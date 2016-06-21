@@ -1,0 +1,72 @@
+
+<project name="setup-distrib" basedir=".">
+	
+	<description>
+        	SETUP DISTRIB
+	</description>
+
+	<import file="utils.xml" />
+	
+	<target name="make-distrib">
+		
+		<!-- Istruzioni -->
+		<if>
+			<or>
+				<matches string="${antinstaller_as}" pattern="jboss.*"/>
+				<matches string="${antinstaller_as}" pattern="wildfly.*"/>
+			</or>	
+			<then>
+				<if>
+					<or>
+						<equals arg1="${antinstaller_as}" arg2="jboss4" />
+						<equals arg1="${antinstaller_as}" arg2="jboss5" />
+						<equals arg1="${antinstaller_as}" arg2="jboss6" />
+					</or>
+					<then>
+						<copy file="${deploy_resources}/INSTALL_JBOSS_v4_v5_v6" tofile="${dist}/INSTALL.txt" />
+					</then>
+					<else>
+						<copy file="${deploy_resources}/INSTALL_JBOSS_v7_v8" tofile="${dist}/INSTALL.txt" />
+					</else>
+				</if>
+			</then>
+			<else>
+				<copy file="${deploy_resources}/INSTALL_TOMCAT" tofile="${dist}/INSTALL.txt" />
+			</else>
+		</if>
+		
+		<!-- Datasource -->
+		<mkdir dir="${dist}/datasource"/>
+		<copy todir="${dist}/datasource">
+		    <fileset dir="${tmp_ds}">
+		      <include name="fatturapa-ds.xml"/>
+		    </fileset>
+		</copy>
+		
+		<!-- SQL -->
+		<mkdir dir="${dist}/sql"/>
+		<concat destfile="${dist}/sql/fattura_pa.sql">
+			<fileset dir="${tmp_sql}">
+				<include name="fattura_pa.sql"/>
+				<include name="init.sql"/>
+			</fileset>
+		</concat>
+		
+		<!-- File di configurazione -->
+		<mkdir dir="${dist}/conf"/>
+		<copy file="${tmp_archivi}/proxyFatturaPA.properties" tofile="${dist}/conf/proxyFatturaPA.properties" />
+		
+		<mkdir dir="${dist}/conf"/>
+		<copy file="${tmp_archivi}/fatturaPAConsole.properties" tofile="${dist}/conf/fatturaPAConsole.properties" />
+		
+		
+		<!-- WAR -->
+		<copy file="${tmp_archivi}/${api.war.name}.war" todir="${dist}" />
+		<zip destfile="${dist}/${console.war.name}.war">
+			<fileset dir="${buildConsoleInstallerDir}/${console.war.name}.war"/>
+		</zip>
+		
+		
+	</target>
+		
+</project>

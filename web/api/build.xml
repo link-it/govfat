@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project name="proxyFatturaPA.dao.web_api" default="build" basedir=".">
+
+	<description>
+        	Ambiente di compilazione del Progetto proxyFatturaPA web API
+	</description>
+
+	<import file="./local_env.xml" />
+	
+	<!-- estensione di ant (if .... ) -->
+	
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="${required_lib_fatturaPA}/ant-contrib-1.0b3.jar"/>
+		</classpath>
+	</taskdef>
+
+	
+	<!-- Check JAVA VERSIONE -->
+	
+    <property name="project.war.name" value="proxyFatturaPA"/>
+
+	<property environment="env"/>
+	<var name="java_home" value="${env.JAVA_HOME}"/>
+	<!-- 
+	<echo message="Java home: ${java_home}"/>
+	<echo message="Java version: ${ant.java.version}"/> 
+	-->
+	<if>
+		<equals arg1="${java_home}" arg2="$${env.JAVA_HOME}"/>
+		<then>
+			<fail message="JAVA_HOME non impostata"/>
+		</then>
+	</if>
+	<if>
+		<or>
+			<equals arg1="${ant.java.version}" arg2="1.3" />
+			<equals arg1="${ant.java.version}" arg2="1.4" />
+			<equals arg1="${ant.java.version}" arg2="1.5" />
+		</or>
+		<then>
+			<fail message="Il Proxy FatturaPA richiede java 6 o superiore"/>
+		</then>
+	</if>
+	
+	
+	<!-- Versione Application Server -->
+	<var name="log4j_jar" value="" />
+	<var name="log4j_properties" value=""/>
+	<var name="commons_logging_jar" value="" />
+	<var name="jaxp_ri_jar" value=""/>
+	<var name="jboss_classloading" value="" />
+	<var name="jboss_scanning" value="" />
+	<var name="jboss_deployment_structure" value="" />
+	<!-- log -->
+	<if>
+		<or>
+			<matches string="${as}" pattern="tomcat.*"/>
+			<equals arg1="${as}" arg2="jboss6"/>
+			<equals arg1="${as}" arg2="jboss7"/>
+		</or>
+		<then>
+			<var name="log4j_jar" value="log4j-1.2.16.jar" />
+		</then>
+	</if>
+	<if>
+		<or>
+			<matches string="${as}" pattern="tomcat.*"/>
+			<equals arg1="${as}" arg2="jboss6"/>
+		</or>
+		<then>
+			<var name="log4j_properties" value="log4j.properties"/>
+		</then>
+	</if>    
+	<!-- commons_logging -->
+	<if>
+		<or>
+			<matches string="${as}" pattern="tomcat.*"/>
+		</or>
+		<then>
+			<var name="commons_logging_jar" value="commons-logging-1.1.1.jar" />
+		</then>
+	</if>        
+	<!-- jaxp_ri -->
+	<if>
+		<or>
+			<equals arg1="${as}" arg2="jboss7"/>
+		</or>
+		<then>
+			<var name="jaxp_ri_jar" value="jaxp-ri-1.4.5.jar"/>
+		</then>
+	</if>
+	<!-- jboss_classloading -->
+	<if>
+		<or>
+			<equals arg1="${as}" arg2="jboss6"/>
+			<equals arg1="${as}" arg2="jboss7"/>
+		</or>
+		<then>
+			<var name="jboss_classloading" value="jboss-classloading.xml" />
+		</then>
+	</if>
+	<!-- jboss_scanning -->
+	<if>
+		<or>
+			<equals arg1="${as}" arg2="jboss6"/>
+			<equals arg1="${as}" arg2="jboss7"/>
+		</or>
+		<then>
+			<var name="jboss_scanning" value="jboss-scanning.xml" />
+		</then>
+	</if>
+	<!-- jboss_deployment_structure -->
+	<if>
+		<or>
+			<equals arg1="${as}" arg2="jboss7"/>
+		</or>
+		<then>
+			<var name="jboss_deployment_structure" value="jboss-deployment-structure.xml" />
+		</then>
+	</if>  
+	
+	
+	<!-- Properties -->
+	<property name="src_dir_fatturaPA_web_api" location="src" />
+	<property name="src_fatturaPA_web_api" location="${src_dir_fatturaPA_web_api}" />
+	<property name="build_dir_fatturaPA_web_api" location="build" />
+	<property name="build_fatturaPA_web_api" value="${build_dir_fatturaPA_web_api}" />
+	<property name="dist_fatturaPA_web_api" location="dist" />
+	<property name="properties_fatturaPA_web_api" location="deploy/properties" />
+	<property name="as_specific_lib" location="${build_dir_fatturaPA_web_api}/lib_aggiuntive" />
+	
+	<target name="clean">
+		<delete dir="${build_dir_fatturaPA_web_api}" />
+		<delete dir="${dist_fatturaPA_web_api}" />
+	</target>
+
+	<target name="init_compile_fatturaPA_web_api">
+		<mkdir dir="${build_fatturaPA_web_api}" />
+		<mkdir dir="${dist_fatturaPA_web_api}" />
+	</target>
+
+	<path id="classpath_compile">
+		<fileset dir="${required_lib_fatturaPA_web_api}" >
+			<include name="**/*.jar"/>
+			<exclude name="**/jars_version.info"/>
+			<exclude name="**/jibx*.jar"/>
+		</fileset>
+		<fileset dir="${required_lib_fatturaPA}" >
+			<include name="openspcoop2_generic-project.jar"/>
+			<include name="openspcoop2_utils.jar"/>
+			<include name="log4j-1.2.16.jar"/>
+		</fileset>
+		<fileset file="${api_fatturaPA}" />
+		<fileset file="${commons_fatturaPA}" />
+	</path>
+
+	<target name="build_fatturaPA_web_api" depends="init_compile_fatturaPA_web_api" description="compila la libreria">
+		
+		<javac destdir="${build_fatturaPA_web_api}" debug="${debug_fatturaPA_web_api}" fork="true">
+			<compilerarg value="-Xlint:unchecked"/>
+			<compilerarg value="-Xlint:deprecation"/>
+			<src path="${src_fatturaPA_web_api}" />
+			<classpath refid="classpath_compile"/>
+		</javac>
+
+		<jar jarfile="${dist_fatturaPA_web_api}/fatturaPA_web_api.jar">
+			<zipfileset dir="${build_fatturaPA_web_api}">
+				<exclude name="**/*Test*"/>
+			</zipfileset>
+		</jar>
+
+	</target>
+
+	            
+	<target name="build" depends="build_fatturaPA_web_api, make_openspcoop2_ejb">
+	
+        <!-- Copia dei jar necessari per l'esecuzione in jboss6 -->
+        <if>
+            <equals arg1="${as}" arg2="jboss6"/>
+            <then>
+                <copy file="${lib_as_specific}/jsr311-api-1.1.1.jar" todir="${as_specific_lib}"/>
+            </then>
+        </if>
+        <!-- Copia dei jar necessari per l'esecuzione in jboss7 -->
+        <if> 
+            <or>
+                <equals arg1="${as}" arg2="jboss7"/>
+                <equals arg1="${as}" arg2="jboss8"/>
+                <equals arg1="${as}" arg2="wildfly8"/>
+            </or>
+            <then>
+                <copy file="${lib_as_specific}/commons-collections-3.2.1.jar" todir="${as_specific_lib}"/>
+                <copy file="${lib_as_specific}/log4j-1.2.16.jar" todir="${as_specific_lib}"/>
+                <copy file="${lib_as_specific}/slf4j-api-1.5.9-RC0.jar" todir="${as_specific_lib}"/>
+                <copy file="${lib_as_specific}/slf4j-log4j12-1.5.9-RC0.jar" todir="${as_specific_lib}"/>
+                <copy file="${lib_as_specific}/jsr311-api-1.1.1.jar" todir="${as_specific_lib}"/>
+                <copy file="${lib_as_specific}/xercesImpl-2.9.1.jar" todir="${as_specific_lib}"/>
+            </then>
+        </if>
+        
+        <!-- Copia dei jar necessari per l'esecuzione in tomcat 5/6/7 -->
+        <if> 
+            <or>
+                <equals arg1="${as}" arg2="tomcat5"/>
+                <equals arg1="${as}" arg2="tomcat6"/>
+                <equals arg1="${as}" arg2="tomcat7"/>
+            </or>
+            <then>
+                <copy file="${lib_as_specific}/commons-collections-3.2.1.jar" todir="${as_specific_lib}"/>
+                <copy file="${lib_as_specific}/log4j-1.2.16.jar" todir="${as_specific_lib}"/>
+                <copy file="${lib_as_specific}/slf4j-api-1.5.9-RC0.jar" todir="${as_specific_lib}"/>
+                <copy file="${lib_as_specific}/slf4j-log4j12-1.5.9-RC0.jar" todir="${as_specific_lib}"/>
+                <copy file="${lib_as_specific}/xercesImpl-2.9.1.jar" todir="${as_specific_lib}"/>
+                <copy file="${lib_as_specific}/jaxp-ri-1.4.5.jar" todir="${as_specific_lib}"/>
+                <copy file="${lib_as_specific}/el-impl-2.2.jar" todir="${as_specific_lib}"/>
+            </then>
+        </if>
+        
+        <if> 
+            <equals arg1="${as}" arg2="tomcat5"/>
+            <then>
+                <copy file="${lib_as_specific}/javax.el.jar" todir="${as_specific_lib}"/>
+            </then>
+        </if>
+		
+		
+		
+		<war destfile="${dist_fatturaPA_web_api}/${project.war.name}.war" webxml="deploy/cxf/web.xml">
+
+			<webinf dir="deploy/cxf">
+				<include name="jbossws-cxf.xml"/>
+				<include name="${jboss_classloading}" />
+			</webinf>
+			<webinf dir="${src_dir_fatturaPA_web_api}/WEB-INF">
+				<include name="${jboss_scanning}" />
+				<include name="${jboss_deployment_structure}" />
+			</webinf>
+	
+			<webinf dir="${src_dir_fatturaPA_web_api}/META-INF">
+				<include name="jboss-web.xml" />
+			</webinf>
+	
+			<lib file="${impl_fatturaPA}"/>
+			<lib file="${commons_fatturaPA}" />
+			<lib file="${api_fatturaPA}" />
+			
+			<lib dir="${dist_fatturaPA_web_api}">
+				<include name="fatturaPA_web_api.jar"/>
+				<include name="fatturaPA_ejb.jar"/>
+			</lib>
+			<lib dir="${required_lib_fatturaPA_web_api}">
+				<include name="**/*.jar"/>
+				<exclude name="javax.ejb.jar"/>
+				<exclude name="javax.servlet.jar"/>
+			</lib>
+
+			<lib dir="${commons.lib}">
+				<include name="*.jar"/>
+			</lib>
+			
+			<classes dir="${commons.properties}">
+				<include name="*.properties"/>
+			</classes>
+			
+            <lib dir="${as_specific_lib}">
+                <include name="*.jar"/>
+            </lib>
+
+			<classes dir="${commons.xsl}" prefix="WEB-INF/classes/xsl"/>
+			
+			<classes dir="${properties_fatturaPA_web_api}">
+				<include name="web.api.properties"/>
+				<include name="log4j.properties"/>
+			</classes>
+			
+			<lib dir="${required_lib_fatturaPA}">
+				<include name="fatturaPA_web_commons.jar"/>
+                <include name="openspcoop2_generic-project.jar"/>
+                <include name="openspcoop2_utils.jar"/>
+                <include name="jaxb-impl-*.jar"/>
+                <include name="jaxb-xjc-*.jar"/>
+                <include name="jibx-*.jar"/>
+                <include name="json-lib-*.jar"/>
+                <include name="commons-lang-*.jar"/>
+                <include name="commons-beanutils-*.jar"/>
+                <include name="ezmorph-*.jar"/>
+			</lib>
+		</war>
+
+	</target>
+	
+	
+	<!-- Creazione del modulo OpenSPCoop2.jar -->
+	<target name="make_openspcoop2_ejb" description="Crea il modulo EJB">
+		<var name="build" value="${build_dir_fatturaPA_web_api}"/>
+
+		<delete dir="${build_dir_fatturaPA_web_api}/tmpEJB" />
+		<mkdir dir="${build_dir_fatturaPA_web_api}/tmpEJB" />
+		
+		<!-- ejb/jboss config -->
+		<var name="ejb_jar_xml" value=""/>
+		<var name="jboss_xml" value=""/>
+		<var name="src" value="${src_dir_fatturaPA_web_api}"/>
+		<if>
+			<equals arg1="${build_openspcoop_with_linkit_threads}" arg2="true" />
+			<then>
+				<if>
+					<or>
+						<equals arg1="${as}" arg2="jboss4"/>
+						<equals arg1="${as}" arg2="jboss5"/>
+						<equals arg1="${as}" arg2="jboss6"/>
+					</or>
+					<then>
+						<copy file="${src}/META-INF/ejb-jar.xml.ejb2.threads" tofile="${build}/tmpEJB/META-INF/ejb-jar.xml" />
+						<copy file="${src}/META-INF/jboss.xml.ejb2.threads" tofile="${build}/tmpEJB/META-INF/jboss.xml" />
+						<var name="ejb_jar_xml" value="ejb-jar.xml"/>
+						<var name="jboss_xml" value="jboss.xml"/>
+					</then>
+				</if>
+				<if>
+					<or>
+						<equals arg1="${as}" arg2="jboss7"/>
+						<equals arg1="${as}" arg2="jboss8"/>
+						<equals arg1="${as}" arg2="wildfly8"/>
+					</or>
+					<then>
+						<copy file="${src}/META-INF/ejb-jar.xml.ejb3.threads" tofile="${build}/tmpEJB/META-INF/ejb-jar.xml" />
+						<copy file="${src}/META-INF/jboss.xml.ejb3.threads" tofile="${build}/tmpEJB/META-INF/jboss-ejb3.xml" />
+						<var name="ejb_jar_xml" value="ejb-jar.xml"/>
+						<var name="jboss_xml" value="jboss-ejb3.xml"/>
+					</then>
+				</if>
+			</then>
+			<else>
+				<if>
+					<or>
+						<equals arg1="${as}" arg2="jboss4"/>
+						<equals arg1="${as}" arg2="jboss5"/>
+						<equals arg1="${as}" arg2="jboss6"/>
+					</or>
+					<then>
+						<copy file="${src}/META-INF/ejb-jar.xml.ejb2" tofile="${build_dir_fatturaPA_web_api}/tmpEJB/META-INF/ejb-jar.xml" />
+						<copy file="${src}/META-INF/jboss.xml.ejb2" tofile="${build_dir_fatturaPA_web_api}/tmpEJB/META-INF/jboss.xml" />
+						<var name="ejb_jar_xml" value="ejb-jar.xml"/>
+						<var name="jboss_xml" value="jboss.xml"/>
+					</then>
+				</if>
+				<if>
+					<or>
+						<equals arg1="${as}" arg2="jboss7"/>
+						<equals arg1="${as}" arg2="jboss8"/>
+						<equals arg1="${as}" arg2="wildfly8"/>
+					</or>
+					<then>
+						<copy file="${src}/META-INF/ejb-jar.xml.ejb3" tofile="${build_dir_fatturaPA_web_api}/tmpEJB/META-INF/ejb-jar.xml" />
+						<copy file="${src}/META-INF/jboss.xml.ejb3" tofile="${build_dir_fatturaPA_web_api}/tmpEJB/META-INF/jboss-ejb3.xml" />
+						<var name="ejb_jar_xml" value="ejb-jar.xml"/>
+						<var name="jboss_xml" value="jboss-ejb3.xml"/>
+					</then>
+				</if>
+			</else>
+		</if>
+		
+		<!-- mailcap
+		<var name="mailcap_info" value=""/>
+		<if>
+			<or>
+				<equals arg1="${as}" arg2="jboss7"/>
+				<equals arg1="${as}" arg2="jboss8"/>
+				<equals arg1="${as}" arg2="wildfly8"/>
+			</or>
+			<then>
+				<var name="mailcap_info" value="mailcap"/>
+			</then>
+		</if>
+		 -->
+		<jar jarfile="${dist_fatturaPA_web_api}/fatturaPA_ejb.jar">
+			<manifest>
+				<attribute name="Class-Path" value="${manifest.classpath.3parti} ${plugins.classpath} ${manifest.classpath.openspcoop} properties/" />
+			</manifest>
+			<zipfileset dir="${build_dir_fatturaPA_web_api}/tmpEJB">
+				<include name="META-INF/${ejb_jar_xml}" />
+				<include name="META-INF/${jboss_xml}" />
+			</zipfileset>
+			<!-- DataContentHandler per application/openspcoop2
+			<zipfileset dir="${data_content_handler_dir}" prefix="META-INF">
+				<include name="${mailcap_info}" />
+			</zipfileset>
+			 -->
+		</jar>
+		<delete dir="${build_dir_fatturaPA_web_api}/tmpEJB" />
+	</target>
+	
+	<target name="prepare_binary_release" depends="build_fatturaPA_web_api">
+		
+		<delete dir="${binary_release_dir}"/>
+		
+		<mkdir dir="${binary_release_dir}"/>
+		<mkdir dir="${binary_release_dir}/deploy/cxf"/>
+		<mkdir dir="${binary_release_dir}/deploy/META-INF"/>
+		<mkdir dir="${binary_release_dir}/deploy/WEB-INF"/>
+		<mkdir dir="${binary_release_dir}/deploy/lib"/>
+		<mkdir dir="${binary_release_dir}/deploy/templates"/>
+		<mkdir dir="${binary_release_dir}/deploy/properties"/>
+		
+		<copy todir="${binary_release_dir}/deploy/META-INF">
+			<fileset dir="${src_dir_fatturaPA_web_api}/META-INF"/>
+		</copy>
+		<copy todir="${binary_release_dir}/deploy/WEB-INF">
+			<fileset dir="${src_dir_fatturaPA_web_api}/WEB-INF"/>
+		</copy>
+		<copy todir="${binary_release_dir}/deploy/lib">
+			<fileset dir="${required_lib_fatturaPA_web_api}/">
+				<include name="**/*.jar"/>
+				<exclude name="javax.ejb.jar"/>
+				<exclude name="javax.servlet.jar"/>
+			</fileset>
+			<fileset dir="${dist_fatturaPA_web_api}/">
+				<include name="fatturaPA_web_api.jar"/>
+			</fileset>
+			<fileset file="${impl_fatturaPA}"/>
+			<fileset file="${commons_fatturaPA}" />
+			<fileset file="${api_fatturaPA}" />
+		</copy>
+		<copy todir="${binary_release_dir}/deploy/templates">
+			<fileset dir="${properties_fatturaPA_web_api}">
+				<include name="*.template"/>
+			</fileset>
+		</copy>
+		<copy todir="${binary_release_dir}/deploy/cxf">
+			<fileset dir="deploy/cxf" />
+		</copy>
+		<copy todir="${binary_release_dir}/deploy/properties">
+			<fileset dir="${commons.xsl}"/>
+			<fileset dir="${commons.properties}">
+				<include name="*.properties"/>
+			</fileset>
+		</copy>
+	</target>
+	
+</project>

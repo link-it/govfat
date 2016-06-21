@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/1.0.fatturaPA"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/1.0.fatturaPA.dao.jdbc"/>
+	<classpathentry kind="lib" path="/1.0.fatturaPA/deploy/lib/openspcoop2_generic-project.jar"/>
+	<classpathentry kind="lib" path="/1.0.fatturaPA/deploy/lib/openspcoop2_utils.jar"/>
+	<classpathentry kind="lib" path="/1.0.fatturaPA/deploy/lib/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/itextpdf-5.5.3.jar" sourcepath="/home/bussu/.m2/repository/com/itextpdf/itextpdf/5.5.3/itextpdf-5.5.3-sources.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/commons-io-2.1.jar"/>
+	<classpathentry kind="lib" path="/1.0.fatturaPA/deploy/lib/commons-lang-2.6.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/flying-saucer-core-9.0.6.jar" sourcepath="/home/bussu/.m2/repository/org/xhtmlrenderer/flying-saucer-core/9.0.6/flying-saucer-core-9.0.6-sources.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/flying-saucer-pdf-itext5-9.0.6.jar" sourcepath="/home/bussu/.m2/repository/org/xhtmlrenderer/flying-saucer-pdf-itext5/9.0.6/flying-saucer-pdf-itext5-9.0.6-sources.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

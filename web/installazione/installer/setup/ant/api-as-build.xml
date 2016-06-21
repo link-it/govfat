@@ -1,0 +1,303 @@
+
+<project name="api_as_build" basedir=".">
+    
+    <description>
+        Setup Application server build
+    </description>
+    
+    <import file="utils.xml" />
+
+    <property name="api.war.name" value="proxyFatturaPA" />
+    <property name="log4j_jar" value="" />
+    <property name="log4j_properties" value=""/>
+    <property name="commons_logging_jar" value="" />
+    <property name="jaxp_ri_jar" value=""/>
+    <property name="jboss_classloading" value="" />
+    <property name="jboss_scanning" value="" />
+    <property name="jboss_deployment_structure" value="" />
+    <property name="jboss_web_xml" value="jboss-web.xml" />
+    <property name="as_specific_lib" value="${build}/as_specific_lib" />
+    
+    <target name="web_check_as">
+        
+        <mkdir dir="${as_specific_lib}" />
+        <!-- Versione Application Server -->
+        <!-- log -->
+        <if>
+            <or>
+                <matches string="${antinstaller_as}" pattern="tomcat.*"/>
+                <equals arg1="${antinstaller_as}" arg2="jboss6"/>
+                <equals arg1="${antinstaller_as}" arg2="jboss7"/>
+            </or>
+            <then>
+                <var name="log4j_jar" value="log4j-1.2.16.jar" />
+            </then>
+        </if>
+        <if>
+            <or>
+                <matches string="${antinstaller_as}" pattern="tomcat.*"/>
+                <equals arg1="${antinstaller_as}" arg2="jboss6"/>
+            </or>
+            <then>
+                <var name="log4j_properties" value="log4j.properties"/>
+            </then>
+        </if>    
+        <!-- commons_logging -->
+        <if>
+            <or>
+                <matches string="${antinstaller_as}" pattern="tomcat.*"/>
+            </or>
+            <then>
+                <var name="commons_logging_jar" value="commons-logging-1.1.1.jar" />
+            </then>
+        </if>        
+        <!-- jaxp_ri -->
+        <if>
+            <or>
+                <equals arg1="${antinstaller_as}" arg2="jboss7"/>
+            </or>
+            <then>
+                <var name="jaxp_ri_jar" value="jaxp-ri-1.4.5.jar"/>
+            </then>
+        </if>
+        <!-- jboss_classloading -->
+        <if>
+            <or>
+                <equals arg1="${antinstaller_as}" arg2="jboss6"/>
+                <equals arg1="${antinstaller_as}" arg2="jboss7"/>
+            </or>
+            <then>
+                <var name="jboss_classloading" value="jboss-classloading.xml" />
+            </then>
+        </if>
+        <!-- jboss_scanning -->
+        <if>
+            <or>
+                <equals arg1="${antinstaller_as}" arg2="jboss6"/>
+                <equals arg1="${antinstaller_as}" arg2="jboss7"/>
+            </or>
+            <then>
+                <var name="jboss_scanning" value="jboss-scanning.xml" />
+            </then>
+        </if>
+        <!-- jboss_deployment_structure -->
+        <if>
+            <or>
+                <equals arg1="${antinstaller_as}" arg2="jboss7"/>
+            </or>
+            <then>
+                <var name="jboss_deployment_structure" value="jboss-deployment-structure.xml" />
+            </then>
+        </if>  
+        
+        <if>
+            <or>
+                <equals arg1="${antinstaller_as}" arg2="jboss7"/>
+                <equals arg1="${antinstaller_as}" arg2="jboss8"/>
+                <equals arg1="${antinstaller_as}" arg2="wildfly8"/>
+            </or>
+            <then>
+                <var name="jboss_web_xml" value="" />
+            </then>
+        </if>
+        
+        
+        
+        <!-- Copia dei jar necessari per l'esecuzione in jboss6 -->
+        <if>
+            <equals arg1="${antinstaller_as}" arg2="jboss6"/>
+            <then>
+                <copy file="${consoleInstallerDir}/lib/jsr311-api-1.1.1.jar" todir="${as_specific_lib}"/>
+            </then>
+        </if>
+        <!-- Copia dei jar necessari per l'esecuzione in jboss7 -->
+        <if> 
+            <or>
+                <equals arg1="${antinstaller_as}" arg2="jboss7"/>
+                <equals arg1="${antinstaller_as}" arg2="jboss8"/>
+                <equals arg1="${antinstaller_as}" arg2="wildfly8"/>
+            </or>
+            <then>
+                <copy file="${consoleInstallerDir}/lib/commons-collections-3.2.1.jar" todir="${as_specific_lib}"/>
+                <copy file="${commonsInstallerDir}/required_lib/log4j-1.2.16.jar" todir="${as_specific_lib}"/>
+                <copy file="${consoleInstallerDir}/lib/slf4j-api-1.5.9-RC0.jar" todir="${as_specific_lib}"/>
+                <copy file="${consoleInstallerDir}/lib/slf4j-log4j12-1.5.9-RC0.jar" todir="${as_specific_lib}"/>
+                <copy file="${consoleInstallerDir}/lib/jsr311-api-1.1.1.jar" todir="${as_specific_lib}"/>
+                <copy file="${commonsInstallerDir}/required_lib/xercesImpl-2.9.1.jar" todir="${as_specific_lib}"/>
+                <!--copy file="${consoleInstallerDir}/lib/jaxp-ri-1.4.5.jar" todir="${as_specific_lib}"/-->
+            </then>
+        </if>
+        
+        <!-- Copia dei jar necessari per l'esecuzione in tomcat 5/6/7 -->
+        <if> 
+            <or>
+                <equals arg1="${antinstaller_as}" arg2="tomcat5"/>
+                <equals arg1="${antinstaller_as}" arg2="tomcat6"/>
+                <equals arg1="${antinstaller_as}" arg2="tomcat7"/>
+            </or>
+            <then>
+                <copy file="${consoleInstallerDir}/lib/commons-collections-3.2.1.jar" todir="${as_specific_lib}"/>
+                <copy file="${commonsInstallerDir}/required_lib/log4j-1.2.16.jar" todir="${as_specific_lib}"/>
+                <copy file="${consoleInstallerDir}/lib/slf4j-api-1.5.9-RC0.jar" todir="${as_specific_lib}"/>
+                <copy file="${consoleInstallerDir}/lib/slf4j-log4j12-1.5.9-RC0.jar" todir="${as_specific_lib}"/>
+                <copy file="${commonsInstallerDir}/required_lib/xercesImpl-2.9.1.jar" todir="${as_specific_lib}"/>
+                <copy file="${consoleInstallerDir}/lib/jaxp-ri-1.4.5.jar" todir="${as_specific_lib}"/>
+                <copy file="${consoleInstallerDir}/lib/javax.servlet.jsp.jstl-1.2.1.jar" todir="${as_specific_lib}"/>
+                <copy file="${consoleInstallerDir}/lib/jsf-impl-1.2_16.jar" todir="${as_specific_lib}"/>
+                <copy file="${consoleInstallerDir}/lib/jsf-api-1.2_16.jar" todir="${as_specific_lib}"/>
+                <copy file="${consoleInstallerDir}/lib/javax.servlet.jsp.jstl-api-1.2.1.jar" todir="${as_specific_lib}"/>
+                <copy file="${consoleInstallerDir}/lib/el-impl-2.2.jar" todir="${as_specific_lib}"/>
+            </then>
+        </if>
+        
+        <if> 
+            <equals arg1="${antinstaller_as}" arg2="tomcat5"/>
+            <then>
+                <copy file="${consoleInstallerDir}/lib/javax.el.jar" todir="${as_specific_lib}"/>
+            </then>
+        </if>
+    </target>
+    <var name="build_openspcoop_with_linkit_threads" value="true" />
+    <target name="web_prepare_ejb">
+        <var name="build" value="${tmp_archivi}"/>
+        
+        <delete dir="${tmp_archivi}/tmpEJB" />
+        <mkdir dir="${tmp_archivi}/tmpEJB" />
+        
+        <var name="ejb_jar_xml" value=""/>
+        <var name="jboss_xml" value=""/>
+        <var name="src" value="${src_dir_fatturaPA_web_api}"/>
+        <if>
+            
+            
+            <equals arg1="${build_openspcoop_with_linkit_threads}" arg2="true" />
+            <then>
+                <if>
+                    <or>
+                        <equals arg1="${antinstaller_as}" arg2="jboss4"/>
+                        <equals arg1="${antinstaller_as}" arg2="jboss5"/>
+                        <equals arg1="${antinstaller_as}" arg2="jboss6"/>
+                    </or>
+                    <then>
+                        <copy file="${api.deploy.META-INF}/ejb-jar.xml.ejb2.threads" tofile="${tmp_archivi}/tmpEJB/META-INF/ejb-jar.xml" />
+                        <copy file="${api.deploy.META-INF}/jboss.xml.ejb2.threads" tofile="${tmp_archivi}/tmpEJB/META-INF/jboss.xml" />
+                        <var name="ejb_jar_xml" value="ejb-jar.xml"/>
+                        <var name="jboss_xml" value="jboss.xml"/>
+                    </then>
+                </if>
+                <if>
+                    <or>
+                        <equals arg1="${antinstaller_as}" arg2="jboss7"/>
+                        <equals arg1="${antinstaller_as}" arg2="jboss8"/>
+                        <equals arg1="${antinstaller_as}" arg2="wildfly8"/>
+                    </or>
+                    <then>
+                        <copy file="${api.deploy.META-INF}/ejb-jar.xml.ejb3.threads" tofile="${tmp_archivi}/tmpEJB/META-INF/ejb-jar.xml" />
+                        <copy file="${api.deploy.META-INF}/jboss.xml.ejb3.threads" tofile="${tmp_archivi}/tmpEJB/META-INF/jboss-ejb3.xml" />
+                        <var name="ejb_jar_xml" value="ejb-jar.xml"/>
+                        <var name="jboss_xml" value="jboss-ejb3.xml"/>
+                    </then>
+                </if>
+            </then>
+            <else>
+                <if>
+                    <or>
+                        <equals arg1="${antinstaller_as}" arg2="jboss4"/>
+                        <equals arg1="${antinstaller_as}" arg2="jboss5"/>
+                        <equals arg1="${antinstaller_as}" arg2="jboss6"/>
+                    </or>
+                    <then>
+                        <copy file="${api.deploy.META-INF}/ejb-jar.xml.ejb2" tofile="${tmp_archivi}/tmpEJB/META-INF/ejb-jar.xml" />
+                        <copy file="${api.deploy.META-INF}/jboss.xml.ejb2" tofile="${tmp_archivi}/tmpEJB/META-INF/jboss.xml" />
+                        <var name="ejb_jar_xml" value="ejb-jar.xml"/>
+                        <var name="jboss_xml" value="jboss.xml"/>
+                    </then>
+                </if>
+                <if>
+                    <or>
+                        <equals arg1="${antinstaller_as}" arg2="jboss7"/>
+                        <equals arg1="${antinstaller_as}" arg2="jboss8"/>
+                        <equals arg1="${antinstaller_as}" arg2="wildfly8"/>
+                    </or>
+                    <then>
+                        <copy file="${api.deploy.META-INF}/ejb-jar.xml.ejb3" tofile="${tmp_archivi}/tmpEJB/META-INF/ejb-jar.xml" />
+                        <copy file="${api.deploy.META-INF}/jboss.xml.ejb3" tofile="${tmp_archivi}/tmpEJB/META-INF/jboss-ejb3.xml" />
+                        <var name="ejb_jar_xml" value="ejb-jar.xml"/>
+                        <var name="jboss_xml" value="jboss-ejb3.xml"/>
+                    </then>
+                </if>
+            </else>
+        </if>
+        <jar jarfile="${tmp_archivi}/tmpEJB/fatturaPA_ejb.jar">
+            <manifest>
+                <attribute name="Class-Path" value="${manifest.classpath.3parti} ${plugins.classpath} ${manifest.classpath.openspcoop} properties/" />
+            </manifest>
+            <zipfileset dir="${tmp_archivi}/tmpEJB">
+                <include name="META-INF/${ejb_jar_xml}" />
+                <include name="META-INF/${jboss_xml}" />
+            </zipfileset>
+        </jar>
+    </target>
+    
+    <target name="web_prepare_war" depends="web_check_as, web_prepare_ejb">
+        <war destfile="${tmp_archivi}/${api.war.name}.war" webxml="${api.deploy}/cxf/web.xml">
+            
+            <webinf dir="${api.deploy}/cxf">
+                <include name="jbossws-cxf.xml"/>
+                <include name="${jboss_classloading}" />
+            </webinf>
+            <webinf dir="${api.deploy}/WEB-INF">
+                <include name="${jboss_scanning}" />
+                <include name="${jboss_deployment_structure}" />
+            </webinf>
+            
+            <webinf dir="${api.deploy}/META-INF">
+                <include name="${jboss_web_xml}" />
+            </webinf>
+            
+            <lib dir="${api.deploy}/lib">
+                <include name="*.jar"/>
+            </lib>
+
+            <classes dir="${commons.properties}">
+                <include name="*.properties"/>
+            </classes>
+            
+            <classes dir="${commons.xsl}" prefix="WEB-INF/classes/xsl"/>
+            
+            <classes dir="${tmp_archivi}">
+                <include name="web.api.properties"/>
+            </classes>
+            
+            <classes dir="${tmp_archivi}/api">
+                <include name="log4j.properties"/>
+            </classes>
+            
+           <lib dir="${commons.lib}">
+                <include name="*.jar"/>
+            </lib>
+            <lib dir="${tmp_archivi}/tmpEJB">
+                <include name="fatturaPA_ejb.jar"/>
+            </lib>
+            
+            <lib dir="${as_specific_lib}">
+                <include name="*.jar"/>
+            </lib>
+            
+            <lib dir="${commons.required_lib}">
+                <include name="fatturaPA_web_commons.jar"/>
+                <include name="openspcoop2_generic-project.jar"/>
+                <include name="openspcoop2_utils.jar"/>
+                <include name="jaxb-impl-*.jar"/>
+                <include name="jaxb-xjc-*.jar"/>
+                <include name="jibx-*.jar"/>
+                <include name="json-lib-*.jar"/>
+                <include name="commons-lang-*.jar"/>
+                <include name="commons-beanutils-*.jar"/>
+                <include name="ezmorph-*.jar"/>
+            </lib>
+            
+        </war>
+    </target>
+    
+</project>

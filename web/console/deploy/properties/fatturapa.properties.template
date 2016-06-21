@@ -1,0 +1,2 @@
+#directory esterna  dove stanno le properties
+org.govmix.proxy.fatturapa.web.console.properties.path=#properties.path#

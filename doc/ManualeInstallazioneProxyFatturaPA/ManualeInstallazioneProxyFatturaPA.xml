@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "/usr/share/sgml/docbook/xml-dtd-4.1.2/docbookx.dtd">
+<?xml-stylesheet type="text/xsl" href="article.xsl"?>
+<article lang="it">
+    <articleinfo>
+        <title>Guida all'Installazione del ProxyFatturaPA</title>
+        <titleabbrev>Guida di Installazione del ProxyFatturaPA</titleabbrev>
+        <copyright>
+            <year>2005-2014</year>
+            <holder>
+                <ulink url="http://www.link.it">
+                    <citetitle>Link.it srl</citetitle>
+                </ulink>
+            </holder>
+        </copyright>
+        <address>
+            Link.it SRL
+            <street>
+                Via S. Martino,51
+            </street>
+            <postcode>I-56125</postcode><city> Pisa</city>
+            <country>
+                ITALY
+            </country>
+            <email>e-mail: info@link.it</email>
+        </address>
+    </articleinfo>
+    <!-- 1. Scopo del Documento -->
+    <sect1 id="intro">
+        <title>Introduzione</title>
+        <para> In questa sezione trovi una guida rapida per l'installazione  del ProxyFatturaPA.
+            Verifica e, se necessario, installa il software di base per il ProxyFatturaPA
+            come indicato nella Fase Preliminare. Un installer grafico ti guider&agrave; nella
+            personalizzazione del software verso la tua piattaforma. </para>
+    </sect1>
+    <sect1 id="preliminare">
+        <title>Fase Preliminare</title>
+        <para> Prima di procedere con l'installazione del ProxyFatturaPA &egrave; necessario disporre
+            del software di base nell'ambiente di esercizio. Verificare i passi seguenti, procedendo
+            eventualmente all'installazione dei componenti mancanti. <orderedlist>
+                <listitem>
+                    <para>
+                        <emphasis>Java Runtime Environment (JRE) 6 o superiore</emphasis> (&Egrave;
+                        possibile scaricare JRE al seguente indirizzo: <ulink
+                            url="http://www.oracle.com/technetwork/java/javase/downloads/index.html"
+                            >http://www.oracle.com/technetwork/java/javase/downloads/index.html</ulink>)
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <emphasis>Application Server JBoss</emphasis> (<ulink
+                            url="http://www.jboss.com">http://www.jboss.com</ulink>) versione
+                        5.x, 6.x o 7.x o <emphasis>WildFly</emphasis> (<ulink
+                            url="http://wildfly.org">http://wildfly.org</ulink>) versione 8.x. In
+                        alternativa &egrave; possibile effettuare l'installazione su Apache Tomcat.
+                        </para>
+                </listitem>
+                <listitem>
+                    <para> Un <emphasis>RDBMS</emphasis> accessibile via JDBC. Il ProxyFatturaPA
+                        supporta le seguenti piattaforme: <itemizedlist>
+                            <listitem><para><emphasis>PostgreSQL 8.x o
+                                superiore</emphasis></para></listitem>
+                            <listitem><para><emphasis>MySQL 5.x o
+                                superiore</emphasis></para></listitem>
+                            <listitem><para><emphasis>Oracle 10g o
+                                superiore</emphasis></para></listitem>
+                            <listitem><para><emphasis>HyperSQL 2.0 o
+                                superiore</emphasis></para></listitem>
+                            <listitem><para><emphasis>MS SQL Server
+                                2005</emphasis></para></listitem> 
+                            <listitem><para><emphasis>IBM DB2 9.5 o superiore</emphasis></para></listitem>
+                        </itemizedlist>
+                    </para>
+                </listitem>
+            </orderedlist>
+        </para>
+    </sect1>
+    <sect1 id="installer">
+        <title>Esecuzione dell'Installer</title>
+        <para>
+            <orderedlist>
+                <listitem>
+                    <para> Scarica <ulink url="http://www.gov4j.org/fatturapa/downloads"
+                            >qui</ulink> il ProxyFatturaPA </para>
+                </listitem>
+                <listitem>
+                    <para> Scompatta l'archivio, verifica ed eventualmente imposta la variabile
+                        d'ambiente <emphasis>JAVA_HOME</emphasis> in modo che riferisca la directory
+                        radice dell'installazione di Java. Lancia l'utility di installazione
+                        mandando in esecuzione il file <emphasis>install.sh</emphasis> su
+                        Unix/Linux, oppure <emphasis>install.cmd</emphasis> su Windows. </para>
+                    <para>
+                        <emphasis role="bold">Nota Bene:</emphasis> L'utility di installazione non
+                        installa il prodotto ma produce tutti gli elementi necessari che dovranno
+                        essere dispiegati nell'ambiente di esercizio. L'utility di installazione
+                        mostra all'avvio una pagina introduttiva. 
+                        <figure id="menu-introduzione">
+                            <title>Introduzione</title>
+                             <mediaobject>
+                                 <imageobject>
+                                     <imagedata fileref="FIGURE_OUT/installer-scr0.jpg"/>
+                                 </imageobject>
+                                 <imageobject>
+                                     <imagedata fileref="FIGURE_OUT/installer-scr0.pdf"/>
+                                 </imageobject>
+                             </mediaobject>
+                         </figure>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Dopo la pagina introduttiva, cliccando sul pulsante
+                        <emphasis>Next</emphasis>, appare una schermata dove fornire i seguenti dati: 
+                        <figure id="menu-informazioni-preliminari">
+                            <title>Informazioni Preliminari</title>
+                            <mediaobject>
+                                <imageobject>
+                                    <imagedata fileref="FIGURE_OUT/installer-scr1.jpg"/>
+                                </imageobject>
+                                <imageobject>
+                                    <imagedata fileref="FIGURE_OUT/installer-scr1.pdf"/>
+                                </imageobject>
+                            </mediaobject>
+                        </figure>
+                        I dati richiesti sono:
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <emphasis>Nome Ente Gestito</emphasis> - Il nome dell'ente che si avvale dei servizi del proxy FatturaPA (es. ComuneRoma)
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Dati di accesso dell'utente amministratore</emphasis> - Si tratta dello username e password relativi all'utente
+                                    che ha pieno accesso a tutte le informazioni di fatturazione gestite dal proxy per l'ente.
+                                </para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para> 
+                        Al passo successivo appare una schermata dove fornire i riferimenti all'ambiente di installazione: 
+                        <figure id="ambiente-installazione">
+                            <title>Ambiente di Installazione</title>
+                             <mediaobject>
+                                 <imageobject>
+                                     <imagedata fileref="FIGURE_OUT/installer-scr2.jpg"/>
+                                 </imageobject>
+                                 <imageobject>
+                                     <imagedata fileref="FIGURE_OUT/installer-scr2.pdf"/>
+                                 </imageobject>
+                             </mediaobject> 
+                        </figure>
+                            Inserire le informazioni richieste tenendo conto che: 
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <emphasis>Directory di Lavoro</emphasis>: una directory
+                                    utilizzata dal ProxyFatturaPA per inserire i file di
+                                    configurazione prodotti. Non &egrave; necessario che questa
+                                    directory esista sulla macchina dove si sta eseguendo
+                                    l'installer; tale directory dovr&agrave; esistere nell'ambiente
+                                    di esercizio dove verr&agrave; effettivamente installata la
+                                    porta di dominio. </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>DB Platform</emphasis>: il tipo di database scelto tra
+                                    i 5 supportati: PostgreSQL, MySQL, Oracle, HyperSQL, SQLServer
+                                    2005 e IBM DB2. </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Application Server</emphasis>: Application server
+                                    utilizzato selezionato tra: JBoss5.x, JBoss6.x,
+                                    JBoss7.x, WildFly 8.x, Apache Tomcat. </para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para> Al passo successivo si dovranno inserire tutti i dati per l'accesso al
+                        database. 
+                        <figure id="menu-accesso-database">
+                            <title>Informazioni Accesso Database</title>
+                             <mediaobject>
+                                 <imageobject>
+                                     <imagedata fileref="FIGURE_OUT/installer-scr3.jpg"/>
+                                 </imageobject>
+                                 <imageobject>
+                                     <imagedata fileref="FIGURE_OUT/installer-scr3.pdf"/>
+                                 </imageobject>
+                             </mediaobject>
+                         </figure>
+                        I dati richiesti sono:
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <emphasis>Hostname</emphasis>: indirizzo per raggiungere il
+                                    database </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Porta</emphasis>: la porta da associare all'host per
+                                    la connessione al database </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Nome Database</emphasis>: il nome dell'istanza del
+                                    database a supporto di ProxyFatturaPA. Non &egrave; necessario che
+                                    questo database esista in questa fase. Il database di
+                                    ProxyFatturaPA infatti potr&agrave; essere creato nella fase
+                                    successiva purch&eacute; il nome assegnato coincida con il
+                                    valore inserito in questo campo. </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Username</emphasis>: l'utente con diritti di
+                                    lettura/scrittura sul database sopra indicato. Analogamente al
+                                    punto precedente, l'utente potr&agrave; essere creato nella fase
+                                    successiva dopo aver creato il database. Ricordarsi per&ograve;
+                                    di utilizzare il medesimo username indicato in questo campo.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Password</emphasis>: la password dell'utente del
+                                    database. </para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para> Premendo il pulsante <emphasis>Install</emphasis> il processo di
+                        configurazione termina con la produzione dei files necessari per
+                        l'installazione di OpenSPCoop2 che verranno inseriti nella nuova directory
+                            <emphasis>dist</emphasis> creata al termine di questo processo. 
+                        <figure id="menu-install">
+                            <title>Installazione Terminata</title>
+                            <mediaobject>
+                                <imageobject>
+                                    <imagedata fileref="FIGURE_OUT/installer-scr4.jpg"/>
+                                </imageobject>
+                                <imageobject>
+                                    <imagedata fileref="FIGURE_OUT/installer-scr4.pdf"/>
+                                </imageobject>
+                            </mediaobject> 
+                           </figure>
+                            I files presenti nella directory <emphasis role="bold"
+                            >dist</emphasis> dovranno essere utilizzati nella fase successiva di
+                        dispiegamento del Proxy FatturaPA </para>
+                </listitem>
+            </orderedlist>
+        </para>
+    </sect1>
+    <sect1 id="dispiegamento">
+        <title>Fase di Dispiegamento</title>
+        <para> Al termine dell'esecuzione dell'installer vengono prodotti i files
+            necessari per effettuare il dispiegamento del proxy FatturaPA nell'ambiente di esercizio. Tali files sono
+            disponibili nella directory <emphasis>dist</emphasis> creata nel pacchetto di installazione.
+            Per completare il processo di installazione si devono effettuare i passi che andiamo a
+            descrivere differenziando per application server. 
+        </para>
+        <sect2>
+             <title>JBoss 5.x e 6.x</title>
+            <para>
+                <orderedlist>
+                    <listitem>
+                        <para>
+                            Creare un utente sul RDBMS avente i medesimi valori di username e password indicati in fase di setup.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Creare un'istanza di database avente il nome indicato durante la fase di setup e come owner l'utente creato al passo precedente.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Dotare l'utente creato al passo 1 dei privilegi necessari affinché possa leggere e scrivere sul database creato al passo 2.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Eseguire lo script <emphasis>dist/sql/fattura_pa.sql</emphasis> per la creazione dello schema del database. 
+                            Ad esempio, nel caso di PostgreSQL, si potrà eseguire il comando <emphasis>psql &lt;hostname&gt; &lt;username&gt; -f sql/fattura_pa.sql</emphasis>
+                        </para>
+                    </listitem>
+                   <listitem>
+                       <para>
+                           Copiare il file <emphasis>dist/datasource/fatturapa-ds.xml</emphasis>, contenente le definizioni dei datasources, nella directory <emphasis>&lt;JBOSS_HOME&gt;/server/default/deploy</emphasis>.
+                       </para>
+                   </listitem>
+                    <listitem>
+                        <para>
+                            Copiare i file contenuti nella cartella <emphasis>dist/conf</emphasis> nella directory di lavoro specificata in fase di installazione.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Copiare i file <emphasis>dist/fatturaPA.war</emphasis> e <emphasis>dist/proxyFatturaPA.war</emphasis> nella directory <emphasis>&lt;JBOSS_HOME&gt;/server/default/deploy</emphasis>.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Installare il DriverJDBC, relativo al tipo di RDBMS indicato in fase di setup, nella directory <emphasis>&lt;JBOSS_HOME&gt;/server/default/lib</emphasis>
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Avviare JBoss (ad esempio su Linux con il comando <emphasis>&lt;JBOSS_HOME&gt;/bin/run.sh</emphasis> oppure utilizzando il relativo service)
+                        </para>
+                    </listitem>
+                </orderedlist>
+            </para>
+        </sect2>
+        <sect2>
+            <title>JBoss 7.x, WildFly 8.x</title>
+            <para>
+        <orderedlist>
+            <listitem>
+                <para>
+                    Creare un utente sul RDBMS avente i medesimi valori di username e password indicati in fase di setup.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    Creare un'istanza di database avente il nome indicato durante la fase di setup e come owner l'utente creato al passo precedente.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    Dotare l'utente creato al passo 1 dei privilegi necessari affinché possa leggere e scrivere sul database creato al passo 2.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    Eseguire lo script <emphasis>dist/sql/fattura_pa.sql</emphasis> per la creazione dello schema del database. 
+                    Ad esempio, nel caso di PostgreSQL, si potrà eseguire il comando <emphasis>psql &lt;hostname&gt; &lt;username&gt; -f sql/fattura_pa.sql</emphasis>
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    Copiare il file <emphasis>dist/datasource/fatturapa-ds.xml</emphasis>, contenente le definizioni dei datasources, 
+                    nella directory <emphasis>&lt;JBOSS_HOME&gt;/standalone/deployments</emphasis>
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    Copiare i file contenuti nella cartella <emphasis>dist/conf</emphasis> nella directory di lavoro specificata in fase di installazione.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    Copiare i file <emphasis>dist/fatturaPA.war</emphasis> e <emphasis>dist/proxyFatturaPA.war</emphasis> nella directory 
+                    <emphasis>&lt;JBOSS_HOME&gt;/standalone/deployments</emphasis>
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    Installare il DriverJDBC, relativo al tipo di RDBMS indicato in fase di setup, nella directory 
+                    <emphasis>&lt;JBOSS_HOME&gt;/standalone/deployments</emphasis>
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    Editare i datasources installati al punto 5. sostituendo la keyword <emphasis>NOME_DRIVER_JDBC.jar</emphasis> con il nome del 
+                    file che contiene il driver jdbc installato al punto 8.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    Avviare JBoss (ad esempio su Linux con il comando <emphasis>&lt;JBOSS_HOME&gt;/bin/standalone.sh</emphasis> oppure utilizzando il relativo service)
+                </para>
+            </listitem>
+        </orderedlist>
+        </para>
+        </sect2>
+        <sect2>
+            <title>Apache Tomcat</title>
+            <para>
+                <orderedlist>
+                    <listitem>
+                        <para>
+                            Creare un utente sul RDBMS avente i medesimi valori di username e password indicati in fase di setup.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Creare un'istanza di database avente il nome indicato durante la fase di setup e come owner l'utente creato al passo precedente.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Dotare l'utente creato al passo 1 dei privilegi necessari affinché possa leggere e scrivere sul database creato al passo 2.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Eseguire lo script <emphasis>dist/sql/fattura_pa.sql</emphasis> per la creazione dello schema del database. 
+                            Ad esempio, nel caso di PostgreSQL, si potrà eseguire il comando <emphasis>psql &lt;hostname&gt; &lt;username&gt; -f sql/fattura_pa.sql</emphasis>
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Copiare del definizioni dei datasource presenti nella directory <emphasis>dist/datasource/fatturapa-ds.xml</emphasis>, 
+                            nella directory <emphasis>&lt;TOMCAT_HOME&gt;/conf/Catalina/localhost</emphasis>
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Copiare i file contenuti nella cartella <emphasis>dist/conf</emphasis> nella directory di lavoro specificata in fase di installazione.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Copiare i file <emphasis>dist/fatturaPA.war</emphasis> e <emphasis>dist/proxyFatturaPA.war</emphasis> nella directory 
+                            <emphasis>&lt;TOMCAT_HOME&gt;/webapps</emphasis>
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Installare il DriverJDBC, relativo al tipo di RDBMS indicato in fase di setup, nella directory 
+                            <emphasis>&lt;TOMCAT_HOME&gt;/lib</emphasis> (o <emphasis>&lt;TOMCAT_HOME&gt;/shared/lib</emphasis>)
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Avviare Apache Tomcat (ad esempio su Linux con il comando <emphasis>&lt;TOMCAT_HOME&gt;/bin/startup.sh</emphasis> oppure utilizzando il relativo service)
+                        </para>
+                    </listitem>
+                </orderedlist>
+            </para>
+        </sect2>
+    </sect1>
+    <sect1 id="startup">
+        <title>Avviamento all'uso</title>
+        <sect2>
+            <title>Verifica dell'installazione</title>
+        <para>
+            Dopo aver effettuato i passi precedentemente descritti nel documento il proxy è operativo ed è possibile verificare il buon esito dell'installazione
+            accedendo tramite browser alle seguenti url:
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        <emphasis>http://hostname:port/fatturaPA</emphasis>
+                    </para>
+                    <para>
+                        Url per l'accesso al cruscotto grafico del proxy.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <emphasis>http://hostname:port/proxyFatturaPA/?_wadl</emphasis>
+                    </para>
+                    <para>Questa url mostra il WADL per l'accesso ai servizi del proxy. È possibile accedere utilizzando le credenziali 
+                    dell'amministratore fornite in fase di esecuzione dell'installer.</para>
+                </listitem>
+            </itemizedlist>
+        </para>
+        </sect2>
+        <sect2>
+            <title>Accesso e autorizzazione</title>
+            <para>   
+                Con l'esecuzione dello script di creazione del database sono stati creati l'ente e l'utente amministratore con i dati forniti
+                durante l'esecuzione dell'installer. Tramite tale utenza è possibile operare sul proxy relativamente a tutte le fatture dell'ente.
+             </para>
+            <para>
+                Le fatture vengono indirizzate ad uno specifico dipartimento che è indicato nel campo
+                <emphasis>CodiceDestinatario</emphasis> della fattura. Affinché il proxy sia in grado di gestire correttamente i meccanismi di autorizzazione
+                ed indirizzare le comunicazioni ai gestionali dei singoli dipartimenti è quindi necessario che vengano censiti tutti i dipartimenti 
+                che sono abilitati a ricevere fatture per l'ente.
+            </para>
+           <para>La versione attuale del proxy non supporta la gestione di utenti, dipartimenti e autorizzazioni tramite il cruscotto grafico.
+               È pertanto necessario operare manualmente sul database. 
+               Nel <ulink url="http://www.gov4j.it/gov4j/download/proxyFatturaPA_ManualeUtente1.0.pdf">Manuale Utente FatturaPA</ulink> vi è una 
+           descrizione concettuale delle entità del database che riguardano i meccanismi di autorizzazione.
+           </para>
+            <para>
+                La versione successiva del proxy FatturaPA, beta3, conterrà le maschere per la gestione delle autorizzazioni in maniera integrata tramite 
+                il cruscotto grafico.
+            </para>
+        </sect2>
+    </sect1>
+</article>

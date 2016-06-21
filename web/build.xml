@@ -1,0 +1,58 @@
+
+<project name="proxyFatturaPA.setup" basedir=".">
+	
+	<description>
+        	BinaryRealease builder
+	</description>
+	
+	<target name="clean_setup">
+		<delete dir="${install.dir}/installer/api" />
+		<delete dir="${install.dir}/installer/commons" />
+		<delete dir="${install.dir}/installer/console" />
+		<delete dir="${install.dir}/installer/sql" />
+		<delete dir="${install.dir}/dist" />
+		<delete dir="${install.dir}/docs" />
+		<delete file="${install.dir}/ant.install.log" />
+	</target>
+
+	<target name="prepare_setup">
+		<ant antfile="../dao/api/build.xml" target="clean" useNativeBasedir="true" />
+                <ant antfile="../dao/api/build.xml" target="build" useNativeBasedir="true" />
+                <ant antfile="../dao/impl/jdbc/build.xml" target="clean" useNativeBasedir="true" />
+                <ant antfile="../dao/impl/jdbc/build.xml" target="build" useNativeBasedir="true" />
+
+		<ant antfile="commons/build.xml" target="prepare_binary_release" useNativeBasedir="true" />
+		<ant antfile="api/build.xml" target="prepare_binary_release" useNativeBasedir="true" />
+		<ant antfile="console/build.xml" target="prepare_binary_release" useNativeBasedir="true" />
+		
+		<mkdir dir="${install.dir}/installer/sql"/>
+		<copy todir="${install.dir}/installer/sql">
+			<fileset dir="../dao/api/deploy/sql">
+				<exclude name="**/*ChangeLog*"/>
+				<exclude name="**/*patch*/*.*"/>
+				<exclude name="**/*utilities*/*.*"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<property name="product.name" value="proxyFatturaPA" />
+	<property name="product.version" value="1.0" /> <!-- default -->
+	<property name="manualeUtente.name" value="ManualeUtente" />
+	<property name="manualeInstallazioneBinaria.name" value="ManualeInstallazioneBin" />
+
+	<target name="make_binary_distrib" depends="clean_setup, prepare_setup">
+		<echo message="Creo la versione ${product.version}, per creare una versione diversa usare l'opzione -Dproduct.version=VERSIONE" />
+		<mkdir dir="${product.name}_v${product.version}"/>
+		<copy todir="${product.name}_v${product.version}">
+			<fileset dir=".">
+				<include name="${install.dir}"/>
+			</fileset>
+		</copy>
+		
+		<zip destfile="${product.name}_v${product.version}.zip">
+			<fileset dir="${product.name}_v${product.version}"/>
+		</zip>
+		
+		<delete dir="${product.name}_v${product.version}"/>
+	</target>
+</project>

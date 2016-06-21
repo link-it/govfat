@@ -1,0 +1,237 @@
+
+<project name="setup" basedir=".">
+	
+	<description>
+        	SETUP
+	</description>
+
+	<import file="local_env.xml" />
+	
+	<!-- estensione di ant (if .... ) -->
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+          <classpath>
+              <pathelement location="${lib}/ant/ant-contrib-1.0b3.jar"/>
+          </classpath>
+	</taskdef>
+	
+	<import file="./ant/proxy-build.xml" />
+	<import file="./ant/ds-build.xml" />
+	<import file="./ant/sql-build.xml" />
+	<import file="./ant/api-as-build.xml" />
+	<import file="./ant/console-as-build.xml" />
+	<import file="./ant/distrib-build.xml" />
+	
+	<property name="deploy_resources" location="deploy/resources" />
+	<property name="deploy_sw" location="deploy/sw" />
+	<property name="deploy_sql" location="deploy/sql" />
+	<property name="deploy_ds" location="deploy/datasource" />
+	<property name="tmp_sql" value="${build}/sql" />
+	<property name="tmp_ds" value="${build}/ds" />
+
+	<property name="console" value="../console" />
+	<property name="api" value="../api" />
+	<property name="commons" value="../commons" />
+	<property name="api.templates" value="${api}/deploy/templates" />
+	<property name="sql_dir" location="../sql" />
+	<property name="console.templates" location="${console}/templates" />
+	<property name="console.properties" location="${console}/properties" />
+	<property name="commons.properties" location="${commons}/properties" />
+	<property name="commons.lib" location="${commons}/lib" />
+	<property name="commons.required_lib" location="${commons}/required_lib" />
+	<property name="commons.xsl" location="${commons}/xsl" />
+	<property name="api.deploy" location="${api}/deploy" />
+	<property name="api.deploy.META-INF" location="${api.deploy}/META-INF" />
+	
+	<property name="dist" location="../../dist" />
+	<!-- Ripulisce la distribuzione -->
+	<target name="installer_clean">
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+	</target>
+
+	
+	<!-- Create the build directory structure used by compile -->
+	<target name="installer_init">
+		<mkdir dir="${build}" />
+		<mkdir dir="${tmp_sql}" />
+		<mkdir dir="${tmp_ds}" />
+		<mkdir dir="${tmp_archivi}" />
+		<mkdir dir="${dist}" />
+	</target>
+
+	
+	<target name="init_setup" depends="installer_clean,installer_init">
+		
+		<if>
+			<or>
+				<matches string="${antinstaller_as}" pattern="jboss.*"/>
+				<matches string="${antinstaller_as}" pattern="wildfly.*"/>
+			</or>
+			<then>
+				<var name="datasource_fatturapa_name" value="org.govmix.dataSource"/>
+			</then>
+			<else>
+				<var name="datasource_fatturapa_name" value="java:/comp/env/org.govmix.dataSource"/>
+			</else>
+		</if>
+		
+		
+        <if>
+                <equals arg1="${antinstaller_directory_lavoro_fatturapa}" arg2="" />
+                <then>
+                        <echo message="Errore: deve essere specificata una directory di lavoro" />
+                        <fail message="Errore: deve essere specificata una directory di lavoro"/>
+                </then>
+        </if>
+
+		
+		<!-- Impostazione slash per windows in stile unix -->
+	    <if>
+			<or>
+				<os family="windows"/>
+				<os family="dos"/>
+			</or>
+			<then>
+				<propertyregex property="work_dir" override="true" input="${antinstaller_directory_lavoro_fatturapa}" 
+					defaultValue="${antinstaller_directory_lavoro_fatturapa}" regexp="\\" replace="/" />
+			</then>
+	    	<else>
+	    		<property name="work_dir" value="${antinstaller_directory_lavoro_fatturapa}"/>
+
+	    	</else>
+		</if>	
+		
+	</target>
+		
+	<target name="setup_properties">
+		<if>
+			<matches string="${antinstaller_as}" pattern="tomcat"/>
+			<then>
+				<var name="server" value="web" />
+			</then>
+			<else>
+				<var name="server" value="j2ee" />
+			</else>
+		</if>
+		
+		<if>
+			<or>
+				<equals arg1="${antinstaller_as}" arg2="jboss7"/>
+				<equals arg1="${antinstaller_as}" arg2="jboss8"/>
+				<equals arg1="${antinstaller_as}" arg2="wildfly8"/>
+			</or>
+			<then>
+				<var name="autoStart.stop" value="false" />
+			</then>
+			<else>
+				<var name="autoStart.stop" value="true" />
+			</else>
+		</if>
+		
+		<!-- Properties in web.api.properties -->
+		<copy file="${api.templates}/web.api.properties.template" tofile="${tmp_archivi}/web.api.properties"/>
+		<antcall target="web_api_properties_settings">
+			<param name="file" value="${tmp_archivi}/web.api.properties"/>
+		</antcall>
+		
+		<!-- Properties in log4j.properties -->
+		<copy file="${api.templates}/log4j.properties.template" tofile="${tmp_archivi}/api/log4j.properties"/>
+		<antcall target="web_api_properties_settings">
+			<param name="file" value="${tmp_archivi}/api/log4j.properties"/>
+		</antcall>
+		
+		<!-- Properties in log4j.properties -->
+		<copy file="${console.templates}/log4j.properties.template" tofile="${tmp_archivi}/console/log4j.properties"/>
+		<antcall target="web_api_properties_settings">
+			<param name="file" value="${tmp_archivi}/console/log4j.properties"/>
+		</antcall>
+		
+		<!-- Properties in proxyFatturaPA.properties -->
+		<copy file="${api.templates}/proxyFatturaPA.properties.template" tofile="${tmp_archivi}/proxyFatturaPA.properties"/>
+		<antcall target="proxy_fatturapa_properties_settings">
+			<param name="file" value="${tmp_archivi}/proxyFatturaPA.properties"/>
+		</antcall>
+		
+		<!-- Properties in fatturaPAConsole.properties -->
+		<copy file="${console.templates}/fatturaPAConsole.properties.template" tofile="${tmp_archivi}/fatturaPAConsole.properties"/>
+		
+		<!-- Properties in fatturaPAConsole.properties -->
+		<copy file="${console.templates}/fatturapa.properties.template" tofile="${tmp_archivi}/fatturapa.properties"/>
+		<antcall target="path_properties_settings">
+			<param name="file" value="${tmp_archivi}/fatturapa.properties"/>
+		</antcall>
+		<copy file="${tmp_archivi}/fatturapa.properties" tofile="${console.properties}/fatturapa.properties"/>
+		
+	</target>
+	
+	
+	<target name="setup_datasource">
+		<if>
+			<or>
+				<matches string="${antinstaller_as}" pattern="jboss.*"/>
+				<matches string="${antinstaller_as}" pattern="wildfly.*"/>
+			</or>
+			<then>
+				<var name="jboss_datasource_dir_name" value=""/>
+				<if>
+					<or>
+						<equals arg1="${antinstaller_as}" arg2="jboss4" />
+						<equals arg1="${antinstaller_as}" arg2="jboss5" />
+						<equals arg1="${antinstaller_as}" arg2="jboss6" />
+					</or>
+					<then>
+						<var name="jboss_datasource_dir_name" value="v4_v5_v6"/>
+					</then>
+					<else>
+						<var name="jboss_datasource_dir_name" value="v7_v8"/>
+					</else>
+				</if>
+				<copy file="${deploy_ds}/jboss/${jboss_datasource_dir_name}/${antinstaller_tipo_database}/fatturapa-ds.xml" todir="${tmp_ds}"/>
+			</then>
+			<else>
+				<copy file="${deploy_ds}/tomcat/${antinstaller_tipo_database}/fatturapa.xml" todir="${tmp_ds}"/>
+			</else>
+		</if>
+		
+		
+		<copy file="${sql_dir}/${antinstaller_tipo_database}/fattura_pa.sql" todir="${tmp_sql}"/>
+		
+		<java classname="PasswordHash" fork="true">
+			<classpath>
+				<fileset dir="../lib/shared">
+					<include name="cryptoUtils.jar"/>
+				</fileset>
+				<fileset dir="../commons/required_lib">
+					<include name="openspcoop2_utils.jar"/>
+				</fileset>
+			</classpath>
+			
+			<arg value="${antinstaller_ente}"/>
+			<arg value="${antinstaller_gestore_user}"/>
+			<arg value="${antinstaller_gestore_password}"/>
+			<arg value="${tmp_sql}/init.sql"/>
+			<arg value="insert into enti(nome) values('#nomeEnte#');"/>
+			<arg value="insert into utenti (username, password, nome, cognome, role, id_ente) VALUES ('#usernameUtente#','#passwordUtente#','#nomeUtente#','#cognomeUtente#','ADMIN',(select id from enti where nome = '#nomeEnte#'));"/>
+			
+		</java>
+		
+		
+		<antcall target="ds_settings">
+			<param name="file" value="${tmp_ds}/fatturapa-ds.xml"/>
+		</antcall>
+		
+		
+		
+	</target>
+	
+	<target name="setup_completo"  depends="init_setup, setup_properties, setup_datasource, setup_finished"/>
+	<target name="setup_finished">
+		<delete dir="${dist}"/>
+		<antcall target="createInstallerWebConsoleFatturaPAWar" />
+		<antcall target="web_prepare_war" />
+		<antcall target="make-distrib"/>		
+		<delete dir="${build}"/>
+	</target>
+
+
+</project>

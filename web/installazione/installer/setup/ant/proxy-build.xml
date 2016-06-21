@@ -1,0 +1,79 @@
+
+<project name="setup-pdd" basedir=".">
+	
+	<description>
+        	SETUP PDD
+	</description>
+
+	<import file="utils.xml" />
+	
+	<target name="path_properties_settings">
+		
+		<!-- WORKING DIR -->
+		<antcall target="replace_token">
+			<param name="file" value="${file}"/>
+			<param name="token" value="#properties.path#"/>
+			<param name="value" value="${antinstaller_directory_lavoro_fatturapa}"/>
+		</antcall>
+		
+	</target>
+	
+	<target name="web_api_properties_settings" depends="path_properties_settings">
+		
+		
+		<!-- Server -->
+		<antcall target="replace_token">
+			<param name="file" value="${file}"/>
+			<param name="token" value="#server#"/>
+			<param name="value" value="${server}"/>
+		</antcall>
+		
+		<antcall target="replace_token">
+			<param name="file" value="${file}"/>
+			<param name="token" value="#autoStart.stop#"/>
+			<param name="value" value="${autoStart.stop}"/>
+		</antcall>
+		
+	</target>
+	
+	<!-- openspcoop2.properties -->
+	<target name="proxy_fatturapa_properties_settings">
+		
+		<!-- Ricezione esito URL -->
+		<antcall target="replace_token">
+			<param name="file" value="${file}"/>
+			<param name="token" value="#ricezioneEsito.url#"/>
+			<!--param name="value" value="${antinstaller_url_ricezione_esito}"/-->
+			<param name="value" value="http://localhost"/>
+		</antcall>
+		
+		<!-- Ricezione esito username -->
+		<antcall target="replace_token">
+			<param name="file" value="${file}"/>
+			<param name="token" value="#ricezioneEsito.username#"/>
+			<!--param name="value" value="${antinstaller_username_ricezione_esito}"/-->
+			<param name="value" value=""/>
+		</antcall>
+		
+		<!-- Ricezione esito Password --> 
+		<antcall target="replace_token">
+			<param name="file" value="${file}"/>
+			<param name="token" value="#ricezioneEsito.password#"/>
+			<!--param name="value" value="${antinstaller_password_ricezione_esito}"/-->
+			<param name="value" value=""/>
+		</antcall>
+		
+	</target>
+	
+	<!-- openspcoop2.properties -->
+	<target name="local_env_settings">
+		
+		<!-- Ricezione esito URL -->
+		<antcall target="replace_token">
+			<param name="file" value="${file}"/>
+			<param name="token" value="#as#"/>
+			<param name="value" value="${antinstaller_as}"/>
+		</antcall>
+	</target>
+	
+</project>

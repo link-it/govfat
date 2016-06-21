@@ -1,0 +1,400 @@
+<!-- 
+  ProxyFatturaPA - Gestione del formato Fattura Elettronica 
+  http://www.gov4j.it/fatturapa
+  
+  Copyright (c) 2014-2015 Link.it srl (http://link.it). 
+  Copyright (c) 2014-2015 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+ 
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+ 
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<ui:composition template="/templates/defaultTemplate.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:op2web="http://www.openspcoop2.org/web/taglib/jsf">
+	<f:loadBundle var="msg" basename="messages" />
+
+	<ui:define name="pageTitle">#{msg['fattura.dettaglio.pageTitle']}</ui:define>
+	<ui:define name="pageHeader">#{msg['fattura.dettaglio.pageTitle']}</ui:define>
+	<ui:define name="navbar">
+		<ul>
+			<li><h:outputText value="/#{msg['menu.group.operazioni']}" /></li>
+			<li><a4j:htmlCommandLink action="#{fatturaElettronicaMBean.restoreSearch}"
+					value="/#{msg['fattura.listaFatture.pageTitle']}">
+				</a4j:htmlCommandLink></li>
+			<li><h:outputText
+					value="/#{msg['fattura.dettaglio.pageTitle']} (#{fatturaElettronicaMBean.selectedElement.cedentePrestatore.value} #{fatturaElettronicaMBean.selectedElement.numero.value}/#{fatturaElettronicaMBean.selectedElement.anno.value})" /></li>
+		</ul>
+	</ui:define>
+	<ui:define name="body">
+
+		<a4j:keepAlive beanName="fatturaElettronicaMBean" ajaxOnly="true" />
+
+		<rich:panel id="panelContainer1" style="padding:0"
+			headerClass="outpanelHeader" styleClass="noborder">
+			<h:outputText id="outNoDettaglio"
+				value="#{msg['fattura.dettaglio.nodata']}"
+				rendered="#{empty fatturaElettronicaMBean.selectedElement}" />
+
+			<rich:panel id="panelDettaglio1" bodyClass="inpanelBody"
+				rendered="#{not empty fatturaElettronicaMBean.selectedElement}">
+				<f:facet name="header">
+					<h:outputText id="outHeaderFattura1"
+						value="#{msg['fattura.dettaglio.pageTitle']} (#{fatturaElettronicaMBean.selectedElement.cedentePrestatore.value} #{fatturaElettronicaMBean.selectedElement.numero.value}/#{fatturaElettronicaMBean.selectedElement.anno.value})"
+						rendered="#{not empty fatturaElettronicaMBean.selectedElement}" />
+				</f:facet>
+
+				<!-- Messaggio Idp -->
+				<h:panelGrid id="panelDettaglio2"
+					columnClasses="gridContent verticalAlignTop"
+					rendered="#{!empty fatturaElettronicaMBean.selectedElement}"
+					columns="1" width="100%">
+
+					<!-- Dati Intestazione  -->
+					<op2web:fieldset legend="#{msg['fattura.label.intestazione']}" collapsible="false" closed="false"
+						rendered="#{true}">
+						<op2web:outputGroup
+							group="#{fatturaElettronicaMBean.selectedElement.datiIntestazione}" />
+					</op2web:fieldset>
+
+					<!-- Dati Trasmissione  -->
+					<op2web:fieldset legend="#{msg['fattura.label.generale']}" collapsible="false" closed="false"
+						rendered="#{true}">
+						<op2web:outputGroup
+							group="#{fatturaElettronicaMBean.selectedElement.datiTrasmissione1}" />
+							
+					</op2web:fieldset>
+
+					<!-- Contenuto Fattura -->
+					<op2web:fieldset legend="#{msg['fattura.label.contenuto']}" collapsible="false" closed="false"
+						rendered="#{true}">
+						<op2web:outputGroup
+							group="#{fatturaElettronicaMBean.selectedElement.contenutoFattura}" />
+					</op2web:fieldset>
+
+
+					<!-- Tabella Allegati -->
+					<op2web:fieldset legend="#{msg['fattura.label.allegati']}" collapsible="false" closed="false"
+						rendered="#{true}">
+						<c:set var="metadataAllegato"
+							value="#{fatturaElettronicaMBean.selectedElement.metadataAllegato}" />
+
+						<c:set var="listaAllegati"
+							value="#{fatturaElettronicaMBean.selectedElement.allegati}" />
+
+						<h:outputText id="outNoListaAllegati"
+							value="#{msg['fattura.label.allegati.nodata']}"
+							rendered="#{empty listaAllegati}" />
+
+						<op2web:simpleTable id="tabellaAllegati"
+							rendered="#{not empty listaAllegati}" value="#{listaAllegati}">
+							<!-- Nome -->
+							<op2web:tableColumn fieldValue="#{item.nomeAttachment}"
+								fieldDescriptor="#{metadataAllegato.nomeAttachment}" />
+							<!-- Descrizione -->
+							<op2web:tableColumn fieldValue="#{item.descrizioneAttachment}"
+								fieldDescriptor="#{metadataAllegato.descrizioneAttachment}" />
+							<!-- Compressione -->
+							<op2web:tableColumn fieldValue="#{item.algoritmoCompressione}"
+								fieldDescriptor="#{metadataAllegato.algoritmoCompressione}" />
+							<!-- Formato -->
+							<op2web:tableColumn fieldValue="#{item.formatoAttachment}"
+								fieldDescriptor="#{metadataAllegato.formatoAttachment}" />
+							<!-- Visualizza -->
+							<rich:column style="text-align: center;">
+								<f:facet name="header">
+									<h:outputText value="#{metadataAllegato.attachment.label}" />
+								</f:facet>
+
+								<h:panelGroup>
+									<h:outputLink value="#{item.attachment.link}" target="_blank"
+										rendered="#{not empty item.attachment.link}">
+										<h:graphicImage
+											value="/images/fatturapa/icons/${item.attachment.icon}"
+											width="16" height="16" title="#{item.attachment.iconTitle}" />
+									</h:outputLink>
+								</h:panelGroup>
+							</rich:column>
+						</op2web:simpleTable>
+					</op2web:fieldset>
+
+					<!-- Notifica di Esito Committente -->
+					<op2web:fieldset legend="#{msg['fattura.label.notificaEC']}" collapsible="false" closed="false"
+						rendered="#{true}">
+						<c:set var="metadataNotificaEC"
+							value="#{fatturaElettronicaMBean.selectedElement.metadataNotificaEC}" />
+
+						<c:set var="listaNotificaEC"
+							value="#{fatturaElettronicaMBean.selectedElement.listaNotificaEC}" />
+
+						<h:outputText id="outNoListaNotificaEC"
+							value="#{msg['fattura.label.notificaEC.nodata']}"
+							rendered="#{empty listaNotificaEC}" />
+
+						<rich:layout>
+		
+			  <rich:layoutPanel position="left" width="70%">
+
+						<op2web:simpleTable id="tabellaNotificaEC"
+							rendered="#{not empty listaNotificaEC}"
+							value="#{fatturaElettronicaMBean.selectedElement.listaNotificaEC}">
+							<!-- Esito -->
+							<op2web:tableColumn fieldValue="#{item.esito}"
+								fieldDescriptor="#{metadataNotificaEC.esito}" />
+								<!-- Data Invio ENTE -->
+							<op2web:tableColumn fieldValue="#{item.dataInvio}"
+								fieldDescriptor="#{metadataNotificaEC.dataInvio}" />
+								<!-- Data invio SDI -->
+							<op2web:tableColumn fieldValue="#{item.data}"
+								fieldDescriptor="#{metadataNotificaEC.data}" />
+							<!-- utente -->
+							<op2web:tableColumn fieldValue="#{item.utente}"
+								fieldDescriptor="#{metadataNotificaEC.utente}" />
+								
+							<op2web:tableColumn fieldValue="#{item.modalitaBatch}"
+								fieldDescriptor="#{metadataNotificaEC.modalitaBatch}" />
+							<!-- Descrizione -->
+							<op2web:tableColumn fieldValue="#{item.descrizione}"
+								fieldDescriptor="#{metadataNotificaEC.descrizione}" />
+
+							<!-- XML (Icona) -->
+							<rich:column style="text-align: center;">
+								<f:facet name="header">
+									<h:outputText value="#{metadataNotificaEC.xml.label}" />
+								</f:facet>
+
+								<h:panelGroup>
+									<h:outputLink value="#{item.xml.link}" target="_blank"
+										rendered="#{not empty item.xml.link}">
+										<h:graphicImage
+											value="/images/fatturapa/icons/${item.xml.icon}" width="16"
+											height="16" title="#{item.xml.iconTitle}" />
+									</h:outputLink>
+								</h:panelGroup>
+							</rich:column>
+
+							<!-- PDF (Icona) -->
+							<rich:column style="text-align: center;">
+								<f:facet name="header">
+									<h:outputText value="#{metadataNotificaEC.pdf.label}" />
+								</f:facet>
+
+								<h:panelGroup>
+									<h:outputLink value="#{item.pdf.link}"  target="_blank"
+										rendered="#{not empty item.pdf.link}">
+										<h:graphicImage
+											value="/images/fatturapa/icons/${item.pdf.icon}" width="16"
+											height="16" title="#{item.pdf.iconTitle}" />
+									</h:outputLink>
+								</h:panelGroup>
+							</rich:column>
+							
+						</op2web:simpleTable>
+						
+						</rich:layoutPanel>
+						
+						<rich:layoutPanel  position="right" width="30%">
+						
+						<op2web:simpleTable id="tabellaNotificaEC2"
+							rendered="#{not empty listaNotificaEC}"
+							value="#{fatturaElettronicaMBean.selectedElement.listaNotificaEC}">
+							<!-- Esito -->
+							
+								<!-- Scarto -->
+							<op2web:tableColumn fieldValue="#{item.scarto}"
+								fieldDescriptor="#{metadataNotificaEC.scarto}" />
+							<!-- Note Scarto -->
+							<op2web:tableColumn fieldValue="#{item.scartoNote}"
+								fieldDescriptor="#{metadataNotificaEC.scartoNote}" />
+
+							<!-- Scarto XML (Icona) -->
+							<rich:column style="text-align: center;">
+								<f:facet name="header">
+									<h:outputText value="#{metadataNotificaEC.scartoXml.label}" />
+								</f:facet>
+
+								<h:panelGroup>
+									<h:outputLink value="#{item.scartoXml.link}"  target="_blank"
+										rendered="#{not empty item.scartoXml.link}">
+										<h:graphicImage
+											value="/images/fatturapa/icons/${item.scartoXml.icon}" width="16"
+											height="16" title="#{item.scartoXml.iconTitle}" />
+									</h:outputLink>
+								</h:panelGroup>
+							</rich:column>
+
+							<!-- SCarto PDF (Icona) -->
+							<rich:column style="text-align: center;">
+								<f:facet name="header">
+									<h:outputText value="#{metadataNotificaEC.scartoPdf.label}" />
+								</f:facet>
+
+								<h:panelGroup>
+									<h:outputLink value="#{item.scartoPdf.link}"  target="_blank"
+										rendered="#{not empty item.scartoPdf.link}">
+										<h:graphicImage
+											value="/images/fatturapa/icons/${item.scartoPdf.icon}" width="16"
+											height="16" title="#{item.scartoPdf.iconTitle}" />
+									</h:outputLink>
+								</h:panelGroup>
+							</rich:column>
+
+						</op2web:simpleTable>
+						</rich:layoutPanel>
+						
+						</rich:layout>
+					</op2web:fieldset>
+
+					<!-- Notifica Decorrenza Termini -->
+					<op2web:fieldset legend="#{msg['fattura.label.notificaDT']}" collapsible="false" closed="false"
+						rendered="#{true}">
+						<c:set var="metadataNotificaDT"
+							value="#{fatturaElettronicaMBean.selectedElement.metadataNotificaDT}" />
+
+						<c:set var="listaNotificaDT"
+							value="#{fatturaElettronicaMBean.selectedElement.listaNotificaDT}" />
+
+						<h:outputText id="outNoListaNotificaDT"
+							value="#{msg['fattura.label.notificaDT.nodata']}"
+							rendered="#{empty listaNotificaDT}" />
+
+						<op2web:simpleTable id="tabellaNotificaDT"
+							value="#{listaNotificaDT}"
+							rendered="#{not empty listaNotificaDT}">
+							<!-- Data Ricezione -->
+							<op2web:tableColumn fieldValue="#{item.dataRicezione}"
+								fieldDescriptor="#{metadataNotificaDT.dataRicezione}" />
+							<!-- Nome File -->
+							<op2web:tableColumn fieldValue="#{item.nomeFile}"
+								fieldDescriptor="#{metadataNotificaDT.nomeFile}" />
+							<!-- Descrizione -->
+							<op2web:tableColumn fieldValue="#{item.descrizione}"
+								fieldDescriptor="#{metadataNotificaDT.descrizione}" />
+
+							<!-- Note -->
+							<op2web:tableColumn fieldValue="#{item.note}"
+								fieldDescriptor="#{metadataNotificaDT.note}" />
+
+							<!-- XML (Icona) -->
+							<rich:column style="text-align: center;">
+								<f:facet name="header">
+									<h:outputText value="#{metadataNotificaDT.xml.label}" />
+								</f:facet>
+
+								<h:panelGroup>
+									<h:outputLink value="#{item.xml.link}" target="_blank"
+										rendered="#{not empty item.xml.link}">
+										<h:graphicImage
+											value="/images/fatturapa/icons/${item.xml.icon}" width="16"
+											height="16" title="#{item.xml.iconTitle}" />
+									</h:outputLink>
+								</h:panelGroup>
+							</rich:column>
+
+							<!-- PDF (Icona) -->
+							<rich:column style="text-align: center;">
+								<f:facet name="header">
+									<h:outputText value="#{metadataNotificaDT.pdf.label}" />
+								</f:facet>
+
+								<h:panelGroup>
+									<h:outputLink value="#{item.pdf.link}" target="_blank"
+										rendered="#{not empty item.pdf.link}">
+										<h:graphicImage
+											value="/images/fatturapa/icons/${item.pdf.icon}" width="16"
+											height="16" title="#{item.pdf.iconTitle}" />
+									</h:outputLink>
+								</h:panelGroup>
+							</rich:column>
+
+						</op2web:simpleTable>
+					</op2web:fieldset>
+
+				</h:panelGrid>
+
+				<br />
+				<div class="buttonrow">
+					<h:form>
+						<!-- Visualizza XML -->
+						<c:set var="linkXml"
+							value="#{fatturaElettronicaMBean.selectedElement.xml}" />
+							
+						<h:outputLink  styleClass="buttonNoRed"
+ 					 		id="visualizzaXmlLink" target="_blank" value="#{linkXml.link}"
+								  rendered="#{not empty linkXml.link}">
+							<h:graphicImage value="/images/fatturapa/icons/${linkXml.icon}" alt="#{linkXml.alt}"
+								width="16" height="16" title="#{linkXml.iconTitle}" />
+							<h:outputText
+								value="#{msg['commons.label.visualizza']} #{linkXml.label}" />
+						</h:outputLink>
+						
+						<!-- Visualizza PDF -->
+						<c:set var="linkPdf"
+							value="#{fatturaElettronicaMBean.selectedElement.pdf}" />
+
+						<h:outputLink  styleClass="buttonNoRed"
+ 					 		id="visualizzaPdfLink" target="_blank"
+ 					 		 value="#{linkPdf.link}"
+							rendered="#{not empty linkPdf.link}">
+
+							<h:graphicImage value="/images/fatturapa/icons/${linkPdf.icon}" alt="#{linkPdf.alt}"
+								width="16" height="16" title="#{linkPdf.iconTitle}" />
+							<h:outputText
+								value="#{msg['commons.label.visualizza']} #{linkPdf.label}" />
+
+						</h:outputLink>
+						
+						<!-- Scarica Tutto -->
+						<c:set var="linkZip"
+							value="#{fatturaElettronicaMBean.selectedElement.zip}" />
+							
+						<h:outputLink  
+ 					 		id="scarica-iconLink" target="_blank" styleClass="icon-compress buttonNoRed"
+ 					 			value="#{linkZip.link}"
+							rendered="#{not empty linkZip.link}">
+							<h:outputText
+								value="#{linkZip.label}" />
+
+						</h:outputLink>
+
+						<!-- Invia Notifica EC -->
+						<c:set var="linkNotificaEC"
+							value="#{fatturaElettronicaMBean.selectedElement.notificaEC}" />
+						<a4j:commandLink id="notificaEC_btn" action="inviaNotificaEC" styleClass="buttonNoRed"
+							rendered="#{not empty linkNotificaEC.link}"
+							ajaxSingle="true">
+							<f:setPropertyActionListener
+								value="#{fatturaElettronicaMBean.selectedElement}"
+								target="#{notificaECMBean.fattura}" />
+							<f:setPropertyActionListener value="dettaglioFattura"
+								target="#{notificaECMBean.fromPage}" />
+							<h:graphicImage alt="#{linkNotificaEC.alt}"
+								value="/images/fatturapa/icons/${linkNotificaEC.icon}"
+								width="16" height="16" title="#{linkNotificaEC.iconTitle}" />
+							<h:outputText
+								value="#{msg['commons.button.invia']} #{linkNotificaEC.label}" />
+						</a4j:commandLink>
+					</h:form>
+				</div>
+
+			</rich:panel>
+
+		</rich:panel>
+
+	</ui:define>
+</ui:composition>

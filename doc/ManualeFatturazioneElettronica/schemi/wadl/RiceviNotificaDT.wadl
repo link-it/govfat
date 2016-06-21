@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    targetNamespace="http://www.govmix.org/fatturapa/ricevente"
+    xmlns:ndt="http://www.fatturapa.gov.it/sdi/messaggi/v1.0" 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified">
+    <grammars>
+        <include href="messaggisdi.xsd"/> 
+    </grammars>
+    <resources base="http://server.proxy/proxyFatturaPA/pdd/">
+        <resource path="/riceviNotificaDT">
+            <method name="POST">
+                <request>
+                    <representation mediaType="text/xml" element="ndt:NotificaDecorrenzaTermini"/>
+                </request>
+            </method>
+        </resource>
+    </resources>
+</application>

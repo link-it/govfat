@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    targetNamespace="http://www.openspcoop2.org/protocolli/sdi"
+    xmlns:err="http://www.openspcoop2.org/core/eccezione/errore_applicativo" 
+    xmlns:nec="http://www.fatturapa.gov.it/sdi/messaggi/v1.0"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified" 
+    attributeFormDefault="unqualified">
+
+    <grammars>
+        <include href="../schemi/openspcoopErroreApplicativo.xsd"/> 
+        <include href="../schemi/MessaggiTypes_v1.1.xsd"/>
+    </grammars>
+    <resources base="http://server.openspcoop/openspcoop/sdi/PDtoSOAP/SDIENTE/SDISogei/SDIRiceviNotifica">
+        <resource path="/NotificaEsito">
+            <method name="POST">
+                <request>
+                    <param name="NomeFile" style="query" type="xs:string"/>
+                    <representation mediaType="text/xml" element="nec:NotificaEsitoCommittente"/>
+                </request>
+                <response status="202"/>
+                <response status="200">
+                    <representation mediaType="text/xml" element="nec:ScartoEsitoCommittente"/>
+                </response>
+                <response status="500"> 
+                    <representation mediaType="text/xml" element="err:errore-applicativo"/>
+                </response>
+            </method>
+        </resource>
+    </resources>
+</application>

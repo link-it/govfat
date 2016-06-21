@@ -1,0 +1,102 @@
+# Path dove si trova il file proxyFatturaPA.properties, con le opzioni di configurazione base
+org.govmix.proxy.fatturapa.web.api.properties.path=#properties.path#
+
+# Limite di fatture consegnate con i servizi pull dell'ente
+org.govmix.proxy.fatturapa.web.api.pull.idfattura.limit=1000
+
+
+# Tipologia server
+# j2ee: il server contiene sia un WebContainer che un EJBContainer
+#       Con questo tipo di server e' possibile sfruttare tutte le funzionalita' EJB
+#	Verranno utilizzate code JMS, MDB, EJB Timer
+# web:  il server e' un WebContainer
+# TODO ABILITARE EJB
+org.govmix.proxy.fatturapa.web.api.server=web
+
+# Tipo autenticazione
+# managed: l'autenticazione viene gestita dal container
+# user: l'autenticazione viene gestita dall'applicazione tramite controllo delle credenziali sul db
+org.govmix.proxy.fatturapa.web.api.authentication=user
+
+# Indicazione se, in fase di consegna, la fattura dovra' essere associata al lotto
+org.govmix.proxy.fatturapa.web.api.consegnaFatturaAssociata=false
+
+# Indicazione se, in fase di inserimento di lotti e fatture nel db, dovra' essere effettuata la validazione degli oggetti DAO (disabilitare solo in fase di debug)
+org.govmix.proxy.fatturapa.web.api.validazioneDAOAbilitata=true
+
+# ------- Timer di OpenSPCoop2 -------
+
+# Modulo ConsegnaFattura
+# Il modulo si occupa di consegnare le fatture all'ente destinatario
+
+# Nome JNDI dell'EJBTimer (Necessario solo per Server j2ee)
+org.govmix.proxy.fatturapa.web.api.timer.consegnaFattura = ejb/ConsegnaFattura
+# Indicazione se le query di ricerca dei messaggi, devono essere registrate sul log timers
+org.govmix.proxy.fatturapa.web.api.timer.consegnaFattura.logQuery=false
+# Numero di messaggi recuperati da una singola query
+org.govmix.proxy.fatturapa.web.api.timer.consegnaFattura.query.limit=50
+
+
+# Modulo ConsegnaLotto
+# Il modulo si occupa di consegnare i lotti di fatture all'ente destinatario
+
+# Nome JNDI dell'EJBTimer (Necessario solo per Server j2ee)
+org.govmix.proxy.fatturapa.web.api.timer.consegnaLotto = ejb/ConsegnaLotto
+# Indicazione se le query di ricerca dei messaggi, devono essere registrate sul log timers
+org.govmix.proxy.fatturapa.web.api.timer.consegnaLotto.logQuery=false
+# Numero di messaggi recuperati da una singola query
+org.govmix.proxy.fatturapa.web.api.timer.consegnaLotto.query.limit=50
+
+# Modulo AssociazioneProtocollo
+# Il modulo si occupa di associare i lotti di fatture al numero di protocollo relativo
+
+# Nome JNDI dell'EJBTimer (Necessario solo per Server j2ee)
+org.govmix.proxy.fatturapa.web.api.timer.associazioneProtocollo = ejb/AssociazioneProtocollo
+# Indicazione se le query di ricerca dei messaggi, devono essere registrate sul log timers
+org.govmix.proxy.fatturapa.web.api.timer.associazioneProtocollo.logQuery=false
+# Numero di messaggi recuperati da una singola query
+org.govmix.proxy.fatturapa.web.api.timer.associazioneProtocollo.query.limit=50
+
+# Modulo ConsegnaEsito
+# Il modulo si occupa di consegnare gli esiti delle fatture alla PdD
+
+# Nome JNDI dell'EJBTimer (Necessario solo per Server j2ee)
+org.govmix.proxy.fatturapa.web.api.timer.consegnaEsito = ejb/ConsegnaEsito
+# Indicazione se le query di ricerca dei messaggi, devono essere registrate sul log timers
+org.govmix.proxy.fatturapa.web.api.timer.consegnaEsito.logQuery=false
+# Numero di messaggi recuperati da una singola query
+org.govmix.proxy.fatturapa.web.api.timer.consegnaEsito.query.limit=50
+
+# Modulo InserimentoFattura
+# Il modulo si occupa di inserire le fatture a partire dal lotto
+
+# Nome JNDI dell'EJBTimer (Necessario solo per Server j2ee)
+org.govmix.proxy.fatturapa.web.api.timer.inserimentoFattura = ejb/InserimentoFattura
+# Indicazione se le query di ricerca dei messaggi, devono essere registrate sul log timers
+org.govmix.proxy.fatturapa.web.api.timer.inserimentoFattura.logQuery=false
+# Numero di messaggi recuperati da una singola query
+org.govmix.proxy.fatturapa.web.api.timer.inserimentoFattura.query.limit=50
+
+# Modulo AccettazioneFattura
+# Il modulo si occupa di accettare automaticamente le fatture prima che sopraggiunga la decorrenza termini
+
+# Nome JNDI dell'EJBTimer (Necessario solo per Server j2ee)
+org.govmix.proxy.fatturapa.web.api.timer.accettazioneFattura = ejb/AccettazioneFattura
+# Indicazione se le query di ricerca dei messaggi, devono essere registrate sul log timers
+org.govmix.proxy.fatturapa.web.api.timer.accettazioneFattura.logQuery=false
+# Numero di messaggi recuperati da una singola query
+org.govmix.proxy.fatturapa.web.api.timer.accettazioneFattura.query.limit=50
+
+# Timeout di attesa per il deploy dei timer in millisecondi (Necessario solo per Server j2ee): 
+# esempio  1 Minuto (1 * 60 * 1000) 
+org.govmix.proxy.fatturapa.web.api.timer.timeout=60000
+# Frequenza di check in millisecondi per il deploy dei timer
+org.govmix.proxy.fatturapa.web.api.timer.check=300
+
+# Gli EJB Timer, nelle versioni di jboss piu' storiche, dovevano essere avviati manualmente.
+# Nelle nuove versioni, jboss avviava automaticamente un EJB Timer registrato. Questo comportamento, insieme 
+# al codice che avviava manualmente l'EJB Timer provocava un doppio avvio. Per evitare cio' veniva effettuato
+# lo stop del timer avviato automaticamente da jboss, per favorire il timer avviato manualmente da openspcoop.
+# In wildfly l'avvio manuale da openspcoop non funziona, e quindi deve essere lasciato attivo quello avviato da jboss
+# L'opzione seguente indica se gli EJBTimer avviati automaticamente da jboss devono essere fermati.
+org.govmix.proxy.fatturapa.web.api.timer.autoStart.stop=#autoStart.stop#

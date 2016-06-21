@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    targetNamespace="http://www.openspcoop2.org/protocolli/sdi"
+    xmlns:fat="http://www.fatturapa.gov.it/sdi/fatturapa/v1.1" 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified">
+    <grammars>
+        <include href="fatturapa.xsd"/> 
+    </grammars>
+    <resources base="http://server.ente/proxyFatturaPA/pdd/">
+        <resource path="/riceviFattura">
+            <method name="POST">
+                <request>
+                    <param name="X-SDI-FormatoFatturaPA" style="header" type="xs:string"/>
+                    <param name="X-SDI-PosizioneFatturaPA" style="header" type="xs:int"/>
+                    <param name="X-SDI-IdentificativoSDI" style="header" type="xs:int"/>
+                    <param name="X-SDI-NomeFile" style="header" type="xs:string"/>
+                    <param name="X-SDI-MessageId" style="header" type="xs:string"/>
+                    <param name="X-SDI-CodiceDestinatario" style="header" type="xs:string"/>
+                    <param name="X-SDI-CedentePrestatore-Denominazione" style="header" type="xs:string"/>
+                    <param name="X-SDI-CedentePrestatore-Nome" style="header" type="xs:string"/>
+                    <param name="X-SDI-CedentePrestatore-Cognome" style="header" type="xs:string"/>
+                    <param name="X-SDI-CedentePrestatore-CodiceFiscale" style="header" type="xs:string"/>
+                    <param name="X-SDI-CedentePrestatore-IdCodice" style="header" type="xs:string"/>
+                    <param name="X-SDI-CedentePrestatore-IdPaese" style="header" type="xs:string"/>
+                    <param name="X-SDI-CessionarioCommittente-Denominazione" style="header" type="xs:string"/>
+                    <param name="X-SDI-CessionarioCommittente-Nome" style="header" type="xs:string"/>
+                    <param name="X-SDI-CessionarioCommittente-Cognome" style="header" type="xs:string"/>
+                    <param name="X-SDI-CessionarioCommittente-CodiceFiscale" style="header" type="xs:string"/>
+                    <param name="X-SDI-CessionarioCommittente-IdCodice" style="header" type="xs:string"/>
+                    <param name="X-SDI-CessionarioCommittente-IdPaese" style="header" type="xs:string"/>
+                    <param name="X-SDI-TerzoIntermediarioOSoggettoEmittente-Denominazione" style="header" type="xs:string" minOccurs="0"/>
+                    <param name="X-SDI-TerzoIntermediarioOSoggettoEmittente-Nome" style="header" type="xs:string" minOccurs="0"/>
+                    <param name="X-SDI-TerzoIntermediarioOSoggettoEmittente-Cognome" style="header" type="xs:string" minOccurs="0"/>
+                    <param name="X-SDI-TerzoIntermediarioOSoggettoEmittente-CodiceFiscale" style="header" type="xs:string" minOccurs="0"/>
+                    <param name="X-SDI-TerzoIntermediarioOSoggettoEmittente-IdCodice" style="header" type="xs:string" minOccurs="0"/>
+                    <param name="X-SDI-TerzoIntermediarioOSoggettoEmittente-IdPaese" style="header" type="xs:string" minOccurs="0"/>
+                    
+                    <representation mediaType="text/xml"/>
+                </request>
+            </method>
+        </resource>
+    </resources>
+</application>

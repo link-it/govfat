@@ -1,0 +1,47 @@
+<datasources>
+  <no-tx-datasource>
+    <jndi-name>org.govmix.dataSource</jndi-name>
+
+    <connection-url>jdbc:postgresql://127.0.0.1:5432/fatturapa</connection-url> 
+
+<driver-class>org.postgresql.Driver</driver-class>
+
+<user-name>openspcoop2</user-name>
+    <password></password>
+
+    <!-- bind to JNDI senza contesto java: -->
+    <use-java-context>false</use-java-context>
+
+    <!-- Transaction Isolation -->
+    <transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation>
+
+    <!-- Minimo numero di connessioni che un pool deve mantenere -->
+    <min-pool-size>1</min-pool-size>
+    <!-- Massimo numero di connessioni per un pool -->
+    <max-pool-size>20</max-pool-size>
+    
+    <!-- Massimo ammontare di minuti che una connessione puo' rimanere 'idle' prima di essere chiusa -->
+    <idle-timeout-minutes>3</idle-timeout-minutes>
+    
+    <!-- Indica il controllo per gli statements non chiusi quando una connessione viene ritornata al pool,
+              e result set siano chiusi quando una statement viene chiusa/ritornata alla cache della prepared statemente -->
+    <track-statements>true</track-statements>
+
+    <!-- Cache PreparedStatement -->
+    <prepared-statement-cache-size>100</prepared-statement-cache-size>
+
+    <!-- sql to call when connection is created and sql to call on an existing pooled connection when it is obtained from pool -->
+    <new-connection-sql>SELECT 1</new-connection-sql>
+    <check-valid-connection-sql>SELECT 1</check-valid-connection-sql>
+    <!--    <valid-connection-checker-class-name>org.jboss.resource.adapter.jdbc.vendor.OracleValidConnectionChecker</valid-connection-checker-class-name>
+                    <exception-sorter-class-name>org.jboss.resource.adapter.jdbc.vendor.OracleExceptionSorter</exception-sorter-class-name>
+        <new-connection-sql>SELECT 1 FROM DUAL</new-connection-sql>-->
+
+     <!-- corresponding type-mapping in the standardjbosscmp-jdbc.xml (optional) -->
+     <metadata>
+	<type-mapping>PostgreSQL 8.0</type-mapping>
+ 	<!--	 <type-mapping>Oracle9i</type-mapping>-->
+     </metadata>
+  </no-tx-datasource>
+
+</datasources>

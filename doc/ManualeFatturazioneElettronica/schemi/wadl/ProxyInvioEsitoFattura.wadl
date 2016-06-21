@@ -1,0 +1,15 @@
+<application xmlns="http://wadl.dev.java.net/2009/02" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <grammars/>
+    <resources base="http://server.proxy/proxyFatturaPA/ente">
+        <resource path="/riceviNotificaEC">
+            <method name="POST">
+                <request>
+                    <representation mediaType="text/xml"/>
+                </request>
+                <response>
+                    <representation mediaType="application/octet-stream"/>
+                </response>
+            </method>
+        </resource>
+    </resources>
+</application>

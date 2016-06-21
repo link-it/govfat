@@ -1,0 +1,270 @@
+
+<project name="console_as_build" basedir=".">
+    
+    <description>
+        Setup Application server build
+    </description>
+    
+    <import file="utils.xml" />
+    
+    <property name="console.war.name" value="fatturaPA" />
+    
+    <!-- Proprieta' directory base installer -->
+    <property name="installerBaseDir" location=".." />
+    <property name="consoleInstallerDir" location="${installerBaseDir}/console" />
+    <property name="commonsInstallerDir" location="${installerBaseDir}/commons" />
+    <property name="buildConsoleInstallerDir" location="${tmp_archivi}/build" />
+    <property name="distConsoleInstallerDir" location="${buildConsoleInstallerDir}/dist" />
+    
+    <target name="createInstallerWebConsoleFatturaPAWar"
+        depends="resourcesInstallerWebConsoleFatturaPA">
+        <war basedir="${buildConsoleInstallerDir}/${console.war.name}.war"
+            warfile="${distConsoleInstallerDir}/${console.war.name}.war"
+            webxml="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/web.xml">
+        </war>
+    </target>
+    
+    <!-- Copy any resource or configuration files -->
+    <target name="resourcesInstallerWebConsoleFatturaPA"  depends="installerCreateWebXml">
+        <!-- Copia del file web.xml-->
+        <copy file="${consoleInstallerDir}/web_xml_parts/web.xml" 
+            todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF"/>
+        
+        
+        <copy todir="${buildConsoleInstallerDir}/${console.war.name}.war"
+            includeEmptyDirs="no">
+            <fileset dir="${consoleInstallerDir}/WebContent">
+            </fileset>
+        </copy>
+        
+        <copy todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/classes"
+            includeEmptyDirs="no">
+            <fileset dir="${consoleInstallerDir}/properties">
+                <patternset>
+                    <include name="**/*.properties" />
+                </patternset>
+            </fileset>
+        </copy>
+        
+        <copy todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/classes"
+            includeEmptyDirs="no">
+            <fileset dir="${commonsInstallerDir}/properties">
+                <patternset>
+                    <include name="**/*.properties" />
+                </patternset>
+            </fileset>
+        </copy>
+        
+        <copy todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/classes/xsl"
+            includeEmptyDirs="no">
+            <fileset dir="${commonsInstallerDir}/xsl">
+                <patternset>
+                    <include name="**/*.xsl" />
+                </patternset>
+            </fileset>
+        </copy>
+        <copy todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/classes"
+            includeEmptyDirs="no">
+            <fileset dir="${tmp_archivi}/console">
+                <include name="log4j.properties"/>
+            </fileset>
+        </copy>
+    </target>
+    
+    <target name="installerCreateWebXml" depends="installerAddLibrariesWebConsoleFatturaPA">
+        <tstamp/>
+        
+        <!-- Genero il file web.xml -->
+        <delete file="${consoleInstallerDir}/web_xml_parts/web.xml" />
+        <concat destfile="${consoleInstallerDir}/web_xml_parts/web.xml" append="yes">
+            <filelist dir="${consoleInstallerDir}/web_xml_parts" files="web.xml.start"/>
+        </concat>
+        
+        <if> 
+            <or>
+                <equals arg1="${antinstaller_as}" arg2="jboss8"/>
+                <equals arg1="${antinstaller_as}" arg2="wildfly8"/>
+            </or>
+            <then>
+                <concat destfile="${consoleInstallerDir}/web_xml_parts/web.xml" append="yes">
+                    <filelist dir="${consoleInstallerDir}/web_xml_parts" files="web.xml.params.jboss8"/>
+                </concat>
+            </then>
+            <else>
+                <concat destfile="${consoleInstallerDir}/web_xml_parts/web.xml" append="yes">
+                    <filelist dir="${consoleInstallerDir}/web_xml_parts" files="web.xml.params"/>
+                </concat>
+            </else>
+        </if>
+        
+        <concat destfile="${consoleInstallerDir}/web_xml_parts/web.xml" append="yes">
+            <filelist dir="${consoleInstallerDir}/web_xml_parts" files="web.xml.listeners"/>
+        </concat>
+        
+        <concat destfile="${consoleInstallerDir}/web_xml_parts/web.xml" append="yes">
+            <filelist dir="${consoleInstallerDir}/web_xml_parts" files="web.xml.filters"/>
+        </concat>
+        
+        
+        <concat destfile="${consoleInstallerDir}/web_xml_parts/web.xml" append="yes">
+            <filelist dir="${consoleInstallerDir}/web_xml_parts" files="web.xml.servlet"/>
+        </concat>
+        
+        <concat destfile="${consoleInstallerDir}/web_xml_parts/web.xml" append="yes">
+            <filelist dir="${consoleInstallerDir}/web_xml_parts" files="web.xml.servlet.mapping"/>
+        </concat>
+        
+        <concat destfile="${consoleInstallerDir}/web_xml_parts/web.xml" append="yes">
+            <filelist dir="${consoleInstallerDir}/web_xml_parts" files="web.xml.session"/>
+        </concat>
+        <concat destfile="${consoleInstallerDir}/web_xml_parts/web.xml" append="yes">
+            <filelist dir="${consoleInstallerDir}/web_xml_parts" files="web.xml.end"/>
+        </concat>
+        
+    </target>
+    
+    
+    <!-- Creazione directory per la build -->
+    <target name="installerAddLibrariesWebConsoleFatturaPA" description="Prepare Classpath ">
+        <delete dir="${buildConsoleInstallerDir}/${console.war.name}.war" />
+        <mkdir dir="${buildConsoleInstallerDir}/${console.war.name}.war" />
+        
+        <!--JAR Progetto WebConsole e JDCB IMPL-->
+        <copy todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib">
+            <fileset dir="${consoleInstallerDir}/jar">
+                <include name="**/*.jar" />
+            </fileset>
+        </copy>
+        
+        <!-- JAR DAO-->
+        <copy file="${commonsInstallerDir}/required_lib/fatturaPA_api.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        
+        <!-- JAR COMMONS -->
+        <copy file="${commonsInstallerDir}/lib/fatturaPA_web_commons.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        
+        <!-- Dipendenze DAO -->
+        <copy todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib">
+            <fileset dir="${commonsInstallerDir}/required_lib">
+                <include name="openspcoop2_*BUILD*.jar"/>
+            </fileset>
+        </copy>
+        
+        <copy file="${commonsInstallerDir}/required_lib/bcel-5.2.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${commonsInstallerDir}/required_lib/commons-beanutils-1.8.3.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${commonsInstallerDir}/required_lib/commons-lang-2.6.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${commonsInstallerDir}/required_lib/commons-logging-1.1.1.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${commonsInstallerDir}/required_lib/ezmorph-1.0.6.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${commonsInstallerDir}/required_lib/geronimo-ws-metadata_2.0_spec-1.1.3.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${commonsInstallerDir}/required_lib/jaxb-api-2.2.6.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${commonsInstallerDir}/required_lib/jibx-bind-1.2.3.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${commonsInstallerDir}/required_lib/jibx-run-1.2.3.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${commonsInstallerDir}/required_lib/json-lib-2.4-jdk15.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${commonsInstallerDir}/required_lib/xom-1.2.7.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${commonsInstallerDir}/required_lib/xpp3-1.2.3.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        
+        
+        <!-- Librerie WebCommons -->
+        
+        <copy file="${commonsInstallerDir}/lib/commons-io-2.1.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${commonsInstallerDir}/lib/flying-saucer-core-9.0.6.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${commonsInstallerDir}/lib/flying-saucer-pdf-itext5-9.0.6.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${commonsInstallerDir}/lib/itextpdf-5.5.3.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        
+        <!-- Librerie interfaccia grafica -->
+        <copy todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib">
+            <fileset dir="${consoleInstallerDir}/lib">
+                <include name="openspcoop2_*BUILD*.jar"/>
+            </fileset>
+        </copy>
+        
+        <copy file="${consoleInstallerDir}/lib/common-annotations.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${consoleInstallerDir}/lib/commons-codec-1.5.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        
+        <copy file="${consoleInstallerDir}/lib/commons-digester-2.1.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${consoleInstallerDir}/lib/commons-pool-1.5.6.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${consoleInstallerDir}/lib/commons-fileupload-1.2.1.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${consoleInstallerDir}/lib/facelets-taglib-0.3_jsf-1.2-spring-2.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${consoleInstallerDir}/lib/jsf-facelets-1.1.15.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${consoleInstallerDir}/lib/richfaces-ui-3.3.4.Final.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${consoleInstallerDir}/lib/richfaces-api-3.3.4.Final.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${consoleInstallerDir}/lib/richfaces-impl-3.3.4.Final.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${consoleInstallerDir}/lib/org.springframework.web-3.1.1.RELEASE.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${consoleInstallerDir}/lib/org.springframework.context-3.1.1.RELEASE.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${consoleInstallerDir}/lib/org.springframework.beans-3.1.1.RELEASE.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${consoleInstallerDir}/lib/org.springframework.core-3.1.1.RELEASE.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${consoleInstallerDir}/lib/org.springframework.asm-3.1.1.RELEASE.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${consoleInstallerDir}/lib/org.springframework.aop-3.1.1.RELEASE.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${consoleInstallerDir}/lib/org.springframework.expression-3.1.1.RELEASE.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${consoleInstallerDir}/lib/org.springframework.orm-3.1.1.RELEASE.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${consoleInstallerDir}/lib/org.springframework.transaction-3.1.1.RELEASE.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        
+        <copy file="${consoleInstallerDir}/lib/standard.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${consoleInstallerDir}/lib/themes-3.3.3.Final.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${consoleInstallerDir}/lib/httpclient-4.3.3.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${consoleInstallerDir}/lib/httpcore-4.3.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${consoleInstallerDir}/lib/httpmime-4.3.1.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        <copy file="${consoleInstallerDir}/lib/soap.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+        
+        <!-- Copia dei jar necessari per l'esecuzione in jboss6 -->
+        <if>
+            <equals arg1="${antinstaller_as}" arg2="jboss6"/>
+            <then>
+                <copy file="${consoleInstallerDir}/lib/jsr311-api-1.1.1.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+            </then>
+        </if>
+        <!-- Copia dei jar necessari per l'esecuzione in jboss7 -->
+        <if> 
+            <or>
+                <equals arg1="${antinstaller_as}" arg2="jboss7"/>
+                <equals arg1="${antinstaller_as}" arg2="jboss8"/>
+                <equals arg1="${antinstaller_as}" arg2="wildfly8"/>
+            </or>
+            <then>
+                <copy file="${consoleInstallerDir}/lib/commons-collections-3.2.1.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+                <copy file="${commonsInstallerDir}/required_lib/log4j-1.2.16.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+                <copy file="${consoleInstallerDir}/lib/slf4j-api-1.5.9-RC0.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+                <copy file="${consoleInstallerDir}/lib/slf4j-log4j12-1.5.9-RC0.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+                <copy file="${consoleInstallerDir}/lib/jsr311-api-1.1.1.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+                <copy file="${commonsInstallerDir}/required_lib/xercesImpl-2.9.1.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+                <!--copy file="${consoleInstallerDir}/lib/jaxp-ri-1.4.5.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/-->
+            </then>
+        </if>
+        
+        <!-- Copia dei jar necessari per l'esecuzione in tomcat 5/6/7 -->
+        <if> 
+            <or>
+                <equals arg1="${antinstaller_as}" arg2="tomcat5"/>
+                <equals arg1="${antinstaller_as}" arg2="tomcat6"/>
+                <equals arg1="${antinstaller_as}" arg2="tomcat7"/>
+            </or>
+            <then>
+                <copy file="${consoleInstallerDir}/lib/commons-collections-3.2.1.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+                <copy file="${commonsInstallerDir}/required_lib/log4j-1.2.16.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+                <copy file="${consoleInstallerDir}/lib/slf4j-api-1.5.9-RC0.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+                <copy file="${consoleInstallerDir}/lib/slf4j-log4j12-1.5.9-RC0.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+                <copy file="${commonsInstallerDir}/required_lib/xercesImpl-2.9.1.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+                <copy file="${consoleInstallerDir}/lib/jaxp-ri-1.4.5.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+                <copy file="${consoleInstallerDir}/lib/javax.servlet.jsp.jstl-1.2.1.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+                <copy file="${consoleInstallerDir}/lib/jsf-impl-1.2_16.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+                <copy file="${consoleInstallerDir}/lib/jsf-api-1.2_16.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+                <copy file="${consoleInstallerDir}/lib/javax.servlet.jsp.jstl-api-1.2.1.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+                <copy file="${consoleInstallerDir}/lib/el-impl-2.2.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+            </then>
+        </if>
+        
+        <if> 
+            <equals arg1="${antinstaller_as}" arg2="tomcat5"/>
+            <then>
+                <copy file="${consoleInstallerDir}/lib/javax.el.jar" todir="${buildConsoleInstallerDir}/${console.war.name}.war/WEB-INF/lib"/>
+            </then>
+        </if>
+        
+        
+    </target>
+    
+    
+    <target name="prepare-env">
+        
+    </target>
+    
+</project>

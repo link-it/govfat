@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project name="fatturaPA.dao.web_api.server_LocalEnv" basedir=".">
+
+	<!-- ApplicationServer version -->
+	<property name="as" value="#as#" />
+
+	<!-- Specifica se inserire le informazioni di debug nelle classi -->
+	<property name="debug_fatturaPA_web_api" value="true" />
+
+	<property name="build_openspcoop_with_linkit_threads" value="true" />
+	
+	
+	<property name="binary_release_dir" value="${install.dir}/installer/api" />
+	
+	<property name="required_lib_fatturaPA_web_api" location="deploy/lib" />
+
+	<!-- Progetto Web commons -->
+	<property name="web_commons" location="../commons" />
+	<property name="commons.xsl" value="${web_commons}/deploy/xsl" />
+	<property name="commons.lib" value="${web_commons}/deploy/lib" />
+	<property name="commons.properties" value="${web_commons}/deploy/properties" />
+	<property name="commons_fatturaPA" value="${web_commons}/dist/fatturaPA_web_commons.jar" />
+
+
+	<!-- progetto api di base -->
+	<property name="daoApiFatturaPA" location="../../dao/api" />
+	<property name="required_lib_fatturaPA" value="${daoApiFatturaPA}/deploy/lib" />
+	<property name="required_lib_fatturaPA" location="${daoApiFatturaPA}/deploy/lib" />
+
+	<property name="api_fatturaPA" value="${daoApiFatturaPA}/dist/fatturaPA_api.jar" />
+
+	<!-- Jar del livello di persistenza scelto (default jdbc) -->
+	<property name="impl_fatturaPA" location="../../dao/impl/jdbc/dist/fatturaPA_jdbc_impl.jar" />
+
+</project>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project name="fatturaPA_LocalEnv" basedir=".">
+
+	<!-- Librerie necessarie al progetto -->
+	<property name="required_lib_fatturaPA" location="deploy/lib" />
+
+	<!-- Specifica se inserire le informazioni di debug nelle classi -->
+	<property name="debug_fatturaPA" value="true" />
+	
+</project>
+
+

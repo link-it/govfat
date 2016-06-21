@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.govmix.org/proxy/fatturapa/notificaesitocommittente" targetNamespace="http://www.govmix.org/proxy/fatturapa/notificaesitocommittente" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:element name="NotificaEC" type="NotificaEC"/>
+    <xs:complexType name="NotificaEC">
+        <xs:sequence>
+            <xs:element name="identificativoSdi" type="IdentificativoSdI"/>
+            <xs:element name="posizione" type="xs:positiveInteger"/>
+            <xs:element name="esito" type="EsitoCommittente"/>
+            <xs:element name="descrizione" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="IdentificativoSdI">
+        <xs:restriction base="xs:integer">
+            <xs:totalDigits value="12"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="EsitoCommittente">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="EC01">
+                <xs:annotation>
+                    <xs:documentation>EC01 = ACCETTAZIONE</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="EC02">
+                <xs:annotation>
+                    <xs:documentation>EC02 = RIFIUTO</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    
+</xs:schema>

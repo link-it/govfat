@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project name="fatturaPA.web.console_LocalEnv" basedir=".">
+
+	<!-- ApplicationServer version jboss5/jboss6/jboss7/jboss8/wildfly8 tomcat5/tomcat6/tomcat7 -->
+	<property name="as" value="#as#" />
+	
+	<!--  properties Progetto web-->
+	<property name="webConsoleFatturaPA" location="." />
+	<property name="srcConsoleFatturaPA" value="${webConsoleFatturaPA}/src" />
+	<property name="deployConsoleFatturaPA" value="${webConsoleFatturaPA}/deploy" />
+	<property name="buildConsoleFatturaPA" value="${webConsoleFatturaPA}/build" />
+	<property name="binConsoleFatturaPA" value="${webConsoleFatturaPA}/bin" />
+	<property name="distConsoleFatturaPA" value="${webConsoleFatturaPA}/dist" />
+	<property name="webContentConsoleFatturaPA" value="${webConsoleFatturaPA}/WebContent" />
+	<property name="propertiesConsoleFatturaPA" value="${deployConsoleFatturaPA}/properties" />
+	<property name="libConsoleFatturaPA" value="${deployConsoleFatturaPA}/lib" />
+	<property name="webXmlPartConsoleFatturaPA" value="${deployConsoleFatturaPA}/web_xml_parts" />
+
+	<!-- progetto dao jdbc impl -->
+	<property name="fatturaPA.dao.jdbc" location="../../dao/impl/jdbc" />
+	<property name="src_fatturaPA.dao.jdbc" value="${fatturaPA.dao.jdbc}/src" />
+	<property name="deploy_fatturaPA.dao.jdbc" value="${fatturaPA.dao.jdbc}/deploy" />
+	
+	<!-- progetto dao api -->
+	<property name="api_core_fatturaPA" location="../../dao/api" />
+	<property name="src_dir_fatturaPA" value="${api_core_fatturaPA}/src" />
+	
+	<!-- progetto WebCommons -->
+	<property name="fatturaPA.web.commons" location="../commons" />
+	<property name="srcCommonsFatturaPA" value="${fatturaPA.web.commons}/src" />
+	<property name="deployCommonsFatturaPA" value="${fatturaPA.web.commons}/deploy" />
+	
+	<!-- Specifica se inserire le informazioni di debug nelle classi -->
+	<property name="debug_webConsoleFatturaPA" value="true" />
+	
+	<!-- Proprieta' directory base installer -->
+	<property name="installerBaseDir" value="${install.dir}/installer" />
+	<property name="consoleInstallerDir" value="${installerBaseDir}/console" />
+	<property name="commonsInstallerDir" value="${installerBaseDir}/commons" />
+	<property name="buildConsoleInstallerDir" value="${consoleInstallerDir}/build" />
+	<property name="distConsoleInstallerDir" value="${consoleInstallerDir}/dist" />
+
+</project>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE installer PUBLIC "-//tp23 //DTD Ant Installer Config//EN" "http://antinstaller.sf.net/dtd/antinstall-config-0.8.dtd">
+<installer name="FatturaPA v1.0 Installer" defaultImageResource="/logoSetup.png"
+    windowIcon="/iconaSetup.png" wide="550:275">
+    
+    <!-- Se si caricano i loadDefaults non funzionano piu' i cambi di stato per il db -->
+    <!-- loadDefaults="true" > -->
+
+    <page type="input" name="intro" displayText="Installer FatturaPA v1.0">
+        <comment explanatoryText=""/>
+        <comment explanatoryText="Il software FatturaPA e' distribuito con licenza GPL v3"/>
+        <comment explanatoryText=""/>
+        <comment explanatoryText="Per maggiori informazioni visitare il sito www.gov4j.it"/>
+        <comment explanatoryText="Per maggiori informazioni visitare il sito www.link.it"/>
+    </page>
+
+
+    <page name="informazioniente" type="input" displayText="Informazioni preliminari">
+        
+        <validated defaultValue="" property="antinstaller_ente" displayText="Nome Ente gestito"
+            regex=".+"/>
+        
+        <comment displayText=""/>
+        <comment displayText="Utente Amministratore" bold="true" />
+        
+        <validated defaultValue="amministratore" regex=".+" property="antinstaller_gestore_user"
+            displayText="Username"/>
+        
+        <validated property="antinstaller_gestore_password" defaultValue="" 
+            displayText="Password" regex="^.+$" />
+    </page>
+    
+    <page name="preinstallazione2" type="input" displayText="Ambiente di installazione">
+                       
+        <directory defaultValue="/var/proxyFatturaPA" defaultValueWin="C:\proxyFatturaPA" displayText="Directory di lavoro"
+            property="antinstaller_directory_lavoro_fatturapa" checkExists="false" />
+        
+        <comment displayText=""/>
+        
+        <large-select defaultValue="postgresql" property="antinstaller_tipo_database" displayText="DB Platform">
+            <option value="postgresql" text="PostgreSQL"/>
+            <option value="mysql" text="MySQL"/>
+            <option value="oracle" text="Oracle"/>
+            <option value="hsql" text="HyperSQL"/>
+            <option value="sqlserver" text="SQLServer 2005"/>
+            <option value="db2" text="IBM DB2"/>
+        </large-select>
+        
+        <comment displayText=""/>
+        
+        <large-select defaultValue="jboss7" property="antinstaller_as" displayText="Application Server">
+            <option value="jboss5" text="JBoss 5.x"/>
+            <option value="jboss6" text="JBoss 6.x"/>
+            <option value="jboss7" text="JBoss 7.x"/>
+            <option value="wildfly8" text="WildFly 8.x"/>
+            <option value="tomcat" text="Apache Tomcat"/>
+        </large-select>
+        
+     </page> 
+
+    <page name="informazionidibasexml" type="input" displayText="Il Database">
+        <validated defaultValue="127.0.0.1" property="antinstaller_dbhost" displayText="Hostname"
+            regex=".+"/>
+        <conditional ifProperty="${antinstaller_tipo_database}=postgresql">
+            <hidden property="porta-db" value="5432"/>
+            <hidden property="TABLESPACE" value="openspcoop2"/>
+            <hidden property="antinstaller_driver_jdbc" value="org.postgresql.Driver"/>
+        </conditional>
+        <conditional ifProperty="${antinstaller_tipo_database}=mysql">
+            <hidden property="porta-db" value="3306"/>
+            <hidden property="TABLESPACE" value="openspcoop2"/>
+            <hidden property="antinstaller_driver_jdbc" value="com.mysql.jdbc.Driver"/>
+        </conditional>
+        <conditional ifProperty="${antinstaller_tipo_database}=oracle">
+            <hidden property="porta-db" value="1521"/>
+            <hidden property="TABLESPACE" value="XE"/>
+            <hidden property="antinstaller_driver_jdbc" value="oracle.jdbc.OracleDriver"/>
+        </conditional>
+        <conditional ifProperty="${antinstaller_tipo_database}=hsql">
+            <hidden property="porta-db" value="9001"/>
+            <hidden property="TABLESPACE" value="openspcoop2"/>
+            <hidden property="antinstaller_driver_jdbc" value="org.hsqldb.jdbcDriver"/>
+        </conditional>
+        <conditional ifProperty="${antinstaller_tipo_database}=sqlserver">
+            <hidden property="porta-db" value="1433"/>
+            <hidden property="TABLESPACE" value="openspcoop2"/>
+            <hidden property="antinstaller_driver_jdbc" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+        </conditional>
+         <conditional ifProperty="${antinstaller_tipo_database}=db2">
+            <hidden property="porta-db" value="50000"/>
+            <hidden property="TABLESPACE" value="openspcoop2"/>
+            <hidden property="antinstaller_driver_jdbc" value="com.ibm.db2.jcc.DB2Driver"/>
+        </conditional>
+        <validated defaultValue="${porta-db}" regex="^[0-9]{1,5}$" property="antinstaller_dbport"
+            displayText="Porta"/>
+
+        <validated defaultValue="fatturapa" property="antinstaller_dbname"
+            displayText="Nome Database" regex=".+"/>
+
+        <validated defaultValue="openspcoop2" property="antinstaller_dbusername"
+            displayText="Username" regex=".+"/>
+        <validated defaultValue="openspcoop2" property="antinstaller_dbpassword"
+            displayText="Password" regex=".+"/>
+        
+    </page>
+    
+    <page name="Fine" displayText="Installazione" type="progress" showTargets="true"
+        target="setup_completo"/>
+    
+</installer>

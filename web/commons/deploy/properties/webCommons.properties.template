@@ -1,0 +1,19 @@
+#Nomi dei file di template da utilizzare per generare i pdf
+
+#Fattura v1.0 
+xsl.fatturapa.sdi10=fatturapa_v1.0.xsl
+
+#Fattura v1.1 
+xsl.fatturapa.sdi11=fatturapa_v1.1.xsl
+
+#Notifica di Esito Committente
+xsl.notificaEC=EC_v1.0.xsl
+
+#Scarto Esito
+xsl.scartoEC=SE_v1.0.xsl
+
+#Notifica di Decorrenza Termini
+xsl.notificaDT=DT_v1.0.xsl
+
+
+xsl.baseDir=xsl

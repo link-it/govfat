@@ -1,0 +1,145 @@
+<!-- 
+  ProxyFatturaPA - Gestione del formato Fattura Elettronica 
+  http://www.gov4j.it/fatturapa
+  
+  Copyright (c) 2014-2015 Link.it srl (http://link.it). 
+  Copyright (c) 2014-2015 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+ 
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+ 
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<ui:composition template="/templates/defaultTemplate.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:op2web="http://www.openspcoop2.org/web/taglib/jsf">
+	<f:loadBundle var="msg" basename="messages" />
+	<a4j:loadScript src="resource://jquery.js" />
+
+	<ui:define name="pageTitle">#{msg['utente.listaUtenti.pageTitle']}</ui:define>
+	<ui:define name="pageHeader">#{msg['utente.listaUtenti.pageTitle']}</ui:define>
+	<ui:define name="navbar">
+		<ul>
+			<li><h:outputText value="/#{msg['menu.group.anagrafica']}" /></li>
+			<li><h:outputText
+					value="/#{msg['utente.listaUtenti.pageTitle']}" /></li>
+		</ul>
+	</ui:define>
+	<ui:define name="body">
+		<a4j:keepAlive beanName="utenteMBean" ajaxOnly="true" />
+		<rich:panel styleClass="noborder">
+
+			<op2web:form formBean="#{utenteMBean.search}">
+
+				<op2web:fieldset legend="#{msg['utente.label.ricercaUtenti']}"
+					rendered="#{true}" collapsible="false" closed="false">
+
+					<op2web:formField
+						field="#{utenteMBean.search.denominazione}" />
+						
+					<op2web:formField
+						field="#{utenteMBean.search.dipartimento}" />
+
+				</op2web:fieldset>
+				<ui:define name="buttons">
+						<a4j:commandButton id="filtraButton"
+							value="#{msg['commons.button.filtra']}" styleClass="icon-refresh"
+							reRender="mainct,menuct" status="mainStatus"
+							action="#{utenteMBean.filtra}">
+						</a4j:commandButton>
+
+						<a4j:commandButton id="pulisciButton"
+							value="#{msg['commons.button.reset']}" reRender="mainct,menuct"
+							status="mainStatus" styleClass="icon-delete"
+							action="#{utenteMBean.resetFiltro}">
+						</a4j:commandButton>
+				</ui:define>
+
+			</op2web:form>
+
+			<br />
+			<br />
+
+			<c:if test="#{empty rowsToDisplay}">
+				<c:set var="rowsToDisplay"
+					value="#{utenteMBean.search.pageSize}" />
+			</c:if>
+
+			<a4j:outputPanel id="panelContainer" ajaxRendered="false" layout="block">
+				<h:form>
+
+					<c:set var="utenteMetadata" value="#{utenteMBean.metadata}" />
+
+					<op2web:dataTable value="#{utenteDM}"
+						id="utenteTable" enableDelete="true"
+						headerText="#{msg['utente.tabellaRisultati.label']}"
+						showSelectAll="true"
+						selectionMapTarget="#{utenteMBean.selectedIds[item]}"
+						rowsToDisplay="#{utenteMBean.search.pageSize}"
+						mBean="#{utenteMBean}">
+						<f:facet name="noData">
+							<h:outputText
+								value="#{msg['utente.tabellaRisultati.noData']}" />
+						</f:facet>
+
+						<!-- Cognome -->
+						<op2web:tableColumn fieldValue="#{item.cognome}"
+							fieldDescriptor="#{utenteMetadata.cognome}" />
+
+						<!-- Nome -->
+						<op2web:tableColumn fieldValue="#{item.nome}"
+							fieldDescriptor="#{utenteMetadata.nome}" />
+
+						<!-- Username -->
+						<op2web:tableColumn fieldValue="#{item.username}"
+							fieldDescriptor="#{utenteMetadata.username}" />
+							
+						<!--Ruolo -->
+						<op2web:tableColumn fieldValue="#{item.ruolo}"
+							fieldDescriptor="#{utenteMetadata.ruolo}" />
+
+						<!-- Link dettagli -->
+						<rich:column style="text-align: center;">
+							<h:panelGroup>
+								<a4j:commandLink id="dettaglio_btn" action="utente"
+									ajaxSingle="true">
+									<f:setPropertyActionListener value="#{item.DTO.id}"
+										target="#{utenteMBean.selectedId}" />
+									<h:graphicImage value="/images/magnifier.png" width="16"
+										height="16"
+										title="#{msg['utente.dettaglioTitle']}" alt="#{msg['utente.dettaglioTitle']}"/>
+								</a4j:commandLink>
+							</h:panelGroup>
+						</rich:column>
+
+						<ui:define name="buttons">
+							<h:commandButton id="aggiungi" styleClass="icon-add"
+								value="#{msg['commons.button.nuovo']}"
+								action="utente"
+								actionListener="#{utenteMBean.addNewListener}" />
+						</ui:define>
+					</op2web:dataTable>
+
+
+				</h:form>
+			</a4j:outputPanel>
+		</rich:panel>
+
+	</ui:define>
+
+
+</ui:composition>

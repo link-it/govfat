@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    xmlns="http://www.govmix.org/proxy/fatturapa/recuperoFatture"
+    targetNamespace="http://www.govmix.org/proxy/fatturapa/recuperoFatture">
+    
+    <xs:element name="listaFattureNonConsegnateResponse" type="listaFattureNonConsegnateResponse" />
+
+    <xs:complexType name="listaFattureNonConsegnateResponse">
+        <xs:sequence>
+            <xs:element name="fattura" type="Fattura" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="Fattura">
+        <xs:sequence>
+            <xs:element name="idSDI" type="IdentificativoSdI"/>
+            <xs:element name="posizione" type="xs:positiveInteger"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+        <xs:simpleType name="IdentificativoSdI">
+            <xs:restriction base="xs:integer">
+            <xs:totalDigits value="12"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

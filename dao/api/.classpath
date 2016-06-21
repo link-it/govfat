@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="deploy/lib/ant-contrib-1.0b3.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/bcel-5.2.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/geronimo-ws-metadata_2.0_spec-1.1.3.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/jaxb-api-2.2.6.jar"/>
+<classpathentry kind="lib" path="deploy/lib/jaxb-xjc-2.2.5.1.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/jaxb-impl-2.2.5.1.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/jibx-bind-1.2.3.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/jibx-run-1.2.3.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/openspcoop2_generic-project.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/xpp3-1.2.3.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/openspcoop2_utils.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

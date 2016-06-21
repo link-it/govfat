@@ -1,0 +1,24 @@
+*******************************
+* DEPLOY DEL PROXY FATTURA PA *
+*******************************
+
+Per completare il processo di installazione si devono effettuare i seguenti passi:
+
+   1. Creare un utente sul RDBMS avente i medesimi valori di username e password indicati in fase di setup.
+
+   2. Creare un'istanza di database avente il nome indicato durante la fase di setup.
+
+   3. Impostare i permessi di accesso in modo che l'utente creato al passo 1 abbia i diritti di lettura/scrittura sul database creato al passo 2. 
+
+   4. Eseguire lo script sql/fattura_pa.sql per la creazione dello schema del database. Ad esempio, nel caso di PostgreSQL, si potrà eseguire il comando psql <hostname> <username> -f sql/fattura_pa.sql
+
+   5. Copiare il file datasource/fatturapa-ds.xml, contenente le definizioni dei datasources, nella directory <JBOSS_HOME>/server/default/deploy
+
+   6. Copiare i file contenuti nella cartella conf nella directory di lavoro specificata in fase di installazione.
+
+   7. Copiare i file fatturaPA.war e proxyFatturaPA.war nella directory <JBOSS_HOME>/server/default/deploy
+
+   8. Installare il DriverJDBC, relativo al tipo di RDBMS indicato in fase di setup, nella directory <JBOSS_HOME>/server/default/lib
+
+   9. Avviare JBoss (ad esempio su Linux con il comando <JBOSS_HOME>/bin/run.sh oppure utilizzando il relativo service)
+

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project name="fatturaPA.dao.jdbc_LocalEnv" basedir=".">
+
+	<!-- progetto api di base -->
+	<property name="api_core_fatturaPA" location="../../api" />
+	<property name="src_dir_fatturaPA" location="${api_core_fatturaPA}/src" />
+	<property name="dist_dir_fatturaPA" location="${api_core_fatturaPA}/dist" />
+
+	<!-- Librerie necessarie al progetto -->
+	<property name="required_lib_fatturaPA" location="${api_core_fatturaPA}/deploy/lib" />
+	<property name="dao_jdbc_lib_fatturaPA" location="deploy/lib" />
+
+	<!-- Specifica se inserire le informazioni di debug nelle classi -->
+	<property name="debug_jdbc_fatturaPA" value="true" />
+
+</project>
+
+

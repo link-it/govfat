@@ -1,0 +1,29 @@
+#Properties per la connessione al database
+
+#Tipo database
+db.tipoDatabase=postgresql
+#db.tipoDatabase=oracle
+
+# Indicazione se le query effettuate vengono visualizzate nei log
+db.showSql=true
+
+# Indicazione se nel database devono essere create le tabelle, se non esistono (funzionalita' non ancora implementata per jdbc)
+db.generateDDL=false
+
+# Automatic Transaction
+db.autoCommit=true
+
+# tipi sono datasource/connection
+db.tipo=datasource
+
+# Tipo 'datasource'
+db.datasource.jndiName=org.govmix.dataSource
+#db.datasource.jndiContext.nome1=valore1
+#...
+#db.datasource.jndiContext.nomeN=valoreN
+
+# Tipo 'connection'
+db.connection.url=jdbc:postgresql://localhost/fatturapa
+db.connection.driver=org.postgresql.Driver
+db.connection.user=openspcoop2
+db.connection.password=openspcoop2

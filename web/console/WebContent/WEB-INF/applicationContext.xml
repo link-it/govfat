@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+	<!-- LOGIN BEAN -->
+	<bean id="loginDAO" class="org.govmix.proxy.fatturapa.web.console.dao.DBLoginDao"
+		scope="request" />
+
+<!-- 	FatturaElettronica -->
+	<bean id="fatturaElettronicaSearchForm" class="org.govmix.proxy.fatturapa.web.console.search.FatturaElettronicaSearchForm"
+		scope="session" />
+
+	<bean id="fatturaElettronicaService" class="org.govmix.proxy.fatturapa.web.console.service.FatturaElettronicaService" scope="request">
+		<property name="form" ref="fatturaElettronicaSearchForm" />
+	</bean>
+
+	<bean id="fatturaElettronicaMBean" class="org.govmix.proxy.fatturapa.web.console.mbean.FatturaElettronicaMBean" scope="request">
+		<property name="service" ref="fatturaElettronicaService" />
+		<property name="search" ref="fatturaElettronicaSearchForm" />
+	</bean>
+	
+	<!-- 	Notifica EC -->
+	<bean id="notificaECForm" class="org.govmix.proxy.fatturapa.web.console.search.NotificaECForm"
+		scope="request" />
+
+	<bean id="notificaECService" class="org.govmix.proxy.fatturapa.web.console.service.NotificaECService" scope="request">
+		<property name="form" ref="notificaECForm" />
+	</bean>
+
+	<bean id="notificaECMBean" class="org.govmix.proxy.fatturapa.web.console.mbean.NotificaECMBean" scope="request">
+		<property name="service" ref="notificaECService" />
+		<property name="form" ref="notificaECForm" />
+	</bean>
+	
+	<!-- Dipartimenti -->
+		<bean id="dipartimentoSearchForm" class="org.govmix.proxy.fatturapa.web.console.anagrafica.form.DipartimentoSearchForm"
+		scope="session" />
+
+	<bean id="dipartimentoService" class="org.govmix.proxy.fatturapa.web.console.anagrafica.service.DipartimentoService" scope="request">
+		<property name="form" ref="dipartimentoSearchForm" />
+	</bean>
+
+	<bean id="dipartimentoMBean" class="org.govmix.proxy.fatturapa.web.console.anagrafica.mbean.DipartimentoMBean" scope="request">
+		<property name="service" ref="dipartimentoService" />
+		<property name="search" ref="dipartimentoSearchForm" />
+	</bean>
+	
+	<!-- Utenti -->
+		<bean id="utenteSearchForm" class="org.govmix.proxy.fatturapa.web.console.anagrafica.form.UtenteSearchForm"
+		scope="session" />
+
+	<bean id="utenteService" class="org.govmix.proxy.fatturapa.web.console.anagrafica.service.UtenteService" scope="request">
+		<property name="form" ref="utenteSearchForm" />
+	</bean>
+
+	<bean id="utenteMBean" class="org.govmix.proxy.fatturapa.web.console.anagrafica.mbean.UtenteMBean" scope="request">
+		<property name="service" ref="utenteService" />
+		<property name="search" ref="utenteSearchForm" />
+	</bean>
+	
+	<!-- Enti -->
+	<bean id="enteSearchForm" class="org.govmix.proxy.fatturapa.web.console.anagrafica.form.EnteSearchForm"
+		scope="session" />
+
+	<bean id="enteService" class="org.govmix.proxy.fatturapa.web.console.anagrafica.service.EnteService" scope="request">
+		<property name="form" ref="enteSearchForm" />
+	</bean>
+
+	<bean id="enteMBean" class="org.govmix.proxy.fatturapa.web.console.anagrafica.mbean.EnteMBean" scope="request">
+		<property name="service" ref="enteService" />
+		<property name="search" ref="enteSearchForm" />
+	</bean>
+	
+	<!-- Registri -->
+	<bean id="registroSearchForm" class="org.govmix.proxy.fatturapa.web.console.anagrafica.form.RegistroSearchForm"
+		scope="session" />
+
+	<bean id="registroService" class="org.govmix.proxy.fatturapa.web.console.anagrafica.service.RegistroService" scope="request">
+		<property name="form" ref="registroSearchForm" />
+	</bean>
+
+</beans>
