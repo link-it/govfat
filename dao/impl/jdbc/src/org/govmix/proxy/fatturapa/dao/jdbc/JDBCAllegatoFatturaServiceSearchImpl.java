@@ -31,6 +31,8 @@ import org.apache.log4j.Logger;
 
 import org.openspcoop2.utils.sql.ISQLQueryObject;
 
+import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
+import org.openspcoop2.generic_project.dao.jdbc.utils.IJDBCFetch;
 import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject;
 import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithoutId;
 import org.openspcoop2.generic_project.utils.UtilsTemplate;
@@ -72,10 +74,18 @@ public class JDBCAllegatoFatturaServiceSearchImpl implements IJDBCServiceSearchW
 		}		
 		return this._allegatoFatturaFieldConverter;
 	}
+	@Override
+	public ISQLFieldConverter getFieldConverter() {
+		return this.getAllegatoFatturaFieldConverter();
+	}
 	
 	private AllegatoFatturaFetch allegatoFatturaFetch = new AllegatoFatturaFetch();
 	public AllegatoFatturaFetch getAllegatoFatturaFetch() {
 		return this.allegatoFatturaFetch;
+	}
+	@Override
+	public IJDBCFetch getFetch() {
+		return getAllegatoFatturaFetch();
 	}
 	
 	
@@ -401,6 +411,9 @@ public class JDBCAllegatoFatturaServiceSearchImpl implements IJDBCServiceSearchW
 		allegatoFattura = (AllegatoFattura) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_allegatoFattura.createSQLQuery(), jdbcProperties.isShowSql(), AllegatoFattura.model(), this.getAllegatoFatturaFetch(),
 			new JDBCObject(tableId,Long.class));
 
+		if(allegatoFattura.getAttachment() == null) {
+			allegatoFattura.setAttachment("".getBytes());
+		}
 
 		// Object _allegatoFattura_fatturaElettronica (recupero id)
 		ISQLQueryObject sqlQueryObjectGet_allegatoFattura_fatturaElettronica_readFkId = sqlQueryObjectGet.newSQLQueryObject();

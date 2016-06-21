@@ -103,6 +103,8 @@ public class DipartimentoService extends BaseService<DipartimentoSearchForm> imp
 			//				}
 			//			}
 
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}
@@ -122,6 +124,8 @@ public class DipartimentoService extends BaseService<DipartimentoSearchForm> imp
 
 			if(nnn != null)
 				cnt =(int) nnn.longValue();
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}
@@ -143,6 +147,9 @@ public class DipartimentoService extends BaseService<DipartimentoSearchForm> imp
 				this.dipartimentoDao.update(idDipartimento, dipartimento);
 			else
 				this.dipartimentoDao.create(dipartimento);
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
+			throw e;
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 			throw new ServiceException(e);
@@ -178,10 +185,12 @@ public class DipartimentoService extends BaseService<DipartimentoSearchForm> imp
 				throw new ServiceException(Utils.getInstance().getMessageFromResourceBundle("dipartimento.deleteError.utentiPresenti"));
 
 			((JDBCDipartimentoService)this.dipartimentoDao).deleteById(key.longValue());
-		}catch (ServiceException e){
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 			throw e;
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
+			throw new ServiceException(e);
 		}
 	}
 
@@ -214,10 +223,12 @@ public class DipartimentoService extends BaseService<DipartimentoSearchForm> imp
 				throw new ServiceException(Utils.getInstance().getMessageFromResourceBundle("dipartimento.deleteError.utentiPresenti"));
 
 			this.dipartimentoDao.deleteById(idDipartimento); 
-		}catch (ServiceException e){
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 			throw e;
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
+			throw new ServiceException(e);
 		}
 	}
 
@@ -233,6 +244,8 @@ public class DipartimentoService extends BaseService<DipartimentoSearchForm> imp
 			dip.setListaNomiProperties(listaPropertiesEnte);
 
 			return dip;
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch(NotFoundException e){
 			log.debug("["+methodName+"] Dipartimento non trovato: "+ e.getMessage(), e);
 		}catch(Exception e){
@@ -253,6 +266,8 @@ public class DipartimentoService extends BaseService<DipartimentoSearchForm> imp
 
 			lst = _findAll( expr, null, null);
 
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}
@@ -272,6 +287,8 @@ public class DipartimentoService extends BaseService<DipartimentoSearchForm> imp
 
 			lst = _findAll( expr, null , null);
 
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}
@@ -327,6 +344,8 @@ public class DipartimentoService extends BaseService<DipartimentoSearchForm> imp
 
 			lst = this.dipartimentoSearchDao.findAllIds(pagExpr);
 
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}
@@ -353,6 +372,8 @@ public class DipartimentoService extends BaseService<DipartimentoSearchForm> imp
 
 			return dip;
 
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch (NotFoundException e) {
 			log.debug("Metodo ["+methodName+"]: Nessun dipartimento con codice ["+codiceDipartimento+"]trovato."+ e.getMessage());
 		}catch(Exception e){

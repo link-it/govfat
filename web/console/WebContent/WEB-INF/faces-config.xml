@@ -247,5 +247,6 @@
 <!-- 		<phase-listener id="noCacheListener">org.openspcoop2.generic_project.web.impl.jsf1.listener.CacheControlPhaseListener</phase-listener> -->
 		<!-- phase-listener id="loginPhaseListener">org.govmix.proxy.fatturapa.web.console.listener.LoginPhaseListener</phase-listener -->
 		<phase-listener id="localePhaseListener">org.openspcoop2.generic_project.web.impl.jsf1.listener.LocaleListener</phase-listener>
+		<phase-listener id="viewExpiredListener">org.govmix.proxy.fatturapa.web.console.listener.ViewExpiredListener</phase-listener>
 	</lifecycle>
 </faces-config>

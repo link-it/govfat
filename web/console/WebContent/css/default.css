@@ -159,3 +159,7 @@ border: none;
 #menuct_body{
 	padding-left: 0px;
 }
+
+.whiteSpace {
+	white-space: pre;
+}

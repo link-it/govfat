@@ -31,7 +31,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -44,21 +46,27 @@ import org.govmix.proxy.fatturapa.IdLotto;
 import org.govmix.proxy.fatturapa.LottoFatture;
 import org.govmix.proxy.fatturapa.NotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.NotificaEsitoCommittente;
+import org.govmix.proxy.fatturapa.Utente;
 import org.govmix.proxy.fatturapa.constants.FormatoTrasmissioneType;
+import org.govmix.proxy.fatturapa.constants.UserRole;
 import org.govmix.proxy.fatturapa.dao.IAllegatoFatturaServiceSearch;
 import org.govmix.proxy.fatturapa.dao.IFatturaElettronicaServiceSearch;
 import org.govmix.proxy.fatturapa.dao.ILottoFattureServiceSearch;
 import org.govmix.proxy.fatturapa.dao.INotificaDecorrenzaTerminiServiceSearch;
 import org.govmix.proxy.fatturapa.dao.INotificaEsitoCommittenteServiceSearch;
+import org.govmix.proxy.fatturapa.dao.IUtenteServiceSearch;
 import org.govmix.proxy.fatturapa.dao.jdbc.JDBCAllegatoFatturaServiceSearch;
 import org.govmix.proxy.fatturapa.dao.jdbc.JDBCFatturaElettronicaServiceSearch;
 import org.govmix.proxy.fatturapa.dao.jdbc.JDBCNotificaEsitoCommittenteServiceSearch;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.exporter.exception.ExportException;
 import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.openspcoop2.generic_project.exception.NotFoundException;
+import org.openspcoop2.generic_project.expression.IExpression;
 import org.openspcoop2.generic_project.expression.IPaginatedExpression;
 import org.openspcoop2.generic_project.expression.SortOrder;
+import org.openspcoop2.utils.UtilsException;
 import org.openspcoop2.utils.resources.MimeTypes;
 
 public class SingleFileExporter {
@@ -75,6 +83,12 @@ public class SingleFileExporter {
 	public static final int XSL_NOTIFICA_DT = 3;
 	public static final int XSL_SCARTO_EC = 4;
 
+	public static final String PARAMETRO_ACTION_FATTURA = "f";
+	public static final String PARAMETRO_ACTION_ALLEGATO = "a";
+	public static final String PARAMETRO_ACTION_NOTIFICA_EC = "ec";
+	public static final String PARAMETRO_ACTION_NOTIFICA_DT = "dt";
+	public static final String PARAMETRO_ACTION_SCARTO = "sc";
+
 	private Logger log = null;
 
 	private IFatturaElettronicaServiceSearch fatturaSearchDAO= null;
@@ -82,15 +96,19 @@ public class SingleFileExporter {
 	private INotificaDecorrenzaTerminiServiceSearch notificaDTSearchDAO= null;
 	private INotificaEsitoCommittenteServiceSearch notificaECSearchDAO = null;
 	private ILottoFattureServiceSearch lottoFattureSearchDAO = null;
+	private IUtenteServiceSearch utenteSearchDAO = null;
+	private FatturaElettronicaBD fatturaBD = null;
 
 	public SingleFileExporter(Logger log){
 		this.log = log;
 		try{
-			this.fatturaSearchDAO = DAOFactory.getInstance(log).getServiceManager().getFatturaElettronicaServiceSearch();
+			this.setFatturaSearchDAO(DAOFactory.getInstance(log).getServiceManager().getFatturaElettronicaServiceSearch());
 			this.allegatoSearchDAO = DAOFactory.getInstance(log).getServiceManager().getAllegatoFatturaServiceSearch();
 			this.notificaDTSearchDAO = DAOFactory.getInstance(log).getServiceManager().getNotificaDecorrenzaTerminiServiceSearch();
 			this.notificaECSearchDAO = DAOFactory.getInstance(log).getServiceManager().getNotificaEsitoCommittenteServiceSearch();
 			this.lottoFattureSearchDAO = DAOFactory.getInstance(log).getServiceManager().getLottoFattureServiceSearch();
+			this.utenteSearchDAO = DAOFactory.getInstance(log).getServiceManager().getUtenteServiceSearch();
+			this.fatturaBD = new FatturaElettronicaBD(log);
 		}catch(Exception e){
 			this.log.error("Si e' verificato un errore durante la creazione del livello DAO: " + e.getMessage(), e);
 		}
@@ -139,7 +157,7 @@ public class SingleFileExporter {
 		return xsltfile;
 	}
 
-	public void exportAsZip(OutputStream out) throws ExportException {
+	public void exportAsZip(IExpression fattExpr , OutputStream out) throws ExportException {
 
 		try{
 			ZipOutputStream zip = new ZipOutputStream(out);
@@ -156,10 +174,19 @@ public class SingleFileExporter {
 			this.log.debug("Avvio esportazione ...");
 			this.log.debug("Inizio esportazione alle:"+time.format(startTime));
 
-			IPaginatedExpression pagExpr = this.fatturaSearchDAO.newPaginatedExpression();
+			IPaginatedExpression pagExpr = null;
+
+			if(fattExpr != null){
+				pagExpr = this.getFatturaSearchDAO().toPaginatedExpression(fattExpr);
+				pagExpr.sortOrder(SortOrder.DESC);
+				pagExpr.addOrder(FatturaElettronica.model().DATA_RICEZIONE);
+			}
+			else 
+				pagExpr = this.getFatturaSearchDAO().newPaginatedExpression();
+
 			pagExpr.offset(start);
 			pagExpr.limit(limit);
-			List<FatturaElettronica> listFattura = this.fatturaSearchDAO.findAll(pagExpr);
+			List<FatturaElettronica> listFattura = this.getFatturaSearchDAO().findAll(pagExpr);
 
 			String rootDir = "" ; //BASE_DIR_NAME +File.separatorChar;
 
@@ -184,7 +211,7 @@ public class SingleFileExporter {
 					pagExpr.offset(start);
 					pagExpr.limit(limit);
 
-					listFattura = this.fatturaSearchDAO.findAll(pagExpr);
+					listFattura = this.getFatturaSearchDAO().findAll(pagExpr);
 				}
 
 				// chiusura entry
@@ -234,7 +261,7 @@ public class SingleFileExporter {
 			List<FatturaElettronica> listFattura = new ArrayList<FatturaElettronica>();
 
 			for (String id: idFattura) {
-				listFattura.add(((JDBCFatturaElettronicaServiceSearch)this.fatturaSearchDAO).get(Long.parseLong(id))); 
+				listFattura.add(((JDBCFatturaElettronicaServiceSearch)this.getFatturaSearchDAO()).get(Long.parseLong(id))); 
 			}
 
 			String rootDir = ""; // BASE_DIR_NAME +File.separatorChar;
@@ -255,6 +282,9 @@ public class SingleFileExporter {
 			this.log.debug("Fine esportazione alle:"+formatter.format(dataFine));
 			this.log.debug("Esportazione completata.");
 
+		}catch(NotFoundException e){
+			this.log.debug("Errore durante esportazione fattura: ",e);
+			throw new ExportException("Risorsa richiesta non trovata.");
 		}catch(ExportException e){
 			this.log.error("Errore durante esportazione zip",e);
 			throw e;
@@ -280,7 +310,7 @@ public class SingleFileExporter {
 			List<FatturaElettronica> listFattura = new ArrayList<FatturaElettronica>();
 
 			for (IdFattura id: idFattura) {
-				listFattura.add(this.fatturaSearchDAO.get(id)); 
+				listFattura.add(this.getFatturaSearchDAO().get(id)); 
 			}
 
 			String rootDir = "";// BASE_DIR_NAME +File.separatorChar;
@@ -301,6 +331,9 @@ public class SingleFileExporter {
 			this.log.debug("Fine esportazione alle:"+formatter.format(dataFine));
 			this.log.debug("Esportazione completata.");
 
+		}catch(NotFoundException e){
+			this.log.debug("Errore durante esportazione fattura: ",e);
+			throw new ExportException("Risorsa richiesta non trovata.");
 		}catch(ExportException e){
 			this.log.error("Errore durante esportazione zip",e);
 			throw e;
@@ -329,7 +362,7 @@ public class SingleFileExporter {
 				// Creazione File XML
 				zip.putNextEntry(new ZipEntry(fatturaDir + nomeEntryFattura + ".xml"));
 
-				baos.write(fattura.getXml().getBytes());
+				baos.write(fattura.getXml());
 
 				in = new ByteArrayInputStream(baos.toByteArray());
 				int len;
@@ -348,12 +381,12 @@ public class SingleFileExporter {
 				zip.putNextEntry(new ZipEntry(fatturaDir + nomeEntryFattura + ".pdf"));
 
 
-				InputStream xmlfile = new ByteArrayInputStream(fattura.getXml().getBytes());
+				InputStream xmlfile = new ByteArrayInputStream(fattura.getXml());
 				int xslFattura = fattura.getFormatoTrasmissione().equals(FormatoTrasmissioneType.SDI10) ? XSL_FATTURA_SDI10 : XSL_FATTURA_SDI11;
 				InputStream xsltfile = getXsltFileStream(xslFattura);
 				PDFCreator.getInstance(log).createPDF(xmlfile, xsltfile, baos);
 
-				//				baos.write(fattura.getXml().getBytes());
+				//				baos.write(fattura.getXml());
 
 				in = new ByteArrayInputStream(baos.toByteArray());
 				while ((len = in.read(buf)) > 0) {
@@ -417,13 +450,16 @@ public class SingleFileExporter {
 					IdLotto id = new IdLotto();
 					id.setIdentificativoSdi(fattura.getIdentificativoSdi());
 					try{
-					LottoFatture lotto = this.lottoFattureSearchDAO.get(id);
-					exportLotto(fatturaDir,  getNomeEntryLottoFatture(lotto), lotto,zip);
+						LottoFatture lotto = this.lottoFattureSearchDAO.get(id);
+						exportLotto(fatturaDir,  getNomeEntryLottoFatture(lotto), lotto,zip);
 					}catch(NotFoundException e){
 						log.debug("Lotto Fatture id["+fattura.getIdentificativoSdi()+"], non trovato...");
 					}
 				}
 
+			}catch(NotFoundException e){
+				this.log.debug("Errore durante esportazione fattura: ",e);
+				throw new ExportException("Risorsa richiesta non trovata.");
 			}catch(IOException ioe){
 				String msg = "Si e' verificato un errore durante l'esportazione della fattura: Identificativo SDI["+fattura.getIdentificativoSdi() + "] Posizione["+fattura.getPosizione()+"]";
 				throw new ExportException(msg, ioe);
@@ -436,7 +472,7 @@ public class SingleFileExporter {
 
 	}
 
-	
+
 
 	public void exportAsZip(LottoFatture lotto,OutputStream out)throws Exception {
 		Date startTime = Calendar.getInstance().getTime();
@@ -473,7 +509,7 @@ public class SingleFileExporter {
 		}
 
 	}
-	
+
 	private void exportLotto(String rootDir, String nomeEntryFattura,
 			LottoFatture lotto, ZipOutputStream zip) throws ExportException {
 
@@ -527,7 +563,7 @@ public class SingleFileExporter {
 	}
 
 	private String getNomeEntryFattura(IdFattura idFattura) throws Exception{
-		FatturaElettronica fattura = this.fatturaSearchDAO.get(idFattura); 
+		FatturaElettronica fattura = this.getFatturaSearchDAO().get(idFattura); 
 		return getNomeEntryFattura(fattura);
 	}
 
@@ -538,6 +574,7 @@ public class SingleFileExporter {
 		InputStream in = null;
 
 
+		Map<String, Integer> allegatiName = new HashMap<String, Integer>();
 
 		for (AllegatoFattura allegato : allegati) {
 
@@ -545,18 +582,19 @@ public class SingleFileExporter {
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
 				if(allegato.getAttachment() != null){
-
-					String ext = MimeTypes.getInstance().getExtension(allegato.getFormatoAttachment());
-
-					if(ext == null){
-						String mimeType = MimeTypes.getInstance().getMimeType(allegato.getFormatoAttachment());
-
-						if(mimeType!= null)
-							ext = MimeTypes.getInstance().getExtension(mimeType);
+					
+					String ext = getExtensionAttachment(allegato);
+					String nomeCompleto = allegato.getNomeAttachment()+ "." + ext;
+					if(!allegatiName.containsKey(nomeCompleto)) {
+						allegatiName.put(nomeCompleto, 1);
+					} else {
+						Integer index = allegatiName.remove(nomeCompleto);
+						allegatiName.put(nomeCompleto, index + 1);
+						nomeCompleto += "." + index;
 					}
-
+						
 					// Creazione File XML
-					zip.putNextEntry(new ZipEntry(rootDir+allegato.getNomeAttachment()+ "." + ext));
+					zip.putNextEntry(new ZipEntry(rootDir+nomeCompleto));
 
 					baos.write(allegato.getAttachment());
 
@@ -586,6 +624,24 @@ public class SingleFileExporter {
 
 	}
 
+	private String getExtensionAttachment(AllegatoFattura allegato)
+			throws UtilsException {
+		String formatoAttachment = allegato.getFormatoAttachment();
+		
+		if(formatoAttachment == null)
+			formatoAttachment = "bin";//"application/octet-stream";
+		
+		String ext = MimeTypes.getInstance().getExtension(formatoAttachment);
+
+		if(ext == null){
+			String mimeType = MimeTypes.getInstance().getMimeType(formatoAttachment);
+
+			if(mimeType!= null)
+				ext = MimeTypes.getInstance().getExtension(mimeType);
+		}
+		return ext;
+	}
+
 
 	private void exportNotificheEsitoCommittente(String rootDir,String nomeEntryFattura, List<NotificaEsitoCommittente> listaNotificheEC,ZipOutputStream zip) throws ExportException{
 
@@ -605,7 +661,7 @@ public class SingleFileExporter {
 					// Creazione File XML
 					zip.putNextEntry(new ZipEntry(rootDir+ nomeEntryFattura + "-EC-" + i + ".xml"));
 
-					baos.write(notifica.getXml().getBytes());
+					baos.write(notifica.getXml());
 
 					in = new ByteArrayInputStream(baos.toByteArray());
 
@@ -623,11 +679,11 @@ public class SingleFileExporter {
 					baos = new ByteArrayOutputStream();
 					zip.putNextEntry(new ZipEntry(rootDir+ nomeEntryFattura + "-EC-" + i + ".pdf"));
 
-					xmlfile = new ByteArrayInputStream(notifica.getXml().getBytes());
+					xmlfile = new ByteArrayInputStream(notifica.getXml());
 					xsltfile = getXsltFileStream(XSL_NOTIFICA_EC);
 					PDFCreator.getInstance(log).createPDF(xmlfile, xsltfile, baos);
 
-					//				baos.write(notifica.getXml().getBytes());
+					//				baos.write(notifica.getXml());
 
 					in = new ByteArrayInputStream(baos.toByteArray());
 
@@ -648,7 +704,7 @@ public class SingleFileExporter {
 					// Creazione File XML
 					zip.putNextEntry(new ZipEntry(rootDir+ nomeEntryFattura + "-SC-" + i + ".xml"));
 					baos = new ByteArrayOutputStream();
-					baos.write(notifica.getScartoXml().getBytes());
+					baos.write(notifica.getScartoXml());
 
 					in = new ByteArrayInputStream(baos.toByteArray());
 					while ((len = in.read(buf)) > 0) {
@@ -665,11 +721,11 @@ public class SingleFileExporter {
 					baos = new ByteArrayOutputStream();
 					zip.putNextEntry(new ZipEntry(rootDir+ nomeEntryFattura + "-SC-" + i + ".pdf"));
 
-					xmlfile = new ByteArrayInputStream(notifica.getScartoXml().getBytes());
+					xmlfile = new ByteArrayInputStream(notifica.getScartoXml());
 					xsltfile = getXsltFileStream(XSL_SCARTO_EC);
 					PDFCreator.getInstance(log).createPDF(xmlfile, xsltfile, baos);
 
-					//					baos.write(notifica.getScartoXml().getBytes());
+					//					baos.write(notifica.getScartoXml());
 
 					in = new ByteArrayInputStream(baos.toByteArray());
 
@@ -713,7 +769,7 @@ public class SingleFileExporter {
 					// Creazione File XML
 					zip.putNextEntry(new ZipEntry(rootDir+ nomeEntryFattura + "-DT-" + i + ".xml"));
 
-					baos.write(notifica.getXml().getBytes());
+					baos.write(notifica.getXml());
 
 					in = new ByteArrayInputStream(baos.toByteArray());
 					int len;
@@ -731,11 +787,11 @@ public class SingleFileExporter {
 					baos = new ByteArrayOutputStream();
 					zip.putNextEntry(new ZipEntry(rootDir+ nomeEntryFattura + "-DT-" + i + ".pdf"));
 
-					InputStream xmlfile = new ByteArrayInputStream(notifica.getXml().getBytes());
+					InputStream xmlfile = new ByteArrayInputStream(notifica.getXml());
 					InputStream xsltfile = getXsltFileStream(XSL_NOTIFICA_DT);
 					PDFCreator.getInstance(log).createPDF(xmlfile, xsltfile, baos);
 
-					//				baos.write(notifica.getXml().getBytes());
+					//				baos.write(notifica.getXml());
 
 					in = new ByteArrayInputStream(baos.toByteArray());
 
@@ -781,7 +837,7 @@ public class SingleFileExporter {
 			this.log.debug("Avvio esportazione ...");
 			this.log.debug("Inizio esportazione alle:"+time.format(startTime));
 
-			FatturaElettronica fattura = this.fatturaSearchDAO.get(idFattura); 
+			FatturaElettronica fattura = this.getFatturaSearchDAO().get(idFattura); 
 
 			String nomeFile = exportFattura(formato,fattura,out,exportLottoXML);
 
@@ -791,6 +847,9 @@ public class SingleFileExporter {
 			this.log.debug("Esportazione completata.");
 
 			return nomeFile;
+		}catch(NotFoundException e){
+			this.log.debug("Errore durante esportazione fattura: ",e);
+			throw new ExportException("Risorsa richiesta non trovata.");
 		}catch(ExportException e){
 			this.log.error("Errore durante esportazione fattura",e);
 			throw e;
@@ -819,7 +878,7 @@ public class SingleFileExporter {
 			this.log.debug("Avvio esportazione ...");
 			this.log.debug("Inizio esportazione alle:"+time.format(startTime));
 
-			FatturaElettronica fattura = ((JDBCFatturaElettronicaServiceSearch)this.fatturaSearchDAO).get(Long.parseLong(idFattura)); 
+			FatturaElettronica fattura = ((JDBCFatturaElettronicaServiceSearch)this.getFatturaSearchDAO()).get(Long.parseLong(idFattura)); 
 
 			String nomeFile = exportFattura(formato,fattura,out,exportLottoXML);
 
@@ -829,7 +888,11 @@ public class SingleFileExporter {
 			this.log.debug("Esportazione completata.");
 
 			return nomeFile;
-		}catch(ExportException e){
+		}catch(NotFoundException e){
+			this.log.debug("Errore durante esportazione fattura: ",e);
+			throw new ExportException("Risorsa richiesta non trovata.");
+		}
+		catch(ExportException e){
 			this.log.error("Errore durante esportazione fattura",e);
 			throw e;
 		}catch(Exception e){
@@ -854,7 +917,7 @@ public class SingleFileExporter {
 			// Creazione File XML
 			if(formato.equals(FORMATO_XML)){
 				if(!exportLottoXML){
-					baos.write(fattura.getXml().getBytes());
+					baos.write(fattura.getXml());
 					nomeFile = baseNomeFile + ".xml";
 				} else {
 					Integer identificativoSdi = fattura.getIdentificativoSdi();
@@ -866,14 +929,14 @@ public class SingleFileExporter {
 						nomeFile = lottoFatture.getNomeFile();
 					}catch(NotFoundException e){
 						log.debug("Lotto Fatture id["+identificativoSdi+"], non trovato...");
-						baos.write(fattura.getXml().getBytes());
+						baos.write(fattura.getXml());
 						nomeFile = baseNomeFile + ".xml";
 					}
 				}
 			}
 
 			if(formato.equals(FORMATO_PDF)){
-				InputStream xmlfile = new ByteArrayInputStream(fattura.getXml().getBytes());
+				InputStream xmlfile = new ByteArrayInputStream(fattura.getXml());
 				int xslFattura = fattura.getFormatoTrasmissione().equals(FormatoTrasmissioneType.SDI10) ? XSL_FATTURA_SDI10 : XSL_FATTURA_SDI11;
 				InputStream xsltfile = getXsltFileStream(xslFattura);
 				PDFCreator.getInstance(log).createPDF(xmlfile, xsltfile, baos);
@@ -894,6 +957,9 @@ public class SingleFileExporter {
 
 
 			return nomeFile;
+		}catch(NotFoundException e){
+			this.log.debug("Errore durante esportazione fattura: ",e);
+			throw new ExportException("Risorsa richiesta non trovata.");
 		}catch(IOException ioe){
 			String msg = "Si e' verificato un errore durante l'esportazione della fattura: Identificativo SDI["+fattura.getIdentificativoSdi() + "] Posizione["+fattura.getPosizione()+"]";
 			throw new ExportException(msg, ioe);
@@ -933,6 +999,9 @@ public class SingleFileExporter {
 			this.log.debug("Esportazione completata.");
 
 			return nomeFile;
+		}catch(NotFoundException e){
+			this.log.debug("Errore durante esportazione fattura: ",e);
+			throw new ExportException("Risorsa richiesta non trovata.");
 		}catch(ExportException e){
 			this.log.error("Errore durante esportazione Notifica Esito Committente",e);
 			throw e;
@@ -957,12 +1026,12 @@ public class SingleFileExporter {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			// Creazione File XML
 			if(formato.equals(FORMATO_XML)){
-				baos.write(notifica.getXml().getBytes());
+				baos.write(notifica.getXml());
 				nomeFile = baseNomeFile + "-EC.xml"; 
 			}
 
 			if(formato.equals(FORMATO_PDF)){
-				InputStream xmlfile = new ByteArrayInputStream(notifica.getXml().getBytes());
+				InputStream xmlfile = new ByteArrayInputStream(notifica.getXml());
 				InputStream xsltfile = getXsltFileStream(XSL_NOTIFICA_EC);
 				PDFCreator.getInstance(log).createPDF(xmlfile, xsltfile, baos);
 				nomeFile = baseNomeFile + "-EC.pdf";
@@ -1018,6 +1087,9 @@ public class SingleFileExporter {
 			this.log.debug("Esportazione completata.");
 
 			return nomeFile;
+		}catch(NotFoundException e){
+			this.log.debug("Errore durante esportazione fattura: ",e);
+			throw new ExportException("Risorsa richiesta non trovata.");
 		}catch(ExportException e){
 			this.log.error("Errore durante esportazione Scarto Note Notifica Esito Committente",e);
 			throw e;
@@ -1042,12 +1114,12 @@ public class SingleFileExporter {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			// Creazione File XML
 			if(formato.equals(FORMATO_XML)){
-				baos.write(notifica.getScartoXml().getBytes());
+				baos.write(notifica.getScartoXml());
 				nomeFile = baseNomeFile + "-SC.xml"; 
 			}
 
 			if(formato.equals(FORMATO_PDF)){
-				InputStream xmlfile = new ByteArrayInputStream(notifica.getScartoXml().getBytes());
+				InputStream xmlfile = new ByteArrayInputStream(notifica.getScartoXml());
 				InputStream xsltfile = getXsltFileStream(XSL_SCARTO_EC);
 				PDFCreator.getInstance(log).createPDF(xmlfile, xsltfile, baos);
 				nomeFile = baseNomeFile + "-SC.pdf";
@@ -1092,7 +1164,7 @@ public class SingleFileExporter {
 			this.log.debug("Avvio esportazione ...");
 			this.log.debug("Inizio esportazione alle:"+time.format(startTime));
 
-			FatturaElettronica fattura = ((JDBCFatturaElettronicaServiceSearch) this.fatturaSearchDAO).get(Long.parseLong(idFattura)) ;
+			FatturaElettronica fattura = ((JDBCFatturaElettronicaServiceSearch) this.getFatturaSearchDAO()).get(Long.parseLong(idFattura)) ;
 
 			NotificaDecorrenzaTermini notificaDT = this.notificaDTSearchDAO.get(fattura.getIdDecorrenzaTermini());
 
@@ -1106,6 +1178,9 @@ public class SingleFileExporter {
 			this.log.debug("Esportazione completata.");
 
 			return nomeFile;
+		}catch(NotFoundException e){
+			this.log.debug("Errore durante esportazione fattura: ",e);
+			throw new ExportException("Risorsa richiesta non trovata.");
 		}catch(ExportException e){
 			this.log.error("Errore durante esportazione Notifica Decorrenza Termini",e);
 			throw e;
@@ -1130,12 +1205,12 @@ public class SingleFileExporter {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			// Creazione File XML
 			if(formato.equals(FORMATO_XML)){
-				baos.write(notifica.getXml().getBytes());
+				baos.write(notifica.getXml());
 				nomeFile = "-DT.xml"; 
 			}
 
 			if(formato.equals(FORMATO_PDF)){
-				InputStream xmlfile = new ByteArrayInputStream(notifica.getXml().getBytes());
+				InputStream xmlfile = new ByteArrayInputStream(notifica.getXml());
 				InputStream xsltfile = getXsltFileStream(XSL_NOTIFICA_DT);
 				PDFCreator.getInstance(log).createPDF(xmlfile, xsltfile, baos);
 				nomeFile = "-DT.pdf";
@@ -1183,6 +1258,9 @@ public class SingleFileExporter {
 			this.log.debug("Esportazione completata.");
 
 			return nomeFile;
+		}catch(NotFoundException e){
+			this.log.debug("Errore durante esportazione fattura: ",e);
+			throw new ExportException("Risorsa richiesta non trovata.");
 		}catch(ExportException e){
 			this.log.error("Errore durante esportazione Allegato",e);
 			throw e;
@@ -1204,14 +1282,7 @@ public class SingleFileExporter {
 			String baseNomeFile = allegato.getNomeAttachment();
 			String nomeFile = "";
 
-			String ext = MimeTypes.getInstance().getExtension(allegato.getFormatoAttachment());
-
-			if(ext == null){
-				String mimeType = MimeTypes.getInstance().getMimeType(allegato.getFormatoAttachment());
-
-				if(mimeType!= null)
-					ext = MimeTypes.getInstance().getExtension(mimeType);
-			}
+			String ext = getExtensionAttachment(allegato);
 
 			// Creazione File XML
 			nomeFile = baseNomeFile + "." + ext; 
@@ -1235,5 +1306,115 @@ public class SingleFileExporter {
 			String msg = "Si e' verificato un errore durante l'esportazione Allegato per la fattura: Identificativo SDI["+allegato.getIdFattura().getIdentificativoSdi() + "] Posizione["+allegato.getIdFattura().getPosizione()+"]";
 			throw new ExportException(msg, e);
 		}
+	}
+
+	public boolean checkautorizzazioneExport(String username, String []ids, String tipoExport, boolean isAll,IExpression fattExpr) throws ExportException {
+
+		try {
+			log.debug("Controllo autorizzazione per l'utente ["+username+"] in corso...");
+			IExpression utenteExpr = this.utenteSearchDAO.newExpression();
+			utenteExpr.equals(Utente.model().USERNAME, username);
+			Utente utente = null;
+			try{
+				utente = this.utenteSearchDAO.find(utenteExpr);
+				log.debug("Controllo autorizzazione per l'utente ["+username+"] completato.");
+			}catch(NotFoundException e){
+				log.debug("Controllo autorizzazione per l'utente ["+username+"] fallito, utente non registrato.");
+				throw new ExportException("Controllo autorizzazione per l'utente ["+username+"] fallito, utente non registrato.");
+			}
+
+			UserRole role = utente.getRole();
+			log.debug("Controllo autorizzazione per l'utente ["+username+"] Ruolo Trovato["+role.toString()+"].");
+			if(role.equals(UserRole.ADMIN)){
+				log.debug("Controllo autorizzazione per l'utente ["+username+"] completato, l'utente con ruolo ADMIN e' autorizzato.");
+				return true;
+			}
+
+			List<IdFattura> idFatturaRichiesti = null;
+			try{
+				if(!isAll){
+
+					// ottenere l'id fattura dal id dell'oggetto che si vuole scaricare
+					idFatturaRichiesti = new ArrayList<IdFattura>();
+					// Fattura o gruppi di fatture sia in zip che in pdf/xml
+					if(tipoExport.equals(PARAMETRO_ACTION_FATTURA)){
+						for (String idFattura : ids) {
+							FatturaElettronica fattura = ((JDBCFatturaElettronicaServiceSearch)this.getFatturaSearchDAO()).get(Long.parseLong(idFattura));
+							IdFattura idFattura2 = this.fatturaSearchDAO.convertToId(fattura);
+							idFatturaRichiesti.add(idFattura2);
+						}
+
+					}else if(tipoExport.equals(PARAMETRO_ACTION_ALLEGATO)){
+						AllegatoFattura allegato  = ((JDBCAllegatoFatturaServiceSearch)this.allegatoSearchDAO).get(Long.parseLong(ids[0])); 
+						idFatturaRichiesti.add(allegato.getIdFattura());
+					}else if(tipoExport.equals(PARAMETRO_ACTION_NOTIFICA_DT)){
+						FatturaElettronica fattura = ((JDBCFatturaElettronicaServiceSearch)this.getFatturaSearchDAO()).get(Long.parseLong(ids[0]));
+						IdFattura idFattura2 = this.fatturaSearchDAO.convertToId(fattura);
+						idFatturaRichiesti.add(idFattura2);
+					}else if(tipoExport.equals(PARAMETRO_ACTION_NOTIFICA_EC)){
+						NotificaEsitoCommittente notificaEC = ((JDBCNotificaEsitoCommittenteServiceSearch)this.notificaECSearchDAO).get(Long.parseLong(ids[0])); 
+						idFatturaRichiesti.add(notificaEC.getIdFattura());
+					}else if(tipoExport.equals(PARAMETRO_ACTION_SCARTO)){
+						NotificaEsitoCommittente notificaEC = ((JDBCNotificaEsitoCommittenteServiceSearch)this.notificaECSearchDAO).get(Long.parseLong(ids[0])); 
+						idFatturaRichiesti.add(notificaEC.getIdFattura());
+					}else{
+						// tipo non riconosciuto
+						return false;
+					}
+
+
+				}
+				else{
+					IPaginatedExpression pagExpr = null;
+
+					if(fattExpr != null){
+						pagExpr = this.getFatturaSearchDAO().toPaginatedExpression(fattExpr);
+						pagExpr.sortOrder(SortOrder.DESC);
+						pagExpr.addOrder(FatturaElettronica.model().DATA_RICEZIONE);
+					}
+					else 
+						pagExpr = this.getFatturaSearchDAO().newPaginatedExpression();
+
+					idFatturaRichiesti = this.fatturaSearchDAO.findAllIds(pagExpr);
+
+
+				}
+			}catch(NotFoundException e){
+				log.debug("Impossibile trovare la risorsa richiesta.");
+				throw new ExportException("Impossibile trovare la risorsa richiesta.");
+			}
+			// passo alla bd l'id utente che mi restituisce una lista di idFattura 
+			List<IdFattura> idFattureByUtente = this.fatturaBD.getIdFattureByUtente(utente);
+
+
+			for (IdFattura idFattura : idFatturaRichiesti) {
+				boolean found = false;
+				for (IdFattura idFatturaAutorizzata : idFattureByUtente) {
+					if(idFattura.getIdentificativoSdi().intValue() == idFatturaAutorizzata.getIdentificativoSdi().intValue() && 
+							idFattura.getPosizione().intValue() == idFatturaAutorizzata.getPosizione().intValue()){
+						found = true;
+						break;
+					}
+				}
+				if(!found)
+					return false;
+			}
+
+			return true;
+
+
+		}catch(Exception e){
+			log.error("Si e' verificato un errore durante la verifica delle autorizzazione export per l'utente ["+username+"]: "+ e.getMessage() , e);
+			throw new ExportException("Si e' verificato un errore durante la verifica delle autorizzazione export per l'utente ["+username+"]");
+		}
+
+	}
+
+	public IFatturaElettronicaServiceSearch getFatturaSearchDAO() {
+		return fatturaSearchDAO;
+	}
+
+	public void setFatturaSearchDAO(IFatturaElettronicaServiceSearch fatturaSearchDAO) {
+		this.fatturaSearchDAO = fatturaSearchDAO;
 	}
 }

@@ -57,7 +57,6 @@ public class UtenteBD extends BaseBD {
 		this.service = this.serviceManager.getUtenteService();
 	}
 
-
 	public boolean belongsTo(IdUtente idUtente, IdDipartimento idDipartimento) throws Exception {
 		try {
 			
@@ -88,6 +87,22 @@ public class UtenteBD extends BaseBD {
 			this.log.error("Errore durante la get: " + e.getMessage(), e);
 			throw new Exception(e);
 		} catch (MultipleResultException e) {
+			this.log.error("Errore durante la get: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la get: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	
+	public Utente findByUsername(String username) throws Exception {
+		try {
+			
+			IdUtente id = new IdUtente();
+			id.setUsername(username);
+			return this.service.get(id);
+		} catch (ServiceException e) {
 			this.log.error("Errore durante la get: " + e.getMessage(), e);
 			throw new Exception(e);
 		} catch (NotImplementedException e) {

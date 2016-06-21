@@ -13,6 +13,7 @@
 
 	<f:facet name="pageHeader">
 		<title>#{msg['appTitle']}</title>
+		<meta http-equiv="Content-Type" content="text/xml; charset=utf-8"/>
 		<link class="component" href="#{facesContext.externalContext.request.contextPath}/css/custom/basic_both.css" rel="stylesheet" type="text/css" />
 <link class="component" href="#{facesContext.externalContext.request.contextPath}/css/custom/extended_both.css" rel="stylesheet" type="text/css" />
 <link class="component" href="#{facesContext.externalContext.request.contextPath}/css/custom/page.css" rel="stylesheet" type="text/css" />
@@ -64,6 +65,14 @@
 				return loc;
 	    	}
 	   </script>
+	   <script type="text/javascript">
+			function disableButton(btn){
+   				 document.getElementById(btn).disabled = true;
+			}
+			function enableButton(btn){
+    			document.getElementById(btn).disabled = false;
+			}
+		</script>
 	</f:facet>
 	<f:facet name="header">
 	 <h:panelGroup id="headerct" layout="block">
@@ -128,6 +137,8 @@
 					if(jQuery.browser.version=="6.0")
 						jQuery("a[id*='iconLink']").addClass('iconLink');
 				}
+
+				jQuery("[id$='TextValue']").addClass('whiteSpace');
 			 });
 		</script>
 		<h:panelGrid  style="width:100%;">

@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.IdLotto;
 import org.govmix.proxy.fatturapa.LottoFatture;
 import org.govmix.proxy.fatturapa.constants.StatoConsegnaType;
+import org.govmix.proxy.fatturapa.constants.StatoInserimentoType;
 import org.govmix.proxy.fatturapa.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.dao.IExtendedLottoFattureServiceSearch;
 import org.govmix.proxy.fatturapa.dao.ILottoFattureService;
@@ -55,7 +56,7 @@ public class LottoBD extends BaseBD {
 		try {
 			IPaginatedExpression expression = this.serviceSearch.newPaginatedExpression();
 			expression.lessEquals(LottoFatture.model().DATA_RICEZIONE, dataRicezione);
-			expression.equals(LottoFatture.model().PROCESSATO, false);
+			expression.equals(LottoFatture.model().STATO_INSERIMENTO, StatoInserimentoType.NON_INSERITO);
 
 			expression.sortOrder(SortOrder.ASC);
 			expression.addOrder(LottoFatture.model().DATA_RICEZIONE);
@@ -75,7 +76,7 @@ public class LottoBD extends BaseBD {
 		try {
 			IExpression expression = this.serviceSearch.newExpression();
 			expression.lessEquals(LottoFatture.model().DATA_RICEZIONE, dataRicezione);
-			expression.equals(LottoFatture.model().PROCESSATO, false);
+			expression.equals(LottoFatture.model().STATO_INSERIMENTO, StatoInserimentoType.NON_INSERITO);
 			
 			return this.serviceSearch.count(expression).longValue();
 		} catch (ServiceException e) {
@@ -169,9 +170,15 @@ public class LottoBD extends BaseBD {
 		}
 	}
 
+
 	public void setProcessato(IdLotto idLotto) throws Exception {
+		this.setProcessato(idLotto, false);
+	}
+	
+	public void setProcessato(IdLotto idLotto, boolean errore) throws Exception {
 		try {
-			UpdateField updateField = new UpdateField(LottoFatture.model().PROCESSATO, true);
+			StatoInserimentoType stato = errore ? StatoInserimentoType.ERRORE_INSERIMENTO :StatoInserimentoType.INSERITO;
+			UpdateField updateField = new UpdateField(LottoFatture.model().STATO_INSERIMENTO, stato);
 			this.service.updateFields(idLotto, updateField);
 		} catch (ServiceException e) {
 			throw new Exception(e);
@@ -190,24 +197,24 @@ public class LottoBD extends BaseBD {
 		}
 	}
 
-	public void assegnaProtocollo(IdLotto idLotto, String protocollo) throws Exception {
-		try {
-
-			List<UpdateField> lst = new ArrayList<UpdateField>();
-			
-			lst.add(new UpdateField(LottoFatture.model().STATO_PROTOCOLLAZIONE, StatoProtocollazioneType.PROTOCOLLATA));
-			lst.add(new UpdateField(LottoFatture.model().DATA_PROTOCOLLAZIONE, new Date()));
-			lst.add(new UpdateField(LottoFatture.model().PROTOCOLLO, protocollo));
-			
-			this.service.updateFields(idLotto, lst.toArray(new UpdateField[1]));
-		} catch (ServiceException e) {
-			this.log.error("Errore durante la updateProtocollo: " + e.getMessage(), e);
-			throw new Exception(e);
-		} catch (NotImplementedException e) {
-			this.log.error("Errore durante la updateProtocollo: " + e.getMessage(), e);
-			throw new Exception(e);
-		}
-	}
+//	public void assegnaProtocollo(IdLotto idLotto, String protocollo) throws Exception {
+//		try {
+//
+//			List<UpdateField> lst = new ArrayList<UpdateField>();
+//			
+//			lst.add(new UpdateField(LottoFatture.model().STATO_PROTOCOLLAZIONE, StatoProtocollazioneType.PROTOCOLLATA));
+//			lst.add(new UpdateField(LottoFatture.model().DATA_PROTOCOLLAZIONE, new Date()));
+//			lst.add(new UpdateField(LottoFatture.model().PROTOCOLLO, protocollo));
+//			
+//			this.service.updateFields(idLotto, lst.toArray(new UpdateField[1]));
+//		} catch (ServiceException e) {
+//			this.log.error("Errore durante la updateProtocollo: " + e.getMessage(), e);
+//			throw new Exception(e);
+//		} catch (NotImplementedException e) {
+//			this.log.error("Errore durante la updateProtocollo: " + e.getMessage(), e);
+//			throw new Exception(e);
+//		}
+//	}
 
 	public void erroreProtocollo(IdLotto idLotto) throws Exception {
 		try {
@@ -270,5 +277,31 @@ public class LottoBD extends BaseBD {
 		}
 	}
 
+	public void updateStatoProtocollazioneOK(IdLotto idLotto) throws Exception {
+		try {
+			UpdateField statoProtocollazioneField = new UpdateField(LottoFatture.model().STATO_PROTOCOLLAZIONE, StatoProtocollazioneType.PROTOCOLLATA);
+			UpdateField dataProtocollazioneField = new UpdateField(LottoFatture.model().DATA_PROTOCOLLAZIONE, new Date());
+			this.service.updateFields(idLotto, statoProtocollazioneField, dataProtocollazioneField);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la updateStatoProtocollazioneOK: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la updateStatoProtocollazioneOK: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public boolean exists(IdLotto idLotto)throws Exception {
+		try {
+			return this.serviceSearch.exists(idLotto);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la exists: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la exists: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+
+	}
 
 }

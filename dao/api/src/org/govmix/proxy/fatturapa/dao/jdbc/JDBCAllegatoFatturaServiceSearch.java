@@ -21,6 +21,7 @@
  */
 package org.govmix.proxy.fatturapa.dao.jdbc;
 
+import org.openspcoop2.generic_project.dao.IDBServiceUtilities;
 import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithoutId;
 import org.openspcoop2.generic_project.beans.InUse;
 import org.openspcoop2.generic_project.beans.IField;
@@ -36,9 +37,11 @@ import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.exception.ValidationException;
 import org.openspcoop2.generic_project.expression.IExpression;
 import org.openspcoop2.generic_project.expression.IPaginatedExpression;
+import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
 import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
 import org.openspcoop2.generic_project.dao.jdbc.JDBCPaginatedExpression;
 import org.openspcoop2.generic_project.dao.jdbc.JDBCProperties;
+import org.openspcoop2.generic_project.dao.jdbc.utils.IJDBCFetch;
 
 import org.govmix.proxy.fatturapa.dao.jdbc.JDBCServiceManager;
 import org.govmix.proxy.fatturapa.dao.jdbc.JDBCLimitedServiceManager;
@@ -61,7 +64,7 @@ import org.openspcoop2.utils.sql.SQLObjectFactory;
  * @author $Author$
  * @version $Rev$, $Date$
 */
-public class JDBCAllegatoFatturaServiceSearch implements IDBAllegatoFatturaServiceSearch {
+public class JDBCAllegatoFatturaServiceSearch implements IDBAllegatoFatturaServiceSearch, IDBServiceUtilities<AllegatoFattura> {
 
 
 	protected JDBCServiceManagerProperties jdbcProperties = null;
@@ -82,6 +85,16 @@ public class JDBCAllegatoFatturaServiceSearch implements IDBAllegatoFatturaServi
 			ValidationException, NotImplementedException {
 		org.openspcoop2.generic_project.utils.XSDValidator.validate(allegatoFattura, this.log, 
 				org.govmix.proxy.fatturapa.utils.XSDValidator.getXSDValidator(this.log));
+	}
+	
+	@Override
+	public IJDBCFetch getFetch() {
+		return this.serviceSearch.getFetch();
+	}
+
+	@Override
+	public ISQLFieldConverter getFieldConverter() {
+		return this.serviceSearch.getFieldConverter();
 	}
 	
 		

@@ -1,632 +1,638 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.govmix.org/proxy/fatturapa" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.govmix.org/proxy/fatturapa">
 
-     
+	
 
 
-    <xsd:element name="Proxy" type="Proxy"/>
-    <xsd:complexType name="Proxy">
-        <xsd:sequence>
-            <xsd:element maxOccurs="unbounded" minOccurs="0" name="LottoFatture" type="LottoFatture"/>
-            <xsd:element maxOccurs="unbounded" minOccurs="0" name="NotificaDecorrenzaTermini" type="NotificaDecorrenzaTermini"/>
-            <xsd:element maxOccurs="unbounded" minOccurs="0" name="FatturaElettronica" type="FatturaElettronica"/>
-            <xsd:element maxOccurs="unbounded" minOccurs="0" name="AllegatoFattura" type="AllegatoFattura"/>
-            <xsd:element maxOccurs="unbounded" minOccurs="0" name="Ente" type="Ente"/>
-            <xsd:element maxOccurs="unbounded" minOccurs="0" name="Registro" type="Registro"/>
-            <xsd:element maxOccurs="unbounded" minOccurs="0" name="RegistroProperty" type="RegistroProperty"/>
-            <xsd:element maxOccurs="unbounded" minOccurs="0" name="Utente" type="Utente"/>
-            <xsd:element maxOccurs="unbounded" minOccurs="0" name="NotificaEsitoCommittente" type="NotificaEsitoCommittente"/>
-            <xsd:element maxOccurs="unbounded" minOccurs="0" name="Dipartimento" type="Dipartimento"/>
-            <xsd:element maxOccurs="unbounded" minOccurs="0" name="DipartimentoProperty" type="DipartimentoProperty"/>
-        </xsd:sequence>
-    </xsd:complexType>
+	<xsd:element name="Proxy" type="Proxy"/>
+	<xsd:complexType name="Proxy">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="LottoFatture" type="LottoFatture"/>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="NotificaDecorrenzaTermini" type="NotificaDecorrenzaTermini"/>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="FatturaElettronica" type="FatturaElettronica"/>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="AllegatoFattura" type="AllegatoFattura"/>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="Ente" type="Ente"/>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="Registro" type="Registro"/>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="RegistroProperty" type="RegistroProperty"/>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="Utente" type="Utente"/>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="NotificaEsitoCommittente" type="NotificaEsitoCommittente"/>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="Dipartimento" type="Dipartimento"/>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="DipartimentoProperty" type="DipartimentoProperty"/>
+		</xsd:sequence>
+	</xsd:complexType>
 
-    <xsd:simpleType name="IdentificativoSdIType">
-        <xsd:restriction base="xsd:integer">
-            <xsd:totalDigits value="12"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-     
-    <xsd:simpleType name="NomeFileType">
-        <xsd:restriction base="xsd:string">
-            <xsd:maxLength value="50"/>
-        </xsd:restriction>
-    </xsd:simpleType>
+	<xsd:simpleType name="IdentificativoSdIType">
+		<xsd:restriction base="xsd:integer">
+			<xsd:totalDigits value="12"/>
+		</xsd:restriction>
+	</xsd:simpleType>
 
-    <xsd:simpleType name="FormatoArchivioInvioFatturaType">
-        <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="XML"/>
-            <xsd:enumeration value="P7M"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <xsd:simpleType name="MessageIdType">
-        <xsd:restriction base="xsd:string">
-            <xsd:minLength value="1"/>
-            <xsd:maxLength value="14"/>
-        </xsd:restriction>
-    </xsd:simpleType>
+	<xsd:simpleType name="NomeFileType">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="50"/>
+		</xsd:restriction>
+	</xsd:simpleType>
 
-    <xsd:simpleType name="String60LatinType">
-        <xsd:restriction base="xsd:normalizedString">
-            <xsd:pattern value="[\p{IsBasicLatin}\p{IsLatin-1Supplement}]{1,60}"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <xsd:simpleType name="String80LatinType">
-        <xsd:restriction base="xsd:normalizedString">
-            <xsd:pattern value="[\p{IsBasicLatin}\p{IsLatin-1Supplement}]{1,80}"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <xsd:simpleType name="CodiceType">
-        <xsd:restriction base="xsd:string">
-            <xsd:minLength value="1"/>
-            <xsd:maxLength value="28"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <xsd:simpleType name="CodiceDestinatarioType">
-        <xsd:restriction base="xsd:string">
-            <xsd:pattern value="[A-Z0-9]{6}"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <xsd:simpleType name="TipoDocumentoType">
-        <xsd:restriction base="xsd:string">
-            <xsd:length value="4"/>
-            <xsd:enumeration value="TD01">
-                <xsd:annotation>
-                    <xsd:documentation>Fattura</xsd:documentation>
-                </xsd:annotation>
-            </xsd:enumeration>
-            <xsd:enumeration value="TD02">
-                <xsd:annotation>
-                    <xsd:documentation>Acconto / anticipo su fattura</xsd:documentation>
-                </xsd:annotation>
-            </xsd:enumeration>
-            <xsd:enumeration value="TD03">
-                <xsd:annotation>
-                    <xsd:documentation>Acconto / anticipo su parcella</xsd:documentation>
-                </xsd:annotation>
-            </xsd:enumeration>
-            <xsd:enumeration value="TD04">
-                <xsd:annotation>
-                    <xsd:documentation>Nota di credito</xsd:documentation>
-                </xsd:annotation>
-            </xsd:enumeration>
-            <xsd:enumeration value="TD05">
-                <xsd:annotation>
-                    <xsd:documentation>Nota di debito</xsd:documentation>
-                </xsd:annotation>
-            </xsd:enumeration>
-            <xsd:enumeration value="TD06">
-                <xsd:annotation>
-                    <xsd:documentation>Parcella</xsd:documentation>
-                </xsd:annotation>
-            </xsd:enumeration>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <xsd:simpleType name="DivisaType">
-        <xsd:restriction base="xsd:string">
-            <xsd:pattern value="[A-Z]{3}"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <xsd:simpleType name="DataFatturaType">
-        <xsd:restriction base="xsd:date">
-            <xsd:minInclusive value="1970-01-01"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <xsd:simpleType name="String10Type">
-        <xsd:restriction base="xsd:normalizedString">
-            <xsd:pattern value="(\p{IsBasicLatin}{1,10})"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <xsd:simpleType name="String20Type">
-        <xsd:restriction base="xsd:normalizedString">
-            <xsd:pattern value="(\p{IsBasicLatin}{1,20})"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <xsd:simpleType name="PasswordType">
-        <xsd:restriction base="xsd:string">
-            <xsd:pattern value="[a-zA-Z0-9]{35}"/> <!-- MD5 della password -->
-        </xsd:restriction>
-    </xsd:simpleType>
+	<xsd:simpleType name="FormatoArchivioInvioFatturaType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="XML"/>
+			<xsd:enumeration value="P7M"/>
+		</xsd:restriction>
+	</xsd:simpleType>
 
-    <xsd:simpleType name="UsernameType">
-        <xsd:restriction base="xsd:string">
-            <xsd:pattern value="[a-zA-Z0-9]{4,20}"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <xsd:simpleType name="Amount2DecimalType">
-        <xsd:restriction base="xsd:decimal">
-            <xsd:pattern value="[\-]?[0-9]{1,11}\.[0-9]{2}"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <xsd:simpleType name="String100LatinType">
-        <xsd:restriction base="xsd:normalizedString">
-            <xsd:pattern value="[\p{IsBasicLatin}\p{IsLatin-1Supplement}]{1,100}"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <xsd:simpleType name="String200LatinType">
-        <xsd:restriction base="xsd:normalizedString">
-            <xsd:pattern value="[\p{IsBasicLatin}\p{IsLatin-1Supplement}]{1,200}"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <xsd:simpleType name="String1000LatinType">
-        <xsd:restriction base="xsd:normalizedString">
-            <xsd:pattern value="[\p{IsBasicLatin}\p{IsLatin-1Supplement}]{1,1000}"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <xsd:simpleType name="FormatoTrasmissioneType">
-        <xsd:restriction base="xsd:string">
-            <xsd:length value="5"/>
-            <xsd:enumeration value="SDI11"/>
-            <xsd:enumeration value="SDI10"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <xsd:simpleType name="EsitoCommittenteType">
-        <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="EC01">
-                <xsd:annotation>
-                    <xsd:documentation>EC01 = ACCETTAZIONE</xsd:documentation>
-                </xsd:annotation>
-            </xsd:enumeration>
-            <xsd:enumeration value="EC02">
-                <xsd:annotation>
-                    <xsd:documentation>EC02 = RIFIUTO</xsd:documentation>
-                </xsd:annotation>
-            </xsd:enumeration>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <xsd:simpleType name="ScartoType">
-        <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="EN00">
-                <xsd:annotation>
-                    <xsd:documentation>EN00 = NOTIFICA NON CONFORME AL FORMATO</xsd:documentation>
-                </xsd:annotation>
-            </xsd:enumeration>
-            <xsd:enumeration value="EN01">
-                <xsd:annotation>
-                    <xsd:documentation>EN01 = NOTIFICA NON AMMISSIBILE</xsd:documentation>
-                </xsd:annotation>
-            </xsd:enumeration>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <xsd:simpleType name="EsitoType">
-        <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="IN_ELABORAZIONE_ACCETTATO"/>
-            <xsd:enumeration value="IN_ELABORAZIONE_RIFIUTATO"/>
-            <xsd:enumeration value="INVIATA_ACCETTATO"/>
-            <xsd:enumeration value="INVIATA_RIFIUTATO"/>
-            <xsd:enumeration value="SCARTATA_ACCETTATO"/>
-            <xsd:enumeration value="SCARTATA_RIFIUTATO"/>
-        </xsd:restriction>
-    </xsd:simpleType>
+	<xsd:simpleType name="MessageIdType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="14"/>
+		</xsd:restriction>
+	</xsd:simpleType>
 
-    <xsd:simpleType name="StatoConsegnaType">
-        <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="NON_CONSEGNATA"/>
-            <xsd:enumeration value="ERRORE_CONSEGNA"/>
-            <xsd:enumeration value="CONSEGNATA"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <xsd:simpleType name="StatoProtocollazioneType">
-        <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="NON_PROTOCOLLATA"/>
-            <xsd:enumeration value="PROTOCOLLATA_IN_ELABORAZIONE"/>
-            <xsd:enumeration value="ERRORE_PROTOCOLLAZIONE"/>
-            <xsd:enumeration value="PROTOCOLLATA"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <xsd:simpleType name="NazioneType">
-        <xsd:restriction base="xsd:string">
-            <xsd:pattern value="[A-Z]{2}"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <xsd:complexType name="id-fattura">
-        <xsd:sequence>
-            <xsd:element name="identificativoSdi" type="IdentificativoSdIType"/>
-            <xsd:element name="posizione" type="xsd:positiveInteger"/>
-        </xsd:sequence>    
-    </xsd:complexType>
-    
-    <xsd:complexType name="id-lotto">
-        <xsd:sequence>
-            <xsd:element name="identificativoSdi" type="IdentificativoSdIType"/>
-        </xsd:sequence>    
-    </xsd:complexType>
-    
-    <xsd:complexType name="id-notifica-decorrenza-termini">
-        <xsd:sequence>
-            <xsd:element name="identificativoSdi" type="IdentificativoSdIType"/>
-        </xsd:sequence>    
-    </xsd:complexType>
-    
-    <xsd:complexType name="id-dipartimento">
-        <xsd:sequence>
-            <xsd:element name="codice" type="CodiceDestinatarioType"/>
-        </xsd:sequence>
-    </xsd:complexType>
-    
-    <xsd:complexType name="id-utente">
-        <xsd:sequence>
-            <xsd:element name="username" type="UsernameType"/>
-        </xsd:sequence>
-    </xsd:complexType>
-    
-    <xsd:complexType name="id-ente">
-        <xsd:sequence>
-            <xsd:element name="nome" type="xsd:string"/>
-        </xsd:sequence>
-    </xsd:complexType>
-    
-    <xsd:complexType name="id-registro">
-        <xsd:sequence>
-            <xsd:element name="nome" type="xsd:string"/>
-        </xsd:sequence>
-    </xsd:complexType>
-    
-    <xsd:simpleType name="user-role">
-        <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="ADMIN"/>
-            <xsd:enumeration value="DEPT_ADMIN"/>
-            <xsd:enumeration value="USER"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <xsd:complexType name="id-property">
-        <xsd:sequence>
-            <xsd:element name="nome" type="xsd:string"/>
-            <xsd:element name="id-ente" type="id-ente"/>
-        </xsd:sequence>
-    </xsd:complexType>
-    
-    <xsd:complexType name="LottoFatture">
-        
-        <xsd:sequence>
-            <xsd:element name="formatoTrasmissione" type="FormatoTrasmissioneType"/>
-            <xsd:element name="identificativoSdi" type="IdentificativoSdIType"/>
-            <xsd:element name="nomeFile" type="NomeFileType"/>
-            <xsd:element name="formatoArchivioInvioFattura" type="FormatoArchivioInvioFatturaType"/>
-            <xsd:element name="messageId" type="MessageIdType"/>
-            <xsd:element minOccurs="0" name="cedentePrestatoreDenominazione" type="String80LatinType">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="cedentePrestatoreNome" type="String80LatinType">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="cedentePrestatoreCognome" type="String80LatinType">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="cedentePrestatoreCodice" type="String80LatinType">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="cedentePrestatorePaese" type="NazioneType">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="cedentePrestatoreCodiceFiscale" type="CodiceType">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="cessionarioCommittenteDenominazione" type="String80LatinType">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="cessionarioCommittenteNome" type="String80LatinType">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="cessionarioCommittenteCognome" type="String80LatinType">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="cessionarioCommittenteCodice" type="String80LatinType">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="cessionarioCommittentePaese" type="NazioneType">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="cessionarioCommittenteCodiceFiscale" type="CodiceType">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="terzoIntermediarioOSoggettoEmittenteDenominazione" type="String80LatinType">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="terzoIntermediarioOSoggettoEmittenteNome" type="String80LatinType">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="terzoIntermediarioOSoggettoEmittenteCognome" type="String80LatinType">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="terzoIntermediarioOSoggettoEmittenteCodice" type="String80LatinType">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="terzoIntermediarioOSoggettoEmittentePaese" type="NazioneType">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="terzoIntermediarioOSoggettoEmittenteCodiceFiscale" type="CodiceType">
-                
-            </xsd:element>
-            <xsd:element name="codiceDestinatario" type="CodiceDestinatarioType"/>
-            <xsd:element name="xml" type="xsd:base64Binary"/>
-            <xsd:element name="dataRicezione" type="DataFatturaType"/>
-            <xsd:element name="processato" type="xsd:boolean"/>
-            <xsd:element name="statoConsegna" type="StatoConsegnaType"/>
-            <xsd:element minOccurs="0" name="dataConsegna" type="xsd:dateTime"/>
-            <xsd:element minOccurs="0" name="dettaglioConsegna" type="xsd:string"/>
-            <xsd:element name="statoProtocollazione" type="StatoProtocollazioneType"/>
-            <xsd:element minOccurs="0" name="dataProtocollazione" type="xsd:dateTime"/>
-            <xsd:element minOccurs="0" name="protocollo" type="xsd:string"/>
-        </xsd:sequence>
-    </xsd:complexType>
-    
-    <xsd:complexType name="FatturaElettronica">
-        
-        <xsd:sequence>
-            <xsd:element name="formatoTrasmissione" type="FormatoTrasmissioneType"/>
-            <xsd:element name="identificativoSdi" type="IdentificativoSdIType"/>
-            <xsd:element name="dataRicezione" type="xsd:dateTime"/>
-            <xsd:element name="nomeFile" type="NomeFileType"/>
-            <xsd:element name="messageId" type="MessageIdType"/>
-            <xsd:element name="cedentePrestatoreDenominazione" type="String80LatinType">
-                
-            </xsd:element>
-            <xsd:element name="cedentePrestatorePaese" type="NazioneType">
-                
-            </xsd:element>
-            <xsd:element name="cedentePrestatoreCodiceFiscale" type="CodiceType">
-                
-            </xsd:element>
-            <xsd:element name="cessionarioCommittenteDenominazione" type="String80LatinType">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="cessionarioCommittentePaese" type="NazioneType">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="cessionarioCommittenteCodiceFiscale" type="CodiceType">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="terzoIntermediarioOSoggettoEmittenteDenominazione" type="String80LatinType">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="terzoIntermediarioOSoggettoEmittentePaese" type="NazioneType">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="terzoIntermediarioOSoggettoEmittenteCodiceFiscale" type="CodiceType">
-                
-            </xsd:element>
-            <xsd:element default="1" name="posizione" type="xsd:positiveInteger"/>
-            <xsd:element name="codiceDestinatario" type="CodiceDestinatarioType"/>
-            <xsd:element name="tipoDocumento" type="TipoDocumentoType"/>
-            <xsd:element name="divisa" type="DivisaType"/>
-            <xsd:element name="data" type="DataFatturaType"/>
-            <xsd:element name="anno" type="xsd:nonNegativeInteger"/>
-            <xsd:element name="numero" type="String20Type"/>
-            <xsd:element minOccurs="0" name="esito" type="EsitoType"/>
-            <xsd:element name="importoTotaleDocumento" type="Amount2DecimalType"/>
-            <xsd:element name="importoTotaleRiepilogo" type="Amount2DecimalType"/>
-            <xsd:element maxOccurs="1" minOccurs="0" name="causale" type="String1000LatinType"/>
-            <xsd:element default="NON_CONSEGNATA" name="statoConsegna" type="StatoConsegnaType"/>
-            <xsd:element minOccurs="0" name="dataConsegna" type="xsd:dateTime"/>
-            <xsd:element minOccurs="0" name="dettaglioConsegna" type="xsd:string"/>
-            <xsd:element name="statoProtocollazione" type="StatoProtocollazioneType"/>
-            <xsd:element minOccurs="0" name="dataProtocollazione" type="xsd:dateTime"/>
-            <xsd:element minOccurs="0" name="protocollo" type="xsd:string"/>
-            <xsd:element name="xml" type="xsd:string">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="idDecorrenzaTermini" type="id-notifica-decorrenza-termini">
-                
-            </xsd:element>
-        </xsd:sequence>
-    </xsd:complexType>
-    
-    <xsd:complexType name="NotificaEsitoCommittente">
-        
-        <xsd:sequence>
-            <xsd:element name="idFattura" type="id-fattura">
-                
-            </xsd:element>
-            <xsd:element name="identificativoSdi" type="IdentificativoSdIType"/>
-            <xsd:element minOccurs="0" name="numeroFattura" type="String20Type"/>
-            <xsd:element minOccurs="0" name="anno" type="xsd:nonNegativeInteger"/>
-            <xsd:element minOccurs="0" name="posizione" type="xsd:positiveInteger"/>
-            <xsd:element name="esito" type="EsitoCommittenteType"/>
-            <xsd:element minOccurs="0" name="descrizione" type="xsd:string"/>
-            <xsd:element minOccurs="0" name="messageIdCommittente" type="MessageIdType"/>
-            <xsd:element name="nomeFile" type="NomeFileType"/>
-            <xsd:element name="utente" type="id-utente">
-                
-            </xsd:element>
-            <xsd:element default="false" name="modalita-batch" type="xsd:boolean"/>
-            <xsd:element name="dataInvioEnte" type="xsd:dateTime"/>
-            <xsd:element minOccurs="0" name="dataInvioSdi" type="xsd:dateTime"/>
-            <xsd:element minOccurs="0" name="scarto" type="ScartoType"/>
-            <xsd:element minOccurs="0" name="scartoNote" type="xsd:string"/>
-            <xsd:element minOccurs="0" name="scartoXml" type="xsd:string">
-                
-            </xsd:element>
-            <xsd:element minOccurs="0" name="xml" type="xsd:string">
-                
-            </xsd:element>
-        </xsd:sequence>
-    </xsd:complexType>
-    
-    <xsd:complexType name="NotificaDecorrenzaTermini">
-        
-        <xsd:sequence>
-            <xsd:element name="identificativoSdi" type="IdentificativoSdIType"/>
-            <xsd:element name="nomeFile" type="NomeFileType"/>
-            <xsd:element minOccurs="0" name="descrizione" type="xsd:string"/>
-            <xsd:element name="messageId" type="MessageIdType"/>
-            <xsd:element minOccurs="0" name="note" type="xsd:string"/>
-            <xsd:element name="dataRicezione" type="xsd:dateTime"/>
-            <xsd:element name="xml" type="xsd:string">
-                
-            </xsd:element>
-        </xsd:sequence>
-    </xsd:complexType>
-    
-    <xsd:complexType name="AllegatoFattura">
-        
-        <xsd:sequence>
-            <xsd:element name="idFattura" type="id-fattura">
-                
-            </xsd:element>
-            <xsd:element name="nomeAttachment" type="String60LatinType"/>
-            <xsd:element minOccurs="0" name="algoritmoCompressione" type="String10Type"/>
-            <xsd:element minOccurs="0" name="formatoAttachment" type="String10Type"/>
-            <xsd:element minOccurs="0" name="descrizioneAttachment" type="String100LatinType"/>
-            <xsd:element name="attachment" type="xsd:base64Binary"/>
-        </xsd:sequence>
-    </xsd:complexType>
-    
-    <xsd:complexType name="Ente">
-        
-        <xsd:sequence>
-            <xsd:element name="nome" type="xsd:string"/>
-            <xsd:element minOccurs="0" name="descrizione" type="xsd:string"/>
-            <xsd:element minOccurs="0" name="endpoint" type="xsd:anyURI"/>
-            <xsd:element minOccurs="0" name="endpointConsegnaLotto" type="xsd:anyURI"/>
-            <xsd:element minOccurs="0" name="endpointRichiediProtocollo" type="xsd:anyURI"/>
-        </xsd:sequence>
-    </xsd:complexType>
-    
-    
-    <xsd:element name="Registro" type="Registro"/>
-    <xsd:complexType name="Registro">
-        
-        <xsd:sequence>
-            <xsd:element name="nome" type="xsd:string"/>
-            <xsd:element name="username" type="UsernameType"/>
-            <xsd:element name="password" type="PasswordType"/>
-            <xsd:element name="idEnte" type="id-ente">
-                
-            </xsd:element>
-            <xsd:element maxOccurs="unbounded" minOccurs="0" ref="RegistroPropertyValue">
-                
-            </xsd:element>
-        </xsd:sequence>
-    </xsd:complexType>
-    
-    <xsd:element name="RegistroProperty" type="RegistroProperty"/>
-    <xsd:complexType name="RegistroProperty">
-        
-        <xsd:sequence>
-            <xsd:element name="nome" type="xsd:string"/>
-            <xsd:element name="label" type="xsd:string"/>
-            <xsd:element name="idEnte" type="id-ente">
-                
-            </xsd:element>
-        </xsd:sequence>
-    </xsd:complexType>
-    
-    <xsd:element name="RegistroPropertyValue" type="RegistroPropertyValue"/>
-    <xsd:complexType name="RegistroPropertyValue">
-        
-        <xsd:sequence>
-            <xsd:element name="valore" type="xsd:string"/>
-            <xsd:element name="id-property" type="id-property">
-                
-            </xsd:element>
-        </xsd:sequence>
-    </xsd:complexType>
-    
-    
-    <xsd:complexType name="Utente">
-        
-        <xsd:sequence>
-            <xsd:element name="username" type="UsernameType"/>
-            <xsd:element name="password" type="PasswordType"/>
-            <xsd:element name="nome" type="xsd:string"/>
-            <xsd:element name="cognome" type="xsd:string"/>
-            <xsd:element name="role" type="user-role"/>
-            <xsd:element name="ente" type="id-ente">
-                
-            </xsd:element>
-            <xsd:element maxOccurs="unbounded" ref="UtenteDipartimento">
-                
-            </xsd:element>
-        </xsd:sequence>
-    </xsd:complexType>
-    
-    <xsd:complexType name="Dipartimento">
-        
-        <xsd:sequence>
-            <xsd:element name="codice" type="CodiceDestinatarioType"/>
-            <xsd:element name="ente" type="id-ente">
-                
-            </xsd:element>
-            <xsd:element name="descrizione" type="xsd:string"/>
-            <xsd:element default="false" name="accettazioneAutomatica" type="xsd:boolean"/>
-            <xsd:element default="true" name="modalitaPush" type="xsd:boolean"/>
-            <xsd:element minOccurs="0" name="registro" type="id-registro">
-                
-            </xsd:element>
-            <xsd:element maxOccurs="unbounded" minOccurs="0" ref="DipartimentoPropertyValue">
-                
-            </xsd:element>
-        </xsd:sequence>
-    </xsd:complexType>
+	<xsd:simpleType name="String60LatinType">
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:pattern value="[\p{IsBasicLatin}\p{IsLatin-1Supplement}]{1,60}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
 
-    <xsd:element name="DipartimentoProperty" type="DipartimentoProperty"/>
-    <xsd:complexType name="DipartimentoProperty">
-        
-        <xsd:sequence>
-            <xsd:element name="nome" type="xsd:string"/>
-            <xsd:element name="label" type="xsd:string"/>
-            <xsd:element name="idEnte" type="id-ente">
-                
-            </xsd:element>
-        </xsd:sequence>
-    </xsd:complexType>
-    
-    <xsd:element name="DipartimentoPropertyValue" type="DipartimentoPropertyValue"/>
-    <xsd:complexType name="DipartimentoPropertyValue">
-        
-        <xsd:sequence>
-            <xsd:element name="valore" type="xsd:string"/>
-            <xsd:element name="id-property" type="id-property">
-                
-            </xsd:element>
-        </xsd:sequence>
-    </xsd:complexType>
-    
-    <xsd:complexType name="UtenteDipartimento">
-        
-        <xsd:sequence>
-            <xsd:element name="idDipartimento" type="id-dipartimento">
-                
-            </xsd:element>
-        </xsd:sequence>
-    </xsd:complexType>
-   
-    <xsd:element name="LottoFatture" type="LottoFatture"/>
-    
-    <xsd:element name="FatturaElettronica" type="FatturaElettronica"/>
-    
-    <xsd:element name="NotificaEsitoCommittente" type="NotificaEsitoCommittente"/>
-    
-    <xsd:element name="NotificaDecorrenzaTermini" type="NotificaDecorrenzaTermini"/>
-    
-    <xsd:element name="AllegatoFattura" type="AllegatoFattura"/>
-    
-    <xsd:element name="Utente" type="Utente"/>
-    
-    <xsd:element name="Dipartimento" type="Dipartimento"/>
-    
-    <xsd:element name="UtenteDipartimento" type="UtenteDipartimento"/>
-    
+	<xsd:simpleType name="String80LatinType">
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:pattern value="[\p{IsBasicLatin}\p{IsLatin-1Supplement}]{1,80}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="CodiceType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="28"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="CodiceDestinatarioType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[A-Z0-9]{6}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="TipoDocumentoType">
+		<xsd:restriction base="xsd:string">
+			<xsd:length value="4"/>
+			<xsd:enumeration value="TD01">
+				<xsd:annotation>
+					<xsd:documentation>Fattura</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="TD02">
+				<xsd:annotation>
+					<xsd:documentation>Acconto / anticipo su fattura
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="TD03">
+				<xsd:annotation>
+					<xsd:documentation>Acconto / anticipo su parcella
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="TD04">
+				<xsd:annotation>
+					<xsd:documentation>Nota di credito</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="TD05">
+				<xsd:annotation>
+					<xsd:documentation>Nota di debito</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="TD06">
+				<xsd:annotation>
+					<xsd:documentation>Parcella</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="DivisaType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[A-Z]{3}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="DataFatturaType">
+		<xsd:restriction base="xsd:date">
+			<xsd:minInclusive value="1970-01-01"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="String10Type">
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:pattern value="(\p{IsBasicLatin}{1,10})"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="String20Type">
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:pattern value="(\p{IsBasicLatin}{1,20})"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="PasswordType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[a-zA-Z0-9]{35}"/> <!-- MD5 della password -->
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="UsernameType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[a-zA-Z0-9]{4,20}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="Amount2DecimalType">
+		<xsd:restriction base="xsd:decimal">
+			<xsd:pattern value="[\-]?[0-9]{1,11}\.[0-9]{2}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="String100LatinType">
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:pattern value="[\p{IsBasicLatin}\p{IsLatin-1Supplement}]{1,100}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="String200LatinType">
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:pattern value="[\p{IsBasicLatin}\p{IsLatin-1Supplement}]{1,200}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="String1000LatinType">
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:pattern value="[\p{IsBasicLatin}\p{IsLatin-1Supplement}]{1,1000}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="FormatoTrasmissioneType">
+		<xsd:restriction base="xsd:string">
+			<xsd:length value="5"/>
+			<xsd:enumeration value="SDI11"/>
+			<xsd:enumeration value="SDI10"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="EsitoCommittenteType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="EC01">
+				<xsd:annotation>
+					<xsd:documentation>EC01 = ACCETTAZIONE</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="EC02">
+				<xsd:annotation>
+					<xsd:documentation>EC02 = RIFIUTO</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="ScartoType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="EN00">
+				<xsd:annotation>
+					<xsd:documentation>EN00 = NOTIFICA NON CONFORME AL FORMATO
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="EN01">
+				<xsd:annotation>
+					<xsd:documentation>EN01 = NOTIFICA NON AMMISSIBILE
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="EsitoType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="IN_ELABORAZIONE_ACCETTATO"/>
+			<xsd:enumeration value="IN_ELABORAZIONE_RIFIUTATO"/>
+			<xsd:enumeration value="INVIATA_ACCETTATO"/>
+			<xsd:enumeration value="INVIATA_RIFIUTATO"/>
+			<xsd:enumeration value="SCARTATA_ACCETTATO"/>
+			<xsd:enumeration value="SCARTATA_RIFIUTATO"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="StatoConsegnaType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="NON_CONSEGNATA"/>
+			<xsd:enumeration value="ERRORE_CONSEGNA"/>
+			<xsd:enumeration value="CONSEGNATA"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="StatoProtocollazioneType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="NON_PROTOCOLLATA"/>
+			<xsd:enumeration value="PROTOCOLLATA_IN_ELABORAZIONE"/>
+			<xsd:enumeration value="ERRORE_PROTOCOLLAZIONE"/>
+			<xsd:enumeration value="PROTOCOLLATA"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="StatoInserimentoType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="NON_INSERITO"/>
+			<xsd:enumeration value="ERRORE_INSERIMENTO"/>
+			<xsd:enumeration value="INSERITO"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="NazioneType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[A-Z]{2}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:complexType name="id-fattura">
+		<xsd:sequence>
+			<xsd:element name="identificativoSdi" type="IdentificativoSdIType"/>
+			<xsd:element name="posizione" type="xsd:positiveInteger"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="id-lotto">
+		<xsd:sequence>
+			<xsd:element name="identificativoSdi" type="IdentificativoSdIType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="id-notifica-decorrenza-termini">
+		<xsd:sequence>
+			<xsd:element name="identificativoSdi" type="IdentificativoSdIType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="id-dipartimento">
+		<xsd:sequence>
+			<xsd:element name="codice" type="CodiceDestinatarioType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="id-utente">
+		<xsd:sequence>
+			<xsd:element name="username" type="UsernameType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="id-ente">
+		<xsd:sequence>
+			<xsd:element name="nome" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="id-registro">
+		<xsd:sequence>
+			<xsd:element name="nome" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:simpleType name="user-role">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="ADMIN"/>
+			<xsd:enumeration value="DEPT_ADMIN"/>
+			<xsd:enumeration value="USER"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:complexType name="id-property">
+		<xsd:sequence>
+			<xsd:element name="nome" type="xsd:string"/>
+			<xsd:element name="id-ente" type="id-ente"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="LottoFatture">
+		
+		<xsd:sequence>
+			<xsd:element name="formatoTrasmissione" type="FormatoTrasmissioneType"/>
+			<xsd:element name="identificativoSdi" type="IdentificativoSdIType"/>
+			<xsd:element name="nomeFile" type="NomeFileType"/>
+			<xsd:element name="formatoArchivioInvioFattura" type="FormatoArchivioInvioFatturaType"/>
+			<xsd:element name="messageId" type="MessageIdType"/>
+			<xsd:element minOccurs="0" name="cedentePrestatoreDenominazione" type="String80LatinType">
+				
+			</xsd:element>
+			<xsd:element minOccurs="0" name="cedentePrestatoreNome" type="String80LatinType">
+				
+			</xsd:element>
+			<xsd:element minOccurs="0" name="cedentePrestatoreCognome" type="String80LatinType">
+				
+			</xsd:element>
+			<xsd:element minOccurs="0" name="cedentePrestatoreCodice" type="String80LatinType">
+				
+			</xsd:element>
+			<xsd:element minOccurs="0" name="cedentePrestatorePaese" type="NazioneType">
+				
+			</xsd:element>
+			<xsd:element minOccurs="0" name="cedentePrestatoreCodiceFiscale" type="CodiceType">
+				
+			</xsd:element>
+			<xsd:element minOccurs="0" name="cessionarioCommittenteDenominazione" type="String80LatinType">
+				
+			</xsd:element>
+			<xsd:element minOccurs="0" name="cessionarioCommittenteNome" type="String80LatinType">
+				
+			</xsd:element>
+			<xsd:element minOccurs="0" name="cessionarioCommittenteCognome" type="String80LatinType">
+				
+			</xsd:element>
+			<xsd:element minOccurs="0" name="cessionarioCommittenteCodice" type="String80LatinType">
+				
+			</xsd:element>
+			<xsd:element minOccurs="0" name="cessionarioCommittentePaese" type="NazioneType">
+				
+			</xsd:element>
+			<xsd:element minOccurs="0" name="cessionarioCommittenteCodiceFiscale" type="CodiceType">
+				
+			</xsd:element>
+			<xsd:element minOccurs="0" name="terzoIntermediarioOSoggettoEmittenteDenominazione" type="String80LatinType">
+				
+			</xsd:element>
+			<xsd:element minOccurs="0" name="terzoIntermediarioOSoggettoEmittenteNome" type="String80LatinType">
+				
+			</xsd:element>
+			<xsd:element minOccurs="0" name="terzoIntermediarioOSoggettoEmittenteCognome" type="String80LatinType">
+				
+			</xsd:element>
+			<xsd:element minOccurs="0" name="terzoIntermediarioOSoggettoEmittenteCodice" type="String80LatinType">
+				
+			</xsd:element>
+			<xsd:element minOccurs="0" name="terzoIntermediarioOSoggettoEmittentePaese" type="NazioneType">
+				
+			</xsd:element>
+			<xsd:element minOccurs="0" name="terzoIntermediarioOSoggettoEmittenteCodiceFiscale" type="CodiceType">
+				
+			</xsd:element>
+			<xsd:element name="codiceDestinatario" type="CodiceDestinatarioType"/>
+			<xsd:element name="xml" type="xsd:base64Binary"/>
+			<xsd:element name="dataRicezione" type="DataFatturaType"/>
+			<xsd:element name="statoInserimento" type="StatoInserimentoType"/>
+			<xsd:element name="statoConsegna" type="StatoConsegnaType"/>
+			<xsd:element minOccurs="0" name="dataConsegna" type="xsd:dateTime"/>
+			<xsd:element minOccurs="0" name="dettaglioConsegna" type="xsd:string"/>
+			<xsd:element name="statoProtocollazione" type="StatoProtocollazioneType"/>
+			<xsd:element minOccurs="0" name="dataProtocollazione" type="xsd:dateTime"/>
+			<xsd:element minOccurs="0" name="protocollo" type="xsd:string">
+				
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="FatturaElettronica">
+		
+		<xsd:sequence>
+			<xsd:element name="formatoTrasmissione" type="FormatoTrasmissioneType"/>
+			<xsd:element name="identificativoSdi" type="IdentificativoSdIType"/>
+			<xsd:element name="dataRicezione" type="xsd:dateTime"/>
+			<xsd:element name="nomeFile" type="NomeFileType"/>
+			<xsd:element name="messageId" type="MessageIdType"/>
+			<xsd:element name="cedentePrestatoreDenominazione" type="String80LatinType">
+				
+			</xsd:element>
+			<xsd:element name="cedentePrestatorePaese" type="NazioneType">
+				
+			</xsd:element>
+			<xsd:element name="cedentePrestatoreCodiceFiscale" type="CodiceType">
+				
+			</xsd:element>
+			<xsd:element name="cessionarioCommittenteDenominazione" type="String80LatinType">
+				
+			</xsd:element>
+			<xsd:element minOccurs="0" name="cessionarioCommittentePaese" type="NazioneType">
+				
+			</xsd:element>
+			<xsd:element minOccurs="0" name="cessionarioCommittenteCodiceFiscale" type="CodiceType">
+				
+			</xsd:element>
+			<xsd:element minOccurs="0" name="terzoIntermediarioOSoggettoEmittenteDenominazione" type="String80LatinType">
+				
+			</xsd:element>
+			<xsd:element minOccurs="0" name="terzoIntermediarioOSoggettoEmittentePaese" type="NazioneType">
+				
+			</xsd:element>
+			<xsd:element minOccurs="0" name="terzoIntermediarioOSoggettoEmittenteCodiceFiscale" type="CodiceType">
+				
+			</xsd:element>
+			<xsd:element default="1" name="posizione" type="xsd:positiveInteger"/>
+			<xsd:element name="codiceDestinatario" type="CodiceDestinatarioType"/>
+			<xsd:element name="tipoDocumento" type="TipoDocumentoType"/>
+			<xsd:element name="divisa" type="DivisaType"/>
+			<xsd:element name="data" type="DataFatturaType"/>
+			<xsd:element name="anno" type="xsd:nonNegativeInteger"/>
+			<xsd:element name="numero" type="String20Type"/>
+			<xsd:element minOccurs="0" name="esito" type="EsitoType"/>
+			<xsd:element name="importoTotaleDocumento" type="Amount2DecimalType"/>
+			<xsd:element name="importoTotaleRiepilogo" type="Amount2DecimalType"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="causale" type="String1000LatinType"/>
+			<xsd:element default="NON_CONSEGNATA" name="statoConsegna" type="StatoConsegnaType"/>
+			<xsd:element minOccurs="0" name="dataConsegna" type="xsd:dateTime"/>
+			<xsd:element minOccurs="0" name="dettaglioConsegna" type="xsd:string"/>
+			<xsd:element name="statoProtocollazione" type="StatoProtocollazioneType"/>
+			<xsd:element minOccurs="0" name="dataProtocollazione" type="xsd:dateTime"/>
+			<xsd:element minOccurs="0" name="protocollo" type="xsd:string"/>
+			<xsd:element name="xml" type="xsd:base64Binary"/>
+			<xsd:element minOccurs="0" name="idDecorrenzaTermini" type="id-notifica-decorrenza-termini">
+				
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="NotificaEsitoCommittente">
+		
+		<xsd:sequence>
+			<xsd:element name="idFattura" type="id-fattura">
+				
+			</xsd:element>
+			<xsd:element name="identificativoSdi" type="IdentificativoSdIType"/>
+			<xsd:element minOccurs="0" name="numeroFattura" type="String20Type"/>
+			<xsd:element minOccurs="0" name="anno" type="xsd:nonNegativeInteger"/>
+			<xsd:element minOccurs="0" name="posizione" type="xsd:positiveInteger"/>
+			<xsd:element name="esito" type="EsitoCommittenteType"/>
+			<xsd:element minOccurs="0" name="descrizione" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="messageIdCommittente" type="MessageIdType"/>
+			<xsd:element name="nomeFile" type="NomeFileType"/>
+			<xsd:element name="utente" type="id-utente">
+				
+			</xsd:element>
+			<xsd:element default="false" name="modalita-batch" type="xsd:boolean"/>
+			<xsd:element name="dataInvioEnte" type="xsd:dateTime"/>
+			<xsd:element minOccurs="0" name="dataInvioSdi" type="xsd:dateTime"/>
+			<xsd:element minOccurs="0" name="scarto" type="ScartoType"/>
+			<xsd:element minOccurs="0" name="scartoNote" type="xsd:string"/>
+                        <xsd:element minOccurs="0" name="scartoXml" type="xsd:base64Binary"/>
+                        <xsd:element minOccurs="0" name="xml" type="xsd:base64Binary"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="NotificaDecorrenzaTermini">
+		
+		<xsd:sequence>
+			<xsd:element name="identificativoSdi" type="IdentificativoSdIType"/>
+			<xsd:element name="nomeFile" type="NomeFileType"/>
+			<xsd:element minOccurs="0" name="descrizione" type="xsd:string"/>
+			<xsd:element name="messageId" type="MessageIdType"/>
+			<xsd:element minOccurs="0" name="note" type="xsd:string"/>
+			<xsd:element name="dataRicezione" type="xsd:dateTime"/>
+                        <xsd:element name="xml" type="xsd:base64Binary"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="AllegatoFattura">
+		
+		<xsd:sequence>
+			<xsd:element name="idFattura" type="id-fattura">
+				
+			</xsd:element>
+			<xsd:element name="nomeAttachment" type="String60LatinType"/>
+			<xsd:element minOccurs="0" name="algoritmoCompressione" type="String10Type"/>
+			<xsd:element minOccurs="0" name="formatoAttachment" type="String10Type"/>
+			<xsd:element minOccurs="0" name="descrizioneAttachment" type="String100LatinType"/>
+			<xsd:element name="attachment" type="xsd:base64Binary"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="Ente">
+		
+		<xsd:sequence>
+			<xsd:element name="nome" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="descrizione" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="endpoint" type="xsd:anyURI"/>
+			<xsd:element minOccurs="0" name="endpointConsegnaLotto" type="xsd:anyURI"/>
+			<xsd:element minOccurs="0" name="endpointRichiediProtocollo" type="xsd:anyURI"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+
+	<xsd:element name="Registro" type="Registro"/>
+	<xsd:complexType name="Registro">
+		
+		<xsd:sequence>
+			<xsd:element name="nome" type="xsd:string"/>
+			<xsd:element name="username" type="UsernameType"/>
+			<xsd:element name="password" type="PasswordType"/>
+			<xsd:element name="idEnte" type="id-ente">
+				
+			</xsd:element>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" ref="RegistroPropertyValue">
+				
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:element name="RegistroProperty" type="RegistroProperty"/>
+	<xsd:complexType name="RegistroProperty">
+		
+		<xsd:sequence>
+			<xsd:element name="nome" type="xsd:string"/>
+			<xsd:element name="label" type="xsd:string"/>
+			<xsd:element name="idEnte" type="id-ente">
+				
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:element name="RegistroPropertyValue" type="RegistroPropertyValue"/>
+	<xsd:complexType name="RegistroPropertyValue">
+		
+		<xsd:sequence>
+			<xsd:element name="valore" type="xsd:string"/>
+			<xsd:element name="id-property" type="id-property">
+				
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+
+	<xsd:complexType name="Utente">
+		
+		<xsd:sequence>
+			<xsd:element name="username" type="UsernameType"/>
+			<xsd:element name="password" type="PasswordType"/>
+			<xsd:element name="nome" type="xsd:string"/>
+			<xsd:element name="cognome" type="xsd:string"/>
+			<xsd:element name="role" type="user-role"/>
+			<xsd:element name="ente" type="id-ente">
+				
+			</xsd:element>
+			<xsd:element maxOccurs="unbounded" ref="UtenteDipartimento">
+				
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="Dipartimento">
+		
+		<xsd:sequence>
+			<xsd:element name="codice" type="CodiceDestinatarioType"/>
+			<xsd:element name="ente" type="id-ente">
+				
+			</xsd:element>
+			<xsd:element name="descrizione" type="xsd:string"/>
+			<xsd:element default="false" name="accettazioneAutomatica" type="xsd:boolean"/>
+			<xsd:element default="true" name="modalitaPush" type="xsd:boolean"/>
+			<xsd:element minOccurs="0" name="registro" type="id-registro">
+				
+			</xsd:element>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" ref="DipartimentoPropertyValue">
+				
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:element name="DipartimentoProperty" type="DipartimentoProperty"/>
+	<xsd:complexType name="DipartimentoProperty">
+		
+		<xsd:sequence>
+			<xsd:element name="nome" type="xsd:string"/>
+			<xsd:element name="label" type="xsd:string"/>
+			<xsd:element name="idEnte" type="id-ente">
+				
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:element name="DipartimentoPropertyValue" type="DipartimentoPropertyValue"/>
+	<xsd:complexType name="DipartimentoPropertyValue">
+		
+		<xsd:sequence>
+			<xsd:element name="valore" type="xsd:string"/>
+			<xsd:element name="id-property" type="id-property">
+				
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="UtenteDipartimento">
+		
+		<xsd:sequence>
+			<xsd:element name="idDipartimento" type="id-dipartimento">
+				
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:element name="LottoFatture" type="LottoFatture"/>
+
+	<xsd:element name="FatturaElettronica" type="FatturaElettronica"/>
+
+	<xsd:element name="NotificaEsitoCommittente" type="NotificaEsitoCommittente"/>
+
+	<xsd:element name="NotificaDecorrenzaTermini" type="NotificaDecorrenzaTermini"/>
+
+	<xsd:element name="AllegatoFattura" type="AllegatoFattura"/>
+
+	<xsd:element name="Utente" type="Utente"/>
+
+	<xsd:element name="Dipartimento" type="Dipartimento"/>
+
+	<xsd:element name="UtenteDipartimento" type="UtenteDipartimento"/>
+
 </xsd:schema>

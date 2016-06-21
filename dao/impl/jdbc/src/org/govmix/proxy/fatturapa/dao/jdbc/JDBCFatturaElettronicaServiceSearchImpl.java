@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
+import org.openspcoop2.generic_project.dao.jdbc.utils.IJDBCFetch;
 import org.govmix.proxy.fatturapa.FatturaElettronica;
 import org.govmix.proxy.fatturapa.IdFattura;
 import org.govmix.proxy.fatturapa.dao.jdbc.converter.FatturaElettronicaFieldConverter;
@@ -67,10 +69,18 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 		}		
 		return this._fatturaElettronicaFieldConverter;
 	}
+	@Override
+	public ISQLFieldConverter getFieldConverter() {
+		return this.getFatturaElettronicaFieldConverter();
+	}
 	
 	private FatturaElettronicaFetch fatturaElettronicaFetch = new FatturaElettronicaFetch();
 	public FatturaElettronicaFetch getFatturaElettronicaFetch() {
 		return this.fatturaElettronicaFetch;
+	}
+	@Override
+	public IJDBCFetch getFetch() {
+		return getFatturaElettronicaFetch();
 	}
 	
 	

@@ -21,6 +21,8 @@
  */
 package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 
+import java.sql.Connection;
+
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.AllegatoFattura;
 import org.govmix.proxy.fatturapa.dao.IAllegatoFatturaService;
@@ -40,9 +42,24 @@ public class AllegatoFatturaBD extends BaseBD {
 		this.service = this.serviceManager.getAllegatoFatturaService();
 	}
 
+	public AllegatoFatturaBD(Logger log, Connection connection, boolean autocommit) throws Exception {
+		super(log, connection, autocommit);
+		this.service = this.serviceManager.getAllegatoFatturaService();
+	}
+
 	public void create(AllegatoFattura allegato) throws Exception {
 		try {
 			this.service.create(allegato, this.validate);
+		} catch (ServiceException e) {
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			throw new Exception(e);
+		}
+	}
+
+	public void validate(AllegatoFattura allegato) throws Exception {
+		try {
+			this.service.validate(allegato);
 		} catch (ServiceException e) {
 			throw new Exception(e);
 		} catch (NotImplementedException e) {

@@ -14,6 +14,7 @@
 	<property name="binary_release_dir" value="${install.dir}/installer/api" />
 	
 	<property name="required_lib_fatturaPA_web_api" location="deploy/lib" />
+    <property name="lib_as_specific" location="deploy/lib_as_specific" />
 
 	<!-- Progetto Web commons -->
 	<property name="web_commons" location="../commons" />

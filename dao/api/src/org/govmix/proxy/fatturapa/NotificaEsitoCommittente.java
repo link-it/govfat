@@ -54,8 +54,8 @@ import java.io.Serializable;
  * 			&lt;element name="dataInvioSdi" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="scarto" type="{http://www.govmix.org/proxy/fatturapa}ScartoType" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="scartoNote" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
- * 			&lt;element name="scartoXml" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
- * 			&lt;element name="xml" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="scartoXml" type="{http://www.w3.org/2001/XMLSchema}base64Binary" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="xml" type="{http://www.w3.org/2001/XMLSchema}base64Binary" minOccurs="0" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -207,6 +207,10 @@ public class NotificaEsitoCommittente extends org.openspcoop2.utils.beans.BaseBe
     this.utente = utente;
   }
 
+  public boolean isModalitaBatch() {
+    return this.modalitaBatch;
+  }
+
   public boolean getModalitaBatch() {
     return this.modalitaBatch;
   }
@@ -259,19 +263,19 @@ public class NotificaEsitoCommittente extends org.openspcoop2.utils.beans.BaseBe
     this.scartoNote = scartoNote;
   }
 
-  public java.lang.String getScartoXml() {
+  public byte[] getScartoXml() {
     return this.scartoXml;
   }
 
-  public void setScartoXml(java.lang.String scartoXml) {
+  public void setScartoXml(byte[] scartoXml) {
     this.scartoXml = scartoXml;
   }
 
-  public java.lang.String getXml() {
+  public byte[] getXml() {
     return this.xml;
   }
 
-  public void setXml(java.lang.String xml) {
+  public void setXml(byte[] xml) {
     this.xml = xml;
   }
 
@@ -363,12 +367,12 @@ public class NotificaEsitoCommittente extends org.openspcoop2.utils.beans.BaseBe
   @XmlElement(name="scartoNote",required=false,nillable=false)
   protected java.lang.String scartoNote;
 
-  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @javax.xml.bind.annotation.XmlSchemaType(name="base64Binary")
   @XmlElement(name="scartoXml",required=false,nillable=false)
-  protected java.lang.String scartoXml;
+  protected byte[] scartoXml;
 
-  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @javax.xml.bind.annotation.XmlSchemaType(name="base64Binary")
   @XmlElement(name="xml",required=false,nillable=false)
-  protected java.lang.String xml;
+  protected byte[] xml;
 
 }

@@ -4,19 +4,19 @@
 	<classpathentry kind="src" path="deploy/properties"/>
 	<classpathentry kind="lib" path="deploy/lib/"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/1.0.fatturaPA/deploy/lib/ant-contrib-1.0b3.jar"/>
-	<classpathentry kind="lib" path="/1.0.fatturaPA/deploy/lib/bcel-5.2.jar"/>
-	<classpathentry kind="lib" path="/1.0.fatturaPA/deploy/lib/commons-logging-1.1.1.jar"/>
-	<classpathentry kind="lib" path="/1.0.fatturaPA/deploy/lib/commons-lang-2.6.jar"/>
-	<classpathentry kind="lib" path="/1.0.fatturaPA/deploy/lib/geronimo-ws-metadata_2.0_spec-1.1.3.jar"/>
-	<classpathentry kind="lib" path="/1.0.fatturaPA/deploy/lib/jaxb-api-2.2.6.jar"/>
-	<classpathentry kind="lib" path="/1.0.fatturaPA/deploy/lib/jibx-bind-1.2.3.jar"/>
-	<classpathentry kind="lib" path="/1.0.fatturaPA/deploy/lib/jibx-run-1.2.3.jar"/>
-	<classpathentry kind="lib" path="/1.0.fatturaPA/deploy/lib/openspcoop2_generic-project.jar" sourcepath="/op2_1.1.dev"/>
-	<classpathentry kind="lib" path="/1.0.fatturaPA/deploy/lib/log4j-1.2.16.jar"/>
-	<classpathentry kind="lib" path="/1.0.fatturaPA/deploy/lib/openspcoop2_utils.jar"/>
-	<classpathentry kind="lib" path="/1.0.fatturaPA/deploy/lib/xercesImpl-2.9.1.jar"/>
-	<classpathentry kind="lib" path="/1.0.fatturaPA/deploy/lib/xpp3-1.2.3.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/1.0.fatturaPA"/>
+	<classpathentry kind="lib" path="/1.0.pab.fatturaPA/deploy/lib/ant-contrib-1.0b3.jar"/>
+	<classpathentry kind="lib" path="/1.0.pab.fatturaPA/deploy/lib/bcel-5.2.jar"/>
+	<classpathentry kind="lib" path="/1.0.pab.fatturaPA/deploy/lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="/1.0.pab.fatturaPA/deploy/lib/commons-lang-2.6.jar"/>
+	<classpathentry kind="lib" path="/1.0.pab.fatturaPA/deploy/lib/geronimo-ws-metadata_2.0_spec-1.1.3.jar"/>
+	<classpathentry kind="lib" path="/1.0.pab.fatturaPA/deploy/lib/jaxb-api-2.2.6.jar"/>
+	<classpathentry kind="lib" path="/1.0.pab.fatturaPA/deploy/lib/jibx-bind-1.2.3.jar"/>
+	<classpathentry kind="lib" path="/1.0.pab.fatturaPA/deploy/lib/jibx-run-1.2.3.jar"/>
+	<classpathentry kind="lib" path="/1.0.pab.fatturaPA/deploy/lib/openspcoop2_generic-project.jar"/>
+	<classpathentry kind="lib" path="/1.0.pab.fatturaPA/deploy/lib/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="/1.0.pab.fatturaPA/deploy/lib/openspcoop2_utils.jar"/>
+	<classpathentry kind="lib" path="/1.0.pab.fatturaPA/deploy/lib/xercesImpl-2.9.1.jar"/>
+	<classpathentry kind="lib" path="/1.0.pab.fatturaPA/deploy/lib/xpp3-1.2.3.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/1.0.pab.fatturaPA"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

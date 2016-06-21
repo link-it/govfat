@@ -113,7 +113,7 @@ public class DBLoginDao implements ILoginDao{
 	}
 
 	@Override
-	public Utente getLoggedUtente(String username, String password) {
+	public Utente getLoggedUtente(String username, String password) throws ServiceException{
 		if(username ==null && password ==null){
 			log.error("Credenziali non presenti");
 			return null;
@@ -153,7 +153,7 @@ public class DBLoginDao implements ILoginDao{
 	}
 	
 	@Override
-	public Utente getLoggedUtente(String username) {
+	public Utente getLoggedUtente(String username) throws ServiceException{
 		if(username ==null ){
 			log.error("Credenziali non presenti");
 			return null;

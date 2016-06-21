@@ -26,6 +26,7 @@ import java.util.List;
 import org.govmix.proxy.fatturapa.Dipartimento;
 import org.govmix.proxy.fatturapa.Ente;
 import org.govmix.proxy.fatturapa.Utente;
+import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.web.dao.ILoginDAO;
 
 
@@ -38,9 +39,9 @@ import org.openspcoop2.generic_project.web.dao.ILoginDAO;
  */
 public interface ILoginDao extends ILoginDAO{
 
-	public Utente getLoggedUtente(String username, String password);
+	public Utente getLoggedUtente(String username, String password) throws ServiceException;
 	
-	public Utente getLoggedUtente(String username);
+	public Utente getLoggedUtente(String username) throws ServiceException;
 	
 	public Ente getEnte();
 	

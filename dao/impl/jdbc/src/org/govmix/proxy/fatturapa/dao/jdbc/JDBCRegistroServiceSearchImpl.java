@@ -27,6 +27,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+
+import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
+import org.openspcoop2.generic_project.dao.jdbc.utils.IJDBCFetch;
+
 import org.govmix.proxy.fatturapa.IdEnte;
 import org.govmix.proxy.fatturapa.IdRegistro;
 import org.govmix.proxy.fatturapa.Registro;
@@ -69,10 +73,18 @@ public class JDBCRegistroServiceSearchImpl implements IJDBCRegistroServiceSearch
 		}		
 		return this._registroFieldConverter;
 	}
+	@Override
+	public ISQLFieldConverter getFieldConverter() {
+		return this.getRegistroFieldConverter();
+	}
 	
 	private RegistroFetch registroFetch = new RegistroFetch();
 	public RegistroFetch getRegistroFetch() {
 		return this.registroFetch;
+	}
+	@Override
+	public IJDBCFetch getFetch() {
+		return getRegistroFetch();
 	}
 	
 	

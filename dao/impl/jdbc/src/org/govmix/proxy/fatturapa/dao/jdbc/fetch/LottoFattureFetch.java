@@ -107,8 +107,8 @@ public class LottoFattureFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "xml", LottoFatture.model().XML.getFieldType()));
 				setParameter(object, "setDataRicezione", LottoFatture.model().DATA_RICEZIONE.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "data_ricezione", LottoFatture.model().DATA_RICEZIONE.getFieldType()));
-				setParameter(object, "setProcessato", LottoFatture.model().PROCESSATO.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "processato", LottoFatture.model().PROCESSATO.getFieldType()));
+				setParameter(object, "set_value_statoInserimento", String.class,
+					jdbcParameterUtilities.readParameter(rs, "stato_inserimento", LottoFatture.model().STATO_INSERIMENTO.getFieldType())+"");
 				setParameter(object, "set_value_statoConsegna", String.class,
 					jdbcParameterUtilities.readParameter(rs, "stato_consegna", LottoFatture.model().STATO_CONSEGNA.getFieldType())+"");
 				setParameter(object, "setDataConsegna", LottoFatture.model().DATA_CONSEGNA.getFieldType(),
@@ -195,8 +195,8 @@ public class LottoFattureFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"xml"));
 				setParameter(object, "setDataRicezione", LottoFatture.model().DATA_RICEZIONE.getFieldType(),
 					this.getObjectFromMap(map,"dataRicezione"));
-				setParameter(object, "setProcessato", LottoFatture.model().PROCESSATO.getFieldType(),
-					this.getObjectFromMap(map,"processato"));
+				setParameter(object, "set_value_statoInserimento", String.class,
+					this.getObjectFromMap(map,"statoInserimento"));
 				setParameter(object, "set_value_statoConsegna", String.class,
 					this.getObjectFromMap(map,"statoConsegna"));
 				setParameter(object, "setDataConsegna", LottoFatture.model().DATA_CONSEGNA.getFieldType(),

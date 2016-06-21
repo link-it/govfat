@@ -129,16 +129,18 @@
 	<property name="build_fatturaPA_web_api" value="${build_dir_fatturaPA_web_api}" />
 	<property name="dist_fatturaPA_web_api" location="dist" />
 	<property name="properties_fatturaPA_web_api" location="deploy/properties" />
-	<property name="as_specific_lib" location="${build_dir_fatturaPA_web_api}/lib_aggiuntive" />
+	<property name="as_specific_lib" location="${build_fatturaPA_web_api}/lib_aggiuntive" />
 	
 	<target name="clean">
 		<delete dir="${build_dir_fatturaPA_web_api}" />
 		<delete dir="${dist_fatturaPA_web_api}" />
+		<delete dir="${as_specific_lib}" />
 	</target>
 
 	<target name="init_compile_fatturaPA_web_api">
 		<mkdir dir="${build_fatturaPA_web_api}" />
 		<mkdir dir="${dist_fatturaPA_web_api}" />
+		<mkdir dir="${as_specific_lib}" />
 	</target>
 
 	<path id="classpath_compile">
@@ -154,6 +156,15 @@
 		</fileset>
 		<fileset file="${api_fatturaPA}" />
 		<fileset file="${commons_fatturaPA}" />
+		<fileset dir="${commons.lib}">
+		 <include name="itextpdf-5.5.3.jar"/>
+		 <include name="commons-io-2.1.jar"/>
+		 <include name="openspcoop2_sdi-protocol.jar"/>
+		 <include name="flying-saucer-core-9.0.6.jar"/>
+		 <include name="flying-saucer-pdf-itext5-9.0.6.jar"/>
+		 <include name="soap.jar"/>
+        </fileset>
+
 	</path>
 
 	<target name="build_fatturaPA_web_api" depends="init_compile_fatturaPA_web_api" description="compila la libreria">
@@ -174,7 +185,7 @@
 	</target>
 
 	            
-	<target name="build" depends="build_fatturaPA_web_api, make_openspcoop2_ejb">
+	<target name="build" depends="build_fatturaPA_web_api">
 	
         <!-- Copia dei jar necessari per l'esecuzione in jboss6 -->
         <if>
@@ -257,7 +268,12 @@
 			</lib>
 
 			<lib dir="${commons.lib}">
-				<include name="*.jar"/>
+			 <include name="itextpdf-5.5.3.jar"/>
+			 <include name="commons-io-2.1.jar"/>
+			 <include name="openspcoop2_sdi-protocol_BUILD*.jar"/>
+			 <include name="flying-saucer-core-9.0.6.jar"/>
+			 <include name="flying-saucer-pdf-itext5-9.0.6.jar"/>
+ 			 <include name="soap.jar"/>
 			</lib>
 			
 			<classes dir="${commons.properties}">
@@ -277,8 +293,8 @@
 			
 			<lib dir="${required_lib_fatturaPA}">
 				<include name="fatturaPA_web_commons.jar"/>
-                <include name="openspcoop2_generic-project.jar"/>
-                <include name="openspcoop2_utils.jar"/>
+                <include name="openspcoop2_generic-project_BUILD*.jar"/>
+                <include name="openspcoop2_utils_BUILD*.jar"/>
                 <include name="jaxb-impl-*.jar"/>
                 <include name="jaxb-xjc-*.jar"/>
                 <include name="jibx-*.jar"/>
@@ -292,122 +308,17 @@
 	</target>
 	
 	
-	<!-- Creazione del modulo OpenSPCoop2.jar -->
-	<target name="make_openspcoop2_ejb" description="Crea il modulo EJB">
-		<var name="build" value="${build_dir_fatturaPA_web_api}"/>
-
-		<delete dir="${build_dir_fatturaPA_web_api}/tmpEJB" />
-		<mkdir dir="${build_dir_fatturaPA_web_api}/tmpEJB" />
-		
-		<!-- ejb/jboss config -->
-		<var name="ejb_jar_xml" value=""/>
-		<var name="jboss_xml" value=""/>
-		<var name="src" value="${src_dir_fatturaPA_web_api}"/>
-		<if>
-			<equals arg1="${build_openspcoop_with_linkit_threads}" arg2="true" />
-			<then>
-				<if>
-					<or>
-						<equals arg1="${as}" arg2="jboss4"/>
-						<equals arg1="${as}" arg2="jboss5"/>
-						<equals arg1="${as}" arg2="jboss6"/>
-					</or>
-					<then>
-						<copy file="${src}/META-INF/ejb-jar.xml.ejb2.threads" tofile="${build}/tmpEJB/META-INF/ejb-jar.xml" />
-						<copy file="${src}/META-INF/jboss.xml.ejb2.threads" tofile="${build}/tmpEJB/META-INF/jboss.xml" />
-						<var name="ejb_jar_xml" value="ejb-jar.xml"/>
-						<var name="jboss_xml" value="jboss.xml"/>
-					</then>
-				</if>
-				<if>
-					<or>
-						<equals arg1="${as}" arg2="jboss7"/>
-						<equals arg1="${as}" arg2="jboss8"/>
-						<equals arg1="${as}" arg2="wildfly8"/>
-					</or>
-					<then>
-						<copy file="${src}/META-INF/ejb-jar.xml.ejb3.threads" tofile="${build}/tmpEJB/META-INF/ejb-jar.xml" />
-						<copy file="${src}/META-INF/jboss.xml.ejb3.threads" tofile="${build}/tmpEJB/META-INF/jboss-ejb3.xml" />
-						<var name="ejb_jar_xml" value="ejb-jar.xml"/>
-						<var name="jboss_xml" value="jboss-ejb3.xml"/>
-					</then>
-				</if>
-			</then>
-			<else>
-				<if>
-					<or>
-						<equals arg1="${as}" arg2="jboss4"/>
-						<equals arg1="${as}" arg2="jboss5"/>
-						<equals arg1="${as}" arg2="jboss6"/>
-					</or>
-					<then>
-						<copy file="${src}/META-INF/ejb-jar.xml.ejb2" tofile="${build_dir_fatturaPA_web_api}/tmpEJB/META-INF/ejb-jar.xml" />
-						<copy file="${src}/META-INF/jboss.xml.ejb2" tofile="${build_dir_fatturaPA_web_api}/tmpEJB/META-INF/jboss.xml" />
-						<var name="ejb_jar_xml" value="ejb-jar.xml"/>
-						<var name="jboss_xml" value="jboss.xml"/>
-					</then>
-				</if>
-				<if>
-					<or>
-						<equals arg1="${as}" arg2="jboss7"/>
-						<equals arg1="${as}" arg2="jboss8"/>
-						<equals arg1="${as}" arg2="wildfly8"/>
-					</or>
-					<then>
-						<copy file="${src}/META-INF/ejb-jar.xml.ejb3" tofile="${build_dir_fatturaPA_web_api}/tmpEJB/META-INF/ejb-jar.xml" />
-						<copy file="${src}/META-INF/jboss.xml.ejb3" tofile="${build_dir_fatturaPA_web_api}/tmpEJB/META-INF/jboss-ejb3.xml" />
-						<var name="ejb_jar_xml" value="ejb-jar.xml"/>
-						<var name="jboss_xml" value="jboss-ejb3.xml"/>
-					</then>
-				</if>
-			</else>
-		</if>
-		
-		<!-- mailcap
-		<var name="mailcap_info" value=""/>
-		<if>
-			<or>
-				<equals arg1="${as}" arg2="jboss7"/>
-				<equals arg1="${as}" arg2="jboss8"/>
-				<equals arg1="${as}" arg2="wildfly8"/>
-			</or>
-			<then>
-				<var name="mailcap_info" value="mailcap"/>
-			</then>
-		</if>
-		 -->
-		<jar jarfile="${dist_fatturaPA_web_api}/fatturaPA_ejb.jar">
-			<manifest>
-				<attribute name="Class-Path" value="${manifest.classpath.3parti} ${plugins.classpath} ${manifest.classpath.openspcoop} properties/" />
-			</manifest>
-			<zipfileset dir="${build_dir_fatturaPA_web_api}/tmpEJB">
-				<include name="META-INF/${ejb_jar_xml}" />
-				<include name="META-INF/${jboss_xml}" />
-			</zipfileset>
-			<!-- DataContentHandler per application/openspcoop2
-			<zipfileset dir="${data_content_handler_dir}" prefix="META-INF">
-				<include name="${mailcap_info}" />
-			</zipfileset>
-			 -->
-		</jar>
-		<delete dir="${build_dir_fatturaPA_web_api}/tmpEJB" />
-	</target>
-	
 	<target name="prepare_binary_release" depends="build_fatturaPA_web_api">
 		
 		<delete dir="${binary_release_dir}"/>
 		
 		<mkdir dir="${binary_release_dir}"/>
 		<mkdir dir="${binary_release_dir}/deploy/cxf"/>
-		<mkdir dir="${binary_release_dir}/deploy/META-INF"/>
 		<mkdir dir="${binary_release_dir}/deploy/WEB-INF"/>
 		<mkdir dir="${binary_release_dir}/deploy/lib"/>
 		<mkdir dir="${binary_release_dir}/deploy/templates"/>
 		<mkdir dir="${binary_release_dir}/deploy/properties"/>
 		
-		<copy todir="${binary_release_dir}/deploy/META-INF">
-			<fileset dir="${src_dir_fatturaPA_web_api}/META-INF"/>
-		</copy>
 		<copy todir="${binary_release_dir}/deploy/WEB-INF">
 			<fileset dir="${src_dir_fatturaPA_web_api}/WEB-INF"/>
 		</copy>

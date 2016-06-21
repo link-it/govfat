@@ -26,20 +26,21 @@ CREATE TABLE lotti
 	codice_destinatario VARCHAR(6) NOT NULL,
 	xml BLOB NOT NULL,
 	data_ricezione DATE NOT NULL,
-	processato SMALLINT NOT NULL,
+	stato_inserimento VARCHAR(255) NOT NULL,
 	stato_consegna VARCHAR(255) NOT NULL,
 	data_consegna TIMESTAMP,
 	dettaglio_consegna VARCHAR(255),
 	stato_protocollazione VARCHAR(255) NOT NULL,
 	data_protocollazione TIMESTAMP,
-	protocollo VARCHAR(255),
+	protocollo CLOB,
 	-- fk/pk columns
 	id BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1 NO CYCLE NO CACHE),
 	-- check constraints
 	CONSTRAINT chk_lotti_1 CHECK (formato_trasmissione IN ('SDI11','SDI10')),
 	CONSTRAINT chk_lotti_2 CHECK (formato_archivio_invio_fattura IN ('XML','P7M')),
-	CONSTRAINT chk_lotti_3 CHECK (stato_consegna IN ('NON_CONSEGNATA','ERRORE_CONSEGNA','CONSEGNATA')),
-	CONSTRAINT chk_lotti_4 CHECK (stato_protocollazione IN ('NON_PROTOCOLLATA','PROTOCOLLATA_IN_ELABORAZIONE','ERRORE_PROTOCOLLAZIONE','PROTOCOLLATA')),
+	CONSTRAINT chk_lotti_3 CHECK (stato_inserimento IN ('NON_INSERITO','ERRORE_INSERIMENTO','INSERITO')),
+	CONSTRAINT chk_lotti_4 CHECK (stato_consegna IN ('NON_CONSEGNATA','ERRORE_CONSEGNA','CONSEGNATA')),
+	CONSTRAINT chk_lotti_5 CHECK (stato_protocollazione IN ('NON_PROTOCOLLATA','PROTOCOLLATA_IN_ELABORAZIONE','ERRORE_PROTOCOLLAZIONE','PROTOCOLLATA')),
 	-- unique constraints
 	CONSTRAINT unique_lotti_1 UNIQUE (identificativo_sdi),
 	-- fk/pk keys constraints
@@ -60,7 +61,7 @@ CREATE TABLE decorrenza_termini
 	message_id VARCHAR(14) NOT NULL,
 	note VARCHAR(255),
 	data_ricezione TIMESTAMP NOT NULL,
-	xml CLOB NOT NULL,
+	xml BLOB NOT NULL,
 	-- fk/pk columns
 	id BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1 NO CYCLE NO CACHE),
 	-- unique constraints
@@ -107,7 +108,7 @@ CREATE TABLE fatture
 	stato_protocollazione VARCHAR(255) NOT NULL,
 	data_protocollazione TIMESTAMP,
 	protocollo VARCHAR(255),
-	xml CLOB NOT NULL,
+	xml BLOB NOT NULL,
 	-- fk/pk columns
 	id BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1 NO CYCLE NO CACHE),
 	id_notifica_decorrenza_termini BIGINT,
@@ -266,8 +267,8 @@ CREATE TABLE esito_committente
 	data_invio_sdi TIMESTAMP,
 	scarto VARCHAR(255),
 	scarto_note VARCHAR(255),
-	scarto_xml CLOB,
-	xml CLOB,
+	scarto_xml BLOB,
+	xml BLOB,
 	-- fk/pk columns
 	id BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1 NO CYCLE NO CACHE),
 	id_fattura_elettronica BIGINT NOT NULL,

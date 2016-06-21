@@ -21,8 +21,6 @@
  */
 package org.govmix.proxy.fatturapa.web.api;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 
@@ -30,19 +28,20 @@ import javax.ws.rs.core.Response;
 
 import org.apache.cxf.helpers.IOUtils;
 import org.apache.log4j.Logger;
+import org.govmix.proxy.fatturapa.IdLotto;
 import org.govmix.proxy.fatturapa.LottoFatture;
-import org.govmix.proxy.fatturapa.constants.FormatoArchivioInvioFatturaType;
 import org.govmix.proxy.fatturapa.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.constants.StatoConsegnaType;
+import org.govmix.proxy.fatturapa.constants.StatoInserimentoType;
 import org.govmix.proxy.fatturapa.constants.StatoProtocollazioneType;
-import org.govmix.proxy.fatturapa.web.api.business.consegnaFattura.ConsegnaFattura;
-import org.govmix.proxy.fatturapa.web.api.business.consegnaFattura.ConsegnaFatturaParameters;
-import org.govmix.proxy.fatturapa.web.api.business.consegnaFattura.ConsegnaFatturaParameters.Soggetto;
-import org.govmix.proxy.fatturapa.web.api.business.riceviNotificaDT.RiceviNotifica;
 import org.govmix.proxy.fatturapa.web.api.utils.WebApiProperties;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFattura;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters.Soggetto;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaUtils;
+import org.govmix.proxy.fatturapa.web.commons.riceviNotificaDT.RiceviNotifica;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
-import org.openspcoop2.protocol.sdi.constants.SDICostanti;
 
 public class EndpointPdDImpl implements EndpointPdD {
 
@@ -55,7 +54,7 @@ public class EndpointPdDImpl implements EndpointPdD {
 	public EndpointPdDImpl() throws Exception {
 		this.log = LoggerManager.getEndpointPdDLogger();
 		this.log.info("Inizializzazione endpoint PdD...");
-		this.consegnaFattura = new ConsegnaFattura(this.log);
+		this.consegnaFattura = new ConsegnaFattura(this.log, WebApiProperties.getInstance().isValidazioneDAOAbilitata());
 		this.riceviNotifica = new RiceviNotifica(this.log);
 		this.lottoBD = new LottoBD(log);
 		this.lottoBD.setValidate(WebApiProperties.getInstance().isValidazioneDAOAbilitata());
@@ -64,93 +63,115 @@ public class EndpointPdDImpl implements EndpointPdD {
 	}
 
 	@Override
-	public Response postRiceviLotto(String X_SDI_FormatoFatturaPA,
-			Integer X_SDI_IdentificativoSDI,
-			String X_SDI_NomeFile, 
-			String X_SDI_FormatoArchivioInvioFattura,
-			String X_SDI_MessageId,
-			String X_SDI_CodiceDestinatario,
-			String X_SDI_CedentePrestatore_Denominazione,
-			String X_SDI_CedentePrestatore_Nome,
-			String X_SDI_CedentePrestatore_Cognome,
-			String X_SDI_CedentePrestatore_CodiceFiscale,
-			String X_SDI_CedentePrestatore_IdCodice,
-			String X_SDI_CedentePrestatore_IdPaese,
-			String X_SDI_CessionarioCommittente_Denominazione,
-			String X_SDI_CessionarioCommittente_Nome,
-			String X_SDI_CessionarioCommittente_Cognome,
-			String X_SDI_CessionarioCommittente_CodiceFiscale,
-			String X_SDI_CessionarioCommittente_IdCodice,
-			String X_SDI_CessionarioCommittente_IdPaese,
-			String X_SDI_TerzoIntermediarioOSoggettoEmittente_Denominazione,
-			String X_SDI_TerzoIntermediarioOSoggettoEmittente_Nome,
-			String X_SDI_TerzoIntermediarioOSoggettoEmittente_Cognome,
-			String X_SDI_TerzoIntermediarioOSoggettoEmittente_CodiceFiscale,
-			String X_SDI_TerzoIntermediarioOSoggettoEmittente_IdCodice,
-			String X_SDI_TerzoIntermediarioOSoggettoEmittente_IdPaese,
+	public Response postRiceviLotto(String formatoFatturaPA,
+			Integer identificativoSDI,
+			String nomeFile, 
+			String formatoArchivioInvioFatturaString,
+			String formatoArchivioBase64,
+			String messageId,
+			String codiceDestinatario,
+			String cedentePrestatoreDenominazione,
+			String cedentePrestatoreNome,
+			String cedentePrestatoreCognome,
+			String cedentePrestatoreCodiceFiscale,
+			String cedentePrestatoreIdCodice,
+			String cedentePrestatoreIdPaese,
+			String cessionarioCommittenteDenominazione,
+			String cessionarioCommittenteNome,
+			String cessionarioCommittenteCognome,
+			String cessionarioCommittenteCodiceFiscale,
+			String cessionarioCommittenteIdCodice,
+			String cessionarioCommittenteIdPaese,
+			String terzoIntermediarioOSoggettoEmittenteDenominazione,
+			String terzoIntermediarioOSoggettoEmittenteNome,
+			String terzoIntermediarioOSoggettoEmittenteCognome,
+			String terzoIntermediarioOSoggettoEmittenteCodiceFiscale,
+			String terzoIntermediarioOSoggettoEmittenteIdCodice,
+			String terzoIntermediarioOSoggettoEmittenteIdPaese,
 			InputStream fatturaStream) {
 
 		this.log.info("Invoke riceviLotto");
-		try {
 
-			LottoFatture lotto = new LottoFatture();
-
-			FormatoArchivioInvioFatturaType formatoArchivioInvioFattura = null;
-			if(SDICostanti.SDI_TIPO_FATTURA_XML.equals(X_SDI_FormatoArchivioInvioFattura)) {
-				formatoArchivioInvioFattura = FormatoArchivioInvioFatturaType.XML;
-			} else if(SDICostanti.SDI_TIPO_FATTURA_P7M.equals(X_SDI_FormatoArchivioInvioFattura)) {
-				formatoArchivioInvioFattura = FormatoArchivioInvioFatturaType.P7M;
-			} else {
-				throw new Exception("Parametro [X-SDI-FormatoArchivioInvioFattura] non valido:" + X_SDI_FormatoArchivioInvioFattura);
-			}
-
-			lotto.setFormatoArchivioInvioFattura(formatoArchivioInvioFattura);
-			lotto.setCedentePrestatoreCodice(X_SDI_CedentePrestatore_IdCodice);
-			lotto.setCedentePrestatorePaese(X_SDI_CedentePrestatore_IdPaese);
-			lotto.setCedentePrestatoreCodiceFiscale(X_SDI_CedentePrestatore_CodiceFiscale);
-			lotto.setCedentePrestatoreCognome(X_SDI_CedentePrestatore_Cognome);
-			lotto.setCedentePrestatoreNome(X_SDI_CedentePrestatore_Nome);
-			lotto.setCedentePrestatoreDenominazione(X_SDI_CedentePrestatore_Denominazione);
-
-			lotto.setCessionarioCommittenteCodice(X_SDI_CessionarioCommittente_IdCodice);
-			lotto.setCessionarioCommittentePaese(X_SDI_CessionarioCommittente_IdPaese);
-			lotto.setCessionarioCommittenteCodiceFiscale(X_SDI_CessionarioCommittente_CodiceFiscale);
-			lotto.setCessionarioCommittenteCognome(X_SDI_CessionarioCommittente_Cognome);
-			lotto.setCessionarioCommittenteNome(X_SDI_CessionarioCommittente_Nome);
-			lotto.setCessionarioCommittenteDenominazione(X_SDI_CessionarioCommittente_Denominazione);
-
-			lotto.setTerzoIntermediarioOSoggettoEmittenteCodice(X_SDI_TerzoIntermediarioOSoggettoEmittente_IdCodice);
-			lotto.setTerzoIntermediarioOSoggettoEmittentePaese(X_SDI_TerzoIntermediarioOSoggettoEmittente_IdPaese);
-			lotto.setTerzoIntermediarioOSoggettoEmittenteCodiceFiscale(X_SDI_TerzoIntermediarioOSoggettoEmittente_CodiceFiscale);
-			lotto.setTerzoIntermediarioOSoggettoEmittenteCognome(X_SDI_TerzoIntermediarioOSoggettoEmittente_Cognome);
-			lotto.setTerzoIntermediarioOSoggettoEmittenteNome(X_SDI_TerzoIntermediarioOSoggettoEmittente_Nome);
-			lotto.setTerzoIntermediarioOSoggettoEmittenteDenominazione(X_SDI_TerzoIntermediarioOSoggettoEmittente_Denominazione);
-
-			lotto.setIdentificativoSdi(X_SDI_IdentificativoSDI);
-
-			lotto.setCodiceDestinatario(X_SDI_CodiceDestinatario);
-			lotto.setFormatoTrasmissione(FormatoTrasmissioneType.valueOf(X_SDI_FormatoFatturaPA));
-
-			lotto.setNomeFile(X_SDI_NomeFile);
-			lotto.setMessageId(X_SDI_MessageId);
-
-			byte[] xml = streamToBytes(fatturaStream);
-			this.log.info("Lotto XML [Inserimento lotto]: " + (new String(xml)));
-			lotto.setXml(xml);
-
-			lotto.setDataRicezione(new Date());
-			lotto.setStatoConsegna(StatoConsegnaType.NON_CONSEGNATA);
-			lotto.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
-
-			this.lottoBD.create(lotto);
-		} catch(Exception e) {
-			this.log.error("riceviLotto completata con errore:"+ e.getMessage(), e);
+		if(identificativoSDI == null) {
+			this.log.error("Impossibile inserire il lotto, identificativo SdI nullo.");
 			return Response.status(500).build();
 		}
 
-		this.log.info("riceviLotto completata con successo");
+		try {
+			IdLotto idLotto = new IdLotto();
+			idLotto.setIdentificativoSdi(identificativoSDI);
+			if(this.lottoBD.exists(idLotto)) {
+				this.log.warn("Lotto con identificativo SdI ["+identificativoSDI+"] esiste gia', inserimento non avvenuto");
+			} else {
+				
+
+				ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(formatoFatturaPA,
+						identificativoSDI, nomeFile,
+						formatoArchivioInvioFatturaString, formatoArchivioBase64,
+						messageId,
+						fatturaStream);
+
+
+				try {
+					params.validate(true);
+				} catch(Exception e) {
+					throw new Exception("Parametri ["+params.toString()+"] ricevuti in ingresso non validi:"+e.getMessage());
+				}
+
+				LottoFatture lotto = new LottoFatture();
+
+				lotto.setFormatoArchivioInvioFattura(params.getFormatoArchivioInvioFattura());
+				lotto.setCedentePrestatoreCodice(params.getCedentePrestatore().getIdCodice());
+				lotto.setCedentePrestatorePaese(params.getCedentePrestatore().getIdPaese());
+				lotto.setCedentePrestatoreCodiceFiscale(params.getCedentePrestatore().getCodiceFiscale());
+				lotto.setCedentePrestatoreCognome(params.getCedentePrestatore().getCognome());
+				lotto.setCedentePrestatoreNome(params.getCedentePrestatore().getNome());
+				lotto.setCedentePrestatoreDenominazione(params.getCedentePrestatore().getDenominazione());
+
+				lotto.setCessionarioCommittenteCodice(params.getCessionarioCommittente().getIdCodice());
+				lotto.setCessionarioCommittentePaese(params.getCessionarioCommittente().getIdPaese());
+				lotto.setCessionarioCommittenteCodiceFiscale(params.getCessionarioCommittente().getCodiceFiscale());
+				lotto.setCessionarioCommittenteCognome(params.getCessionarioCommittente().getCognome());
+				lotto.setCessionarioCommittenteNome(params.getCessionarioCommittente().getNome());
+				lotto.setCessionarioCommittenteDenominazione(params.getCessionarioCommittente().getDenominazione());
+
+				if(params.getTerzoIntermediarioOSoggettoEmittente() != null) {
+					lotto.setTerzoIntermediarioOSoggettoEmittenteCodice(params.getTerzoIntermediarioOSoggettoEmittente().getIdCodice());
+					lotto.setTerzoIntermediarioOSoggettoEmittentePaese(params.getTerzoIntermediarioOSoggettoEmittente().getIdPaese());
+					lotto.setTerzoIntermediarioOSoggettoEmittenteCodiceFiscale(params.getTerzoIntermediarioOSoggettoEmittente().getCodiceFiscale());
+					lotto.setTerzoIntermediarioOSoggettoEmittenteCognome(params.getTerzoIntermediarioOSoggettoEmittente().getCognome());
+					lotto.setTerzoIntermediarioOSoggettoEmittenteNome(params.getTerzoIntermediarioOSoggettoEmittente().getNome());
+					lotto.setTerzoIntermediarioOSoggettoEmittenteDenominazione(params.getTerzoIntermediarioOSoggettoEmittente().getDenominazione());
+				}
+
+				lotto.setIdentificativoSdi(params.getIdentificativoSdI());
+
+				lotto.setCodiceDestinatario(params.getCodiceDestinatario());
+				lotto.setFormatoTrasmissione(FormatoTrasmissioneType.valueOf(params.getFormatoFatturaPA()));
+
+				lotto.setNomeFile(params.getNomeFile());
+				lotto.setMessageId(params.getMessageId());
+
+				lotto.setXml(params.getXml());
+
+				lotto.setDataRicezione(new Date());
+				lotto.setStatoConsegna(StatoConsegnaType.NON_CONSEGNATA);
+				lotto.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
+				lotto.setStatoInserimento(StatoInserimentoType.NON_INSERITO);
+
+				this.log.info("Inserimento del Lotto con identificativo SdI ["+lotto.getIdentificativoSdi()+"]...");
+				this.lottoBD.create(lotto);	
+				this.log.info("Inserimento del Lotto con identificativo SdI ["+lotto.getIdentificativoSdi()+"] completato");
+			}
+			
+		} catch(Exception e) {
+			this.log.error("riceviLotto completata con errore per il lotto con identificativo SdI ["+identificativoSDI+"]:"+ e.getMessage(), e);
+			return Response.status(500).build();
+		}
+
+		this.log.info("riceviLotto completata con successo per il lotto con identificativo SdI ["+identificativoSDI+"]");
 		return Response.ok().build();
-	} 
+	}
 
 	@Override
 	public Response postConsegnaFattura(String formatoFatturaPA, 
@@ -234,7 +255,7 @@ public class EndpointPdDImpl implements EndpointPdD {
 
 
 		try {
-
+			params.setXml(IOUtils.readBytesFromStream(fattura));
 			try {
 				params.validate();
 			} catch(Exception e) {
@@ -247,7 +268,7 @@ public class EndpointPdDImpl implements EndpointPdD {
 
 
 
-			this.consegnaFattura.consegnaFattura(params, streamToString(fattura));
+			this.consegnaFattura.consegnaFattura(params);
 		} catch(Exception e) {
 			this.log.error("riceviFattura completata con errore:"+ e.getMessage(), e);
 			return Response.status(500).build();
@@ -266,7 +287,7 @@ public class EndpointPdDImpl implements EndpointPdD {
 				throw new Exception("La notifica ricevuta in ingresso e' null");
 			}
 
-			this.riceviNotifica.ricevi(streamToString(notifica));
+			this.riceviNotifica.ricevi(IOUtils.readBytesFromStream(notifica));
 		} catch(Exception e) {
 			this.log.error("riceviNotificaDT completata con errore:"+ e.getMessage(), e);
 			return Response.status(500).build();
@@ -274,33 +295,5 @@ public class EndpointPdDImpl implements EndpointPdD {
 
 		this.log.info("riceviNotificaDT completata con successo");
 		return Response.ok().build();
-	}
-
-	private static byte[] streamToBytes(InputStream is) throws IOException {
-		ByteArrayOutputStream baos = null;
-
-		try {
-			baos = new ByteArrayOutputStream();
-			byte[] buff = new byte[2048];
-			int len = is.read(buff);
-			while(len > 0) {
-				baos.write(buff, 0, len);
-				len = is.read(buff);
-			}
-
-			return baos.toByteArray();
-		} finally {
-			if(is != null)
-				try {is.close(); } catch(Exception e) {} //IOUtils non chiude sempre (TODO usare commons IO di apache) 
-		}
-	}
-
-	private static String streamToString(InputStream is) throws IOException {
-		try {
-			return IOUtils.toString(is);
-		} finally {
-			if(is != null)
-				try {is.close(); } catch(Exception e) {} //IOUtils non chiude sempre (TODO usare commons IO di apache) 
-		}
 	}
 }

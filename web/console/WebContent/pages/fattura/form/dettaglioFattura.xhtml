@@ -329,16 +329,18 @@
 
 				<br />
 				<div class="buttonrow">
+					
+					<h:panelGroup>
 					<h:form>
 						<!-- Visualizza XML -->
 						<c:set var="linkXml"
 							value="#{fatturaElettronicaMBean.selectedElement.xml}" />
 							
-						<h:outputLink  styleClass="buttonNoRed"
- 					 		id="visualizzaXmlLink" target="_blank" value="#{linkXml.link}"
+						<h:outputLink  styleClass="icon-fatturapa-xml buttonNoRed"
+ 					 		id="visualizzaXml-iconLink" target="_blank" value="#{linkXml.link}"
 								  rendered="#{not empty linkXml.link}">
-							<h:graphicImage value="/images/fatturapa/icons/${linkXml.icon}" alt="#{linkXml.alt}"
-								width="16" height="16" title="#{linkXml.iconTitle}" />
+							<!-- h:graphicImage value="/images/fatturapa/icons/${linkXml.icon}" alt="#{linkXml.alt}"
+								width="16" height="16" title="#{linkXml.iconTitle}" /-->
 							<h:outputText
 								value="#{msg['commons.label.visualizza']} #{linkXml.label}" />
 						</h:outputLink>
@@ -347,13 +349,13 @@
 						<c:set var="linkPdf"
 							value="#{fatturaElettronicaMBean.selectedElement.pdf}" />
 
-						<h:outputLink  styleClass="buttonNoRed"
- 					 		id="visualizzaPdfLink" target="_blank"
+						<h:outputLink  styleClass="icon-fatturapa-pdf buttonNoRed"
+ 					 		id="visualizzaPdf-iconLink" target="_blank"
  					 		 value="#{linkPdf.link}"
 							rendered="#{not empty linkPdf.link}">
 
-							<h:graphicImage value="/images/fatturapa/icons/${linkPdf.icon}" alt="#{linkPdf.alt}"
-								width="16" height="16" title="#{linkPdf.iconTitle}" />
+							<!-- h:graphicImage value="/images/fatturapa/icons/${linkPdf.icon}" alt="#{linkPdf.alt}"
+								width="16" height="16" title="#{linkPdf.iconTitle}" /-->
 							<h:outputText
 								value="#{msg['commons.label.visualizza']} #{linkPdf.label}" />
 
@@ -375,21 +377,23 @@
 						<!-- Invia Notifica EC -->
 						<c:set var="linkNotificaEC"
 							value="#{fatturaElettronicaMBean.selectedElement.notificaEC}" />
-						<a4j:commandLink id="notificaEC_btn" action="inviaNotificaEC" styleClass="buttonNoRed"
-							rendered="#{not empty linkNotificaEC.link}"
-							ajaxSingle="true">
+						<a4j:commandLink id="notificaEC_btn-iconLink" action="inviaNotificaEC" 
+							styleClass="icon-fatturapa-plus-grey buttonNoRed"
+							rendered="#{not empty linkNotificaEC.link}" >
 							<f:setPropertyActionListener
 								value="#{fatturaElettronicaMBean.selectedElement}"
 								target="#{notificaECMBean.fattura}" />
 							<f:setPropertyActionListener value="dettaglioFattura"
 								target="#{notificaECMBean.fromPage}" />
-							<h:graphicImage alt="#{linkNotificaEC.alt}"
+							<!-- h:graphicImage alt="#{linkNotificaEC.alt}"
 								value="/images/fatturapa/icons/${linkNotificaEC.icon}"
-								width="16" height="16" title="#{linkNotificaEC.iconTitle}" />
+								width="16" height="16" title="#{linkNotificaEC.iconTitle}" /-->
 							<h:outputText
 								value="#{msg['commons.button.invia']} #{linkNotificaEC.label}" />
 						</a4j:commandLink>
-					</h:form>
+						</h:form>
+						</h:panelGroup>
+					
 				</div>
 
 			</rich:panel>

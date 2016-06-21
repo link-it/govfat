@@ -124,7 +124,7 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long>{
 	}
 
 	private double truncate(double value) {
-		int integerValue =(int)  value * 100;
+		long integerValue = Math.round(value * 100);
 		return integerValue / 100.0;
 	}
 	
@@ -907,7 +907,8 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long>{
 
 			response.sendRedirect(context.getExternalContext()
 					.getRequestContextPath()
-					+ "/fattureexporter?"+ FattureExporter.PARAMETRO_IDS+"="
+					+ "/" + FattureExporter.FATTURE_EXPORTER+"?"
+					+ FattureExporter.PARAMETRO_IDS+"="
 					+ StringUtils.join(idFatture, ",")
 					+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ SingleFileExporter.FORMATO_PDF
 					+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_FATTURA);
@@ -942,7 +943,8 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long>{
 
 			response.sendRedirect(context.getExternalContext()
 					.getRequestContextPath()
-					+ "/fattureexporter?"+ FattureExporter.PARAMETRO_IDS+"="
+					+"/" + FattureExporter.FATTURE_EXPORTER+"?"
+					+ FattureExporter.PARAMETRO_IDS+"="
 					+ StringUtils.join(idFatture, ",")
 					+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ SingleFileExporter.FORMATO_XML
 					+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_FATTURA);

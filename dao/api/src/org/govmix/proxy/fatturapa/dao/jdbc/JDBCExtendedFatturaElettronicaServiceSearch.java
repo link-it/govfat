@@ -27,7 +27,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.FatturaElettronica;
-import org.govmix.proxy.fatturapa.IdFattura;
 import org.govmix.proxy.fatturapa.IdLotto;
 import org.govmix.proxy.fatturapa.IdUtente;
 import org.govmix.proxy.fatturapa.dao.IExtendedFatturaElettronicaServiceSearch;
@@ -256,7 +255,7 @@ public class JDBCExtendedFatturaElettronicaServiceSearch extends JDBCFatturaElet
 	}
 
 	@Override
-	public List<IdFattura> findAllFatturePullByUser(Date date,
+	public List<FatturaElettronica> findAllFatturePullByUser(Date date,
 			IdUtente idUtente, int offset, int limit)
 					throws NotImplementedException, ServiceException, Exception {
 		Connection connection = null;
@@ -384,9 +383,9 @@ public class JDBCExtendedFatturaElettronicaServiceSearch extends JDBCFatturaElet
 			if(idLotto==null){
 				throw new Exception("Parameter (type:"+IdLotto.class.getName()+") 'idLotto' is null");
 			}
-			if(protocollo==null){
-				throw new Exception("Parameter (type:"+String.class.getName()+") 'protocollo' is null");
-			}
+//			if(protocollo==null){
+//				throw new Exception("Parameter (type:"+String.class.getName()+") 'protocollo' is null");
+//			}
 
 			// ISQLQueryObject
 			ISQLQueryObject sqlQueryObject = SQLObjectFactory.createSQLQueryObject(this.jdbcProperties.getDatabase());

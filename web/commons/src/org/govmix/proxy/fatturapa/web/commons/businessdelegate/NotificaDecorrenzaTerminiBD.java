@@ -24,6 +24,7 @@ package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 import java.sql.Connection;
 
 import org.apache.log4j.Logger;
+import org.govmix.proxy.fatturapa.IdNotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.NotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.dao.INotificaDecorrenzaTerminiService;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
@@ -48,6 +49,12 @@ public class NotificaDecorrenzaTerminiBD extends BaseBD {
 
 	public void create(NotificaDecorrenzaTermini notificaDecorrenzaTermini) throws Exception {
 		try {
+			
+			IdNotificaDecorrenzaTermini id = this.service.convertToId(notificaDecorrenzaTermini);
+			if(this.service.exists(id)) {
+				this.log.warn("Notifica Decorrenza Termini ["+id.toJson()+"] gia' inserita nel sistema. Non la inserisco nuovamente");
+				return;
+			}
 			this.service.create(notificaDecorrenzaTermini);
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la create: " + e.getMessage(), e);

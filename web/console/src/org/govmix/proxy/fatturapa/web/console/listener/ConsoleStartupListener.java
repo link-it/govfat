@@ -48,8 +48,8 @@ public class ConsoleStartupListener extends ApplicationStartupListener {
                     .getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
 			
 			
-			log.debug("Elenco Font disponibili: " + Arrays.asList(GraphicsEnvironment
-                    .getLocalGraphicsEnvironment().getAllFonts()));
+//			log.debug("Elenco Font disponibili: " + Arrays.asList(GraphicsEnvironment
+//                    .getLocalGraphicsEnvironment().getAllFonts()));
 			
 		}catch(Throwable e ){
 			ConsoleStartupListener.log.error(

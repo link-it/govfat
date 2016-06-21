@@ -124,6 +124,10 @@
 	background-image: url(../images/fatturapa/icons/pdf.png) ! important;
 }
 
+.icon-fatturapa-plus-grey {
+        background-image: url(../images/fatturapa/icons/plus-grey.png) ! important;
+}
+
 /** OLD **/
 
 .icon-refresh{

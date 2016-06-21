@@ -32,7 +32,6 @@ import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.Dipartimento;
 import org.govmix.proxy.fatturapa.Ente;
 import org.govmix.proxy.fatturapa.FatturaElettronica;
-import org.govmix.proxy.fatturapa.IdFattura;
 import org.govmix.proxy.fatturapa.IdLotto;
 import org.govmix.proxy.fatturapa.IdUtente;
 import org.govmix.proxy.fatturapa.LottoFatture;
@@ -193,7 +192,11 @@ JDBCFatturaElettronicaServiceSearchImpl implements IExtendedJDBCFatturaElettroni
 		List<IField> fields= new ArrayList<IField>();
 		fields.add(FatturaElettronica.model().IDENTIFICATIVO_SDI);
 		fields.add(FatturaElettronica.model().POSIZIONE);
+		fields.add(FatturaElettronica.model().NOME_FILE);
 		fields.add(FatturaElettronica.model().CODICE_DESTINATARIO);
+		fields.add(FatturaElettronica.model().STATO_CONSEGNA);
+		fields.add(FatturaElettronica.model().DETTAGLIO_CONSEGNA);
+		fields.add(FatturaElettronica.model().DATA);
 		fields.add(FatturaElettronica.model().DATA_RICEZIONE);
 		fields.add(FatturaElettronica.model().NUMERO);
 		fields.add(FatturaElettronica.model().IMPORTO_TOTALE_DOCUMENTO);
@@ -273,7 +276,11 @@ JDBCFatturaElettronicaServiceSearchImpl implements IExtendedJDBCFatturaElettroni
 		List<IField> fields= new ArrayList<IField>();
 		fields.add(FatturaElettronica.model().IDENTIFICATIVO_SDI);
 		fields.add(FatturaElettronica.model().POSIZIONE);
+		fields.add(FatturaElettronica.model().NOME_FILE);
 		fields.add(FatturaElettronica.model().CODICE_DESTINATARIO);
+		fields.add(FatturaElettronica.model().STATO_CONSEGNA);
+		fields.add(FatturaElettronica.model().DETTAGLIO_CONSEGNA);
+		fields.add(FatturaElettronica.model().DATA);
 		fields.add(FatturaElettronica.model().DATA_RICEZIONE);
 		fields.add(FatturaElettronica.model().NUMERO);
 		fields.add(FatturaElettronica.model().IMPORTO_TOTALE_DOCUMENTO);
@@ -353,9 +360,9 @@ JDBCFatturaElettronicaServiceSearchImpl implements IExtendedJDBCFatturaElettroni
 	}
 
 	@Override
-	public List<IdFattura> findAllFatturePullByUser(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, Date date, IdUtente idUtente, int offset, int limit) throws NotImplementedException, ServiceException,Exception {
+	public List<FatturaElettronica> findAllFatturePullByUser(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, Date date, IdUtente idUtente, int offset, int limit) throws NotImplementedException, ServiceException,Exception {
 
-		List<IdFattura> list = new ArrayList<IdFattura>();
+		List<FatturaElettronica> list = new ArrayList<FatturaElettronica>();
 
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 
 				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
@@ -404,7 +411,7 @@ JDBCFatturaElettronicaServiceSearchImpl implements IExtendedJDBCFatturaElettroni
 			map.put(FatturaElettronica.model().POSIZIONE.getFieldName(), lstFields.get(1));
 
 			FatturaElettronica fattura = (FatturaElettronica) this.getFatturaElettronicaFetch().fetch(jdbcProperties.getDatabase(), FatturaElettronica.model(), map);
-			list.add(this.convertToId(jdbcProperties, log, connection, sqlQueryObject, fattura));
+			list.add(fattura);
 		}
 
 		return list;      

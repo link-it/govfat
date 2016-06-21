@@ -48,7 +48,7 @@ public interface IExtendedFatturaElettronicaServiceSearch extends IServiceSearch
 	long countFattureContestualePush(Date date) throws NotImplementedException, ServiceException, Exception;
 	List<FatturaElettronica> findAllFattureContestualePush(Date date, int offset, int limit) throws NotImplementedException, ServiceException, Exception;
 	public long countFatturePullByUser(Date date, IdUtente idUtente) throws NotImplementedException, ServiceException,Exception;
-	public List<IdFattura> findAllFatturePullByUser(Date date, IdUtente idUtente, int offset, int limit) throws NotImplementedException, ServiceException,Exception;
+	public List<FatturaElettronica> findAllFatturePullByUser(Date date, IdUtente idUtente, int offset, int limit) throws NotImplementedException, ServiceException,Exception;
 	public long countFattureDaAccettare(Date date) throws NotImplementedException, ServiceException,Exception;	
 	public List<FatturaElettronica> findAllFattureDaAccettare(Date date, int offset, int limit) throws NotImplementedException, ServiceException,Exception;
 

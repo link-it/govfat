@@ -80,6 +80,8 @@ public class UtenteService extends BaseService<UtenteSearchForm> implements IUte
 				}
 			}
 
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}
@@ -99,6 +101,8 @@ public class UtenteService extends BaseService<UtenteSearchForm> implements IUte
 
 			if(nnn != null)
 				cnt =(int) nnn.longValue();
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}
@@ -120,6 +124,9 @@ public class UtenteService extends BaseService<UtenteSearchForm> implements IUte
 				this.utenteDao.update(idUtente, utente);
 			else
 				this.utenteDao.create(utente);
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
+			throw e;
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 			throw new ServiceException(e);
@@ -133,8 +140,12 @@ public class UtenteService extends BaseService<UtenteSearchForm> implements IUte
 
 		try{
 			((JDBCUtenteService)this.utenteDao).deleteById(key.longValue());
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
+			throw e;
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
+			throw new ServiceException(e);
 		}
 
 	}
@@ -150,8 +161,18 @@ public class UtenteService extends BaseService<UtenteSearchForm> implements IUte
 			idUtente.setUsername(utente.getUsername());
 
 			this.utenteDao.deleteById(idUtente); 
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
+
+			String tmp = Utils.getInstance().getMessageFromResourceBundle(e.getMessage());
+
+			 if(tmp != null && !tmp.startsWith("?? key ") && !tmp.endsWith(" not found ??"))
+				throw new ServiceException(tmp);
+		
+			throw new ServiceException(e.getMessage());
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
+			throw new ServiceException(e);
 		}
 
 	}
@@ -168,6 +189,8 @@ public class UtenteService extends BaseService<UtenteSearchForm> implements IUte
 			return ut;
 		}catch(NotFoundException e){
 			log.debug("["+methodName+"] Utente non trovato: "+ e.getMessage());
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}
@@ -201,6 +224,8 @@ public class UtenteService extends BaseService<UtenteSearchForm> implements IUte
 				}
 			}
 
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}
@@ -366,6 +391,8 @@ public class UtenteService extends BaseService<UtenteSearchForm> implements IUte
 			idObj.setUsername(obj.getDTO().getUsername());
 			return this.utenteSearchDao.exists(idObj );
 
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}

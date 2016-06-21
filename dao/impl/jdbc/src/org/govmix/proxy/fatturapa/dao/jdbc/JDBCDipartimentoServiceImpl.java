@@ -168,7 +168,7 @@ public class JDBCDipartimentoServiceImpl extends JDBCDipartimentoServiceSearchIm
 			DipartimentoPropertyValue dipartimento_dipartimentoPropertyValue = (DipartimentoPropertyValue) dipartimento_dipartimentoPropertyValue_object;
 			Long id_dipartimento_dipartimentoPropertyValue_dipartimentoProperty = JDBCDipartimentoPropertyUtils.toLongId(jdbcProperties, log, connection, sqlQueryObjectInsert, dipartimento_dipartimentoPropertyValue.getIdProperty());
 
-			if(id_dipartimento_dipartimentoPropertyValue_dipartimentoProperty == null || id_dipartimento_dipartimentoPropertyValue_dipartimentoProperty.longValue() <= 0) {
+			if(dipartimento_dipartimentoPropertyValue.getId() == null || dipartimento_dipartimentoPropertyValue.getId().longValue() <= 0) {
 
 				long id = dipartimento.getId();			
 

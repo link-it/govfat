@@ -28,6 +28,8 @@ import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 import org.openspcoop2.utils.sql.ISQLQueryObject;
+import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
+import org.openspcoop2.generic_project.dao.jdbc.utils.IJDBCFetch;
 import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject;
 import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithoutId;
 import org.openspcoop2.generic_project.utils.UtilsTemplate;
@@ -67,10 +69,18 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 		}		
 		return this._notificaEsitoCommittenteFieldConverter;
 	}
+	@Override
+	public ISQLFieldConverter getFieldConverter() {
+		return this.getNotificaEsitoCommittenteFieldConverter();
+	}
 	
 	private NotificaEsitoCommittenteFetch notificaEsitoCommittenteFetch = new NotificaEsitoCommittenteFetch();
 	public NotificaEsitoCommittenteFetch getNotificaEsitoCommittenteFetch() {
 		return this.notificaEsitoCommittenteFetch;
+	}
+	@Override
+	public IJDBCFetch getFetch() {
+		return getNotificaEsitoCommittenteFetch();
 	}
 	
 	
@@ -471,6 +481,11 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 			sqlQueryObject.addWhereCondition(tableName1+".id_fattura_elettronica="+tableName2+".id");
 		}
         
+		if(expression.inUseModel(NotificaEsitoCommittente.model().UTENTE,false)){
+			String tableName1 = this.getNotificaEsitoCommittenteFieldConverter().toAliasTable(NotificaEsitoCommittente.model());
+			String tableName2 = this.getNotificaEsitoCommittenteFieldConverter().toAliasTable(NotificaEsitoCommittente.model().UTENTE);
+			sqlQueryObject.addWhereCondition(tableName1+".id_utente="+tableName2+".id");
+		}
 	}
 	
 	protected java.util.List<Object> _getRootTablePrimaryKeyValues(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, NotificaEsitoCommittente notificaEsitoCommittente) throws NotFoundException, ServiceException, NotImplementedException, Exception{

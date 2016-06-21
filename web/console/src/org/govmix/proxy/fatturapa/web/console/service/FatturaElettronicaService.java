@@ -111,7 +111,8 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 
 			if(select != null && select.size() > 0){
 				for (Object object : select) {
-					listaMittenti.add((String) object);
+					String res = ((String) object); 
+					listaMittenti.add(res);
 				}
 			}
 
@@ -144,7 +145,7 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 
 		try{
 
-			IExpression expr = getExpressionFromSearch(this.form);
+			IExpression expr = getExpressionFromSearch( this.fatturaSearchDao,this.form);
 
 			//order by
 			expr.sortOrder(SortOrder.DESC);
@@ -178,7 +179,7 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 		int cnt = 0;
 		try{
 
-			IExpression expr = getExpressionFromSearch(this.form);
+			IExpression expr = getExpressionFromSearch( this.fatturaSearchDao,this.form);
 
 			NonNegativeNumber nnn = this.fatturaSearchDao.count(expr);
 
@@ -209,7 +210,7 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 
 		try{
 
-			IExpression expr = getExpressionFromSearch(this.form);
+			IExpression expr = getExpressionFromSearch( this.fatturaSearchDao,this.form);
 
 			//order by
 			expr.sortOrder(SortOrder.DESC);
@@ -263,16 +264,44 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 
 	}
 
-	private IExpression getExpressionFromSearch(FatturaElettronicaSearchForm search) throws Exception{
+	public IExpression getExpressionFromSearch(IFatturaElettronicaServiceSearch fatturaSearchDao, FatturaElettronicaSearchForm search) throws Exception{
 		IExpression expr = null;
 
 		try{
-			expr = this.fatturaSearchDao.newExpression();
+			expr =  fatturaSearchDao.newExpression();
 
 			// selezione mittente, se non viene scelto dovrei cercare solo le fatture destinate all'ente dell'utente loggato
 			// ma questo vincolo e' gia' rispettato dal filtro sul dipartimento.
 			if(search.getCedentePrestatore().getValue() != null && !StringUtils.isEmpty(search.getCedentePrestatore().getValue()) && !CostantiForm.NON_SELEZIONATO.equals(search.getCedentePrestatore().getValue())){
-				expr.ilike(FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE, search.getCedentePrestatore().getValue(), LikeMode.ANYWHERE);
+				List<SelectItem> cedPrestVals = this.form.getCedPrestSelList();
+				String trimSelCedPrest = search.getCedentePrestatore().getValue().trim();
+
+				log.debug("Confronto TRIM["+trimSelCedPrest+"]");
+				List<String> valoriCedPret = new ArrayList<String>();
+				for (SelectItem selectItem : cedPrestVals) {
+					String val = selectItem.getValue();
+					
+					String noSpaceRes = val.trim().replace("  ", " ");
+					while(noSpaceRes.contains("  ")) {
+						noSpaceRes = noSpaceRes.replace("  ", " ");
+					}
+
+						log.debug("Confronto NSRES["+noSpaceRes+"]");
+					// Se il valore trimmato selezionato dall'utente corrisponde ad uno dei valori nella lista allora li uso per fare il confronto
+					if(noSpaceRes.equals(trimSelCedPrest)){
+						valoriCedPret.add(val);
+					}
+				}
+
+				if(valoriCedPret.size() == 0)
+					expr.ilike(FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE, search.getCedentePrestatore().getValue(), LikeMode.ANYWHERE);
+				else {
+					IExpression orExpr = fatturaSearchDao.newExpression();
+					for (String val : valoriCedPret) {
+						orExpr.ilike(FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE, val, LikeMode.ANYWHERE).or();
+					}
+					expr.and(orExpr);
+				}
 				//				expr.equals(FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE, search.getCedentePrestatore().getValue());
 			}
 
@@ -292,7 +321,7 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 				}
 			}
 
-			expr.and(getExpressionDateFromSearch(search)).and();
+			expr.and(getExpressionDateFromSearch(fatturaSearchDao,search)).and();
 
 			if(search.getTipoDocumento().getValue() != null &&
 					!StringUtils.isEmpty(search.getTipoDocumento().getValue().getValue()) && !search.getTipoDocumento().getValue().getValue().equals("*")){
@@ -370,11 +399,11 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 	}
 
 
-	private IExpression getExpressionDateFromSearch(FatturaElettronicaSearchForm search) throws Exception{
+	private IExpression getExpressionDateFromSearch(IFatturaElettronicaServiceSearch fatturaSearchDao,FatturaElettronicaSearchForm search) throws Exception{
 		IExpression expr = null;
 
 		try{
-			expr = this.fatturaSearchDao.newExpression();
+			expr = fatturaSearchDao.newExpression();
 
 			FormField<SelectItem> dataRicezionePeriodo = search.getDataRicezionePeriodo();
 			FormField<Date> dataRicezione = search.getDataRicezione();
@@ -426,6 +455,15 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 				// personalizzato
 				dataInizio = dataRicezione.getValue();
 				dataFine = dataRicezione.getValue2();
+
+				Calendar calendarFine = Calendar.getInstance();
+				calendarFine.setTime(dataFine); 
+				// forzo l'ora della data fine alle 23:59:59
+				calendarFine.set(Calendar.HOUR_OF_DAY, 23);
+				calendarFine.set(Calendar.MINUTE, 59);
+				calendarFine.set(Calendar.SECOND, 59);
+
+				dataFine = calendarFine.getTime();
 			}
 
 

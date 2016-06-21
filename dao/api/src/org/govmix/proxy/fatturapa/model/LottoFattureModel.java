@@ -68,7 +68,7 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 		this.CODICE_DESTINATARIO = new Field("codiceDestinatario",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.XML = new Field("xml",byte[].class,"LottoFatture",LottoFatture.class);
 		this.DATA_RICEZIONE = new Field("dataRicezione",java.util.Date.class,"LottoFatture",LottoFatture.class);
-		this.PROCESSATO = new Field("processato",boolean.class,"LottoFatture",LottoFatture.class);
+		this.STATO_INSERIMENTO = new Field("statoInserimento",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.STATO_CONSEGNA = new Field("statoConsegna",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.DATA_CONSEGNA = new Field("dataConsegna",java.util.Date.class,"LottoFatture",LottoFatture.class);
 		this.DETTAGLIO_CONSEGNA = new Field("dettaglioConsegna",java.lang.String.class,"LottoFatture",LottoFatture.class);
@@ -108,7 +108,7 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 		this.CODICE_DESTINATARIO = new ComplexField(father,"codiceDestinatario",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.XML = new ComplexField(father,"xml",byte[].class,"LottoFatture",LottoFatture.class);
 		this.DATA_RICEZIONE = new ComplexField(father,"dataRicezione",java.util.Date.class,"LottoFatture",LottoFatture.class);
-		this.PROCESSATO = new ComplexField(father,"processato",boolean.class,"LottoFatture",LottoFatture.class);
+		this.STATO_INSERIMENTO = new ComplexField(father,"statoInserimento",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.STATO_CONSEGNA = new ComplexField(father,"statoConsegna",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.DATA_CONSEGNA = new ComplexField(father,"dataConsegna",java.util.Date.class,"LottoFatture",LottoFatture.class);
 		this.DETTAGLIO_CONSEGNA = new ComplexField(father,"dettaglioConsegna",java.lang.String.class,"LottoFatture",LottoFatture.class);
@@ -172,7 +172,7 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 	 
 	public IField DATA_RICEZIONE = null;
 	 
-	public IField PROCESSATO = null;
+	public IField STATO_INSERIMENTO = null;
 	 
 	public IField STATO_CONSEGNA = null;
 	 

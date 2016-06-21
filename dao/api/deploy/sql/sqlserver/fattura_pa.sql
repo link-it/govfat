@@ -26,20 +26,21 @@ CREATE TABLE lotti
 	codice_destinatario VARCHAR(6) NOT NULL,
 	xml VARBINARY(MAX) NOT NULL,
 	data_ricezione DATE NOT NULL,
-	processato BIT NOT NULL,
+	stato_inserimento VARCHAR(255) NOT NULL,
 	stato_consegna VARCHAR(255) NOT NULL,
 	data_consegna DATETIME2,
 	dettaglio_consegna VARCHAR(255),
 	stato_protocollazione VARCHAR(255) NOT NULL,
 	data_protocollazione DATETIME2,
-	protocollo VARCHAR(255),
+	protocollo VARCHAR(max),
 	-- fk/pk columns
 	id BIGINT IDENTITY,
 	-- check constraints
 	CONSTRAINT chk_lotti_1 CHECK (formato_trasmissione IN ('SDI11','SDI10')),
 	CONSTRAINT chk_lotti_2 CHECK (formato_archivio_invio_fattura IN ('XML','P7M')),
-	CONSTRAINT chk_lotti_3 CHECK (stato_consegna IN ('NON_CONSEGNATA','ERRORE_CONSEGNA','CONSEGNATA')),
-	CONSTRAINT chk_lotti_4 CHECK (stato_protocollazione IN ('NON_PROTOCOLLATA','PROTOCOLLATA_IN_ELABORAZIONE','ERRORE_PROTOCOLLAZIONE','PROTOCOLLATA')),
+	CONSTRAINT chk_lotti_3 CHECK (stato_inserimento IN ('NON_INSERITO','ERRORE_INSERIMENTO','INSERITO')),
+	CONSTRAINT chk_lotti_4 CHECK (stato_consegna IN ('NON_CONSEGNATA','ERRORE_CONSEGNA','CONSEGNATA')),
+	CONSTRAINT chk_lotti_5 CHECK (stato_protocollazione IN ('NON_PROTOCOLLATA','PROTOCOLLATA_IN_ELABORAZIONE','ERRORE_PROTOCOLLAZIONE','PROTOCOLLATA')),
 	-- unique constraints
 	CONSTRAINT unique_lotti_1 UNIQUE (identificativo_sdi),
 	-- fk/pk keys constraints
@@ -60,7 +61,7 @@ CREATE TABLE decorrenza_termini
 	message_id VARCHAR(14) NOT NULL,
 	note VARCHAR(255),
 	data_ricezione DATETIME2 NOT NULL,
-	xml VARCHAR(max) NOT NULL,
+	xml VARBINARY(MAX) NOT NULL,
 	-- fk/pk columns
 	id BIGINT IDENTITY,
 	-- unique constraints
@@ -107,7 +108,7 @@ CREATE TABLE fatture
 	stato_protocollazione VARCHAR(255) NOT NULL,
 	data_protocollazione DATETIME2,
 	protocollo VARCHAR(255),
-	xml VARCHAR(max) NOT NULL,
+	xml VARBINARY(MAX) NOT NULL,
 	-- fk/pk columns
 	id BIGINT IDENTITY,
 	id_notifica_decorrenza_termini BIGINT,
@@ -266,8 +267,8 @@ CREATE TABLE esito_committente
 	data_invio_sdi DATETIME2,
 	scarto VARCHAR(255),
 	scarto_note VARCHAR(255),
-	scarto_xml VARCHAR(max),
-	xml VARCHAR(max),
+	scarto_xml VARBINARY(MAX),
+	xml VARBINARY(MAX),
 	-- fk/pk columns
 	id BIGINT IDENTITY,
 	id_fattura_elettronica BIGINT NOT NULL,

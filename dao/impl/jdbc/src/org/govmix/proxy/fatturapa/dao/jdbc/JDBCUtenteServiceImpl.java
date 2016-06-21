@@ -25,6 +25,7 @@ import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.IdUtente;
+import org.govmix.proxy.fatturapa.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.Utente;
 import org.govmix.proxy.fatturapa.UtenteDipartimento;
 import org.openspcoop2.generic_project.beans.NonNegativeNumber;
@@ -40,6 +41,7 @@ import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
+import org.openspcoop2.generic_project.expression.IPaginatedExpression;
 import org.openspcoop2.utils.sql.ISQLQueryObject;
 
 /**     
@@ -271,11 +273,11 @@ public class JDBCUtenteServiceImpl extends JDBCUtenteServiceSearchImpl
 		
 		
 		Long longId = null;
+		IdUtente idUtente = this.convertToId(jdbcProperties,log,connection,sqlQueryObject,utente);
 		if( (utente.getId()!=null) && (utente.getId()>0) ){
 			longId = utente.getId();
 		}
 		else{
-			IdUtente idUtente = this.convertToId(jdbcProperties,log,connection,sqlQueryObject,utente);
 			longId = this.findIdUtente(jdbcProperties,log,connection,sqlQueryObject,idUtente,false);
 			if(longId == null){
 				return; // entry not exists
@@ -290,6 +292,14 @@ public class JDBCUtenteServiceImpl extends JDBCUtenteServiceSearchImpl
 	
 		if(id!=null && id.longValue()<=0){
 			throw new ServiceException("Id is less equals 0");
+		}
+		IdUtente idUtente = this.convertToId(jdbcProperties, log, connection, sqlQueryObject, this.get(jdbcProperties, log, connection, sqlQueryObject, id));
+		
+		IPaginatedExpression expression = this.getServiceManager().getNotificaEsitoCommittenteServiceSearch().newPaginatedExpression();
+		expression.equals(NotificaEsitoCommittente.model().UTENTE.USERNAME, idUtente.getUsername());
+		
+		if(this.getServiceManager().getNotificaEsitoCommittenteServiceSearch().findAll(expression).size() > 0) {
+			throw new ServiceException("utente.delete.ko.esitoCommittente");
 		}
 		
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 

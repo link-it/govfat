@@ -31,6 +31,8 @@ import org.apache.log4j.Logger;
 
 import org.openspcoop2.utils.sql.ISQLQueryObject;
 
+import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
+import org.openspcoop2.generic_project.dao.jdbc.utils.IJDBCFetch;
 import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject;
 import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithId;
 import org.govmix.proxy.fatturapa.IdLotto;
@@ -73,10 +75,18 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 		}		
 		return this._lottoFattureFieldConverter;
 	}
+	@Override
+	public ISQLFieldConverter getFieldConverter() {
+		return this.getLottoFattureFieldConverter();
+	}
 	
 	private LottoFattureFetch lottoFattureFetch = new LottoFattureFetch();
 	public LottoFattureFetch getLottoFattureFetch() {
 		return this.lottoFattureFetch;
+	}
+	@Override
+	public IJDBCFetch getFetch() {
+		return getLottoFattureFetch();
 	}
 	
 	
@@ -487,7 +497,7 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().CODICE_DESTINATARIO,true));
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().XML,true));
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_RICEZIONE,true));
-		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().PROCESSATO,true));
+		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().STATO_INSERIMENTO,true));
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().STATO_CONSEGNA,true));
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_CONSEGNA,true));
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DETTAGLIO_CONSEGNA,true));

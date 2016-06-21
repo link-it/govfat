@@ -54,9 +54,11 @@ public class RegistroService extends BaseService<RegistroSearchForm> implements 
 
 		try{
 
-			lst = _findAllRegistri(this.form);
+			lst = _findAllRegistri(this.form,start,limit);
 
 
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}
@@ -76,6 +78,8 @@ public class RegistroService extends BaseService<RegistroSearchForm> implements 
 
 			if(nnn != null)
 				cnt =(int) nnn.longValue();
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}
@@ -97,6 +101,8 @@ public class RegistroService extends BaseService<RegistroSearchForm> implements 
 				this.registroDao.update(idRegistro, registro);
 			else
 				this.registroDao.create(registro);
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 			throw new ServiceException(e);
@@ -109,8 +115,12 @@ public class RegistroService extends BaseService<RegistroSearchForm> implements 
 
 		try{
 			((JDBCRegistroService)this.registroDao).deleteById(key.longValue());
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
+			throw e;
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
+			throw new ServiceException(e);
 		}
 	}
 
@@ -125,8 +135,12 @@ public class RegistroService extends BaseService<RegistroSearchForm> implements 
 			idRegistro.setNome(registro.getNome());
 
 			this.registroDao.deleteById(idRegistro); 
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
+			throw e;
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
+			throw new ServiceException(e);
 		}
 	}
 
@@ -144,6 +158,8 @@ public class RegistroService extends BaseService<RegistroSearchForm> implements 
 				return bean;
 			}catch (NotFoundException e) {
 				log.debug("Metodo ["+methodName+"]: Nessun registro trovato."+ e.getMessage());
+			}catch(ServiceException e){
+				log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 			}catch(Exception e){
 				log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 			}
@@ -158,8 +174,10 @@ public class RegistroService extends BaseService<RegistroSearchForm> implements 
 
 			try{
 
-				lst = _findAllRegistri(this.form);
+				lst = _findAllRegistri(this.form,null,null);
 
+			}catch(ServiceException e){
+				log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 			}catch(Exception e){
 				log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 			}
@@ -175,6 +193,8 @@ public class RegistroService extends BaseService<RegistroSearchForm> implements 
 			idObj.setNome(obj.getDTO().getNome());
 			return this.registroSearchDao.exists(idObj);
 
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}
@@ -199,6 +219,8 @@ public class RegistroService extends BaseService<RegistroSearchForm> implements 
 
 			return bean;
 
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch (NotFoundException e) {
 			log.debug("Metodo ["+methodName+"]: Nessun registro con nome ["+nome+"]trovato."+ e.getMessage());
 		}catch(Exception e){
@@ -242,8 +264,10 @@ public class RegistroService extends BaseService<RegistroSearchForm> implements 
 
 		try{
 
-			lst = _findAllRegistri( form);
+			lst = _findAllRegistri( form,null,null);
 
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}
@@ -251,7 +275,7 @@ public class RegistroService extends BaseService<RegistroSearchForm> implements 
 		return lst;
 	}
 	
-	private List<RegistroBean> _findAllRegistri(RegistroSearchForm form) throws ServiceException {
+	private List<RegistroBean> _findAllRegistri(RegistroSearchForm form,Integer start, Integer limit) throws ServiceException {
 		List<RegistroBean> lst = new ArrayList<RegistroBean>();
 
 		try{
@@ -263,6 +287,10 @@ public class RegistroService extends BaseService<RegistroSearchForm> implements 
 			expr.addOrder(Registro.model().NOME);
 
 			IPaginatedExpression pagExpr = this.registroSearchDao.toPaginatedExpression(expr);
+			if(start!= null)
+				pagExpr.offset(start);
+			if(limit != null)
+				pagExpr.limit(limit);
 
 			List<Registro> findAll = this.registroSearchDao.findAll(pagExpr,false);
 

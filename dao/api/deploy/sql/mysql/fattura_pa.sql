@@ -26,7 +26,7 @@ CREATE TABLE lotti
 	codice_destinatario VARCHAR(6) NOT NULL,
 	xml MEDIUMBLOB NOT NULL,
 	data_ricezione TIMESTAMP NOT NULL DEFAULT 0,
-	processato BOOLEAN NOT NULL,
+	stato_inserimento VARCHAR(255) NOT NULL,
 	stato_consegna VARCHAR(255) NOT NULL,
 	-- Precisione ai millisecondi supportata dalla versione 5.6.4, se si utilizza una versione precedente non usare il suffisso '(3)'
 	data_consegna TIMESTAMP(3) DEFAULT 0,
@@ -34,14 +34,15 @@ CREATE TABLE lotti
 	stato_protocollazione VARCHAR(255) NOT NULL,
 	-- Precisione ai millisecondi supportata dalla versione 5.6.4, se si utilizza una versione precedente non usare il suffisso '(3)'
 	data_protocollazione TIMESTAMP(3) DEFAULT 0,
-	protocollo VARCHAR(255),
+	protocollo LONGTEXT,
 	-- fk/pk columns
 	id BIGINT AUTO_INCREMENT,
 	-- check constraints
 	CONSTRAINT chk_lotti_1 CHECK (formato_trasmissione IN ('SDI11','SDI10')),
 	CONSTRAINT chk_lotti_2 CHECK (formato_archivio_invio_fattura IN ('XML','P7M')),
-	CONSTRAINT chk_lotti_3 CHECK (stato_consegna IN ('NON_CONSEGNATA','ERRORE_CONSEGNA','CONSEGNATA')),
-	CONSTRAINT chk_lotti_4 CHECK (stato_protocollazione IN ('NON_PROTOCOLLATA','PROTOCOLLATA_IN_ELABORAZIONE','ERRORE_PROTOCOLLAZIONE','PROTOCOLLATA')),
+	CONSTRAINT chk_lotti_3 CHECK (stato_inserimento IN ('NON_INSERITO','ERRORE_INSERIMENTO','INSERITO')),
+	CONSTRAINT chk_lotti_4 CHECK (stato_consegna IN ('NON_CONSEGNATA','ERRORE_CONSEGNA','CONSEGNATA')),
+	CONSTRAINT chk_lotti_5 CHECK (stato_protocollazione IN ('NON_PROTOCOLLATA','PROTOCOLLATA_IN_ELABORAZIONE','ERRORE_PROTOCOLLAZIONE','PROTOCOLLATA')),
 	-- unique constraints
 	CONSTRAINT unique_lotti_1 UNIQUE (identificativo_sdi),
 	-- fk/pk keys constraints
@@ -63,7 +64,7 @@ CREATE TABLE decorrenza_termini
 	note VARCHAR(255),
 	-- Precisione ai millisecondi supportata dalla versione 5.6.4, se si utilizza una versione precedente non usare il suffisso '(3)'
 	data_ricezione TIMESTAMP(3) NOT NULL DEFAULT 0,
-	xml LONGTEXT NOT NULL,
+	xml MEDIUMBLOB NOT NULL,
 	-- fk/pk columns
 	id BIGINT AUTO_INCREMENT,
 	-- unique constraints
@@ -113,7 +114,7 @@ CREATE TABLE fatture
 	-- Precisione ai millisecondi supportata dalla versione 5.6.4, se si utilizza una versione precedente non usare il suffisso '(3)'
 	data_protocollazione TIMESTAMP(3) DEFAULT 0,
 	protocollo VARCHAR(255),
-	xml LONGTEXT NOT NULL,
+	xml MEDIUMBLOB NOT NULL,
 	-- fk/pk columns
 	id BIGINT AUTO_INCREMENT,
 	id_notifica_decorrenza_termini BIGINT,
@@ -274,8 +275,8 @@ CREATE TABLE esito_committente
 	data_invio_sdi TIMESTAMP(3) DEFAULT 0,
 	scarto VARCHAR(255),
 	scarto_note VARCHAR(255),
-	scarto_xml LONGTEXT,
-	xml LONGTEXT,
+	scarto_xml MEDIUMBLOB,
+	xml MEDIUMBLOB,
 	-- fk/pk columns
 	id BIGINT AUTO_INCREMENT,
 	id_fattura_elettronica BIGINT NOT NULL,

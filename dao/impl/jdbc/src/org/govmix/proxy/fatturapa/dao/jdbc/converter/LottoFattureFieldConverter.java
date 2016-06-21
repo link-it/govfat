@@ -250,11 +250,11 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 				return "data_ricezione";
 			}
 		}
-		if(field.equals(LottoFatture.model().PROCESSATO)){
+		if(field.equals(LottoFatture.model().STATO_INSERIMENTO)){
 			if(appendTablePrefix){
-				return this.toAliasTable(field)+".processato";
+				return this.toAliasTable(field)+".stato_inserimento";
 			}else{
-				return "processato";
+				return "stato_inserimento";
 			}
 		}
 		if(field.equals(LottoFatture.model().STATO_CONSEGNA)){
@@ -390,7 +390,7 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 		if(field.equals(LottoFatture.model().DATA_RICEZIONE)){
 			return this.toTable(LottoFatture.model(), returnAlias);
 		}
-		if(field.equals(LottoFatture.model().PROCESSATO)){
+		if(field.equals(LottoFatture.model().STATO_INSERIMENTO)){
 			return this.toTable(LottoFatture.model(), returnAlias);
 		}
 		if(field.equals(LottoFatture.model().STATO_CONSEGNA)){

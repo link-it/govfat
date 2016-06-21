@@ -130,7 +130,7 @@
 									height="16"	title="#{item.notificaEC.iconTitle}"  alt="#{item.notificaEC.alt}"
 									  rendered="#{empty item.notificaEC.link}"/>
 						
-							<a4j:commandLink id="notificaEC_btn" action="inviaNotificaEC"
+							<a4j:htmlCommandLink id="notificaEC_btn" action="inviaNotificaEC"
 							 rendered="#{not empty item.notificaEC.link}" ajaxSingle="true">
 								<f:setPropertyActionListener value="#{item}"
 									target="#{notificaECMBean.fattura}" />
@@ -138,7 +138,7 @@
 									target="#{notificaECMBean.fromPage}" />
 								<h:graphicImage value="/images/fatturapa/icons/${item.notificaEC.icon}" width="16"
 									height="16" title="#{item.notificaEC.iconTitle}" alt="#{item.notificaEC.alt}" />
-							</a4j:commandLink>
+							</a4j:htmlCommandLink>
 						</h:panelGroup>
  					</rich:column>
  					
@@ -192,13 +192,12 @@
 					<!-- Link dettagli -->
 					<rich:column style="text-align: center;">
 						<h:panelGroup>
-							<a4j:commandLink id="dettaglio_btn" action="dettaglio"
-								ajaxSingle="true">
+							<a4j:htmlCommandLink id="dettaglio_btn" action="dettaglio">
 								<f:setPropertyActionListener value="#{item}"
 									target="#{fatturaElettronicaMBean.selectedElement}" />
 								<h:graphicImage value="/images/magnifier.png" width="16" alt="#{msg['fattura.label.ricercaFatture.dettaglioTitle']}"
 									height="16" title="#{msg['fattura.label.ricercaFatture.dettaglioTitle']}" />
-							</a4j:commandLink>
+							</a4j:htmlCommandLink>
 						</h:panelGroup>
 					</rich:column>
 					

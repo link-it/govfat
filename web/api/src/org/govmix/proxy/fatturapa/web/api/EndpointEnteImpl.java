@@ -32,9 +32,9 @@ import org.apache.cxf.jaxrs.ext.MessageContext;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.IdFattura;
 import org.govmix.proxy.fatturapa.IdUtente;
-import org.govmix.proxy.fatturapa.web.api.business.recuperaFatture.RecuperaFatture;
 import org.govmix.proxy.fatturapa.web.api.utils.WebApiProperties;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.business.InvioNotificaEsitoCommittente;
+import org.govmix.proxy.fatturapa.web.commons.recuperaFatture.RecuperaFatture;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 
 public class EndpointEnteImpl implements EndpointEnte {

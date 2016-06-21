@@ -11,6 +11,9 @@
 
 #log4j.throwableRenderer=org.apache.log4j.EnhancedThrowableRenderer
 
+log4j.logger.org.ajax4jsf.webapp=WARN
+log4j.logger.javax.enterprise.resource.webcontainer.jsf.lifecycle=WARN
+
 # Log WebGenericProject
 log4j.logger.org.openspcoop2.generic_project.web=DEBUG,console.gui
 log4j.additivity.org.openspcoop2.generic_project.web=false

@@ -8,5 +8,5 @@
 	
 		<servlet-mapping>
 		<servlet-name>fattureexporter</servlet-name>
-		<url-pattern>/fattureexporter</url-pattern>
+		<url-pattern>/pages/fattureexporter</url-pattern>
 	</servlet-mapping>

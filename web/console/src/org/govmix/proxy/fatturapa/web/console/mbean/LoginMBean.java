@@ -82,11 +82,14 @@ public class LoginMBean extends LoginBean{
 	@Override
 	public String login() {
 		if(!this.isNoPasswordLogin()){
+
 			if(null == this.getUsername() && this.getPassword() == null){		
 				return "login";
 			}
 
 			try{
+				log.info("Verifico le credenziali per l'utente ["+this.getUsername()+"]");
+
 				if(this.getLoginDao().login(this.getUsername(),this.getPassword())){
 					//			ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 					//			HttpSession session = (HttpSession) ec.getSession(true);
@@ -95,28 +98,33 @@ public class LoginMBean extends LoginBean{
 					this.loggedUtente = ((ILoginDao)this.getLoginDao()).getLoggedUtente(this.getUsername(),this.getPassword()); 
 					this.ente = ((ILoginDao)this.getLoginDao()).getEnte();
 					this.listDipartimenti = ((ILoginDao)this.getLoginDao()).getListaDipartimentiUtente(this.loggedUtente,this.ente);
-
+					log.info("Utente ["+this.getUsername()+"] autenticato con successo");
 					return "loginSuccess";
 				}else{
 					FacesContext.getCurrentInstance().addMessage(null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR,
-									Utils.getInstance().getMessageFromResourceBundle("login.form.credenzialiError"),null));
+									Utils.getInstance().getMessageWithParamsFromResourceBundle("login.form.credenzialiError",this.getUsername()),null));
 				}
 			}catch(ServiceException e){
+				log.error("Si e' verificato un errore durante il login: "+ e.getMessage(), e);
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								Utils.getInstance().getMessageFromResourceBundle("login.form.genericError"),null));
+								Utils.getInstance().getMessageWithParamsFromResourceBundle("login.form.genericError",this.getUsername()),null));
 			}
 		}else{
+			log.info("Verifico il ticket per l'utente ["+this.getUsername()+"]");
 			try{
 			this.loggedUtente = ((ILoginDao)this.getLoginDao()).getLoggedUtente(this.getUsername()); 
 			if(this.loggedUtente != null){
 				this.setIsLoggedIn(true);
 				this.ente = ((ILoginDao)this.getLoginDao()).getEnte();
 				this.listDipartimenti = ((ILoginDao)this.getLoginDao()).getListaDipartimentiUtente(this.loggedUtente,this.ente);
-
+				log.info("Utente ["+this.getUsername()+"] autenticato con successo");
 				return "loginSuccess";
 			}
+			}catch(ServiceException e){
+				log.error("Si e' verificato un errore durante il login: "+ e.getMessage(), e);
+				return "loginError";
 			}catch(Exception e){
 				log.error("Si e' verificato un errore durante il login: "+ e.getMessage(), e);
 				return "loginError";

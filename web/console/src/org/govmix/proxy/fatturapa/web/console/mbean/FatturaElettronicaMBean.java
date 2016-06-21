@@ -280,7 +280,7 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 		for (Dipartimento dipartimento : listaDipartimentiLoggedUtente) {
 			this.listaDipartimenti.add(
 					new SelectItem(
-							new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(dipartimento.getCodice(),dipartimento.getDescrizione())));
+							new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(dipartimento.getCodice(),dipartimento.getDescrizione() + " ("+dipartimento.getCodice()+")")));
 		}
 
 
@@ -314,7 +314,7 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 
 			response.sendRedirect(context.getExternalContext()
 					.getRequestContextPath()
-					+ "/fattureexporter?"+FattureExporter.PARAMETRO_IS_ALL+"="
+					+ "/" + FattureExporter.FATTURE_EXPORTER+"?"+FattureExporter.PARAMETRO_IS_ALL+"="
 					+ this.isSelectedAll()
 					+ "&"+FattureExporter.PARAMETRO_IDS+"="
 					+ StringUtils.join(idFatture, ",")
@@ -353,7 +353,7 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 					}
 				}
 			}
-
+			
 		}catch(Exception e ){
 
 		}

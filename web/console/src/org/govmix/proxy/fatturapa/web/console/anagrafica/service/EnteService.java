@@ -67,6 +67,8 @@ public class EnteService extends BaseService<EnteSearchForm> implements IEnteSer
 				}
 			}
 
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}
@@ -86,6 +88,8 @@ public class EnteService extends BaseService<EnteSearchForm> implements IEnteSer
 
 			if(nnn != null)
 				cnt =(int) nnn.longValue();
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}
@@ -107,6 +111,8 @@ public class EnteService extends BaseService<EnteSearchForm> implements IEnteSer
 				this.enteDao.update(idEnte, ente);
 			else
 				this.enteDao.create(ente);
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 			throw new ServiceException(e);
@@ -120,8 +126,12 @@ public class EnteService extends BaseService<EnteSearchForm> implements IEnteSer
 
 		try{
 			((JDBCEnteService)this.enteDao).deleteById(key.longValue());
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
+			throw e;
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
+			throw new ServiceException(e);
 		}
 
 	}
@@ -137,8 +147,12 @@ public class EnteService extends BaseService<EnteSearchForm> implements IEnteSer
 			idEnte.setNome(ente.getNome());
 
 			this.enteDao.deleteById(idEnte); 
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
+			throw e;
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
+			throw new ServiceException(e);
 		}
 
 	}
@@ -153,6 +167,8 @@ public class EnteService extends BaseService<EnteSearchForm> implements IEnteSer
 			ut.setDTO(d);
 
 			return ut;
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch(NotFoundException e){
 			log.debug("["+methodName+"] Ente non trovato: "+ e.getMessage());
 		}catch(Exception e){
@@ -187,6 +203,8 @@ public class EnteService extends BaseService<EnteSearchForm> implements IEnteSer
 				}
 			}
 
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}
@@ -227,6 +245,8 @@ public class EnteService extends BaseService<EnteSearchForm> implements IEnteSer
 
 			return ente;
 
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}
@@ -242,6 +262,8 @@ public class EnteService extends BaseService<EnteSearchForm> implements IEnteSer
 			idObj.setNome(obj.getDTO().getNome());
 			return this.enteSearchDao.exists(idObj );
 
+		}catch(ServiceException e){
+			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}catch(Exception e){
 			log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 		}

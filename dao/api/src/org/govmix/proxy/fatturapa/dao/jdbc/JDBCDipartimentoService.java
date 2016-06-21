@@ -21,27 +21,23 @@
  */
 package org.govmix.proxy.fatturapa.dao.jdbc;
 
-import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceCRUDWithId;
-import org.govmix.proxy.fatturapa.IdDipartimento;
+import java.sql.Connection;
 
+import org.govmix.proxy.fatturapa.Dipartimento;
+import org.govmix.proxy.fatturapa.IdDipartimento;
+import org.govmix.proxy.fatturapa.dao.IDBDipartimentoService;
+import org.govmix.proxy.fatturapa.utils.ProjectInfo;
 import org.openspcoop2.generic_project.beans.NonNegativeNumber;
 import org.openspcoop2.generic_project.beans.UpdateField;
 import org.openspcoop2.generic_project.beans.UpdateModel;
+import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceCRUDWithId;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
 import org.openspcoop2.generic_project.dao.jdbc.JDBCProperties;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.exception.ValidationException;
 import org.openspcoop2.generic_project.expression.IExpression;
-import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
-
-import org.govmix.proxy.fatturapa.dao.jdbc.JDBCServiceManager;
-import org.govmix.proxy.fatturapa.Dipartimento;
-import org.govmix.proxy.fatturapa.dao.IDBDipartimentoService;
-import org.govmix.proxy.fatturapa.utils.ProjectInfo;
-
-import java.sql.Connection;
-
 import org.openspcoop2.utils.sql.ISQLQueryObject;
 import org.openspcoop2.utils.sql.SQLObjectFactory;
 

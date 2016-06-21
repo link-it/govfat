@@ -1,41 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <binding force-classes="true">
-  <mapping name="Proxy" class="org.govmix.proxy.fatturapa.Proxy">
-    <namespace uri="http://www.govmix.org/proxy/fatturapa" default="elements"/>
-    <collection field="lottoFatture" create-type="java.util.ArrayList">
-      <structure map-as="org.govmix.proxy.fatturapa.LottoFatture"/>
-    </collection>
-    <collection field="notificaDecorrenzaTermini" create-type="java.util.ArrayList">
-      <structure map-as="org.govmix.proxy.fatturapa.NotificaDecorrenzaTermini"/>
-    </collection>
-    <collection field="fatturaElettronica" create-type="java.util.ArrayList">
-      <structure map-as="org.govmix.proxy.fatturapa.FatturaElettronica"/>
-    </collection>
-    <collection field="allegatoFattura" create-type="java.util.ArrayList">
-      <structure map-as="org.govmix.proxy.fatturapa.AllegatoFattura"/>
-    </collection>
-    <collection field="ente" create-type="java.util.ArrayList">
-      <structure map-as="org.govmix.proxy.fatturapa.Ente"/>
-    </collection>
-    <collection field="registro" create-type="java.util.ArrayList">
-      <structure map-as="org.govmix.proxy.fatturapa.Registro"/>
-    </collection>
-    <collection field="registroProperty" create-type="java.util.ArrayList">
-      <structure map-as="org.govmix.proxy.fatturapa.RegistroProperty"/>
-    </collection>
-    <collection field="utente" create-type="java.util.ArrayList">
-      <structure map-as="org.govmix.proxy.fatturapa.Utente"/>
-    </collection>
-    <collection field="notificaEsitoCommittente" create-type="java.util.ArrayList">
-      <structure map-as="org.govmix.proxy.fatturapa.NotificaEsitoCommittente"/>
-    </collection>
-    <collection field="dipartimento" create-type="java.util.ArrayList">
-      <structure map-as="org.govmix.proxy.fatturapa.Dipartimento"/>
-    </collection>
-    <collection field="dipartimentoProperty" create-type="java.util.ArrayList">
-      <structure map-as="org.govmix.proxy.fatturapa.DipartimentoProperty"/>
-    </collection>
-  </mapping>
   <mapping name="idFattura" class="org.govmix.proxy.fatturapa.IdFattura" abstract="false">
     <namespace uri="http://www.govmix.org/proxy/fatturapa" default="elements"/>
     <value name="identificativoSdi" field="identificativoSdi" usage="required"/>
@@ -92,6 +56,7 @@
     <value name="formatoTrasmissione" field="formatoTrasmissione" usage="required" enum-value-method="toString"/>
     <value name="identificativoSdi" field="identificativoSdi" usage="required"/>
     <value name="nomeFile" field="nomeFile" usage="required"/>
+    <value name="formatoArchivioInvioFattura" field="formatoArchivioInvioFattura" usage="required" enum-value-method="toString"/>
     <value name="messageId" field="messageId" usage="required"/>
     <value name="cedentePrestatoreDenominazione" field="cedentePrestatoreDenominazione" usage="optional"/>
     <value name="cedentePrestatoreNome" field="cedentePrestatoreNome" usage="optional"/>
@@ -114,7 +79,7 @@
     <value name="codiceDestinatario" field="codiceDestinatario" usage="required"/>
     <value name="xml" field="xml" usage="required"/>
     <value name="dataRicezione" field="dataRicezione" usage="required"/>
-    <value name="processato" field="processato" usage="required"/>
+    <value name="statoInserimento" field="statoInserimento" usage="required" enum-value-method="toString"/>
     <value name="statoConsegna" field="statoConsegna" usage="required" enum-value-method="toString"/>
     <value name="dataConsegna" field="dataConsegna" usage="optional"/>
     <value name="dettaglioConsegna" field="dettaglioConsegna" usage="optional"/>

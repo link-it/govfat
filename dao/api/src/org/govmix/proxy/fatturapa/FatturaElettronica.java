@@ -73,7 +73,7 @@ import java.io.Serializable;
  * 			&lt;element name="statoProtocollazione" type="{http://www.govmix.org/proxy/fatturapa}StatoProtocollazioneType" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="dataProtocollazione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="protocollo" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
- * 			&lt;element name="xml" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="xml" type="{http://www.w3.org/2001/XMLSchema}base64Binary" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="idDecorrenzaTermini" type="{http://www.govmix.org/proxy/fatturapa}id-notifica-decorrenza-termini" minOccurs="0" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
@@ -470,11 +470,11 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
     this.protocollo = protocollo;
   }
 
-  public java.lang.String getXml() {
+  public byte[] getXml() {
     return this.xml;
   }
 
-  public void setXml(java.lang.String xml) {
+  public void setXml(byte[] xml) {
     this.xml = xml;
   }
 
@@ -660,9 +660,9 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
   @XmlElement(name="protocollo",required=false,nillable=false)
   protected java.lang.String protocollo;
 
-  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @javax.xml.bind.annotation.XmlSchemaType(name="base64Binary")
   @XmlElement(name="xml",required=true,nillable=false)
-  protected java.lang.String xml;
+  protected byte[] xml;
 
   @XmlElement(name="idDecorrenzaTermini",required=false,nillable=false)
   protected IdNotificaDecorrenzaTermini idDecorrenzaTermini;

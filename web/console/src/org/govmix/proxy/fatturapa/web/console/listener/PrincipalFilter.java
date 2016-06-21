@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.faces.application.ViewExpiredException;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.Filter;
@@ -66,7 +67,7 @@ public class PrincipalFilter implements Filter {
 			}
 		}
 		
-		this.log.debug("USE PRINCIPAL ["+this.usePrincipal+"]"); 
+		this.log.debug("Usa il principal per il controllo autorizzazione utente ["+this.usePrincipal+"]"); 
 
 		// popolo la white list degli oggetti che possono essere visti anche se non authenticati, in particolare css, immagini, js, ecc...
 		if(this.usePrincipal){
@@ -192,7 +193,7 @@ public class PrincipalFilter implements Filter {
 								String redirPageUrl = httpServletRequest.getContextPath() + "/public/error.jsf" ;
 								
 								// Messaggio di errore
-								sessione.setAttribute(PRINCIPAL_ERROR_MSG, Utils.getInstance().getMessageFromResourceBundle("login.form.genericError")); 
+								sessione.setAttribute(PRINCIPAL_ERROR_MSG, Utils.getInstance().getMessageWithParamsFromResourceBundle("login.form.genericError", username)); 
 								
 								httpServletResponse.sendRedirect(redirPageUrl);
 								return;
@@ -232,10 +233,39 @@ public class PrincipalFilter implements Filter {
 					}
 				}
 			}
-		}
+		}  
 
-		filterChain.doFilter(request, response);
-
+//		filterChain.doFilter(request, response);
+		
+		try {
+		//	this.log.debug("filterChain.dofilter..."); 
+			filterChain.doFilter(request, response);
+		} catch (ServletException e) {
+//			this.log.debug(" ServletException ["+e.getRootCause()+"]"); 
+			Throwable rootCause = e.getRootCause();
+			if(rootCause != null){
+				if (rootCause instanceof ViewExpiredException) { // This is true for any FacesException.
+					
+					this.log.debug("Rilevata ViewExpiredException: ["+rootCause.getMessage()+"]"); 
+					if ((request instanceof HttpServletRequest) && (response instanceof HttpServletResponse)) {
+						HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+						HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+						
+						String redirPageUrl = httpServletRequest.getContextPath() + "/"+ "public/timeoutPage.jsf";
+						httpServletResponse.sendRedirect(redirPageUrl);
+						return;
+					}
+					
+					throw (ViewExpiredException) rootCause; // Throw wrapped ViewExpiredException instead of ServletException.
+				} else if (rootCause instanceof RuntimeException) { // This is true for any FacesException.
+					throw (RuntimeException) rootCause; // Throw wrapped RuntimeException instead of ServletException.
+				} else {
+					throw e;
+				}
+			} else {
+				throw e;
+			}
+		} 
 	}
 
 	/**
@@ -273,6 +303,12 @@ public class PrincipalFilter implements Filter {
 				&& !httpServletRequest.isRequestedSessionIdValid();
 		return sessionInValid;
 	}
+	
+	
+//	private boolean isSessionInvalid(HttpServletRequest httpServletRequest) {
+//		boolean sessionInValid = (httpServletRequest.getRequestedSessionId() == null) || !httpServletRequest.isRequestedSessionIdValid();
+//		return sessionInValid;
+//	}
 
 	private String getRedirPage(HttpServletRequest req){
 		String ctx = req.getContextPath();

@@ -1,0 +1,79 @@
+2015-07-15 Giuliano Pintori <pintori@link.it>
+
+        * [Cruscotto]
+        Risolto Bug FAT-151
+	Corretti i problemi di ricerca fattura in caso di cedente prestatore contenente piu' spazi consecutivi
+
+2015-07-15 Giovanni Bussu <bussu@link.it>
+
+        * [Web API]
+        Risolto Bug FAT-149
+	Ottimizzata la gestione della ricezione di un lotto gia' inserito nel
+	proxy in modo da non effettuare il parsing del lotto in ingresso.
+
+2015-07-02  Giuliano Pintori <pintori@link.it>
+
+        * [Cruscotto]
+        Risolto Bug FAT-143
+	Sistemata gestione degli errori che si hanno in fase di login quando il db non risponde.
+	Aggiunti nuovi messaggi di errore da presentare all'utente.
+
+2015-07-01  Giovanni Bussu <bussu@link.it>
+
+        * [DAO] [Batch]
+        Risolto Bug FAT-137
+        Modificato il DAO e il batch di inserimento fattura per gestire un attachment vuoto
+
+2015-07-01  Giuliano Pintori <pintori@link.it>
+
+        * [Cruscotto]
+        Risolto Bug FAT-139
+	Aggiunto controllo che impedisce disabilita il doppio click per il tasto invia notifica
+
+2015-06-03  Giovanni Bussu <bussu@link.it>
+
+        * [Batch]
+        Aggiunta funzionalita' FAT-53
+	Implementato il rifiuto automatico delle fatture in maniera configurabile
+
+2015-05-27  Giovanni Bussu <bussu@link.it>
+
+        * [Batch]
+        Risolto Bug FAT-49
+	Gestita correttamente la fattura in caso di errore nell'inserimento degli allegati
+
+2015-05-21  Giovanni Bussu <bussu@link.it>
+
+        * [DAO]
+        Risolto Bug FAT-47
+	Modificati i tipi sul db affinche' i dati grezzi vengano memorizzati 
+	come byte e non come stringhe. Creata apposita patch, aggiornato il codice
+	di conseguenza.
+
+2015-05-15  Giovanni Bussu <bussu@link.it>
+
+        * [Web API]
+        Risolto Bug FAT-43
+        -Spostata in una utility comune la gestione del mapping 
+	tra i parametri in input alle web api e i metadati del lotto
+	che verranno memorizzati sul database
+	-Modificata la gestione dei metadati del lotto: vengono inseriti sul db
+	i dati presenti nell'xml del lotto e non piu' i dati presenti negli header HTTP
+
+	* [Batch]
+	Utilizzata la nuova utility comune per il popolamento dei metadati della fattura
+
+2015-05-14  Giovanni Bussu <bussu@link.it>
+
+        * [Web API]
+        Risolto Bug FAT-44
+	Gestito correttamente il cambio di stato della fattura
+	quando la fattura viene consegnata
+	
+2015-05-14  Giuliano Pintori <pintori@link.it>
+
+        * [Cruscotto]
+	Risolto Bug FAT-39
+	Aggiunto Filtro per la gestione dell'eccezione di tipo
+	javax.faces.application.ViewExpiredException
+

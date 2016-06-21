@@ -115,14 +115,14 @@
 						<!-- Link dettagli -->
 						<rich:column style="text-align: center;">
 							<h:panelGroup>
-								<a4j:commandLink id="dettaglio_btn" action="utente"
+								<a4j:htmlCommandLink id="dettaglio_btn" action="utente"
 									ajaxSingle="true">
 									<f:setPropertyActionListener value="#{item.DTO.id}"
 										target="#{utenteMBean.selectedId}" />
 									<h:graphicImage value="/images/magnifier.png" width="16"
 										height="16"
 										title="#{msg['utente.dettaglioTitle']}" alt="#{msg['utente.dettaglioTitle']}"/>
-								</a4j:commandLink>
+								</a4j:htmlCommandLink>
 							</h:panelGroup>
 						</rich:column>
 

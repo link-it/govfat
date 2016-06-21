@@ -31,6 +31,8 @@ import org.apache.log4j.Logger;
 
 import org.openspcoop2.utils.sql.ISQLQueryObject;
 
+import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
+import org.openspcoop2.generic_project.dao.jdbc.utils.IJDBCFetch;
 import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject;
 import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithId;
 import org.govmix.proxy.fatturapa.IdEnte;
@@ -73,10 +75,18 @@ public class JDBCEnteServiceSearchImpl implements IJDBCServiceSearchWithId<Ente,
 		}		
 		return this._enteFieldConverter;
 	}
+	@Override
+	public ISQLFieldConverter getFieldConverter() {
+		return this.getEnteFieldConverter();
+	}
 	
 	private EnteFetch enteFetch = new EnteFetch();
 	public EnteFetch getEnteFetch() {
 		return this.enteFetch;
+	}
+	@Override
+	public IJDBCFetch getFetch() {
+		return getEnteFetch();
 	}
 	
 	

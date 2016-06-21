@@ -29,6 +29,9 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.IdEnte;
 import org.govmix.proxy.fatturapa.IdProperty;
+import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
+import org.openspcoop2.generic_project.dao.jdbc.utils.IJDBCFetch;
+
 import org.govmix.proxy.fatturapa.RegistroProperty;
 import org.govmix.proxy.fatturapa.dao.jdbc.converter.RegistroPropertyFieldConverter;
 import org.govmix.proxy.fatturapa.dao.jdbc.fetch.RegistroPropertyFetch;
@@ -69,10 +72,18 @@ public class JDBCRegistroPropertyServiceSearchImpl implements IJDBCServiceSearch
 		}		
 		return this._registroPropertyFieldConverter;
 	}
+	@Override
+	public ISQLFieldConverter getFieldConverter() {
+		return this.getRegistroPropertyFieldConverter();
+	}
 
 	private RegistroPropertyFetch registroPropertyFetch = new RegistroPropertyFetch();
 	public RegistroPropertyFetch getRegistroPropertyFetch() {
 		return this.registroPropertyFetch;
+	}
+	@Override
+	public IJDBCFetch getFetch() {
+		return getRegistroPropertyFetch();
 	}
 
 

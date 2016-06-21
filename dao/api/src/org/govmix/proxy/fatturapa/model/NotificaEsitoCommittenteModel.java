@@ -57,8 +57,8 @@ public class NotificaEsitoCommittenteModel extends AbstractModel<NotificaEsitoCo
 		this.DATA_INVIO_SDI = new Field("dataInvioSdi",java.util.Date.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.SCARTO = new Field("scarto",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.SCARTO_NOTE = new Field("scartoNote",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
-		this.SCARTO_XML = new Field("scartoXml",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
-		this.XML = new Field("xml",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
+		this.SCARTO_XML = new Field("scartoXml",byte[].class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
+		this.XML = new Field("xml",byte[].class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 	
 	}
 	
@@ -81,8 +81,8 @@ public class NotificaEsitoCommittenteModel extends AbstractModel<NotificaEsitoCo
 		this.DATA_INVIO_SDI = new ComplexField(father,"dataInvioSdi",java.util.Date.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.SCARTO = new ComplexField(father,"scarto",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.SCARTO_NOTE = new ComplexField(father,"scartoNote",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
-		this.SCARTO_XML = new ComplexField(father,"scartoXml",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
-		this.XML = new ComplexField(father,"xml",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
+		this.SCARTO_XML = new ComplexField(father,"scartoXml",byte[].class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
+		this.XML = new ComplexField(father,"xml",byte[].class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 	
 	}
 	

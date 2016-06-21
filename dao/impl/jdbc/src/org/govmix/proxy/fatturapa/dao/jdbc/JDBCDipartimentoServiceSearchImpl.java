@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+
+import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
+import org.openspcoop2.generic_project.dao.jdbc.utils.IJDBCFetch;
 import org.govmix.proxy.fatturapa.Dipartimento;
 import org.govmix.proxy.fatturapa.DipartimentoPropertyValue;
 import org.govmix.proxy.fatturapa.IdDipartimento;
@@ -68,10 +71,18 @@ public class JDBCDipartimentoServiceSearchImpl implements IJDBCDipartimentoServi
 		}		
 		return this._dipartimentoFieldConverter;
 	}
+	@Override
+	public ISQLFieldConverter getFieldConverter() {
+		return this.getDipartimentoFieldConverter();
+	}
 	
 	private DipartimentoFetch dipartimentoFetch = new DipartimentoFetch();
 	public DipartimentoFetch getDipartimentoFetch() {
 		return this.dipartimentoFetch;
+	}
+	@Override
+	public IJDBCFetch getFetch() {
+		return getDipartimentoFetch();
 	}
 	
 	

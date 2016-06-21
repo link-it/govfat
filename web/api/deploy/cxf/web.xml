@@ -82,11 +82,6 @@
     <url-pattern>/*</url-pattern>
 </filter-mapping-->
 
-
-  <listener>
-        <listener-class>org.govmix.proxy.fatturapa.web.api.timers.TimerStartup</listener-class>
-  </listener>
-
     <listener>
         <listener-class>
             org.springframework.web.context.ContextLoaderListener

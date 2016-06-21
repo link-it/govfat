@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
+import org.openspcoop2.generic_project.dao.jdbc.utils.IJDBCFetch;
 import org.govmix.proxy.fatturapa.IdNotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.NotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.dao.jdbc.converter.NotificaDecorrenzaTerminiFieldConverter;
@@ -67,10 +69,18 @@ public class JDBCNotificaDecorrenzaTerminiServiceSearchImpl implements IJDBCServ
 		}		
 		return this._notificaDecorrenzaTerminiFieldConverter;
 	}
+	@Override
+	public ISQLFieldConverter getFieldConverter() {
+		return this.getNotificaDecorrenzaTerminiFieldConverter();
+	}
 	
 	private NotificaDecorrenzaTerminiFetch notificaDecorrenzaTerminiFetch = new NotificaDecorrenzaTerminiFetch();
 	public NotificaDecorrenzaTerminiFetch getNotificaDecorrenzaTerminiFetch() {
 		return this.notificaDecorrenzaTerminiFetch;
+	}
+	@Override
+	public IJDBCFetch getFetch() {
+		return getNotificaDecorrenzaTerminiFetch();
 	}
 	
 	

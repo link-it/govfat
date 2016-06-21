@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.Dipartimento;
 import org.govmix.proxy.fatturapa.LottoFatture;
 import org.govmix.proxy.fatturapa.constants.StatoConsegnaType;
+import org.govmix.proxy.fatturapa.constants.StatoInserimentoType;
 import org.govmix.proxy.fatturapa.dao.jdbc.converter.DipartimentoFieldConverter;
 import org.openspcoop2.generic_project.beans.IField;
 import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
@@ -58,6 +59,7 @@ JDBCLottoFattureServiceSearchImpl implements IExtendedJDBCLottoFattureServiceSea
 		sqlQueryObjectCnt.addWhereCondition(dipartimentoFieldConverter.toColumn(Dipartimento.model().MODALITA_PUSH, true) + "= ?");
 		sqlQueryObjectCnt.addWhereCondition(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_RICEZIONE, true) + " <= ?");
 		sqlQueryObjectCnt.addWhereCondition(false, this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_CONSEGNA, true) + " <= ?", this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_CONSEGNA, true) + " IS NULL");
+		sqlQueryObjectCnt.addWhereCondition(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().STATO_INSERIMENTO, true) + " = ?");
 		sqlQueryObjectCnt.addWhereCondition(false, this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().STATO_CONSEGNA, true) + " =?", this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().STATO_CONSEGNA, true) + " =?");
 		sqlQueryObjectCnt.setANDLogicOperator(true);
 		return sqlQueryObjectCnt;
@@ -67,7 +69,8 @@ JDBCLottoFattureServiceSearchImpl implements IExtendedJDBCLottoFattureServiceSea
 		JDBCObject[] params = new JDBCObject[] {
 				new JDBCObject(true, Dipartimento.model().MODALITA_PUSH.getFieldType()), 
 				new JDBCObject(date, LottoFatture.model().DATA_RICEZIONE.getFieldType()), 
-				new JDBCObject(date, LottoFatture.model().DATA_CONSEGNA.getFieldType()), 
+				new JDBCObject(date, LottoFatture.model().DATA_CONSEGNA.getFieldType()),
+				new JDBCObject(StatoInserimentoType.INSERITO, LottoFatture.model().STATO_INSERIMENTO.getFieldType()), 
 				new JDBCObject(StatoConsegnaType.NON_CONSEGNATA, LottoFatture.model().STATO_CONSEGNA.getFieldType()),
 				new JDBCObject(StatoConsegnaType.ERRORE_CONSEGNA, LottoFatture.model().STATO_CONSEGNA.getFieldType())};
 		return params;
@@ -127,7 +130,7 @@ JDBCLottoFattureServiceSearchImpl implements IExtendedJDBCLottoFattureServiceSea
 		fields.add(LottoFatture.model().CODICE_DESTINATARIO);
 		fields.add(LottoFatture.model().XML);
 		fields.add(LottoFatture.model().DATA_RICEZIONE);
-		fields.add(LottoFatture.model().PROCESSATO);
+		fields.add(LottoFatture.model().STATO_INSERIMENTO);
 		fields.add(LottoFatture.model().STATO_CONSEGNA);
 
 		for(IField field : fields) {

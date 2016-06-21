@@ -49,7 +49,6 @@
 		</ul>
 	</ui:define>
 	<ui:define name="body">
-
 		<a4j:keepAlive beanName="notificaECMBean" />
 		<a4j:keepAlive beanName="fatturaElettronicaMBean" />
 
@@ -117,6 +116,7 @@
 									value="#{msg['commons.button.conferma']}"
 									styleClass="icon-save" reRender="mainct,menuct"
 									status="mainStatus" action="#{notificaECMBean.invia}"
+									onclick="disableButton('invia')" oncomplete="enableButton('invia')"
 									rendered="#{notificaECMBean.showForm == 'true'}">
 								</a4j:commandButton>
 

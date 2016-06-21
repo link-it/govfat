@@ -32,6 +32,8 @@ import org.govmix.proxy.fatturapa.IdFattura;
 import org.govmix.proxy.fatturapa.IdLotto;
 import org.govmix.proxy.fatturapa.IdNotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.IdUtente;
+import org.govmix.proxy.fatturapa.Utente;
+import org.govmix.proxy.fatturapa.UtenteDipartimento;
 import org.govmix.proxy.fatturapa.constants.EsitoType;
 import org.govmix.proxy.fatturapa.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.constants.StatoProtocollazioneType;
@@ -93,6 +95,19 @@ public class FatturaElettronicaBD extends BaseBD {
 			throw new Exception(e);
 		} catch (NotImplementedException e) {
 			this.log.error("Errore durante la create: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public void validate(FatturaElettronica fattura) throws Exception {
+		try {
+
+			this.service.validate(fattura);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la validate: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la validate: " + e.getMessage(), e);
 			throw new Exception(e);
 		}
 	}
@@ -160,6 +175,7 @@ public class FatturaElettronicaBD extends BaseBD {
 			
 			List<UpdateField> lst = new ArrayList<UpdateField>();
 			lst.add(new UpdateField(FatturaElettronica.model().STATO_CONSEGNA, StatoConsegnaType.CONSEGNATA));
+			lst.add(new UpdateField(FatturaElettronica.model().DETTAGLIO_CONSEGNA, null));
 			lst.add(new UpdateField(FatturaElettronica.model().DATA_CONSEGNA, new Date()));
 			
 			if(asincrono) {
@@ -185,12 +201,19 @@ public class FatturaElettronicaBD extends BaseBD {
 		}
 	}
 
-	public void updateStatoConsegna(IdFattura idFattura, String protocollo, String dettaglio) throws Exception {
+	public void updateStatoConsegna(IdFattura idFattura, String dettaglio) throws Exception {
+		this.updateStatoConsegna(idFattura, StatoConsegnaType.ERRORE_CONSEGNA, dettaglio);
+	}
+
+	public void updateStatoConsegna(IdFattura idFattura, StatoConsegnaType statoConsegna, String dettaglio) throws Exception {
 		try {
-			UpdateField statoConsegnaField = new UpdateField(FatturaElettronica.model().STATO_CONSEGNA, StatoConsegnaType.ERRORE_CONSEGNA);
-			UpdateField dataConsegnaField = new UpdateField(FatturaElettronica.model().DATA_CONSEGNA, new Date());
-			UpdateField dettaglioConsegnaField = new UpdateField(FatturaElettronica.model().DETTAGLIO_CONSEGNA, protocollo != null ? dettaglio + ": " + protocollo : dettaglio);
-			this.service.updateFields(idFattura, statoConsegnaField, dataConsegnaField, dettaglioConsegnaField);
+			List<UpdateField> lstFields = new ArrayList<UpdateField>();
+			lstFields.add(new UpdateField(FatturaElettronica.model().STATO_CONSEGNA, statoConsegna));
+			lstFields.add(new UpdateField(FatturaElettronica.model().DATA_CONSEGNA, new Date()));
+			if(dettaglio != null)
+				lstFields.add(new UpdateField(FatturaElettronica.model().DETTAGLIO_CONSEGNA, dettaglio));
+			
+			this.service.updateFields(idFattura, lstFields.toArray(new UpdateField[]{}));
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la updateStatoConsegna: " + e.getMessage(), e);
 			throw new Exception(e);
@@ -213,7 +236,31 @@ public class FatturaElettronicaBD extends BaseBD {
 		}
 	}
 
-	public List<IdFattura> getIdFattureNonConsegnate(IdUtente idUtente, int limit) throws Exception {
+	public List<IdFattura> getIdFattureByUtente(Utente utente) throws Exception {
+		
+		try {
+			IPaginatedExpression expression = this.serviceSearch.newPaginatedExpression();
+			List<String> dipartimenti = new ArrayList<String>();
+			
+			for(UtenteDipartimento id: utente.getUtenteDipartimentoList()) {
+				dipartimenti.add(id.getIdDipartimento().getCodice());
+			}
+			
+			expression.in(FatturaElettronica.model().CODICE_DESTINATARIO, dipartimenti.toArray());
+			return this.serviceSearch.findAllIds(expression);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la getIdFattureByUtente: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la getIdFattureByUtente: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (Exception e) {
+			this.log.error("Errore durante la getIdFattureByUtente: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+	
+	public List<FatturaElettronica> getIdFattureNonConsegnate(IdUtente idUtente, int limit) throws Exception {
 
 		try {
 			return this.serviceSearch.findAllFatturePullByUser(new Date(), idUtente, 0, limit);

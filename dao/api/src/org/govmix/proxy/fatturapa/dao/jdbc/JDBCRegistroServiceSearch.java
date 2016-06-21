@@ -36,10 +36,12 @@ import org.openspcoop2.generic_project.beans.InUse;
 import org.openspcoop2.generic_project.beans.NonNegativeNumber;
 import org.openspcoop2.generic_project.beans.Union;
 import org.openspcoop2.generic_project.beans.UnionExpression;
+import org.openspcoop2.generic_project.dao.IDBServiceUtilities;
 import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
 import org.openspcoop2.generic_project.dao.jdbc.JDBCPaginatedExpression;
 import org.openspcoop2.generic_project.dao.jdbc.JDBCProperties;
 import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
+import org.openspcoop2.generic_project.dao.jdbc.utils.IJDBCFetch;
 import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
@@ -47,6 +49,7 @@ import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.exception.ValidationException;
 import org.openspcoop2.generic_project.expression.IExpression;
 import org.openspcoop2.generic_project.expression.IPaginatedExpression;
+import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
 import org.openspcoop2.utils.sql.ISQLQueryObject;
 import org.openspcoop2.utils.sql.SQLObjectFactory;
 
@@ -57,7 +60,7 @@ import org.openspcoop2.utils.sql.SQLObjectFactory;
  * @author $Author$
  * @version $Rev$, $Date$
 */
-public class JDBCRegistroServiceSearch implements IDBRegistroServiceSearch {
+public class JDBCRegistroServiceSearch implements IDBRegistroServiceSearch, IDBServiceUtilities<Registro> {
 
 
 	protected JDBCServiceManagerProperties jdbcProperties = null;
@@ -78,6 +81,16 @@ public class JDBCRegistroServiceSearch implements IDBRegistroServiceSearch {
 			ValidationException, NotImplementedException {
 		org.openspcoop2.generic_project.utils.XSDValidator.validate(registro, this.log, 
 				org.govmix.proxy.fatturapa.utils.XSDValidator.getXSDValidator(this.log));
+	}
+	
+	@Override
+	public IJDBCFetch getFetch() {
+		return this.serviceSearch.getFetch();
+	}
+
+	@Override
+	public ISQLFieldConverter getFieldConverter() {
+		return this.serviceSearch.getFieldConverter();
 	}
 	
 	@Override

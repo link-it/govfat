@@ -81,6 +81,17 @@ public class NotificaEC {
     protected EsitoCommittente esito;
     protected String descrizione;
 
+//    public static void main(String[] args) throws Exception {
+//    	JAXBContext ctx = JAXBContext.newInstance(NotificaEC.class.getPackage().getName());
+//		Marshaller masrshal =  ctx.createMarshaller();
+//		NotificaEC jaxbElement = new NotificaEC();
+//		jaxbElement.setEsito(EsitoCommittente.EC_02);
+//		jaxbElement.setDescrizione("Importo non coerente e committente errato");
+//		jaxbElement.setIdentificativoSdi(new BigInteger("111"));
+//		jaxbElement.setPosizione(new BigInteger("1"));
+//		masrshal.marshal(jaxbElement, System.out);
+//	}
+    
     /**
      * Gets the value of the identificativoSdi property.
      * 

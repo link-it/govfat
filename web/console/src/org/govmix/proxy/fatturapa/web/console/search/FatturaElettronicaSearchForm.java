@@ -21,6 +21,7 @@
  */
 package org.govmix.proxy.fatturapa.web.console.search;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -42,13 +43,14 @@ import org.openspcoop2.generic_project.web.impl.jsf1.input.TextField;
  * @author $Author: pintori $
  *
  */
-public class FatturaElettronicaSearchForm extends SearchForm {
+public class FatturaElettronicaSearchForm extends SearchForm implements Cloneable{
 
 	public static final String DATA_RICEZIONE_PERIODO_PERSONALIZZATO = "3";
 	public static final String DATA_RICEZIONE_PERIODO_ULTIMI_TRE_MESI = "2";
 	public static final String DATA_RICEZIONE_PERIODO_ULTIMO_MESE = "1";
 	public static final String DATA_RICEZIONE_PERIODO_ULTIMA_SETTIMANA = "0";
 	private FormField<String> cedentePrestatore = null;
+	private List<SelectItem> cedPrestSelList = null;
 	private SelectListField dipartimento = null;
 	private FormField<SelectItem> dataRicezionePeriodo = null;
 	private FormField<Date> dataRicezione = null;
@@ -59,7 +61,7 @@ public class FatturaElettronicaSearchForm extends SearchForm {
 	private FormField<Date> dataEsatta = null;
 	private FormField<String> numero = null;
 	private FormField<String> identificativoLotto = null;
-	
+
 
 	public FatturaElettronicaSearchForm(){
 		init();
@@ -92,7 +94,8 @@ public class FatturaElettronicaSearchForm extends SearchForm {
 
 		this.dataRicezionePeriodo = new SelectListField();
 		this.dataRicezionePeriodo.setName("dataRicezionePeriodo");
-		this.dataRicezionePeriodo.setDefaultValue(new SelectItem(DATA_RICEZIONE_PERIODO_ULTIMA_SETTIMANA,"fattura.search.dataRicezione.ultimaSettimana"));
+		//NOTA: Modificato a seguito della CR 80
+		this.dataRicezionePeriodo.setDefaultValue(new SelectItem(DATA_RICEZIONE_PERIODO_ULTIMO_MESE,"fattura.search.dataRicezione.ultimoMese"));
 		this.dataRicezionePeriodo.setLabel("fattura.search.dataRicezione");
 		this.dataRicezionePeriodo.setFieldsToUpdate(this.getIdForm() + "_formPnl");
 		this.dataRicezionePeriodo.setForm(this);
@@ -104,14 +107,14 @@ public class FatturaElettronicaSearchForm extends SearchForm {
 		this.dataRicezione.setInterval(true);
 		this.dataRicezione.setLabel("fattura.search.dataRicezione.personalizzato");
 		this.dataRicezione.setPattern("dd/M/yyyy");
-		
+
 		this.dataEsatta = new DateField();
 		this.dataEsatta.setName("dataEsatta");
 		this.dataEsatta.setDefaultValue(null);
 		this.dataEsatta.setInterval(false);
 		this.dataEsatta.setLabel("fattura.search.dataEsatta");
 		this.dataEsatta.setPattern("dd/M/yyyy");
-		
+
 		// imposto i valori di default per le date
 		_setPeriodo();
 
@@ -119,7 +122,7 @@ public class FatturaElettronicaSearchForm extends SearchForm {
 		this.tipoDocumento.setName("tipoDocumento");
 		this.tipoDocumento.setValue(null);
 		this.tipoDocumento.setLabel("fattura.search.tipoDocumento");
-		
+
 		this.notificaEsitoCommittente = new SelectListField();
 		this.notificaEsitoCommittente.setName("notificaEsitoCommittente");
 		this.notificaEsitoCommittente.setValue(null);
@@ -129,7 +132,7 @@ public class FatturaElettronicaSearchForm extends SearchForm {
 		this.notificaDecorrenzaTermini.setName("notificaDecorrenzaTermini");
 		this.notificaDecorrenzaTermini.setValue(null);
 		this.notificaDecorrenzaTermini.setLabel("fattura.search.notificaDT");
-		
+
 		this.numero = new TextField();
 		this.numero.setName("numero");
 		this.numero.setValue(null);
@@ -139,7 +142,7 @@ public class FatturaElettronicaSearchForm extends SearchForm {
 		this.numero.setEnableManualInput(true);
 		this.numero.setFieldsToUpdate(this.getIdForm() + "_formPnl");
 		this.numero.setForm(this);
-		
+
 		this.identificativoLotto = new TextField();
 		this.identificativoLotto.setName("identificativoLotto");
 		this.identificativoLotto.setValue(null);
@@ -162,6 +165,7 @@ public class FatturaElettronicaSearchForm extends SearchForm {
 
 		// reset search fields
 		this.cedentePrestatore.reset();
+		this.setCedPrestSelList(new ArrayList<SelectItem>());
 		this.dipartimento.reset();
 		this.dataRicezionePeriodo.reset();
 		this.dataRicezione.reset();
@@ -169,15 +173,15 @@ public class FatturaElettronicaSearchForm extends SearchForm {
 		this.tipoDocumento.reset();
 		this.notificaEsitoCommittente.reset();
 		this.notificaDecorrenzaTermini.reset();
-		
+
 		this.identificativoLotto.reset();
 		this.dataEsatta.reset(); 
 		this.numero.reset();
 
 	}
 
-	
-	
+
+
 	public FormField<Date> getDataEsatta() {
 		return dataEsatta;
 	}
@@ -266,26 +270,50 @@ public class FatturaElettronicaSearchForm extends SearchForm {
 	}
 
 	public List<SelectItem> cedentePrestatoreAutoComplete(Object val){
-		return this.mBean.cedentePrestatoreAutoComplete(val);
+
+		
+		this.cedPrestSelList =  this.mBean.cedentePrestatoreAutoComplete(val);
+		
+		List<SelectItem> listToRet = new ArrayList<SelectItem>();
+		
+		List<String> app = new ArrayList<String>();
+		for (SelectItem selectItem : this.cedPrestSelList) {
+			String res = selectItem.getValue().trim(); 
+			
+			String noSpaceRes = res.replace("  ", " ");
+			while(noSpaceRes.contains("  ")) {
+				noSpaceRes = noSpaceRes.replace("  ", " ");
+			}
+			if(!app.contains(noSpaceRes)) 
+				app.add(noSpaceRes);
+		}
+		
+		for (String string : app) {
+			listToRet.add(new SelectItem(string, string));
+		}
+		
+		return listToRet;
 	}
-	
+
 	public void dataRicezionePeriodoSelectListener(ActionEvent ae){
 		_setPeriodo();
 	}
-	
+
 	public void cedentePrestatoreSelectListener(ActionEvent ae){
 		//do something
 	}
-	
+
 	public List<SelectItem> numeroAutoComplete(Object val){
 		return this.mBean.numeroAutoComplete(val);
 	}
-	
+
 	public void numeroSelectListener(ActionEvent ae){
 		//do something
 	}
-	
+
 	/**
+	 * 
+	 * 
 	 * Aggiornamento del valore effettivo delle date quando seleziono un valore nella tendina del periodo
 	 * 
 	 * 0 ultima settimana
@@ -296,7 +324,7 @@ public class FatturaElettronicaSearchForm extends SearchForm {
 	private void _setPeriodo() {
 		Date dataInizio = this.getDataRicezione().getValue();
 		Date dataFine = this.getDataRicezione().getValue2();
-		
+
 		String periodo = this.getDataRicezionePeriodo().getValue() != null ? this.getDataRicezionePeriodo().getValue().getValue() : DATA_RICEZIONE_PERIODO_ULTIMA_SETTIMANA ;
 
 		Calendar today = Calendar.getInstance();
@@ -335,7 +363,7 @@ public class FatturaElettronicaSearchForm extends SearchForm {
 			lastyear.add(Calendar.DATE, -90);
 			dataInizio = lastyear.getTime();
 		} else {
-		
+
 			// personalizzato
 			dataInizio = this.getDataRicezione().getValue();
 			dataFine = this.getDataRicezione().getValue2();
@@ -346,6 +374,15 @@ public class FatturaElettronicaSearchForm extends SearchForm {
 		this.getDataRicezione().setValue2(dataFine);
 	}
 
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+	public List<SelectItem> getCedPrestSelList() {
+		return cedPrestSelList;
+	}
 
-
+	public void setCedPrestSelList(List<SelectItem> cedPrestSelList) {
+		this.cedPrestSelList = cedPrestSelList;
+	}
 }

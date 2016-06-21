@@ -43,7 +43,7 @@ import java.io.Serializable;
  * 			&lt;element name="messageId" type="{http://www.govmix.org/proxy/fatturapa}string" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="note" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="dataRicezione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="1" maxOccurs="1"/>
- * 			&lt;element name="xml" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="xml" type="{http://www.w3.org/2001/XMLSchema}base64Binary" minOccurs="1" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -141,11 +141,11 @@ public class NotificaDecorrenzaTermini extends org.openspcoop2.utils.beans.BaseB
     this.dataRicezione = dataRicezione;
   }
 
-  public java.lang.String getXml() {
+  public byte[] getXml() {
     return this.xml;
   }
 
-  public void setXml(java.lang.String xml) {
+  public void setXml(byte[] xml) {
     this.xml = xml;
   }
 
@@ -197,8 +197,8 @@ public class NotificaDecorrenzaTermini extends org.openspcoop2.utils.beans.BaseB
   @XmlElement(name="dataRicezione",required=true,nillable=false,type=java.lang.String.class)
   protected java.util.Date dataRicezione;
 
-  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @javax.xml.bind.annotation.XmlSchemaType(name="base64Binary")
   @XmlElement(name="xml",required=true,nillable=false)
-  protected java.lang.String xml;
+  protected byte[] xml;
 
 }

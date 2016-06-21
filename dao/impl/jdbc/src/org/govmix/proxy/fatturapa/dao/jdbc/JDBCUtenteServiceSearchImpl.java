@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
+import org.openspcoop2.generic_project.dao.jdbc.utils.IJDBCFetch;
 import org.govmix.proxy.fatturapa.Dipartimento;
 import org.govmix.proxy.fatturapa.IdDipartimento;
 import org.govmix.proxy.fatturapa.IdEnte;
@@ -72,10 +74,18 @@ public class JDBCUtenteServiceSearchImpl implements IJDBCUtenteServiceSearch {
 		}		
 		return this._utenteFieldConverter;
 	}
+	@Override
+	public ISQLFieldConverter getFieldConverter() {
+		return this.getUtenteFieldConverter();
+	}
 
 	private UtenteFetch utenteFetch = new UtenteFetch();
 	public UtenteFetch getUtenteFetch() {
 		return this.utenteFetch;
+	}
+	@Override
+	public IJDBCFetch getFetch() {
+		return getUtenteFetch();
 	}
 
 

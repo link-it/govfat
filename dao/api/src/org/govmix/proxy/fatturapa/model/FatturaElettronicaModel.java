@@ -73,7 +73,7 @@ public class FatturaElettronicaModel extends AbstractModel<FatturaElettronica> {
 		this.STATO_PROTOCOLLAZIONE = new Field("statoProtocollazione",java.lang.String.class,"FatturaElettronica",FatturaElettronica.class);
 		this.DATA_PROTOCOLLAZIONE = new Field("dataProtocollazione",java.util.Date.class,"FatturaElettronica",FatturaElettronica.class);
 		this.PROTOCOLLO = new Field("protocollo",java.lang.String.class,"FatturaElettronica",FatturaElettronica.class);
-		this.XML = new Field("xml",java.lang.String.class,"FatturaElettronica",FatturaElettronica.class);
+		this.XML = new Field("xml",byte[].class,"FatturaElettronica",FatturaElettronica.class);
 		this.ID_DECORRENZA_TERMINI = new org.govmix.proxy.fatturapa.model.IdNotificaDecorrenzaTerminiModel(new Field("idDecorrenzaTermini",org.govmix.proxy.fatturapa.IdNotificaDecorrenzaTermini.class,"FatturaElettronica",FatturaElettronica.class));
 	
 	}
@@ -113,7 +113,7 @@ public class FatturaElettronicaModel extends AbstractModel<FatturaElettronica> {
 		this.STATO_PROTOCOLLAZIONE = new ComplexField(father,"statoProtocollazione",java.lang.String.class,"FatturaElettronica",FatturaElettronica.class);
 		this.DATA_PROTOCOLLAZIONE = new ComplexField(father,"dataProtocollazione",java.util.Date.class,"FatturaElettronica",FatturaElettronica.class);
 		this.PROTOCOLLO = new ComplexField(father,"protocollo",java.lang.String.class,"FatturaElettronica",FatturaElettronica.class);
-		this.XML = new ComplexField(father,"xml",java.lang.String.class,"FatturaElettronica",FatturaElettronica.class);
+		this.XML = new ComplexField(father,"xml",byte[].class,"FatturaElettronica",FatturaElettronica.class);
 		this.ID_DECORRENZA_TERMINI = new org.govmix.proxy.fatturapa.model.IdNotificaDecorrenzaTerminiModel(new ComplexField(father,"idDecorrenzaTermini",org.govmix.proxy.fatturapa.IdNotificaDecorrenzaTermini.class,"FatturaElettronica",FatturaElettronica.class));
 	
 	}
