@@ -16,7 +16,7 @@ Per completare il processo di installazione si devono effettuare i seguenti pass
 
    6. Copiare i file contenuti nella cartella conf nella directory di lavoro specificata in fase di installazione.
    
-   7. Copiare i file fatturaPA.war e proxyFatturaPA.war nella directory <JBOSS_HOME>/standalone/deployments/
+   7. Copiare i file di tipo .war nella directory <JBOSS_HOME>/standalone/deployments/
 
    8. Installare il DriverJDBC, relativo al tipo di RDBMS indicato in fase di setup, nella directory <JBOSS_HOME>/standalone/deployments/
 

@@ -1,0 +1,1258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 3 U (http://www.xmlspy.com) by Silvestro (Silvestro) -->
+<xs:schema targetNamespace="http://www.tesoro.it/fatture" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.tesoro.it/fatture" version="1.0">
+	
+	<xs:import namespace="http://schemas.xmlsoap.org/soap/envelope/" schemaLocation="http://schemas.xmlsoap.org/soap/envelope/"/>
+	
+	<!-- ################################################################################ -->
+	<!-- ANNOTAZIONI PER VERSIONING (NON MODIFICARE)                                                                            -->
+	<!-- ################################################################################ -->
+	<xs:annotation>
+		<xs:documentation>
+      			================================================================================
+       		$Revision: 3.1 $ 
+      	 		$Author:  $ 
+       		$Date: 2015-02-02 17:09:52  $
+      			================================================================================
+		</xs:documentation>
+	</xs:annotation>
+	<xs:element name="testWsRispostaTipo" type="xs:string"/>
+	<xs:element name="proxyOperazioneContabileRichiestaTipo" type="tns:proxyOperazioneContabileRichiestaTipo"/>
+	<xs:element name="proxyPagamentoIvaRichiestaTipo" type="tns:proxyPagamentoIvaRichiestaTipo"/>
+	<xs:element name="proxyRispostaTipo" type="tns:proxyRispostaTipo"/>
+	<xs:element name="queryOperazioneContabileRichiestaTipo" type="tns:queryOperazioneContabileRichiestaTipo"/>
+	<xs:element name="queryOperazioneContabileRispostaTipo" type="tns:queryOperazioneContabileRispostaTipo"/>
+	<xs:element name="queryPagamentoIvaRichiestaTipo" type="tns:queryPagamentoIvaRichiestaTipo"/>
+	<xs:element name="queryPagamentoIvaRispostaTipo" type="tns:queryPagamentoIvaRispostaTipo"/>
+	<xs:element name="proxyDatiFatturaRichiestaTipo" type="tns:proxyDatiFatturaRichiestaTipo"/>
+	<xs:element name="queryDatiFatturaRichiestaTipo" type="tns:queryDatiFatturaRichiestaTipo"/>
+	<xs:element name="queryDatiFatturaRispostaTipo" type="tns:queryDatiFatturaRispostaTipo"/>
+	<xs:element name="proxyInserimentoFatturaRichiestaTipo" type="tns:proxyInserimentoFatturaRichiestaTipo"/>
+	<xs:element name="queryInserimentoFatturaRichiestaTipo" type="tns:queryInserimentoFatturaRichiestaTipo"/>
+	<xs:element name="queryInserimentoFatturaRispostaTipo" type="tns:queryInserimentoFatturaRispostaTipo"/>
+	<xs:element name="readStatoFatturaRichiestaTipo" type="tns:readStatoFatturaRichiestaTipo"/>
+	<xs:element name="readStatoFatturaRispostaTipo" type="tns:readStatoFatturaRispostaTipo"/>
+	<xs:element name="queryInterrogazioneEsitiRichiestaTipo" type="tns:queryInterrogazioneEsitiRichiestaTipo"/>
+	<xs:element name="queryInterrogazioneEsitiRispostaTipo" type="tns:queryInterrogazioneEsitiRispostaTipo"/>
+	<xs:element name="readElencoMovimentiErarioIvaRichiestaTipo" type="tns:readElencoMovimentiErarioIvaRichiestaTipo"/>
+	<xs:element name="readElencoMovimentiErarioIvaRispostaTipo" type="tns:readElencoMovimentiErarioIvaRispostaTipo"/>
+	<xs:element name="readDownloadDocumentoRichiestaTipo" type="tns:readDownloadDocumentoRichiestaTipo"/>
+	<xs:element name="readDownloadDocumentoRispostaTipo" type="tns:readDownloadDocumentoRispostaTipo"/>
+	<!-- ################################################################################ -->
+	<!-- TIPI DI BASE                                                                     							              -->
+	<!-- ################################################################################ -->
+	<xs:complexType name="proxyOperazioneContabileRichiestaTipo">
+		<xs:sequence>
+			<xs:element name="testataRichiesta" type="tns:testataAsyncTipo"/>
+			<xs:element name="datiRichiesta" type="tns:datiRichiestaOperazioneContabileProxyTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="proxyRispostaTipo">
+		<xs:sequence>
+			<xs:element name="testataRisposta" type="tns:testataAsyncTipo"/>
+			<xs:element name="datiRisposta" type="tns:datiRispostaProxyTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="queryOperazioneContabileRichiestaTipo">
+		<xs:sequence>
+			<xs:element name="testataRichiesta" type="tns:testataQueryTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="queryOperazioneContabileRispostaTipo">
+		<xs:sequence>
+			<xs:element name="testataRisposta" type="tns:testataAsyncTipo"/>
+			<xs:element name="datiRisposta" type="tns:datiRispostaOperazioneContabileQueryTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="proxyPagamentoIvaRichiestaTipo">
+		<xs:sequence>
+			<xs:element name="testataRichiesta" type="tns:testataAsyncTipo"/>
+			<xs:element name="datiRichiesta" type="tns:datiRichiestaPagamentoIvaProxyTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="queryPagamentoIvaRichiestaTipo">
+		<xs:sequence>
+			<xs:element name="testataRichiesta" type="tns:testataQueryTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="queryPagamentoIvaRispostaTipo">
+		<xs:sequence>
+			<xs:element name="testataRisposta" type="tns:testataAsyncTipo"/>
+			<xs:element name="datiRisposta" type="tns:esitoElabTransazTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="proxyDatiFatturaRichiestaTipo">
+		<xs:sequence>
+			<xs:element name="testataRichiesta" type="tns:testataAsyncTipo"/>
+			<xs:element name="datiRichiesta" type="tns:datiRichiestaDatiFatturaProxyTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="queryDatiFatturaRichiestaTipo">
+		<xs:sequence>
+			<xs:element name="testataRichiesta" type="tns:testataQueryTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="queryDatiFatturaRispostaTipo">
+		<xs:sequence>
+			<xs:element name="testataRisposta" type="tns:testataAsyncTipo"/>
+			<xs:element name="datiRisposta" type="tns:datiRispostaDatiFatturaQueryTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="proxyInserimentoFatturaRichiestaTipo">
+		<xs:sequence>
+			<xs:element name="testataRichiesta" type="tns:testataAsyncTipo"/>
+			<xs:element name="datiRichiesta" type="tns:datiRichiestaInserimentoFatturaProxyTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="queryInserimentoFatturaRichiestaTipo">
+		<xs:sequence>
+			<xs:element name="testataRichiesta" type="tns:testataQueryTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="queryInserimentoFatturaRispostaTipo">
+		<xs:sequence>
+			<xs:element name="testataRisposta" type="tns:testataAsyncTipo"/>
+			<xs:element name="datiRisposta" type="tns:datiRispostaInserimentoFatturaQueryTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="readStatoFatturaRichiestaTipo">
+		<xs:sequence>
+			<xs:element name="testataRichiesta" type="tns:testataTransazioneTipo"/>
+			<xs:element name="datiRichiesta" type="tns:datiRichiestaDatiFatturaProxyTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="readStatoFatturaRispostaTipo">
+		<xs:sequence>
+			<xs:element name="testataRisposta" type="tns:testataTransazioneTipo"/>
+			<xs:element name="datiRisposta" type="tns:datiRispostaStatoFatturaReadTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="queryInterrogazioneEsitiRichiestaTipo">
+		<xs:sequence>
+			<xs:element name="testataRichiesta" type="tns:testataBaseTipo"/>
+			<xs:element name="datiRichiesta" type="tns:datiRichiestaInterrogazioneEsitiQueryTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="queryInterrogazioneEsitiRispostaTipo">
+		<xs:sequence>
+			<xs:element name="testataRisposta" type="tns:testataBaseTipo"/>
+			<xs:element name="datiRisposta" type="tns:datiRispostaInterrogazioneEsitiQueryTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="readElencoMovimentiErarioIvaRichiestaTipo">
+		<xs:sequence>
+			<xs:element name="testataRichiesta" type="tns:testataTransazioneTipo"/>
+			<xs:element name="datiRichiesta" type="tns:datiRichiestaElencoMovimentiErarioReadTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="readElencoMovimentiErarioIvaRispostaTipo">
+		<xs:sequence>
+			<xs:element name="testataRisposta" type="tns:testataTransazioneTipo"/>
+			<xs:element name="datiRisposta" type="tns:datiRispostaElencoMovimentiErarioReadTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="readDownloadDocumentoRichiestaTipo">
+		<xs:sequence>
+			<xs:element name="testataRichiesta" type="tns:testataTransazioneTipo"/>
+			<xs:element name="datiRichiesta" type="tns:datiRichiestaDownloadDocumentoReadTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="readDownloadDocumentoRispostaTipo">
+		<xs:sequence>
+			<xs:element name="testataRisposta" type="tns:testataTransazioneTipo"/>
+			<xs:element name="datiRisposta" type="tns:datiRispostaDownloadDocumentoReadTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ################################################################################ -->
+	<!-- TIPI - TESTATA - INIZIO                                                     							              -->
+	<!-- ################################################################################ -->
+	<xs:complexType name="testataBaseTipo">
+		<xs:sequence>
+			<xs:element name="codiceFiscaleTrasmittente" type="tns:codiceFiscaleTrasmittenteTipo" minOccurs="0"/>
+			<xs:element name="timestampTrasmissione" type="xs:dateTime" minOccurs="0"/>
+			<xs:element name="versioneApplicativa" type="tns:maxLenghtString5Type" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="testataTransazioneTipo">
+		<xs:complexContent>
+			<xs:extension base="tns:testataBaseTipo">
+				<xs:sequence>
+					<xs:element name="identificativoPCCAmministrazione" type="tns:numericalDigit9Type" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="testataAsyncTipo">
+		<xs:complexContent>
+			<xs:extension base="tns:testataTransazioneTipo">
+				<xs:sequence>
+					<xs:element name="identificativoTransazionePA" type="tns:maxLenghtString50Type" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="testataQueryTipo">
+		<xs:complexContent>
+			<xs:extension base="tns:testataAsyncTipo">
+				<xs:sequence>
+					<xs:element name="identificativoTransazionePCC" type="tns:maxLenghtString35Type" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ################################################################################ -->
+	<!-- TIPI - TESTATA - FINE                                                     							              -->
+	<!-- ################################################################################ -->
+	<!-- ################################################################################ -->
+	<!-- TIPI - DATI RICHIESTA/DATI RISPOSTA - INIZIO                                                 		              -->
+	<!-- ################################################################################ -->
+	<xs:complexType name="datiRichiestaOperazioneContabileProxyTipo">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="identificazionePCC" type="tns:maxLenghtString20Type" minOccurs="0"/>
+				<xs:element name="identificazioneSDI" type="tns:identificazioneSDITipo" minOccurs="0"/>
+				<xs:element name="identificazioneGenerale" type="tns:identificazioneGeneraleTipo" minOccurs="0"/>
+			</xs:choice>
+			<xs:element name="listaOperazione" type="tns:listaOperazioneTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="datiRichiestaPagamentoIvaProxyTipo">
+		<xs:sequence>
+			<xs:element name="identificativoPCCUfficio" type="tns:maxLenghtString35Type"/>
+			<xs:element name="tipologiaMovimentoErario" type="tns:tipologiaMovimentoErarioTipo"/>
+			<xs:element name="dettaglioMovimentoErario" type="tns:dettaglioMovimentoErarioTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="datiRichiestaDatiFatturaProxyTipo">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="identificazionePCC" type="tns:maxLenghtString20Type" minOccurs="0"/>
+				<xs:element name="identificazioneSDI" type="tns:identificazioneSDITipo" minOccurs="0"/>
+				<xs:element name="identificazioneGenerale" type="tns:identificazioneGeneraleTipo" minOccurs="0"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="datiRichiestaInserimentoFatturaProxyTipo">
+		<xs:sequence>
+			<xs:element name="datiFornitore" type="tns:datiFornitoreInsFattTipo"/>
+			<xs:element name="datiAmministrazione" type="tns:datiAmministrazioneInsFattTipo"/>
+			<xs:element name="identificativoDistinta" type="tns:maxLenghtString50Type"/>
+			<xs:element name="datiGeneraliFattura" type="tns:datiGeneraliFatturaTipo"/>
+			<xs:element name="listaRiepilogoAliquote" type="tns:listaRiepilogoAliquoteTipo" minOccurs="0"/>
+			<xs:element name="listaDistribuzioneCupCig" type="tns:listaDistribuzioneCupCigTipo" minOccurs="0"/>
+			<xs:element name="listaDettaglioPagamento" type="tns:listaDettaglioPagamentoTipo" minOccurs="0"/>
+			<xs:element name="datiRicezioneFattura" type="tns:ricezioneFatturaTipo"/>
+			<xs:element name="forzaturaImmissione" type="tns:forzaturaImmissioneTipo" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="datiRichiestaInterrogazioneEsitiQueryTipo">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="listaTransazionePA" type="tns:listaIdentificativoTransazioneTipo"/>
+				<xs:element name="listaTransazionePCC" type="tns:listaIdentificativoTransazionePCCTipo"/>
+				<xs:element name="intervalloDate" type="tns:intervalloDateTipo"/>
+			</xs:choice>
+			<xs:element name="flagEsitiNonComunicati" type="tns:flagSiNoTipo" default="NO" minOccurs="0"/>
+			<xs:element name="numeroPagina" type="tns:numericalDigit9Type" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="datiRichiestaElencoMovimentiErarioReadTipo">
+		<xs:sequence>
+			<xs:element name="IdentificativoPCCUfficio" type="tns:maxLenghtString35Type" minOccurs="0"/>
+			<xs:element name="intervalloDate" type="tns:intervalloDateMovErarioIvaTipo" minOccurs="0"/>
+			<xs:element name="numeroPagina" type="tns:numericalDigit9Type" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="datiRichiestaDownloadDocumentoReadTipo">
+		<xs:sequence>
+			<xs:element name="identificativoAllegato" type="tns:numericalDigit9Type"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ################################################################################ -->
+	<!-- TIPI - DATI RISPOSTA                                                                                                 	              -->
+	<!-- ################################################################################ -->
+	<xs:complexType name="datiRispostaProxyTipo">
+		<xs:complexContent>
+			<xs:extension base="tns:esitoBaseTipo">
+				<xs:sequence>
+					<xs:element name="identificativoTransazionePCC" type="tns:maxLenghtString35Type" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="datiRispostaOperazioneContabileQueryTipo">
+		<xs:sequence>
+			<xs:element name="esitoTrasmissione" type="tns:esitoOkKoTipo"/>
+			<xs:element name="listaErroreTrasmissione" type="tns:listaErroreTipo" minOccurs="0"/>
+			<xs:element name="dataFineElaborazione" type="xs:dateTime" minOccurs="0"/>
+			<xs:element name="esitoElaborazioneTransazione" type="tns:maxLenghtString10Type" minOccurs="0"/>
+			<xs:element name="listaErroreElaborazione" type="tns:listaErroreElaborazioneOperazioneTipo" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="datiRispostaDatiFatturaQueryTipo">
+		<xs:complexContent>
+			<xs:extension base="tns:esitoElabTransazTipo">
+				<xs:sequence>
+					<xs:element name="dettaglioFattura" type="tns:dettaglioFatturaTipo" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="datiRispostaInserimentoFatturaQueryTipo">
+		<xs:complexContent>
+			<xs:extension base="tns:esitoElabTransazTipo">
+				<xs:sequence>
+					<xs:element name="codiceRegistrazioneFattura" type="tns:maxLenghtString20Type" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="datiRispostaStatoFatturaReadTipo">
+		<xs:complexContent>
+			<xs:extension base="tns:esitoFineElabTipo">
+				<xs:sequence>
+					<xs:element name="statoContabileFattura" type="tns:statoContabileFatturaTipo" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="datiRispostaInterrogazioneEsitiQueryTipo">
+		<xs:complexContent>
+			<xs:extension base="tns:esitoFineElabTipo">
+				<xs:sequence>
+					<xs:element name="paginazione" type="tns:paginazioneTipo" minOccurs="0"/>
+					<xs:element name="listaEsito" type="tns:listaEsitoTipo" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="datiRispostaElencoMovimentiErarioReadTipo">
+		<xs:complexContent>
+			<xs:extension base="tns:esitoFineElabTipo">
+				<xs:sequence>
+					<xs:element name="totaleImportoPagato" type="tns:importoType" minOccurs="0"/>
+					<xs:element name="totaleIva" type="tns:importoType" minOccurs="0"/>
+					<xs:element name="listaPagamentiStornoIva" type="tns:listaPagamentoStornoIvaTipo" minOccurs="0"/>
+					<xs:element name="paginazione" type="tns:paginazioneTipo" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="datiRispostaDownloadDocumentoReadTipo">
+		<xs:complexContent>
+			<xs:extension base="tns:esitoFineElabTipo">
+				<xs:sequence>
+					<xs:element name="documento" type="tns:allegato" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ################################################################################ -->
+	<!-- TIPI - DATI RICHIESTA/DATI RISPOSTA - FINE                                                 		              -->
+	<!-- ################################################################################ -->
+	<!-- ################################################################################ -->
+	<!-- TIPI - ESITO - INIZIO                                                                                              		              -->
+	<!-- ################################################################################ -->
+	<xs:complexType name="esitoBaseTipo">
+		<xs:sequence>
+			<xs:element name="esitoTrasmissione" type="tns:esitoOkKoTipo"/>
+			<xs:element name="listaErroreTrasmissione" type="tns:listaErroreTipo" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="esitoFineElabTipo">
+		<xs:complexContent>
+			<xs:extension base="tns:esitoBaseTipo">
+				<xs:sequence>
+					<xs:element name="dataFineElaborazione" type="xs:dateTime" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="esitoElabTransazTipo">
+		<xs:complexContent>
+			<xs:extension base="tns:esitoFineElabTipo">
+				<xs:sequence>
+					<xs:element name="esitoElaborazioneTransazione" type="tns:maxLenghtString10Type" minOccurs="0"/>
+					<xs:element name="descrizioneElaborazioneTransazione" type="tns:maxLenghtString1024Type" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="erroreTipo">
+		<xs:sequence>
+			<xs:element name="codice" type="tns:maxLenghtString6Type"/>
+			<xs:element name="descrizione" type="tns:maxLenghtString100Type"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="esitoTipo">
+		<xs:sequence>
+			<xs:element name="identificativoTransazionePCC" type="tns:maxLenghtString35Type" minOccurs="0"/>
+			<xs:element name="identificativoTransazionePA" type="tns:maxLenghtString50Type" minOccurs="0"/>
+			<xs:element name="identificativoPCCAmministrazione" type="tns:numericalDigit9Type" minOccurs="0"/>
+			<xs:element name="statoTransazione" type="tns:statoTransazioneTipo" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="erroreElaborazioneOperazioneTipo">
+		<xs:sequence>
+			<xs:element name="tipoOperazione" type="tns:tipoOperazioneTipo" minOccurs="0"/>
+			<xs:element name="progressivoOperazione" type="tns:numericalDigit5Type" minOccurs="0"/>
+			<xs:element name="codiceEsitoElaborazioneOperazione" type="tns:maxLenghtString10Type"/>
+			<xs:element name="descrizioneEsitoElaborazioneOperazione" type="tns:maxLenghtString1024Type" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="esitoOkKoTipo">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="OK"/>
+			<xs:enumeration value="KO"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="statoTransazioneTipo">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="EL_AT : Transazione in attesa di elaborazione"/>
+			<xs:enumeration value="EL_CO : Transazione in corso di elaborazione"/>
+			<xs:enumeration value="EL_OK : Transazione elaborata con esito positivo"/>
+			<xs:enumeration value="EL_KO : Transazione elaborata con esito negativo"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- ################################################################################ -->
+	<!-- TIPI - ESITO - FINE                                                                                              		              -->
+	<!-- ################################################################################ -->
+	<xs:complexType name="identificazioneGeneraleTipo">
+		<xs:sequence>
+			<xs:element name="numeroFattura" type="tns:maxLenghtString20Type"/>
+			<xs:element name="dataEmissione" type="xs:date"/>
+			<xs:element name="importoTotaleDocumento" type="tns:importoType"/>
+			<xs:element name="idFiscaleIvaFornitore" type="tns:idFiscaleIvaTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="identificazioneSDITipo">
+		<xs:sequence>
+			<xs:element name="lottoSDI" type="xs:decimal"/>
+			<xs:element name="numeroFattura" type="tns:maxLenghtString20Type"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="operazioneTipo">
+		<xs:sequence>
+			<xs:element name="tipoOperazione" type="tns:tipoOperazioneTipo"/>
+			<xs:element name="progressivoOperazione" type="tns:numericalDigit5Type"/>
+			<xs:element name="strutturaDatiOperazione" type="tns:strutturaDatiOperazioneTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="pagamentoTipo">
+		<xs:sequence>
+			<xs:element name="importoPagato" type="tns:importoType"/>
+			<xs:element name="naturaSpesa" type="tns:naturaSpesaTipo"/>
+			<xs:element name="capitoliSpesa" type="tns:maxLenghtString100Type" minOccurs="0"/>
+			<xs:element name="estremiImpegno" type="tns:maxLenghtString50Type" minOccurs="0"/>
+			<xs:element name="mandatoPagamento" type="tns:mandatoPagamentoTipo"/>
+			<xs:element name="idFiscaleIVABeneficiario" type="tns:idFiscaleIvaTipo"/>
+			<xs:element name="codiceCIG" type="tns:maxLenghtString15Type"/>
+			<xs:element name="codiceCUP" type="tns:maxLenghtString15Type"/>
+			<xs:element name="descrizione" type="tns:maxLenghtString100Type" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="pagamentoStornoTipo">
+		<xs:sequence>
+			<xs:element name="importoStorno" type="tns:importoType"/>
+			<xs:element name="naturaSpesa" type="tns:naturaSpesaTipo"/>
+			<xs:element name="idFiscaleIVABeneficiario" type="tns:idFiscaleIvaTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="comunicazioneScadenzaTipo">
+		<xs:sequence>
+			<xs:element name="comunicaScadenza" type="tns:comunicaScadenzaTipo"/>
+			<xs:element name="importo" type="tns:importoType" minOccurs="0"/>
+			<xs:element name="dataScadenza" type="xs:date" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="contabilizzazioneTipo">
+		<xs:sequence>
+			<xs:element name="importoMovimento" type="tns:importoType"/>
+			<xs:element name="naturaSpesa" type="tns:naturaSpesaContabiliTipo"/>
+			<xs:element name="capitoliSpesa" type="tns:maxLenghtString100Type" minOccurs="0"/>
+			<xs:element name="operazione" type="tns:operazioneContabilizzazioneTipo"/>
+			<xs:element name="descrizione" type="tns:maxLenghtString100Type" minOccurs="0"/>
+			<xs:element name="estremiImpegno" type="tns:maxLenghtString50Type" minOccurs="0"/>
+			<xs:element name="codiceCIG" type="tns:maxLenghtString15Type"/>
+			<xs:element name="codiceCUP" type="tns:maxLenghtString15Type"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="mandatoPagamentoTipo">
+		<xs:sequence>
+			<xs:element name="numero" type="tns:maxLenghtString100Type"/>
+			<xs:element name="dataMandatoPagamento" type="xs:date"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="strutturaDatiOperazioneTipo">
+		<xs:sequence>
+			<xs:choice minOccurs="0">
+				<xs:element name="pagamento" type="tns:pagamentoTipo"/>
+				<xs:element name="pagamentoStorno" type="tns:pagamentoStornoTipo"/>
+				<xs:element name="comunicazioneScadenza" type="tns:comunicazioneScadenzaTipo"/>
+				<xs:element name="listaContabilizzazione" type="tns:listaContabilizzazioneTipo" minOccurs="0"/>
+				<xs:element name="rifiutoFattura" type="tns:rifiutoFatturaTipo"/>
+				<xs:element name="ricezioneFattura" type="tns:ricezioneFatturaTipo"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="operazioneContabilizzazioneTipo">
+		<xs:sequence>
+			<xs:element name="statoDebito" type="tns:statoDebitoTipo"/>
+			<xs:element name="causale" type="tns:maxLenghtString255Type" minOccurs="0"/>
+			<!--<xs:element name="descrizione" type="tns:maxLenghtString150Type"/>-->
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="rifiutoFatturaTipo">
+		<xs:sequence>
+			<xs:element name="dataRifiuto" type="xs:date"/>
+			<xs:element name="descrizioneRifiuto" type="tns:maxLenghtString100Type"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ricezioneFatturaTipo">
+		<xs:sequence>
+			<xs:element name="numeroProtocolloEntrata" type="tns:maxLenghtString50Type" minOccurs="0"/>
+			<xs:element name="dataRicezione" type="xs:date" minOccurs="0"/>
+			<xs:element name="note" type="tns:maxLenghtString1024Type" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="datiPagamentoTipo">
+		<xs:sequence>
+			<xs:element name="numeroMandato" type="tns:maxLenghtString100Type"/>
+			<xs:element name="dataMandato" type="xs:date"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="dettagliPagamentoTipo">
+		<xs:sequence>
+			<xs:element name="importo" type="tns:importoType"/>
+			<xs:element name="capitoliSpesa" type="tns:maxLenghtString100Type" minOccurs="0"/>
+			<xs:element name="estremiImpegno" type="tns:maxLenghtString50Type" minOccurs="0"/>
+			<xs:element name="noteAggiuntive" type="tns:maxLenghtString4000Type" minOccurs="0"/>
+			<xs:element name="documentoAllegato" type="tns:allegato" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="dettaglioFatturaTipo">
+		<xs:sequence>
+			<xs:element name="datiFornitore" type="tns:datiFornitoreTipo" minOccurs="0"/>
+			<xs:element name="datiCessionario" type="tns:datiCessionarioTipo" minOccurs="0"/>
+			<xs:element name="datiAmministrazione" type="tns:datiAmministrazioneTipo" minOccurs="0"/>
+			<xs:element name="datiDistintaTrasmissione" type="tns:datiDistintaTrasmissioneTipo" minOccurs="0"/>
+			<xs:element name="flagFatturaCertificata" type="tns:flagSiNoTipo" minOccurs="0"/>
+			<xs:element name="listaCertificazione" type="tns:listaCertificazioneTipo" minOccurs="0"/>
+			<xs:element name="importoTotaleComunicazioniScadenze" type="tns:importoType" minOccurs="0"/>
+			<xs:element name="listaComunicazioneScadenza" type="tns:listaPianoComunicazioneScadenzaTipo" minOccurs="0"/>
+			<xs:element name="datiDocumento" type="tns:dettaglioDocumentoTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="datiFornitoreTipo">
+		<xs:sequence>
+			<xs:element name="codiceFiscale" type="tns:codiceFiscaleTrasmittenteTipo" minOccurs="0"/>
+			<xs:element name="denominazione" type="tns:maxLenghtString150Type" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="datiCessionarioTipo">
+		<xs:sequence>
+			<xs:element name="codiceFiscaleGiuridicoTipo" type="tns:maxLenghtString16Type" minOccurs="0"/>
+			<xs:element name="denominazione" type="tns:maxLenghtString150Type" minOccurs="0"/>
+			<xs:element name="dataCessione" type="xs:date" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="datiFornitoreInsFattTipo">
+		<xs:sequence>
+			<xs:element name="codiceFiscale" type="tns:codiceFiscaleTrasmittenteTipo"/>
+			<xs:element name="denominazione" type="tns:maxLenghtString150Type"/>
+			<xs:element name="idFiscaleIVA" type="tns:idFiscaleIvaTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="datiAmministrazioneTipo">
+		<xs:sequence>
+			<xs:element name="codiceFiscale" type="tns:codiceFiscaleGiuridicoTipo" minOccurs="0"/>
+			<xs:element name="denominazione" type="tns:maxLenghtString150Type" minOccurs="0"/>
+			<xs:element name="codiceUfficioPCC" type="tns:maxLenghtString6Type" minOccurs="0"/>
+			<xs:element name="denominazioneUfficioPCC" type="tns:maxLenghtString1024Type" minOccurs="0"/>
+			<xs:element name="codiceUnivocoUfficioIPA" type="tns:maxLenghtString6Type" minOccurs="0"/>
+			<xs:element name="denominazioneUfficioIPA" type="tns:maxLenghtString512Type" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="datiAmministrazioneInsFattTipo">
+		<xs:sequence>
+			<xs:element name="codiceFiscale" type="tns:codiceFiscaleGiuridicoTipo"/>
+			<xs:element name="denominazione" type="tns:maxLenghtString150Type"/>
+			<xs:element name="codiceUfficioPCC" type="tns:maxLenghtString6Type" minOccurs="0"/>
+			<xs:element name="codiceUnivocoUfficioIPA" type="tns:maxLenghtString6Type" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="datiDistintaTrasmissioneTipo">
+		<xs:sequence>
+			<xs:element name="identificativoDistinta" type="tns:maxLenghtString50Type" minOccurs="0"/>
+			<xs:element name="dataImmissione" type="xs:date" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="certificazioneTipo">
+		<xs:sequence>
+			<xs:element name="numeroIstanza" type="tns:maxLenghtString20Type" minOccurs="0"/>
+			<xs:element name="numeroCertificazione" type="tns:maxLenghtString20Type" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="pianoComunicazioneScadenzaTipo">
+		<xs:sequence>
+			<xs:element name="dataScadenza" type="xs:date" minOccurs="0"/>
+			<xs:element name="importoInScadenza" type="tns:importoType" minOccurs="0"/>
+			<xs:element name="importoIniziale" type="tns:importoType" minOccurs="0"/>
+			<xs:element name="pagatoRicontabilizzato" type="tns:aliquotaIVAType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="dettaglioDocumentoTipo">
+		<xs:sequence>
+			<xs:element name="statoDocumento" type="tns:statoDocumentoTipo" minOccurs="0"/>
+			<xs:element name="IdFiscaleIVA" type="tns:idFiscaleIvaTipo" minOccurs="0"/>
+			<xs:element name="progressivoRegistrazione" type="tns:maxLenghtString50Type" minOccurs="0"/>
+			<xs:element name="identificazioneSDI" type="tns:identificazioneSDITipo" minOccurs="0"/>
+			<xs:element name="numeroProtocollo" type="tns:maxLenghtString50Type" minOccurs="0"/>
+			<xs:element name="dataRicezione" type="xs:date" minOccurs="0"/>
+			<xs:element name="tipoDocumento" type="tns:tipoDocumentoTipo" minOccurs="0"/>
+			<xs:element name="dataEmissione" type="xs:date" minOccurs="0"/>
+			<xs:element name="numeroDocumento" type="tns:maxLenghtString20Type" minOccurs="0"/>
+			<xs:element name="descrizioneCausale" type="tns:maxLenghtString100Type" minOccurs="0"/>
+			<xs:element name="importoTotale" type="tns:importoType" minOccurs="0"/>
+			<xs:element name="importoImponibile" type="tns:importoType" minOccurs="0"/>
+			<xs:element name="totaleImposta" type="tns:importoType" minOccurs="0"/>
+			<xs:element name="splitPayment" type="tns:flagSiNoTipo" minOccurs="0"/>
+			<xs:element name="listaRiepilogoAliquote" type="tns:listaRiepilogoAliquoteTipo" minOccurs="0"/>
+			<xs:element name="ripartizioneAttuale" type="tns:ripartizioneAttualeTipo"/>
+			<xs:element name="listaDettaglioPagamento" type="tns:listaDettaglioPagamentoTipo" minOccurs="0"/>
+			<xs:element name="listaDettaglioMovimento" type="tns:listaDettaglioMovimentoTipo" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="dettaglioDocumentoReadTipo">
+		<xs:sequence>
+			<xs:element name="statoDocumento" type="tns:statoDocumentoTipo" minOccurs="0"/>
+			<xs:element name="IdFiscaleIVA" type="tns:idFiscaleIvaTipo"/>
+			<xs:element name="progressivoRegistrazione" type="tns:maxLenghtString50Type" minOccurs="0"/>
+			<xs:element name="numeroProtocollo" type="tns:maxLenghtString50Type" minOccurs="0"/>
+			<xs:element name="dataRicezione" type="xs:date" minOccurs="0"/>
+			<xs:element name="tipoDocumento" type="tns:tipoDocumentoTipo" minOccurs="0"/>
+			<xs:element name="dataEmissione" type="xs:date" minOccurs="0"/>
+			<xs:element name="numeroDocumento" type="tns:maxLenghtString20Type" minOccurs="0"/>
+			<xs:element name="descrizioneCausale" type="tns:maxLenghtString100Type" minOccurs="0"/>
+			<xs:element name="importoTotale" type="tns:importoType" minOccurs="0"/>
+			<xs:element name="importoImponibile" type="tns:importoType" minOccurs="0"/>
+			<xs:element name="totaleImposta" type="tns:importoType" minOccurs="0"/>
+			<xs:element name="splitPayment" type="tns:flagSiNoTipo" minOccurs="0"/>
+			<xs:element name="ripartizioneAttuale" type="tns:ripartizioneAttualeTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="riepilogoAliquoteTipo">
+		<xs:sequence>
+			<xs:element name="aliquotaIVA" type="tns:aliquotaIVAType" minOccurs="0"/>
+			<xs:element name="codiceEsenzioneIVA" type="tns:codiceEsenzioneIVATipo" minOccurs="0"/>
+			<xs:element name="totaleImponibileAliquota" type="tns:importoType" minOccurs="0"/>
+			<xs:element name="totaleImpostaAliquota" type="tns:importoType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ripartizioneAttualeTipo">
+		<xs:sequence>
+			<xs:element name="importoLiquidato" type="tns:importoType" minOccurs="0"/>
+			<xs:element name="importoNonLiquidato" type="tns:importoType" minOccurs="0"/>
+			<xs:element name="importoSospeso" type="tns:importoType" minOccurs="0"/>
+			<xs:element name="importoPagato" type="tns:importoType" minOccurs="0"/>
+			<xs:element name="dataCertificazione" type="xs:date" minOccurs="0"/>
+			<xs:element name="importoCertificato" type="tns:importoType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="dettaglioPagamentoTipo">
+		<xs:sequence>
+			<xs:element name="dataRiferimentoTerminiPagamento" type="xs:date" minOccurs="0"/>
+			<xs:element name="giorniTerminiPagamento" type="tns:numericalDigit5Type" minOccurs="0"/>
+			<xs:element name="dataScadenzaPagamento" type="xs:date" minOccurs="0"/>
+			<xs:element name="importoPagamento" type="tns:importoType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="dettaglioMovimentoTipo">
+		<xs:sequence>
+			<xs:element name="dataMovimento" type="xs:date" minOccurs="0"/>
+			<xs:element name="importo" type="tns:importoType" minOccurs="0"/>
+			<xs:element name="statoDebito" type="tns:maxLenghtString20Type" minOccurs="0"/>
+			<xs:element name="causale" type="tns:maxLenghtString255Type" minOccurs="0"/>
+			<xs:element name="importoNaturaCorrente" type="tns:importoType" minOccurs="0"/>
+			<xs:element name="importoContoCapitale" type="tns:importoType" minOccurs="0"/>
+			<xs:element name="capitoloPgConto" type="tns:maxLenghtString100Type" minOccurs="0"/>
+			<xs:element name="estremiImpegno" type="tns:maxLenghtString50Type" minOccurs="0"/>
+			<xs:element name="codiceCIG" type="tns:maxLenghtString50Type" minOccurs="0"/>
+			<xs:element name="codiceCUP" type="tns:maxLenghtString50Type" minOccurs="0"/>
+			<xs:element name="descrizioneContabilizzazione" type="tns:maxLenghtString1024Type" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="datiGeneraliFatturaTipo">
+		<xs:sequence>
+			<xs:element name="tipoDocumento" type="tns:tipoDocumentoTipo"/>
+			<xs:element name="dataEmissione" type="xs:date"/>
+			<xs:element name="numeroFattura" type="tns:maxLenghtString20Type"/>
+			<xs:element name="descrizioneCausale" type="tns:maxLenghtString100Type"/>
+			<xs:element name="importoTotaleDocumento" type="tns:importoType"/>
+			<xs:element name="importoImponibile" type="tns:importoType" minOccurs="0"/>
+			<xs:element name="totaleImposta" type="tns:importoType" minOccurs="0"/>
+			<xs:element name="art73" type="tns:flagSiNoTipo" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="distribuzioneCupCigTipo">
+		<xs:sequence>
+			<xs:element name="importo" type="tns:importoType" minOccurs="0"/>
+			<xs:element name="codiceCUP" type="tns:maxLenghtString50Type" minOccurs="0"/>
+			<xs:element name="codiceCIG" type="tns:maxLenghtString50Type" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="statoContabileFatturaTipo">
+		<xs:sequence>
+			<xs:element name="datiFornitore" type="tns:datiFornitoreTipo"/>
+			<xs:element name="datiAmministrazione" type="tns:datiAmministrazioneTipo"/>
+			<xs:element name="datiDistintaTrasmissione" type="tns:datiDistintaTrasmissioneTipo"/>
+			<xs:element name="datiDocumento" type="tns:dettaglioDocumentoReadTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="intervalloDateTipo">
+		<xs:sequence>
+			<xs:element name="inizioDataRichiestaElaborazione" type="xs:date"/>
+			<xs:element name="fineDataRichiestaElaborazione" type="xs:date"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="intervalloDateMovErarioIvaTipo">
+		<xs:sequence>
+			<xs:element name="inizioDataRicerca" type="xs:date" minOccurs="0"/>
+			<xs:element name="fineDataRicerca" type="xs:date" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="allegato">
+		<xs:sequence>
+			<xs:element name="fileAllegato" type="xs:base64Binary"/>
+			<xs:element name="nomeFile" type="tns:maxLenghtString4000Type"/>
+			<xs:element name="contentType" type="tns:maxLenghtString255Type" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="identificativoTransazioneTipo">
+		<xs:sequence>
+			<xs:element name="identificativoTransazionePA" type="tns:maxLenghtString50Type"/>
+			<xs:element name="identificativoPCCAmministrazione" type="tns:numericalDigit9Type"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="dettaglioMovimentoErarioTipo">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="stornoPagamentoIVA" type="tns:stornoPagamentoIVATipo"/>
+				<xs:element name="pagamentoIVA" type="tns:pagamentoIVATipo"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="stornoPagamentoIVATipo">
+		<xs:sequence>
+			<xs:element name="identificativoPagamentoIVA" type="tns:numericalDigit9Type"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="pagamentoIVATipo">
+		<xs:sequence>
+			<xs:element name="datiPagamento" type="tns:datiPagamentoTipo"/>
+			<xs:element name="listaDettagliPagamento" type="tns:listaDettagliPagamentoTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="pagamentoStornoIvaTipo">
+		<xs:sequence>
+			<xs:element name="identificativoMovimentoIva" type="tns:numericalDigit9Type" minOccurs="0"/>
+			<xs:element name="tipoMovimento" type="tns:tipologiaMovimentoErarioTipo" minOccurs="0"/>
+			<xs:element name="identificativoPCCUfficio" type="tns:maxLenghtString35Type" minOccurs="0"/>
+			<xs:element name="descrizioneUfficio" type="tns:maxLenghtString1024Type" minOccurs="0"/>
+			<xs:element name="dataMandato" type="xs:date" minOccurs="0"/>
+			<xs:element name="dataRegistrazione" type="xs:date" minOccurs="0"/>
+			<xs:element name="mumeroMandato" type="tns:maxLenghtString100Type" minOccurs="0"/>
+			<xs:element name="importo" type="tns:importoType" minOccurs="0"/>
+			<xs:element name="capitoloSpesa" type="tns:maxLenghtString30Type" minOccurs="0"/>
+			<xs:element name="estremiImpegno" type="tns:maxLenghtString100Type" minOccurs="0"/>
+			<xs:element name="noteAggiuntive" type="tns:maxLenghtString4000Type" minOccurs="0"/>
+			<xs:element name="identificativoAllegato" type="tns:numericalDigit9Type" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Lista Oggetti -->
+	<xs:complexType name="listaOperazioneTipo">
+		<xs:sequence>
+			<xs:element name="operazione" type="tns:operazioneTipo" maxOccurs="240"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="listaRiepilogoAliquoteTipo">
+		<xs:sequence>
+			<xs:element name="riepilogoAliquote" type="tns:riepilogoAliquoteTipo" maxOccurs="240"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="listaDistribuzioneCupCigTipo">
+		<xs:sequence>
+			<xs:element name="distribuzioneCupCig" type="tns:distribuzioneCupCigTipo" maxOccurs="240"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="listaDettaglioPagamentoTipo">
+		<xs:sequence>
+			<xs:element name="dettaglioPagamento" type="tns:dettaglioPagamentoTipo" maxOccurs="240"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="listaIdentificativoTransazioneTipo">
+		<xs:sequence>
+			<xs:element name="transazione" type="tns:identificativoTransazioneTipo" maxOccurs="240"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="listaIdentificativoTransazionePCCTipo">
+		<xs:sequence>
+			<xs:element name="identificativoTransazionePCC" type="tns:maxLenghtString35Type" maxOccurs="240"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="listaErroreElaborazioneOperazioneTipo">
+		<xs:sequence>
+			<xs:element name="erroreElaborazione" type="tns:erroreElaborazioneOperazioneTipo" maxOccurs="240"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="listaEsitoTipo">
+		<xs:sequence>
+			<xs:element name="esito" type="tns:esitoTipo" maxOccurs="240"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="listaPagamentoStornoIvaTipo">
+		<xs:sequence>
+			<xs:element name="pagamentoStorniIva" type="tns:pagamentoStornoIvaTipo" maxOccurs="240"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="listaErroreTipo">
+		<xs:sequence>
+			<xs:element name="erroreTrasmissione" type="tns:erroreTipo" maxOccurs="240"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="listaCertificazioneTipo">
+		<xs:sequence>
+			<xs:element name="certificazione" type="tns:certificazioneTipo" maxOccurs="240"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="listaPianoComunicazioneScadenzaTipo">
+		<xs:sequence>
+			<xs:element name="comunicazioneScadenza" type="tns:pianoComunicazioneScadenzaTipo" maxOccurs="240"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="listaDettaglioMovimentoTipo">
+		<xs:sequence>
+			<xs:element name="movimento" type="tns:dettaglioMovimentoTipo" maxOccurs="240"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="listaDettagliPagamentoTipo">
+		<xs:sequence>
+			<xs:element name="dettagliPagamento" type="tns:dettagliPagamentoTipo" maxOccurs="240"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="listaContabilizzazioneTipo">
+		<xs:sequence>
+			<xs:element name="contabilizzazione" type="tns:contabilizzazioneTipo" maxOccurs="230"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="paginazioneTipo">
+		<xs:sequence>
+			<xs:element name="paginaCorrente" type="tns:numericalDigit9Type"/>
+			<xs:element name="numeroPagine" type="tns:numericalDigit9Type"/>
+			<xs:element name="numeroTotaleElementi" type="tns:numericalDigit9Type"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Lista Oggetti -->
+	<!--Tipo Operazione -->
+	<xs:simpleType name="tipoOperazioneTipo">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CP">
+				<xs:annotation>
+					<xs:documentation>
+                    			OPERAZIONE DI PAGAMENTO
+                			</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="SP">
+				<xs:annotation>
+					<xs:documentation>
+                    			OPERAZIONE DI STORNO PAGAMENTO
+                			</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="CS">
+				<xs:annotation>
+					<xs:documentation>OPERAZIONE DI COMUNICAZIONE SCADENZA</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="CO">
+				<xs:annotation>
+					<xs:documentation>OPERAZIONE DI CONTABILIZZAZIONE FATTURA</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="RF">
+				<xs:annotation>
+					<xs:documentation>OPERAZIONE DI RIFIUTO FATTURA</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="RC">
+				<xs:annotation>
+					<xs:documentation>OPERAZIONE DI RICEZIONE FATTURA</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="CCS">
+				<xs:annotation>
+					<xs:documentation>OPERAZIONE DI CANCELLAZIONE COMUNICAZIONI SCADENZA</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="SC">
+				<xs:annotation>
+					<xs:documentation>OPERAZIONE DI STORNO CONTABILIZZAZIONE</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="naturaSpesaTipo">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CO">
+				<xs:annotation>
+					<xs:documentation>Spesa Corrente o classificazione equivalente (es. spesa per beni di consumo)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="CA">
+				<xs:annotation>
+					<xs:documentation>Conto Capitale o classificazione equivalente (es. spesa per investimento)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="naturaSpesaContabiliTipo">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CO">
+				<xs:annotation>
+					<xs:documentation>Spesa Corrente o classificazione equivalente (es. spesa per beni di consumo)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="CA">
+				<xs:annotation>
+					<xs:documentation>Conto Capitale o classificazione equivalente (es. spesa per investimento)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="NA">
+				<xs:annotation>
+					<xs:documentation>negli altri casi</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="comunicaScadenzaTipo">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="SI"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="statoDebitoTipo">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="LIQ">
+				<xs:annotation>
+					<xs:documentation>LIQUIDATO</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="SOSP">
+				<xs:annotation>
+					<xs:documentation>SOSPESO</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="NOLIQ">
+				<xs:annotation>
+					<xs:documentation>NO LIQUIDATO</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--CodiceFiscale PA -->
+	<!--idFiscaleIva-->
+	<xs:simpleType name="codiceFiscaleTrasmittenteTipo">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="(([0-9]{11})|([A-Za-z]{6}[0-9lmnpqrstuvLMNPQRSTUV]{2}[abcdehlmprstABCDEHLMPRST]{1}[0-9lmnpqrstuvLMNPQRSTUV]{2}[A-Za-z]{1}[0-9lmnpqrstuvLMNPQRSTUV]{3}[A-Za-z]{1}))"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="idFiscaleIvaTipo">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="((it|IT)\d{11}|([A-Za-z]{6}[0-9lmnpqrstuvLMNPQRSTUV]{2}[abcdehlmprstABCDEHLMPRST]{1}[0-9lmnpqrstuvLMNPQRSTUV]{2}[A-Za-z]{1}[0-9lmnpqrstuvLMNPQRSTUV]{3}[A-Za-z]{1}))"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="codiceFiscaleGiuridicoTipo">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([0-9]{11})"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--idFiscaleIva-->
+	<xs:simpleType name="flagSiNoTipo">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="SI"/>
+			<xs:enumeration value="NO"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="statoDocumentoTipo">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="IL">
+				<xs:annotation>
+					<xs:documentation>IN LAVORAZIONE</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="BO">
+				<xs:annotation>
+					<xs:documentation>BOZZA</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="PR">
+				<xs:annotation>
+					<xs:documentation>PRESENTATA</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="RI">
+				<xs:annotation>
+					<xs:documentation>RICEVUTA</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="LA">
+				<xs:annotation>
+					<xs:documentation>LAVORATA</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="RE">
+				<xs:annotation>
+					<xs:documentation>RESPINTA</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tipoDocumentoTipo">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="TD01">
+				<xs:annotation>
+					<xs:documentation>FATTURA</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="TD02">
+				<xs:annotation>
+					<xs:documentation>ACCONTO/ANTICIPO SU FATTURA</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="TD03">
+				<xs:annotation>
+					<xs:documentation>ACCONTO/ANTICIPO SU PARCELLA</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="TD04">
+				<xs:annotation>
+					<xs:documentation>NOTA DI CREDITO</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="TD05">
+				<xs:annotation>
+					<xs:documentation>NOTA DI DEBITO</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="TD06">
+				<xs:annotation>
+					<xs:documentation>PARCELLA</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="codiceEsenzioneIVATipo">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NA">
+				<xs:annotation>
+					<xs:documentation>NON APPLICABILE</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="N1">
+				<xs:annotation>
+					<xs:documentation>ESCLUSE EX ART. 15</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="N2">
+				<xs:annotation>
+					<xs:documentation>NON SOGGETTE</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="N3">
+				<xs:annotation>
+					<xs:documentation>NON IMPONIBILI</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="N4">
+				<xs:annotation>
+					<xs:documentation>ESENTI</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="N5">
+				<xs:annotation>
+					<xs:documentation>REGIME DEL MARGINE</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="forzaturaImmissioneTipo">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="AG">
+				<xs:annotation>
+					<xs:documentation>Aggiungi la fattura come nuova</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="SO">
+				<xs:annotation>
+					<xs:documentation>Sovrascrivi la fattura gia' presente</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tipologiaMovimentoErarioTipo">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Pagamento">
+				<xs:annotation>
+					<xs:documentation>
+                    			identifica un movimento di pagamento IVA
+                			</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Storno">
+				<xs:annotation>
+					<xs:documentation>
+                    			identifica un movimento di storno pagamento IVA
+                			</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="maxLenghtString4000Type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="4000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="maxLenghtString1024Type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1024"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="maxLenghtString1000Type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="maxLenghtString512Type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="512"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="maxLenghtString500Type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="500"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="maxLenghtString255Type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="maxLenghtString150Type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="150"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="maxLenghtString100Type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="maxLenghtString50Type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="50"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="maxLenghtString35Type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="35"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="maxLenghtString30Type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="30"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="maxLenghtString20Type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="maxLenghtString16Type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="16"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="maxLenghtString15Type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="15"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="maxLenghtString10Type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="maxLenghtString6Type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="6"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="maxLenghtString5Type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="5"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--Importo 12 interi 2 decimali-->
+	<xs:simpleType name="importoType">
+		<xs:restriction base="xs:decimal">
+			<xs:minExclusive value="-999999999999.99"/>
+			<xs:maxInclusive value="999999999999.99"/>
+			<xs:pattern value="-?[0-9]{1,12}(\.[0-9]{1,2})?"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--aliquota iva 3 interi 2 decimali-->
+	<xs:simpleType name="aliquotaIVAType">
+		<xs:restriction base="xs:decimal">
+			<xs:minExclusive value="0.0"/>
+			<xs:maxInclusive value="100.00"/>
+			<xs:pattern value="[0-9]{1,3}(\.[0-9]{1,2})?"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="numericalDigit28Type">
+		<xs:restriction base="xs:long">
+			<xs:totalDigits value="28"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="numericalDigit12Type">
+		<xs:restriction base="xs:long">
+			<xs:totalDigits value="12"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="numericalDigit9Type">
+		<xs:restriction base="xs:long">
+			<xs:totalDigits value="9"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="numericalDigit5Type">
+		<xs:restriction base="xs:long">
+			<xs:totalDigits value="5"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

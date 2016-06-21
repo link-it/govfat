@@ -4,9 +4,12 @@
 	<description>
         	BinaryRealease builder
 	</description>
+
+	<property name="install.dir" value="installazione" />
 	
 	<target name="clean_setup">
 		<delete dir="${install.dir}/installer/api" />
+		<delete dir="${install.dir}/installer/timers" />
 		<delete dir="${install.dir}/installer/commons" />
 		<delete dir="${install.dir}/installer/console" />
 		<delete dir="${install.dir}/installer/sql" />
@@ -23,6 +26,7 @@
 
 		<ant antfile="commons/build.xml" target="prepare_binary_release" useNativeBasedir="true" />
 		<ant antfile="api/build.xml" target="prepare_binary_release" useNativeBasedir="true" />
+		<ant antfile="timers/build.xml" target="prepare_binary_release" useNativeBasedir="true" />
 		<ant antfile="console/build.xml" target="prepare_binary_release" useNativeBasedir="true" />
 		
 		<mkdir dir="${install.dir}/installer/sql"/>

@@ -1,51 +1,83 @@
-2015-07-15 Giuliano Pintori <pintori@link.it>
+2015-09-01  Giuliano Pintori <pintori@link.it>
 
         * [Cruscotto]
-        Risolto Bug FAT-151
-	Corretti i problemi di ricerca fattura in caso di cedente prestatore contenente piu' spazi consecutivi
+        Aggiunta funzionalita' #FAT-153
+	Aggiunta la prima implementazione Jsf2 per il cruscotto che utilizza le librerie grafiche Richfaces 4.
 
-2015-07-15 Giovanni Bussu <bussu@link.it>
+2015-07-13  Giuliano Pintori <pintori@link.it>
+
+        * [Cruscotto]
+        Aggiunta funzionalita' #FAT-147
+	Aggiornate le pagine del cruscotto per utilizzare il nuovo sistema di scelta dei field da visualizzare.
+
+2015-07-03  Giuliano Pintori <pintori@link.it>
+
+        * [Cruscotto]
+        Aggiunta funzionalita' #FAT-146
+	Modificata la visualizzazione dei messaggi di errore e info nel cruscotto.
+
+2015-06-30  Giuliano Pintori <pintori@link.it>
+
+        * [Cruscotto]
+        Aggiunta funzionalita' #FAT-141
+	Modificata la parte xhtml dell'applicazione per utilizzare i nuovi componenti.
+
+2015-06-25  Giuliano Pintori <pintori@link.it>
+
+        * [Cruscotto]
+        Risolto Bug #FAT-135
+	Sistemati messaggi di errore in fase di cancellazione degli utenti.
+
+2015-06-16  Giovanni Bussu <bussu@link.it>
+
+        * [Installer]
+        Risolto Bug #FAT-33
+	Modificata procedura di creazione dell'installer in modo che
+	venga creato anche il war timersProxyFatturaPA.war
+
+2015-06-15  Giovanni Bussu <bussu@link.it>
+
+        * [Batch]
+        Implementata funzionalita' #FAT-59
+        Implementato il batch di consegna delle comunicazioni attive
+
+2015-06-15  Giovanni Bussu <bussu@link.it>
 
         * [Web API]
-        Risolto Bug FAT-149
-	Ottimizzata la gestione della ricezione di un lotto gia' inserito nel
-	proxy in modo da non effettuare il parsing del lotto in ingresso.
+        Implementata funzionalita' #FAT-57
+        Implementata Web API invio fattura
 
-2015-07-02  Giuliano Pintori <pintori@link.it>
 
-        * [Cruscotto]
-        Risolto Bug FAT-143
-	Sistemata gestione degli errori che si hanno in fase di login quando il db non risponde.
-	Aggiunti nuovi messaggi di errore da presentare all'utente.
+2015-06-15  Giovanni Bussu <bussu@link.it>
 
-2015-07-01  Giovanni Bussu <bussu@link.it>
+        * [Web API]
+        Implementata funzionalita' #FAT-58
+        Implementata Web API Ricevi notifica
 
-        * [DAO] [Batch]
-        Risolto Bug FAT-137
-        Modificato il DAO e il batch di inserimento fattura per gestire un attachment vuoto
 
-2015-07-01  Giuliano Pintori <pintori@link.it>
+2015-06-15  Giuliano Pintori <pintori@link.it>
 
         * [Cruscotto]
-        Risolto Bug FAT-139
-	Aggiunto controllo che impedisce disabilita il doppio click per il tasto invia notifica
+	Aggiunta funzionalita' #FAT-100
+	Sistemato il cruscotto per utilizzare la nuova libreria grafica JSF1
+	del WebGenericProject.
 
 2015-06-03  Giovanni Bussu <bussu@link.it>
 
         * [Batch]
-        Aggiunta funzionalita' FAT-53
+        Implementata funzionalita' #FAT-53
 	Implementato il rifiuto automatico delle fatture in maniera configurabile
 
 2015-05-27  Giovanni Bussu <bussu@link.it>
 
         * [Batch]
-        Risolto Bug FAT-49
+        Risolto Bug #FAT-49
 	Gestita correttamente la fattura in caso di errore nell'inserimento degli allegati
 
 2015-05-21  Giovanni Bussu <bussu@link.it>
 
         * [DAO]
-        Risolto Bug FAT-47
+        Risolto Bug #FAT-47
 	Modificati i tipi sul db affinche' i dati grezzi vengano memorizzati 
 	come byte e non come stringhe. Creata apposita patch, aggiornato il codice
 	di conseguenza.
@@ -53,7 +85,7 @@
 2015-05-15  Giovanni Bussu <bussu@link.it>
 
         * [Web API]
-        Risolto Bug FAT-43
+        Risolto Bug #FAT-43
         -Spostata in una utility comune la gestione del mapping 
 	tra i parametri in input alle web api e i metadati del lotto
 	che verranno memorizzati sul database
@@ -66,14 +98,14 @@
 2015-05-14  Giovanni Bussu <bussu@link.it>
 
         * [Web API]
-        Risolto Bug FAT-44
+        Risolto Bug #FAT-44
 	Gestito correttamente il cambio di stato della fattura
 	quando la fattura viene consegnata
 	
 2015-05-14  Giuliano Pintori <pintori@link.it>
 
         * [Cruscotto]
-	Risolto Bug FAT-39
+	Risolto Bug #FAT-39
 	Aggiunto Filtro per la gestione dell'eccezione di tipo
 	javax.faces.application.ViewExpiredException
 

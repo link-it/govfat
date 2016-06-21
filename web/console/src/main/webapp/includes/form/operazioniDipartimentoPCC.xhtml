@@ -1,0 +1,189 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:op2web="http://www.openspcoop2.org/web/taglib/jsf">
+	<f:loadBundle var="msg" basename="messages" />
+
+	<!-- PCC -->
+	<op2web:fieldset legend="#{msg['dipartimento.pcc']}"
+		collapsible="false" closed="false"
+		rendered="#{mBean.form.codicePCC.value}">
+
+		<op2web:prop label="#{form.indirizziNotifica.label}" note="#{msg['dipartimento.pcc.indirizziNotifica.note']}" required="#{form.indirizziNotifica.required}"
+			rendered="#{form.indirizziNotifica.rendered}">
+				<h:inputTextarea id="input_#{form.indirizziNotifica.name}" value="#{form.indirizziNotifica.value}"
+			style="#{form.indirizziNotifica.style}" disabled="#{form.indirizziNotifica.disabled}" rows="#{form.indirizziNotifica.rows}"
+			cols="#{form.indirizziNotifica.columns}"/>
+		</op2web:prop>
+
+		<rich:spacer height="10" />
+		
+		<op2web:prop label="#{msg['dipartimento.pcc.labelAutorizzazione']}" rendered="#{mBean.form.codicePCC.value}">
+				<rich:spacer height="20" />
+		</op2web:prop>
+
+			<op2web:prop label="#{form.pagamentoIVA.label}" rendered="#{form.pagamentoIVA.rendered}">
+			<h:selectOneRadio id="input_#{form.pagamentoIVA.name}"
+				layout="#{form.pagamentoIVA.direzione}" styleClass="controlset"
+				disabled="#{form.pagamentoIVA.disabled}" 
+				value="#{form.pagamentoIVA.value}">
+				
+				<f:selectItems value="#{form.pagamentoIVA.elencoSelectItems}" />
+			</h:selectOneRadio>
+		</op2web:prop>
+
+		<op2web:prop label="#{form.datiFattura.label}" rendered="#{form.datiFattura.rendered}">
+			<h:selectOneRadio id="input_#{form.datiFattura.name}"
+				layout="#{form.datiFattura.direzione}" styleClass="controlset"
+				disabled="#{form.datiFattura.disabled}"
+				value="#{form.datiFattura.value}">
+				<f:selectItems value="#{form.datiFattura.elencoSelectItems}" />
+			</h:selectOneRadio>
+		</op2web:prop>
+
+		<op2web:prop label="#{form.inserimentoFattura.label}" rendered="#{form.inserimentoFattura.rendered}">
+			<h:selectOneRadio id="input_#{form.inserimentoFattura.name}"
+				layout="#{form.inserimentoFattura.direzione}"
+				styleClass="controlset"
+				disabled="#{form.inserimentoFattura.disabled}"
+				value="#{form.inserimentoFattura.value}">
+				<f:selectItems value="#{form.inserimentoFattura.elencoSelectItems}" />
+			</h:selectOneRadio>
+		</op2web:prop>
+
+		<op2web:prop label="#{form.statoFattura.label}" rendered="#{form.statoFattura.rendered}">
+			<h:selectOneRadio id="input_#{form.statoFattura.name}"
+				layout="#{form.statoFattura.direzione}" styleClass="controlset"
+				disabled="#{form.statoFattura.disabled}"
+				value="#{form.statoFattura.value}">
+				<f:selectItems value="#{form.statoFattura.elencoSelectItems}" />
+			</h:selectOneRadio>
+		</op2web:prop>
+
+		<op2web:prop label="#{form.movimentiErarioIVA.label}" rendered="#{form.movimentiErarioIVA.rendered}">
+			<h:selectOneRadio id="input_#{form.movimentiErarioIVA.name}"
+				layout="#{form.movimentiErarioIVA.direzione}"
+				styleClass="controlset"
+				disabled="#{form.movimentiErarioIVA.disabled}"
+				value="#{form.movimentiErarioIVA.value}">
+				<f:selectItems value="#{form.movimentiErarioIVA.elencoSelectItems}" />
+			</h:selectOneRadio>
+		</op2web:prop>
+
+		<op2web:prop label="#{form.downloadDocumento.label}" rendered="#{form.downloadDocumento.rendered}">
+			<h:selectOneRadio id="input_#{form.downloadDocumento.name}"
+				layout="#{form.downloadDocumento.direzione}" styleClass="controlset"
+				disabled="#{form.downloadDocumento.disabled}"
+				value="#{form.downloadDocumento.value}">
+				<f:selectItems value="#{form.downloadDocumento.elencoSelectItems}" />
+			</h:selectOneRadio>
+		</op2web:prop>
+
+		<op2web:prop label="#{form.consultazioneTracce.label}"
+			rendered="#{form.consultazioneTracce.rendered}">
+			<h:selectOneRadio id="input_#{form.consultazioneTracce.name}"
+				layout="#{form.consultazioneTracce.direzione}"
+				styleClass="controlset"
+				disabled="#{form.consultazioneTracce.disabled}"
+				value="#{form.consultazioneTracce.value}">
+				<f:selectItems value="#{form.consultazioneTracce.elencoSelectItems}" />
+			</h:selectOneRadio>
+		</op2web:prop>
+
+		<op2web:prop label="#{form.pagamento.label}"
+			rendered="#{form.pagamento.rendered}">
+			<h:selectOneRadio id="input_#{form.pagamento.name}"
+				layout="#{form.pagamento.direzione}" styleClass="controlset"
+				disabled="#{form.pagamento.disabled}"
+				value="#{form.pagamento.value}">
+				<f:selectItems value="#{form.pagamento.elencoSelectItems}" />
+			</h:selectOneRadio>
+		</op2web:prop>
+
+		<op2web:prop label="#{form.stornoPagamento.label}"
+			rendered="#{form.stornoPagamento.rendered}">
+			<h:selectOneRadio id="input_#{form.stornoPagamento.name}"
+				layout="#{form.stornoPagamento.direzione}" styleClass="controlset"
+				disabled="#{form.stornoPagamento.disabled}"
+				value="#{form.stornoPagamento.value}">
+				<f:selectItems value="#{form.stornoPagamento.elencoSelectItems}" />
+			</h:selectOneRadio>
+		</op2web:prop>
+
+
+		<op2web:prop label="#{form.comunicazioneScadenza.label}"
+			rendered="#{form.comunicazioneScadenza.rendered}">
+			<h:selectOneRadio id="input_#{form.comunicazioneScadenza.name}"
+				layout="#{form.comunicazioneScadenza.direzione}"
+				styleClass="controlset"
+				disabled="#{form.comunicazioneScadenza.disabled}"
+				value="#{form.comunicazioneScadenza.value}">
+				<f:selectItems
+					value="#{form.comunicazioneScadenza.elencoSelectItems}" />
+			</h:selectOneRadio>
+		</op2web:prop>
+
+
+		<op2web:prop label="#{form.cancellazioneScadenze.label}"
+			rendered="#{form.cancellazioneScadenze.rendered}">
+			<h:selectOneRadio id="input_#{form.cancellazioneScadenze.name}"
+				layout="#{form.cancellazioneScadenze.direzione}"
+				styleClass="controlset"
+				disabled="#{form.cancellazioneScadenze.disabled}"
+				value="#{form.cancellazioneScadenze.value}">
+				<f:selectItems
+					value="#{form.cancellazioneScadenze.elencoSelectItems}" />
+			</h:selectOneRadio>
+		</op2web:prop>
+
+		<op2web:prop label="#{form.contabilizzazione.label}"
+			rendered="#{form.contabilizzazione.rendered}">
+			<h:selectOneRadio id="input_#{form.contabilizzazione.name}"
+				layout="#{form.contabilizzazione.direzione}" styleClass="controlset"
+				disabled="#{form.contabilizzazione.disabled}"
+				value="#{form.contabilizzazione.value}">
+				<f:selectItems value="#{form.contabilizzazione.elencoSelectItems}" />
+			</h:selectOneRadio>
+		</op2web:prop>
+
+		<op2web:prop label="#{form.stornoContabilizzazione.label}"
+			rendered="#{form.stornoContabilizzazione.rendered}">
+			<h:selectOneRadio id="input_#{form.stornoContabilizzazione.name}"
+				layout="#{form.stornoContabilizzazione.direzione}"
+				styleClass="controlset"
+				disabled="#{form.stornoContabilizzazione.disabled}"
+				value="#{form.stornoContabilizzazione.value}">
+				<f:selectItems
+					value="#{form.stornoContabilizzazione.elencoSelectItems}" />
+			</h:selectOneRadio>
+		</op2web:prop>
+
+		<op2web:prop label="#{form.ricezioneFattura.label}"
+			rendered="#{form.ricezioneFattura.rendered}">
+			<h:selectOneRadio id="input_#{form.ricezioneFattura.name}"
+				layout="#{form.ricezioneFattura.direzione}" styleClass="controlset"
+				disabled="#{form.ricezioneFattura.disabled}"
+				value="#{form.ricezioneFattura.value}">
+				<f:selectItems value="#{form.ricezioneFattura.elencoSelectItems}" />
+			</h:selectOneRadio>
+		</op2web:prop>
+
+		<op2web:prop label="#{form.rifiutoFattura.label}"
+			rendered="#{form.rifiutoFattura.rendered}">
+			<h:selectOneRadio id="input_#{form.rifiutoFattura.name}"
+				layout="#{form.rifiutoFattura.direzione}" styleClass="controlset"
+				disabled="#{form.rifiutoFattura.disabled}"
+				value="#{form.rifiutoFattura.value}">
+				<f:selectItems value="#{form.rifiutoFattura.elencoSelectItems}" />
+			</h:selectOneRadio>
+		</op2web:prop>
+
+	</op2web:fieldset>
+
+
+
+</ui:composition>

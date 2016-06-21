@@ -62,6 +62,7 @@
 		
 		<!-- WAR -->
 		<copy file="${tmp_archivi}/${api.war.name}.war" todir="${dist}" />
+		<copy file="${tmp_archivi}/${timers.war.name}.war" todir="${dist}" />
 		<zip destfile="${dist}/${console.war.name}.war">
 			<fileset dir="${buildConsoleInstallerDir}/${console.war.name}.war"/>
 		</zip>

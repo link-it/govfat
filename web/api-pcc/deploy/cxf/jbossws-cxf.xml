@@ -1,0 +1,73 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:jaxws="http://cxf.apache.org/jaxws"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+		http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+    
+    <import resource="classpath:META-INF/cxf/cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
+    
+    <jaxws:endpoint id="proxyWSFattImpl" implementor="org.govmix.pcc.fatture.FattureWSImpl" address="/proxypcc">
+     	<jaxws:inInterceptors>
+			     <ref bean="authorizationInterceptor"/>
+	 		     <ref bean="loggingProxyPCCInInterceptor"/>
+	 	</jaxws:inInterceptors>
+     	<jaxws:outInterceptors>
+			     <ref bean="loggingProxyPCCOutInterceptor"/>
+	 	</jaxws:outInterceptors>
+     	<jaxws:outFaultInterceptors>
+			     <ref bean="loggingProxyPCCFaultInterceptor"/>
+	 	</jaxws:outFaultInterceptors>
+		<jaxws:properties>
+			<entry key="schema-validation-enabled" value="true"/>
+		</jaxws:properties>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint id="getTracceImpl" implementor="org.govmix.pcc.fatture.tracciamento.ricerca.RecuperaTracceImpl" address="/getTracce">
+     	<jaxws:inInterceptors>
+			     <ref bean="loggingGetTracceInInterceptor"/>
+	 	</jaxws:inInterceptors>
+     	<jaxws:outInterceptors>
+			     <ref bean="loggingGetTracceOutInterceptor"/>
+	 	</jaxws:outInterceptors>
+     	<jaxws:outFaultInterceptors>
+			     <ref bean="loggingGetTracceFaultInterceptor"/>
+	 	</jaxws:outFaultInterceptors>
+		<jaxws:properties>
+			<entry key="schema-validation-enabled" value="true"/>
+		</jaxws:properties>
+    </jaxws:endpoint>
+    
+   	<bean id="authorizationInterceptor" class="org.govmix.pcc.fatture.AuthorizationInterceptor"/>
+   	
+   	
+   	<bean id="loggingGetTracceInInterceptor" class="org.apache.cxf.interceptor.LoggingInInterceptor">
+   		<property name="outputLocation" value="file:///var/proxyFatturaPA/log/get_tracce_in.log" />
+        <property name="prettyLogging" value="true" />
+   	</bean>	
+   	
+   	<bean id="loggingGetTracceOutInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor">	
+   		<property name="outputLocation" value="file:///var/proxyFatturaPA/log/get_tracce_out.log" />
+        <property name="prettyLogging" value="true" />
+   	</bean>		
+
+   	<bean id="loggingGetTracceFaultInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor">	
+   		<property name="outputLocation" value="file:///var/proxyFatturaPA/log/get_tracce_fault.log" />
+        <property name="prettyLogging" value="true" />
+   	</bean>		
+
+   	<bean id="loggingProxyPCCInInterceptor" class="org.apache.cxf.interceptor.LoggingInInterceptor">
+   		<property name="outputLocation" value="file:///var/proxyFatturaPA/log/proxy_pcc_in.log" />
+        <property name="prettyLogging" value="true" />
+   	</bean>	
+   	
+   	<bean id="loggingProxyPCCOutInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor">	
+   		<property name="outputLocation" value="file:///var/proxyFatturaPA/log/proxy_pcc_out.log" />
+        <property name="prettyLogging" value="true" />
+   	</bean>		
+
+   	<bean id="loggingProxyPCCFaultInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor">	
+   		<property name="outputLocation" value="file:///var/proxyFatturaPA/log/proxy_pcc_fault.log" />
+        <property name="prettyLogging" value="true" />
+   	</bean>		
+</beans>

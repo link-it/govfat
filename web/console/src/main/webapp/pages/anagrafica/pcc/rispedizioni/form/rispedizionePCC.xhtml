@@ -1,0 +1,142 @@
+<!-- 
+  ProxyFatturaPA - Gestione del formato Fattura Elettronica 
+  http://www.gov4j.it/fatturapa
+  
+  Copyright (c) 2014-2016 Link.it srl (http://link.it). 
+  Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+ 
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+ 
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<ui:composition template="/templates/defaultTemplate.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:op2web="http://www.openspcoop2.org/web/taglib/jsf">
+	<f:loadBundle var="msg" basename="messages" />
+
+	<ui:define name="pageTitle">#{msg['rispedizione.dettaglio.pageTitle']}</ui:define>
+	<ui:define name="pageHeader">#{msg['rispedizione.dettaglio.pageTitle']}</ui:define>
+	<ui:define name="navbar">
+		<ul>
+			<li><h:outputText value="/#{msg['menu.group.anagrafica']}" /></li>
+			<li><a4j:htmlCommandLink
+					action="#{rispedizioneMBean.restoreSearch}"
+					value="/#{msg['rispedizione.listaRispedizioni.pageTitle']}">
+				</a4j:htmlCommandLink></li>
+			<li><h:outputText
+					rendered="#{rispedizioneMBean.selectedElement.DTO.id != -1}"
+					value="/#{msg['rispedizione.dettaglio.pageTitle']} (#{rispedizioneMBean.selectedElement.codiceErrore.value})" /></li>
+			<li><h:outputText
+					rendered="#{rispedizioneMBean.showForm == true and rispedizioneMBean.azione == 'update'}"
+					value="/#{msg['commons.button.aggiorna']}" /> <h:outputText
+					rendered="#{rispedizioneMBean.showForm == true and rispedizioneMBean.azione != 'update'}"
+					value="/#{msg['commons.button.nuovo']}" /></li>
+		</ul>
+	</ui:define>
+	<ui:define name="body">
+
+		<a4j:keepAlive beanName="rispedizioneMBean" ajaxOnly="true" />
+		
+		<script type="text/javascript">
+				 jQuery(document).ready(function() {
+					_force_get = true;
+				 });
+		</script>
+
+		<rich:panel id="panelContainer1" style="padding:0"
+			headerClass="outpanelHeader" styleClass="noborder">
+			<h:outputText id="outNoDettaglio"
+				value="#{msg['rispedizione.dettaglio.nodata']}"
+				rendered="#{empty rispedizioneMBean.selectedElement and rispedizioneMBean.azione == 'update'}" />
+
+			<!-- Form Inserimento dati -->
+			<op2web:editForm mBean="#{rispedizioneMBean}" rendered="#{rispedizioneMBean.showForm  == true}" fieldsToUpdateButtonInvia="mainct" 
+						fieldsToUpdateButtonAnnulla="mainct"> 
+				<p class="legend">
+					<strong>#{msg['commons.label.note']}</strong> (<em>*</em>)
+					#{msg['commons.label.campiObbligatori']}
+				</p>
+				<op2web:fieldset legend="#{msg['rispedizione.form.label']}"
+					collapsible="false" closed="false" rendered="#{true}">
+
+					<op2web:formFields
+						nomiFields="#{'codiceErrore,descrizioneErrore,numeroTentativi,intervalloRispedizione,tipoErrore'}" />
+
+					<op2web:prop
+						label="#{rispedizioneMBean.form.rispedizioneAutomatica.label}"
+						rendered="#{rispedizioneMBean.form.rispedizioneAutomatica.rendered}">
+						<h:selectOneRadio
+							id="input_#{rispedizioneMBean.form.rispedizioneAutomatica.name}"
+							layout="#{rispedizioneMBean.form.rispedizioneAutomatica.direzione}"
+							styleClass="controlset"
+							disabled="#{rispedizioneMBean.form.rispedizioneAutomatica.disabled}"
+							value="#{rispedizioneMBean.form.rispedizioneAutomatica.value}">
+
+							<f:selectItems
+								value="#{rispedizioneMBean.form.rispedizioneAutomatica.elencoSelectItems}" />
+						</h:selectOneRadio>
+					</op2web:prop>
+
+					<rich:spacer height="10" />
+				</op2web:fieldset>
+
+			</op2web:editForm>
+
+
+
+			<rich:panel id="panelDettaglio1" bodyClass="inpanelBody"
+				rendered="#{not empty rispedizioneMBean.selectedElement and rispedizioneMBean.showForm == false}">
+				<f:facet name="header">
+					<h:outputText id="outHeaderFattura1"
+						value="#{msg['rispedizione.dettaglio.pageTitle']} (#{rispedizioneMBean.selectedElement.codiceErrore.value})"
+						rendered="#{not empty rispedizioneMBean.selectedElement}" />
+				</f:facet>
+
+				<!-- Messaggio Idp -->
+				<h:panelGrid id="panelDettaglio2"
+					columnClasses="gridContent verticalAlignTop"
+					rendered="#{!empty rispedizioneMBean.selectedElement}" columns="1"
+					width="100%">
+
+					<!-- Dati Generali  -->
+					<op2web:fieldset legend="#{msg['rispedizione.label.generale']}"
+						rendered="#{true}">
+						<op2web:outputGroup
+							group="#{rispedizioneMBean.selectedElement.fieldsDatiGenerali}" />
+					</op2web:fieldset>
+
+				</h:panelGrid>
+
+				<rich:spacer height="10" />
+				<h:form id="sUpF">
+					<div class="buttonrow">
+						<a4j:commandButton id="aggiorna"
+							value="#{msg['commons.button.modifica']}" styleClass="icon-edit"
+							status="mainStatus" action="#{rispedizioneMBean.modifica}"
+							onclick="abilitaModifica()" oncomplete="disabilitaModifica()"
+							reRender="mainct">
+						</a4j:commandButton>
+					</div>
+				</h:form>
+
+			</rich:panel>
+
+		</rich:panel>
+
+	</ui:define>
+</ui:composition>

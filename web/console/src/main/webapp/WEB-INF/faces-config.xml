@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<faces-config version="1.2" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd">
+
+	<managed-bean>
+		<managed-bean-name>loginBean</managed-bean-name>
+		<managed-bean-class>org.govmix.proxy.fatturapa.web.console.mbean.LoginMBean</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+		<managed-property>
+			<property-name>loginDao</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.dao.ILoginDao</property-class>
+			<value>#{loginDAO}</value>
+		</managed-property>
+	</managed-bean>
+
+	<!-- Fatturaelettronica -->
+	<managed-bean>
+		<managed-bean-name>fatturaElettronicaDM</managed-bean-name>
+		<managed-bean-class>org.govmix.proxy.fatturapa.web.console.datamodel.FatturaElettronicaDM</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>dataProvider</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.iservice.IFatturaElettronicaService</property-class>
+			<value>#{fatturaElettronicaService}</value>
+		</managed-property>
+	</managed-bean>
+	
+			<!-- Scadenze -->
+	<managed-bean>
+		<managed-bean-name>scadenzaMBean</managed-bean-name>
+		<managed-bean-class>org.govmix.proxy.fatturapa.web.console.pcc.mbean.ScadenzaMBean</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>service</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.pcc.iservice.IScadenzaService</property-class>
+			<value>#{scadenzaService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>search</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.pcc.search.ScadenzaSearchForm</property-class>
+			<value>#{scadenzaSearchForm}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>idFattura</property-name>
+			<property-class>org.govmix.proxy.fatturapa.orm.IdFattura</property-class>
+			<value>#{fatturaElettronicaMBean.selectedIdFattura}</value>
+		</managed-property>
+	</managed-bean>
+
+	
+	<managed-bean>
+		<managed-bean-name>scadenzaDM</managed-bean-name>
+		<managed-bean-class>org.govmix.proxy.fatturapa.web.console.pcc.datamodel.ScadenzaDM</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>dataProvider</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.pcc.iservice.IScadenzaService</property-class>
+			<value>#{scadenzaMBean.service}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>idFattura</property-name>
+			<property-class>org.govmix.proxy.fatturapa.orm.IdFattura</property-class>
+			<value>#{fatturaElettronicaMBean.selectedIdFattura}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>scadenzaMBean</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.pcc.mbean.ScadenzaMBean</property-class>
+			<value>#{scadenzaMBean}</value>
+		</managed-property>
+	</managed-bean>
+
+		<!-- Contabilizzazioni -->
+	<managed-bean>
+		<managed-bean-name>contabilizzazioneMBean</managed-bean-name>
+		<managed-bean-class>org.govmix.proxy.fatturapa.web.console.pcc.mbean.ContabilizzazioneMBean</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>service</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.pcc.iservice.IContabilizzazioneService</property-class>
+			<value>#{contabilizzazioneService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>search</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.pcc.search.ContabilizzazioneSearchForm</property-class>
+			<value>#{contabilizzazioneSearchForm}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>idFattura</property-name>
+			<property-class>org.govmix.proxy.fatturapa.orm.IdFattura</property-class>
+			<value>#{fatturaElettronicaMBean.selectedIdFattura}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>scadenzaMBean</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.pcc.mbean.ScadenzaMBean</property-class>
+			<value>#{scadenzaMBean}</value>
+		</managed-property>
+	</managed-bean>
+	
+	<!-- Contabilizzazioni -->
+	<managed-bean>
+		<managed-bean-name>contabilizzazioneDM</managed-bean-name>
+		<managed-bean-class>org.govmix.proxy.fatturapa.web.console.pcc.datamodel.ContabilizzazioneDM</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>dataProvider</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.pcc.iservice.IContabilizzazioneService</property-class>
+			<value>#{contabilizzazioneMBean.service}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>idFattura</property-name>
+			<property-class>org.govmix.proxy.fatturapa.orm.IdFattura</property-class>
+			<value>#{fatturaElettronicaMBean.selectedIdFattura}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>contabilizzazioneMBean</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.pcc.mbean.ContabilizzazioneMBean</property-class>
+			<value>#{contabilizzazioneMBean}</value>
+		</managed-property>
+	</managed-bean>
+	
+	
+
+	<!-- operazioni -->
+	<managed-bean>
+		<managed-bean-name>operazioneDettaglioPccDM</managed-bean-name>
+		<managed-bean-class>org.govmix.proxy.fatturapa.web.console.pcc.datamodel.OperazioneDM</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>dataProvider</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.pcc.iservice.IOperazioneService</property-class>
+			<value>#{operazioneService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>form</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.pcc.search.OperazioneSearchForm</property-class>
+			<value>#{operazioneSearchForm}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>idFattura</property-name>
+			<property-class>org.govmix.proxy.fatturapa.orm.IdFattura</property-class>
+			<value>#{fatturaElettronicaMBean.selectedIdFattura}</value>
+		</managed-property>
+	</managed-bean>
+	
+	
+	
+
+
+	<!-- Pagamento -->
+	<managed-bean>
+		<managed-bean-name>pagamentoDM</managed-bean-name>
+		<managed-bean-class>org.govmix.proxy.fatturapa.web.console.pcc.datamodel.PagamentoDM</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>dataProvider</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.pcc.iservice.IPagamentoService</property-class>
+			<value>#{pagamentoService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>idFattura</property-name>
+			<property-class>org.govmix.proxy.fatturapa.orm.IdFattura</property-class>
+			<value>#{fatturaElettronicaMBean.selectedIdFattura}</value>
+		</managed-property>
+	</managed-bean>
+
+
+	<!-- operazioni sezione monitoraggio -->
+	<managed-bean>
+		<managed-bean-name>operazioneDM</managed-bean-name>
+		<managed-bean-class>org.govmix.proxy.fatturapa.web.console.pcc.datamodel.OperazioneDM</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>dataProvider</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.pcc.iservice.IOperazioneService</property-class>
+			<value>#{operazioneService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>form</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.pcc.search.OperazioneSearchForm</property-class>
+			<value>#{operazioneSearchForm}</value>
+		</managed-property>
+	</managed-bean>
+	
+		<!-- trasmissioni -->
+	<managed-bean>
+		<managed-bean-name>trasmissioneDM</managed-bean-name>
+		<managed-bean-class>org.govmix.proxy.fatturapa.web.console.pcc.datamodel.TrasmissioneDM</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>dataProvider</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.pcc.iservice.ITrasmissioneService</property-class>
+			<value>#{trasmissioneService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>idTraccia</property-name>
+			<property-class>org.govmix.proxy.fatturapa.orm.IdTraccia</property-class>
+			<value>#{operazioneMBean.selectedIdTraccia}</value>
+		</managed-property>
+	</managed-bean>
+	
+		<!-- esiti -->
+	<managed-bean>
+		<managed-bean-name>esitoDM</managed-bean-name>
+		<managed-bean-class>org.govmix.proxy.fatturapa.web.console.pcc.datamodel.EsitoDM</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>dataProvider</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.pcc.iservice.IEsitoService</property-class>
+			<value>#{esitoService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>idTrasmissione</property-name>
+			<property-class>org.govmix.proxy.fatturapa.orm.IdTrasmissione</property-class>
+			<value>#{trasmissioneMBean.selectedIdTrasmissione}</value>
+		</managed-property>
+	</managed-bean>
+	
+			<!-- errori -->
+	<managed-bean>
+		<managed-bean-name>erroreDM</managed-bean-name>
+		<managed-bean-class>org.govmix.proxy.fatturapa.web.console.pcc.datamodel.ErroreDM</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>dataProvider</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.pcc.iservice.IErroreService</property-class>
+			<value>#{erroreService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>idEsito</property-name>
+			<property-class>org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito</property-class>
+			<value>#{esitoMBean.selectedIdEsito}</value>
+		</managed-property>
+	</managed-bean>
+
+	<!-- Utente -->
+	<managed-bean>
+		<managed-bean-name>utenteDM</managed-bean-name>
+		<managed-bean-class>org.govmix.proxy.fatturapa.web.console.anagrafica.datamodel.UtenteDM</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>dataProvider</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.anagrafica.iservice.IUtenteService</property-class>
+			<value>#{utenteService}</value>
+		</managed-property>
+	</managed-bean>
+
+	<!-- Dipartimenti -->
+	<managed-bean>
+		<managed-bean-name>dipartimentoDM</managed-bean-name>
+		<managed-bean-class>org.govmix.proxy.fatturapa.web.console.anagrafica.datamodel.DipartimentoDM</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>dataProvider</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.anagrafica.iservice.IDipartimentoService</property-class>
+			<value>#{dipartimentoService}</value>
+		</managed-property>
+	</managed-bean>
+	
+		<!-- Dipartimenti-utenti -->
+	<managed-bean>
+		<managed-bean-name>dipartimentiUtenteDM</managed-bean-name>
+		<managed-bean-class>org.govmix.proxy.fatturapa.web.console.anagrafica.datamodel.DipartimentoDM</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>dataProvider</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.anagrafica.iservice.IDipartimentoService</property-class>
+			<value>#{dipartimentiUtenteService}</value>
+		</managed-property>
+	</managed-bean>
+
+	<!-- Rispedizioni -->
+	<managed-bean>
+		<managed-bean-name>rispedizioneDM</managed-bean-name>
+		<managed-bean-class>org.govmix.proxy.fatturapa.web.console.anagrafica.datamodel.RispedizioneDM</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>dataProvider</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.anagrafica.iservice.IRispedizioneService</property-class>
+			<value>#{rispedizioneService}</value>
+		</managed-property>
+	</managed-bean>
+
+	<!-- Protocollo/Registri -->
+	<managed-bean>
+		<managed-bean-name>registroDM</managed-bean-name>
+		<managed-bean-class>org.govmix.proxy.fatturapa.web.console.anagrafica.datamodel.RegistroDM</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>dataProvider</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.anagrafica.iservice.IRegistroService</property-class>
+			<value>#{registroService}</value>
+		</managed-property>
+	</managed-bean>
+
+	<!-- Login -->
+	<navigation-rule>
+		<from-view-id>/public/login.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>loginSuccess</from-outcome>
+			<to-view-id>/pages/fattura/list/listaFatture.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<!-- Navigazione dalla pagina listaFatture -->
+	<navigation-rule>
+		<from-view-id>/pages/fattura/list/listaFatture.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>dettaglio</from-outcome>
+			<to-view-id>/pages/fattura/form/dettaglioFatturaPCC.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>inviaNotificaEC</from-outcome>
+			<to-view-id>/pages/fattura/form/invioNotificaEC.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<!-- Navigazione dalla pagina dettaglioFattura -->
+	<navigation-rule>
+		<from-view-id>/pages/fattura/form/dettaglioFatturaPCC.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>listaFatture</from-outcome>
+			<to-view-id>/pages/fattura/list/listaFatture.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>inviaNotificaEC</from-outcome>
+			<to-view-id>/pages/fattura/form/invioNotificaEC.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>dettaglioOperazione</from-outcome>
+			<to-view-id>/pages/operazioni/form/dettaglioOperazioneCompatta.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>dettaglioErrore</from-outcome>
+			<to-view-id>/pages/operazioni/form/dettaglioErrore.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<!-- Navigazione dalla pagina InvioNotificaEC -->
+	<navigation-rule>
+		<from-view-id>/pages/fattura/form/invioNotificaEC.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>listaFatture</from-outcome>
+			<to-view-id>/pages/fattura/list/listaFatture.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>dettaglioBack</from-outcome>
+			<to-view-id>/pages/fattura/form/dettaglioFatturaPCC.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<!-- Navigazione dalla pagina listaDipartimenti -->
+	<navigation-rule>
+		<from-view-id>/pages/anagrafica/dipartimenti/list/listaDipartimenti.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>dipartimento</from-outcome>
+			<to-view-id>/pages/anagrafica/dipartimenti/form/dipartimento.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<!-- Navigazione dalla pagina Dipartimento -->
+	<navigation-rule>
+		<from-view-id>/pages/anagrafica/dipartimenti/form/dipartimento.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>listaDipartimenti</from-outcome>
+			<to-view-id>/pages/anagrafica/dipartimenti/list/listaDipartimenti.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<!-- Navigazione dalla pagina listaUtenti -->
+	<navigation-rule>
+		<from-view-id>/pages/anagrafica/utenti/list/listaUtenti.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>utente</from-outcome>
+			<to-view-id>/pages/anagrafica/utenti/form/utente.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<!-- Navigazione dalla pagina Utente -->
+	<navigation-rule>
+		<from-view-id>/pages/anagrafica/utenti/form/utente.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>listaUtenti</from-outcome>
+			<to-view-id>/pages/anagrafica/utenti/list/listaUtenti.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<!-- Navigazione dalla pagina Ente -->
+	<navigation-rule>
+		<from-view-id>/pages/anagrafica/protocolli/form/protocollo.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>registro</from-outcome>
+			<to-view-id>/pages/anagrafica/protocolli/form/registro.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<!-- Navigazione dalla pagina Protocollo -->
+	<navigation-rule>
+		<from-view-id>/pages/anagrafica/protocolli/form/registro.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>protocollo</from-outcome>
+			<to-view-id>/pages/anagrafica/protocolli/form/protocollo.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<!-- Navigazione dalla pagina listaRispedizioniPCC -->
+	<navigation-rule>
+		<from-view-id>/pages/anagrafica/pcc/rispedizioni/list/listaRispedizioniPCC.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>rispedizionePCC</from-outcome>
+			<to-view-id>/pages/anagrafica/pcc/rispedizioni/form/rispedizionePCC.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<!-- Navigazione dalla pagina rispedizione -->
+	<navigation-rule>
+		<from-view-id>/pages/anagrafica/pcc/rispedizioni/form/rispedizionePCC.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>listaRispedizioniPCC</from-outcome>
+			<to-view-id>/pages/anagrafica/pcc/rispedizioni/list/listaRispedizioniPCC.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+		<!-- Navigazione dalla pagina listaOperazioni -->
+	<navigation-rule>
+		<from-view-id>/pages/operazioni/list/listaOperazioni.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>dettaglioOperazione</from-outcome>
+			<to-view-id>/pages/operazioni/form/dettaglioOperazioneCompatta.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+		<!-- Navigazione dalla pagina Dettaglio Operazione Compatta-->
+	<navigation-rule>
+		<from-view-id>/pages/operazioni/form/dettaglioOperazioneCompatta.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>listaOperazioni</from-outcome>
+			<to-view-id>/pages/operazioni/list/listaOperazioni.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>listaFatture</from-outcome>
+			<to-view-id>/pages/fattura/list/listaFatture.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>dettaglioFattura</from-outcome>
+			<to-view-id>/pages/fattura/form/dettaglioFatturaPCC.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+		<!-- Navigazione dalla pagina Dettaglio Operazione -->
+	<navigation-rule>
+		<from-view-id>/pages/operazioni/form/dettaglioOperazione.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>listaOperazioni</from-outcome>
+			<to-view-id>/pages/operazioni/list/listaOperazioni.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>listaFatture</from-outcome>
+			<to-view-id>/pages/fattura/list/listaFatture.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>dettaglioFattura</from-outcome>
+			<to-view-id>/pages/fattura/form/dettaglioFatturaPCC.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>dettaglioTrasmissione</from-outcome>
+			<to-view-id>/pages/operazioni/form/dettaglioTrasmissione.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+		<!-- Navigazione dalla pagina Dettaglio Trasmissione -->
+	<navigation-rule>
+		<from-view-id>/pages/operazioni/form/dettaglioTrasmissione.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>listaOperazioni</from-outcome>
+			<to-view-id>/pages/operazioni/list/listaOperazioni.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>listaFatture</from-outcome>
+			<to-view-id>/pages/fattura/list/listaFatture.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>dettaglioFattura</from-outcome>
+			<to-view-id>/pages/fattura/form/dettaglioFatturaPCC.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>dettaglioOperazione</from-outcome>
+			<to-view-id>/pages/operazioni/form/dettaglioOperazione.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>dettaglioEsito</from-outcome>
+			<to-view-id>/pages/operazioni/form/dettaglioEsito.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+		<!-- Navigazione dalla pagina Dettaglio Esito -->
+	<navigation-rule>
+		<from-view-id>/pages/operazioni/form/dettaglioEsito.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>listaOperazioni</from-outcome>
+			<to-view-id>/pages/operazioni/list/listaOperazioni.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>listaFatture</from-outcome>
+			<to-view-id>/pages/fattura/list/listaFatture.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>dettaglioFattura</from-outcome>
+			<to-view-id>/pages/fattura/form/dettaglioFatturaPCC.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>dettaglioOperazione</from-outcome>
+			<to-view-id>/pages/operazioni/form/dettaglioOperazione.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>dettaglioTrasmissione</from-outcome>
+			<to-view-id>/pages/operazioni/form/dettaglioTrasmissione.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+			<!-- Navigazione dalla pagina Dettaglio errore -->
+	<navigation-rule>
+		<from-view-id>/pages/operazioni/form/dettaglioErrore.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>listaFatture</from-outcome>
+			<to-view-id>/pages/fattura/list/listaFatture.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>dettaglioFattura</from-outcome>
+			<to-view-id>/pages/fattura/form/dettaglioFatturaPCC.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<!-- Regole globali -->
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>login</from-outcome>
+			<to-view-id>/public/login.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>welcome</from-outcome>
+			<to-view-id>/public/welcome.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>logoutAS</from-outcome>
+			<to-view-id>/public/logoutAS.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>listaFatture</from-outcome>
+			<to-view-id>/pages/fattura/list/listaFatture.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>listaOperazioni</from-outcome>
+			<to-view-id>/pages/operazioni/list/listaOperazioni.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>listaDipartimenti</from-outcome>
+			<to-view-id>/pages/anagrafica/dipartimenti/list/listaDipartimenti.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>listaUtenti</from-outcome>
+			<to-view-id>/pages/anagrafica/utenti/list/listaUtenti.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>listaRispedizioniPCC</from-outcome>
+			<to-view-id>/pages/anagrafica/pcc/rispedizioni/list/listaRispedizioniPCC.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>protocollo</from-outcome>
+			<to-view-id>/pages/anagrafica/protocolli/form/protocollo.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<converter>
+		<converter-id>suggestionSelectItemConverter</converter-id>
+		<converter-class>org.openspcoop2.generic_project.web.impl.jsf1.converter.SuggestionSelectItemConverter</converter-class>
+
+	</converter>
+	<converter>
+		<converter-id>selectItemConverter</converter-id>
+		<converter-class>org.openspcoop2.generic_project.web.impl.jsf1.converter.SelectListItemConverter</converter-class>
+
+	</converter>
+	<converter>
+		<converter-id>multipleChoiceItemConverter</converter-id>
+		<converter-class>org.openspcoop2.generic_project.web.impl.jsf1.converter.MultipleChoiceItemConverter</converter-class>
+	</converter>
+	<converter>
+		<converter-id>dateConverter</converter-id>
+		<converter-class>org.govmix.proxy.fatturapa.web.console.converter.DateConverter</converter-class>
+	</converter>
+
+	<converter>
+		<converter-id>dateEmptyConverter</converter-id>
+		<converter-class>org.govmix.proxy.fatturapa.web.console.converter.DateEmptyConverter</converter-class>
+	</converter>
+
+	<converter>
+		<converter-id>numberConverter</converter-id>
+		<converter-class>org.govmix.proxy.fatturapa.web.console.converter.NumberConverter</converter-class>
+	</converter>
+	
+	<application>
+		<view-handler>com.sun.facelets.FaceletViewHandler</view-handler>
+		<locale-config>
+			<default-locale>it</default-locale>
+			<supported-locale>it</supported-locale>
+			<supported-locale>de</supported-locale>
+		</locale-config>
+		<message-bundle>messages_it</message-bundle>
+		<resource-bundle>
+			<base-name>messages</base-name>
+			<var>msg</var>
+		</resource-bundle>
+		<el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+	</application>
+	<lifecycle>
+		<phase-listener id="loginPhaseListener">org.openspcoop2.generic_project.web.impl.jsf1.listener.LoginPhaseListener</phase-listener>
+		<!-- <phase-listener id="noCacheListener">org.openspcoop2.generic_project.web.impl.jsf1.listener.CacheControlPhaseListener</phase-listener> -->
+		<!-- phase-listener id="loginPhaseListener">org.govmix.proxy.fatturapa.web.console.listener.LoginPhaseListener</phase-listener -->
+		<phase-listener id="localePhaseListener">org.openspcoop2.generic_project.web.impl.jsf1.listener.LocaleListener</phase-listener>
+		<phase-listener id="viewExpiredListener">org.govmix.proxy.fatturapa.web.console.listener.ViewExpiredListener</phase-listener>
+	</lifecycle>
+</faces-config>

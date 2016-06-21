@@ -1,0 +1,72 @@
+<ejb-jar  xmlns="http://java.sun.com/xml/ns/javaee"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd"
+          version="3.1">
+
+    <enterprise-beans>
+
+        <!-- TimerEJB -->
+        <session id="ConsegnaFattura">
+            <display-name>ConsegnaFattura</display-name>
+            <ejb-name>ConsegnaFattura</ejb-name>
+            <home>org.govmix.proxy.fatturapa.web.api.timers.TimerConsegnaFatturaHome</home>
+            <remote>org.govmix.proxy.fatturapa.web.api.timers.TimerConsegnaFattura</remote>
+            <ejb-class>org.govmix.proxy.fatturapa.web.api.timers.TimerConsegnaFatturaImpl</ejb-class>
+            <session-type>Stateless</session-type>
+            <transaction-type>Container</transaction-type>
+        </session>
+        <session id="ConsegnaEsito">
+            <display-name>ConsegnaEsito</display-name>
+            <ejb-name>ConsegnaEsito</ejb-name>
+            <home>org.govmix.proxy.fatturapa.web.api.timers.TimerConsegnaEsitoHome</home>
+            <remote>org.govmix.proxy.fatturapa.web.api.timers.TimerConsegnaEsito</remote>
+            <ejb-class>org.govmix.proxy.fatturapa.web.api.timers.TimerConsegnaEsitoImpl</ejb-class>
+            <session-type>Stateless</session-type>
+            <transaction-type>Container</transaction-type>
+        </session>
+		<session id="InserimentoFattura">
+            <display-name>InserimentoFattura</display-name>
+            <ejb-name>InserimentoFattura</ejb-name>
+            <home>org.govmix.proxy.fatturapa.web.api.timers.TimerInserimentoFatturaHome</home>
+            <remote>org.govmix.proxy.fatturapa.web.api.timers.TimerInserimentoFattura</remote>
+            <ejb-class>org.govmix.proxy.fatturapa.web.api.timers.TimerInserimentoFatturaImpl</ejb-class>
+            <session-type>Stateless</session-type>
+            <transaction-type>Container</transaction-type>
+        </session>
+		<session id="AccettazioneFattura">
+            <display-name>AccettazioneFattura</display-name>
+            <ejb-name>AccettazioneFattura</ejb-name>
+            <home>org.govmix.proxy.fatturapa.web.api.timers.TimerAccettazioneFatturaHome</home>
+            <remote>org.govmix.proxy.fatturapa.web.api.timers.TimerAccettazioneFattura</remote>
+            <ejb-class>org.govmix.proxy.fatturapa.web.api.timers.TimerAccettazioneFatturaImpl</ejb-class>
+            <session-type>Stateless</session-type>
+            <transaction-type>Container</transaction-type>
+        </session>
+    </enterprise-beans>
+
+    <!-- Transazione Attiva (trans-attribute=Required) -->
+    <assembly-descriptor>
+        <container-transaction>
+
+            <!-- TimerEJB -->
+            <method>
+                <ejb-name>ConsegnaFattura</ejb-name>
+                <method-name>ejbTimeout()</method-name>
+            </method>
+            <method>
+                <ejb-name>ConsegnaEsito</ejb-name>
+                <method-name>ejbTimeout()</method-name>
+            </method>
+            <method>
+                <ejb-name>InserimentoFattura</ejb-name>
+                <method-name>ejbTimeout()</method-name>
+            </method>
+            <method>
+                <ejb-name>AccettazioneFattura</ejb-name>
+                <method-name>ejbTimeout()</method-name>
+            </method>
+
+            <trans-attribute>Required</trans-attribute>
+        </container-transaction>
+    </assembly-descriptor>
+</ejb-jar>

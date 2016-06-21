@@ -1,0 +1,9 @@
+Gentile utente,
+
+riceve questo messaggio in quanto inserito nella lista di notifica per il dipartimento ${notifica.dipartimento.descrizione} (codice ${notifica.dipartimento.codice}).
+
+La informiamo che la spedizione con identificativo PA ${notifica.pccTraccia.idPaTransazione}, relativa all'operazione ${operazione_it}<#if fattura??> e fattura (Identificativo SDI ${fattura.identificativoSdi?c} / Numero ${fattura.numero})<#else></#if> ha ottenuto un esito di errore.
+
+Puo' schedulare nuovamente la consegna in maniera manuale collegandosi al cruscotto eFatt.
+
+Cordiali saluti

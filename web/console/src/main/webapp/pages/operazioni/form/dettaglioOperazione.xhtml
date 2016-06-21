@@ -1,0 +1,240 @@
+<!-- 
+  ProxyoperazionePA - Gestione del formato operazione Elettronica 
+  http://www.gov4j.it/operazionepa
+  
+  Copyright (c) 2014-2016 Link.it srl (http://link.it). 
+  Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+ 
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+ 
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<ui:composition template="/templates/defaultTemplate.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:op2web="http://www.openspcoop2.org/web/taglib/jsf">
+	<f:loadBundle var="msg" basename="messages" />
+
+	<ui:define name="pageTitle">#{msg['operazione.dettaglio.pageTitle']}</ui:define>
+	<ui:define name="pageHeader">#{msg['operazione.dettaglio.pageTitle']}</ui:define>
+	<ui:define name="navbar">
+		<ul>
+			<li><h:outputText value="/#{msg['menu.group.operazioni']}"/>
+			</li>
+			<li><a4j:htmlCommandLink
+					action="#{operazioneMBean.restoreSearch}"
+					value="/#{msg['operazione.listaOperazioni.pageTitle']}" rendered="#{operazioneMBean.paginaFrom == 'menu'}">
+				</a4j:htmlCommandLink>
+				<a4j:htmlCommandLink
+					action="#{fatturaElettronicaMBean.restoreSearch}" rendered="#{operazioneMBean.paginaFrom == 'dettaglioFattura'}"
+					value="/#{msg['fattura.listaFatture.pageTitle']}">
+				</a4j:htmlCommandLink>
+			</li>
+			<li><h:outputText value="/#{msg['operazione.dettaglio.pageTitle']} (#{operazioneMBean.selectedElement.operazione.value})" rendered="#{operazioneMBean.paginaFrom == 'menu'}" />
+				<a4j:htmlCommandLink action="dettaglioFattura" id="dettaglioFattura"
+					rendered="#{operazioneMBean.paginaFrom == 'dettaglioFattura'}"
+					value="/#{msg['fattura.dettaglio.pageTitle']} (#{operazioneMBean.fattura.cedentePrestatore.value} #{operazioneMBean.fattura.numero.value}/#{operazioneMBean.fattura.anno.value})">
+					<f:setPropertyActionListener value="#{operazioneMBean.fattura}"
+						target="#{fatturaElettronicaMBean.selectedElement}" />
+				</a4j:htmlCommandLink>	
+			</li>
+			<li><h:outputText value="/#{msg['operazione.dettaglio.pageTitle']} (#{operazioneMBean.selectedElement.operazione.value})" rendered="#{operazioneMBean.paginaFrom == 'dettaglioFattura'}" /></li>
+		</ul>
+	</ui:define>
+	<ui:define name="body">
+		<a4j:keepAlive beanName="operazioneMBean"  />
+		<a4j:keepAlive beanName="fatturaElettronicaMBean" />
+		<a4j:keepAlive beanName="trasmissioneMBean" ajaxOnly="true" />
+
+		<rich:panel id="panelContainer1" style="padding:0"
+			headerClass="outpanelHeader" styleClass="noborder">
+			<h:outputText id="outNoDettaglio"
+				value="#{msg['operazione.dettaglio.nodata']}"
+				rendered="#{empty operazioneMBean.selectedElement}" />
+
+			<rich:panel id="panelDettaglio1" bodyClass="inpanelBody"
+				rendered="#{not empty operazioneMBean.selectedElement}">
+				<f:facet name="header">
+					<h:outputText id="outHeaderoperazione1"
+						value="#{msg['operazione.dettaglio.pageTitle']} (#{operazioneMBean.selectedElement.operazione.value})"
+						rendered="#{not empty operazioneMBean.selectedElement}" />
+				</f:facet>
+
+				<!-- Messaggio Idp -->
+				<h:panelGrid id="panelDettaglio2"
+					columnClasses="gridContent verticalAlignTop"
+					rendered="#{!empty operazioneMBean.selectedElement}" columns="1"
+					width="100%">
+
+					<!-- Dati Generali  -->
+					<op2web:fieldset legend="#{msg['operazione.label.intestazione']}"
+						collapsible="false" closed="false" rendered="#{true}">
+						
+						<c:set var="datiGenerali" value="#{operazioneMBean.selectedElement.fieldsDatiGenerali}" />
+						
+						<h:panelGrid id="panelGroupOut_#{datiGenerali.id}" styleClass="#{datiGenerali.styleClass}"
+							columnClasses="#{datiGenerali.columnClasses}" 
+							rendered="#{datiGenerali.rendered}" columns="#{datiGenerali.columns}">
+					
+							<op2web:output field="#{operazioneMBean.selectedElement.dataUltimaTrasmissione}" insideGroup="true" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							
+							<op2web:output field="#{operazioneMBean.selectedElement.sistemaRichiedente}" insideGroup="true" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							
+							<op2web:output field="#{operazioneMBean.selectedElement.utenteRichiedente}" insideGroup="true" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							
+							<op2web:output field="#{operazioneMBean.selectedElement.operazione}" insideGroup="true" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							
+							<op2web:output field="#{operazioneMBean.selectedElement.tipoOperazione}" insideGroup="true" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							
+							<op2web:output field="#{operazioneMBean.selectedElement.stato}" insideGroup="true" />
+							<h:panelGroup>
+								<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{operazioneMBean.selectedElement.visualizzaLinkRispedizione == false}"/>
+								<h:form id="formRiconsegna" rendered="#{operazioneMBean.selectedElement.visualizzaLinkRispedizione}">
+									<a4j:commandLink id="ritentaRispedizione-Link"  
+										action="#{operazioneMBean.inviaRispedizione}"
+										reRender="panelDettaglio2"
+										styleClass="buttonNoRed" ajaxSingle="true">
+										<h:outputText value="#{msg['tracciaPcc.inviaRispedizione']}" />
+									</a4j:commandLink>
+								</h:form>
+							</h:panelGroup>
+							
+							<op2web:output field="#{operazioneMBean.selectedElement.cfTrasmittente}" insideGroup="true" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							
+							<op2web:output field="#{operazioneMBean.selectedElement.versioneApplicativa}" insideGroup="true" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							
+							<op2web:output field="#{operazioneMBean.selectedElement.idPccAmministrazione}" insideGroup="true" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							
+							<op2web:output field="#{operazioneMBean.selectedElement.idPaTransazione}" insideGroup="true" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							
+							<op2web:output field="#{operazioneMBean.selectedElement.dataUltimoTentativoEsito}" insideGroup="true" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							
+							<op2web:output field="#{operazioneMBean.selectedElement.rispedizione}" insideGroup="true" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							
+							<op2web:output field="#{operazioneMBean.selectedElement.rispedizioneProssimoTentativo}" insideGroup="true" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+						</h:panelGrid>	
+							
+					</op2web:fieldset>
+					
+					
+					<!-- dati fattura -->
+					<!-- Dati Trasmissione  -->
+					<op2web:fieldset legend="#{msg['fattura.label.riferimento']}" collapsible="false" closed="false" rendered="#{operazioneMBean.paginaFrom == 'menu'}">
+													
+						<c:set var="datiTrasmissione1" value="#{operazioneMBean.selectedElement.fattura.datiTrasmissione1}" />
+							
+						<h:panelGrid id="panelGroupOut_#{datiTrasmissione1.id}" styleClass="#{datiTrasmissione1.styleClass}"
+							columnClasses="#{datiTrasmissione1.columnClasses}" 
+							rendered="#{datiTrasmissione1.rendered}" columns="#{datiTrasmissione1.columns}">
+					
+							<op2web:output field="#{operazioneMBean.selectedElement.fattura.identificativoSdi}" insideGroup="true" />
+							<op2web:output field="#{operazioneMBean.selectedElement.fattura.posizione}" insideGroup="true" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							
+							<op2web:output field="#{operazioneMBean.selectedElement.fattura.anno}" insideGroup="true" />
+							<op2web:output field="#{operazioneMBean.selectedElement.fattura.numero}" insideGroup="true" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+						</h:panelGrid>
+					</op2web:fieldset>
+
+					<!-- Tabella Trasmissioni -->
+					<op2web:fieldset legend="#{msg['operazione.label.trasmissioni']}"
+						collapsible="false" closed="false" rendered="#{true}">
+						<c:set var="metadataTrasmissione"
+							value="#{trasmissioneMBean.metadata}" />
+
+						<op2web:pagedListView id="tabellaPagamenti" showSelectAll="false" enableDelete="false" mBean="#{trasmissioneMBean}"
+							value="#{trasmissioneDM}" rendered="true" itemMetadata="#{metadataTrasmissione}">
+
+							<!--colonne -->
+							<op2web:tableColumns
+								nomiColonne="#{'tsTrasmissione,idPccTransazione,esitoTrasmissione,statoEsito,gdo,idEgovRichiesta'}" />
+								
+								
+												<!-- Link dettagli -->
+				<rich:column style="text-align: center;">
+					<h:panelGroup>
+						<a4j:commandLink id="dettaglioTrasm_btn" action="dettaglioTrasmissione"
+							ajaxSingle="true">
+							<f:setPropertyActionListener value="#{item}"
+								target="#{trasmissioneMBean.selectedElement}" />
+							<f:setPropertyActionListener value="#{operazioneMBean.paginaFrom}" 
+								target="#{trasmissioneMBean.paginaFrom}" />
+							<f:setPropertyActionListener value="#{operazioneMBean.fattura}" 
+								target="#{trasmissioneMBean.fattura}" />
+							<f:setPropertyActionListener value="#{operazioneMBean.selectedElement}" 
+								target="#{trasmissioneMBean.traccia}" />
+							<h:graphicImage value="/images/magnifier.png" width="16"
+								alt="#{msg['trasmissionePcc.label.ricercaTrasmissioni.dettaglioTitle']}"
+								height="16"
+								title="#{msg['trasmissionePcc.label.ricercaTrasmissioni.dettaglioTitle']}" />
+						</a4j:commandLink>
+					</h:panelGroup>
+				</rich:column>
+						</op2web:pagedListView>
+					</op2web:fieldset>
+					
+				
+							<h:form>
+								<div class="buttonrow" style="padding: 10px;">
+								<!-- Visualizza XML Richiesta -->
+								<c:set var="linkXmlRichiesta"
+									value="#{operazioneMBean.selectedElement.richiesta}" />
+									
+								<h:commandLink action="#{operazioneMBean.selectedElement.visualizzaTracciaRichiesta}"
+								 styleClass="icon-fatturapa-xml buttonNoRed"
+									id="visualizzaXmlRichiesta-iconLink" target="_blank"
+									 rendered="#{not empty linkXmlRichiesta.href}">
+									<h:outputText
+										value="#{msg['commons.label.visualizza']} #{linkXmlRichiesta.label}"/>
+										 
+								</h:commandLink>
+
+								<!-- Visualizza XML Risposta  -->
+								<c:set var="linkXmlRisposta"
+									value="#{operazioneMBean.selectedElement.risposta}" />
+
+								<h:commandLink styleClass="icon-fatturapa-xml buttonNoRed"
+									action="#{operazioneMBean.selectedElement.visualizzaTracciaRisposta}"
+									id="visualizzaXmlRisposta-iconLink" target="_blank"
+									  rendered="#{not empty linkXmlRisposta.href}">
+									<h:outputText
+										value="#{msg['commons.label.visualizza']} #{linkXmlRisposta.label}" />
+								</h:commandLink>
+								</div>
+							</h:form>
+						
+				</h:panelGrid>
+
+			</rich:panel>
+
+		</rich:panel>
+
+	</ui:define>
+</ui:composition>

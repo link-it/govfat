@@ -27,6 +27,11 @@
 		</jaxrs:serviceBeans>
 	</jaxrs:server>
 	
+	<jaxrs:server id="apTrasmittente" address="/trasmittente">
+		<jaxrs:serviceBeans>
+			<bean id="endpointTrasmittente" class="org.govmix.proxy.fatturapa.web.api.EndpointTrasmittenteImpl" />
+		</jaxrs:serviceBeans>
+	</jaxrs:server>
 	<jaxrs:server id="apEnte" address="/ente">
 		<jaxrs:serviceBeans>
 			<bean id="endpointEnte" class="org.govmix.proxy.fatturapa.web.api.EndpointEnteImpl" />

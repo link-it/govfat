@@ -1,0 +1,21 @@
+
+
+
+
+	<!-- Listener -->
+	 <listener>
+          <listener-class>org.govmix.proxy.fatturapa.web.console.listener.ConsoleStartupListener</listener-class>
+     </listener>
+	
+	<!-- <listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener> -->
+	<listener>
+		<listener-class>org.openspcoop2.generic_project.web.impl.jsf2.listener.HttpSessionCheckListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>com.sun.faces.config.ConfigureListener</listener-class>
+	</listener>

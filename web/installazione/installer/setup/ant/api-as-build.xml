@@ -157,89 +157,8 @@
             </then>
         </if>
     </target>
-    <var name="build_openspcoop_with_linkit_threads" value="true" />
-    <target name="web_prepare_ejb">
-        <var name="build" value="${tmp_archivi}"/>
-        
-        <delete dir="${tmp_archivi}/tmpEJB" />
-        <mkdir dir="${tmp_archivi}/tmpEJB" />
-        
-        <var name="ejb_jar_xml" value=""/>
-        <var name="jboss_xml" value=""/>
-        <var name="src" value="${src_dir_fatturaPA_web_api}"/>
-        <if>
-            
-            
-            <equals arg1="${build_openspcoop_with_linkit_threads}" arg2="true" />
-            <then>
-                <if>
-                    <or>
-                        <equals arg1="${antinstaller_as}" arg2="jboss4"/>
-                        <equals arg1="${antinstaller_as}" arg2="jboss5"/>
-                        <equals arg1="${antinstaller_as}" arg2="jboss6"/>
-                    </or>
-                    <then>
-                        <copy file="${api.deploy.META-INF}/ejb-jar.xml.ejb2.threads" tofile="${tmp_archivi}/tmpEJB/META-INF/ejb-jar.xml" />
-                        <copy file="${api.deploy.META-INF}/jboss.xml.ejb2.threads" tofile="${tmp_archivi}/tmpEJB/META-INF/jboss.xml" />
-                        <var name="ejb_jar_xml" value="ejb-jar.xml"/>
-                        <var name="jboss_xml" value="jboss.xml"/>
-                    </then>
-                </if>
-                <if>
-                    <or>
-                        <equals arg1="${antinstaller_as}" arg2="jboss7"/>
-                        <equals arg1="${antinstaller_as}" arg2="jboss8"/>
-                        <equals arg1="${antinstaller_as}" arg2="wildfly8"/>
-                    </or>
-                    <then>
-                        <copy file="${api.deploy.META-INF}/ejb-jar.xml.ejb3.threads" tofile="${tmp_archivi}/tmpEJB/META-INF/ejb-jar.xml" />
-                        <copy file="${api.deploy.META-INF}/jboss.xml.ejb3.threads" tofile="${tmp_archivi}/tmpEJB/META-INF/jboss-ejb3.xml" />
-                        <var name="ejb_jar_xml" value="ejb-jar.xml"/>
-                        <var name="jboss_xml" value="jboss-ejb3.xml"/>
-                    </then>
-                </if>
-            </then>
-            <else>
-                <if>
-                    <or>
-                        <equals arg1="${antinstaller_as}" arg2="jboss4"/>
-                        <equals arg1="${antinstaller_as}" arg2="jboss5"/>
-                        <equals arg1="${antinstaller_as}" arg2="jboss6"/>
-                    </or>
-                    <then>
-                        <copy file="${api.deploy.META-INF}/ejb-jar.xml.ejb2" tofile="${tmp_archivi}/tmpEJB/META-INF/ejb-jar.xml" />
-                        <copy file="${api.deploy.META-INF}/jboss.xml.ejb2" tofile="${tmp_archivi}/tmpEJB/META-INF/jboss.xml" />
-                        <var name="ejb_jar_xml" value="ejb-jar.xml"/>
-                        <var name="jboss_xml" value="jboss.xml"/>
-                    </then>
-                </if>
-                <if>
-                    <or>
-                        <equals arg1="${antinstaller_as}" arg2="jboss7"/>
-                        <equals arg1="${antinstaller_as}" arg2="jboss8"/>
-                        <equals arg1="${antinstaller_as}" arg2="wildfly8"/>
-                    </or>
-                    <then>
-                        <copy file="${api.deploy.META-INF}/ejb-jar.xml.ejb3" tofile="${tmp_archivi}/tmpEJB/META-INF/ejb-jar.xml" />
-                        <copy file="${api.deploy.META-INF}/jboss.xml.ejb3" tofile="${tmp_archivi}/tmpEJB/META-INF/jboss-ejb3.xml" />
-                        <var name="ejb_jar_xml" value="ejb-jar.xml"/>
-                        <var name="jboss_xml" value="jboss-ejb3.xml"/>
-                    </then>
-                </if>
-            </else>
-        </if>
-        <jar jarfile="${tmp_archivi}/tmpEJB/fatturaPA_ejb.jar">
-            <manifest>
-                <attribute name="Class-Path" value="${manifest.classpath.3parti} ${plugins.classpath} ${manifest.classpath.openspcoop} properties/" />
-            </manifest>
-            <zipfileset dir="${tmp_archivi}/tmpEJB">
-                <include name="META-INF/${ejb_jar_xml}" />
-                <include name="META-INF/${jboss_xml}" />
-            </zipfileset>
-        </jar>
-    </target>
     
-    <target name="web_prepare_war" depends="web_check_as, web_prepare_ejb">
+    <target name="web_api_prepare_war" depends="web_check_as">
         <war destfile="${tmp_archivi}/${api.war.name}.war" webxml="${api.deploy}/cxf/web.xml">
             
             <webinf dir="${api.deploy}/cxf">
@@ -249,10 +168,6 @@
             <webinf dir="${api.deploy}/WEB-INF">
                 <include name="${jboss_scanning}" />
                 <include name="${jboss_deployment_structure}" />
-            </webinf>
-            
-            <webinf dir="${api.deploy}/META-INF">
-                <include name="${jboss_web_xml}" />
             </webinf>
             
             <lib dir="${api.deploy}/lib">
@@ -276,9 +191,6 @@
            <lib dir="${commons.lib}">
                 <include name="*.jar"/>
             </lib>
-            <lib dir="${tmp_archivi}/tmpEJB">
-                <include name="fatturaPA_ejb.jar"/>
-            </lib>
             
             <lib dir="${as_specific_lib}">
                 <include name="*.jar"/>
@@ -295,6 +207,7 @@
                 <include name="commons-lang-*.jar"/>
                 <include name="commons-beanutils-*.jar"/>
                 <include name="ezmorph-*.jar"/>
+            	<include name="soap.jar"/>
             </lib>
             
         </war>

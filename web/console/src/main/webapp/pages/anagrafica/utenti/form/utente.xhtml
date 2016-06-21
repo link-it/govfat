@@ -1,0 +1,157 @@
+<!-- 
+  ProxyFatturaPA - Gestione del formato Fattura Elettronica 
+  http://www.gov4j.it/fatturapa
+  
+  Copyright (c) 2014-2016 Link.it srl (http://link.it). 
+  Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+ 
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+ 
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<ui:composition template="/templates/defaultTemplate.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:op2web="http://www.openspcoop2.org/web/taglib/jsf">
+	<f:loadBundle var="msg" basename="messages" />
+
+	<ui:define name="pageTitle">#{msg['utente.dettaglio.pageTitle']}</ui:define>
+	<ui:define name="pageHeader">#{msg['utente.dettaglio.pageTitle']}</ui:define>
+	<ui:define name="navbar">
+		<ul>
+			<li><h:outputText value="/#{msg['menu.group.anagrafica']}" /></li>
+			<li><a4j:htmlCommandLink action="#{utenteMBean.restoreSearch}"
+					value="/#{msg['utente.listaUtenti.pageTitle']}">
+				</a4j:htmlCommandLink></li>
+			<li><h:outputText
+					rendered="#{utenteMBean.selectedElement.DTO.id != -1}"
+					value="/#{msg['utente.dettaglio.pageTitle']} (#{utenteMBean.selectedElement.username.value})" /></li>
+			<li><h:outputText
+					rendered="#{utenteMBean.showForm == true and utenteMBean.azione == 'update'}"
+					value="/#{msg['commons.button.aggiorna']}" /> <h:outputText
+					rendered="#{utenteMBean.showForm == true and utenteMBean.azione != 'update'}"
+					value="/#{msg['commons.button.nuovo']}" /></li>
+		</ul>
+	</ui:define>
+	<ui:define name="body">
+
+		<a4j:keepAlive beanName="utenteMBean" ajaxOnly="true" />
+		
+		<script type="text/javascript">
+				 jQuery(document).ready(function() {
+					_force_get = true;
+				 });
+		</script>
+		
+		<rich:panel id="panelContainer1" style="padding:0"
+			headerClass="outpanelHeader" styleClass="noborder">
+			<h:outputText id="outNoDettaglio"
+				value="#{msg['utente.dettaglio.nodata']}"
+				rendered="#{empty utenteMBean.selectedElement and utenteMBean.azione == 'update'}" />
+
+			<!-- Form Inserimento dati -->
+			<op2web:editForm mBean="#{utenteMBean}" rendered="#{utenteMBean.showForm  == true}" fieldsToUpdateButtonInvia="mainct" 
+						fieldsToUpdateButtonAnnulla="mainct" >
+				<p class="legend">
+					<strong>#{msg['commons.label.note']}</strong> (<em>*</em>)
+					#{msg['commons.label.campiObbligatori']}
+				</p>
+				<op2web:fieldset legend="#{msg['utente.form.label']}" collapsible="false" closed="false" rendered="#{true}">
+
+					<op2web:formFields nomiFields="#{'nome,cognome,username,password,ruolo,profilo,ente'}" />
+
+				</op2web:fieldset>
+				<rich:spacer height="10" rendered="#{utenteMBean.form.showUOandPCC.value}"/>
+
+				<op2web:fieldset legend="#{msg['utente.form.dipartimento.label']}" 	collapsible="false" closed="false" rendered="#{utenteMBean.form.showUOandPCC.value}">
+
+					<op2web:formFields nomiFields="#{'dipartimento'}" />
+
+				</op2web:fieldset>
+				
+				<rich:spacer height="10" rendered="#{utenteMBean.form.showUOandPCC.value}" />
+				
+				<ui:include src="/includes/form/operazioniUtentePCC.xhtml">
+							<ui:param name="mBean" value="#{utenteMBean}" />
+							<ui:param name="form" value="#{utenteMBean.form}" />
+						</ui:include>
+				 
+			</op2web:editForm>
+
+			<rich:panel id="panelDettaglio1" bodyClass="inpanelBody"
+				rendered="#{not empty utenteMBean.selectedElement and utenteMBean.showForm == false}">
+				<f:facet name="header">
+					<h:outputText id="outHeaderFattura1"
+						value="#{msg['utente.dettaglio.pageTitle']} (#{utenteMBean.selectedElement.username.value})"
+						rendered="#{not empty utenteMBean.selectedElement}" />
+				</f:facet>
+
+				<!-- Messaggio Idp -->
+				<h:panelGrid id="panelDettaglio2"
+					columnClasses="gridContent verticalAlignTop"
+					rendered="#{!empty utenteMBean.selectedElement}" columns="1"
+					width="100%">
+
+					<!-- Dati Generali  -->
+					<op2web:fieldset legend="#{msg['utente.label.generale']}"
+						rendered="#{true}">
+						<op2web:outputGroup
+							group="#{utenteMBean.selectedElement.fieldsDatiGenerali}" />
+					</op2web:fieldset>
+					
+					<op2web:fieldset legend="#{msg['utente.form.dipartimento.label']}"
+					collapsible="false" closed="false" rendered="#{utenteMBean.numeroDipartimenti gt 0}">
+					
+					<c:set var="dipartimentoMetadata"
+							value="#{utenteMBean.selectedElement.metadataDipartimento}" />
+					
+						<op2web:pagedListView id="tabellaDipartimenti" showSelectAll="false"
+							enableDelete="false" mBean="#{dipartimentoMBean}" value="#{dipartimentiUtenteDM}"
+							rendered="true"   itemMetadata="#{dipartimentoMetadata}">
+			
+							<!--colonne -->
+							<op2web:tableColumns nomiColonne="#{'descrizione,codice,modalitaPush'}" />
+						</op2web:pagedListView>
+					
+					</op2web:fieldset>
+					
+					<!-- Dati PCC  -->
+					<op2web:fieldset legend="#{msg['utente.pcc']}"
+						rendered="#{utenteMBean.selectedElement.showPCC}">
+						<op2web:outputGroup group="#{utenteMBean.selectedElement.fieldsDatiPCC}" />
+					</op2web:fieldset>
+
+				</h:panelGrid>
+
+				<rich:spacer height="10"/>
+				<h:form id="sUpF">
+					<div class="buttonrow">
+						<a4j:commandButton id="aggiorna"
+							value="#{msg['commons.button.modifica']}"
+							styleClass="icon-edit" status="mainStatus"
+							onclick="abilitaModifica()" oncomplete="disabilitaModifica()" 
+							action="#{utenteMBean.modifica}" reRender="mainct">
+						</a4j:commandButton>
+					</div>
+				</h:form>
+
+			</rich:panel>
+
+		</rich:panel>
+
+	</ui:define>
+</ui:composition>

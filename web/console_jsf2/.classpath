@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="lib" path="deploy/lib/openspcoop2_web-generic-project.jar" />
+	<classpathentry kind="lib" path="deploy/lib/openspcoop2_web-generic-project-impl-jsf2.jar" />
+	<classpathentry kind="lib" path="/1.1.fatturaPA/deploy/lib/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="/1.1.fatturaPA/deploy/lib/openspcoop2_generic-project.jar"/>
+	<classpathentry kind="lib" path="/1.1.fatturaPA/deploy/lib/openspcoop2_utils.jar"  />
+	<classpathentry kind="lib" path="deploy/lib/org.springframework.aop-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/org.springframework.asm-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/org.springframework.beans-3.1.1.RELEASE.jar" />
+	<classpathentry kind="lib" path="deploy/lib/org.springframework.context-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/org.springframework.core-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/org.springframework.expression-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/org.springframework.orm-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/org.springframework.transaction-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/org.springframework.web-3.1.1.RELEASE.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/1.1.fatturaPA"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/1.1.fatturaPA.dao.jdbc"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/1.1.fatturaPA.web.commons"/>
+	<classpathentry kind="lib" path="deploy/lib/cssparser-0.9.16.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/ehcache-2.8.3.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/el-api-2.2.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/javax.faces-2.2.8.jar" />
+	<classpathentry kind="lib" path="deploy/lib/javax.servlet-api-3.0.1.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/jsp-api-2.1.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/jstl-api-1.2.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/openspcoop2_web-generic-project_BUILD-11086.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/openspcoop2_web-generic-project-impl-jsf2_BUILD-11086.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/sac-1.3.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/servlet-api-2.5.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/slf4j-api-1.6.1.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/soap.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/httpclient-4.3.3.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/httpcore-4.3.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/httpmime-4.3.1.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/commons-lang-2.6.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/richfaces-components-api-4.3.7.Final.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/richfaces-components-ui-4.3.7.Final.jar" />
+	<classpathentry kind="lib" path="deploy/lib/richfaces-core-api-4.3.7.Final.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/richfaces-core-impl-4.3.7.Final.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/guava-13.0.1.jar"/>
+	<classpathentry kind="lib" path="deploy/lib/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

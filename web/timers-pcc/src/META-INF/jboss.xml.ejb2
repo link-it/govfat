@@ -1,0 +1,24 @@
+<jboss>
+
+   <enterprise-beans>
+
+      <!-- TimerEJB -->
+      <session>
+         <ejb-name>ConsegnaFattura</ejb-name>
+         <jndi-name>ejb/ConsegnaFattura</jndi-name>
+      </session>
+      <session>
+         <ejb-name>ConsegnaEsito</ejb-name>
+         <jndi-name>ejb/ConsegnaEsito</jndi-name>
+      </session>
+	<session>
+         <ejb-name>InserimentoFattura</ejb-name>
+         <jndi-name>ejb/InserimentoFattura</jndi-name>
+      </session>
+    <session>
+         <ejb-name>AccettazioneFattura</ejb-name>
+         <jndi-name>ejb/AccettazioneFattura</jndi-name>
+      </session>
+   </enterprise-beans>
+
+</jboss>

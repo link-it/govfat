@@ -20,7 +20,7 @@ if [ "$1" != "" ] ; then
 	VERSIONE=$1;
 fi
 
-for i in api console; do cp $i/local_env.xml{.template,}; done
+for i in api console timers; do cp $i/local_env.xml{.template,}; done
 
 pushd commons/deploy/properties
 

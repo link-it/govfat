@@ -1,0 +1,149 @@
+<!-- 
+  ProxyoperazionePA - Gestione del formato operazione Elettronica 
+  http://www.gov4j.it/operazionepa
+  
+  Copyright (c) 2014-2016 Link.it srl (http://link.it). 
+  Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+ 
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+ 
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<ui:composition template="/templates/defaultTemplate.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:op2web="http://www.openspcoop2.org/web/taglib/jsf">
+	<f:loadBundle var="msg" basename="messages" />
+
+	<ui:define name="pageTitle">#{msg['trasmissionePcc.dettaglio.pageTitle']}</ui:define>
+	<ui:define name="pageHeader">#{msg['trasmissionePcc.dettaglio.pageTitle']}</ui:define>
+	<ui:define name="navbar">
+		<ul>
+			<li><h:outputText value="/#{msg['menu.group.operazioni']}"/>
+			</li>
+			<li><a4j:htmlCommandLink
+					action="#{operazioneMBean.restoreSearch}"
+					value="/#{msg['operazione.listaOperazioni.pageTitle']}" rendered="#{trasmissioneMBean.paginaFrom == 'menu'}">
+				</a4j:htmlCommandLink>
+				<a4j:htmlCommandLink
+					action="#{fatturaElettronicaMBean.restoreSearch}" rendered="#{trasmissioneMBean.paginaFrom == 'dettaglioFattura'}"
+					value="/#{msg['fattura.listaFatture.pageTitle']}">
+				</a4j:htmlCommandLink>
+			</li>
+			<li>
+				<a4j:htmlCommandLink action="dettaglioOperazione" id="dettaglioOperazione"
+					rendered="#{trasmissioneMBean.paginaFrom == 'menu'}" value="/#{msg['operazione.dettaglio.pageTitle']} (#{trasmissioneMBean.traccia.operazione.value})">
+					<f:setPropertyActionListener value="#{trasmissioneMBean.traccia}" target="#{operazioneMBean.selectedElement}" />
+					<f:setPropertyActionListener value="#{trasmissioneMBean.paginaFrom}" target="#{operazioneMBean.paginaFrom}" />
+				</a4j:htmlCommandLink>
+				<a4j:htmlCommandLink action="dettaglioFattura" id="dettaglioFattura"
+					rendered="#{trasmissioneMBean.paginaFrom == 'dettaglioFattura'}"
+					value="/#{msg['fattura.dettaglio.pageTitle']} (#{trasmissioneMBean.fattura.cedentePrestatore.value} #{trasmissioneMBean.fattura.numero.value}/#{trasmissioneMBean.fattura.anno.value})">
+					<f:setPropertyActionListener value="#{trasmissioneMBean.fattura}" target="#{fatturaElettronicaMBean.selectedElement}" />
+				</a4j:htmlCommandLink>	
+			</li>
+			<li>
+				<a4j:htmlCommandLink action="dettaglioOperazione" id="dettaglioOperazione2"
+					rendered="#{trasmissioneMBean.paginaFrom == 'dettaglioFattura'}" value="/#{msg['operazione.dettaglio.pageTitle']} (#{trasmissioneMBean.traccia.operazione.value})">
+					<f:setPropertyActionListener value="#{trasmissioneMBean.traccia}" target="#{operazioneMBean.selectedElement}" />
+					<f:setPropertyActionListener value="#{trasmissioneMBean.fattura}" target="#{operazioneMBean.fattura}" />
+					<f:setPropertyActionListener value="#{trasmissioneMBean.paginaFrom}" target="#{operazioneMBean.paginaFrom}" />
+				</a4j:htmlCommandLink>
+				<h:outputText value="/#{msg['trasmissionePcc.dettaglio.pageTitle']} (#{trasmissioneMBean.selectedElement.tsTrasmissioneFormatted})" rendered="#{trasmissioneMBean.paginaFrom == 'menu'}" />
+			</li>
+			<li><h:outputText value="/#{msg['trasmissionePcc.dettaglio.pageTitle']} (#{trasmissioneMBean.selectedElement.tsTrasmissioneFormatted})" rendered="#{trasmissioneMBean.paginaFrom == 'dettaglioFattura'}" /></li>
+		</ul>
+	</ui:define>
+	<ui:define name="body">
+		<a4j:keepAlive beanName="operazioneMBean" />
+		<a4j:keepAlive beanName="fatturaElettronicaMBean" />
+		<a4j:keepAlive beanName="trasmissioneMBean" />
+		<a4j:keepAlive beanName="esitoMBean" ajaxOnly="true" />
+
+		<rich:panel id="panelContainer1" style="padding:0"
+			headerClass="outpanelHeader" styleClass="noborder">
+			<h:outputText id="outNoDettaglio"
+				value="#{msg['trasmissionePcc.dettaglio.nodata']}"
+				rendered="#{empty trasmissioneMBean.selectedElement}" />
+
+			<rich:panel id="panelDettaglio1" bodyClass="inpanelBody"
+				rendered="#{not empty trasmissioneMBean.selectedElement}">
+				<f:facet name="header">
+					<h:outputText id="outHeaderoperazione1"
+						value="#{msg['trasmissionePcc.dettaglio.pageTitle']} (#{trasmissioneMBean.selectedElement.tsTrasmissioneFormatted})"
+						rendered="#{not empty trasmissioneMBean.selectedElement}" />
+				</f:facet>
+
+				<!-- Messaggio Idp -->
+				<h:panelGrid id="panelDettaglio2"
+					columnClasses="gridContent verticalAlignTop"
+					rendered="#{!empty trasmissioneMBean.selectedElement}" columns="1"
+					width="100%">
+
+					<!-- Dati Generali  -->
+					<op2web:fieldset legend="#{msg['trasmissionePcc.label.intestazione']}"
+						collapsible="false" closed="false" rendered="#{true}">
+						<op2web:outputGroup
+							group="#{trasmissioneMBean.selectedElement.fieldsDatiGenerali}" />
+					</op2web:fieldset>
+					
+					<!-- Tabella Esiti -->
+					<op2web:fieldset legend="#{msg['trasmissionePcc.label.esiti']}"
+						collapsible="false" closed="false" rendered="#{true}">
+						<c:set var="metadataEsito"
+							value="#{esitoMBean.metadata}" />
+
+						<op2web:pagedListView id="tabellaEsiti" showSelectAll="false" enableDelete="false" mBean="#{esitoMBean}"
+							value="#{esitoDM}" rendered="true" itemMetadata="#{metadataEsito}">
+
+							<!--colonne -->
+							<op2web:tableColumns
+								nomiColonne="#{'gdo,idEgovRichiesta,esitoTrasmissione,esitoElaborazione'}" />
+								
+								
+												<!-- Link dettagli -->
+				<rich:column style="text-align: center;">
+					<h:panelGroup>
+						<a4j:commandLink id="dettaglioEsito_btn" action="dettaglioEsito"
+							ajaxSingle="true">
+							<f:setPropertyActionListener value="#{item}"
+								target="#{esitoMBean.selectedElement}" />
+							<f:setPropertyActionListener value="#{trasmissioneMBean.paginaFrom}" 
+								target="#{esitoMBean.paginaFrom}" />
+							<f:setPropertyActionListener value="#{trasmissioneMBean.fattura}" 
+								target="#{esitoMBean.fattura}" />
+							<f:setPropertyActionListener value="#{trasmissioneMBean.traccia}" 
+								target="#{esitoMBean.traccia}" />
+								<f:setPropertyActionListener value="#{trasmissioneMBean.selectedElement}" 
+								target="#{esitoMBean.trasmissione}" />
+							<h:graphicImage value="/images/magnifier.png" width="16"
+								alt="#{msg['esitoPcc.label.ricercaEsiti.dettaglioTitle']}"
+								height="16"
+								title="#{msg['esitoPcc.label.ricercaEsiti.dettaglioTitle']}" />
+						</a4j:commandLink>
+					</h:panelGroup>
+				</rich:column>
+						</op2web:pagedListView>
+					</op2web:fieldset>
+				</h:panelGrid>
+
+			</rich:panel>
+
+		</rich:panel>
+
+	</ui:define>
+</ui:composition>

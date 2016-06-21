@@ -1,0 +1,1 @@
+Avviso: la spedizione ${notifica.pccTraccia.idPaTransazione} ha ottenuto un esito di errore

@@ -1,0 +1,127 @@
+<!-- 
+  ProxyFatturaPA - Gestione del formato Fattura Elettronica 
+  http://www.gov4j.it/fatturapa
+  
+  Copyright (c) 2014-2015 Link.it srl (http://link.it). 
+  Copyright (c) 2014-2015 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+ 
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+ 
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<!DOCTYPE ui:composition
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:rich="http://richfaces.org/rich" xmlns:op2web="http://www.openspcoop2.org/web/taglib/jsf2" template="/templates/defaultTemplate.xhtml">
+	<f:loadBundle var="msg" basename="messages"/>
+
+	<ui:define name="pageTitle">#{msg['notificaEsitoCommittente.formInvia.label.inviaNotifica']}</ui:define>
+	<ui:define name="pageHeader">#{msg['notificaEsitoCommittente.formInvia.label.inviaNotifica']}</ui:define>
+	<ui:define name="navbar">
+		<ul>
+			<li><h:outputText value="/#{msg['menu.group.operazioni']}"/></li>
+			<li><a4j:commandLink action="#{fatturaElettronicaMBean.restoreSearch}" value="/#{msg['fattura.listaFatture.pageTitle']}">
+				</a4j:commandLink></li>
+			<li><a4j:commandLink action="dettaglioBack" id="dettaglioFattura" rendered="#{notificaECMBean.fromPage == 'dettaglioFattura'}" value="/#{msg['fattura.dettaglio.pageTitle']} (#{notificaECMBean.fattura.cedentePrestatore.value} #{notificaECMBean.fattura.numero.value}/#{notificaECMBean.fattura.anno.value})">
+					<f:setPropertyActionListener value="#{notificaECMBean.fattura}" target="#{fatturaElettronicaMBean.selectedElement}"/>
+				</a4j:commandLink></li>
+			<li><h:outputText value="/#{msg['notificaEsitoCommittente.formInvia.label.inviaNotifica']}"/></li>
+		</ul>
+	</ui:define>
+	<ui:define name="body">
+
+		<c:set var="fatturaBean" value="#{notificaECMBean.fattura}"/>
+
+		<rich:panel id="panelContainer1" style="padding:0" headerClass="outpanelHeader" styleClass="noborder">
+			<h:outputText id="outNoDettaglio" value="#{msg['fattura.dettaglio.nodata']}" rendered="#{empty fatturaBean}"/>
+
+			<rich:panel id="panelDettaglio1" bodyClass="inpanelBody" rendered="#{not empty fatturaBean}">
+				<f:facet name="header">
+					<h:outputText id="outHeaderFattura1" value="#{msg['fattura.riepilogo.pageTitle']} (#{fatturaBean.identificativoSdi.value})" rendered="#{not empty fatturaBean}"/>
+				</f:facet>
+
+				<!-- Messaggio Idp -->
+				<h:panelGrid id="panelDettaglio2" columnClasses="gridContent verticalAlignTop" rendered="#{!empty fatturaBean}" columns="1" width="100%">
+
+					<!-- Dati Intestazione  -->
+					<op2web:fieldset legend="#{msg['fattura.label.intestazione']}" rendered="#{true}">
+						<op2web:outputGroup group="#{fatturaBean.datiIntestazione}"/>
+					</op2web:fieldset>
+
+					<!-- Dati Trasmissione  -->
+					<op2web:fieldset legend="#{msg['fattura.label.generale']}" rendered="#{true}">
+						<op2web:outputGroup group="#{fatturaBean.datiTrasmissione1}"/>
+					</op2web:fieldset>
+
+					<!-- Contenuto Fattura -->
+					<op2web:fieldset legend="#{msg['fattura.label.contenuto']}" rendered="#{true}">
+						<op2web:outputGroup group="#{fatturaBean.contenutoFattura}"/>
+					</op2web:fieldset>
+					
+					<h:panelGroup xmlns="" layout="block" styleClass="spacer"/>
+
+					<!-- Form Notifica  -->
+					<op2web:form formBean="#{notificaECMBean.form}" rendered="#{notificaECMBean.showForm == 'true'}">
+						<p class="legend">
+							<strong>#{msg['commons.label.note']}</strong> (<em>*</em>)
+							#{msg['commons.label.campiObbligatori']}
+						</p>
+
+						<op2web:fieldset legend="#{msg['notificaEsitoCommittente.formInvia.label.inviaNotifica']}" collapsible="false" closed="false">
+
+							<op2web:formFields nomiFields="#{'esito,descrizione'}"/>
+
+						</op2web:fieldset>
+						<ui:define name="buttons">
+								<!-- Invia Notifica -->
+								<a4j:commandButton id="invia" value="#{msg['commons.button.conferma']}" styleClass="icon-save" render="mainct" status="mainStatus" action="#{notificaECMBean.invia}" rendered="#{notificaECMBean.showForm == 'true'}">
+								</a4j:commandButton>
+
+								<!-- Annulla/Indietro to DettaglioFattura -->
+								<a4j:commandButton id="annullaToDetail" value="#{notificaECMBean.showForm == 'true' ? msg['commons.button.annulla'] : msg['commons.button.indietro']}" status="mainStatus" styleClass="#{notificaECMBean.showForm == 'true' ? 'icon-delete' : 'icon-back'}" rendered="#{notificaECMBean.fromPage == 'dettaglioFattura'}" action="dettaglioBack">
+									<f:setPropertyActionListener value="#{notificaECMBean.fattura}" target="#{fatturaElettronicaMBean.selectedElement}"/>
+								</a4j:commandButton>
+
+								<!-- Annulla/Indietro to ListaFattura -->
+								<a4j:commandButton id="annullaToSearch" value="#{notificaECMBean.showForm == 'true' ? msg['commons.button.annulla'] : msg['commons.button.indietro']}" status="mainStatus" styleClass="#{notificaECMBean.showForm == 'true' ? 'icon-delete' : 'icon-back'}" rendered="#{notificaECMBean.fromPage != 'dettaglioFattura'}" action="#{fatturaElettronicaMBean.restoreSearch}">
+								</a4j:commandButton>
+						</ui:define>
+
+					</op2web:form>
+
+					<rich:panel id="backPanel" style="padding:0" styleClass="noborder" rendered="#{notificaECMBean.showForm == 'false'}">
+
+						<h:panelGroup xmlns="" layout="block" styleClass="spacer"/>
+						<h:form id="backPanelForm">
+							<div class="buttonrow">
+								<!-- Annulla/Indietro to DettaglioFattura -->
+								<a4j:commandButton id="backToDetail" value="#{notificaECMBean.showForm == 'true' ? msg['commons.button.annulla'] : msg['commons.button.indietro']}" status="mainStatus" styleClass="#{notificaECMBean.showForm == 'true' ? 'icon-delete' : 'icon-back'}" rendered="#{notificaECMBean.fromPage == 'dettaglioFattura'}" action="dettaglioBack">
+									<f:setPropertyActionListener value="#{notificaECMBean.fattura}" target="#{fatturaElettronicaMBean.selectedElement}"/>
+								</a4j:commandButton>
+
+								<!-- Annulla/Indietro to ListaFattura -->
+								<a4j:commandButton id="backToSearch" value="#{notificaECMBean.showForm == 'true' ? msg['commons.button.annulla'] : msg['commons.button.indietro']}" status="mainStatus" styleClass="#{notificaECMBean.showForm == 'true' ? 'icon-delete' : 'icon-back'}" rendered="#{notificaECMBean.fromPage != 'dettaglioFattura'}" action="#{fatturaElettronicaMBean.restoreSearch}">
+								</a4j:commandButton>
+							</div>
+						</h:form>
+					</rich:panel>
+
+
+				</h:panelGrid>
+
+
+
+			</rich:panel>
+
+		</rich:panel>
+
+	</ui:define>
+</ui:composition>

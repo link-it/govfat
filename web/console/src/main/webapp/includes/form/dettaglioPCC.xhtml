@@ -1,0 +1,760 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:op2web="http://www.openspcoop2.org/web/taglib/jsf">
+	<f:loadBundle var="msg" basename="messages" />
+
+	<!-- Visualizza XML -->
+	<a4j:keepAlive beanName="scadenzaMBean" />
+	<a4j:keepAlive beanName="contabilizzazioneMBean" />
+	<a4j:keepAlive beanName="operazioneMBean" />
+
+	<h:panelGrid id="panelDettaglioPCC"
+		columnClasses="gridContent verticalAlignTop" rendered="#{true}"
+		columns="1" width="100%">
+
+		<script type="text/javascript">
+				 function showConfirmOperazioneContabile(name){
+					Richfaces.showModalPanel(name);
+					return false;
+				 };
+		</script>
+
+		<!--Operazioni PCC -->
+		<op2web:fieldset legend="#{msg['operazione.sezioneOperazioni']}"
+			collapsible="false" closed="false" rendered="#{true}">
+
+			<c:set var="itemMetadata" value="#{operazioneMBean.metadata}" />
+			<a4j:outputPanel id="tabellaOperazioni" ajaxRendered="false"
+				layout="block">
+				<h:form>
+					<a4j:jsFunction name="refreshPnl"
+						reRender="tabellaOperazioni,panelStatoContabilizzazioni,panelStatoScadenze,tabellaContabilizzazioni,tabellaScadenze,tabellaPagamenti" />
+					<op2web:dataTable value="#{operazioneDettaglioPccDM}"
+						id="tabellaOperazioni_dt" enableDelete="false"
+						headerText="#{operazioneMBean.table.headerText}"
+						showSelectAll="false" mBean="#{operazioneMBean}"
+						selectionMapTarget="#{operazioneMBean.selectedIds[item]}"
+						rowsToDisplay="#{operazioneMBean.search.pageSize}">
+						<f:facet name="noData">
+							<h:outputText
+								value="#{msg['operazione.label.ricercaOperazioni.tabellaRisultati.noData']}" />
+						</f:facet>
+
+						<op2web:tableColumns
+							nomiColonne="#{'dataUltimaTrasmissione,operazioneContabile,sistemaRichiedente,utenteRichiedente,stato'}" />
+
+						<!-- Link dettagli ,tabellaContabilizzazioni,panelStatoContabilizzazioni,panelStatoScadenze,tabellaScadenze,tabellaPagamenti-->
+						<rich:column width="50px" style="text-align: center;">
+							<f:facet name="header">
+								<h:panelGroup style="width:50px;" layout="block">
+									<a4j:commandLink id="refreshPagina"
+										reRender="tabellaOperazioni"
+										rendered="#{operazioneMBean.visualizzaRefresh}"
+										action="#{operazioneMBean.refreshDettaglioPcc}"
+										oncomplete="refreshPnl()">
+										<h:graphicImage value="/images/arrow_refresh.png" width="16"
+											height="16" title="#{msg['operazione.label.aggiornaPagina']}" />
+									</a4j:commandLink>
+								</h:panelGroup>
+							</f:facet>
+							<h:panelGroup>
+								<a4j:htmlCommandLink id="dettaglio_btn"
+									action="dettaglioOperazione" ajaxSingle="true">
+									<f:setPropertyActionListener value="#{item.DTO.id}"
+										target="#{operazioneMBean.selectedId}" />
+									<f:setPropertyActionListener value="dettaglioFattura"
+										target="#{operazioneMBean.paginaFrom}" />
+									<f:setPropertyActionListener value="#{fatturaSelezionata}"
+										target="#{operazioneMBean.fattura}" />
+									<h:graphicImage value="/images/magnifier.png" width="16"
+										alt="#{msg['operazione.label.ricercaOperazioni.dettaglioTitle']}"
+										height="16"
+										title="#{msg['operazione.label.ricercaOperazioni.dettaglioTitle']}" />
+								</a4j:htmlCommandLink>
+							</h:panelGroup>
+						</rich:column>
+
+						<ui:define name="buttons">
+
+							<!--Invia Riallineamento Sincrono -->
+							<a4j:commandLink id="inviaRichiestaRiallineamentoS-iconLink"
+								disabled="#{!contabilizzazioneMBean.abilitaOperazioni}"
+								rendered="#{contabilizzazioneMBean.visualizzaRiallineamentoSincrono}"
+								onclick="#{rich:component('invioRichiestaRiallineamento_Confirmation')}.show(); return false;"
+								styleClass="icon-fatturapa-up-grey buttonNoRed">
+								<h:outputText
+									value="#{msg['contabilizzazione.inviaRichiestaAllineamento.sincrono']}" />
+							</a4j:commandLink>
+
+							<!--Invia Riallineamento Asincrono-->
+							<a4j:commandLink id="inviaRichiestaRiallineamentoAS-iconLink"
+								disabled="#{!contabilizzazioneMBean.abilitaOperazioneAsincrona}"
+								onclick="#{rich:component('invioRichiestaRiallineamentoAsincrona_Confirmation')}.show(); return false;"
+								styleClass="icon-fatturapa-up-grey buttonNoRed">
+								<h:outputText
+									value="#{msg['contabilizzazione.inviaRichiestaAllineamento.asincrono']}" />
+							</a4j:commandLink>
+
+						</ui:define>
+					</op2web:dataTable>
+				</h:form>
+			</a4j:outputPanel>
+		</op2web:fieldset>
+
+		<!-- Contabilizzazioni -->
+		<op2web:fieldset
+			legend="#{msg['contabilizzazione.sezioneContabilizzazioni']}"
+			collapsible="false" closed="false" rendered="#{true}">
+			<c:set var="metadataContabilizzazione"
+				value="#{contabilizzazioneMBean.metadata}" />
+
+			<a4j:outputPanel id="panelStatoContabilizzazioni"
+				ajaxRendered="false" layout="block">
+				<h:form>
+					<h:panelGrid
+						id="panelGroupOut_#{contabilizzazioneMBean.fieldsContabilizzazioni.id}"
+						styleClass="#{contabilizzazioneMBean.fieldsContabilizzazioni.styleClass}"
+						columnClasses="#{contabilizzazioneMBean.fieldsContabilizzazioni.columnClasses}"
+						rendered="#{contabilizzazioneMBean.fieldsContabilizzazioni.rendered}"
+						columns="3">
+
+						<op2web:output
+							field="#{contabilizzazioneMBean.esitoContabilizzazioni}"
+							insideGroup="#{true}" />
+						<a4j:htmlCommandLink id="visualizzaErroreContabilizzazioni"
+							action="dettaglioErrore" ajaxSingle="true"
+							rendered="#{contabilizzazioneMBean.visualizzaLinkErroreContabilizzazioni}">
+							<f:setPropertyActionListener
+								value="#{contabilizzazioneMBean.esitoContabilizzazione}"
+								target="#{esitoMBean.selectedElement}" />
+							<f:setPropertyActionListener value="dettaglioFattura"
+								target="#{esitoMBean.paginaFrom}" />
+							<f:setPropertyActionListener
+								value="#{contabilizzazioneMBean.fattura}"
+								target="#{esitoMBean.fattura}" />
+							<h:outputText
+								value="#{contabilizzazioneMBean.linkErroreContabilizzazioni.label}" />
+						</a4j:htmlCommandLink>
+					</h:panelGrid>
+				</h:form>
+			</a4j:outputPanel>
+
+			<rich:spacer height="20" />
+
+			<c:set var="itemMetadata" value="#{contabilizzazioneMBean.metadata}" />
+			<a4j:outputPanel id="tabellaContabilizzazioni" ajaxRendered="false"
+				layout="block">
+				<h:form>
+					<op2web:dataTable value="#{contabilizzazioneDM}"
+						id="tabellaContabilizzazioni_dt" enableDelete="false"
+						isList="#{true}"
+						headerText="#{contabilizzazioneMBean.table.headerText}"
+						showSelectAll="false" mBean="#{contabilizzazioneMBean}"
+						selectionMapTarget="#{contabilizzazioneMBean.selectedIds[item]}"
+						rowsToDisplay="#{contabilizzazioneMBean.search.pageSize}">
+						<f:facet name="noData">
+							<h:outputText
+								value="#{msg['operazione.label.ricercaOperazioni.tabellaRisultati.noData']}" />
+						</f:facet>
+
+						<rich:column align="center" width="50px" id="cmdCol">
+							<h:panelGroup style="width:50px;" layout="block">
+								<script type="text/javascript">
+									 jQuery(document).ready(function() {
+										checkInviate('tabellaContabilizzazioni_dt');
+									 });
+						
+									 function checkInviate(containerId){
+										jQuery("div [id$='"+containerId+"_tbl'] tbody tr td[id$='cmdCol'] input[id$='contInv']")
+										 	.each( function(){
+								               var valore = jQuery(this).val();
+								   
+								               if(valore == "false"){
+								                 jQuery(this).parent().parent().parent().addClass("inviata");
+								               }
+					 					 });
+									 };
+								</script>
+
+								<h:inputHidden id="contInv" value="#{item.nonInviata}" />
+								<a4j:commandLink id="editlinkContabilizzazione"
+									rendered="#{item.editabile and contabilizzazioneMBean.abilitaOperazioni}"
+									reRender="editPanelContabilizzazioni"
+									oncomplete="#{rich:component('editPanelContabilizzazioni')}.show()">
+									<h:graphicImage value="/images/icons/silk/pencil.png"
+										width="16" height="16"
+										title="#{msg['contabilizzazione.modificaImporto']}" />
+									<f:setPropertyActionListener value="#{item}"
+										target="#{contabilizzazioneMBean.selectedElement}" />
+									<f:setPropertyActionListener value="edit"
+										target="#{contabilizzazioneMBean.contabilizzazioneAction}" />
+								</a4j:commandLink>
+
+								<rich:spacer width="6" />
+
+								<a4j:commandLink id="cancellalinkContabilizzazione"
+									reRender="tabellaContabilizzazioni"
+									rendered="#{item.editabile and contabilizzazioneMBean.abilitaOperazioni}"
+									action="#{contabilizzazioneMBean.delete}">
+									<h:graphicImage value="/images/icons/silk/cross.png" width="16"
+										height="16"
+										title="#{msg['contabilizzazione.cancellaImporto']}" />
+									<f:setPropertyActionListener value="#{item}"
+										target="#{contabilizzazioneMBean.selectedElement}" />
+									<f:setPropertyActionListener value="delete"
+										target="#{contabilizzazioneMBean.contabilizzazioneAction}" />
+								</a4j:commandLink>
+							</h:panelGroup>
+						</rich:column>
+
+						<!-- Colonne nome,descrizione,compressione,formato-->
+						<!-- Aggiungi Importo -  Elimina Selezionati - Annulla Modifiche -  Invia Op. Con. - Invia Rich. Riallineam.	 -->
+						<op2web:tableColumns
+							nomiColonne="#{'descrizione,importoMovimento,statoDebito,causale,sistemaRichiedente,utenteRichiedente'}" />
+
+						<ui:define name="buttons">
+							<a4j:commandLink id="aggiungiImporto-iconLink"
+								styleClass="icon-add buttonNoRed"
+								disabled="#{!contabilizzazioneMBean.abilitaOperazioni}"
+								reRender="editPanelContabilizzazioni"
+								actionListener="#{contabilizzazioneMBean.addNewListener}"
+								oncomplete="#{rich:component('editPanelContabilizzazioni')}.show()">
+								<h:outputText
+									value="#{msg['contabilizzazione.aggiungiImporto']}" />
+							</a4j:commandLink>
+
+							<!-- Annulla Modifiche-->
+							<a4j:commandLink id="annullaModificheCont-iconLink"
+								disabled="#{!contabilizzazioneMBean.abilitaOperazioni}"
+								action="#{contabilizzazioneMBean.annullaModifiche}"
+								reRender="tabellaContabilizzazioni"
+								styleClass="icon-fatturapa-db-ko buttonNoRed" ajaxSingle="true">
+								<h:outputText
+									value="#{msg['contabilizzazione.annullaModifiche']}" />
+							</a4j:commandLink>
+
+							<!--  invia operazione contabile -->
+							<a4j:commandLink id="inviaOperazioneContabile-iconLink"
+								disabled="#{!contabilizzazioneMBean.abilitaOperazioni}"
+								styleClass="icon-fatturapa-up-grey buttonNoRed"
+								onclick="#{rich:component('invioOperazioneContabile_Confirmation')}.show(); return false;">
+								<h:outputText
+									value="#{msg['contabilizzazione.inviaOperazioneContabile']}" />
+							</a4j:commandLink>
+
+
+						</ui:define>
+					</op2web:dataTable>
+				</h:form>
+			</a4j:outputPanel>
+		</op2web:fieldset>
+
+		<!-- Scadenze -->
+		<op2web:fieldset legend="#{msg['scadenza.sezioneScadenze']}"
+			collapsible="false" closed="false" rendered="#{true}">
+			<c:set var="metadataScadenza" value="#{scadenzaMBean.metadata}" />
+
+			<a4j:outputPanel id="panelStatoScadenze" ajaxRendered="false"
+				layout="block">
+				<h:form>
+					<h:panelGrid id="panelGroupOut_#{scadenzaMBean.fieldsScadenze.id}"
+						styleClass="#{scadenzaMBean.fieldsScadenze.styleClass}"
+						columnClasses="#{scadenzaMBean.fieldsScadenze.columnClasses}"
+						rendered="#{scadenzaMBean.fieldsScadenze.rendered}" columns="3">
+
+						<op2web:output field="#{scadenzaMBean.esitoScadenze}"
+							insideGroup="#{true}" />
+						<a4j:htmlCommandLink id="visualizzaErroreScadenze"
+							action="dettaglioErrore" ajaxSingle="true"
+							rendered="#{scadenzaMBean.visualizzaLinkErroreScadenze}">
+							<f:setPropertyActionListener
+								value="#{scadenzaMBean.esitoScadenza}"
+								target="#{esitoMBean.selectedElement}" />
+							<f:setPropertyActionListener value="dettaglioFattura"
+								target="#{esitoMBean.paginaFrom}" />
+							<f:setPropertyActionListener value="#{scadenzaMBean.fattura}"
+								target="#{esitoMBean.fattura}" />
+							<h:outputText value="#{scadenzaMBean.linkErroreScadenze.label}" />
+						</a4j:htmlCommandLink>
+
+					</h:panelGrid>
+					<h:panelGrid
+						id="panelGroupOut_#{scadenzaMBean.fieldsScadenze.id}_2"
+						styleClass="#{scadenzaMBean.fieldsScadenze.styleClass}"
+						columnClasses="#{scadenzaMBean.fieldsScadenze.columnClasses}"
+						rendered="#{scadenzaMBean.pianoScadenze.rendered}" columns="5">
+
+						<op2web:output field="#{scadenzaMBean.pianoScadenze}"
+							insideGroup="#{true}" />
+						<op2web:output field="#{scadenzaMBean.dataPianoScadenze}"
+							insideGroup="#{true}" />
+						<h:graphicImage value="/images/s.gif" width="1" height="1"
+							alt="spacer" />
+					</h:panelGrid>
+
+				</h:form>
+			</a4j:outputPanel>
+
+			<rich:spacer height="20" />
+
+			<c:set var="itemMetadata" value="#{scadenzaMBean.metadata}" />
+			<a4j:outputPanel id="tabellaScadenze" ajaxRendered="false"
+				layout="block">
+				<h:form>
+					<op2web:dataTable value="#{scadenzaDM}" id="tabellaScadenze_dt"
+						enableDelete="false" isList="#{true}"
+						headerText="#{scadenzaMBean.table.headerText}"
+						showSelectAll="false" mBean="#{scadenzaMBean}"
+						selectionMapTarget="#{scadenzaMBean.selectedIds[item]}"
+						rowsToDisplay="#{scadenzaMBean.search.pageSize}">
+						<f:facet name="noData">
+							<h:outputText
+								value="#{msg['scadenzalabel.ricercaOperazioni.tabellaRisultati.noData']}" />
+						</f:facet>
+
+						<rich:column align="center" width="50px">
+							<h:panelGroup style="width:50px;" layout="block">
+								<a4j:commandLink id="editlinkScadenza"
+									reRender="editPanelScadenze"
+									rendered="#{item.editabile and scadenzaMBean.abilitaOperazioni}"
+									oncomplete="#{rich:component('editPanelScadenze')}.show()">
+									<h:graphicImage value="/images/icons/silk/pencil.png"
+										width="16" height="16"
+										title="#{msg['scadenza.modificaScadenza']}" />
+									<f:setPropertyActionListener value="#{item}"
+										target="#{scadenzaMBean.selectedElement}" />
+									<f:setPropertyActionListener value="edit"
+										target="#{scadenzaMBean.scadenzaAction}" />
+								</a4j:commandLink>
+
+								<rich:spacer width="6" />
+
+								<a4j:commandLink id="cancellalinkScadenza"
+									reRender="tabellaScadenze"
+									rendered="#{item.editabile and scadenzaMBean.abilitaOperazioni}"
+									action="#{scadenzaMBean.delete}">
+									<h:graphicImage value="/images/icons/silk/cross.png" width="16"
+										height="16" title="#{msg['scadenza.cancellaScadenza']}" />
+									<f:setPropertyActionListener value="#{item}"
+										target="#{scadenzaMBean.selectedElement}" />
+									<f:setPropertyActionListener value="delete"
+										target="#{scadenzaMBean.scadenzaAction}" />
+								</a4j:commandLink>
+							</h:panelGroup>
+						</rich:column>
+
+						<!-- Data Ricezione, Nome File, Descrizione, Note -->
+						<!-- Aggiungi scadenza - Elimina Selezionati - Annulla Modifiche - Invia Scadenze - Invia Cancellaz. scadenze -->
+						<op2web:tableColumns nomiColonne="#{'dataScadenza,importo'}" />
+
+						<ui:define name="buttons">
+
+							<a4j:commandLink id="aggiungiScadenza-iconLink"
+								styleClass="icon-add buttonNoRed"
+								disabled="#{!scadenzaMBean.abilitaOperazioni}"
+								reRender="editPanelScadenze"
+								actionListener="#{scadenzaMBean.addNewListener}"
+								oncomplete="#{rich:component('editPanelScadenze')}.show()">
+								<h:outputText value="#{msg['scadenza.aggiungiScadenza']}" />
+							</a4j:commandLink>
+
+							<!-- Annulla Modifiche-->
+							<a4j:commandLink id="annullaModifiche-iconLink"
+								disabled="#{!scadenzaMBean.abilitaOperazioni}"
+								action="#{scadenzaMBean.annullaModificheScadenze}"
+								reRender="tabellaScadenze" ajaxSingle="true"
+								styleClass="icon-fatturapa-db-ko buttonNoRed">
+								<h:outputText value="#{msg['scadenza.annullaModifiche']}" />
+							</a4j:commandLink>
+
+							<!-- invia scadenze -->
+							<a4j:commandLink id="aggScadenze-iconLink"
+								disabled="#{!scadenzaMBean.abilitaOperazioni}"
+								onclick="#{rich:component('invioRichiestaScadenze_Confirmation')}.show(); return false;"
+								styleClass="icon-fatturapa-up-grey buttonNoRed">
+								<h:outputText
+									value="#{msg['scadenza.inviaAggiornamentoScadenze']}" />
+							</a4j:commandLink>
+
+							<!--Invia Cancella scadenze-->
+							<a4j:commandLink id="cancellaScadenze-iconLink"
+								disabled="#{!scadenzaMBean.abilitaOperazioni}"
+								onclick="#{rich:component('invioCancellazioneScadenze_Confirmation')}.show(); return false;"
+								styleClass="icon-delete buttonNoRed">
+								<h:outputText value="#{msg['scadenza.cancellaScadenze']}" />
+							</a4j:commandLink>
+
+
+						</ui:define>
+					</op2web:dataTable>
+				</h:form>
+			</a4j:outputPanel>
+		</op2web:fieldset>
+
+		<!-- Pagamento -->
+		<op2web:fieldset legend="#{msg['pagamentoPcc.sezionePagamenti']}"
+			collapsible="false" closed="false" rendered="#{true}">
+			<c:set var="metadataPagamento" value="#{pagamentoMBean.metadata}" />
+
+			<op2web:pagedListView id="tabellaPagamenti" showSelectAll="false"
+				enableDelete="false" mBean="#{pagamentoMBean}"
+				value="#{pagamentoDM}" rendered="true"
+				itemMetadata="#{metadataPagamento}">
+
+				<!--colonne -->
+				<op2web:tableColumns
+					nomiColonne="#{'numeroMandato,dataMandato,importoPagato,naturaSpesa,capitoliSpesa,estremiImpegno,idFiscaleIvaBeneficiario,codiceCig,codiceCup'}" />
+			</op2web:pagedListView>
+		</op2web:fieldset>
+
+	</h:panelGrid>
+
+	<rich:modalPanel id="editPanelContabilizzazioni" autosized="true"
+		width="550" height="250" style="overflow:auto;"
+		showWhenRendered="false">
+		<f:facet name="header">
+			<h:outputText
+				value="#{contabilizzazioneMBean.contabilizzazioneAction != 'add' ? msg['contabilizzazione.modificaImporto'] : msg['contabilizzazione.aggiungiImporto']}" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup id="panelChiudiEditContabilizzazioni">
+				<a href="#"
+					onclick="Richfaces.hideModalPanel('editPanelContabilizzazioni');">Chiudi</a>
+			</h:panelGroup>
+		</f:facet>
+		<a4j:outputPanel id="outPanelContabilizzazioniError11"
+			ajaxRendered="true">
+			<h:panelGroup id="panelGroupContabilizzazioniError11" layout="block"
+				styleClass="#{facesContext.maximumSeverity.ordinal>=2 ? 'errors' : 'info'}"
+				rendered="#{not empty facesContext.maximumSeverity}">
+				<h:panelGroup id="panelGroupContabilizzazioniError12"
+					rendered="#{facesContext.maximumSeverity.ordinal>=2}">
+					<p>
+						<em> <h:outputText id="outContabilizzazioniError11"
+								value="Si sono verificati degli errori:" />
+						</em>
+					</p>
+				</h:panelGroup>
+				<rich:spacer id="spacerContabilizzazioniError1" height="7px" />
+				<rich:messages id="msgContabilizzazioniError1">
+					<f:facet name="errorMarker">
+						<h:graphicImage value="/images/msgerror.png"
+							id="imgContabilizzazioniError11" />
+					</f:facet>
+					<f:facet name="infoMarker">
+						<h:graphicImage value="/images/msginfo.png"
+							id="imgContabilizzazioniInfo11" />
+					</f:facet>
+					<f:facet name="warnMarker">
+						<h:graphicImage value="/images/msgwarn.png"
+							id="imgContabilizzazioniWarn11" />
+					</f:facet>
+				</rich:messages>
+			</h:panelGroup>
+		</a4j:outputPanel>
+		<p class="legend">
+			<strong>Note:</strong> (<em>*</em>) Campi obbligatori
+		</p>
+		<!-- Form Aggiungi contabilizzazione  -->
+		<op2web:form formBean="#{contabilizzazioneMBean.form}" rendered="true">
+			<op2web:fieldset
+				legend="#{contabilizzazioneMBean.contabilizzazioneAction != 'add' ? msg['contabilizzazione.modificaImporto'] : msg['contabilizzazione.aggiungiImporto']}"
+				collapsible="false" closed="false">
+
+				<op2web:formFields
+					nomiFields="#{'cont_importo,descrizione,stato,causale'}" />
+
+			</op2web:fieldset>
+			<ui:define name="buttons">
+				<!-- Invia Notifica -->
+				<a4j:commandButton id="inviaContabilizzazione"
+					value="#{contabilizzazioneMBean.contabilizzazioneAction != 'add' ? msg['contabilizzazione.salvaImportoButton'] : msg['contabilizzazione.aggiungiImportoButton']}"
+					styleClass="icon-save" reRender="tabellaContabilizzazioni"
+					status="mainStatus" action="#{contabilizzazioneMBean.invia}"
+					oncomplete="if (#{contabilizzazioneMBean.checkContabilizzazione == 'true'}) #{rich:component('editPanelContabilizzazioni')}.hide();"
+					rendered="true">
+
+				</a4j:commandButton>
+			</ui:define>
+
+		</op2web:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="editPanelScadenze" autosized="true" width="550"
+		height="250" style="overflow:auto;" showWhenRendered="false">
+		<f:facet name="header">
+			<h:outputText
+				value="#{scadenzaMBean.scadenzaAction != 'add' ? msg['scadenza.modificaScadenza'] : msg['scadenza.aggiungiScadenza']}" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup id="panelChiudiEditScadenze">
+				<a href="#" onclick="Richfaces.hideModalPanel('editPanelScadenze');">Chiudi</a>
+			</h:panelGroup>
+		</f:facet>
+		<a4j:outputPanel id="outPanelScadenzeError11" ajaxRendered="true">
+			<h:panelGroup id="panelGroupScadenzeError11" layout="block"
+				styleClass="#{facesContext.maximumSeverity.ordinal>=2 ? 'errors' : 'info'}"
+				rendered="#{not empty facesContext.maximumSeverity}">
+				<h:panelGroup id="panelGroupScadenzeError12"
+					rendered="#{facesContext.maximumSeverity.ordinal>=2}">
+					<p>
+						<em> <h:outputText id="outScadenzeError11"
+								value="Si sono verificati degli errori:" />
+						</em>
+					</p>
+				</h:panelGroup>
+				<rich:spacer id="spacerScadenzeError1" height="7px" />
+				<rich:messages id="msgScadenzeError1">
+					<f:facet name="errorMarker">
+						<h:graphicImage value="/images/msgerror.png"
+							id="imgScadenzeError11" />
+					</f:facet>
+					<f:facet name="infoMarker">
+						<h:graphicImage value="/images/msginfo.png" id="imgScadenzeInfo11" />
+					</f:facet>
+					<f:facet name="warnMarker">
+						<h:graphicImage value="/images/msgwarn.png" id="imgScadenzeWarn11" />
+					</f:facet>
+				</rich:messages>
+			</h:panelGroup>
+		</a4j:outputPanel>
+		<p class="legend">
+			<strong>Note:</strong> (<em>*</em>) Campi obbligatori
+		</p>
+		<!-- Form Aggiungi scadenza  -->
+		<op2web:form formBean="#{scadenzaMBean.form}" rendered="true">
+			<op2web:fieldset
+				legend="#{scadenzaMBean.scadenzaAction != 'add' ? msg['scadenza.modificaScadenza'] : msg['scadenza.aggiungiScadenza']}"
+				collapsible="false" closed="false">
+
+				<op2web:formFields nomiFields="#{'importo,data'}" />
+
+			</op2web:fieldset>
+			<ui:define name="buttons">
+				<!-- Invia Notifica -->
+				<a4j:commandButton id="inviaScadenza"
+					value="#{scadenzaMBean.scadenzaAction != 'add' ? msg['scadenza.salvaScadenzaButton'] : msg['scadenza.aggiungiScadenzaButton']}"
+					styleClass="icon-save" reRender="tabellaScadenze"
+					status="mainStatus" action="#{scadenzaMBean.invia}"
+					oncomplete="if (#{scadenzaMBean.checkScadenza == true}) #{rich:component('editPanelScadenze')}.hide();"
+					rendered="true">
+
+				</a4j:commandButton>
+			</ui:define>
+
+		</op2web:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="invioOperazioneContabile_Confirmation" width="300"
+		height="150">
+		<f:facet name="header">
+			<h:outputText
+				value="#{msg['contabilizzazione.form.operazioneContabile.conferma.title']}" />
+		</f:facet>
+		<h:panelGrid style="width:100%;">
+			<h:panelGrid columns="3" style="text-align: center;">
+				<h:graphicImage value="/images/001_11.png"
+					alt="#{msg['contabilizzazione.form.operazioneContabile.conferma.label']}" />
+				<rich:spacer width="10px" />
+				<h:outputText
+					value="#{msg['contabilizzazione.form.operazioneContabile.conferma.label']}"
+					style="font-weight: bold;" />
+			</h:panelGrid>
+			<h:panelGroup>
+				<rich:spacer height="20px" />
+				<h:form>
+					<div class="buttonrow" style="text-align: center;">
+						<a4j:htmlCommandLink
+							id="invioOperazioneContabile_confermaBtn-iconLink"
+							styleClass="icon-ok buttonNoRed"
+							action="#{contabilizzazioneMBean.inviaOperazioneContabile}"
+							reRender="panelStatoContabilizzazioni,tabellaContabilizzazioni,tabellaOperazioni"
+							onclick="disableLink('invioOperazioneContabile_confermaBtn-iconLink')"
+							onComplete="Richfaces.hideModalPanel('invioOperazioneContabile_Confirmation'); enableLink('invioOperazioneContabile_confermaBtn-iconLink');  return false;">
+							<h:outputText
+								value="#{msg['contabilizzazione.form.operazioneContabile.conferma.ok']}" />
+							<f:setPropertyActionListener value="tabPCC"
+								target="#{fatturaElettronicaMBean.selectedTab}" />
+						</a4j:htmlCommandLink>
+						<input id="invioOperazioneContabile_annullaBtn" type="button"
+							value="#{msg['contabilizzazione.form.operazioneContabile.conferma.ko']}"
+							class="negative icon-delete"
+							onclick="Richfaces.hideModalPanel('invioOperazioneContabile_Confirmation');return false" />
+					</div>
+				</h:form>
+			</h:panelGroup>
+		</h:panelGrid>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="invioRichiestaRiallineamento_Confirmation"
+		width="300" height="150">
+		<f:facet name="header">
+			<h:outputText
+				value="#{msg['contabilizzazione.form.operazioneRichiestaRiallineamento.conferma.title']}" />
+		</f:facet>
+		<h:panelGrid style="width:100%;">
+			<h:panelGrid columns="3" style="text-align: center;">
+				<h:graphicImage value="/images/001_11.png"
+					alt="#{msg['contabilizzazione.form.operazioneRichiestaRiallineamento.conferma.label']}" />
+				<rich:spacer width="10px" />
+				<h:outputText
+					value="#{msg['contabilizzazione.form.operazioneRichiestaRiallineamento.conferma.label']}"
+					style="font-weight: bold;" />
+			</h:panelGrid>
+			<h:panelGroup>
+				<rich:spacer height="20px" />
+				<h:form>
+					<div class="buttonrow" style="text-align: center;">
+						<a4j:htmlCommandLink
+							id="invioRichiestaRiallineamento_confermaBtn-iconLink"
+							styleClass="icon-ok buttonNoRed"
+							action="#{contabilizzazioneMBean.inviaRichiestaRiallineamento}"
+							reRender="panelStatoContabilizzazioni,tabellaContabilizzazioni,tabellaOperazioni,tabellaPagamenti"
+							onclick="disableLink('invioRichiestaRiallineamento_confermaBtn-iconLink')"
+							onComplete="Richfaces.hideModalPanel('invioRichiestaRiallineamento_Confirmation'); enableLink('invioRichiestaRiallineamento_confermaBtn-iconLink');  return false;">
+							<h:outputText
+								value="#{msg['contabilizzazione.form.operazioneRichiestaRiallineamento.conferma.ok']}" />
+							<f:setPropertyActionListener value="tabPCC"
+								target="#{fatturaElettronicaMBean.selectedTab}" />
+						</a4j:htmlCommandLink>
+						<input id="invioRichiestaRiallineamento_annullaBtn" type="button"
+							value="#{msg['contabilizzazione.form.operazioneRichiestaRiallineamento.conferma.ko']}"
+							class="negative icon-delete"
+							onclick="Richfaces.hideModalPanel('invioRichiestaRiallineamento_Confirmation');return false" />
+					</div>
+				</h:form>
+			</h:panelGroup>
+		</h:panelGrid>
+	</rich:modalPanel>
+
+	<rich:modalPanel
+		id="invioRichiestaRiallineamentoAsincrona_Confirmation" width="300"
+		height="150">
+		<f:facet name="header">
+			<h:outputText
+				value="#{msg['contabilizzazione.form.operazioneRichiestaRiallineamentoAsincrona.conferma.title']}" />
+		</f:facet>
+		<h:panelGrid style="width:100%;">
+			<h:panelGrid columns="3" style="text-align: center;">
+				<h:graphicImage value="/images/001_11.png"
+					alt="#{msg['contabilizzazione.form.operazioneRichiestaRiallineamentoAsincrona.conferma.label']}" />
+				<rich:spacer width="10px" />
+				<h:outputText
+					value="#{msg['contabilizzazione.form.operazioneRichiestaRiallineamentoAsincrona.conferma.label']}"
+					style="font-weight: bold;" />
+			</h:panelGrid>
+			<h:panelGroup>
+				<rich:spacer height="20px" />
+				<h:form>
+					<div class="buttonrow" style="text-align: center;">
+						<a4j:htmlCommandLink
+							id="invioRichiestaRiallineamentoAsincrona_confermaBtn-iconLink"
+							styleClass="icon-ok buttonNoRed"
+							action="#{contabilizzazioneMBean.inviaRichiestaRiallineamentoAsincrono}"
+							reRender="panelStatoContabilizzazioni,tabellaContabilizzazioni,tabellaOperazioni,panelStatoScadenze,tabellaScadenze,tabellaPagamenti"
+							onclick="disableLink('invioRichiestaRiallineamentoAsincrona_confermaBtn-iconLink')"
+							onComplete="Richfaces.hideModalPanel('invioRichiestaRiallineamentoAsincrona_Confirmation'); enableLink('invioRichiestaRiallineamentoAsincrona_confermaBtn-iconLink');  return false;">
+							<h:outputText
+								value="#{msg['contabilizzazione.form.operazioneRichiestaRiallineamentoAsincrona.conferma.ok']}" />
+							<f:setPropertyActionListener value="tabPCC"
+								target="#{fatturaElettronicaMBean.selectedTab}" />
+						</a4j:htmlCommandLink>
+						<input id="invioRichiestaRiallineamentoAsincrona_annullaBtn"
+							type="button"
+							value="#{msg['contabilizzazione.form.operazioneRichiestaRiallineamentoAsincrona.conferma.ko']}"
+							class="negative icon-delete"
+							onclick="Richfaces.hideModalPanel('invioRichiestaRiallineamentoAsincrona_Confirmation');return false" />
+					</div>
+				</h:form>
+			</h:panelGroup>
+		</h:panelGrid>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="invioRichiestaScadenze_Confirmation" width="300"
+		height="150">
+		<f:facet name="header">
+			<h:outputText
+				value="#{msg['scadenza.form.operazioneInviaScadenze.conferma.title']}" />
+		</f:facet>
+		<h:panelGrid style="width:100%;">
+			<h:panelGrid columns="3" style="text-align: center;">
+				<h:graphicImage value="/images/001_11.png"
+					alt="#{msg['scadenza.form.operazioneInviaScadenze.conferma.label']}" />
+				<rich:spacer width="10px" />
+				<h:outputText
+					value="#{msg['scadenza.form.operazioneInviaScadenze.conferma.label']}"
+					style="font-weight: bold;" />
+			</h:panelGrid>
+			<h:panelGroup>
+				<rich:spacer height="20px" />
+				<h:form>
+					<div class="buttonrow" style="text-align: center;">
+						<a4j:htmlCommandLink
+							id="invioRichiestaScadenze_confermaBtn-iconLink"
+							styleClass="icon-ok buttonNoRed"
+							action="#{scadenzaMBean.inviaAggiornamentoScadenze}"
+							reRender="panelStatoScadenze,tabellaScadenze,tabellaOperazioni"
+							onclick="disableLink('invioRichiestaScadenze_confermaBtn-iconLink')"
+							onComplete="Richfaces.hideModalPanel('invioRichiestaScadenze_Confirmation'); enableLink('invioRichiestaScadenze_confermaBtn-iconLink');  return false;">
+							<h:outputText
+								value="#{msg['scadenza.form.operazioneInviaScadenze.conferma.ok']}" />
+							<f:setPropertyActionListener value="tabPCC"
+								target="#{fatturaElettronicaMBean.selectedTab}" />
+						</a4j:htmlCommandLink>
+						<input id="invioRichiestaScadenze_annullaBtn" type="button"
+							value="#{msg['scadenza.form.operazioneInviaScadenze.conferma.ko']}"
+							class="negative icon-delete"
+							onclick="Richfaces.hideModalPanel('invioRichiestaScadenze_Confirmation');return false" />
+					</div>
+				</h:form>
+			</h:panelGroup>
+		</h:panelGrid>
+	</rich:modalPanel>
+	
+	<rich:modalPanel id="invioCancellazioneScadenze_Confirmation"
+		width="300" height="150">
+		<f:facet name="header">
+			<h:outputText
+				value="#{msg['scadenza.form.operazioneCancellazioneScadenze.conferma.title']}" />
+		</f:facet>
+		<h:panelGrid style="width:100%;">
+			<h:panelGrid columns="3" style="text-align: center;">
+				<h:graphicImage value="/images/001_11.png"
+					alt="#{msg['scadenza.form.operazioneCancellazioneScadenze.conferma.label']}" />
+				<rich:spacer width="10px" />
+				<h:outputText
+					value="#{msg['scadenza.form.operazioneCancellazioneScadenze.conferma.label']}"
+					style="font-weight: bold;" />
+			</h:panelGrid>
+			<h:panelGroup>
+				<rich:spacer height="20px" />
+				<h:form>
+					<div class="buttonrow" style="text-align: center;">
+					<a4j:htmlCommandLink
+							id="invioCancellazioneScadenze_confermaBtn-iconLink"
+							styleClass="icon-ok buttonNoRed"
+							action="#{scadenzaMBean.cancellaScadenze}"
+							reRender="panelStatoScadenze,tabellaScadenze,tabellaOperazioni"
+							onclick="disableLink('invioCancellazioneScadenze_confermaBtn-iconLink')"
+							onComplete="Richfaces.hideModalPanel('invioCancellazioneScadenze_Confirmation'); enableLink('invioCancellazioneScadenze_confermaBtn-iconLink'); return false;">
+							<h:outputText
+								value="#{msg['scadenza.form.operazioneCancellazioneScadenze.conferma.ok']}" />
+							<f:setPropertyActionListener value="tabPCC"
+								target="#{fatturaElettronicaMBean.selectedTab}" />
+						</a4j:htmlCommandLink>
+						<input id="invioCancellazioneScadenze_annullaBtn" type="button"
+							value="#{msg['scadenza.form.operazioneCancellazioneScadenze.conferma.ko']}"
+							class="negative icon-delete"
+							onclick="Richfaces.hideModalPanel('invioCancellazioneScadenze_Confirmation');return false" />
+					</div>
+				</h:form>
+			</h:panelGroup>
+		</h:panelGrid>
+	</rich:modalPanel>
+
+</ui:composition>

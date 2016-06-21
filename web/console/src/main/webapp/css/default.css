@@ -1,0 +1,190 @@
+/**
+	diagnostici severita
+ */
+.diag_error{
+	color: Red;
+}
+.diag_info{
+	color: #17B517;
+}
+.diag_fatal{
+	color: Red;
+	font-weight: bold;
+	font-style: normal;
+}
+.diag_debug{
+	
+}
+/**
+	Esito dettaglio messaggio
+ */
+ .esito_ok{
+ 	color: #17B517;
+ }
+ .esito_ko{
+ 	color: Red;
+ }
+
+/*Link con icona*/
+ a[id$='iconLink']{
+	display:inline-block;
+	padding-left:20px;
+	padding-right: 5px;
+	line-height:18px;
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-position: center left;
+}
+
+ label[id$='iconLabel']{
+	display:inline-block;
+	padding-left:20px;
+	line-height:18px;
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-position: center left;
+}
+
+a.iconLinkie{
+	display:inline-block;
+	padding-left:20px;
+	padding-right: 5px;
+	line-height:18px;
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-position: center left;
+}
+
+.align-top{
+    vertical-align: top;
+}
+.info{
+    overflow: auto;
+}
+
+.link-plain, .link-plain:visited{
+	text-decoration: none;
+	color: transparent;
+	background: transparent url('../images/s.gif') no-repeat left;
+}
+.link-plain img, .link-plain:visited img{
+	border: none;
+}
+
+/*Table row*/
+.even {
+	background-color: #FCFFFE;
+}
+
+.odd {
+	background-color: #ECF3FE;
+}
+.active{
+	background-color: #FFEBDA;
+}
+
+.inviata {
+	background-color: #bfcfbf;
+}
+/*End Table row*/
+
+.fieldError{
+	background: transparent none repeat-x scroll center bottom;
+	background-image:url(../images/invalid_line.gif);
+}
+
+.noborder {
+	border: none !important;
+}
+
+.rich-page-footer{
+	padding: 5px 0px !important;
+}
+
+/* LABEL Outputfield*/
+.outputFieldLabel {
+	font-weight: bold;
+}
+
+.labelAllineataDx {
+	text-align: right;
+	padding: 0px 10px;
+}
+
+.labelAllineataSx {
+	padding: 0px 10px;
+}
+
+.valueAllineataSx {
+    padding: 0 10px 0 2px;
+}
+
+.datiTrasmissioneTable{
+	border-spacing: 3px;
+}
+
+
+
+
+/* LABEL SELEZIONE TABELLA*/
+.selectionInfoCtr{
+	margin-bottom: 5px;
+}
+.selectionInfoItems{
+	text-align: center;
+}
+.selectionInfoItem{
+ 	margin-right: 5px;
+}	
+
+
+/* Elementi del layout che violano**/
+#navbar {
+	width: 100%;
+}
+
+#body {
+	width: 100% !important;
+}
+
+.rich-page-header {
+border-bottom: none;
+
+}
+
+.rich-page-content {
+border: none;
+} 
+
+.rich-page-main {
+	border-top: 0px;
+}
+
+#menuct_body{
+	padding-left: 0px;
+}
+
+.whiteSpace {
+	white-space: pre;
+}
+
+.whiteSpaceNewLine {
+	white-space: pre-line !important;
+}
+
+
+/* Tabella notifiche EC*/
+
+.ec_sc{
+	width: 100%;
+}
+
+.ec_col_sx {}
+.ec_col_dx {
+	padding-left: 40px;
+}
+
+.linkClicked {
+       pointer-events: none;
+       cursor: default;
+} 

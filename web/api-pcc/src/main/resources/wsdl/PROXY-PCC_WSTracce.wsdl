@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:wsp1_2="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:tns="http://www.govmix.org/pcc/getTracce" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.govmix.org/pcc/getTracce" name="WSTracce">
+	<wsdl:types>
+		<xs:schema>
+			<xs:import namespace="http://www.govmix.org/pcc/getTracce" schemaLocation="../xsd/GetTracce.xsd"/>
+		</xs:schema>
+	</wsdl:types>
+	<wsdl:message name="recuperaTracceRichiesta">
+		<wsdl:part name="recuperaTracceRichiestaTipo" element="tns:recuperaTracceRichiestaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="recuperaTracceRisposta">
+		<wsdl:part name="recuperaTracceRisposta" element="tns:recuperaTracceRispostaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="recuperaDettaglioTracciaRichiesta">
+		<wsdl:part name="recuperaTracceRichiestaTipo" element="tns:recuperaDettaglioTracciaRichiestaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="recuperaDettaglioTracciaRisposta">
+		<wsdl:part name="recuperaTracceRisposta" element="tns:recuperaDettaglioTracciaRispostaTipo"/>
+	</wsdl:message>
+	<wsdl:portType name="wsTracce">
+		<wsdl:operation name="recuperaTracce">
+			<wsdl:input message="tns:recuperaTracceRichiesta" wsam:Action="http://www.govmix.org/pcc/fatture/wsTracce/recuperaTracceRichiesta"/>
+			<wsdl:output message="tns:recuperaTracceRisposta" wsam:Action="http://www.govmix.org/pcc/fatture/wsTracce/recuperaTracceRisposta"/>
+		</wsdl:operation>
+		<wsdl:operation name="recuperaDettaglioTraccia">
+			<wsdl:input message="tns:recuperaDettaglioTracciaRichiesta" wsam:Action="http://www.govmix.org/pcc/fatture/wsTracce/recuperaDettaglioTracciaRichiesta"/>
+			<wsdl:output message="tns:recuperaDettaglioTracciaRisposta" wsam:Action="http://www.govmix.org/pcc/fatture/wsTracce/recuperaDettaglioTracciaRisposta"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="WsTracceSOAP11PortBinding" type="tns:wsTracce">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsp:PolicyReference URI="#WsTracceSOAP11PortBinding_MTOM_Policy"/>
+		<wsdl:operation name="recuperaTracce">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="recuperaDettaglioTraccia">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="WsTracce">
+		<wsdl:port name="WsTracceSOAP11Port" binding="tns:WsTracceSOAP11PortBinding">
+			<soap:address location="http://localhost:8080/WsTracce/WsTracce"/>
+		</wsdl:port>
+	</wsdl:service>
+	<wsp:Policy wsu:Id="WsTracceSOAP11PortBinding_MTOM_Policy">
+		<ns1:OptimizedMimeSerialization xmlns:ns1="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization" wsp:Optional="true"/>
+	</wsp:Policy>
+</wsdl:definitions>

@@ -18,6 +18,7 @@
 	<import file="./ant/ds-build.xml" />
 	<import file="./ant/sql-build.xml" />
 	<import file="./ant/api-as-build.xml" />
+	<import file="./ant/timers-as-build.xml" />
 	<import file="./ant/console-as-build.xml" />
 	<import file="./ant/distrib-build.xml" />
 	
@@ -30,6 +31,10 @@
 
 	<property name="console" value="../console" />
 	<property name="api" value="../api" />
+	<property name="timers" value="../timers" />
+	<property name="timers.deploy" value="${timers}/deploy" />
+	<property name="timers.templates" value="${timers.deploy}/templates" />
+	<property name="timers.deploy.META-INF" location="${timers.deploy}/META-INF" />
 	<property name="commons" value="../commons" />
 	<property name="api.templates" value="${api}/deploy/templates" />
 	<property name="sql_dir" location="../sql" />
@@ -40,7 +45,7 @@
 	<property name="commons.required_lib" location="${commons}/required_lib" />
 	<property name="commons.xsl" location="${commons}/xsl" />
 	<property name="api.deploy" location="${api}/deploy" />
-	<property name="api.deploy.META-INF" location="${api.deploy}/META-INF" />
+	
 	
 	<property name="dist" location="../../dist" />
 	<!-- Ripulisce la distribuzione -->
@@ -140,16 +145,28 @@
 			<param name="file" value="${tmp_archivi}/api/log4j.properties"/>
 		</antcall>
 		
-		<!-- Properties in log4j.properties -->
-		<copy file="${console.templates}/log4j.properties.template" tofile="${tmp_archivi}/console/log4j.properties"/>
+		<!-- Properties in web.api.properties -->
+		<copy file="${timers.templates}/batch.properties.template" tofile="${tmp_archivi}/batch.properties"/>
 		<antcall target="web_api_properties_settings">
-			<param name="file" value="${tmp_archivi}/console/log4j.properties"/>
+			<param name="file" value="${tmp_archivi}/batch.properties"/>
+		</antcall>
+		
+		<!-- Properties in log4j.properties -->
+		<copy file="${timers.templates}/log4j.properties.template" tofile="${tmp_archivi}/timers/log4j.properties"/>
+		<antcall target="web_api_properties_settings">
+			<param name="file" value="${tmp_archivi}/timers/log4j.properties"/>
 		</antcall>
 		
 		<!-- Properties in proxyFatturaPA.properties -->
 		<copy file="${api.templates}/proxyFatturaPA.properties.template" tofile="${tmp_archivi}/proxyFatturaPA.properties"/>
 		<antcall target="proxy_fatturapa_properties_settings">
 			<param name="file" value="${tmp_archivi}/proxyFatturaPA.properties"/>
+		</antcall>
+		
+		<!-- Properties in log4j.properties -->
+		<copy file="${console.templates}/fatturapa.log4j.properties.template" tofile="${tmp_archivi}/console/fatturapa.log4j.properties"/>
+		<antcall target="web_api_properties_settings">
+			<param name="file" value="${tmp_archivi}/console/fatturapa.log4j.properties"/>
 		</antcall>
 		
 		<!-- Properties in fatturaPAConsole.properties -->
@@ -228,7 +245,8 @@
 	<target name="setup_finished">
 		<delete dir="${dist}"/>
 		<antcall target="createInstallerWebConsoleFatturaPAWar" />
-		<antcall target="web_prepare_war" />
+		<antcall target="web_api_prepare_war" />
+		<antcall target="web_timers_prepare_war" />
 		<antcall target="make-distrib"/>		
 		<delete dir="${build}"/>
 	</target>

@@ -1,0 +1,15 @@
+insert into pcc_operazioni(nome, dipartimento, label) values ('DownloadDocumento', 0, 'pccOperazione.nome.DownloadDocumento');
+insert into pcc_operazioni(nome, dipartimento, label) values ('ElencoMovimentiErarioIva', 0, 'pccOperazione.nome.ElencoMovimentiErarioIVA');
+insert into pcc_operazioni(nome, dipartimento, label) values ('PagamentoIva', 0, 'pccOperazione.nome.PagamentoIVA');
+insert into pcc_operazioni(nome, dipartimento, label) values ('OperazioneContabile_CP', 1, 'pccOperazione.nome.OperazioneContabile_CP');
+insert into pcc_operazioni(nome, dipartimento, label) values ('OperazioneContabile_CO', 1, 'pccOperazione.nome.OperazioneContabile_CO');
+insert into pcc_operazioni(nome, dipartimento, label) values ('OperazioneContabile_CS', 1, 'pccOperazione.nome.OperazioneContabile_CS');
+insert into pcc_operazioni(nome, dipartimento, label) values ('OperazioneContabile_CCS', 1, 'pccOperazione.nome.OperazioneContabile_CCS');
+insert into pcc_operazioni(nome, dipartimento, label) values ('OperazioneContabile_SP', 1, 'pccOperazione.nome.OperazioneContabile_SP');
+insert into pcc_operazioni(nome, dipartimento, label) values ('OperazioneContabile_RF', 1, 'pccOperazione.nome.OperazioneContabile_RF');
+insert into pcc_operazioni(nome, dipartimento, label) values ('OperazioneContabile_RC', 1, 'pccOperazione.nome.OperazioneContabile_RC');
+insert into pcc_operazioni(nome, dipartimento, label) values ('OperazioneContabile_SC', 1, 'pccOperazione.nome.OperazioneContabile_SC');
+insert into pcc_operazioni(nome, dipartimento, label) values ('ConsultazioneTracce', 1, 'pccOperazione.nome.ConsultazioneTracce');
+insert into pcc_operazioni(nome, dipartimento, label) values ('StatoFattura', 1, 'pccOperazione.nome.StatoFattura');
+insert into pcc_operazioni(nome, dipartimento, label) values ('InserimentoFattura', 1, 'pccOperazione.nome.InserimentoFattura');
+insert into pcc_operazioni(nome, dipartimento, label) values ('DatiFattura', 1, 'pccOperazione.nome.DatiFattura');

@@ -92,6 +92,14 @@
     <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
     <load-on-startup>2</load-on-startup>
   </servlet>
+  <servlet>
+    <servlet-name>ServletSonda</servlet-name>
+    <servlet-class>org.govmix.proxy.fatturapa.web.api.utils.ServletSonda</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ServletSonda</servlet-name>
+    <url-pattern>/sonda</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>CXFServlet</servlet-name>
     <url-pattern>/*</url-pattern>

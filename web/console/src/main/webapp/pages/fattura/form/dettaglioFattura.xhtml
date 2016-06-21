@@ -1,0 +1,110 @@
+<!-- 
+  ProxyFatturaPA - Gestione del formato Fattura Elettronica 
+  http://www.gov4j.it/fatturapa
+  
+  Copyright (c) 2014-2016 Link.it srl (http://link.it). 
+  Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+ 
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+ 
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<ui:composition template="/templates/defaultTemplate.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:op2web="http://www.openspcoop2.org/web/taglib/jsf">
+	<f:loadBundle var="msg" basename="messages" />
+
+	<ui:define name="pageTitle">#{msg['fattura.dettaglio.pageTitle']}</ui:define>
+	<ui:define name="pageHeader">#{msg['fattura.dettaglio.pageTitle']}</ui:define>
+	<ui:define name="navbar">
+		<ul>
+			<li><h:outputText value="/#{msg['menu.group.operazioni']}" /></li>
+			<li><a4j:htmlCommandLink action="#{fatturaElettronicaMBean.restoreSearch}"
+					value="/#{msg['fattura.listaFatture.pageTitle']}">
+				</a4j:htmlCommandLink></li>
+			<li><h:outputText
+					value="/#{msg['fattura.dettaglio.pageTitle']} (#{fatturaElettronicaMBean.selectedElement.cedentePrestatore.value} #{fatturaElettronicaMBean.selectedElement.numero.value}/#{fatturaElettronicaMBean.selectedElement.anno.value})" /></li>
+		</ul>
+	</ui:define>
+	<ui:define name="body">
+
+		<a4j:keepAlive beanName="fatturaElettronicaMBean" ajaxOnly="true" />
+
+		<rich:panel id="panelContainer1" style="padding:0"
+			headerClass="outpanelHeader" styleClass="noborder">
+			<h:outputText id="outNoDettaglio"
+				value="#{msg['fattura.dettaglio.nodata']}"
+				rendered="#{empty fatturaElettronicaMBean.selectedElement}" />
+
+			<rich:panel id="panelDettaglio1" bodyClass="inpanelBody"
+				rendered="#{not empty fatturaElettronicaMBean.selectedElement}">
+				<f:facet name="header">
+					<h:outputText id="outHeaderFattura1"
+						value="#{msg['fattura.dettaglio.pageTitle']} (#{fatturaElettronicaMBean.selectedElement.cedentePrestatore.value} #{fatturaElettronicaMBean.selectedElement.numero.value}/#{fatturaElettronicaMBean.selectedElement.anno.value})"
+						rendered="#{not empty fatturaElettronicaMBean.selectedElement}" />
+				</f:facet>
+				
+				
+				<ui:include src="/includes/form/dettaglioFattura.xhtml" >
+					<ui:param name="fatturaSelezionata" value="#{fatturaElettronicaMBean.selectedElement}" />
+				</ui:include>
+
+				<rich:spacer height="20"/>
+				<div class="buttonrow">
+					<h:form>
+						<!-- Visualizza XML -->
+						<c:set var="linkXml" value="#{fatturaElettronicaMBean.selectedElement.xml}" />
+							
+						<h:outputLink  styleClass="icon-fatturapa-xml buttonNoRed"
+							id="visualizzaXml-iconLink" target="_blank" value="#{linkXml.href}" rendered="#{not empty linkXml.href}">
+							<!--h:graphicImage value="#{linkXml.image}" alt="#{linkXml.alt}" width="16" height="16" title="#{linkXml.title}" /-->
+							<h:outputText value="#{msg['commons.label.visualizza']} #{linkXml.label}" />
+						</h:outputLink>
+						
+						<!-- Visualizza PDF -->
+						<c:set var="linkPdf" value="#{fatturaElettronicaMBean.selectedElement.pdf}" />
+
+						<h:outputLink  styleClass="icon-fatturapa-pdf buttonNoRed"
+						 	id="visualizzaPdf-iconLink" target="_blank" value="#{linkPdf.href}" rendered="#{not empty linkPdf.href}">
+							<!-- h:graphicImage value="#{linkPdf.image}" alt="#{linkPdf.alt}" width="16" height="16" title="#{linkPdf.title}" /-->
+							<h:outputText value="#{msg['commons.label.visualizza']} #{linkPdf.label}" />
+						</h:outputLink>
+						
+						<!-- Scarica Tutto -->
+						<c:set var="linkZip" value="#{fatturaElettronicaMBean.selectedElement.zip}" />
+							<h:outputLink id="scarica-iconLink" target="_blank" styleClass="icon-compress buttonNoRed" value="#{linkZip.href}" rendered="#{not empty linkZip.href}">
+							<h:outputText value="#{linkZip.label}" />
+						</h:outputLink>
+
+						<!-- Invia Notifica EC -->
+						<c:set var="linkNotificaEC" value="#{fatturaElettronicaMBean.selectedElement.notificaEC}" />
+						<a4j:commandLink id="notificaEC_btn-iconLink" action="inviaNotificaEC" styleClass="icon-fatturapa-plus-grey buttonNoRed" rendered="#{not empty linkNotificaEC.href}" ajaxSingle="true">
+							<f:setPropertyActionListener value="#{fatturaElettronicaMBean.selectedElement}" target="#{notificaECMBean.fattura}" />
+							<f:setPropertyActionListener value="dettaglioFattura" target="#{notificaECMBean.fromPage}" />
+							<!-- h:graphicImage alt="#{linkNotificaEC.alt}" value="#{linkNotificaEC.image}" width="16" height="16" title="#{linkNotificaEC.title}" /-->
+							<h:outputText value="#{msg['commons.button.invia']} #{linkNotificaEC.label}" />
+						</a4j:commandLink>
+					</h:form>
+				</div>
+
+			</rich:panel>
+
+		</rich:panel>
+
+	</ui:define>
+</ui:composition>

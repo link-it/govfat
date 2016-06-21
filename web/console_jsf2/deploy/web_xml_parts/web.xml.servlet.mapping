@@ -1,0 +1,18 @@
+
+
+
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.jsf</url-pattern>
+	</servlet-mapping>
+	
+		<servlet-mapping>
+		<servlet-name>fattureexporter</servlet-name>
+		<url-pattern>/pages/fattureexporter</url-pattern>
+	</servlet-mapping>
+	
+	
+	<servlet-mapping>
+        <servlet-name>Resource Servlet</servlet-name>
+        <url-pattern>/org.richfaces.resources/*</url-pattern>
+    </servlet-mapping>

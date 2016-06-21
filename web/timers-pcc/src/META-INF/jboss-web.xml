@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-web>
+  <!-- depends>jboss.j2ee:jndiName=ejb/ConsegnaFattura,service=EJB</depends>
+  <depends>jboss.j2ee:jndiName=ejb/ConsegnaEsito,service=EJB</depends>
+  <depends>jboss.j2ee:jndiName=ejb/InserimentoFattura,service=EJB</depends-->
+</jboss-web>

@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 3 U (http://www.xmlspy.com) by Silvestro (Silvestro) -->
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:wsp1_2="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:tns="http://www.govmix.org/pcc/fatture" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.govmix.org/pcc/fatture" name="FattureWS">
+	<wsdl:types>
+		<xs:schema>
+			<xs:import namespace="http://www.govmix.org/pcc/fatture" schemaLocation="../xsd/PROXY-PCC-WSFATT-dizionario_v2.0.xsd"/>
+		</xs:schema>
+	</wsdl:types>
+	<wsdl:message name="wSProxyOperazioneContabileRichiesta">
+		<wsdl:part name="proxyOperazioneContabileRichiestaTipo" element="tns:proxyOperazioneContabileRichiestaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSProxyOperazioneContabileRisposta">
+		<wsdl:part name="proxyRispostaTipo" element="tns:proxyRispostaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSQueryOperazioneContabileRichiesta">
+		<wsdl:part name="queryOperazioneContabileRichiestaTipo" element="tns:queryOperazioneContabileRichiestaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSQueryOperazioneContabileRisposta">
+		<wsdl:part name="queryOperazioneContabileRispostaTipo" element="tns:queryOperazioneContabileRispostaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSProxyPagamentoIvaRichiesta">
+		<wsdl:part name="proxyPagamentoIvaRichiestaTipo" element="tns:proxyPagamentoIvaRichiestaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSProxyPagamentoIvaRisposta">
+		<wsdl:part name="proxyRispostaTipo" element="tns:proxyRispostaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSQueryPagamentoIvaRichiesta">
+		<wsdl:part name="queryPagamentoIvaRichiestaTipo" element="tns:queryPagamentoIvaRichiestaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSQueryPagamentoIvaRisposta">
+		<wsdl:part name="queryPagamentoIvaRispostaTipo" element="tns:queryPagamentoIvaRispostaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSProxyDatiFatturaRichiesta">
+		<wsdl:part name="proxyDatiFatturaRichiestaTipo" element="tns:proxyDatiFatturaRichiestaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSProxyDatiFatturaRisposta">
+		<wsdl:part name="proxyRispostaTipo" element="tns:proxyRispostaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSQueryDatiFatturaRichiesta">
+		<wsdl:part name="queryDatiFatturaRichiestaTipo" element="tns:queryDatiFatturaRichiestaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSQueryDatiFatturaRisposta">
+		<wsdl:part name="queryDatiFatturaRispostaTipo" element="tns:queryDatiFatturaRispostaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSProxyInserimentoFatturaRichiesta">
+		<wsdl:part name="proxyInserimentoFatturaRichiestaTipo" element="tns:proxyInserimentoFatturaRichiestaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSProxyInserimentoFatturaRisposta">
+		<wsdl:part name="proxyRispostaTipo" element="tns:proxyRispostaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSQueryInserimentoFatturaRichiesta">
+		<wsdl:part name="queryInserimentoFatturaRichiestaTipo" element="tns:queryInserimentoFatturaRichiestaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSQueryInserimentoFatturaRisposta">
+		<wsdl:part name="queryInserimentoFatturaRispostaTipo" element="tns:queryInserimentoFatturaRispostaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSReadStatoFatturaRichiesta">
+		<wsdl:part name="readStatoFatturaRichiestaTipo" element="tns:readStatoFatturaRichiestaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSReadStatoFatturaRisposta">
+		<wsdl:part name="readStatoFatturaRispostaTipo" element="tns:readStatoFatturaRispostaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSQueryInterrogazioneEsitiRichiesta">
+		<wsdl:part name="queryInterrogazioneEsitiRichiestaTipo" element="tns:queryInterrogazioneEsitiRichiestaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSQueryInterrogazioneEsitiRisposta">
+		<wsdl:part name="queryInterrogazioneEsitiRispostaTipo" element="tns:queryInterrogazioneEsitiRispostaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSReadElencoMovimentiErarioIvaRichiesta">
+		<wsdl:part name="readElencoMovimentiErarioIvaRichiestaTipo" element="tns:readElencoMovimentiErarioIvaRichiestaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSReadElencoMovimentiErarioIvaRisposta">
+		<wsdl:part name="readElencoMovimentiErarioIvaRispostaTipo" element="tns:readElencoMovimentiErarioIvaRispostaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSReadDownloadDocumentoRichiesta">
+		<wsdl:part name="readDownloadDocumentoRichiestaTipo" element="tns:readDownloadDocumentoRichiestaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSReadDownloadDocumentoRisposta">
+		<wsdl:part name="readDownloadDocumentoRispostaTipo" element="tns:readDownloadDocumentoRispostaTipo"/>
+	</wsdl:message>
+	<wsdl:message name="wSAuthorizationFault">
+		<wsdl:part name="authorizationFault" element="tns:authorizationFault"/>
+	</wsdl:message>
+	<wsdl:message name="wSGenericFault">
+		<wsdl:part name="genericFault" element="tns:genericFault"/>
+	</wsdl:message>
+	<wsdl:message name="wSResultNotReadyFault">
+		<wsdl:part name="resultNotReadyFault" element="tns:resultNotReadyFault"/>
+	</wsdl:message>
+	<wsdl:portType name="fattureWS">
+		<wsdl:operation name="wSProxyOperazioneContabile">
+			<wsdl:input message="tns:wSProxyOperazioneContabileRichiesta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/wSProxyOperazioneContabileRichiesta"/>
+			<wsdl:output message="tns:wSProxyOperazioneContabileRisposta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/wSProxyOperazioneContabileRisposta"/>
+			<wsdl:fault name="authorizationFault" message="tns:wSAuthorizationFault" />
+			<wsdl:fault name="genericFault" message="tns:wSGenericFault" />
+		</wsdl:operation>
+		<wsdl:operation name="wSQueryOperazioneContabile">
+			<wsdl:input message="tns:wSQueryOperazioneContabileRichiesta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/wSQueryOperazioneContabileRichiesta"/>
+			<wsdl:output message="tns:wSQueryOperazioneContabileRisposta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/wSQueryOperazioneContabileRisposta"/>
+			<wsdl:fault name="authorizationFault" message="tns:wSAuthorizationFault" />
+			<wsdl:fault name="resultNotReadyFault" message="tns:wSResultNotReadyFault" />
+			<wsdl:fault name="genericFault" message="tns:wSGenericFault" />
+		</wsdl:operation>
+		<wsdl:operation name="wSProxyPagamentoIva">
+			<wsdl:input message="tns:wSProxyPagamentoIvaRichiesta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/wSProxyPagamentoIvaRichiesta"/>
+			<wsdl:output message="tns:wSProxyPagamentoIvaRisposta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/wSProxyPagamentoIvaRisposta"/>
+			<wsdl:fault name="authorizationFault" message="tns:wSAuthorizationFault" />
+			<wsdl:fault name="genericFault" message="tns:wSGenericFault" />
+		</wsdl:operation>
+		<wsdl:operation name="wSQueryPagamentoIva">
+			<wsdl:input message="tns:wSQueryPagamentoIvaRichiesta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/wSQueryPagamentoIvaRichiesta"/>
+			<wsdl:output message="tns:wSQueryPagamentoIvaRisposta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/wSQueryPagamentoIvaRisposta"/>
+			<wsdl:fault name="authorizationFault" message="tns:wSAuthorizationFault" />
+			<wsdl:fault name="resultNotReadyFault" message="tns:wSResultNotReadyFault" />
+			<wsdl:fault name="genericFault" message="tns:wSGenericFault" />
+		</wsdl:operation>
+		<wsdl:operation name="wSProxyDatiFattura">
+			<wsdl:input message="tns:wSProxyDatiFatturaRichiesta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/wSProxyDatiFatturaRichiesta"/>
+			<wsdl:output message="tns:wSProxyDatiFatturaRisposta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/wSProxyDatiFatturaRisposta"/>
+			<wsdl:fault name="authorizationFault" message="tns:wSAuthorizationFault" />
+			<wsdl:fault name="genericFault" message="tns:wSGenericFault" />
+		</wsdl:operation>
+		<wsdl:operation name="wSQueryDatiFattura">
+			<wsdl:input message="tns:wSQueryDatiFatturaRichiesta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/wSQueryDatiFatturaRichiesta"/>
+			<wsdl:output message="tns:wSQueryDatiFatturaRisposta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/wSQueryDatiFatturaRisposta"/>
+			<wsdl:fault name="authorizationFault" message="tns:wSAuthorizationFault" />
+			<wsdl:fault name="resultNotReadyFault" message="tns:wSResultNotReadyFault" />
+			<wsdl:fault name="genericFault" message="tns:wSGenericFault" />
+		</wsdl:operation>
+		<wsdl:operation name="wSProxyInserimentoFattura">
+			<wsdl:input message="tns:wSProxyInserimentoFatturaRichiesta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/wSProxyInserimentoFatturaRichiesta"/>
+			<wsdl:output message="tns:wSProxyInserimentoFatturaRisposta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/wSProxyInserimentoFatturaRisposta"/>
+			<wsdl:fault name="authorizationFault" message="tns:wSAuthorizationFault" />
+			<wsdl:fault name="genericFault" message="tns:wSGenericFault" />
+		</wsdl:operation>
+		<wsdl:operation name="wSQueryInserimentoFattura">
+			<wsdl:input message="tns:wSQueryInserimentoFatturaRichiesta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/wSQueryInserimentoFatturaRichiesta"/>
+			<wsdl:output message="tns:wSQueryInserimentoFatturaRisposta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/wSQueryInserimentoFatturaRisposta"/>
+			<wsdl:fault name="authorizationFault" message="tns:wSAuthorizationFault" />
+			<wsdl:fault name="resultNotReadyFault" message="tns:wSResultNotReadyFault" />
+			<wsdl:fault name="genericFault" message="tns:wSGenericFault" />
+		</wsdl:operation>
+		<wsdl:operation name="wSReadStatoFattura">
+			<wsdl:input message="tns:wSReadStatoFatturaRichiesta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/wSReadStatoFatturaRichiesta"/>
+			<wsdl:output message="tns:wSReadStatoFatturaRisposta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/wSReadStatoFatturaRisposta"/>
+			<wsdl:fault name="authorizationFault" message="tns:wSAuthorizationFault" />
+			<wsdl:fault name="genericFault" message="tns:wSGenericFault" />
+		</wsdl:operation>
+		<wsdl:operation name="wSReadElencoMovimentiErarioIva">
+			<wsdl:input message="tns:wSReadElencoMovimentiErarioIvaRichiesta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/wSReadElencoMovimentiErarioIvaRichiesta"/>
+			<wsdl:output message="tns:wSReadElencoMovimentiErarioIvaRisposta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/wSReadElencoMovimentiErarioIvaRisposta"/>
+			<wsdl:fault name="authorizationFault" message="tns:wSAuthorizationFault" />
+			<wsdl:fault name="genericFault" message="tns:wSGenericFault" />
+		</wsdl:operation>
+		<wsdl:operation name="wSReadDownloadDocumento">
+			<wsdl:input message="tns:wSReadDownloadDocumentoRichiesta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/wSReadDownloadDocumentoRichiesta"/>
+			<wsdl:output message="tns:wSReadDownloadDocumentoRisposta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/wSReadDownloadDocumentoRisposta"/>
+			<wsdl:fault name="authorizationFault" message="tns:wSAuthorizationFault" />
+			<wsdl:fault name="genericFault" message="tns:wSGenericFault" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="FattureWSSOAP11PortBinding" type="tns:fattureWS">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsp:PolicyReference URI="#FattureWSSOAP11PortBinding_MTOM_Policy"/>
+		<wsdl:operation name="wSProxyOperazioneContabile">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:output>
+			<wsdl:fault name="authorizationFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="authorizationFault"/>
+			</wsdl:fault>
+			<wsdl:fault name="genericFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="genericFault"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="wSQueryOperazioneContabile">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:output>
+			<wsdl:fault name="authorizationFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="authorizationFault"/>
+			</wsdl:fault>
+			<wsdl:fault name="genericFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="genericFault"/>
+			</wsdl:fault>
+			<wsdl:fault name="resultNotReadyFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="resultNotReadyFault"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="wSProxyPagamentoIva">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:output>
+			<wsdl:fault name="authorizationFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="authorizationFault"/>
+			</wsdl:fault>
+			<wsdl:fault name="genericFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="genericFault"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="wSQueryPagamentoIva">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:output>
+			<wsdl:fault name="authorizationFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="authorizationFault"/>
+			</wsdl:fault>
+			<wsdl:fault name="genericFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="genericFault"/>
+			</wsdl:fault>
+			<wsdl:fault name="resultNotReadyFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="resultNotReadyFault"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="wSProxyDatiFattura">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:output>
+			<wsdl:fault name="authorizationFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="authorizationFault"/>
+			</wsdl:fault>
+			<wsdl:fault name="genericFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="genericFault"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="wSQueryDatiFattura">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:output>
+			<wsdl:fault name="authorizationFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="authorizationFault"/>
+			</wsdl:fault>
+			<wsdl:fault name="genericFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="genericFault"/>
+			</wsdl:fault>
+			<wsdl:fault name="resultNotReadyFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="resultNotReadyFault"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="wSProxyInserimentoFattura">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:output>
+			<wsdl:fault name="authorizationFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="authorizationFault"/>
+			</wsdl:fault>
+			<wsdl:fault name="genericFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="genericFault"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="wSQueryInserimentoFattura">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:output>
+			<wsdl:fault name="authorizationFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="authorizationFault"/>
+			</wsdl:fault>
+			<wsdl:fault name="genericFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="genericFault"/>
+			</wsdl:fault>
+			<wsdl:fault name="resultNotReadyFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="resultNotReadyFault"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="wSReadStatoFattura">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:output>
+			<wsdl:fault name="authorizationFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="authorizationFault"/>
+			</wsdl:fault>
+			<wsdl:fault name="genericFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="genericFault"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="wSReadElencoMovimentiErarioIva">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:output>
+			<wsdl:fault name="authorizationFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="authorizationFault"/>
+			</wsdl:fault>
+			<wsdl:fault name="genericFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="genericFault"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="wSReadDownloadDocumento">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+			</wsdl:output>
+			<wsdl:fault name="authorizationFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="authorizationFault"/>
+			</wsdl:fault>
+			<wsdl:fault name="genericFault">
+				<soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="genericFault"/>
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="FattureWS">
+		<wsdl:port name="FattureWSSOAP11Port" binding="tns:FattureWSSOAP11PortBinding">
+			<soap:address location="http://localhost:8080/FattureWS/FattureWS"/>
+		</wsdl:port>
+	</wsdl:service>
+	<wsp:Policy wsu:Id="FattureWSSOAP11PortBinding_MTOM_Policy">
+		<ns1:OptimizedMimeSerialization xmlns:ns1="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization" wsp:Optional="true"/>
+	</wsp:Policy>
+</wsdl:definitions>

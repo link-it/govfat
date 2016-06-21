@@ -1,0 +1,222 @@
+<!-- 
+  ProxyFatturaPA - Gestione del formato Fattura Elettronica 
+  http://www.gov4j.it/fatturapa
+  
+  Copyright (c) 2014-2016 Link.it srl (http://link.it). 
+  Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+ 
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+ 
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<ui:composition template="/templates/defaultTemplate.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:rich="http://richfaces.org/rich" xmlns:op2web="http://www.openspcoop2.org/web/taglib/jsf">
+	<f:loadBundle var="msg" basename="messages" />
+	<a4j:loadScript src="resource://jquery.js" />
+
+	<ui:define name="pageTitle">#{msg['fattura.listaFatture.pageTitle']}</ui:define>
+	<ui:define name="pageHeader">#{msg['fattura.listaFatture.pageTitle']}</ui:define>
+	<ui:define name="navbar">
+		<ul>
+			<li><h:outputText value="/#{msg['menu.group.operazioni']}" /></li>
+			<li><h:outputText value="/#{msg['fattura.listaFatture.pageTitle']}" /></li>
+		</ul>
+	</ui:define>
+	<ui:define name="body">
+		<a4j:keepAlive beanName="fatturaElettronicaMBean" ajaxOnly="true" />
+		
+		<rich:panel styleClass="noborder" id="pagina" >
+			
+			<op2web:searchForm searchBean="#{fatturaElettronicaMBean.search}">
+		
+				<op2web:fieldset legend="#{msg['fattura.search.datiTrasmissione']}" rendered="#{true}" collapsible="false" closed="false">
+					<op2web:searchFields nomiFields="#{'cedentePrestatore,identificativoLotto,dipartimento,dataRicezionePeriodo'}"    />
+
+					<op2web:inlineProp labelEsterna="#{fatturaElettronicaMBean.search.dataRicezione.label}"
+						rendered="#{fatturaElettronicaMBean.search.dataRicezione.rendered}">
+
+						<ui:define name="prop1">
+							<op2web:prop label="#{commonsMsg['form.component.dal']}" 
+								styleClass="insideLeftProp" rendered="#{fatturaElettronicaMBean.search.dataRicezione.rendered}">
+								<rich:calendar id="input1_#{fatturaElettronicaMBean.search.dataRicezione.name}" value="#{fatturaElettronicaMBean.search.dataRicezione.value}"
+									disabled="#{fatturaElettronicaMBean.search.dataRicezione.disabled}" style="#{fatturaElettronicaMBean.search.dataRicezione.style}" bypassUpdates="true"
+									datePattern="#{fatturaElettronicaMBean.search.dataRicezione.pattern}" defaultTime="00:00" validatorMessage="#{msg['fattura.search.dataRicezione.da.formatoNonValido']}"
+									enableManualInput="true" validator="#{fatturaElettronicaMBean.search.dataInizioValidator}" valueChangeListener="#{fatturaElettronicaMBean.search.dataInizioChangeListener}"
+									converter="dateConverter" >
+								 </rich:calendar>
+							</op2web:prop>
+						</ui:define>
+
+						<ui:define name="prop2">
+							<op2web:prop label="#{commonsMsg['form.component.al']}"
+								styleClass="insideRightProp" rendered="#{fatturaElettronicaMBean.search.dataRicezione.rendered}">
+								<rich:calendar id="input2_#{fatturaElettronicaMBean.search.dataRicezione.name}" value="#{fatturaElettronicaMBean.search.dataRicezione.value2}"
+									disabled="#{fatturaElettronicaMBean.search.dataRicezione.disabled}" style="#{fatturaElettronicaMBean.search.dataRicezione.style}"
+									datePattern="#{fatturaElettronicaMBean.search.dataRicezione.pattern}" defaultTime="23:59" converter="dateConverter" 
+									enableManualInput="true" />
+							</op2web:prop>
+						</ui:define>
+					</op2web:inlineProp>
+				</op2web:fieldset>
+					
+				<op2web:fieldset legend="#{msg['fattura.search.datiFattura']}" rendered="#{true}" collapsible="false" closed="false">
+					<op2web:formField field="#{fatturaElettronicaMBean.search.numero}" />
+						
+					<op2web:prop label="#{fatturaElettronicaMBean.search.dataEsatta.label}" rendered="#{fatturaElettronicaMBean.search.dataEsatta.rendered}">
+						<rich:calendar id="input_#{fatturaElettronicaMBean.search.dataEsatta.name}" value="#{fatturaElettronicaMBean.search.dataEsatta.value}"  disabled="#{fatturaElettronicaMBean.search.dataEsatta.disabled}"
+		 					style="#{fatturaElettronicaMBean.search.dataEsatta.style}" datePattern="#{fatturaElettronicaMBean.search.dataEsatta.pattern}" defaultTime="00:00" 
+		 					validatorMessage="#{msg['fattura.search.dataEsatta.formatoNonValido']}" converter="dateEmptyConverter"
+									enableManualInput="true" validator="#{fatturaElettronicaMBean.search.dataEsattaValidator}" />
+					</op2web:prop>
+					
+					<op2web:formField
+						field="#{fatturaElettronicaMBean.search.tipoDocumento}" />
+				</op2web:fieldset>
+					
+				<op2web:fieldset legend="#{msg['fattura.search.statoFattura']}" rendered="#{true}" collapsible="false" closed="false">
+					<op2web:searchFields nomiFields="#{'notificaEsitoCommittente,notificaDecorrenzaTermini'}" />
+				</op2web:fieldset>
+
+				<op2web:fieldset legend="#{msg['fattura.search.protocollo']}"
+					rendered="#{true}" collapsible="false" closed="false">
+					<op2web:formField field="#{fatturaElettronicaMBean.search.identificativoProtocollo}" />
+						
+					<op2web:formField field="#{fatturaElettronicaMBean.search.statoConsegna}" />
+				</op2web:fieldset>
+				
+				<ui:define name="buttons">
+					<a4j:commandButton id="filtraButton"
+						value="#{msg['fattura.search.button.filtra.dataRicezione']}" styleClass="icon-refresh"
+						reRender="fatturaElettronicaTable" status="mainStatus" action="#{fatturaElettronicaMBean.filtra}">
+					</a4j:commandButton>
+		
+					<a4j:commandButton id="pulisciButton"
+						value="#{msg['commons.button.reset']}" reRender="#{fatturaElettronicaMBean.search.id}_searchPnl,fatturaElettronicaTable"
+						status="mainStatus" styleClass="icon-delete" action="#{fatturaElettronicaMBean.reset}">
+					</a4j:commandButton>
+					
+					<a4j:commandButton id="filtraButtonScadenza"
+						value="#{msg['fattura.search.button.filtra.dataScadenza']}" styleClass="icon-refresh"
+						reRender="fatturaElettronicaTable" status="mainStatus" action="#{fatturaElettronicaMBean.filtraScadenza}">
+					</a4j:commandButton>
+				</ui:define>
+			</op2web:searchForm>	
+			<rich:spacer height="20"/>
+			
+			<op2web:managedPagedListView  value="#{fatturaElettronicaDM}" mBean="#{fatturaElettronicaMBean}" >
+				
+				<!-- Colonne mittente,destinatario,identificativoSDI, annonumero, data, dataricezione, importo -->
+				<op2web:tableColumns nomiColonne="#{'cedentePrestatore,dipartimento,identificativoSdi,annoNumero,data,dataRicezione'}" />
+				
+				
+				<!-- Data scadenza -->
+				<rich:column styleClass="#{itemMetadata.dataScadenza.tableColumnStyleClass}">
+					<f:facet name="header">
+						<h:outputText value="#{itemMetadata.dataScadenza.label}" rendered="#{not empty itemMetadata.dataScadenza.label}" styleClass="#{itemMetadata.dataScadenza.labelStyleClass}" />
+					</f:facet>
+
+					<h:outputText id="#{itemMetadata.dataScadenza.name}NoValue" value="#{item.dataScadenzaAssente.value}" styleClass="#{itemMetadata.dataScadenza.valueStyleClass}"
+							rendered="#{empty item.dataScadenza.value}" />
+			
+					<h:outputText id="#{itemMetadata.dataScadenza.name}DataValue" value="#{item.dataScadenza.value}" styleClass="#{itemMetadata.dataScadenza.valueStyleClass}"
+						rendered="#{not empty item.dataScadenza.value}">
+						<f:convertDateTime pattern="#{itemMetadata.dataScadenza.pattern}" defaultTime="00:00" timeZone="Europe/Rome" />
+					</h:outputText>
+				</rich:column>
+				
+				<!-- Colonne mittente,destinatario,identificativoSDI, annonumero, data, dataricezione, importo -->
+				<op2web:tableColumns nomiColonne="#{'importo'}" />
+				
+				<!-- Notifica EC (Icona) -->
+				<rich:column style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{itemMetadata.notificaEC.label}" />
+					</f:facet>
+					 
+					<h:panelGroup>
+						<h:graphicImage value="#{item.notificaEC.image}" width="16" height="16"	title="#{item.notificaEC.title}"  alt="#{item.notificaEC.alt}"
+								  rendered="#{empty item.notificaEC.href}"/>
+					
+						<a4j:htmlCommandLink id="notificaEC_btn" action="inviaNotificaEC" rendered="#{not empty item.notificaEC.href}" ajaxSingle="true">
+							<f:setPropertyActionListener value="#{item}" target="#{notificaECMBean.fattura}" />
+								<f:setPropertyActionListener value="listaFatture" target="#{notificaECMBean.fromPage}" />
+							<h:graphicImage value="#{item.notificaEC.image}" width="16" height="16" title="#{item.notificaEC.title}" alt="#{item.notificaEC.alt}" />
+						</a4j:htmlCommandLink>
+					</h:panelGroup>
+				</rich:column>
+					
+					<!-- Notifica DT (Icona) -->
+				<rich:column style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{itemMetadata.notificaDT.label}" />
+					</f:facet>
+					 
+					<h:panelGroup>
+						<h:graphicImage value="#{item.notificaDT.image}" width="16" alt="#{item.notificaDT.alt}" height="16"	title="#{item.notificaDT.title}" rendered="#{item.notificaDT.rendered == true}" />
+						<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{item.notificaDT.rendered == false}" />
+					</h:panelGroup>
+				</rich:column>
+				
+				<!-- XML (Icona) -->
+				<rich:column style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{itemMetadata.xml.label}" />
+					</f:facet>
+					 
+					<h:panelGroup>
+					 	<h:commandLink id="visualizzaXmlLink" target="_blank" action="#{item.visualizzaXml}" rendered="#{not empty item.xml.href}">
+							<h:graphicImage value="#{item.xml.image}" width="16" alt="#{item.xml.alt}" height="16"	title="#{item.xml.title}" />
+						</h:commandLink>
+					</h:panelGroup>
+				</rich:column>
+				
+				<!-- PDF (Icona) -->
+				<rich:column style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{itemMetadata.pdf.label}" />
+					</f:facet>
+					 <h:panelGroup>
+					 	<h:commandLink id="visualizzaPdfLink" target="_blank" action="#{item.visualizzaPdf}" rendered="#{not empty item.pdf.href}">
+							<h:graphicImage value="#{item.pdf.image}" width="16" height="16"	title="#{item.pdf.title}" alt="#{item.pdf.alt}" />
+						</h:commandLink>
+					</h:panelGroup>
+				</rich:column>
+				
+				<!-- Link dettagli -->
+				<rich:column style="text-align: center;">
+					<h:panelGroup>
+						<a4j:commandLink id="dettaglio_btn" action="dettaglio" ajaxSingle="true">
+							<f:setPropertyActionListener value="tabSDI" target="#{fatturaElettronicaMBean.selectedTab}" />
+							<f:setPropertyActionListener value="#{item}" target="#{fatturaElettronicaMBean.selectedElement}" />
+							<h:graphicImage value="/images/magnifier.png" width="16" alt="#{msg['fattura.label.ricercaFatture.dettaglioTitle']}"
+								height="16" title="#{msg['fattura.label.ricercaFatture.dettaglioTitle']}" />
+						</a4j:commandLink>
+					</h:panelGroup>
+				</rich:column>
+				
+				<ui:define name="buttonsListView">
+					<h:commandLink id="exportFatture-iconLink" target="_blank"
+						styleClass="icon-compress" action="#{fatturaElettronicaMBean.exportSelected}"
+						onclick="return checkSelection('fatturaElettronicaTable_dt');" style="color: #dd2c0d">
+						<h:outputText value="#{msg['commons.button.esporta']}" />
+					</h:commandLink>
+				</ui:define>
+			</op2web:managedPagedListView>
+		</rich:panel>
+	</ui:define>
+</ui:composition>
