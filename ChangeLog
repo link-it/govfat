@@ -1,4 +1,6 @@
 Aggiunte le seguenti funzionalità
+[FAT-56] - Fatturazione attiva - supporto minimale
+[FAT-99] - Aggiornamento del cruscotto alla nuova struttura della libreria WebGenericProject
 [FAT-155] - ProxyPCC - WS-Fatt - modulo preposto all'interazione con la PCC
 [FAT-156] - ProxyPCC - WS-Tracce - modulo preposto alla consultazione delle tracce prodotte durante l'interazione con la PCC
 [FAT-157] - ProxyPCC - Batch Esiti - modulo preposto al recupero degli Esiti prodotti in maniera asincronia dalla PCC
@@ -10,8 +12,3 @@ Aggiunte le seguenti funzionalità
 Risolti i seguenti bug
 [FAT-187] - Consegna fattura: errore caratteri speciali nei metadati
 [FAT-189] - Problema di visualizzazione delle form di ricerca della console con IE11
-
-Story
-[FAT-56] - Fatturazione attiva - supporto minimale
-[FAT-99] - Aggiornamento del cruscotto alla nuova struttura della libreria WebGenericProject
-
