@@ -7,7 +7,7 @@ Aggiunte le seguenti funzionalità
 [FAT-182] - PCC - Adeguamenti console
 [FAT-196] - Implementazione sonde - modulo preposto al monitoraggio del corretto avviamento degli applicativi
 
-Bug
+Risolti i seguenti bug
 [FAT-187] - Consegna fattura: errore caratteri speciali nei metadati
 [FAT-189] - Problema di visualizzazione delle form di ricerca della console con IE11
 
