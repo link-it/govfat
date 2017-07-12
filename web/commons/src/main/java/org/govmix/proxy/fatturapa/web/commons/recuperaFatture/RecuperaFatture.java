@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -40,14 +39,14 @@ import org.govmix.proxy.fatturapa.recuperofatture.ListaFattureNonConsegnateRespo
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.DipartimentoBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.UtenteBD;
-import org.govmix.proxy.fatturapa.web.commons.exporter.SingleFileExporter;
+import org.govmix.proxy.fatturapa.web.commons.exporter.FatturaSingleFileExporter;
 
 public class RecuperaFatture {
 
 	private FatturaElettronicaBD fatturaElettronicaBD;
 	private DipartimentoBD dipartimentoBD;
 	private UtenteBD utenteBD;
-	private SingleFileExporter sfe;
+	private FatturaSingleFileExporter sfe;
 	
 	private static Marshaller marshaller;
 	
@@ -69,7 +68,7 @@ public class RecuperaFatture {
 		this.dipartimentoBD = new DipartimentoBD(log);
 		this.utenteBD = new UtenteBD(log);
 		
-		this.sfe = new SingleFileExporter(log);
+		this.sfe = new FatturaSingleFileExporter(log);
 
 	}
 	
@@ -112,7 +111,8 @@ public class RecuperaFatture {
 			
 			
 			os = new ByteArrayOutputStream();
-			sfe.exportAsZip(Arrays.asList(idFattura), os, true);
+			FatturaElettronica fattura = this.fatturaElettronicaBD.get(idFattura); 
+			sfe.exportAsZip(Arrays.asList(fattura), os);
 			return os.toByteArray();
 		} finally {
 			if(os != null) {

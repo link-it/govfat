@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,10 +26,6 @@ import org.govmix.proxy.pcc.fatture.utils.AbstractProperties;
 
 public class WebApiProperties extends AbstractProperties{
 
-	/** tipo di autenticazione: managed o user */
-	private static String AUTHENTICATION_TYPE_MANAGED = "managed";
-	private static String AUTHENTICATION_TYPE_USER = "user";
-	
 	private static WebApiProperties props;
 	
 	public static WebApiProperties getInstance() throws Exception {
@@ -42,7 +37,6 @@ public class WebApiProperties extends AbstractProperties{
 		
 	}
 	
-	private boolean authenticationManaged;
 	private boolean validazioneDAOAbilitata;
 	private Integer limitGetIdFatture;
 
@@ -72,16 +66,6 @@ public class WebApiProperties extends AbstractProperties{
 
 		this.limitGetIdFatture = Integer.valueOf(this.getProperty("org.govmix.proxy.fatturapa.web.api.pull.idfattura.limit", true));
 
-		String authenticationType = this.getProperty("org.govmix.proxy.fatturapa.web.api.authentication", true);
-		
-		if(WebApiProperties.AUTHENTICATION_TYPE_MANAGED.equalsIgnoreCase(authenticationType)){
-			this.authenticationManaged = true;
-		}else if(WebApiProperties.AUTHENTICATION_TYPE_USER.equalsIgnoreCase(authenticationType)){
-			this.authenticationManaged = false;
-		}else{
-			throw new Exception("Valore ["+authenticationType+"] non conosciuto per la properieta' [org.govmix.proxy.fatturapa.web.api.authentication]");
-		}
-
 		String validazioneDAOAbilitataString = this.getProperty("org.govmix.proxy.fatturapa.web.api.validazioneDAOAbilitata", false);
 		
 		if(validazioneDAOAbilitataString != null) {
@@ -98,10 +82,6 @@ public class WebApiProperties extends AbstractProperties{
 	}
 	public Integer getLimitGetIdFatture() {
 		return this.limitGetIdFatture;
-	}
-	
-	public boolean isAuthenticationManaged() {
-		return this.authenticationManaged;
 	}
 
 	public boolean isValidazioneDAOAbilitata() {

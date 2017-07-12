@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -35,7 +34,22 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.govmix.proxy.fatturapa.web.commons.exporter.SingleFileExporter;
+import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
+import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
+import org.govmix.proxy.fatturapa.orm.IdFattura;
+import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
+import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
+import org.govmix.proxy.fatturapa.orm.PccTraccia;
+import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaServiceSearch;
+import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
+import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter.FORMAT;
+import org.govmix.proxy.fatturapa.web.commons.exporter.AllegatoSingleFileExporter;
+import org.govmix.proxy.fatturapa.web.commons.exporter.ExtendedNotificaEsitoCommittente;
+import org.govmix.proxy.fatturapa.web.commons.exporter.FatturaSingleFileExporter;
+import org.govmix.proxy.fatturapa.web.commons.exporter.NotificaDTSingleFileExporter;
+import org.govmix.proxy.fatturapa.web.commons.exporter.NotificaECSingleFileExporter;
+import org.govmix.proxy.fatturapa.web.commons.exporter.PccTracciaResponseSingleFileExporter;
+import org.govmix.proxy.fatturapa.web.commons.exporter.ScartoECSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.exporter.exception.ExportException;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.mbean.LoginMBean;
@@ -43,6 +57,8 @@ import org.govmix.proxy.fatturapa.web.console.search.FatturaElettronicaSearchFor
 import org.govmix.proxy.fatturapa.web.console.service.FatturaElettronicaService;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.expression.IExpression;
+import org.openspcoop2.generic_project.expression.IPaginatedExpression;
+import org.openspcoop2.generic_project.expression.SortOrder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -66,12 +82,12 @@ public class FattureExporter  extends HttpServlet{
 	public static final String PARAMETRO_IS_ALL = "isAll";
 	public static final String PARAMETRO_IDS = "ids";
 
-	public static final String PARAMETRO_ACTION_FATTURA = SingleFileExporter.PARAMETRO_ACTION_FATTURA;
-	public static final String PARAMETRO_ACTION_ALLEGATO = SingleFileExporter.PARAMETRO_ACTION_ALLEGATO;
-	public static final String PARAMETRO_ACTION_NOTIFICA_EC = SingleFileExporter.PARAMETRO_ACTION_NOTIFICA_EC;
-	public static final String PARAMETRO_ACTION_NOTIFICA_DT = SingleFileExporter.PARAMETRO_ACTION_NOTIFICA_DT;
-	public static final String PARAMETRO_ACTION_SCARTO = SingleFileExporter.PARAMETRO_ACTION_SCARTO;
-	public static final String PARAMETRO_ACTION_PCC_RIALLINEAMENTO = SingleFileExporter.PARAMETRO_ACTION_PCC_RIALLINEAMENTO;
+	public static final String PARAMETRO_ACTION_FATTURA = AbstractSingleFileExporter.PARAMETRO_ACTION_FATTURA;
+	public static final String PARAMETRO_ACTION_ALLEGATO = AbstractSingleFileExporter.PARAMETRO_ACTION_ALLEGATO;
+	public static final String PARAMETRO_ACTION_NOTIFICA_EC = AbstractSingleFileExporter.PARAMETRO_ACTION_NOTIFICA_EC;
+	public static final String PARAMETRO_ACTION_NOTIFICA_DT = AbstractSingleFileExporter.PARAMETRO_ACTION_NOTIFICA_DT;
+	public static final String PARAMETRO_ACTION_SCARTO = AbstractSingleFileExporter.PARAMETRO_ACTION_SCARTO;
+	public static final String PARAMETRO_ACTION_PCC_RIALLINEAMENTO = AbstractSingleFileExporter.PARAMETRO_ACTION_PCC_RIALLINEAMENTO;
 
 	public static final String FATTURE_EXPORTER = "pages/fattureexporter";
 
@@ -130,18 +146,13 @@ public class FattureExporter  extends HttpServlet{
 						throw new ExportException("Si e' verificato un errore durante l'export: Formato parametri errato.");
 
 					if(action != null){
-						// controllo del tipo di risorsa richiesta
-						if(!action.equals(FattureExporter.PARAMETRO_ACTION_FATTURA) && !action.equals(FattureExporter.PARAMETRO_ACTION_ALLEGATO) 
-								&& !action.equals(FattureExporter.PARAMETRO_ACTION_NOTIFICA_EC) && !action.equals(FattureExporter.PARAMETRO_ACTION_NOTIFICA_DT)
-								&& !action.equals(FattureExporter.PARAMETRO_ACTION_SCARTO)
-								&& !action.equals(FattureExporter.PARAMETRO_ACTION_PCC_RIALLINEAMENTO))
-							throw new ExportException("Si e' verificato un errore durante l'export: Tipo di risorsa richiesta non disponibile.");
-
-						SingleFileExporter sfe = new SingleFileExporter(FattureExporter.log);
+						AbstractSingleFileExporter<?, ?> sfe = getSingleFileExporter(action);
 						String fileName = null;
 
 						response.addHeader("Cache-Control", "private");
 						response.setStatus(200);
+
+						IFatturaElettronicaServiceSearch fatturaSearchDAO = sfe.getFatturaSearchDAO();
 						//						response.setBufferSize(1024);
 						if(isAll){
 							try{
@@ -151,7 +162,7 @@ public class FattureExporter  extends HttpServlet{
 								FatturaElettronicaSearchForm sfInSession = (FatturaElettronicaSearchForm)context.getBean("fatturaElettronicaSearchForm");
 								FatturaElettronicaSearchForm form2 = (FatturaElettronicaSearchForm) sfInSession.clone();
 
-								expressionFromSearch = service.getExpressionFromSearch(sfe.getFatturaSearchDAO(), form2);
+								expressionFromSearch = service.getExpressionFromSearch(fatturaSearchDAO, form2);
 
 							}catch(Exception e){
 								FattureExporter.log.error("Si e' verificato un errore durante l'impostazione dei criteri di ricerca: "+ e.getMessage(),e);
@@ -159,7 +170,7 @@ public class FattureExporter  extends HttpServlet{
 							}
 						}
 
-						boolean autorizzato = sfe.checkautorizzazioneExport(username, ids, action, isAll, expressionFromSearch);
+						boolean autorizzato = sfe.checkautorizzazioneExport(username, ids, isAll, expressionFromSearch);
 
 						// utente non autorizzato ad accerdere alla risorsa
 						if(!autorizzato){
@@ -173,37 +184,38 @@ public class FattureExporter  extends HttpServlet{
 						// Export Fattura
 						if(action.equals(FattureExporter.PARAMETRO_ACTION_FATTURA)){
 							// formato di export della fattura non valido
-							if(!formato.equals(SingleFileExporter.FORMATO_ZIP_CON_ALLEGATI) && !formato.equals(SingleFileExporter.FORMATO_PDF) 
-									&& !formato.equals(SingleFileExporter.FORMATO_XML))
+							if(!formato.equals(AbstractSingleFileExporter.FORMATO_ZIP_CON_ALLEGATI) && !formato.equals(AbstractSingleFileExporter.FORMATO_PDF) 
+									&& !formato.equals(AbstractSingleFileExporter.FORMATO_XML))
 								throw new ExportException("Si e' verificato un errore durante l'export: Il formato richiesto non e' disponibile per la risorsa di tipo fattura.");
 
+							FatturaSingleFileExporter fsfe = (FatturaSingleFileExporter) sfe;
+
 							//Export Completo
-							if(formato.equals(SingleFileExporter.FORMATO_ZIP_CON_ALLEGATI)){
+							if(formato.equals(AbstractSingleFileExporter.FORMATO_ZIP_CON_ALLEGATI)){
 								response.setContentType("application/zip");
-								fileName = SingleFileExporter.BASE_DIR_NAME + ".zip";
+								fileName = AbstractSingleFileExporter.BASE_DIR_NAME + ".zip";
 								// Tutte le fatture
 								if(isAll){
-									sfe.exportAsZip(expressionFromSearch,baos);
+									List<IdFattura> lstIdFattura = getLstIdFattura(fatturaSearchDAO, expressionFromSearch);
+									fsfe.exportListById(lstIdFattura, baos, FORMAT.ZIP);
+									//									sfe.exportAsZip(expressionFromSearch,baos);
 								}else{
-									//
-									List<String> idFattura = new ArrayList<String>();
+									List<FatturaElettronica> lstIdFattura = new ArrayList<FatturaElettronica>();
 									for (int j = 0; j < ids.length; j++) {
-										idFattura.add(ids[j]);					
+
+										lstIdFattura.add(fsfe.convertToObject(ids[j]));					
 									}
-									sfe.exportAsZipFromListaId(idFattura,baos,true);
+									fsfe.exportList(lstIdFattura, baos, FORMAT.ZIP);
+
 								}		
-							}
-
-							// Visualizzazione Singola Fattura PDF
-							if(formato.equals(SingleFileExporter.FORMATO_PDF)){
+							} else if(formato.equals(AbstractSingleFileExporter.FORMATO_PDF)){ // Visualizzazione Singola Fattura PDF
 								response.setContentType("application/pdf");
-								fileName = sfe.exportFatturaAsPdf(ids[0],baos);
-							}
-
-							// Visualizzazione Singola Fattura XML
-							if(formato.equals(SingleFileExporter.FORMATO_XML)){
+								FatturaElettronica f = fsfe.convertToObject(ids[0]);
+								fileName = fsfe.exportAsPdf(f,baos);
+							} else if(formato.equals(AbstractSingleFileExporter.FORMATO_XML)){ // Visualizzazione Singola Fattura XML
 								response.setContentType("text/xml");
-								fileName = sfe.exportFatturaAsXml(ids[0], baos);
+								FatturaElettronica f = fsfe.convertToObject(ids[0]);
+								fileName = fsfe.exportAsRaw(f, baos);
 							}
 
 							response.addHeader("Content-Type", "x-download");
@@ -211,76 +223,94 @@ public class FattureExporter  extends HttpServlet{
 							// committing status and headers
 							//							response.flushBuffer();
 
-						} else if(action.equals(FattureExporter.PARAMETRO_ACTION_ALLEGATO)){
-							fileName = sfe.exportAllegato(ids[0], baos);
+						} else if(action.equals(PARAMETRO_ACTION_ALLEGATO)){
+							AllegatoSingleFileExporter asfe = (AllegatoSingleFileExporter) sfe;
+							AllegatoFattura a = asfe.convertToObject(ids[0]);
+							fileName = asfe.exportAsRaw(a, baos);
 							response.setContentType("application/x-download");
 							response.setHeader("Content-Disposition", "attachment; filename="+fileName);
 							// committing status and headers
 							//							response.flushBuffer();
 
-						}else if(action.equals(FattureExporter.PARAMETRO_ACTION_NOTIFICA_DT)){
-							if(!formato.equals(SingleFileExporter.FORMATO_PDF) && !formato.equals(SingleFileExporter.FORMATO_XML))
+						}else if(action.equals(PARAMETRO_ACTION_NOTIFICA_DT)){
+							if(!formato.equals(AbstractSingleFileExporter.FORMATO_PDF) && !formato.equals(AbstractSingleFileExporter.FORMATO_XML))
 								throw new ExportException("Si e' verificato un errore durante l'export: Il formato richiesto non e' disponibile per la risorsa di tipo Notifica DT.");
+
+							NotificaDTSingleFileExporter dtsfe = (NotificaDTSingleFileExporter) sfe;
+							NotificaDecorrenzaTermini dt = dtsfe.convertToObject(ids[0]);
+
 							// Visualizzazione Notifica DT formato PDF
-							if(formato.equals(SingleFileExporter.FORMATO_PDF)){
+							if(formato.equals(AbstractSingleFileExporter.FORMATO_PDF)){
 								response.setContentType("application/pdf");
-								fileName = sfe.exportNotificaDTAsPdf(ids[0], baos);
+								fileName = dtsfe.exportAsPdf(dt, baos);
 							}
 
 							// Visualizzazione NotificaDT formato XML
-							if(formato.equals(SingleFileExporter.FORMATO_XML)){
+							if(formato.equals(AbstractSingleFileExporter.FORMATO_XML)){
 								response.setContentType("text/xml");
-								fileName = sfe.exportNotificaDTAsXml(ids[0], baos);
+								fileName = dtsfe.exportAsRaw(dt, baos);
 							}
 
 							response.setHeader("Content-Disposition", "attachment; filename="+fileName);
 							// committing status and headers
 							//							response.flushBuffer();
 
-						} else if(action.equals(FattureExporter.PARAMETRO_ACTION_NOTIFICA_EC)){
-							if(!formato.equals(SingleFileExporter.FORMATO_PDF) && !formato.equals(SingleFileExporter.FORMATO_XML))
+						} else if(action.equals(PARAMETRO_ACTION_NOTIFICA_EC)){
+							if(!formato.equals(AbstractSingleFileExporter.FORMATO_PDF) && !formato.equals(AbstractSingleFileExporter.FORMATO_XML))
 								throw new ExportException("Si e' verificato un errore durante l'export: Il formato richiesto non e' disponibile per la risorsa di tipo Notifica EC.");
+
+							NotificaECSingleFileExporter ecsfe = (NotificaECSingleFileExporter) sfe;
+							ExtendedNotificaEsitoCommittente ec = ecsfe.convertToObject(ids[0]);
+
 							// Visualizzazione Notifica EC formato PDF
-							if(formato.equals(SingleFileExporter.FORMATO_PDF)){
+							if(formato.equals(AbstractSingleFileExporter.FORMATO_PDF)){
 								response.setContentType("application/pdf");
-								fileName = sfe.exportNotificaECAsPdf(ids[0], baos);
+								fileName = ecsfe.exportAsPdf(ec, baos);
 							}
 
 							// Visualizzazione NotificaEC formato XML
-							if(formato.equals(SingleFileExporter.FORMATO_XML)){
+							if(formato.equals(AbstractSingleFileExporter.FORMATO_XML)){
 								response.setContentType("text/xml");
-								fileName = sfe.exportNotificaECAsXml(ids[0], baos);
+								fileName = ecsfe.exportAsRaw(ec, baos);
 							}
 
 							response.setHeader("Content-Disposition", "attachment; filename="+fileName);
 							// committing status and headers
 							//							response.flushBuffer();
 
-						} else if(action.equals(FattureExporter.PARAMETRO_ACTION_SCARTO)){
-							if(!formato.equals(SingleFileExporter.FORMATO_PDF) && !formato.equals(SingleFileExporter.FORMATO_XML))
+						} else if(action.equals(PARAMETRO_ACTION_SCARTO)){
+							if(!formato.equals(AbstractSingleFileExporter.FORMATO_PDF) && !formato.equals(AbstractSingleFileExporter.FORMATO_XML))
 								throw new ExportException("Si e' verificato un errore durante l'export: Il formato richiesto non e' disponibile per la risorsa di tipo Scarto Notifica EC.");
+
+							ScartoECSingleFileExporter ecsfe = (ScartoECSingleFileExporter) sfe;
+							ExtendedNotificaEsitoCommittente ec = ecsfe.convertToObject(ids[0]);
+
+
 							// Visualizzazione Scarto formato PDF
-							if(formato.equals(SingleFileExporter.FORMATO_PDF)){
+							if(formato.equals(AbstractSingleFileExporter.FORMATO_PDF)){
 								response.setContentType("application/pdf");
-								fileName = sfe.exportScartoNoteECAsPdf(ids[0], baos);
+								fileName = ecsfe.exportAsPdf(ec, baos);
 							}
 
 							// Visualizzazione Scarto formato XML
-							if(formato.equals(SingleFileExporter.FORMATO_XML)){
+							if(formato.equals(AbstractSingleFileExporter.FORMATO_XML)){
 								response.setContentType("text/xml");
-								fileName = sfe.exportScartoNoteECAsXml(ids[0], baos);
+								fileName = ecsfe.exportAsRaw(ec, baos);
 							}
 
 							response.setHeader("Content-Disposition", "attachment; filename="+fileName);
 							// committing status and headers
 						} else if(action.equals(FattureExporter.PARAMETRO_ACTION_PCC_RIALLINEAMENTO)){
-							if(!formato.equals(SingleFileExporter.FORMATO_PDF))
+							if(!formato.equals(AbstractSingleFileExporter.FORMATO_PDF))
 								throw new ExportException("Si e' verificato un errore durante l'export: Il formato richiesto non e' disponibile per la risorsa di tipo Riallineamento PCC.");
+
+							PccTracciaResponseSingleFileExporter riallineamentoSFE = (PccTracciaResponseSingleFileExporter) sfe;
+							PccTraccia object = riallineamentoSFE.convertToObject(ids[0]); 
 							
 							// Visualizzazione Scarto formato PDF
-							if(formato.equals(SingleFileExporter.FORMATO_PDF)){
+							if(formato.equals(AbstractSingleFileExporter.FORMATO_PDF)){
 								response.setContentType("application/pdf");
-								fileName = sfe.exportPccRiallineamentoAsPdf(ids[0], baos);
+								fileName = riallineamentoSFE.exportAsPdf(object, baos);
 							}
 							
 							response.setHeader("Content-Disposition", "attachment; filename="+fileName);
@@ -335,6 +365,55 @@ public class FattureExporter  extends HttpServlet{
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 
 			Utils.copy(bais, response.getOutputStream()); 
+		}
+	}
+
+	private List<IdFattura> getLstIdFattura(IFatturaElettronicaServiceSearch fatturaSearchDAO, IExpression expressionFromSearch) throws Exception {
+		IPaginatedExpression pagExpr = null;
+
+		int start = 0;
+		int limit = 1000;
+		if(expressionFromSearch != null){
+			pagExpr = fatturaSearchDAO.toPaginatedExpression(expressionFromSearch);
+			pagExpr.sortOrder(SortOrder.DESC);
+			pagExpr.addOrder(FatturaElettronica.model().DATA_RICEZIONE);
+		}
+		else 
+			pagExpr = fatturaSearchDAO.newPaginatedExpression();
+
+		pagExpr.offset(start);
+		pagExpr.limit(limit);
+		List<IdFattura> listFattura = fatturaSearchDAO.findAllIds(pagExpr);
+
+		int size = listFattura.size();
+		while(size>0){
+
+			start+=listFattura.size();
+			pagExpr.offset(start);
+			pagExpr.limit(limit);
+
+			List<IdFattura> findAllIds = fatturaSearchDAO.findAllIds(pagExpr);
+			listFattura.addAll(findAllIds);
+			size = findAllIds.size();
+		}
+		return listFattura;
+
+	}
+
+	private AbstractSingleFileExporter<?, ?> getSingleFileExporter(String action) throws Exception {
+
+		if(action.equals(PARAMETRO_ACTION_FATTURA)) {
+			return new FatturaSingleFileExporter(log);
+		} else if(action.equals(PARAMETRO_ACTION_ALLEGATO)) { 
+			return new AllegatoSingleFileExporter(log);
+		} else if(action.equals(PARAMETRO_ACTION_NOTIFICA_EC)) {
+			return new NotificaECSingleFileExporter(log);
+		} else if(action.equals(PARAMETRO_ACTION_SCARTO)) {
+			return new ScartoECSingleFileExporter(log);
+		} else if(action.equals(PARAMETRO_ACTION_NOTIFICA_DT)) {
+			return new NotificaDTSingleFileExporter(log);
+		} else {
+			throw new ExportException("Si e' verificato un errore durante l'export: Tipo di risorsa richiesta ["+action+"] non disponibile.");
 		}
 	}
 }

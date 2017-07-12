@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -28,17 +27,18 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
+import org.govmix.proxy.fatturapa.notificaesitocommittente.NotificaEC;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdDipartimento;
 import org.govmix.proxy.fatturapa.orm.IdUtente;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoCommittenteType;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
-import org.govmix.proxy.fatturapa.notificaesitocommittente.NotificaEC;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.NotificaEsitoCommittenteBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.UtenteBD;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
+import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.business.exception.NotificaGiaInviataException;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.converter.NotificaEsitoCommittenteConverter;
 
 public class InvioNotificaEsitoCommittente {
@@ -114,7 +114,10 @@ public class InvioNotificaEsitoCommittente {
 			throw new Exception("L'utente ["+idUtente.toJson()+"] non appartiene al dipartimento destinatario della fattura.");
 		}
 
+		if(notificaEsitoCommittenteBD.canNotificaEsitoCommittenteBeSent(notificaEsitoCommittente.getIdFattura()))
 		notificaEsitoCommittenteBD.create(notificaEsitoCommittente);
+		else
+			throw new NotificaGiaInviataException("Impossibile inviare la Notifica di Esito Committente per la fattura con id ["+notificaEsitoCommittente.getIdFattura().toJson()+"] in quanto ne e' stata gia' inviata una");
 
 		EsitoType esito = notificaEsitoCommittente.getEsito().equals(EsitoCommittenteType.EC01) ? EsitoType.IN_ELABORAZIONE_ACCETTATO : EsitoType.IN_ELABORAZIONE_RIFIUTATO;
 		fatturaElettronicaBD.updateEsito(notificaEsitoCommittente.getIdFattura(), esito);

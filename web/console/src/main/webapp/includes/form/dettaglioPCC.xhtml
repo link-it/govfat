@@ -424,7 +424,7 @@
 		<f:facet name="controls">
 			<h:panelGroup id="panelChiudiEditContabilizzazioni">
 				<a href="#"
-					onclick="Richfaces.hideModalPanel('editPanelContabilizzazioni');">Chiudi</a>
+					onclick="Richfaces.hideModalPanel('editPanelContabilizzazioni');">#{msg['commons.label.chiudi']}</a>
 			</h:panelGroup>
 		</f:facet>
 		<a4j:outputPanel id="outPanelContabilizzazioniError11"
@@ -458,7 +458,7 @@
 			</h:panelGroup>
 		</a4j:outputPanel>
 		<p class="legend">
-			<strong>Note:</strong> (<em>*</em>) Campi obbligatori
+			<strong>#{msg['commons.label.note']}</strong> (<em>*</em>) #{msg['commons.label.campiObbligatori']}
 		</p>
 		<!-- Form Aggiungi contabilizzazione  -->
 		<op2web:form formBean="#{contabilizzazioneMBean.form}" rendered="true">
@@ -493,7 +493,7 @@
 		</f:facet>
 		<f:facet name="controls">
 			<h:panelGroup id="panelChiudiEditScadenze">
-				<a href="#" onclick="Richfaces.hideModalPanel('editPanelScadenze');">Chiudi</a>
+				<a href="#" onclick="Richfaces.hideModalPanel('editPanelScadenze');">#{msg['commons.label.chiudi']}</a>
 			</h:panelGroup>
 		</f:facet>
 		<a4j:outputPanel id="outPanelScadenzeError11" ajaxRendered="true">
@@ -524,7 +524,7 @@
 			</h:panelGroup>
 		</a4j:outputPanel>
 		<p class="legend">
-			<strong>Note:</strong> (<em>*</em>) Campi obbligatori
+			<strong>#{msg['commons.label.note']}</strong> (<em>*</em>) #{msg['commons.label.campiObbligatori']}
 		</p>
 		<!-- Form Aggiungi scadenza  -->
 		<op2web:form formBean="#{scadenzaMBean.form}" rendered="true">

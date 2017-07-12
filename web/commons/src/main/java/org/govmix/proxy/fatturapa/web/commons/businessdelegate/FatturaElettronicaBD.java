@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -591,7 +590,7 @@ public class FatturaElettronicaBD extends BaseBD {
 		}
 	}
 
-	public void updateEsitoScadenza(IdFattura idFattura, PccTracciaTrasmissioneEsito esito, boolean existScadenze)  throws Exception {
+	public void updateEsitoScadenza(IdFattura idFattura, PccTracciaTrasmissioneEsito esito)  throws Exception {
 		try {
 			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase()); 
 			CustomField esitoCustomField = new CustomField("id_scadenza", Long.class, "id_scadenza", converter.toTable(FatturaElettronica.model()));
@@ -599,12 +598,12 @@ public class FatturaElettronicaBD extends BaseBD {
 			if(esito != null) {
 				esitoField = new UpdateField(esitoCustomField, esito.getId());
 			}else {
-				FatturaElettronica f = this.get(idFattura);
-				if((f.getIdEsitoScadenza() == null || f.getIdEsitoScadenza().getIdTrasmissioneEsito() < 0) && existScadenze) {
-					throw new OperazioneNonPermessaException("Fattura ["+idFattura.toJson()+"] in stato di elaborazione, impossibile inviare un piano di scadenze");
-				} else {
+//				FatturaElettronica f = this.get(idFattura);
+//				if((f.getIdEsitoScadenza() == null || f.getIdEsitoScadenza().getIdTrasmissioneEsito() < 0) && existScadenze) {
+//					throw new OperazioneNonPermessaException("Fattura ["+idFattura.toJson()+"] in stato di elaborazione, impossibile inviare un piano di scadenze");
+//				} else {
 					esitoField = new UpdateField(esitoCustomField, null);					
-				}
+//				}
 			}
 			this.service.updateFields(idFattura, esitoField);
 		} catch (ServiceException e) {
@@ -616,7 +615,22 @@ public class FatturaElettronicaBD extends BaseBD {
 		}
 	}
 
-	public void updateEsitoContabilizzazione(IdFattura idFattura, PccTracciaTrasmissioneEsito esito, boolean existContabilizzazioni)  throws Exception {
+	public void checkEsitoScadenza(IdFattura idFattura)  throws Exception {
+		try {
+			FatturaElettronica f = this.get(idFattura);
+			if((f.getIdEsitoScadenza() == null || f.getIdEsitoScadenza().getIdTrasmissioneEsito() < 0)) {
+				throw new OperazioneNonPermessaException("Fattura ["+idFattura.toJson()+"] in stato di elaborazione, impossibile inviare un piano di scadenze");
+			}
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la checkEsitoScadenza: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la checkEsitoScadenza: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public void updateEsitoContabilizzazione(IdFattura idFattura, PccTracciaTrasmissioneEsito esito)  throws Exception {
 		try {
 			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase()); 
 			CustomField esitoCustomField = new CustomField("id_contabilizzazione", Long.class, "id_contabilizzazione", converter.toTable(FatturaElettronica.model()));
@@ -624,12 +638,12 @@ public class FatturaElettronicaBD extends BaseBD {
 			if(esito != null) {
 				esitoField = new UpdateField(esitoCustomField, esito.getId());
 			}else {
-				FatturaElettronica f = this.get(idFattura);
-				if((f.getIdEsitoContabilizzazione() == null || f.getIdEsitoContabilizzazione().getIdTrasmissioneEsito() < 0) && existContabilizzazioni) {
-					throw new OperazioneNonPermessaException("Fattura ["+idFattura.toJson()+"] in stato di elaborazione, impossibile inviare un piano di contabilizzazioni");
-				} else {
+//				FatturaElettronica f = this.get(idFattura);
+//				if((f.getIdEsitoContabilizzazione() == null || f.getIdEsitoContabilizzazione().getIdTrasmissioneEsito() < 0) && existContabilizzazioni) {
+//					throw new OperazioneNonPermessaException("Fattura ["+idFattura.toJson()+"] in stato di elaborazione, impossibile inviare un piano di contabilizzazioni");
+//				} else {
 					esitoField = new UpdateField(esitoCustomField, null);					
-				}
+//				}
 			}
 
 			this.service.updateFields(idFattura, esitoField);
@@ -638,6 +652,22 @@ public class FatturaElettronicaBD extends BaseBD {
 			throw new Exception(e);
 		} catch (NotImplementedException e) {
 			this.log.error("Errore durante la updateEsito: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public void checkEsitoContabilizzazione(IdFattura idFattura)  throws Exception {
+		try {
+			FatturaElettronica f = this.get(idFattura);
+			if((f.getIdEsitoContabilizzazione() == null || f.getIdEsitoContabilizzazione().getIdTrasmissioneEsito() < 0)) {
+				throw new OperazioneNonPermessaException("Fattura ["+idFattura.toJson()+"] in stato di elaborazione, impossibile inviare un piano di contabilizzazioni");
+			}
+
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la checkEsitoContabilizzazione: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la checkEsitoContabilizzazione: " + e.getMessage(), e);
 			throw new Exception(e);
 		}
 	}

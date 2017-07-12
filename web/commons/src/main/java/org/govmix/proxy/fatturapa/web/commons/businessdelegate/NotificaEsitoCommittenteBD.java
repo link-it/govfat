@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -112,13 +111,13 @@ public class NotificaEsitoCommittenteBD extends BaseBD {
 	public List<NotificaEsitoCommittente> findAllNotifiche(Date date, int offset, int limit) throws Exception {
 		try {
 			IExpression exp1 = this.service.newExpression();
-			exp1.lessEquals(NotificaEsitoCommittente.model().DATA_INVIO_SDI, date).and().isNull(NotificaEsitoCommittente.model().XML);
+			exp1.equals(NotificaEsitoCommittente.model().STATO_CONSEGNA_SDI, StatoConsegnaType.NON_CONSEGNATA).or().equals(NotificaEsitoCommittente.model().STATO_CONSEGNA_SDI, StatoConsegnaType.IN_RICONSEGNA);
 			
 			IExpression exp2 = this.service.newExpression();
-			exp2.isNull(NotificaEsitoCommittente.model().DATA_INVIO_SDI);
+			exp2.isNull(NotificaEsitoCommittente.model().DATA_PROSSIMA_CONSEGNA_SDI).or().lessEquals(NotificaEsitoCommittente.model().DATA_PROSSIMA_CONSEGNA_SDI, date);
 
 			IPaginatedExpression exp = this.service.newPaginatedExpression();
-			exp.or(exp1, exp2);
+			exp.and(exp1, exp2);
 			exp.sortOrder(SortOrder.ASC);
 			exp.addOrder(NotificaEsitoCommittente.model().DATA_INVIO_ENTE);
 			exp.offset(offset);
@@ -143,13 +142,13 @@ public class NotificaEsitoCommittenteBD extends BaseBD {
 		try {
 			
 			IExpression exp1 = this.service.newExpression();
-			exp1.lessEquals(NotificaEsitoCommittente.model().DATA_INVIO_SDI, date).and().isNull(NotificaEsitoCommittente.model().XML);
+			exp1.equals(NotificaEsitoCommittente.model().STATO_CONSEGNA_SDI, StatoConsegnaType.NON_CONSEGNATA).or().equals(NotificaEsitoCommittente.model().STATO_CONSEGNA_SDI, StatoConsegnaType.IN_RICONSEGNA);
 			
 			IExpression exp2 = this.service.newExpression();
-			exp2.isNull(NotificaEsitoCommittente.model().DATA_INVIO_SDI);
+			exp2.isNull(NotificaEsitoCommittente.model().DATA_PROSSIMA_CONSEGNA_SDI).or().lessEquals(NotificaEsitoCommittente.model().DATA_PROSSIMA_CONSEGNA_SDI, date);
 
 			IExpression exp = this.service.newExpression();
-			exp.or(exp1, exp2);
+			exp.and(exp1, exp2);
 
 			return this.service.count(exp).longValue();
 		} catch (ServiceException e) {

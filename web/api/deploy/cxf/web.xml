@@ -94,7 +94,7 @@
   </servlet>
   <servlet>
     <servlet-name>ServletSonda</servlet-name>
-    <servlet-class>org.govmix.proxy.fatturapa.web.api.utils.ServletSonda</servlet-class>
+    <servlet-class>org.govmix.proxy.fatturapa.web.commons.sonde.ServletSonda</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>ServletSonda</servlet-name>

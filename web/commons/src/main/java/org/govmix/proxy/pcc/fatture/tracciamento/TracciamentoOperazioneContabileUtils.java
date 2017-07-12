@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -44,7 +43,6 @@ import org.govmix.pcc.fatture.OperazioneContabilizzazioneTipo;
 import org.govmix.pcc.fatture.OperazioneTipo;
 import org.govmix.pcc.fatture.PagamentoStornoTipo;
 import org.govmix.pcc.fatture.PagamentoTipo;
-import org.govmix.pcc.fatture.ProxyOperazioneContabileRichiestaTipo;
 import org.govmix.pcc.fatture.StatoDebitoTipo;
 import org.govmix.pcc.fatture.TipoOperazioneTipo;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
@@ -73,6 +71,16 @@ public class TracciamentoOperazioneContabileUtils {
 	private PccScadenzaBD scadenzaBD;
 	private List<TipoOperazioneTipo> operazioniTracciabili;
 	private Logger log;
+	
+	// riallineamento
+	private List<String> addLiq;
+	private List<String> addSosp;
+	private List<String> addNoliq;
+	private List<String> addPagamento;
+	
+	private List<String> clearLiq;
+	private List<String> clearSosp;
+	private List<String> clearNoliq;
 
 	public TracciamentoOperazioneContabileUtils(Logger log) throws Exception {
 		this.log = log;
@@ -87,22 +95,95 @@ public class TracciamentoOperazioneContabileUtils {
 		this.operazioniTracciabili.add(TipoOperazioneTipo.CS);
 		this.operazioniTracciabili.add(TipoOperazioneTipo.CCS);
 		this.operazioniTracciabili.add(TipoOperazioneTipo.SC);
+		
+		this.addLiq = new ArrayList<String>();
+		this.addLiq.add("DebitiPerInteressiMoratori");
+		this.addLiq.add("DocumentiRespintiFoglia");
+		this.addLiq.add("EccedenzeDiContabilizzazione");
+		this.addLiq.add("EccedenzeDiPagamento");
+		this.addLiq.add("DocumentiPresentati");
+		this.addLiq.add("DocumentiRicevuti");
+		this.addLiq.add("ErarioIVASplit");
+		
+		
+		this.addSosp = new ArrayList<String>();
+		this.addSosp.add("PagamentiFornitoriCO");
+		this.addSosp.add("PagamentiFornitoriCA");
+		this.addSosp.add("VersamentiIVASplit");
+		this.addSosp.add("PagamentiBancheCessionarieCO");
+		this.addSosp.add("PagamentiBancheCessionarieCA");
+		this.addSosp.add("CompensazioniAltreChiusureIVA");
+		this.addSosp.add("PagamentiAgenziaRiscossioneCO");
+		this.addSosp.add("PagamentiAgenziaRiscossioneCA");
+		this.addSosp.add("PagamentiAgenziaEntrateCO");
+		this.addSosp.add("PagamentiAgenziaEntrateCA");
+
+		
+		this.addNoliq = new ArrayList<String>();
+		this.addNoliq.add("DebitiNonRiconosciuti");
+		this.addNoliq.add("DebitiNonCommerciali");
+		this.addNoliq.add("DebitiPerInteressiMoratori");
+
+		
+		this.addPagamento = new ArrayList<String>();
+
+		this.addPagamento.add("PagamentiAgenziaEntrateCO");
+		this.addPagamento.add("PagamentiAgenziaEntrateCA");
+		this.addPagamento.add("PagamentiAgenziaRiscossioneCO");
+		this.addPagamento.add("PagamentiAgenziaRiscossioneCA");
+		this.addPagamento.add("PagamentiBancheCessionarieCO");
+		this.addPagamento.add("PagamentiBancheCessionarieCA");
+		this.addPagamento.add("PagamentiFornitoriCO");
+		this.addPagamento.add("PagamentiFornitoriCA");
+		this.addPagamento.add("EccedenzeDiPagamento");
+		this.addPagamento.add("CompensazioniAltreChiusureIVA");
+		this.addPagamento.add("VersamentiIVASplit");
+
+		this.clearLiq = new ArrayList<String>();
+		this.clearLiq.add("DebitiLiquidatiCO");
+		this.clearLiq.add("DebitiLiquidatiCA");
+		this.clearLiq.add("DebitiInAttesaDiLiquidazioneCO");
+		this.clearLiq.add("DebitiInAttesaDiLiquidazioneCA");
+		this.clearLiq.add("DebitiInAttesaDiLiquidazioneNA");
+		this.clearLiq.add("DebitiLiquidabiliNonCommercialiCO");
+		this.clearLiq.add("DebitiLiquidabiliNonCommercialiCA");
+
+		this.clearNoliq = new ArrayList<String>();
+		this.clearNoliq.add("DebitiNonRiconosciuti");
+		this.clearNoliq.add("DebitiNonCommerciali");
+		this.clearNoliq.add("DebitiPerInteressiMoratori");
+
+		
+		this.clearSosp = new ArrayList<String>();
+		this.clearSosp.add("DebitiACaricoDiTerziCA");
+		this.clearSosp.add("DebitiACaricoDiTerziCO");
+		this.clearSosp.add("DebitiACaricoDiTerziNA");
+		this.clearSosp.add("DebitiContestatiCA");
+		this.clearSosp.add("DebitiContestatiCO");
+		this.clearSosp.add("DebitiContestatiNA");
+		this.clearSosp.add("DebitiInAttesaDiAccettazioneCA");
+		this.clearSosp.add("DebitiInAttesaDiAccettazioneCO");
+		this.clearSosp.add("DebitiInAttesaDiAccettazioneNA");
+		this.clearSosp.add("DebitiInContenziosoCA");
+		this.clearSosp.add("DebitiInContenziosoCO");
+		this.clearSosp.add("DebitiInContenziosoNA");
+
+		
 
 	}
 
-	public void tracciaOperazioneContabile(ProxyOperazioneContabileRichiestaTipo proxyOperazioneContabileRichiestaTipo, AuthorizationBeanResponse auth, IdFattura idFattura) throws Exception {
-		OperazioneTipo operaz = proxyOperazioneContabileRichiestaTipo.getDatiRichiesta().getListaOperazione().getOperazione();
+	public void tracciaOperazioneContabile(OperazioneTipo operaz, String sistemaRichiedente, String utenteRichiedente, IdFattura idFattura) throws Exception {
 
 		if(this.operazioniTracciabili.contains(operaz.getTipoOperazione())) {
 
 			switch(operaz.getTipoOperazione()) {
 			case CCS: tracciaCancellazioneComunicazioniScadenza(operaz, idFattura);
 			break;
-			case CO: tracciaContabilizzazioneFattura(operaz, auth, idFattura);
+			case CO: tracciaContabilizzazioneFattura(operaz, sistemaRichiedente, utenteRichiedente, idFattura);
 			break;
 			case CP: tracciaPagamento(operaz, idFattura);
 			break;
-			case CS: tracciaComunicazioneScadenza(operaz, auth, idFattura);
+			case CS: tracciaComunicazioneScadenza(operaz, sistemaRichiedente, utenteRichiedente, idFattura);
 			break;
 			case RC: //NOP
 			break;
@@ -145,7 +226,9 @@ public class TracciamentoOperazioneContabileUtils {
 		this.pccOperazioneContabileBD.deleteContabilizzazioni(idFattura);
 	}
 
-	private List<PccScadenza> tracciaComunicazioneScadenza(OperazioneTipo operaz, AuthorizationBeanResponse auth, IdFattura idFattura) throws Exception {
+	private List<PccScadenza> tracciaComunicazioneScadenza(OperazioneTipo operaz, String sistemaRichiedente, String utenteRichiedente, IdFattura idFattura) throws Exception {
+
+		this.pccOperazioneContabileBD.deleteScadenze(idFattura, false);
 
 		List<PccScadenza> scadenzaLst = new ArrayList<PccScadenza>();
 
@@ -164,8 +247,8 @@ public class TracciamentoOperazioneContabileUtils {
 			}
 			
 			scadenza.setPagatoRicontabilizzato(0d);
-			scadenza.setSistemaRichiedente(auth.getSistemaRichiedente());
-			scadenza.setUtenteRichiedente(auth.getUtenteRichiedente());
+			scadenza.setSistemaRichiedente(sistemaRichiedente);
+			scadenza.setUtenteRichiedente(utenteRichiedente);
 			this.pccOperazioneContabileBD.create(scadenza);
 			scadenzaLst.add(scadenza);
 		}
@@ -235,33 +318,43 @@ public class TracciamentoOperazioneContabileUtils {
 		return pccPagamentoLst;
 	}
 
-	private void tracciaContabilizzazioneFattura(OperazioneTipo operaz, AuthorizationBeanResponse auth, IdFattura idFattura)  throws Exception {
+	private void tracciaContabilizzazioneFattura(OperazioneTipo operaz, String sistemaRichiedente, String utenteRichiedente, IdFattura idFattura)  throws Exception {
 		
-		if(PccProperties.getInstance().getSistemaRichiedenteCruscotto().equals(auth.getSistemaRichiedente())) {
-			this.pccContabilizzazioneBD.deleteByIdFatturaSistemaRichiedente(idFattura, auth.getSistemaRichiedente());			
+		if(PccProperties.getInstance().getSistemaRichiedenteCruscotto().equals(sistemaRichiedente)) {
+			this.pccContabilizzazioneBD.deleteByIdFatturaSistemaRichiedente(idFattura, sistemaRichiedente);			
 		}
 		
 		for(ContabilizzazioneTipo contabilizzazione: operaz.getStrutturaDatiOperazione().getListaContabilizzazione()) {
 			
-			PccContabilizzazione pccContabilizzazione = new PccContabilizzazione();
-			pccContabilizzazione.setDataRichiesta(new Date());
-			pccContabilizzazione.setIdImporto(contabilizzazione.getIdentificativoMovimento());
-			pccContabilizzazione.setSistemaRichiedente(auth.getSistemaRichiedente());
-			pccContabilizzazione.setUtenteRichiedente(auth.getUtenteRichiedente());
-			pccContabilizzazione.setImportoMovimento(contabilizzazione.getImportoMovimento().doubleValue());
-			pccContabilizzazione.setNaturaSpesa(NaturaSpesaType.toEnumConstant(contabilizzazione.getNaturaSpesa().toString()));
-			pccContabilizzazione.setCapitoliSpesa(contabilizzazione.getCapitoliSpesa());
-			pccContabilizzazione.setStatoDebito(StatoDebitoType.toEnumConstant(contabilizzazione.getOperazione().getStatoDebito().value()));
-			
-			if(contabilizzazione.getOperazione().getCausale() != null)
-				pccContabilizzazione.setCausale(CausaleType.toEnumConstant(contabilizzazione.getOperazione().getCausale()));
-			
-			pccContabilizzazione.setDescrizione(contabilizzazione.getDescrizione());
-			pccContabilizzazione.setEstremiImpegno(contabilizzazione.getEstremiImpegno());
-			pccContabilizzazione.setCodiceCig(contabilizzazione.getCodiceCIG());
-			pccContabilizzazione.setCodiceCup(contabilizzazione.getCodiceCUP());
-			pccContabilizzazione.setIdFattura(idFattura);
-			this.pccOperazioneContabileBD.create(pccContabilizzazione);
+			if(contabilizzazione.getImportoMovimento().doubleValue() != 0) {
+				PccContabilizzazione pccContabilizzazione = new PccContabilizzazione();
+				pccContabilizzazione.setDataRichiesta(new Date());
+				
+				if(contabilizzazione.getIdentificativoMovimento() != null) {
+					pccContabilizzazione.setIdImporto(contabilizzazione.getIdentificativoMovimento());
+					pccContabilizzazione.setDescrizione(contabilizzazione.getDescrizione());
+				} else {
+					TransformUtils.populateContabilizzazione(pccContabilizzazione, contabilizzazione.getDescrizione());
+				}
+				pccContabilizzazione.setSistemaRichiedente(sistemaRichiedente);
+				pccContabilizzazione.setUtenteRichiedente(utenteRichiedente);
+
+				pccContabilizzazione.setImportoMovimento(contabilizzazione.getImportoMovimento().doubleValue());
+				pccContabilizzazione.setNaturaSpesa(NaturaSpesaType.toEnumConstant(contabilizzazione.getNaturaSpesa().toString()));
+				pccContabilizzazione.setCapitoliSpesa(contabilizzazione.getCapitoliSpesa());
+				pccContabilizzazione.setStatoDebito(StatoDebitoType.toEnumConstant(contabilizzazione.getOperazione().getStatoDebito().value()));
+				
+				if(contabilizzazione.getOperazione().getCausale() != null)
+					pccContabilizzazione.setCausale(CausaleType.toEnumConstant(contabilizzazione.getOperazione().getCausale()));
+				
+				pccContabilizzazione.setEstremiImpegno(contabilizzazione.getEstremiImpegno());
+				pccContabilizzazione.setCodiceCig(contabilizzazione.getCodiceCIG());
+				pccContabilizzazione.setCodiceCup(contabilizzazione.getCodiceCUP());
+				pccContabilizzazione.setIdFattura(idFattura);
+				this.pccOperazioneContabileBD.create(pccContabilizzazione);
+			} else {
+				this.pccContabilizzazioneBD.deleteByIdFatturaIdMovimento(idFattura, contabilizzazione.getIdentificativoMovimento());
+			}
 		}
 	}
 
@@ -487,44 +580,39 @@ public class TracciamentoOperazioneContabileUtils {
 					
 					DettaglioMovimentoTipo movimento = datiFattura.getDatiRisposta().getDettaglioFattura().getDatiDocumento().getListaDettaglioMovimento().getMovimento().get(i);
 					String statoDebito = movimento.getStatoDebito().trim();
+					String causale = movimento.getCausale().trim();
+					String descrizione = movimento.getDescrizioneContabilizzazione();
 					
-					this.log.debug("Trovato statoDebito ["+statoDebito+"]");
-					if("Liquidazione".equalsIgnoreCase(statoDebito) || "Ricontabilizzazione Liquidato".equalsIgnoreCase(statoDebito) || "Liquidazione da Storno Pagamento".equalsIgnoreCase(statoDebito)) {
-						this.log.debug("Trovato statoDebito ["+statoDebito+"], aggiungo contabilizzazioni LIQ");
+					this.log.debug("Trovato statoDebito ["+causale+"]");
+					if(this.addLiq.contains(causale) && descrizione != null) {
+						this.log.debug("Trovato statoDebito ["+causale+"], aggiungo contabilizzazioni LIQ");
 						lstLiq.addAll(getContabilizzazione(movimento));
-					} else if("Sospeso".equalsIgnoreCase(statoDebito) || "Ricontabilizzazione Sospeso".equalsIgnoreCase(statoDebito)) {
-						this.log.debug("Trovato statoDebito ["+statoDebito+"], aggiungo contabilizzazioni SOSP");
+					} else if(this.addSosp.contains(causale) && descrizione != null) {
+						this.log.debug("Trovato statoDebito ["+causale+"], aggiungo contabilizzazioni SOSP");
 						lstSosp.addAll(getContabilizzazione(movimento));
-					} else if("Non Liquidato".equalsIgnoreCase(statoDebito) || "Ricontabilizzazione Non Liquidato".equalsIgnoreCase(statoDebito)) {
-						this.log.debug("Trovato statoDebito ["+statoDebito+"], aggiungo contabilizzazioni NOLIQ");
+					} else if(this.addNoliq.contains(causale) && descrizione != null) {
+						this.log.debug("Trovato statoDebito ["+causale+"], aggiungo contabilizzazioni NOLIQ");
 						lstNoliq.addAll(getContabilizzazione(movimento));
-					} else if("Adeguamento Liquidato da Sospeso".equalsIgnoreCase(statoDebito)) {
-						this.log.debug("Trovato statoDebito ["+statoDebito+"], sottraggo SOSP");
-						sottraiImporto(movimento, lstSosp);
-					} else if("Adeguamento Liquidato da Non Liquidato".equalsIgnoreCase(statoDebito) || "Adeguamento  Liquidato da Non Liquidato".equalsIgnoreCase(statoDebito)) {
-						this.log.debug("Trovato statoDebito ["+statoDebito+"], sottraggo NOLIQ");
-						sottraiImporto(movimento, lstNoliq);
-					} else if("Pagamento su Liquidato".equalsIgnoreCase(statoDebito)) {
-						this.log.debug("Trovato statoDebito ["+statoDebito+"], sottraggo LIQ");
-						sottraiImporto(movimento, lstLiq);
-					} else if("Pagamento".equalsIgnoreCase(statoDebito)) {
-						this.log.debug("Trovato statoDebito ["+statoDebito+"], aggiungo Pagamento");
+					} else if(this.addPagamento.contains(causale) && "Pagamento".equals(statoDebito)) {
+						this.log.debug("Trovato statoDebito ["+causale+"], aggiungo Pagamento");
 						lstPag.addAll(getPagamento(movimento, false));
-					} else if("Storno Conto Sospeso".equalsIgnoreCase(statoDebito)) {
-						this.log.debug("Trovato statoDebito ["+statoDebito+"], azzero SOSP");
-						lstSosp.clear();
-					} else if("Storno Pagamento".equalsIgnoreCase(statoDebito)) {
-						this.log.debug("Trovato statoDebito ["+statoDebito+"], aggiungo PAG negativo");
+					} else if(this.addPagamento.contains(causale) && "StornoPagamento".equals(statoDebito)) {
+						this.log.debug("Trovato statoDebito ["+causale+"], aggiungo PAG negativo");
 						lstPag.addAll(getPagamento(movimento, true));
-					} else if("Storno Conto Liquidato".equalsIgnoreCase(statoDebito)) {
-						this.log.debug("Trovato statoDebito ["+statoDebito+"], azzero LIQ");
+						lstLiq.addAll(getContabilizzazione(movimento));
+					} else if(this.clearLiq.contains(causale) && "StornoContabilizzazione".equals(statoDebito)) {
+						this.log.debug("Trovato statoDebito ["+causale+"], azzero LIQ");
 						lstLiq.clear();
-					} else if("Storno Conto Non Liquidato".equalsIgnoreCase(statoDebito)) {
-						this.log.debug("Trovato statoDebito ["+statoDebito+"], azzero NOLIQ");
+					} else if(this.clearSosp.contains(causale) && "StornoContabilizzazione".equals(statoDebito)) {
+						this.log.debug("Trovato statoDebito ["+causale+"], azzero SOSP");
+						lstSosp.clear();
+					} else if(this.clearNoliq.contains(causale) && "StornoContabilizzazione".equals(statoDebito)) {
+						this.log.debug("Trovato statoDebito ["+causale+"], azzero NOLIQ");
 						lstNoliq.clear();
 					} else {
-						this.log.debug("StatoDebito ["+statoDebito+"] corrisponde a NOP");
+						this.log.debug("StatoDebito ["+causale+"] corrisponde a NOP");
 					}
+					
 				}
 			}
 			
@@ -578,7 +666,7 @@ public class TracciamentoOperazioneContabileUtils {
 				this.log.debug("Inserisco ["+lstPag.size()+"] PAG");
 				for(PccPagamento pag: lstPag) {
 					pag.setIdFattura(idFattura);
-					pag.setIdFiscaleIvaBeneficiario(datiFattura.getDatiRisposta().getDettaglioFattura().getDatiDocumento().getIdFiscaleIVA()); //TODO verificare
+					pag.setIdFiscaleIvaBeneficiario(datiFattura.getDatiRisposta().getDettaglioFattura().getDatiDocumento().getIdFiscaleIVA());
 					this.pccOperazioneContabileBD.create(pag);
 				}
 			} else {
@@ -615,71 +703,6 @@ public class TracciamentoOperazioneContabileUtils {
 			
 	}
 	
-	private void sottraiImporto(DettaglioMovimentoTipo movimento, List<PccContabilizzazione> lstCont) throws Exception {
-		
-		List<PccContabilizzazione> contLst = getContabilizzazione(movimento);
-		
-		for(PccContabilizzazione contDaSottrarre: contLst) {
-			double rimanenza = contDaSottrarre.getImportoMovimento();
-			
-			if(rimanenza < 0) rimanenza = -rimanenza;
-			
-			List<PccContabilizzazione> lstContabilizzazioniStessoCigCup = new ArrayList<PccContabilizzazione>();
-			List<PccContabilizzazione> lstContabilizzazioniDiversoCigCup = new ArrayList<PccContabilizzazione>();
-			for(PccContabilizzazione cont: lstCont) {
-				if(cont.getCodiceCig() != null && cont.getCodiceCup() != null && cont.getNaturaSpesa() != null
-						&&
-						cont.getCodiceCig().equals(contDaSottrarre.getCodiceCig()) && cont.getCodiceCup().equals(contDaSottrarre.getCodiceCup()) && cont.getNaturaSpesa().getValue().equals(contDaSottrarre.getNaturaSpesa().getValue())) {
-					lstContabilizzazioniStessoCigCup.add(cont);
-				} else {
-					lstContabilizzazioniDiversoCigCup.add(cont);
-				}
-			}
-				
-			for(PccContabilizzazione contStessoCigCup: lstContabilizzazioniStessoCigCup) {
-				if(rimanenza > 0) {
-					if(contStessoCigCup.getImportoMovimento() > rimanenza) {
-						contStessoCigCup.setImportoMovimento(contStessoCigCup.getImportoMovimento() - rimanenza);
-						rimanenza = 0;
-					} else {
-						rimanenza -= contStessoCigCup.getImportoMovimento();
-						contStessoCigCup.setImportoMovimento(0);
-					}
-				} else {
-					continue;
-				}
-			}
-
-			for(PccContabilizzazione contDiversoCigCup: lstContabilizzazioniDiversoCigCup) {
-				if(rimanenza > 0) {
-					if(contDiversoCigCup.getImportoMovimento() > rimanenza) {
-						contDiversoCigCup.setImportoMovimento(contDiversoCigCup.getImportoMovimento() - rimanenza);
-						rimanenza = 0;
-					} else {
-						rimanenza -= contDiversoCigCup.getImportoMovimento();
-						contDiversoCigCup.setImportoMovimento(0);
-					}
-				} else {
-					continue;
-				}
-			}
-			
-			lstCont.clear();
-			
-			for(PccContabilizzazione contStessoCigCup: lstContabilizzazioniStessoCigCup) {
-				if(contStessoCigCup.getImportoMovimento() > 0) {
-					lstCont.add(contStessoCigCup);
-				}
-			}
-
-			for(PccContabilizzazione contDiversoCigCup: lstContabilizzazioniDiversoCigCup) {
-				if(contDiversoCigCup.getImportoMovimento() > 0) {
-					lstCont.add(contDiversoCigCup);
-				}
-			}
-		}
-	}
-
 	private PccContabilizzazione getContabilizzazione(DettaglioMovimentoTipo movimento, NaturaSpesaType naturaSpesa, double importo) throws Exception {
 		PccContabilizzazione pccContabilizzazione = new PccContabilizzazione();
 		pccContabilizzazione.setDataRichiesta(movimento.getDataMovimento());
@@ -876,7 +899,7 @@ public class TracciamentoOperazioneContabileUtils {
 		}
 	}
 
-	public void aggiornaContabilizzazioniDopoStornoPagamento(IdFattura idFattura, PagamentoStornoTipo storno, AuthorizationBeanResponse response) throws Exception {
+	public void aggiornaContabilizzazioniDopoStornoPagamento(IdFattura idFattura, PagamentoStornoTipo storno, String sistemaRichiedente, String utenteRichiedente) throws Exception {
 		
 		PccContabilizzazione contabilizzazione = new PccContabilizzazione();
 		NaturaSpesaType naturaSpesa = null;
@@ -897,8 +920,8 @@ public class TracciamentoOperazioneContabileUtils {
 		contabilizzazione.setStatoDebito(StatoDebitoType.LIQ);
 		contabilizzazione.setImportoMovimento(storno.getImportoStorno().doubleValue());
 		contabilizzazione.setIdFattura(idFattura);
-		contabilizzazione.setSistemaRichiedente(response.getSistemaRichiedente());
-		contabilizzazione.setUtenteRichiedente(response.getUtenteRichiedente());
+		contabilizzazione.setSistemaRichiedente(sistemaRichiedente);
+		contabilizzazione.setUtenteRichiedente(utenteRichiedente);
 		contabilizzazione.setIdImporto(UUID.randomUUID().toString().substring(0, 3));
 		
 		this.pccContabilizzazioneBD.create(contabilizzazione);
@@ -979,6 +1002,7 @@ public class TracciamentoOperazioneContabileUtils {
 		double importoInScadenza = 0;
 
 		for(PccScadenza scadenza: scadenzeLst) {
+			if(scadenza.getImportoInScadenza() == null) return; // quando c'e' una scadenza senza importo non possiamo fare assunzioni, quindi non aggiorniamo le scadenze)
 			importoInScadenza += scadenza.getImportoInScadenza();
 		}
 		
@@ -1043,6 +1067,10 @@ public class TracciamentoOperazioneContabileUtils {
 			}
 			return lst;
 		}
+
+	public boolean existPagamentiByIdFattura(IdFattura idFattura) throws Exception {
+		return this.pccPagamentoBD.existPagamentiByIdFattura(idFattura);
+	}
 
 	public List<ContabilizzazioneTipo> getContabilizzazioniByIdFatturaDiversoSistemaRichiedenteEIdImportoDiversi(
 			IdFattura idFattura, String sistemaRichiedente,

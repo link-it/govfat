@@ -425,7 +425,9 @@
     <value name="stato" field="stato" usage="required" enum-value-method="toString"/>
     <value name="dataUltimaTrasmissione" field="dataUltimaTrasmissione" usage="required"/>
     <value name="dataUltimoTentativoEsito" field="dataUltimoTentativoEsito" usage="optional"/>
+    <value name="codiciErrore" field="codiciErrore" usage="optional"/>
     <value name="rispedizione" field="rispedizione" default="false" usage="required"/>
+    <value name="rispedizioneDopoQuery" field="rispedizioneDopoQuery" usage="required"/>
     <value name="rispedizioneMaxTentativi" field="rispedizioneMaxTentativi" usage="optional"/>
     <value name="rispedizioneProssimoTentativo" field="rispedizioneProssimoTentativo" usage="optional"/>
     <value name="rispedizioneNumeroTentativi" field="rispedizioneNumeroTentativi" usage="optional"/>

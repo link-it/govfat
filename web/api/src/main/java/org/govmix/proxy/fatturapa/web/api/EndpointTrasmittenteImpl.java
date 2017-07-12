@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -82,7 +81,7 @@ public class EndpointTrasmittenteImpl implements EndpointTrasmittente {
 
 
 	@Override
-	public Response postInviaFattura(String tipoFattura, InputStream lottoStream) {
+	public Response postInviaFattura(String tipoFattura, String versione, InputStream lottoStream) {
 		this.log.info("Invoke inviaFattura");
 
 		try {
@@ -109,7 +108,11 @@ public class EndpointTrasmittenteImpl implements EndpointTrasmittente {
 				throw new Exception("Tipo Fattura ["+tipoFattura+"] non corretto");
 			}
 
-			URL url = new URL(urlOriginale.toString() + "?TipoFile="+tipoFattura+"&IdPaese="+WebApiProperties.getInstance().getInvioFatturaIdPaese()+"&IdCodice="+WebApiProperties.getInstance().getInvioFatturaIdCodice());
+			if(versione == null) {
+				versione = "FPA12";
+			}
+			
+			URL url = new URL(urlOriginale.toString() + "?TipoFile="+tipoFattura+"&Versione="+versione+"&IdPaese="+WebApiProperties.getInstance().getInvioFatturaIdPaese()+"&IdCodice="+WebApiProperties.getInstance().getInvioFatturaIdCodice());
 
 			URLConnection conn = url.openConnection();
 			HttpURLConnection httpConn = (HttpURLConnection) conn;

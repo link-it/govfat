@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -31,6 +30,7 @@ import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.AllegatoFatturaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.AbstractFatturaConverter;
+import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FPA12Converter;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FatturaV10Converter;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FatturaV11Converter;
 
@@ -63,19 +63,24 @@ public class ConsegnaFattura {
 			converter = new FatturaV10Converter(params.getXml(), params);
 		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.equals(params.getFormatoFatturaPA())) {
 			converter = new FatturaV11Converter(params.getXml(), params);
+		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.equals(params.getFormatoFatturaPA()) || 
+				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.equals(params.getFormatoFatturaPA())) {
+			converter = new FPA12Converter(params.getXml(), params);
+		} else {
+			throw new Exception("Formato FatturaPA ["+params.getFormatoFatturaPA()+"] non riconosciuto");
 		}
 
+		
 
 		FatturaElettronica fatturaElettronica = converter.getFatturaElettronica();
 		List<AllegatoFattura> allegatiLst = converter.getAllegati();
 
+		IdFattura idFattura = this.fatturaBD.convertToId(fatturaElettronica);
+
 		if(this.validazioneDAOAbilitata) {
 			this.fatturaBD.validate(fatturaElettronica);
 			if(allegatiLst != null) {
-				IdFattura idFattura = this.fatturaBD.convertToId(fatturaElettronica);
-
 				for(AllegatoFattura allegato: allegatiLst) {
-					
 					allegato.setIdFattura(idFattura);
 					this.allegatoBD.validate(allegato);
 				}
@@ -86,6 +91,7 @@ public class ConsegnaFattura {
 
 		if(allegatiLst != null) {
 			for(AllegatoFattura allegato: allegatiLst) {
+				allegato.setIdFattura(idFattura);
 				this.allegatoBD.create(allegato);
 			}
 		}

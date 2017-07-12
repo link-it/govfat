@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -40,6 +39,7 @@ import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.InvioNotifica;
 import org.govmix.proxy.fatturapa.web.commons.sonde.Sonda;
 import org.govmix.proxy.fatturapa.web.timers.utils.BatchProperties;
+import org.openspcoop2.generic_project.exception.ValidationException;
 
 /**
  * Implementazione dell'interfaccia {@link TimerInserimentoFattura}
@@ -99,7 +99,7 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 								
 								lottoBD.setProcessato(idLotto);
 	
-							} catch(Exception e) {
+							} catch(ValidationException e) {
 								//NOTA: in caso di errore oltre che effettuare il rollback il lotto viene marcato come in errore, e viene inviata una notifica di rifiuto d'ufficio al fornitore
 								connection.rollback();
 								this.log.error("Errore durante l'inserimento del lotto con identificativo SdI ["+lotto.getIdentificativoSdi()+"]: "+e.getMessage(), e);
@@ -163,7 +163,7 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 	}
 
 	public void inserisciFattura(ConsegnaFattura consegnaFattura, LottoFatture lotto,
-			int posizione, String nomeFile, byte[] xml) throws Exception {
+			int posizione, String nomeFile, byte[] xml) throws Exception, ValidationException {
 		ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(lotto, posizione, nomeFile, xml);
 
 		try {

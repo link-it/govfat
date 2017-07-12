@@ -2,8 +2,8 @@
   ProxyoperazionePA - Gestione del formato operazione Elettronica 
   http://www.gov4j.it/operazionepa
   
-  Copyright (c) 2014-2016 Link.it srl (http://link.it). 
-  Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+  Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+  Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
   
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -45,8 +45,7 @@
 				</a4j:htmlCommandLink>
 			</li>
 			<li><h:outputText value="/#{msg['operazione.dettaglio.pageTitle']} (#{operazioneMBean.selectedElement.operazione.value})" rendered="#{operazioneMBean.paginaFrom == 'menu'}" />
-				<a4j:htmlCommandLink action="dettaglioFattura" id="dettaglioFattura"
-					rendered="#{operazioneMBean.paginaFrom == 'dettaglioFattura'}"
+				<a4j:htmlCommandLink action="dettaglioFattura" id="dettaglioFattura" rendered="#{operazioneMBean.paginaFrom == 'dettaglioFattura'}"
 					value="/#{msg['fattura.dettaglio.pageTitle']} (#{operazioneMBean.fattura.cedentePrestatore.value} #{operazioneMBean.fattura.numero.value}/#{operazioneMBean.fattura.anno.value})">
 					<f:setPropertyActionListener value="tabPCC" target="#{fatturaElettronicaMBean.selectedTab}" />
 					<f:setPropertyActionListener value="#{operazioneMBean.fattura}"
@@ -58,8 +57,7 @@
 	</ui:define>
 	<ui:define name="body">
 		<a4j:keepAlive beanName="operazioneMBean"  />
-		<a4j:keepAlive beanName="fatturaElettronicaMBean" />
-		<a4j:keepAlive beanName="trasmissioneMBean" ajaxOnly="true" />
+		<a4j:keepAlive beanName="fatturaElettronicaMBean" ajaxOnly="true" />
 
 		<rich:panel id="panelContainer1" style="padding:0"
 			headerClass="outpanelHeader" styleClass="noborder">
@@ -159,15 +157,22 @@
 							
 						<h:panelGrid id="panelGroupOut_#{datiTrasmissione1.id}" styleClass="#{datiTrasmissione1.styleClass}"
 							columnClasses="#{datiTrasmissione1.columnClasses}" 
-							rendered="#{datiTrasmissione1.rendered}" columns="#{datiTrasmissione1.columns}">
+							rendered="#{datiTrasmissione1.rendered}" columns="5">
 					
 							<op2web:output field="#{fattura.identificativoSdi}" insideGroup="true" />
 							<op2web:output field="#{fattura.posizione}" insideGroup="true" />
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							<h:form id="formDettaglioFattura">
+									<a4j:commandLink id="visualizzaFattura-Link" action="dettaglioFattura" styleClass="buttonNoRed" ajaxSingle="true">
+										<f:setPropertyActionListener value="tabSDI" target="#{fatturaElettronicaMBean.selectedTab}" />
+										<f:setPropertyActionListener value="#{fattura}" target="#{fatturaElettronicaMBean.selectedElement}" />
+										<h:outputText value="#{msg['fattura.dettaglio.pageTitle']}" title="#{msg['fattura.label.ricercaFatture.dettaglioTitle']}" />
+									</a4j:commandLink>
+							</h:form>
 							
 							<op2web:output field="#{fattura.anno}" insideGroup="true" />
 							<op2web:output field="#{fattura.numero}" insideGroup="true" />
 							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+								
 						</h:panelGrid>
 					</op2web:fieldset>
 					

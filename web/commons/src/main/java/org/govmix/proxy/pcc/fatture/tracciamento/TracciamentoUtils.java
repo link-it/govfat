@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -32,7 +31,10 @@ import it.tesoro.fatture.ProxyRispostaTipo;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+
+import javax.xml.ws.WebServiceException;
 
 import org.apache.log4j.Logger;
 import org.govmix.pcc.fatture.OrigineTipo;
@@ -81,7 +83,7 @@ public class TracciamentoUtils {
 	
 
 
-	public PccTraccia getTracciaProxy(NomePccOperazioneType operazione, TestataAsyncRichiestaTipo testata, AuthorizationBeanResponse beanResponse, byte[] xml) throws Exception {
+	public PccTraccia getTracciaProxy(NomePccOperazioneType operazione, TestataAsyncRichiestaTipo testata, AuthorizationBeanResponse beanResponse, byte[] xml, TracciamentoUtils tracciamentoUtils) throws Exception {
 
 		if(this.pccTracciamentoBD.existsTracciaByIdPa(testata.getIdentificativoTransazionePA())) {
 			throw new IdentificativoTransazionePADuplicatoException(testata.getIdentificativoTransazionePA());
@@ -106,6 +108,7 @@ public class TracciamentoUtils {
 		String operazioneValue = operazione.getValue();
 		traccia.setOperazione(operazioneValue);
 		traccia.setTipoOperazione(TipoOperazionePccType.PROXY);
+		tracciamentoUtils.insertOrUpdateTraccia(traccia);
 		return traccia;
 	}
 
@@ -200,6 +203,7 @@ public class TracciamentoUtils {
 		
 		trasmissione.setIdEgovRichiesta(idEgov);
 		
+		traccia.setDataUltimoTentativoEsito(new Date(System.currentTimeMillis()+ (PccProperties.getInstance().getIntervalloSpedizioneEsito() * 60000) ));
 		traccia.setDataUltimaTrasmissione(dataTrasmissione);
 		
 		traccia.addPccTracciaTrasmissione(trasmissione);
@@ -208,9 +212,7 @@ public class TracciamentoUtils {
 			this.log.debug("Traccia idPA["+idPa+"]:esito OK, prendo in carico e non inserisco la rispedizione");
 			traccia.setStato(StatoType.AS_PRESA_IN_CARICO);
 			traccia.setRispedizione(false);
-//			traccia.setRispedizioneProssimoTentativo(null);
-//			traccia.setRispedizioneMaxTentativi(0);
-//			traccia.setRispedizioneNumeroTentativi(0);
+
 			trasmissione.setEsitoTrasmissione(EsitoTrasmissioneType.OK);
 			
 		} else {
@@ -237,13 +239,61 @@ public class TracciamentoUtils {
 			esito.setGdo(date);
 			esito.setDataFineElaborazione(date);
 			esito.setIdEgovRichiesta(idEgov);
-			populateTracciaConInfoTracciaRispedizione(traccia, risposta.getDatiRisposta().getListaErroreTrasmissione());
+			populateTracciaConInfoTracciaRispedizione(traccia, risposta.getDatiRisposta().getListaErroreTrasmissione(), false);
 
 			trasmissione.addPccTracciaTrasmissioneEsito(esito);
 
 		}
 
 		return getTestataRisp(traccia.getIdPaTransazione(), risposta.getDatiRisposta().getEsitoTrasmissione(), traccia.getRispedizione());
+	}
+
+
+	public TestataRispTipo popolaTracciaETrasmissioneProxyErrore(PccTraccia traccia, WebServiceException e, String idEgov) throws Exception {
+		
+		
+		String idPa = traccia.getIdPaTransazioneRispedizione() != null ? traccia.getIdPaTransazioneRispedizione() : traccia.getIdPaTransazione();
+		
+		this.log.debug("Traccia idPA["+idPa+"]: popolo e inserisco una trasmissione");
+		PccTracciaTrasmissione trasmissione = new PccTracciaTrasmissione();
+		
+		Date dataTrasmissione = new Date();
+		
+		Date date = new Date();
+		trasmissione.setGdo(date);
+		trasmissione.setTsTrasmissione(dataTrasmissione);
+		trasmissione.setStatoEsito(StatoEsitoTrasmissioneType.NON_PRESENTE);
+
+		
+		trasmissione.setIdEgovRichiesta(idEgov);
+		
+		traccia.setDataUltimoTentativoEsito(new Date(System.currentTimeMillis()+ (PccProperties.getInstance().getIntervalloSpedizioneEsito() * 60000) ));
+		traccia.setDataUltimaTrasmissione(dataTrasmissione);
+		
+		traccia.addPccTracciaTrasmissione(trasmissione);
+
+		this.log.debug("Traccia idPA["+idPa+"]: esito KO, dettaglio["+e.getMessage()+"]");
+		traccia.setStato(StatoType.AS_ERRORE_PRESA_IN_CARICO);
+
+		trasmissione.setDettaglioErroreTrasmissione("Impossibile contattare la PCC");
+		trasmissione.setEsitoTrasmissione(EsitoTrasmissioneType.KO);
+		PccTracciaTrasmissioneEsito esito = new PccTracciaTrasmissioneEsito();
+
+		PccErroreElaborazione erroreElaboraz = new PccErroreElaborazione();
+		erroreElaboraz.setCodiceEsito("KO");
+		erroreElaboraz.setDescrizioneEsito("Impossibile contattare la PCC");
+		esito.addPccErroreElaborazione(erroreElaboraz);
+
+		esito.setEsitoTrasmissione(EsitoTrasmissioneType.KO);
+		esito.setEsitoElaborazione("--");
+		esito.setDettaglioErroreTrasmissione("Impossibile contattare la PCC");
+		
+		esito.setGdo(date);
+		esito.setDataFineElaborazione(date);
+		esito.setIdEgovRichiesta("--");
+		trasmissione.addPccTracciaTrasmissioneEsito(esito);
+
+		return getTestataRisp(traccia.getIdPaTransazione(), EsitoOkKoTipo.KO, traccia.getRispedizione());
 	}
 
 	public PccTracciaTrasmissioneEsito aggiornaTracciaETrasmissioneQueryOperazioneContabile(
@@ -260,7 +310,8 @@ public class TracciamentoUtils {
 
 	public PccTracciaTrasmissioneEsito aggiornaTracciaETrasmissioneQuery(PccTraccia traccia, PccTracciaTrasmissione trasmissione, AuthorizationBeanRequest beanResponse, EsitoOkKoTipo esitoTrasmissione, ListaErroreTipo listaErroriTrasmissione, String esitoElaborazione, Date dataFineElaborazione, ListaErroreElaborazioneOperazioneTipo listaErroreElaborazione, String idEgov, byte[] risposta) throws Exception {
 		
-		
+		checkForFW0010(traccia, listaErroriTrasmissione, listaErroreElaborazione);
+
 		PccTracciaTrasmissioneEsito trasmissioneEsito = new PccTracciaTrasmissioneEsito();
 		
 		trasmissioneEsito.setGdo(new Date());
@@ -282,9 +333,6 @@ public class TracciamentoUtils {
 			isOkTrasmissione = true;
 			traccia.setRispostaXml(risposta);
 			traccia.setRispedizione(false);
-//			traccia.setRispedizioneProssimoTentativo(null);
-//			traccia.setRispedizioneMaxTentativi(0);
-//			traccia.setRispedizioneNumeroTentativi(0);
 
 		} else {
 			String error = "";
@@ -302,7 +350,7 @@ public class TracciamentoUtils {
 			trasmissioneEsito.setEsitoTrasmissione(EsitoTrasmissioneType.KO);
 			trasmissioneEsito.setEsitoElaborazione("KO");
 			
-			populateTracciaConInfoTracciaRispedizione(traccia, listaErroriTrasmissione);
+			populateTracciaConInfoTracciaRispedizione(traccia, listaErroriTrasmissione, true);
 			
 			if(traccia.getRispedizione() == false)
 				traccia.setRispostaXml(risposta);
@@ -333,6 +381,7 @@ public class TracciamentoUtils {
 				this.pccTracciamentoBD.associaAEsito(trasmissioneEsito, pccErroreElaborazione);
 
 			}
+			
 			populateTracciaConStatoEInfoTracciaRispedizione(traccia, listaErroriTrasmissione, listaErroreElaborazione);
 		} else {
 			isOkElaborazione = true;
@@ -349,6 +398,33 @@ public class TracciamentoUtils {
 		return trasmissioneEsito;
 	}
 	
+	private boolean checkForFW0010(String errorCode) {
+		return "FW0010".equals(errorCode);
+	}
+	
+	private void checkForFW0010(PccTraccia traccia, ListaErroreTipo listaErroriTrasmissione,
+			ListaErroreElaborazioneOperazioneTipo listaErroreElaborazione) throws Exception {
+
+		if(listaErroriTrasmissione != null) {
+			for(ErroreTipo errore: listaErroriTrasmissione.getErroreTrasmissione()) {
+				if(checkForFW0010(errore.getCodice())) {
+					throw new Exception("Errore ["+errore.getCodice()+"] Descrizione ["+errore.getDescrizione()+"]: esito non pronto");
+				}
+					
+			}
+		}
+
+		if(listaErroreElaborazione != null) {
+			for(ErroreElaborazioneOperazioneTipo errore: listaErroreElaborazione.getErroreElaborazione()) {
+				if(checkForFW0010(errore.getCodiceEsitoElaborazioneOperazione())) {
+					throw new Exception("Errore ["+errore.getCodiceEsitoElaborazioneOperazione()+"] Descrizione ["+errore.getDescrizioneEsitoElaborazioneOperazione()+"]: esito non pronto");
+				}
+			}
+		}
+
+		return;
+	}
+
 	private void populateTracciaConStatoEInfoTracciaRispedizione(PccTraccia traccia, ListaErroreTipo listaErroriTrasmissione, ListaErroreElaborazioneOperazioneTipo listaErroreElaborazione) throws Exception {
 		PccRispedizione rispedizione = getRispedizioneByListaErrore(listaErroriTrasmissione, listaErroreElaborazione);
 		String idPa = traccia.getIdPaTransazioneRispedizione() != null ? traccia.getIdPaTransazioneRispedizione() : traccia.getIdPaTransazione();
@@ -359,7 +435,7 @@ public class TracciamentoUtils {
 			traccia.setRispedizioneNumeroTentativi(traccia.getRispedizioneNumeroTentativi() + 1);
 			traccia.setRispedizioneUltimoTentativo(new Date());
 			traccia.setRispedizione(traccia.getRispedizioneNumeroTentativi() < traccia.getRispedizioneMaxTentativi());
-
+			traccia.setRispedizioneDopoQuery(true);
 			if(traccia.getRispedizione()) {
 				this.log.debug("Traccia idPA["+idPa+"]: trovata rispedizione: maxTentativi ["+traccia.getRispedizioneMaxTentativi()+"] numTentativi ["+traccia.getRispedizioneNumeroTentativi()+"] proxTentativo ["+traccia.getRispedizioneProssimoTentativo()+"]");
 			} else {
@@ -371,6 +447,10 @@ public class TracciamentoUtils {
 			traccia.setRispedizione(false);
 			traccia.setStato(StatoType.AS_ERRORE);
 			this.log.debug("Traccia idPA["+idPa+"]: rispedizione non trovata");
+			if(!traccia.getSistemaRichiedente().equals(PccProperties.getInstance().getSistemaRichiedenteCruscotto())) {
+				this.log.debug("Traccia idPA["+idPa+"]: Inserisco notifica in quanto il sistema richiedente e ["+traccia.getSistemaRichiedente()+"]");
+				this.creaNotifica(traccia);
+			}
 		}
 	}
 	
@@ -388,6 +468,9 @@ public class TracciamentoUtils {
 		
 		notifica.setStatoConsegna(StatoConsegnaType.NON_CONSEGNATA);
 		this.pccNotificaBD.createNotifica(notifica);
+		String idPa = traccia.getIdPaTransazioneRispedizione() != null ? traccia.getIdPaTransazioneRispedizione() : traccia.getIdPaTransazione();
+		this.log.debug("Creata notifica per la traccia idPA["+idPa+"]");
+		
 	}
 
 	private PccRispedizione getRispedizioneByListaErrore(ListaErroreTipo listaErroriTrasmissione, ListaErroreElaborazioneOperazioneTipo listaErroreElaborazione) {
@@ -414,35 +497,79 @@ public class TracciamentoUtils {
 			return null;
 	}
 
-	public void insertTraccia(PccTraccia traccia) throws Exception {
+	public void insertOrUpdateTraccia(PccTraccia traccia) throws Exception {
 		
-		if(traccia.getDataUltimaTrasmissione() == null)
-			traccia.setDataUltimaTrasmissione(new Date());
-		
-		this.pccTracciamentoBD.create(traccia);
-		if(traccia.sizePccTracciaTrasmissioneList() > 0) {
-			for(PccTracciaTrasmissione trasm : traccia.getPccTracciaTrasmissioneList()) {
-				this.pccTracciamentoBD.associaATraccia(trasm, traccia);
-				
-				if(trasm.sizePccTracciaTrasmissioneEsitoList() > 0) {
-					for(PccTracciaTrasmissioneEsito esito: trasm.getPccTracciaTrasmissioneEsitoList()) {
-						this.pccTracciamentoBD.associaATrasmissione(trasm, esito);
-
-						if(esito.sizePccErroreElaborazioneList() > 0) {
-							for(PccErroreElaborazione errore: esito.getPccErroreElaborazioneList()) {
-								this.pccTracciamentoBD.associaAEsito(esito, errore);
-							}
-						}	
-						
-					}
-				}	
-				
+		if(traccia.getStato() == null) {
+			switch(traccia.getTipoOperazione()){
+			case PROXY: traccia.setStato(StatoType.AS_ERRORE);
+				break;
+			case READ: traccia.setStato(StatoType.S_ERRORE);
+				break;
+			default:
+				break;
+			
 			}
 		}
+
+		populateCodiciErrore(traccia);
+		
+		if(traccia.getDataUltimaTrasmissione() == null)
+			traccia.setDataUltimaTrasmissione(traccia.getDataCreazione());
+		
+		if(traccia.getId() != null && traccia.getId() < 0) {
+			this.pccTracciamentoBD.create(traccia);
+			if(traccia.sizePccTracciaTrasmissioneList() > 0) {
+				for(PccTracciaTrasmissione trasm : traccia.getPccTracciaTrasmissioneList()) {
+					this.pccTracciamentoBD.associaATraccia(trasm, traccia);
+					
+					if(trasm.sizePccTracciaTrasmissioneEsitoList() > 0) {
+						for(PccTracciaTrasmissioneEsito esito: trasm.getPccTracciaTrasmissioneEsitoList()) {
+							this.pccTracciamentoBD.associaATrasmissione(trasm, esito);
+	
+							if(esito.sizePccErroreElaborazioneList() > 0) {
+								for(PccErroreElaborazione errore: esito.getPccErroreElaborazioneList()) {
+									this.pccTracciamentoBD.associaAEsito(esito, errore);
+								}
+							}	
+							
+						}
+					}	
+					
+				}
+			}
+		} else {
+			this.aggiornaTraccia(traccia);
+		}
+
 	}
 
-	public void aggiornaTracciaRispedizione(PccTraccia traccia) throws Exception {
+	private void populateCodiciErrore(PccTraccia traccia) {
+		HashSet<String> codes = new HashSet<String>();
+		if(traccia.sizePccTracciaTrasmissioneList() > 0) {
+			for(PccTracciaTrasmissione trasm : traccia.getPccTracciaTrasmissioneList()) {
+				if(trasm.sizePccTracciaTrasmissioneEsitoList() > 0) {
+					for(PccTracciaTrasmissioneEsito esito: trasm.getPccTracciaTrasmissioneEsitoList()) {
+						if(esito.sizePccErroreElaborazioneList() > 0) {
+							for(PccErroreElaborazione errore: esito.getPccErroreElaborazioneList()) {
+								codes.add(errore.getCodiceEsito());
+							}
+						}	
+					}
+				}	
+			}
+		}
 		
+		String codices = "";
+		for(String code: codes) {
+			if(codices.length() > 0) {
+				codices += ",";
+			}
+			codices+=code;
+		}
+		traccia.setCodiciErrore(codices);
+	}
+	
+	private void aggiornaTraccia(PccTraccia traccia) throws Exception {
 		this.pccTracciamentoBD.update(traccia);
 		if(traccia.sizePccTracciaTrasmissioneList() > 0) {
 			for(PccTracciaTrasmissione trasm : traccia.getPccTracciaTrasmissioneList()) {
@@ -458,7 +585,6 @@ public class TracciamentoUtils {
 									this.pccTracciamentoBD.associaAEsito(esito, errore);
 								}
 							}	
-							
 						}
 					}	
 				}				
@@ -466,7 +592,7 @@ public class TracciamentoUtils {
 		}
 	}
 
-	private void populateTracciaConInfoTracciaRispedizione(PccTraccia traccia, ListaErroreTipo listaErroreTipo) throws Exception {
+	private void populateTracciaConInfoTracciaRispedizione(PccTraccia traccia, ListaErroreTipo listaErroreTipo, boolean rispedizioneDopoQuery) throws Exception {
 		PccRispedizione rispedizione = getRispedizioneByListaErrore(listaErroreTipo);
 
 		String idPa = traccia.getIdPaTransazioneRispedizione() != null ? traccia.getIdPaTransazioneRispedizione() : traccia.getIdPaTransazione();
@@ -477,6 +603,7 @@ public class TracciamentoUtils {
 			traccia.setRispedizioneNumeroTentativi(traccia.getRispedizioneNumeroTentativi() + 1);
 			traccia.setRispedizioneUltimoTentativo(new Date());
 			traccia.setRispedizione(traccia.getRispedizioneNumeroTentativi() < traccia.getRispedizioneMaxTentativi());
+			traccia.setRispedizioneDopoQuery(rispedizioneDopoQuery);
 			if(traccia.getRispedizione()) {
 				this.log.debug("Traccia idPA["+idPa+"]: trovata rispedizione: maxTentativi ["+traccia.getRispedizioneMaxTentativi()+"] numTentativi ["+traccia.getRispedizioneNumeroTentativi()+"] proxTentativo ["+traccia.getRispedizioneProssimoTentativo()+"]");
 			} else {
@@ -486,7 +613,12 @@ public class TracciamentoUtils {
 			}
 		} else {
 			traccia.setRispedizione(false);
+			traccia.setStato(StatoType.AS_ERRORE);
 			this.log.debug("Traccia idPA["+idPa+"]: rispedizione non trovata");
+			if(!traccia.getSistemaRichiedente().equals(PccProperties.getInstance().getSistemaRichiedenteCruscotto())) {
+				this.log.debug("Traccia idPA["+idPa+"]: Inserisco notifica in quanto il sistema richiedente e ["+traccia.getSistemaRichiedente()+"]");
+				this.creaNotifica(traccia);
+			}
 		}
 
 	}
@@ -534,24 +666,25 @@ public class TracciamentoUtils {
 		
 		boolean isRispedizionePerEccezioneAbilitata = !(lstEccezioniCheNonPrevedonoRispedizione.contains(e.getClass())); 
 				
-		
+
+		String idPa = traccia.getIdPaTransazioneRispedizione() != null ? traccia.getIdPaTransazioneRispedizione() : traccia.getIdPaTransazione();
+
 		if(isRispedizionePerEccezioneAbilitata) {
-			PccRispedizione rispedizione = new PccRispedizione();
-			rispedizione.setMaxNumeroTentativi(1);
-			rispedizione.setIntervalloTentativi(0);
 
-			if(traccia.getStato() == null) {
-				traccia.setStato(StatoType.AS_PRESA_IN_CARICO);
-			}
-			traccia.setRispedizioneProssimoTentativo(new Date(System.currentTimeMillis()+ (rispedizione.getIntervalloTentativi() * 60000) )); //intervallo tentativi espresso in minuti
-			traccia.setRispedizioneMaxTentativi(rispedizione.getMaxNumeroTentativi());
-			traccia.setRispedizioneNumeroTentativi(traccia.getRispedizioneNumeroTentativi() + 1);
-			traccia.setRispedizioneUltimoTentativo(new Date());
-			traccia.setRispedizione(traccia.getRispedizioneNumeroTentativi() <= traccia.getRispedizioneMaxTentativi());
-
-		} else {
 			if(traccia.getStato() == null) {
 				traccia.setStato(StatoType.AS_ERRORE_PRESA_IN_CARICO);
+			}
+			traccia.setRispedizioneProssimoTentativo(new Date(System.currentTimeMillis()+ (PccProperties.getInstance().getIntervalloRispedizioneDefault() * 60000) )); //intervallo tentativi espresso in minuti
+			traccia.setRispedizioneUltimoTentativo(new Date());
+			traccia.setRispedizione(true);
+			this.log.debug("Traccia idPA["+idPa+"]: trovata rispedizione di default: proxTentativo ["+traccia.getRispedizioneProssimoTentativo()+"]");
+		} else {
+			traccia.setRispedizione(false);
+			traccia.setStato(StatoType.AS_ERRORE);
+			this.log.debug("Traccia idPA["+idPa+"]: rispedizione non trovata");
+			if(!traccia.getSistemaRichiedente().equals(PccProperties.getInstance().getSistemaRichiedenteCruscotto())) {
+				this.log.debug("Traccia idPA["+idPa+"]: Inserisco notifica in quanto il sistema richiedente e ["+traccia.getSistemaRichiedente()+"]");
+				this.creaNotifica(traccia);
 			}
 		}
 

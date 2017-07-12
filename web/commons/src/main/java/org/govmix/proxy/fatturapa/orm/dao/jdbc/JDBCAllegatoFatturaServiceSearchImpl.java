@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -412,6 +411,9 @@ public class JDBCAllegatoFatturaServiceSearchImpl implements IJDBCServiceSearchW
 		allegatoFattura = (AllegatoFattura) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_allegatoFattura.createSQLQuery(), jdbcProperties.isShowSql(), AllegatoFattura.model(), this.getAllegatoFatturaFetch(),
 			new JDBCObject(tableId,Long.class));
 
+		if(allegatoFattura.getAttachment() == null) {
+			allegatoFattura.setAttachment("".getBytes());
+		}
 
 		if(idMappingResolutionBehaviour==null ||
 			(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))

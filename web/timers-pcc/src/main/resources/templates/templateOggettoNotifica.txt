@@ -1,1 +1,1 @@
-Avviso: la spedizione ${notifica.pccTraccia.idPaTransazione} ha ottenuto un esito di errore
+Avviso: la spedizione "${notifica.pccTraccia.idPaTransazione}" ha ottenuto un esito di errore - Warnung: die Sendung mit der Nummer "${notifica.pccTraccia.idPaTransazione}" hat einen Fehler geliefert

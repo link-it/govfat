@@ -25,7 +25,7 @@ CREATE TABLE lotti
 	se_idcodice VARCHAR(80),
 	se_nazione VARCHAR(2),
 	se_codicefiscale VARCHAR(28),
-	codice_destinatario VARCHAR(6) NOT NULL,
+	codice_destinatario VARCHAR(7) NOT NULL,
 	xml BLOB NOT NULL,
 	data_ricezione DATE NOT NULL,
 	stato_inserimento VARCHAR(255) NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE lotti
 	-- fk/pk columns
 	id NUMBER NOT NULL,
 	-- check constraints
-	CONSTRAINT chk_lotti_1 CHECK (formato_trasmissione IN ('SDI11','SDI10')),
+	CONSTRAINT chk_lotti_1 CHECK (formato_trasmissione IN ('FPA12','FPR12','SDI11','SDI10')),
 	CONSTRAINT chk_lotti_2 CHECK (formato_archivio_invio_fattura IN ('XML','P7M')),
 	CONSTRAINT chk_lotti_3 CHECK (stato_inserimento IN ('NON_INSERITO','ERRORE_INSERIMENTO','INSERITO')),
 	CONSTRAINT chk_lotti_4 CHECK (stato_consegna IN ('NON_CONSEGNATA','IN_RICONSEGNA','ERRORE_CONSEGNA','CONSEGNATA')),
@@ -112,7 +112,7 @@ CREATE TABLE pcc_tracce
 	sistema_richiedente VARCHAR(255) NOT NULL,
 	utente_richiedente VARCHAR(255) NOT NULL,
 	id_fattura NUMBER,
-	codice_dipartimento VARCHAR(6),
+	codice_dipartimento VARCHAR(7),
 	richiesta_xml BLOB NOT NULL,
 	risposta_xml BLOB,
 	operazione VARCHAR(255) NOT NULL,
@@ -120,7 +120,9 @@ CREATE TABLE pcc_tracce
 	stato VARCHAR(255) NOT NULL,
 	data_ultima_trasmissione TIMESTAMP NOT NULL,
 	data_ultimo_tentativo_esito TIMESTAMP,
+	codici_errore VARCHAR(1000),
 	rispedizione NUMBER NOT NULL,
+	rispedizione_dopo_query NUMBER NOT NULL,
 	rispedizione_max_tentativi NUMBER,
 	rispedizione_prox_tentativo TIMESTAMP,
 	rispedizione_numero_tentativi NUMBER,
@@ -274,7 +276,7 @@ CREATE TABLE fatture
 	se_nazione VARCHAR(2),
 	se_codicefiscale VARCHAR(28),
 	posizione NUMBER NOT NULL,
-	codice_destinatario VARCHAR(6) NOT NULL,
+	codice_destinatario VARCHAR(7) NOT NULL,
 	tipo_documento VARCHAR(255) NOT NULL,
 	divisa VARCHAR(3) NOT NULL,
 	data DATE NOT NULL,
@@ -301,7 +303,7 @@ CREATE TABLE fatture
 	id_contabilizzazione NUMBER,
 	id_scadenza NUMBER,
 	-- check constraints
-	CONSTRAINT chk_fatture_1 CHECK (formato_trasmissione IN ('SDI11','SDI10')),
+	CONSTRAINT chk_fatture_1 CHECK (formato_trasmissione IN ('FPA12','FPR12','SDI11','SDI10')),
 	CONSTRAINT chk_fatture_2 CHECK (tipo_documento IN ('TD01','TD02','TD03','TD04','TD05','TD06')),
 	CONSTRAINT chk_fatture_3 CHECK (esito IN ('IN_ELABORAZIONE_ACCETTATO','IN_ELABORAZIONE_RIFIUTATO','INVIATA_ACCETTATO','INVIATA_RIFIUTATO','SCARTATA_ACCETTATO','SCARTATA_RIFIUTATO')),
 	CONSTRAINT chk_fatture_4 CHECK (stato_consegna IN ('NON_CONSEGNATA','IN_RICONSEGNA','ERRORE_CONSEGNA','CONSEGNATA')),
@@ -682,7 +684,7 @@ CREATE SEQUENCE seq_dipartimenti MINVALUE 1 MAXVALUE 9223372036854775807 START W
 
 CREATE TABLE dipartimenti
 (
-	codice VARCHAR(6) NOT NULL,
+	codice VARCHAR(7) NOT NULL,
 	descrizione VARCHAR(255) NOT NULL,
 	accettazione_automatica NUMBER NOT NULL,
 	modalita_push NUMBER NOT NULL,

@@ -7,3 +7,13 @@ La informiamo che la spedizione con identificativo PA ${notifica.pccTraccia.idPa
 Puo' schedulare nuovamente la consegna in maniera manuale collegandosi al cruscotto eFatt.
 
 Cordiali saluti
+
+---------------------------------------------------------------------------------------------------------------
+
+Sehr geehrter Nutzer,
+ 
+Sie erhalten diese Nachricht, weil Sie in der Benachrichtigungsliste für die Abteilung  ${notifica.dipartimento.descrizione} (Code ${notifica.dipartimento.codice}) eingetragen sind.
+ 
+Wir informieren Sie, dass die Sendung mit der Nummer "${notifica.pccTraccia.idPaTransazione}", bezüglich der Operation  ${operazione_de}<#if fattura??> (SDI ${fattura.identificativoSdi?c} / Nummer ${fattura.numero})<#else></#if>, einen Fehler geliefert hat. Mit dem eFatt-System können Sie manuell einen neuen Versand einplanen.
+ 
+Mit freundlichen Grüßen

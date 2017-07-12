@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -46,6 +45,7 @@ import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 
 public class EndpointPdDImpl implements EndpointPdD {
 
+	private static final String ID_EGOV = "X-SDI-DirectVM-IDMessaggioRichiesta";
 	private ConsegnaFattura consegnaFattura;
 	private RiceviNotifica riceviNotifica;
 	private LottoBD lottoBD;
@@ -122,6 +122,16 @@ public class EndpointPdDImpl implements EndpointPdD {
 				this.log.warn("Lotto con identificativo SdI ["+identificativoSDI+"] esiste gia', inserimento non avvenuto");
 			} else {
 				
+				String idEgov = null;
+				if(!headers.getRequestHeaders().keySet().isEmpty()) {
+					this.log.debug("Headers: ");
+					for(String header : headers.getRequestHeaders().keySet()){
+						this.log.debug(header + ": " + headers.getRequestHeaders().getFirst(header));
+						if(header.equalsIgnoreCase(ID_EGOV)) {
+							idEgov = headers.getRequestHeaders().getFirst(header);
+						}
+					}
+				}
 
 				ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(formatoFatturaPA,
 						identificativoSDI, nomeFile,
@@ -167,6 +177,7 @@ public class EndpointPdDImpl implements EndpointPdD {
 				lotto.setCodiceDestinatario(params.getCodiceDestinatario());
 				lotto.setFormatoTrasmissione(FormatoTrasmissioneType.valueOf(params.getFormatoFatturaPA()));
 
+				lotto.setIdEgov(idEgov);
 				lotto.setNomeFile(params.getNomeFile());
 				lotto.setMessageId(params.getMessageId());
 

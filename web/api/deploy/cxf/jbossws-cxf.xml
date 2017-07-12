@@ -39,8 +39,13 @@
 		 <jaxrs:inInterceptors>
 		     <ref bean="authorizationInterceptor"/>
 		 </jaxrs:inInterceptors>
-	    
+   		<jaxrs:providers>
+			<ref bean="dateParamHandler" />
+		</jaxrs:providers>
 	</jaxrs:server>
+		<bean id="dateParamHandler"
+		class="org.govmix.proxy.fatturapa.web.api.DateParamHandler" />
+
+	<bean id="authorizationInterceptor" class="${org.govmix.proxy.fatturapa.web.api.authentication.filter.class}"/>
 	
-	<bean id="authorizationInterceptor" class="org.govmix.proxy.fatturapa.web.api.AuthorizationInterceptor"/>	
 </beans>

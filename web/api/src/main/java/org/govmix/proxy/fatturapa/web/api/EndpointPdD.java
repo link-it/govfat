@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -39,7 +38,7 @@ public interface EndpointPdD {
 	@Path("riceviFattura")
 	Response postConsegnaFattura(@HeaderParam("X-SDI-FormatoFatturaPA") String X_SDI_FormatoFatturaPA, 
 			@HeaderParam("X-SDI-PosizioneFatturaPA") Integer X_SDI_PosizioneFatturaPA,
-			@HeaderParam("X-SDI-IdentificativoSDI") Integer X_SDI_IdentificativoSDI, 
+			@HeaderParam("X-SDI-IdentificativoSdI") Integer X_SDI_IdentificativoSDI, 
 			@HeaderParam("X-SDI-NomeFile") String X_SDI_NomeFile, 
 			@HeaderParam("X-SDI-MessageId") String X_SDI_MessageId,
 			@HeaderParam("X-SDI-CodiceDestinatario") String X_SDI_CodiceDestinatario,
@@ -67,7 +66,7 @@ public interface EndpointPdD {
 //	@Consumes("text/xml")
 	@Path("riceviLotto")
 	Response postRiceviLotto(@HeaderParam("X-SDI-FormatoFatturaPA") String X_SDI_FormatoFatturaPA, 
-			@HeaderParam("X-SDI-IdentificativoSDI") String X_SDI_IdentificativoSDIString, 
+			@HeaderParam("X-SDI-IdentificativoSdI") String X_SDI_IdentificativoSDIString, 
 			@HeaderParam("X-SDI-NomeFile") String X_SDI_NomeFile,
 			@HeaderParam("X-SDI-FormatoArchivioInvioFattura") String X_SDI_FormatoArchivioInvioFattura,
 			@HeaderParam("X-SDI-FormatoArchivioBase64") String X_SDI_FormatoArchivioBase64,

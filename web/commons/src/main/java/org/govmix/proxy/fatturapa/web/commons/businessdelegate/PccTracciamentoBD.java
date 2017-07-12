@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -119,12 +118,12 @@ public class PccTracciamentoBD extends BaseBD {
 	public void forzaRispedizione(IdTraccia idTraccia) throws Exception {
 		try {
 
-
 			UpdateField rispedizioneField = new UpdateField(PccTraccia.model().RISPEDIZIONE, true);
 			UpdateField intervalloRispedizioneField = new UpdateField(PccTraccia.model().RISPEDIZIONE_PROSSIMO_TENTATIVO, new Date());
 			UpdateField tentativiRispedizioneField = new UpdateField(PccTraccia.model().RISPEDIZIONE_NUMERO_TENTATIVI, 0);;
 			UpdateField maxTentativiRispedizioneField = new UpdateField(PccTraccia.model().RISPEDIZIONE_MAX_TENTATIVI, 1);
-			this.tracciamentoService.updateFields(idTraccia, rispedizioneField, intervalloRispedizioneField, tentativiRispedizioneField, maxTentativiRispedizioneField);
+			UpdateField statoTracciaField = new UpdateField(PccTraccia.model().STATO, StatoType.AS_PRESA_IN_CARICO);
+			this.tracciamentoService.updateFields(idTraccia, rispedizioneField, intervalloRispedizioneField, tentativiRispedizioneField, maxTentativiRispedizioneField, statoTracciaField);
 
 		} catch (Exception e) {
 			this.log.error("Errore durante la update traccia: " + e.getMessage(), e);
@@ -233,6 +232,11 @@ public class PccTracciamentoBD extends BaseBD {
 				traccia.addPccTracciaTrasmissione(pccTracciaTrasmissione);
 			}
 		}
+		
+		if(traccia.getIdFattura() > 0) {
+			traccia.setFatturaElettronica(((IDBFatturaElettronicaServiceSearch)fatturaService).get(traccia.getIdFattura()));
+		}
+		
 		return traccia;
 
 	}

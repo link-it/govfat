@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -37,6 +36,7 @@ public class CommonsProperties {
 
 	private String xslFatturaSDI10;
 	private String xslFatturaSDI11;
+	private String xslFatturaV12;
 	private String xslNotificaEC;
 	private String xslNotificaDT;
 	private String xslScartoEC;
@@ -102,6 +102,7 @@ public class CommonsProperties {
 		//carico le properties
 		this.xslFatturaSDI10 = getProperty("xsl.fatturapa.sdi10", true);
 		this.xslFatturaSDI11 = getProperty("xsl.fatturapa.sdi11", true);
+		this.xslFatturaV12 = getProperty("xsl.fatturapa.v12", true);
 		this.xslNotificaDT = getProperty("xsl.notificaDT", true);
 		this.xslNotificaEC = getProperty("xsl.notificaEC", true);
 		this.xslScartoEC = getProperty("xsl.scartoEC", true);
@@ -197,6 +198,14 @@ public class CommonsProperties {
 
 	public void setXslPccRiallineamento(String xslPccRiallineamento) {
 		this.xslPccRiallineamento = xslPccRiallineamento;
+	}
+
+	public String getXslFatturaV12() {
+		return xslFatturaV12;
+	}
+
+	public void setXslFatturaV12(String xslFatturaV12) {
+		this.xslFatturaV12 = xslFatturaV12;
 	}
 
 

@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -114,7 +113,15 @@ public class FattureWSImpl implements FattureWS {
 	public QueryOperazioneContabileRispostaTipo wSQueryOperazioneContabile(QueryOperazioneContabileRichiestaTipo queryOperazioneContabileRichiestaTipo) throws WSGenericFault, WSAuthorizationFault, WSResultNotReadyFault {
 		try {
 			PccTraccia traccia = this.client.getTraccia(queryOperazioneContabileRichiestaTipo);
-			this.authorizationManager.authorizeByIdFattura(AuthorizationBeanFactory.getAuthorizationBeanByIdFattura(this.getPrincipal(), queryOperazioneContabileRichiestaTipo.getTestataRichiesta().getUtenteRichiedente(), traccia.getIdFattura(), NomePccOperazioneType.toEnumConstant(traccia.getOperazione())));
+			
+			NomePccOperazioneType nomePccOperazione = NomePccOperazioneType.toEnumConstant(traccia.getOperazione());
+			if(nomePccOperazione.equals(NomePccOperazioneType.OPERAZIONE_CONTABILE_CPS)) {
+				this.authorizationManager.authorizeByIdFattura(AuthorizationBeanFactory.getAuthorizationBeanByIdFattura(this.getPrincipal(), queryOperazioneContabileRichiestaTipo.getTestataRichiesta().getUtenteRichiedente(), traccia.getIdFattura(), NomePccOperazioneType.OPERAZIONE_CONTABILE_CO));
+			} else if(nomePccOperazione.equals(NomePccOperazioneType.OPERAZIONE_CONTABILE_CSPC)) {
+				this.authorizationManager.authorizeByIdFattura(AuthorizationBeanFactory.getAuthorizationBeanByIdFattura(this.getPrincipal(), queryOperazioneContabileRichiestaTipo.getTestataRichiesta().getUtenteRichiedente(), traccia.getIdFattura(), NomePccOperazioneType.OPERAZIONE_CONTABILE_CS));
+			} else {
+				this.authorizationManager.authorizeByIdFattura(AuthorizationBeanFactory.getAuthorizationBeanByIdFattura(this.getPrincipal(), queryOperazioneContabileRichiestaTipo.getTestataRichiesta().getUtenteRichiedente(), traccia.getIdFattura(), nomePccOperazione));
+			}
 			return this.client.wSQueryOperazioneContabile(traccia);
 		}catch(WSAuthorizationFault e) {
 			log.error("Authorization Fault: " +e.getMessage(),e);

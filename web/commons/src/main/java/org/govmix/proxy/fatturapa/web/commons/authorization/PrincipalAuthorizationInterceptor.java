@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,12 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.govmix.pcc.fatture;
+package org.govmix.proxy.fatturapa.web.commons.authorization;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.message.Message;
@@ -34,17 +35,14 @@ import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdUtente;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.UtenteBD;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
-//import javax.servlet.http.HttpServletRequest;
-//import org.openspcoop2.utils.Identity;
+import org.openspcoop2.utils.Identity;
 
-public class AuthorizationInterceptor extends AbstractPhaseInterceptor<Message> {
+public class PrincipalAuthorizationInterceptor extends AbstractPhaseInterceptor<Message> {
 
 	private UtenteBD utenteBD;
 	private Logger log;
 	
-	public static final String HEADER_PRINCIPAL = "X-ProxyFatturaPA-Principal"; 
-	
-	public AuthorizationInterceptor() throws Exception {
+	public PrincipalAuthorizationInterceptor() throws Exception {
 		super(Phase.UNMARSHAL);
 		this.log = LoggerManager.getEndpointProxyPccLogger();
 		this.utenteBD = new UtenteBD(this.log);
@@ -60,15 +58,17 @@ public class AuthorizationInterceptor extends AbstractPhaseInterceptor<Message> 
 			headers = new TreeMap<String, List<String>>(String.CASE_INSENSITIVE_ORDER);
 			message.put(Message.PROTOCOL_HEADERS, headers);
 		}
-//		HttpServletRequest req = (HttpServletRequest) message.get("HTTP.REQUEST");
-//		Identity identity = new Identity(req);
+		HttpServletRequest req = (HttpServletRequest) message.get("HTTP.REQUEST");
+		Identity identity = new Identity(req);
 		
 		try {
-			 //TODO fino a censimento Kerberos utenti applicativi
-//			String principal = identity.getUsername();
-			String principal = null;
-			if(headers.containsKey(HEADER_PRINCIPAL))
-				principal = headers.get(HEADER_PRINCIPAL).get(0);
+			String principal = identity.getPrincipal();
+
+			this.log.debug("Utente autenticato: " + principal);
+			
+			if(principal == null) {
+				throw new Exception("Utente non autenticato");
+			}
 			
 			IdUtente idUtente = new IdUtente();
 			idUtente.setUsername(principal);

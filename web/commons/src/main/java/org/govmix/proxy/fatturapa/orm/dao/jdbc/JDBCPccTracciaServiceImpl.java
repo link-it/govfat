@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -87,7 +86,9 @@ public class JDBCPccTracciaServiceImpl extends JDBCPccTracciaServiceSearchImpl
 		sqlQueryObjectInsert.addInsertField(this.getPccTracciaFieldConverter().toColumn(PccTraccia.model().STATO,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getPccTracciaFieldConverter().toColumn(PccTraccia.model().DATA_ULTIMA_TRASMISSIONE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getPccTracciaFieldConverter().toColumn(PccTraccia.model().DATA_ULTIMO_TENTATIVO_ESITO,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getPccTracciaFieldConverter().toColumn(PccTraccia.model().CODICI_ERRORE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getPccTracciaFieldConverter().toColumn(PccTraccia.model().RISPEDIZIONE,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getPccTracciaFieldConverter().toColumn(PccTraccia.model().RISPEDIZIONE_DOPO_QUERY,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getPccTracciaFieldConverter().toColumn(PccTraccia.model().RISPEDIZIONE_MAX_TENTATIVI,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getPccTracciaFieldConverter().toColumn(PccTraccia.model().RISPEDIZIONE_PROSSIMO_TENTATIVO,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getPccTracciaFieldConverter().toColumn(PccTraccia.model().RISPEDIZIONE_NUMERO_TENTATIVI,false),"?");
@@ -113,7 +114,9 @@ public class JDBCPccTracciaServiceImpl extends JDBCPccTracciaServiceSearchImpl
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(pccTraccia.getStato(),PccTraccia.model().STATO.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(pccTraccia.getDataUltimaTrasmissione(),PccTraccia.model().DATA_ULTIMA_TRASMISSIONE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(pccTraccia.getDataUltimoTentativoEsito(),PccTraccia.model().DATA_ULTIMO_TENTATIVO_ESITO.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(pccTraccia.getCodiciErrore(),PccTraccia.model().CODICI_ERRORE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(pccTraccia.getRispedizione(),PccTraccia.model().RISPEDIZIONE.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(pccTraccia.getRispedizioneDopoQuery(),PccTraccia.model().RISPEDIZIONE_DOPO_QUERY.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(pccTraccia.getRispedizioneMaxTentativi(),PccTraccia.model().RISPEDIZIONE_MAX_TENTATIVI.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(pccTraccia.getRispedizioneProssimoTentativo(),PccTraccia.model().RISPEDIZIONE_PROSSIMO_TENTATIVO.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(pccTraccia.getRispedizioneNumeroTentativi(),PccTraccia.model().RISPEDIZIONE_NUMERO_TENTATIVI.getFieldType()),
@@ -200,8 +203,12 @@ public class JDBCPccTracciaServiceImpl extends JDBCPccTracciaServiceSearchImpl
 		lstObjects_pccTraccia.add(new JDBCObject(pccTraccia.getDataUltimaTrasmissione(), PccTraccia.model().DATA_ULTIMA_TRASMISSIONE.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getPccTracciaFieldConverter().toColumn(PccTraccia.model().DATA_ULTIMO_TENTATIVO_ESITO,false), "?");
 		lstObjects_pccTraccia.add(new JDBCObject(pccTraccia.getDataUltimoTentativoEsito(), PccTraccia.model().DATA_ULTIMO_TENTATIVO_ESITO.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getPccTracciaFieldConverter().toColumn(PccTraccia.model().CODICI_ERRORE,false), "?");
+		lstObjects_pccTraccia.add(new JDBCObject(pccTraccia.getCodiciErrore(), PccTraccia.model().CODICI_ERRORE.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getPccTracciaFieldConverter().toColumn(PccTraccia.model().RISPEDIZIONE,false), "?");
 		lstObjects_pccTraccia.add(new JDBCObject(pccTraccia.getRispedizione(), PccTraccia.model().RISPEDIZIONE.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getPccTracciaFieldConverter().toColumn(PccTraccia.model().RISPEDIZIONE_DOPO_QUERY,false), "?");
+		lstObjects_pccTraccia.add(new JDBCObject(pccTraccia.getRispedizioneDopoQuery(), PccTraccia.model().RISPEDIZIONE_DOPO_QUERY.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getPccTracciaFieldConverter().toColumn(PccTraccia.model().RISPEDIZIONE_MAX_TENTATIVI,false), "?");
 		lstObjects_pccTraccia.add(new JDBCObject(pccTraccia.getRispedizioneMaxTentativi(), PccTraccia.model().RISPEDIZIONE_MAX_TENTATIVI.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getPccTracciaFieldConverter().toColumn(PccTraccia.model().RISPEDIZIONE_PROSSIMO_TENTATIVO,false), "?");

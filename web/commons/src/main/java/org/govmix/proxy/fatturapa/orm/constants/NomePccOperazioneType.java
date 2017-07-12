@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -61,6 +60,10 @@ public enum NomePccOperazioneType implements IEnumeration , Serializable , Clone
 	OPERAZIONE_CONTABILE_CS ("OperazioneContabile_CS"),
 	@javax.xml.bind.annotation.XmlEnumValue("OperazioneContabile_CCS")
 	OPERAZIONE_CONTABILE_CCS ("OperazioneContabile_CCS"),
+	@javax.xml.bind.annotation.XmlEnumValue("OperazioneContabile_CPS")
+	OPERAZIONE_CONTABILE_CPS ("OperazioneContabile_CPS"),
+	@javax.xml.bind.annotation.XmlEnumValue("OperazioneContabile_CSPC")
+	OPERAZIONE_CONTABILE_CSPC ("OperazioneContabile_CSPC"),
 	@javax.xml.bind.annotation.XmlEnumValue("OperazioneContabile_SP")
 	OPERAZIONE_CONTABILE_SP ("OperazioneContabile_SP"),
 	@javax.xml.bind.annotation.XmlEnumValue("OperazioneContabile_RF")

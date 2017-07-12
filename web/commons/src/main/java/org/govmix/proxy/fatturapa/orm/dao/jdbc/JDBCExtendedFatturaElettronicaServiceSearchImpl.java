@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -79,18 +78,18 @@ JDBCFatturaElettronicaServiceSearchImpl implements IExtendedJDBCFatturaElettroni
 		return sqlQueryObjectCnt;
 	}
 
-	public JDBCObject[] getParamsFattureContestualePush(Date date) {
+	private JDBCObject[] getParamsFattureContestualePush(Date date) {
 		JDBCObject[] params = new JDBCObject[] {
 				new JDBCObject(StatoConsegnaType.CONSEGNATA, LottoFatture.model().STATO_CONSEGNA.getFieldType()),
 				new JDBCObject(true, Dipartimento.model().MODALITA_PUSH.getFieldType()), 
 				new JDBCObject(date, FatturaElettronica.model().DATA_RICEZIONE.getFieldType()), 
 				new JDBCObject(date, FatturaElettronica.model().DATA_CONSEGNA.getFieldType()), 
 				new JDBCObject(StatoConsegnaType.NON_CONSEGNATA, FatturaElettronica.model().STATO_CONSEGNA.getFieldType()),
-				new JDBCObject(StatoConsegnaType.ERRORE_CONSEGNA, FatturaElettronica.model().STATO_CONSEGNA.getFieldType())};
+				new JDBCObject(StatoConsegnaType.IN_RICONSEGNA, FatturaElettronica.model().STATO_CONSEGNA.getFieldType())};
 		return params;
 	}
 
-	public ISQLQueryObject getSQLQueryObjectForFindFatturePush(
+	private ISQLQueryObject getSQLQueryObjectForFindFatturePush(
 			ISQLQueryObject sqlQueryObject) throws ExpressionException,
 			SQLQueryObjectException {
 		DipartimentoFieldConverter dipartimentoFieldConverter = new DipartimentoFieldConverter(this.getFatturaElettronicaFieldConverter().getDatabaseType());
@@ -101,19 +100,19 @@ JDBCFatturaElettronicaServiceSearchImpl implements IExtendedJDBCFatturaElettroni
 		
 		sqlQueryObjectCnt.addWhereCondition(dipartimentoFieldConverter.toColumn(Dipartimento.model().MODALITA_PUSH, true) + "= ?");
 		sqlQueryObjectCnt.addWhereCondition(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DATA_RICEZIONE, true) + " <= ?");
-		sqlQueryObjectCnt.addWhereCondition(false, this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DATA_CONSEGNA, true) + " <= ?", this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DATA_CONSEGNA, true) + " IS NULL");
+		sqlQueryObjectCnt.addWhereCondition(false, this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DATA_PROSSIMA_CONSEGNA, true) + " <= ?", this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DATA_PROSSIMA_CONSEGNA, true) + " IS NULL");
 		sqlQueryObjectCnt.addWhereCondition(false, this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().STATO_CONSEGNA, true) + " =?", this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().STATO_CONSEGNA, true) + " =?");
 		sqlQueryObjectCnt.setANDLogicOperator(true);
 		return sqlQueryObjectCnt;
 	}
 
-	public JDBCObject[] getParamsFatturePush(Date date) {
+	private JDBCObject[] getParamsFatturePush(Date date) {
 		JDBCObject[] params = new JDBCObject[] {
 				new JDBCObject(true, Dipartimento.model().MODALITA_PUSH.getFieldType()), 
 				new JDBCObject(date, FatturaElettronica.model().DATA_RICEZIONE.getFieldType()), 
-				new JDBCObject(date, FatturaElettronica.model().DATA_CONSEGNA.getFieldType()), 
+				new JDBCObject(date, FatturaElettronica.model().DATA_PROSSIMA_CONSEGNA.getFieldType()), 
 				new JDBCObject(StatoConsegnaType.NON_CONSEGNATA, FatturaElettronica.model().STATO_CONSEGNA.getFieldType()),
-				new JDBCObject(StatoConsegnaType.ERRORE_CONSEGNA, FatturaElettronica.model().STATO_CONSEGNA.getFieldType())};
+				new JDBCObject(StatoConsegnaType.IN_RICONSEGNA, FatturaElettronica.model().STATO_CONSEGNA.getFieldType())};
 		return params;
 	}
 	
@@ -479,7 +478,7 @@ JDBCFatturaElettronicaServiceSearchImpl implements IExtendedJDBCFatturaElettroni
 
 	}
 
-	public ISQLQueryObject getSQLQueryObjectForFindFattureDaAccettare(
+	private ISQLQueryObject getSQLQueryObjectForFindFattureDaAccettare(
 			ISQLQueryObject sqlQueryObject) throws ExpressionException,
 			SQLQueryObjectException {
 		DipartimentoFieldConverter dipartimentoFieldConverter = new DipartimentoFieldConverter(this.getFatturaElettronicaFieldConverter().getDatabaseType());
@@ -507,7 +506,7 @@ JDBCFatturaElettronicaServiceSearchImpl implements IExtendedJDBCFatturaElettroni
 		return sqlQueryObjectCnt;
 	}
 	
-	public JDBCObject[] getParamsFattureDaAccettare(Date date) {
+	private JDBCObject[] getParamsFattureDaAccettare(Date date) {
 		JDBCObject[] params = new JDBCObject[] {
 				new JDBCObject(true, Dipartimento.model().ACCETTAZIONE_AUTOMATICA.getFieldType()), 
 				new JDBCObject(date, FatturaElettronica.model().DATA_RICEZIONE.getFieldType())}; 

@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -90,8 +89,12 @@ public class PccTracciaFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "data_ultima_trasmissione", PccTraccia.model().DATA_ULTIMA_TRASMISSIONE.getFieldType()));
 				setParameter(object, "setDataUltimoTentativoEsito", PccTraccia.model().DATA_ULTIMO_TENTATIVO_ESITO.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "data_ultimo_tentativo_esito", PccTraccia.model().DATA_ULTIMO_TENTATIVO_ESITO.getFieldType()));
+				setParameter(object, "setCodiciErrore", PccTraccia.model().CODICI_ERRORE.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "codici_errore", PccTraccia.model().CODICI_ERRORE.getFieldType()));
 				setParameter(object, "setRispedizione", PccTraccia.model().RISPEDIZIONE.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "rispedizione", PccTraccia.model().RISPEDIZIONE.getFieldType()));
+				setParameter(object, "setRispedizioneDopoQuery", PccTraccia.model().RISPEDIZIONE_DOPO_QUERY.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "rispedizione_dopo_query", PccTraccia.model().RISPEDIZIONE_DOPO_QUERY.getFieldType()));
 				setParameter(object, "setRispedizioneMaxTentativi", PccTraccia.model().RISPEDIZIONE_MAX_TENTATIVI.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "rispedizione_max_tentativi", PccTraccia.model().RISPEDIZIONE_MAX_TENTATIVI.getFieldType()));
 				setParameter(object, "setRispedizioneProssimoTentativo", PccTraccia.model().RISPEDIZIONE_PROSSIMO_TENTATIVO.getFieldType(),
@@ -156,8 +159,12 @@ public class PccTracciaFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"dataUltimaTrasmissione"));
 				setParameter(object, "setDataUltimoTentativoEsito", PccTraccia.model().DATA_ULTIMO_TENTATIVO_ESITO.getFieldType(),
 					this.getObjectFromMap(map,"dataUltimoTentativoEsito"));
+				setParameter(object, "setCodiciErrore", PccTraccia.model().CODICI_ERRORE.getFieldType(),
+					this.getObjectFromMap(map,"codiciErrore"));
 				setParameter(object, "setRispedizione", PccTraccia.model().RISPEDIZIONE.getFieldType(),
 					this.getObjectFromMap(map,"rispedizione"));
+				setParameter(object, "setRispedizioneDopoQuery", PccTraccia.model().RISPEDIZIONE_DOPO_QUERY.getFieldType(),
+					this.getObjectFromMap(map,"rispedizioneDopoQuery"));
 				setParameter(object, "setRispedizioneMaxTentativi", PccTraccia.model().RISPEDIZIONE_MAX_TENTATIVI.getFieldType(),
 					this.getObjectFromMap(map,"rispedizioneMaxTentativi"));
 				setParameter(object, "setRispedizioneProssimoTentativo", PccTraccia.model().RISPEDIZIONE_PROSSIMO_TENTATIVO.getFieldType(),

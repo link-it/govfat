@@ -25,7 +25,8 @@
 
     <jaxws:endpoint id="getTracceImpl" implementor="org.govmix.pcc.fatture.tracciamento.ricerca.RecuperaTracceImpl" address="/getTracce">
      	<jaxws:inInterceptors>
-			     <ref bean="loggingGetTracceInInterceptor"/>
+			<ref bean="authorizationInterceptor"/>
+			<ref bean="loggingGetTracceInInterceptor"/>
 	 	</jaxws:inInterceptors>
      	<jaxws:outInterceptors>
 			     <ref bean="loggingGetTracceOutInterceptor"/>
@@ -38,36 +39,36 @@
 		</jaxws:properties>
     </jaxws:endpoint>
     
-   	<bean id="authorizationInterceptor" class="org.govmix.pcc.fatture.AuthorizationInterceptor"/>
+   	<bean id="authorizationInterceptor" class="${org.govmix.proxy.fatturapa.pcc.authentication.filter.class}"/>
    	
    	
    	<bean id="loggingGetTracceInInterceptor" class="org.apache.cxf.interceptor.LoggingInInterceptor">
-   		<property name="outputLocation" value="file:///var/proxyFatturaPA/log/get_tracce_in.log" />
+   		<property name="outputLocation" value="file://${properties.path}/log/get_tracce_in.log" />
         <property name="prettyLogging" value="true" />
    	</bean>	
    	
    	<bean id="loggingGetTracceOutInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor">	
-   		<property name="outputLocation" value="file:///var/proxyFatturaPA/log/get_tracce_out.log" />
+   		<property name="outputLocation" value="file://${properties.path}/log/get_tracce_out.log" />
         <property name="prettyLogging" value="true" />
    	</bean>		
 
    	<bean id="loggingGetTracceFaultInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor">	
-   		<property name="outputLocation" value="file:///var/proxyFatturaPA/log/get_tracce_fault.log" />
+   		<property name="outputLocation" value="file:///${properties.path}/log/get_tracce_fault.log" />
         <property name="prettyLogging" value="true" />
    	</bean>		
 
    	<bean id="loggingProxyPCCInInterceptor" class="org.apache.cxf.interceptor.LoggingInInterceptor">
-   		<property name="outputLocation" value="file:///var/proxyFatturaPA/log/proxy_pcc_in.log" />
+   		<property name="outputLocation" value="file://${properties.path}/log/proxy_pcc_in.log" />
         <property name="prettyLogging" value="true" />
    	</bean>	
    	
    	<bean id="loggingProxyPCCOutInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor">	
-   		<property name="outputLocation" value="file:///var/proxyFatturaPA/log/proxy_pcc_out.log" />
+   		<property name="outputLocation" value="file://${properties.path}/log/proxy_pcc_out.log" />
         <property name="prettyLogging" value="true" />
    	</bean>		
 
    	<bean id="loggingProxyPCCFaultInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor">	
-   		<property name="outputLocation" value="file:///var/proxyFatturaPA/log/proxy_pcc_fault.log" />
+   		<property name="outputLocation" value="file://${properties.path}/log/proxy_pcc_fault.log" />
         <property name="prettyLogging" value="true" />
    	</bean>		
 </beans>

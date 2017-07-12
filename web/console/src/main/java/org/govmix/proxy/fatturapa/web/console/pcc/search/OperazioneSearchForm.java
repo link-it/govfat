@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -60,6 +59,7 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 	private Text numero = null;
 	private Text identificativoLotto = null;
 	private Text idPaTransazione = null;
+	private SelectList<SelectItem> codiceErrore = null;
 
 	private OperazioneMBean mBean = null;
 
@@ -127,6 +127,9 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 		this.identificativoLotto = factory.getInputFieldFactory().createText("idLotto","operazione.search.identificativoLotto",null,false);
 
 		this.idPaTransazione = factory.getInputFieldFactory().createText("idPaTrans","operazione.search.idPaTransazione",null,false);
+		
+		this.codiceErrore = factory.getInputFieldFactory().createSelectList("codiceErrore","operazione.search.codiceErrore",null,false);
+		this.codiceErrore.setDefaultValue(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi")));
 
 		this.setField(this.cedentePrestatore);
 		this.setField(this.utenteRichiedente);
@@ -138,6 +141,7 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 		this.setField(this.numero); 
 		this.setField(this.identificativoLotto); 
 		this.setField(this.idPaTransazione);
+		this.setField(this.codiceErrore);
 
 
 		this.reset();
@@ -167,6 +171,7 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 		this.identificativoLotto.reset();
 		this.numero.reset();
 		this.idPaTransazione.reset();
+		this.codiceErrore.reset();
 
 	}
 
@@ -454,6 +459,12 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 	public void setIdPaTransazione(Text idPaTransazione) {
 		this.idPaTransazione = idPaTransazione;
 	}
-	
-	
+
+	public SelectList<SelectItem> getCodiceErrore() {
+		return codiceErrore;
+	}
+
+	public void setCodiceErrore(SelectList<SelectItem> codiceErrore) {
+		this.codiceErrore = codiceErrore;
+	}
 }

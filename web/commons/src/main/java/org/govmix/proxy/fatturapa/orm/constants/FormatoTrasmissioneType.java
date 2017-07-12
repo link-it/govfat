@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -39,6 +38,10 @@ import org.openspcoop2.generic_project.exception.NotFoundException;
 @javax.xml.bind.annotation.XmlEnum(String.class)
 public enum FormatoTrasmissioneType implements IEnumeration , Serializable , Cloneable {
 
+	@javax.xml.bind.annotation.XmlEnumValue("FPA12")
+	FPA12 ("FPA12"),
+	@javax.xml.bind.annotation.XmlEnumValue("FPR12")
+	FPR12 ("FPR12"),
 	@javax.xml.bind.annotation.XmlEnumValue("SDI11")
 	SDI11 ("SDI11"),
 	@javax.xml.bind.annotation.XmlEnumValue("SDI10")

@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -190,7 +189,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 										// Attualmente i casi di questo tipo sono due:
 										if(ScartoType.EN01.equals(scartoT)) { 
 											this.log.info("Risposta dallo SdI con Scarto Note["+scarto.getNote()+"]. Numero tentativi di consegna["+notifica.getTentativiConsegnaSdi()+"].");
-											if(scarto.getNote().contains(properties.getMsgNotificaGiaPervenuta())) {
+											if(scarto.getNote() != null && scarto.getNote().contains(properties.getMsgNotificaGiaPervenuta())) {
 												// 1) Notifica gia' pervenuta al sistema di interscambio: significa che la notifica e' arrivata allo SdI
 												// ma il proxy non e' riuscito a riceverne comunicazione.
 												this.log.info("Risposta dallo SdI con Scarto Note["+scarto.getNote()+"]. Numero tentativi di consegna["+notifica.getTentativiConsegnaSdi()+"].");
@@ -225,7 +224,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 
 													}
 												}
-											} else if(scarto.getNote().contains(properties.getMsgAvvenutaRicezioneNonNotificata())) {
+											} else if(scarto.getNote() != null && scarto.getNote().contains(properties.getMsgAvvenutaRicezioneNonNotificata())) {
 												// 2) Notifica arrivata allo SdI prima che il committente ricevesse comunicazione dell'avvenuta ricezione della fattura: 
 												// si ritenta la rispedizione dopo 24 ore per dare il tempo allo SdI di inviare la comunicazione al committente
 												Date domaniStessaOra = new Date(System.currentTimeMillis() + 1000*60*60*24);
@@ -317,8 +316,8 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 						this.log.info("Gestite ["+countNotificheElaborate+"\\"+countNotifiche+"] NotificheEsitoCommittente da consegnare");
 
 						lstNotifiche = notificaEsitoCommittenteBD.findAllNotifiche(limitDate, 0, this.limit);
+						connection.commit();
 					}
-					connection.commit();
 					Sonda.getInstance().registraChiamataServizioOK(this.getTimerName());
 				} catch(Exception e) {
 					log.error("Errore durante la consegnaEsito:"+e.getMessage(), e);

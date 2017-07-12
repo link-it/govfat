@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -42,7 +41,7 @@ import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
-import org.govmix.proxy.fatturapa.web.commons.exporter.SingleFileExporter;
+import org.govmix.proxy.fatturapa.web.commons.exporter.FatturaSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.sonde.Sonda;
 import org.govmix.proxy.fatturapa.web.commons.utils.CostantiProtocollazione;
 import org.govmix.proxy.fatturapa.web.commons.utils.Endpoint;
@@ -68,12 +67,8 @@ public class TimerConsegnaFatturaLib extends AbstractTimerLib {
 	private static final String URL_PARAM_ID_SDI = "ProxyFatturaPA-IdSDI";
 	private static final String URL_PARAM_POSIZIONE = "ProxyFatturaPA-Posizione";
 
-	private SingleFileExporter sfe;
-
 	public TimerConsegnaFatturaLib(int limit, Logger log, boolean logQuery) throws Exception{
 		super(limit, log, logQuery);
-		this.sfe = new SingleFileExporter(log);
-
 	}
 
 	@Override
@@ -83,6 +78,7 @@ public class TimerConsegnaFatturaLib extends AbstractTimerLib {
 		try {
 			connection = DAOFactory.getInstance().getConnection();
 			FatturaElettronicaBD fatturaElettronicaBD = new FatturaElettronicaBD(log, connection, false);
+			FatturaSingleFileExporter sfe = new FatturaSingleFileExporter(this.log, connection, false);
 
 			Date limitDate = new Date();
 			
@@ -163,7 +159,7 @@ public class TimerConsegnaFatturaLib extends AbstractTimerLib {
 									
 									httpConn.setRequestMethod("POST");								
 									baos = new ByteArrayOutputStream();
-									sfe.exportAsZip(Arrays.asList(idFattura), baos, true); //esporta anche l'xml del lotto di fatture
+									sfe.exportAsZip(Arrays.asList(fattura), baos);
 									
 									httpConn.getOutputStream().write(baos.toByteArray());
 									httpConn.getOutputStream().flush();

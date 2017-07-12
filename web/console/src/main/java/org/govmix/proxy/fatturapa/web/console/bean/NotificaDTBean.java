@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -24,7 +23,7 @@ package org.govmix.proxy.fatturapa.web.console.bean;
 import javax.faces.context.FacesContext;
 
 import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
-import org.govmix.proxy.fatturapa.web.commons.exporter.SingleFileExporter;
+import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
 import org.openspcoop2.generic_project.web.bean.IBean;
 import org.openspcoop2.generic_project.web.factory.FactoryException;
@@ -152,7 +151,7 @@ public class NotificaDTBean extends BaseBean<NotificaDecorrenzaTermini, Long> im
 		String url = context.getExternalContext().getRequestContextPath() 
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
 				+FattureExporter.PARAMETRO_IDS+"=" + this.idFattura
-				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ SingleFileExporter.FORMATO_XML
+				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_NOTIFICA_DT;
 
 		this.xml.setHref(this.getDTO().getXml() != null ?  url : null);
@@ -160,7 +159,7 @@ public class NotificaDTBean extends BaseBean<NotificaDecorrenzaTermini, Long> im
 		url = context.getExternalContext().getRequestContextPath() 
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
 				+FattureExporter.PARAMETRO_IDS+"=" + this.idFattura
-				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ SingleFileExporter.FORMATO_PDF
+				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_PDF
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_NOTIFICA_DT;
 
 		this.pdf.setHref( this.getDTO().getXml() != null ? url : null);

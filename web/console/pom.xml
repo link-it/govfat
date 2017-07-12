@@ -3,22 +3,21 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>fatturapa</groupId>
-	<artifactId>web-console</artifactId>
-	<version>1.1</version>
-	<packaging>war</packaging>
+        <parent>
+                <artifactId>fatturapa</artifactId>
+                <groupId>fatturapa</groupId>
+                <version>2.0-SNAPSHOT</version>
+        </parent>
 
-	<name>Fattura PA Console</name>
+        <artifactId>web-console</artifactId>
+        <packaging>war</packaging>
 
-	<properties>
-		<richfaces.version>3.3.4.Final</richfaces.version>
+        <name>FatturaPA console</name>
+
+        <properties>
+                <rel-to-parent>..</rel-to-parent>
 		<openspcoop2.version>2.2.1</openspcoop2.version>
-		<jboss.home>/var/lib/jbossas-7.1.1.Final</jboss.home>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spring.version>3.2.3.RELEASE</spring.version>
-		<openspcoop2.version>2.2.1</openspcoop2.version>
-
-	</properties>
+        </properties>
 
 	<dependencies>
 		<dependency>
@@ -125,7 +124,7 @@
 		<dependency>
 			<groupId>fatturapa</groupId>
 			<artifactId>web-commons</artifactId>
-			<version>1.1</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<!-- Commons -->
@@ -287,7 +286,7 @@
 
 	<build>
 		<filters>
-			<filter>../../resources/filters/${env}.filter.properties</filter>
+			<filter>${basedir}/../../resources/filters/${env}.filter.properties</filter>
 		</filters>
 		<resources>
 			<resource>

@@ -17,7 +17,6 @@
 			<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 				<linkit:dao>
 					<linkit:jdbc generate="true" />
-					<linkit:jpa generate="false" />
 					<linkit:sql>
 						<linkit:sql-script generate="true">
 							<linkit:sql-table-list>
@@ -29,7 +28,7 @@
 								<linkit:sql-table object-name="PccErroreElaborazione" object-type="PccErroreElaborazione" />
 								<linkit:sql-table object-name="FatturaElettronica" object-type="FatturaElettronica" />
 								<linkit:sql-table object-name="AllegatoFattura" object-type="AllegatoFattura" />
-								<linkit:sql-table object-name="ComunicazioneSdi" object-type="ComunicazioneSdi" />
+								<linkit:sql-table object-name="TracciaSDI" object-type="TracciaSDI" />
 								<linkit:sql-table object-name="Metadato" object-type="Metadato" />
 								<linkit:sql-table object-name="Ente" object-type="Ente" />
 								<linkit:sql-table object-name="Protocollo" object-type="Protocollo" />
@@ -50,7 +49,6 @@
 								<linkit:sql-table object-name="PccPagamento" object-type="PccPagamento" />
 								<linkit:sql-table object-name="PccRispedizione" object-type="PccRispedizione" />
 								<linkit:sql-table object-name="PccNotifica" object-type="PccNotifica" />
-								<linkit:sql-table object-name="Evento" object-type="Evento" />
 							</linkit:sql-table-list>
 						</linkit:sql-script>
 						<linkit:sql-mapping single-table-mapping="false"
@@ -109,7 +107,7 @@
 
 	<xsd:simpleType name="CodiceDestinatarioType">
 		<xsd:restriction base="xsd:string">
-			<xsd:pattern value="[A-Z0-9]{6}" />
+			<xsd:pattern value="[A-Z0-9]{6,7}" />
 		</xsd:restriction>
 	</xsd:simpleType>
 
@@ -291,6 +289,8 @@
 			<xsd:enumeration value="OperazioneContabile_CO"/>
 			<xsd:enumeration value="OperazioneContabile_CS"/>
 			<xsd:enumeration value="OperazioneContabile_CCS"/>
+			<xsd:enumeration value="OperazioneContabile_CPS"/>
+			<xsd:enumeration value="OperazioneContabile_CSPC"/>
 			<xsd:enumeration value="OperazioneContabile_SP"/>
 			<xsd:enumeration value="OperazioneContabile_RF"/>
 			<xsd:enumeration value="OperazioneContabile_SC"/>
@@ -338,6 +338,8 @@
 	<xsd:simpleType name="FormatoTrasmissioneType">
 		<xsd:restriction base="xsd:string">
 			<xsd:length value="5" />
+			<xsd:enumeration value="FPA12" />
+			<xsd:enumeration value="FPR12" />
 			<xsd:enumeration value="SDI11" />
 			<xsd:enumeration value="SDI10" />
 		</xsd:restriction>
@@ -411,6 +413,19 @@
 			<xsd:enumeration value="INSERITO" />
 		</xsd:restriction>
 	</xsd:simpleType>
+	
+	<xsd:simpleType name="StatoElaborazioneType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="NON_FIRMATO" />
+			<xsd:enumeration value="ERRORE_FIRMA" />
+			<xsd:enumeration value="FIRMA_OK" />
+			<xsd:enumeration value="ERRORE_PROTOCOLLAZIONE" />
+			<xsd:enumeration value="PROTOCOLLAZIONE_OK" />
+			<xsd:enumeration value="ERRORE_SPEDIZIONE" />
+			<xsd:enumeration value="SPEDIZIONE_OK" />
+			<xsd:enumeration value="SPEDIZIONE_NON_ATTIVA" />
+		</xsd:restriction>
+	</xsd:simpleType>
 
 	<xsd:simpleType name="NazioneType">
 		<xsd:restriction base="xsd:string">
@@ -454,12 +469,6 @@
 			<xsd:element name="codice" type="CodiceDestinatarioType" />
 		</xsd:sequence>
 	</xsd:complexType>
-	
-	<!--xsd:complexType name="id-pcc-ufficio">
-		<xsd:sequence>
-			<xsd:element name="codiceUfficioPcc" type="xsd:string" />
-		</xsd:sequence>
-	</xsd:complexType-->
 	
 	<xsd:complexType name="id-utente">
 		<xsd:sequence>
@@ -535,6 +544,11 @@
 			<xsd:element name="progressivo" type="xsd:positiveInteger"/>
 		</xsd:sequence>
 	</xsd:complexType>
+	<xsd:complexType name="id-documento">
+		<xsd:sequence>
+			<xsd:element name="idDocumento" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
 	
 	<xsd:simpleType name="user-type">
 		<xsd:restriction base="xsd:string">
@@ -576,7 +590,7 @@
 	</xsd:complexType>
 	
 	
-	<xsd:complexType name="ComunicazioneSdi">
+	<!--xsd:complexType name="ComunicazioneSdi">
 		<xsd:annotation>
 			<xsd:appinfo>
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
@@ -597,32 +611,176 @@
 			<xsd:element name="tipoComunicazione" type="TipoComunicazioneType"/>
 			<xsd:element name="progressivo" type="xsd:positiveInteger"/>
 			<xsd:element name="dataRicezione" type="DataFatturaType"/>
-			<xsd:element minOccurs="0" name="nomeFile" type="NomeFileType"/> <!-- Temporaneamente -->
+			<xsd:element name="nomeFile" type="NomeFileType"/>
+			<xsd:element name="messageId" type="MessageIdType" />
+			<xsd:element maxOccurs="unbounded" minOccurs="0" ref="Metadato"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="Documento">
+		<xsd:annotation>
+			<xsd:appinfo>
+				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+					<linkit:interface crud="true" id="id-documento" />
+					<linkit:sql-table-mapping generate-sql="true"
+						name="documenti" on-delete-cascade="false">
+					</linkit:sql-table-mapping>
+				</linkit:generator>
+			</xsd:appinfo>
+		</xsd:annotation>
+		<xsd:sequence>
 			<xsd:element name="contentType" type="xsd:string"/>
 			<xsd:element name="rawData" type="xsd:base64Binary"/>
 			<xsd:element name="statoConsegna" type="StatoConsegnaType"/>
 			<xsd:element minOccurs="0" name="dataConsegna" type="xsd:dateTime"/>
 			<xsd:element minOccurs="0" name="dettaglioConsegna" type="xsd:string"/>
-			<xsd:element maxOccurs="unbounded" minOccurs="0" ref="Metadato"/>
+			<xsd:element name="idComunicazioneSdI" type="id-comunicazione" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-id-mapping object-name="ComunicazioneSdi"
+								object-type="ComunicazioneSdi" relationship="reversed" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
+	
+	<xsd:complexType name="LottoFattureAttive">
+		<xsd:annotation>
+			<xsd:appinfo>
+				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+					<linkit:interface crud="true" id="id-lotto" />
+					<linkit:sql-table-mapping generate-sql="true"
+						name="lotti_fatture_attive" on-delete-cascade="false">
+						<linkit:sql-table-unique create-index="true">
+							<linkit:sql-table-unique-column name="id_comunicazione_sdi" />
+						</linkit:sql-table-unique>
+					</linkit:sql-table-mapping>
+				</linkit:generator>
+			</xsd:appinfo>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="identificativoSdi" type="IdentificativoSdIType" minOccurs="0"/>
+			<xsd:element name="idComunicazioneSdI" type="id-comunicazione" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-id-mapping object-name="ComunicazioneSdi"
+								object-type="ComunicazioneSdi" relationship="reversed" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="cedentePrestatoreDenominazione" type="String80LatinType">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-column-mapping name="cp_denominazione" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="cedentePrestatorePaese" type="NazioneType">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-column-mapping name="cp_nazione" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="cedentePrestatoreCodiceFiscale" type="CodiceType">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-column-mapping name="cp_codicefiscale" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="cessionarioCommittenteDenominazione"
+				type="String80LatinType">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-column-mapping name="cc_denominazione" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="cessionarioCommittentePaese" type="NazioneType"
+				minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-column-mapping name="cc_nazione" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="cessionarioCommittenteCodiceFiscale"
+				type="CodiceType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-column-mapping name="cc_codicefiscale" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="terzoIntermediarioOSoggettoEmittenteDenominazione"
+				type="String80LatinType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-column-mapping name="se_denominazione" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="terzoIntermediarioOSoggettoEmittentePaese"
+				type="NazioneType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-column-mapping name="se_nazione" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="terzoIntermediarioOSoggettoEmittenteCodiceFiscale"
+				type="CodiceType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-column-mapping name="se_codicefiscale" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="codiceDestinatario" type="CodiceDestinatarioType" />
+			<xsd:element name="statoElaborazione" type="StatoElaborazioneType" />
+		</xsd:sequence>
+	</xsd:complexType-->
 	
 	<xsd:complexType name="Metadato">
 		<xsd:annotation>
 			<xsd:appinfo>
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:sql-table-mapping generate-sql="true"
-						name="metadati" on-delete-cascade="false">
+						name="metadati" on-delete-cascade="false" comment="Metadati inviati e ricevuti in una comunicazione con lo SdI">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
 		</xsd:annotation>
 		<xsd:sequence>
+			<xsd:element name="richiesta" type="xsd:boolean"/>
 			<xsd:element name="nome" type="xsd:string"/>
 			<xsd:element name="valore" type="xsd:string"/>
 		</xsd:sequence>
 	</xsd:complexType>
-	
 	
 	<xsd:complexType name="LottoFatture">
 		<xsd:annotation>
@@ -630,7 +788,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-lotto" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="lotti" on-delete-cascade="false">
+						name="lotti" on-delete-cascade="false" comment="Lotti di fatture inviate o ricevute dallo SdI">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field
 								name="identificativoSdi" />
@@ -831,6 +989,8 @@
 			</xsd:element>
 			<xsd:element name="codiceDestinatario" type="CodiceDestinatarioType" />
 			<xsd:element name="xml" type="xsd:base64Binary" />
+			<xsd:element name="fatturazioneAttiva" type="xsd:boolean" />
+			<xsd:element name="statoElaborazioneInUscita" type="StatoElaborazioneType" minOccurs="0"/>
 			<xsd:element name="dataRicezione" type="DataFatturaType" />
 			<xsd:element name="statoInserimento" type="StatoInserimentoType" />
 			<xsd:element name="statoConsegna" type="StatoConsegnaType" />
@@ -851,14 +1011,64 @@
 			<xsd:element name="id-egov" type="xsd:string" minOccurs="0"/>
 		</xsd:sequence>
 	</xsd:complexType>
-
+	
+	<xsd:complexType name="TracciaSDI">
+		<xsd:annotation>
+			<xsd:appinfo>
+				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+					<linkit:interface crud="true" />
+					<linkit:sql-table-mapping generate-sql="true"
+						name="tracce_sdi" on-delete-cascade="false" comment="Tracciamento delle comunicazioni con lo SdI (solo ciclo attivo)">
+					</linkit:sql-table-mapping>
+				</linkit:generator>
+			</xsd:appinfo>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="identificativoSdi" type="IdentificativoSdIType" />
+			<xsd:element name="tipoComunicazione" type="TipoComunicazioneType" />
+			<xsd:element name="nomeFile" type="NomeFileType" />
+			<xsd:element name="data" type="xsd:dateTime" />
+			<xsd:element name="idEgov" type="xsd:string" />
+			<xsd:element name="rawData" type="xsd:base64Binary" minOccurs="0" />
+			<xsd:element name="statoProtocollazione" type="StatoProtocollazioneType" />
+			<xsd:element name="dataProtocollazione" type="xsd:dateTime" minOccurs="0" />
+			<xsd:element name="dataProssimaProtocollazione" type="xsd:dateTime" minOccurs="0" />
+			<xsd:element name="tentativiProtocollazione" type="xsd:nonNegativeInteger" />
+			<xsd:element name="dettaglioProtocollazione" type="xsd:string" minOccurs="0" />
+			<!--xsd:element ref="ProtocollazioneTracciaSDI" minOccurs="0" /-->
+			<xsd:element ref="Metadato" minOccurs="0" maxOccurs="unbounded" />
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<!--xsd:element name="ProtocollazioneTracciaSDI" type="ProtocollazioneTracciaSDI"/>
+	<xsd:complexType name="ProtocollazioneTracciaSDI">
+		<xsd:annotation>
+			<xsd:appinfo>
+				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+					<linkit:interface crud="true" />
+					<linkit:sql-table-mapping generate-sql="true"
+						name="tracce_sdi" on-delete-cascade="false" comment="Tracciamento delle comunicazioni con lo SdI (solo ciclo attivo)">
+					</linkit:sql-table-mapping>
+				</linkit:generator>
+			</xsd:appinfo>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="tipoComunicazione" type="TipoComunicazioneType" />
+			<xsd:element name="statoProtocollazione" type="StatoProtocollazioneType" />
+			<xsd:element name="dataProtocollazione" type="xsd:dateTime" minOccurs="0" />
+			<xsd:element name="dataProssimaProtocollazione" type="xsd:dateTime" minOccurs="0" />
+			<xsd:element name="tentativiProtocollazione" type="xsd:nonNegativeInteger" />
+			<xsd:element name="dettaglioProtocollazione" type="xsd:string" minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType-->
+	
 	<xsd:complexType name="FatturaElettronica">
 		<xsd:annotation>
 			<xsd:appinfo>
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-fattura" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="fatture" on-delete-cascade="false">
+						name="fatture" on-delete-cascade="false" comment="Fatture inviate o ricevute dallo SdI">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field
 								name="identificativoSdi" />
@@ -875,6 +1085,7 @@
 		</xsd:annotation>
 		<xsd:sequence>
 			<xsd:element name="formatoTrasmissione" type="FormatoTrasmissioneType" />
+			<xsd:element name="fatturazioneAttiva" type="xsd:boolean" />
 			<xsd:element name="identificativoSdi" type="IdentificativoSdIType" />
 			<xsd:element name="dataRicezione" type="xsd:dateTime" />
 			<xsd:element name="nomeFile" type="NomeFileType" />
@@ -986,8 +1197,7 @@
 			<xsd:element name="dettaglioConsegna" type="xsd:string" minOccurs="0" />
 			<xsd:element name="statoProtocollazione" type="StatoProtocollazioneType" />
 			<xsd:element name="dataScadenza" type="xsd:dateTime" minOccurs="0"/>
-			<xsd:element name="dataProtocollazione" type="xsd:dateTime"
-				minOccurs="0" />
+			<xsd:element name="dataProtocollazione" type="xsd:dateTime" minOccurs="0" />
 			<xsd:element name="protocollo" type="xsd:string"
 				minOccurs="0" />
 			<xsd:element name="xml" type="xsd:base64Binary"/>
@@ -1035,7 +1245,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="esito_committente" on-delete-cascade="true">
+						name="esito_committente" on-delete-cascade="true" comment="Esiti inviati al committente per le fatture ricevute">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -1100,7 +1310,7 @@
 					<linkit:interface crud="true"
 						id="id-notifica-decorrenza-termini" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="decorrenza_termini" on-delete-cascade="true">
+						name="decorrenza_termini" on-delete-cascade="true" comment="Notifiche di decorrenza dei termini ricevute dallo SdI in seguito alla ricezione di fatture">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field
 								name="identificativoSdi" />
@@ -1117,13 +1327,6 @@
 			<xsd:element name="messageId" type="MessageIdType" />
 			<xsd:element name="note" type="xsd:string" minOccurs="0" />
 			<xsd:element name="dataRicezione" type="xsd:dateTime" />
-			
-			<!--xsd:element name="statoConsegna" type="StatoConsegnaType" default="NON_CONSEGNATA" />
-			<xsd:element name="dataUltimaConsegna" type="xsd:dateTime" minOccurs="0" />
-			<xsd:element name="dataProssimaConsegna" type="xsd:dateTime" minOccurs="0" />
-			<xsd:element name="tentativiConsegna" type="xsd:positiveInteger"/>
-			<xsd:element name="dettaglioConsegna" type="xsd:string" minOccurs="0" /-->
-			
 			<xsd:element name="xml" type="xsd:base64Binary" />
 		</xsd:sequence>
 	</xsd:complexType>
@@ -1134,7 +1337,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="allegati" on-delete-cascade="true">
+						name="allegati" on-delete-cascade="false" comment="Allegati alle fatture inviate o ricevute">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -1168,7 +1371,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-ente" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="enti" on-delete-cascade="false">
+						name="enti" on-delete-cascade="false" comment="Enti censiti nel sistema">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field
 								name="nome" />
@@ -1180,6 +1383,7 @@
 		<xsd:sequence>
 			<xsd:element name="nome" type="xsd:string" />
 			<xsd:element name="idPccAmministrazione" type="xsd:string" minOccurs="0" />
+			<xsd:element name="cfAuth" type="xsd:string" minOccurs="0"/>
 			<xsd:element name="descrizione" type="xsd:string" minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
@@ -1190,7 +1394,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-protocollo" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="protocolli" on-delete-cascade="false">
+						name="protocolli" on-delete-cascade="false" comment="Sistemi di protocollazione censiti nel sistema">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field
 								name="nome" />
@@ -1203,8 +1407,6 @@
 			<xsd:element name="nome" type="xsd:string" />
 			<xsd:element name="descrizione" type="xsd:string" minOccurs="0" />
 			<xsd:element name="endpoint" type="xsd:anyURI" />
-			<xsd:element name="endpointConsegnaLotto" type="xsd:anyURI" minOccurs="0" />
-			<xsd:element name="endpointRichiediProtocollo" type="xsd:anyURI" minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
 	
@@ -1216,7 +1418,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-registro" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="registri" on-delete-cascade="false">
+						name="registri" on-delete-cascade="false" comment="Registri di protocollo censiti nel sistema">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field
 								name="nome" />
@@ -1259,7 +1461,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-registro-property" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="registri_props" on-delete-cascade="false">
+						name="registri_props" on-delete-cascade="false" comment="Proprietà custom che ogni registro di un protocollo deve istanziare">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field name="nome" />
 							<linkit:sql-table-unique-column name="id_protocollo" />
@@ -1290,7 +1492,7 @@
 			<xsd:appinfo>
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:sql-table-mapping generate-sql="true"
-						name="registri_prop_values" on-delete-cascade="false">
+						name="registri_prop_values" on-delete-cascade="false" comment="Valori delle proprietà custom di un registro">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-column
 								name="id_registro_property" />
@@ -1323,7 +1525,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-utente" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="utenti" on-delete-cascade="false">
+						name="utenti" on-delete-cascade="false" comment="Utenti censiti nel sistema">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field
 								name="username" />
@@ -1359,7 +1561,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-dipartimento" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="dipartimenti" on-delete-cascade="false">
+						name="dipartimenti" on-delete-cascade="false" comment="Unità organizzative censite nel sistema">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field
 								name="codice" />
@@ -1381,6 +1583,11 @@
 				</xsd:annotation>
 			</xsd:element>
 			<xsd:element name="descrizione" type="xsd:string" />
+			<xsd:element name="fatturazioneAttiva" type="xsd:boolean"
+				default="false" />
+			<xsd:element name="idProcedimento" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="firmaAutomatica" type="xsd:boolean"
+				default="false" />
 			<xsd:element name="accettazioneAutomatica" type="xsd:boolean"
 				default="false" />
 			<xsd:element name="modalitaPush" type="xsd:boolean"
@@ -1395,7 +1602,6 @@
 					</xsd:appinfo>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="cfAuth" type="xsd:string" minOccurs="0"/>
 			<xsd:element name="listaEmailNotifiche" type="xsd:string" minOccurs="0">
 				<xsd:annotation>
 					<xsd:appinfo>
@@ -1421,38 +1627,6 @@
 
 
 
-	<!--xsd:element name="PccUfficio" type="PccUfficio" />
-	<xsd:complexType name="PccUfficio">
-		<xsd:annotation>
-			<xsd:appinfo>
-				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
-					<linkit:interface crud="true" id="id-pcc-ufficio" />
-					<linkit:sql-table-mapping generate-sql="true"
-						name="pcc_uffici" on-delete-cascade="false">
-						<linkit:sql-table-unique create-index="true">
-							<linkit:sql-table-unique-field
-								name="codiceUfficioPcc" />
-						</linkit:sql-table-unique>
-					</linkit:sql-table-mapping>
-				</linkit:generator>
-			</xsd:appinfo>
-		</xsd:annotation>
-		<xsd:sequence>
-	<xsd:element name="codiceUfficioPcc" type="xsd:string" />
-	<xsd:element name="denominazione" type="xsd:string" />
-	<xsd:element name="cfAuth" type="xsd:string" />
-	<xsd:element name="listaEmailNotifiche" type="xsd:string">
-		<xsd:annotation>
-			<xsd:appinfo>
-				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
-					<linkit:sql-column-mapping long-text="true" />
-				</linkit:generator>
-			</xsd:appinfo>
-		</xsd:annotation>
-	</xsd:element>
-		</xsd:sequence>
-	</xsd:complexType-->
-	
 	<xsd:element name="DipartimentoProperty" type="DipartimentoProperty" />
 	<xsd:complexType name="DipartimentoProperty">
 		<xsd:annotation>
@@ -1460,7 +1634,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-dipartimento-property" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="dipartimenti_props" on-delete-cascade="false">
+						name="dipartimenti_props" on-delete-cascade="false" comment="Proprietà custom che ogni dipartimento di un ente deve istanziare">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field
 								name="nome" />
@@ -1493,7 +1667,7 @@
 			<xsd:appinfo>
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:sql-table-mapping generate-sql="true"
-						name="dipartimenti_prop_values" on-delete-cascade="false">
+						name="dipartimenti_prop_values" on-delete-cascade="false" comment="Valori delle proprietà di un dipartimento">
 						<linkit:sql-table-constraint unique="un_dipart_prop_values"
 							index="idx_dipart_prop_values" foreign-key="fk_dipart_prop_values"
 							primary-key="pk_dipart_prop_values" />
@@ -1515,7 +1689,6 @@
 						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 							<linkit:sql-id-mapping object-name="DipartimentoProperty"
 								object-type="DipartimentoProperty" relationship="reversed" />
-							<!--linkit:sql-column-mapping required="true" / -->
 						</linkit:generator>
 					</xsd:appinfo>
 				</xsd:annotation>
@@ -1528,7 +1701,7 @@
 			<xsd:appinfo>
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:sql-table-mapping generate-sql="true"
-						name="utenti_dipartimenti" on-delete-cascade="false">
+						name="utenti_dipartimenti" on-delete-cascade="false" comment="Associazione tra utenti e dipartimenti">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -1554,7 +1727,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-operazione" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="pcc_operazioni" on-delete-cascade="false">
+						name="pcc_operazioni" on-delete-cascade="false" comment="Operazioni PCC consentite nel sistema">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field name="nome" />
 						</linkit:sql-table-unique>
@@ -1575,7 +1748,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="dipartimenti_operazioni" on-delete-cascade="false">
+						name="dipartimenti_operazioni" on-delete-cascade="false" comment="Associazione tra Operazioni PCC e dipartimenti che possono eseguirle">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -1611,7 +1784,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="pcc_utenti_operazioni" on-delete-cascade="false">
+						name="pcc_utenti_operazioni" on-delete-cascade="false" comment="Associazione tra Operazioni PCC e utenti che possono eseguirle">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -1651,7 +1824,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-contabilizzazione" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="pcc_contabilizzazioni" on-delete-cascade="false">
+						name="pcc_contabilizzazioni" on-delete-cascade="false" comment="Contabilizzazioni PCC inserite tramite il sistema">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field name="idImporto" />
 							<linkit:sql-table-unique-field name="sistemaRichiedente" />
@@ -1697,7 +1870,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-scadenza" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="pcc_scadenze" on-delete-cascade="false">
+						name="pcc_scadenze" on-delete-cascade="false" comment="Scadenze PCC inserite tramite il sistema">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -1731,7 +1904,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-pagamento" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="pcc_pagamenti" on-delete-cascade="false">
+						name="pcc_pagamenti" on-delete-cascade="false" comment="Pagamenti PCC inseriti tramite il sistema">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -1772,7 +1945,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-traccia" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="pcc_tracce" on-delete-cascade="false">
+						name="pcc_tracce" on-delete-cascade="false" comment="Tracce delle interazioni tra il sistema e PCC">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -1795,7 +1968,9 @@
 			<xsd:element name="stato" type="StatoType"/>
 			<xsd:element name="dataUltimaTrasmissione" type="xsd:dateTime" />
 			<xsd:element name="dataUltimoTentativoEsito" type="xsd:dateTime" minOccurs="0"/>
+			<xsd:element name="codiciErrore" type="String1000LatinType" minOccurs="0"/>
 			<xsd:element name="rispedizione" type="xsd:boolean" default="false"/>
+			<xsd:element name="rispedizioneDopoQuery" type="xsd:boolean"/>
 			<xsd:element name="rispedizioneMaxTentativi" type="xsd:int" minOccurs="0" />
 			<xsd:element name="rispedizioneProssimoTentativo" type="xsd:dateTime" minOccurs="0" >
 				<xsd:annotation>
@@ -1838,7 +2013,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-trasmissione" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="pcc_tracce_trasmissioni" on-delete-cascade="false">
+						name="pcc_tracce_trasmissioni" on-delete-cascade="false" comment="Trasmissioni di una stessa interazione tra il sistema e la PCC">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -1892,7 +2067,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-trasmissione-esito" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="tracce_trasmissioni_esiti" on-delete-cascade="false">
+						name="tracce_trasmissioni_esiti" on-delete-cascade="false" comment="Esiti di una trasmissione PCC">
 						<linkit:sql-table-constraint check="chk_esiti" />
 					</linkit:sql-table-mapping>
 				</linkit:generator>
@@ -1955,7 +2130,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="pcc_errori_elaborazione" on-delete-cascade="false">
+						name="pcc_errori_elaborazione" on-delete-cascade="false" comment="Errori occorsi nell'ambito di una trasmissione PCC">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -1995,7 +2170,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-rispedizione" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="pcc_rispedizioni" on-delete-cascade="false">
+						name="pcc_rispedizioni" on-delete-cascade="false" comment="Politiche di reinoltro di un messaggio verso la PCC basate sull'errore">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field name="codiceErrore" />
 						</linkit:sql-table-unique>
@@ -2028,7 +2203,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="pcc_notifiche" on-delete-cascade="false">
+						name="pcc_notifiche" on-delete-cascade="false" comment="Notifiche inviate agli utenti in seguito ad errori nell'interazione con PCC">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -2085,7 +2260,7 @@
 	
 	<!-- ********* PLUGINS PER GLI EVENTI ************* -->
 	
-	<xsd:element name="Evento" type="Evento" />
+	<!--xsd:element name="Evento" type="Evento" />
 	<xsd:complexType name="Evento">
 		<xsd:annotation>
 			<xsd:appinfo>
@@ -2093,7 +2268,7 @@
 					<linkit:interface crud="true" />
 					<linkit:sql-table-mapping name="notifiche_eventi">
 						<linkit:sql-table-index>
-							<linkit:sql-table-index-field name="ora-registrazione"/>
+							<linkit:sql-table-index-field name="ora-registrazione" ignoreTypeCompatibility="true"/>
 						</linkit:sql-table-index>
 					</linkit:sql-table-mapping>
 				</linkit:generator>
@@ -2181,7 +2356,7 @@
 					</xsd:annotation>			        
 				</xsd:element>
 			</xsd:sequence>
-		</xsd:complexType>
+		</xsd:complexType-->
 	
 
 	<xsd:element name="LottoFatture" type="LottoFatture" />
@@ -2194,8 +2369,6 @@
 
 	<xsd:element name="AllegatoFattura" type="AllegatoFattura" />
 
-	<xsd:element name="ComunicazioneSdi" type="ComunicazioneSdi"/>
-	
 	<xsd:element name="Metadato" type="Metadato"/>
 	
 	<xsd:element name="Utente" type="Utente" />
