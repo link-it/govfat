@@ -29,16 +29,14 @@ import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 
 
-/** <p>Java class for Metadato complex type.
+/** <p>Java class for id-documento complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="Metadato">
+ * &lt;complexType name="id-documento">
  * 		&lt;sequence>
- * 			&lt;element name="richiesta" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1"/>
- * 			&lt;element name="nome" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="1" maxOccurs="1"/>
- * 			&lt;element name="valore" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="idDocumento" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="1" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -51,18 +49,16 @@ import java.io.Serializable;
  * */
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Metadato", 
+@XmlType(name = "id-documento", 
   propOrder = {
-  	"richiesta",
-  	"nome",
-  	"valore"
+  	"idDocumento"
   }
 )
 
-@XmlRootElement(name = "Metadato")
+@XmlRootElement(name = "id-documento")
 
-public class Metadato extends org.openspcoop2.utils.beans.BaseBean implements Serializable , Cloneable {
-  public Metadato() {
+public class IdDocumento extends org.openspcoop2.utils.beans.BaseBean implements Serializable , Cloneable {
+  public IdDocumento() {
   }
 
   public Long getId() {
@@ -79,32 +75,12 @@ public class Metadato extends org.openspcoop2.utils.beans.BaseBean implements Se
 		this.id=new Long(-1);
   }
 
-  public boolean isRichiesta() {
-    return this.richiesta;
+  public java.lang.String getIdDocumento() {
+    return this.idDocumento;
   }
 
-  public boolean getRichiesta() {
-    return this.richiesta;
-  }
-
-  public void setRichiesta(boolean richiesta) {
-    this.richiesta = richiesta;
-  }
-
-  public java.lang.String getNome() {
-    return this.nome;
-  }
-
-  public void setNome(java.lang.String nome) {
-    this.nome = nome;
-  }
-
-  public java.lang.String getValore() {
-    return this.valore;
-  }
-
-  public void setValore(java.lang.String valore) {
-    this.valore = valore;
+  public void setIdDocumento(java.lang.String idDocumento) {
+    this.idDocumento = idDocumento;
   }
 
   private static final long serialVersionUID = 1L;
@@ -114,16 +90,8 @@ public class Metadato extends org.openspcoop2.utils.beans.BaseBean implements Se
 
 
 
-  @javax.xml.bind.annotation.XmlSchemaType(name="boolean")
-  @XmlElement(name="richiesta",required=true,nillable=false)
-  protected boolean richiesta;
-
   @javax.xml.bind.annotation.XmlSchemaType(name="string")
-  @XmlElement(name="nome",required=true,nillable=false)
-  protected java.lang.String nome;
-
-  @javax.xml.bind.annotation.XmlSchemaType(name="string")
-  @XmlElement(name="valore",required=true,nillable=false)
-  protected java.lang.String valore;
+  @XmlElement(name="idDocumento",required=true,nillable=false)
+  protected java.lang.String idDocumento;
 
 }

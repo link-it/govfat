@@ -1011,7 +1011,7 @@ public class PccWsClient {
 		Date dataScadenza = this.tracciamentoOperazioneContabileUtils.getDataScadenza(idFattura, fattura.getImportoTotaleDocumento());
 		boolean daPagare = this.tracciamentoOperazioneContabileUtils.isDaPagare(idFattura);
 		this.log.info("Aggiornamento data scadenza della fattura ["+dataScadenza+"]...");
-		this.fatturaBD.aggiornaDataScadenza(idFattura, dataScadenza, daPagare);
+		this.fatturaBD.updateDataScadenza(idFattura, dataScadenza, daPagare);
 		this.log.info("Aggiornamento data scadenza della fattura ["+dataScadenza+"] completato");
 	}
 
@@ -1096,7 +1096,7 @@ public class PccWsClient {
 				Date dataScadenza = this.tracciamentoOperazioneContabileUtils.getDataScadenza(idFattura, fattura.getImportoTotaleDocumento());
 				boolean daPagare = this.tracciamentoOperazioneContabileUtils.isDaPagare(idFattura);
 				this.log.info("Aggiornamento data scadenza della fattura ["+dataScadenza+"]...");
-				this.fatturaBD.aggiornaDataScadenza(idFattura, dataScadenza, daPagare);
+				this.fatturaBD.updateDataScadenza(idFattura, dataScadenza, daPagare);
 				this.log.info("Aggiornamento data scadenza della fattura ["+dataScadenza+"] completato");
 
 			}

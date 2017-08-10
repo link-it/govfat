@@ -166,6 +166,9 @@ public class JDBCDipartimentoServiceSearchImpl implements IJDBCDipartimentoServi
 			fields.add(Dipartimento.model().ACCETTAZIONE_AUTOMATICA);
 			fields.add(Dipartimento.model().MODALITA_PUSH);
 			fields.add(Dipartimento.model().LISTA_EMAIL_NOTIFICHE);
+			fields.add(Dipartimento.model().FATTURAZIONE_ATTIVA);
+			fields.add(Dipartimento.model().FIRMA_AUTOMATICA);
+			fields.add(Dipartimento.model().ID_PROCEDIMENTO);
 			fields.add(Dipartimento.model().ENTE.NOME);
 
 			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));

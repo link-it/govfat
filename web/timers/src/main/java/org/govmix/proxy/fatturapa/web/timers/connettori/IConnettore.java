@@ -21,12 +21,12 @@
 package org.govmix.proxy.fatturapa.web.timers.connettori;
 
 import org.apache.log4j.Logger;
-import org.govmix.proxy.fatturapa.orm.ComunicazioneSdi;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 
 public interface IConnettore {
 
-	public void process(ComunicazioneSdi comunicazione, Logger log) throws Exception;
+	public void process(TracciaSDI comunicazione, Logger log) throws Exception;
 	public StatoConsegnaType getStatoConsegna();
 	public String getDettaglio();
 }

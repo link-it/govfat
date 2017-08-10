@@ -42,6 +42,7 @@ public class MetadatoModel extends AbstractModel<Metadato> {
 	
 		super();
 	
+		this.RICHIESTA = new Field("richiesta",boolean.class,"Metadato",Metadato.class);
 		this.NOME = new Field("nome",java.lang.String.class,"Metadato",Metadato.class);
 		this.VALORE = new Field("valore",java.lang.String.class,"Metadato",Metadato.class);
 	
@@ -51,6 +52,7 @@ public class MetadatoModel extends AbstractModel<Metadato> {
 	
 		super(father);
 	
+		this.RICHIESTA = new ComplexField(father,"richiesta",boolean.class,"Metadato",Metadato.class);
 		this.NOME = new ComplexField(father,"nome",java.lang.String.class,"Metadato",Metadato.class);
 		this.VALORE = new ComplexField(father,"valore",java.lang.String.class,"Metadato",Metadato.class);
 	
@@ -58,6 +60,8 @@ public class MetadatoModel extends AbstractModel<Metadato> {
 	
 	
 
+	public IField RICHIESTA = null;
+	 
 	public IField NOME = null;
 	 
 	public IField VALORE = null;

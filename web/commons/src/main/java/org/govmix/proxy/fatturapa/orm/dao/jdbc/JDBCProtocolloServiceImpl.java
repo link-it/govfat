@@ -72,17 +72,13 @@ public class JDBCProtocolloServiceImpl extends JDBCProtocolloServiceSearchImpl
 		sqlQueryObjectInsert.addInsertField(this.getProtocolloFieldConverter().toColumn(Protocollo.model().NOME,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getProtocolloFieldConverter().toColumn(Protocollo.model().DESCRIZIONE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getProtocolloFieldConverter().toColumn(Protocollo.model().ENDPOINT,false),"?");
-		sqlQueryObjectInsert.addInsertField(this.getProtocolloFieldConverter().toColumn(Protocollo.model().ENDPOINT_CONSEGNA_LOTTO,false),"?");
-		sqlQueryObjectInsert.addInsertField(this.getProtocolloFieldConverter().toColumn(Protocollo.model().ENDPOINT_RICHIEDI_PROTOCOLLO,false),"?");
 
 		// Insert protocollo
 		org.openspcoop2.utils.jdbc.IKeyGeneratorObject keyGenerator = this.getProtocolloFetch().getKeyGeneratorObject(Protocollo.model());
 		long id = jdbcUtilities.insertAndReturnGeneratedKey(sqlQueryObjectInsert, keyGenerator, jdbcProperties.isShowSql(),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(protocollo.getNome(),Protocollo.model().NOME.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(protocollo.getDescrizione(),Protocollo.model().DESCRIZIONE.getFieldType()),
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(protocollo.getEndpoint(),Protocollo.model().ENDPOINT.getFieldType()),
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(protocollo.getEndpointConsegnaLotto(),Protocollo.model().ENDPOINT_CONSEGNA_LOTTO.getFieldType()),
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(protocollo.getEndpointRichiediProtocollo(),Protocollo.model().ENDPOINT_RICHIEDI_PROTOCOLLO.getFieldType())
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(protocollo.getEndpoint(),Protocollo.model().ENDPOINT.getFieldType())
 		);
 		protocollo.setId(id);
 
@@ -137,10 +133,6 @@ public class JDBCProtocolloServiceImpl extends JDBCProtocolloServiceSearchImpl
 		lstObjects_protocollo.add(new JDBCObject(protocollo.getDescrizione(), Protocollo.model().DESCRIZIONE.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getProtocolloFieldConverter().toColumn(Protocollo.model().ENDPOINT,false), "?");
 		lstObjects_protocollo.add(new JDBCObject(protocollo.getEndpoint(), Protocollo.model().ENDPOINT.getFieldType()));
-		sqlQueryObjectUpdate.addUpdateField(this.getProtocolloFieldConverter().toColumn(Protocollo.model().ENDPOINT_CONSEGNA_LOTTO,false), "?");
-		lstObjects_protocollo.add(new JDBCObject(protocollo.getEndpointConsegnaLotto(), Protocollo.model().ENDPOINT_CONSEGNA_LOTTO.getFieldType()));
-		sqlQueryObjectUpdate.addUpdateField(this.getProtocolloFieldConverter().toColumn(Protocollo.model().ENDPOINT_RICHIEDI_PROTOCOLLO,false), "?");
-		lstObjects_protocollo.add(new JDBCObject(protocollo.getEndpointRichiediProtocollo(), Protocollo.model().ENDPOINT_RICHIEDI_PROTOCOLLO.getFieldType()));
 		sqlQueryObjectUpdate.addWhereCondition("id=?");
 		lstObjects_protocollo.add(new JDBCObject(tableId, Long.class));
 

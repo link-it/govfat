@@ -20,13 +20,12 @@
  */
 package org.govmix.proxy.fatturapa.orm.dao;
 
-import org.govmix.proxy.fatturapa.orm.ComunicazioneSdi;
-import org.openspcoop2.generic_project.dao.IServiceSearchWithId;
-import org.govmix.proxy.fatturapa.orm.IdComunicazione;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
+import org.openspcoop2.generic_project.dao.IServiceSearchWithoutId;
 
 
 /** 
-* Service can be used for research objects on the backend of type org.govmix.proxy.fatturapa.orm.ComunicazioneSdi  
+* Service can be used for research objects on the backend of type org.govmix.proxy.fatturapa.orm.TracciaSDI  
  *
  * @author Giuseppe Papandrea (papandrea@link.it)
  * @author Giovanni Bussu (bussu@link.it)
@@ -34,5 +33,5 @@ import org.govmix.proxy.fatturapa.orm.IdComunicazione;
  * @version $Rev$, $Date$
  */
 
-public interface IComunicazioneSdiServiceSearch extends IServiceSearchWithId<ComunicazioneSdi, IdComunicazione> {
+public interface ITracciaSDIServiceSearch extends IServiceSearchWithoutId<TracciaSDI> {
 }

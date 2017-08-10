@@ -21,6 +21,8 @@
 package org.govmix.proxy.fatturapa.web.commons.utils;
 
 import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
@@ -40,11 +42,13 @@ public class EndpointSelector {
 	private RegistroBD registroBD;
 	private Logger log;
 	
+	private Map<String, Endpoint> endpoints;
 	public EndpointSelector(Logger log) throws Exception {
 		this.protocolloBD = new ProtocolloBD(log);
 		this.dipartimentoBD = new DipartimentoBD(log);
 		this.registroBD = new RegistroBD(log);
 		this.log = log;
+		this.endpoints = new HashMap<String, Endpoint>();
 	}
 	
 	public EndpointSelector(Logger log, Connection connection, boolean autoCommit) throws Exception {
@@ -65,25 +69,29 @@ public class EndpointSelector {
 	
 	private Endpoint findEndpoint(String codiceDestinatario) throws Exception {
 
-		Endpoint endpoint = new Endpoint();
-		IdDipartimento id = new IdDipartimento();
-		id.setCodice(codiceDestinatario);
-
-		Dipartimento dipartimento = this.dipartimentoBD.get(id);
-
-		Registro registro = this.registroBD.findById(dipartimento.getRegistro());
-		Protocollo protocollo = this.protocolloBD.get(registro.getIdProtocollo());
-		this.log.debug("Trovato ente ["+protocollo.getNome()+"] con endpoint consegna fattura ["+protocollo.getEndpoint()+"] endpoint consegna lotto ["+protocollo.getEndpointConsegnaLotto()+"] endpoint richiesta protocollo ["+protocollo.getEndpointRichiediProtocollo()+"] per codice destinatario ["+codiceDestinatario+"]");
+		if(this.endpoints.containsKey(codiceDestinatario)) {
+			return this.endpoints.get(codiceDestinatario);
+		} else{
+			Endpoint endpoint = new Endpoint();
+			IdDipartimento id = new IdDipartimento();
+			id.setCodice(codiceDestinatario);
 		
-
-		endpoint.setEndpoint(protocollo.getEndpoint());
-		endpoint.setEndpointAssociazioneLotto(protocollo.getEndpointRichiediProtocollo());
-		endpoint.setEndpointConsegnaLotto(protocollo.getEndpointConsegnaLotto());
-
-		endpoint.setUsername(registro.getUsername());
-		endpoint.setPassword(registro.getPassword());
-
-		return endpoint;
+			Dipartimento dipartimento = this.dipartimentoBD.get(id);
+		
+			Registro registro = this.registroBD.findById(dipartimento.getRegistro());
+			Protocollo protocollo = this.protocolloBD.get(registro.getIdProtocollo());
+			this.log.debug("Trovato ente ["+protocollo.getNome()+"] con endpoint["+protocollo.getEndpoint()+"]");
+			
+		
+			endpoint.setEndpoint(protocollo.getEndpoint());
+		
+			endpoint.setUsername(registro.getUsername());
+			endpoint.setPassword(registro.getPassword());
+			
+			this.endpoints.put(codiceDestinatario, endpoint);
+			
+			return endpoint;
+		}
 	}
 
 }

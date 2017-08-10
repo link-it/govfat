@@ -25,10 +25,10 @@ import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
 import org.openspcoop2.generic_project.utils.ServiceManagerProperties;
 
-import org.govmix.proxy.fatturapa.orm.dao.IComunicazioneSdiServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IComunicazioneSdiService;
 import org.govmix.proxy.fatturapa.orm.dao.ILottoFattureServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.ILottoFattureService;
+import org.govmix.proxy.fatturapa.orm.dao.ITracciaSDIServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.ITracciaSDIService;
 import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaService;
 import org.govmix.proxy.fatturapa.orm.dao.INotificaEsitoCommittenteServiceSearch;
@@ -201,38 +201,6 @@ public class JDBCServiceManager extends org.openspcoop2.generic_project.dao.jdbc
 
 	/*
 	 =====================================================================================================================
-	 Services relating to the object with name:ComunicazioneSdi type:ComunicazioneSdi
-	 =====================================================================================================================
-	*/
-	
-	/**
-	 * Return a service used to research on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi}
-	 *
-	 * @return Service used to research on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi}	
-	 * @throws ServiceException Exception thrown when an error occurs during processing of the request
-	 * @throws NotImplementedException Exception thrown when the method is not implemented
-	 */
-	@Override
-	public IComunicazioneSdiServiceSearch getComunicazioneSdiServiceSearch() throws ServiceException,NotImplementedException{
-		return new JDBCComunicazioneSdiServiceSearch(this);
-	}
-	
-	/**
-	 * Return a service used to research and manage on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi}
-	 *
-	 * @return Service used to research and manage on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi}	
-	 * @throws ServiceException Exception thrown when an error occurs during processing of the request
-	 * @throws NotImplementedException Exception thrown when the method is not implemented
-	 */
-	@Override
-	public IComunicazioneSdiService getComunicazioneSdiService() throws ServiceException,NotImplementedException{
-		return new JDBCComunicazioneSdiService(this);
-	}
-	
-	
-	
-	/*
-	 =====================================================================================================================
 	 Services relating to the object with name:LottoFatture type:LottoFatture
 	 =====================================================================================================================
 	*/
@@ -262,7 +230,38 @@ public class JDBCServiceManager extends org.openspcoop2.generic_project.dao.jdbc
 	}
 	
 	
-		/**
+	
+	/*
+	 =====================================================================================================================
+	 Services relating to the object with name:TracciaSDI type:TracciaSDI
+	 =====================================================================================================================
+	*/
+	
+	/**
+	 * Return a service used to research on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI}
+	 *
+	 * @return Service used to research on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI}	
+	 * @throws ServiceException Exception thrown when an error occurs during processing of the request
+	 * @throws NotImplementedException Exception thrown when the method is not implemented
+	 */
+	@Override
+	public ITracciaSDIServiceSearch getTracciaSDIServiceSearch() throws ServiceException,NotImplementedException{
+		return new JDBCTracciaSDIServiceSearch(this);
+	}
+	
+	/**
+	 * Return a service used to research and manage on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI}
+	 *
+	 * @return Service used to research and manage on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI}	
+	 * @throws ServiceException Exception thrown when an error occurs during processing of the request
+	 * @throws NotImplementedException Exception thrown when the method is not implemented
+	 */
+	@Override
+	public ITracciaSDIService getTracciaSDIService() throws ServiceException,NotImplementedException{
+		return new JDBCTracciaSDIService(this);
+	}
+	
+	/**
 	 * Return a service used to research on the backend on objects of type {@link org.govmix.proxy.fatturapa.LottoFatture}
 	 *
 	 * @return Service used to research on the backend on objects of type {@link org.govmix.proxy.fatturapa.LottoFatture}	
@@ -274,7 +273,6 @@ public class JDBCServiceManager extends org.openspcoop2.generic_project.dao.jdbc
 		return new JDBCExtendedLottoFattureServiceSearch(this);
 	}
 	
-
 	/*
 	 =====================================================================================================================
 	 Services relating to the object with name:FatturaElettronica type:FatturaElettronica
@@ -305,7 +303,7 @@ public class JDBCServiceManager extends org.openspcoop2.generic_project.dao.jdbc
 		return new JDBCFatturaElettronicaService(this);
 	}
 	
-		/**
+	/**
 	 * Return a service used to research on the backend on objects of type {@link org.govmix.proxy.fatturapa.FatturaElettronica}
 	 *
 	 * @return Service used to research on the backend on objects of type {@link org.govmix.proxy.fatturapa.FatturaElettronica}	
@@ -317,7 +315,6 @@ public class JDBCServiceManager extends org.openspcoop2.generic_project.dao.jdbc
 		return new JDBCExtendedFatturaElettronicaServiceSearch(this);
 	}
 	
-
 	
 	/*
 	 =====================================================================================================================

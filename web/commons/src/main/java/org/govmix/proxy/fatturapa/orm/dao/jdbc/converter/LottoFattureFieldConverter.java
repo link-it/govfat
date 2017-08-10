@@ -243,6 +243,20 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 				return "xml";
 			}
 		}
+		if(field.equals(LottoFatture.model().FATTURAZIONE_ATTIVA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".fatturazione_attiva";
+			}else{
+				return "fatturazione_attiva";
+			}
+		}
+		if(field.equals(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".stato_elaborazione_in_uscita";
+			}else{
+				return "stato_elaborazione_in_uscita";
+			}
+		}
 		if(field.equals(LottoFatture.model().DATA_RICEZIONE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".data_ricezione";
@@ -392,6 +406,12 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 			return this.toTable(LottoFatture.model(), returnAlias);
 		}
 		if(field.equals(LottoFatture.model().XML)){
+			return this.toTable(LottoFatture.model(), returnAlias);
+		}
+		if(field.equals(LottoFatture.model().FATTURAZIONE_ATTIVA)){
+			return this.toTable(LottoFatture.model(), returnAlias);
+		}
+		if(field.equals(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA)){
 			return this.toTable(LottoFatture.model(), returnAlias);
 		}
 		if(field.equals(LottoFatture.model().DATA_RICEZIONE)){

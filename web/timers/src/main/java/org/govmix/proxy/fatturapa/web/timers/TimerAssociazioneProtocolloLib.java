@@ -89,11 +89,11 @@ public class TimerAssociazioneProtocolloLib extends AbstractTimerLib {
 	
 								Endpoint endpoint = endpointSelector.findEndpoint(lotto);
 	
-								URL urlOriginale = endpoint.getEndpointAssociazioneLotto().toURL();
+								URL urlOriginale = endpoint.getEndpoint().toURL();
 								
 								this.log.debug("Associo il protocollo al lotto di fatture ["+idLotto.toJson()+"]");
 								
-								URL url = new URL(urlOriginale.toString());
+								URL url = new URL(urlOriginale.toString() + "/richiediProtocollo");
 	
 								URLConnection conn = url.openConnection();
 								HttpURLConnection httpConn = (HttpURLConnection) conn;

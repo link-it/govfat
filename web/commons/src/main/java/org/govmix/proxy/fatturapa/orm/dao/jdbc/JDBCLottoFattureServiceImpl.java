@@ -94,6 +94,8 @@ public class JDBCLottoFattureServiceImpl extends JDBCLottoFattureServiceSearchIm
 		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE_FISCALE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().CODICE_DESTINATARIO,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().XML,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().FATTURAZIONE_ATTIVA,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_RICEZIONE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().STATO_INSERIMENTO,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().STATO_CONSEGNA,false),"?");
@@ -132,6 +134,8 @@ public class JDBCLottoFattureServiceImpl extends JDBCLottoFattureServiceSearchIm
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getTerzoIntermediarioOSoggettoEmittenteCodiceFiscale(),LottoFatture.model().TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE_FISCALE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getCodiceDestinatario(),LottoFatture.model().CODICE_DESTINATARIO.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getXml(),LottoFatture.model().XML.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getFatturazioneAttiva(),LottoFatture.model().FATTURAZIONE_ATTIVA.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getStatoElaborazioneInUscita(),LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getDataRicezione(),LottoFatture.model().DATA_RICEZIONE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getStatoInserimento(),LottoFatture.model().STATO_INSERIMENTO.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getStatoConsegna(),LottoFatture.model().STATO_CONSEGNA.getFieldType()),
@@ -234,6 +238,10 @@ public class JDBCLottoFattureServiceImpl extends JDBCLottoFattureServiceSearchIm
 		lstObjects_lottoFatture.add(new JDBCObject(lottoFatture.getCodiceDestinatario(), LottoFatture.model().CODICE_DESTINATARIO.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().XML,false), "?");
 		lstObjects_lottoFatture.add(new JDBCObject(lottoFatture.getXml(), LottoFatture.model().XML.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().FATTURAZIONE_ATTIVA,false), "?");
+		lstObjects_lottoFatture.add(new JDBCObject(lottoFatture.getFatturazioneAttiva(), LottoFatture.model().FATTURAZIONE_ATTIVA.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA,false), "?");
+		lstObjects_lottoFatture.add(new JDBCObject(lottoFatture.getStatoElaborazioneInUscita(), LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_RICEZIONE,false), "?");
 		lstObjects_lottoFatture.add(new JDBCObject(lottoFatture.getDataRicezione(), LottoFatture.model().DATA_RICEZIONE.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().STATO_INSERIMENTO,false), "?");

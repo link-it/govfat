@@ -42,6 +42,7 @@ import java.io.Serializable;
  * &lt;complexType name="FatturaElettronica">
  * 		&lt;sequence>
  * 			&lt;element name="formatoTrasmissione" type="{http://www.govmix.org/proxy/fatturapa/orm}FormatoTrasmissioneType" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="fatturazioneAttiva" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="identificativoSdi" type="{http://www.govmix.org/proxy/fatturapa/orm}integer" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="dataRicezione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="nomeFile" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
@@ -80,6 +81,8 @@ import java.io.Serializable;
  * 			&lt;element name="idDecorrenzaTermini" type="{http://www.govmix.org/proxy/fatturapa/orm}id-notifica-decorrenza-termini" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="idEsitoContabilizzazione" type="{http://www.govmix.org/proxy/fatturapa/orm}id-trasmissione-esito" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="idEsitoScadenza" type="{http://www.govmix.org/proxy/fatturapa/orm}id-trasmissione-esito" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="Dipartimento" type="{http://www.govmix.org/proxy/fatturapa/orm}Dipartimento" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="LottoFatture" type="{http://www.govmix.org/proxy/fatturapa/orm}LottoFatture" minOccurs="0" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -95,6 +98,7 @@ import java.io.Serializable;
 @XmlType(name = "FatturaElettronica", 
   propOrder = {
   	"formatoTrasmissione",
+  	"fatturazioneAttiva",
   	"_decimalWrapper_identificativoSdi",
   	"dataRicezione",
   	"nomeFile",
@@ -132,7 +136,9 @@ import java.io.Serializable;
   	"xml",
   	"idDecorrenzaTermini",
   	"idEsitoContabilizzazione",
-  	"idEsitoScadenza"
+  	"idEsitoScadenza",
+  	"dipartimento",
+  	"lottoFatture"
   }
 )
 
@@ -174,6 +180,18 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
 
   public void setFormatoTrasmissione(org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType formatoTrasmissione) {
     this.formatoTrasmissione = formatoTrasmissione;
+  }
+
+  public boolean isFatturazioneAttiva() {
+    return this.fatturazioneAttiva;
+  }
+
+  public boolean getFatturazioneAttiva() {
+    return this.fatturazioneAttiva;
+  }
+
+  public void setFatturazioneAttiva(boolean fatturazioneAttiva) {
+    this.fatturazioneAttiva = fatturazioneAttiva;
   }
 
   public java.lang.Integer getIdentificativoSdi() {
@@ -550,6 +568,22 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
     this.idEsitoScadenza = idEsitoScadenza;
   }
 
+  public Dipartimento getDipartimento() {
+    return this.dipartimento;
+  }
+
+  public void setDipartimento(Dipartimento dipartimento) {
+    this.dipartimento = dipartimento;
+  }
+
+  public LottoFatture getLottoFatture() {
+    return this.lottoFatture;
+  }
+
+  public void setLottoFatture(LottoFatture lottoFatture) {
+    this.lottoFatture = lottoFatture;
+  }
+
   private static final long serialVersionUID = 1L;
 
   @XmlTransient
@@ -574,6 +608,10 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
 
   @XmlElement(name="formatoTrasmissione",required=true,nillable=false)
   protected FormatoTrasmissioneType formatoTrasmissione;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="boolean")
+  @XmlElement(name="fatturazioneAttiva",required=true,nillable=false)
+  protected boolean fatturazioneAttiva;
 
   @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.Decimal2String.class)
   @javax.xml.bind.annotation.XmlSchemaType(name="integer")
@@ -754,5 +792,11 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
 
   @XmlElement(name="idEsitoScadenza",required=false,nillable=false)
   protected IdTrasmissioneEsito idEsitoScadenza;
+
+  @XmlElement(name="Dipartimento",required=false,nillable=false)
+  protected Dipartimento dipartimento;
+
+  @XmlElement(name="LottoFatture",required=false,nillable=false)
+  protected LottoFatture lottoFatture;
 
 }

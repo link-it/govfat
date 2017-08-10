@@ -89,6 +89,27 @@ public class DipartimentoFieldConverter extends AbstractSQLFieldConverter {
 				return "descrizione";
 			}
 		}
+		if(field.equals(Dipartimento.model().FATTURAZIONE_ATTIVA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".fatturazione_attiva";
+			}else{
+				return "fatturazione_attiva";
+			}
+		}
+		if(field.equals(Dipartimento.model().ID_PROCEDIMENTO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".id_procedimento";
+			}else{
+				return "id_procedimento";
+			}
+		}
+		if(field.equals(Dipartimento.model().FIRMA_AUTOMATICA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".firma_automatica";
+			}else{
+				return "firma_automatica";
+			}
+		}
 		if(field.equals(Dipartimento.model().ACCETTAZIONE_AUTOMATICA)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".accettazione_automatica";
@@ -158,6 +179,15 @@ public class DipartimentoFieldConverter extends AbstractSQLFieldConverter {
 			return this.toTable(Dipartimento.model().ENTE, returnAlias);
 		}
 		if(field.equals(Dipartimento.model().DESCRIZIONE)){
+			return this.toTable(Dipartimento.model(), returnAlias);
+		}
+		if(field.equals(Dipartimento.model().FATTURAZIONE_ATTIVA)){
+			return this.toTable(Dipartimento.model(), returnAlias);
+		}
+		if(field.equals(Dipartimento.model().ID_PROCEDIMENTO)){
+			return this.toTable(Dipartimento.model(), returnAlias);
+		}
+		if(field.equals(Dipartimento.model().FIRMA_AUTOMATICA)){
 			return this.toTable(Dipartimento.model(), returnAlias);
 		}
 		if(field.equals(Dipartimento.model().ACCETTAZIONE_AUTOMATICA)){

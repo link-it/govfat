@@ -21,14 +21,14 @@
 package org.govmix.proxy.fatturapa.web.timers.connettori.impl;
 
 import org.apache.log4j.Logger;
-import org.govmix.proxy.fatturapa.orm.ComunicazioneSdi;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.web.timers.connettori.IConnettore;
 
 public class ConnettoreNOP implements IConnettore {
 
 	@Override
-	public void process(ComunicazioneSdi comunicazione, Logger log)
+	public void process(TracciaSDI comunicazione, Logger log)
 			throws Exception {
 		log.info("NOP eseguita");
 	}

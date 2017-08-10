@@ -33,6 +33,7 @@ import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdDipartimento;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdUtente;
+import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.recuperofatture.Fattura;
 import org.govmix.proxy.fatturapa.recuperofatture.ListaFattureNonConsegnateResponse;
@@ -73,8 +74,9 @@ public class RecuperaFatture {
 	}
 	
 	public String cercaFattureNonConsegnate(IdUtente idUtente, Integer limit) throws Exception {
+		Utente utente = this.utenteBD.findByUsername(idUtente.getUsername());
 		List<FatturaElettronica> lst = this.fatturaElettronicaBD.
-				getIdFattureNonConsegnate(idUtente, limit);
+				getIdFattureNonConsegnate(utente, limit);
 		
 		ListaFattureNonConsegnateResponse response = new ListaFattureNonConsegnateResponse();
 		

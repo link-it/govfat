@@ -20,8 +20,7 @@
  */
 package org.govmix.proxy.fatturapa.orm.dao.jdbc;
 
-import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceCRUDWithId;
-import org.govmix.proxy.fatturapa.orm.IdComunicazione;
+import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceCRUDWithoutId;
 
 import org.openspcoop2.generic_project.beans.NonNegativeNumber;
 import org.openspcoop2.generic_project.beans.UpdateField;
@@ -35,8 +34,8 @@ import org.openspcoop2.generic_project.expression.IExpression;
 import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
 
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCServiceManager;
-import org.govmix.proxy.fatturapa.orm.ComunicazioneSdi;
-import org.govmix.proxy.fatturapa.orm.dao.IDBComunicazioneSdiService;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
+import org.govmix.proxy.fatturapa.orm.dao.IDBTracciaSDIService;
 import org.govmix.proxy.fatturapa.orm.utils.ProjectInfo;
 
 import java.sql.Connection;
@@ -44,7 +43,7 @@ import java.sql.Connection;
 import org.openspcoop2.utils.sql.ISQLQueryObject;
 
 /**     
- * Service can be used to search for and manage the backend objects of type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi} 
+ * Service can be used to search for and manage the backend objects of type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI} 
  *
  * @author Giuseppe Papandrea (papandrea@link.it)
  * @author Giovanni Bussu (bussu@link.it)
@@ -52,22 +51,22 @@ import org.openspcoop2.utils.sql.ISQLQueryObject;
  * @version $Rev$, $Date$
  */
 
-public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSearch  implements IDBComunicazioneSdiService {
+public class JDBCTracciaSDIService extends JDBCTracciaSDIServiceSearch  implements IDBTracciaSDIService {
 
 
-	private IJDBCServiceCRUDWithId<ComunicazioneSdi, IdComunicazione, JDBCServiceManager> serviceCRUD = null;
-	public JDBCComunicazioneSdiService(JDBCServiceManager jdbcServiceManager) throws ServiceException {
+	private IJDBCServiceCRUDWithoutId<TracciaSDI, JDBCServiceManager> serviceCRUD = null;
+	public JDBCTracciaSDIService(JDBCServiceManager jdbcServiceManager) throws ServiceException {
 		super(jdbcServiceManager);
-		this.log.debug(JDBCComunicazioneSdiService.class.getName()+ " initialized");
-		this.serviceCRUD = JDBCProperties.getInstance(ProjectInfo.getInstance()).getServiceCRUD("comunicazioneSdi");
+		this.log.debug(JDBCTracciaSDIService.class.getName()+ " initialized");
+		this.serviceCRUD = JDBCProperties.getInstance(ProjectInfo.getInstance()).getServiceCRUD("tracciaSDI");
 		this.serviceCRUD.setServiceManager(new JDBCLimitedServiceManager(this.jdbcServiceManager));
 	}
 
 	
 	@Override
-	public void create(ComunicazioneSdi comunicazioneSdi) throws ServiceException, NotImplementedException {
+	public void create(TracciaSDI tracciaSDI) throws ServiceException, NotImplementedException {
 		try{
-			this.create(comunicazioneSdi, false, null);
+			this.create(tracciaSDI, false, null);
 		}catch(ValidationException vE){
 			// not possible
 			throw new ServiceException(vE.getMessage(), vE);
@@ -75,9 +74,9 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 	}
 	
 	@Override
-	public void create(ComunicazioneSdi comunicazioneSdi, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws ServiceException, NotImplementedException {
+	public void create(TracciaSDI tracciaSDI, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws ServiceException, NotImplementedException {
 		try{
-			this.create(comunicazioneSdi, false, idMappingResolutionBehaviour);
+			this.create(tracciaSDI, false, idMappingResolutionBehaviour);
 		}catch(ValidationException vE){
 			// not possible
 			throw new ServiceException(vE.getMessage(), vE);
@@ -85,12 +84,12 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 	}
 	
 	@Override
-	public void create(ComunicazioneSdi comunicazioneSdi, boolean validate) throws ServiceException, NotImplementedException, ValidationException {
-		this.create(comunicazioneSdi, validate, null);
+	public void create(TracciaSDI tracciaSDI, boolean validate) throws ServiceException, NotImplementedException, ValidationException {
+		this.create(tracciaSDI, validate, null);
 	}
 	
 	@Override
-	public void create(ComunicazioneSdi comunicazioneSdi, boolean validate, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws ServiceException, NotImplementedException, ValidationException {
+	public void create(TracciaSDI tracciaSDI, boolean validate, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws ServiceException, NotImplementedException, ValidationException {
 		
 		Connection connection = null;
 		boolean oldValueAutoCommit = false;
@@ -98,13 +97,13 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 		try{
 			
 			// check parameters
-			if(comunicazioneSdi==null){
-				throw new Exception("Parameter (type:"+ComunicazioneSdi.class.getName()+") 'comunicazioneSdi' is null");
+			if(tracciaSDI==null){
+				throw new Exception("Parameter (type:"+TracciaSDI.class.getName()+") 'tracciaSDI' is null");
 			}
 			
 			// validate
 			if(validate){
-				this.validate(comunicazioneSdi);
+				this.validate(tracciaSDI);
 			}
 
 			// ISQLQueryObject
@@ -119,7 +118,7 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 				connection.setAutoCommit(false);
 			}
 		
-			this.serviceCRUD.create(this.jdbcProperties,this.log,connection,sqlQueryObject,comunicazioneSdi,idMappingResolutionBehaviour);			
+			this.serviceCRUD.create(this.jdbcProperties,this.log,connection,sqlQueryObject,tracciaSDI,idMappingResolutionBehaviour);			
 
 		}catch(ServiceException e){
 			rollback = true;
@@ -159,9 +158,9 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 	}
 
 	@Override
-	public void update(IdComunicazione oldId, ComunicazioneSdi comunicazioneSdi) throws ServiceException, NotFoundException, NotImplementedException {
+	public void update(TracciaSDI tracciaSDI) throws ServiceException, NotFoundException, NotImplementedException {
 		try{
-			this.update(oldId, comunicazioneSdi, false, null);
+			this.update(tracciaSDI, false, null);
 		}catch(ValidationException vE){
 			// not possible
 			throw new ServiceException(vE.getMessage(), vE);
@@ -169,9 +168,9 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 	}
 	
 	@Override
-	public void update(IdComunicazione oldId, ComunicazioneSdi comunicazioneSdi, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws ServiceException, NotFoundException, NotImplementedException {
+	public void update(TracciaSDI tracciaSDI, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws ServiceException, NotFoundException, NotImplementedException {
 		try{
-			this.update(oldId, comunicazioneSdi, false, idMappingResolutionBehaviour);
+			this.update(tracciaSDI, false, idMappingResolutionBehaviour);
 		}catch(ValidationException vE){
 			// not possible
 			throw new ServiceException(vE.getMessage(), vE);
@@ -179,12 +178,12 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 	}
 	
 	@Override
-	public void update(IdComunicazione oldId, ComunicazioneSdi comunicazioneSdi, boolean validate) throws ServiceException, NotFoundException, NotImplementedException, ValidationException {
-		this.update(oldId, comunicazioneSdi, validate, null);
+	public void update(TracciaSDI tracciaSDI, boolean validate) throws ServiceException, NotFoundException, NotImplementedException, ValidationException {
+		this.update(tracciaSDI, validate, null);
 	}
 		
 	@Override
-	public void update(IdComunicazione oldId, ComunicazioneSdi comunicazioneSdi, boolean validate, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws ServiceException, NotFoundException, NotImplementedException, ValidationException {
+	public void update(TracciaSDI tracciaSDI, boolean validate, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws ServiceException, NotFoundException, NotImplementedException, ValidationException {
 	
 		Connection connection = null;
 		boolean oldValueAutoCommit = false;
@@ -192,16 +191,13 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 		try{
 			
 			// check parameters
-			if(comunicazioneSdi==null){
-				throw new Exception("Parameter (type:"+ComunicazioneSdi.class.getName()+") 'comunicazioneSdi' is null");
-			}
-			if(oldId==null){
-				throw new Exception("Parameter (type:"+IdComunicazione.class.getName()+") 'oldId' is null");
+			if(tracciaSDI==null){
+				throw new Exception("Parameter (type:"+TracciaSDI.class.getName()+") 'tracciaSDI' is null");
 			}
 
 			// validate
 			if(validate){
-				this.validate(comunicazioneSdi);
+				this.validate(tracciaSDI);
 			}
 
 			// ISQLQueryObject
@@ -216,7 +212,7 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 				connection.setAutoCommit(false);
 			}
 
-			this.serviceCRUD.update(this.jdbcProperties,this.log,connection,sqlQueryObject,oldId,comunicazioneSdi,idMappingResolutionBehaviour);
+			this.serviceCRUD.update(this.jdbcProperties,this.log,connection,sqlQueryObject,tracciaSDI,idMappingResolutionBehaviour);
 			
 		}catch(ServiceException e){
 			rollback = true;
@@ -259,9 +255,9 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 	}
 	
 	@Override
-	public void update(long tableId, ComunicazioneSdi comunicazioneSdi) throws ServiceException, NotFoundException, NotImplementedException {
+	public void update(long tableId, TracciaSDI tracciaSDI) throws ServiceException, NotFoundException, NotImplementedException {
 		try{
-			this.update(tableId, comunicazioneSdi, false, null);
+			this.update(tableId, tracciaSDI, false, null);
 		}catch(ValidationException vE){
 			// not possible
 			throw new ServiceException(vE.getMessage(), vE);
@@ -269,9 +265,9 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 	}
 	
 	@Override
-	public void update(long tableId, ComunicazioneSdi comunicazioneSdi, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws ServiceException, NotFoundException, NotImplementedException {
+	public void update(long tableId, TracciaSDI tracciaSDI, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws ServiceException, NotFoundException, NotImplementedException {
 		try{
-			this.update(tableId, comunicazioneSdi, false, idMappingResolutionBehaviour);
+			this.update(tableId, tracciaSDI, false, idMappingResolutionBehaviour);
 		}catch(ValidationException vE){
 			// not possible
 			throw new ServiceException(vE.getMessage(), vE);
@@ -279,12 +275,12 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 	}
 	
 	@Override
-	public void update(long tableId, ComunicazioneSdi comunicazioneSdi, boolean validate) throws ServiceException, NotFoundException, NotImplementedException, ValidationException {
-		this.update(tableId, comunicazioneSdi, validate, null);
+	public void update(long tableId, TracciaSDI tracciaSDI, boolean validate) throws ServiceException, NotFoundException, NotImplementedException, ValidationException {
+		this.update(tableId, tracciaSDI, validate, null);
 	}
 		
 	@Override
-	public void update(long tableId, ComunicazioneSdi comunicazioneSdi, boolean validate, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws ServiceException, NotFoundException, NotImplementedException, ValidationException {
+	public void update(long tableId, TracciaSDI tracciaSDI, boolean validate, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws ServiceException, NotFoundException, NotImplementedException, ValidationException {
 	
 		Connection connection = null;
 		boolean oldValueAutoCommit = false;
@@ -292,8 +288,8 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 		try{
 			
 			// check parameters
-			if(comunicazioneSdi==null){
-				throw new Exception("Parameter (type:"+ComunicazioneSdi.class.getName()+") 'comunicazioneSdi' is null");
+			if(tracciaSDI==null){
+				throw new Exception("Parameter (type:"+TracciaSDI.class.getName()+") 'tracciaSDI' is null");
 			}
 			if(tableId<=0){
 				throw new Exception("Parameter (type:"+long.class.getName()+") 'tableId' is less equals 0");
@@ -301,7 +297,7 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 
 			// validate
 			if(validate){
-				this.validate(comunicazioneSdi);
+				this.validate(tracciaSDI);
 			}
 
 			// ISQLQueryObject
@@ -316,7 +312,7 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 				connection.setAutoCommit(false);
 			}
 
-			this.serviceCRUD.update(this.jdbcProperties,this.log,connection,sqlQueryObject,tableId,comunicazioneSdi,idMappingResolutionBehaviour);
+			this.serviceCRUD.update(this.jdbcProperties,this.log,connection,sqlQueryObject,tableId,tracciaSDI,idMappingResolutionBehaviour);
 			
 		}catch(ServiceException e){
 			rollback = true;
@@ -359,7 +355,7 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 	}
 	
 	@Override
-	public void updateFields(IdComunicazione id, UpdateField ... updateFields) throws ServiceException, NotFoundException, NotImplementedException {
+	public void updateFields(TracciaSDI tracciaSDI, UpdateField ... updateFields) throws ServiceException, NotFoundException, NotImplementedException {
 	
 		Connection connection = null;
 		boolean oldValueAutoCommit = false;
@@ -367,8 +363,8 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 		try{
 			
 			// check parameters
-			if(id==null){
-				throw new Exception("Parameter (type:"+IdComunicazione.class.getName()+") 'id' is null");
+			if(tracciaSDI==null){
+				throw new Exception("Parameter (type:"+TracciaSDI.class.getName()+") 'tracciaSDI' is null");
 			}
 			if(updateFields==null){
 				throw new Exception("Parameter (type:"+UpdateField.class.getName()+") 'updateFields' is null");
@@ -386,7 +382,7 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 				connection.setAutoCommit(false);
 			}
 
-			this.serviceCRUD.updateFields(this.jdbcProperties,this.log,connection,sqlQueryObject,id,updateFields);
+			this.serviceCRUD.updateFields(this.jdbcProperties,this.log,connection,sqlQueryObject,tracciaSDI,updateFields);
 			
 		}catch(ServiceException e){
 			rollback = true;
@@ -426,7 +422,7 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 	}
 	
 	@Override
-	public void updateFields(IdComunicazione id, IExpression condition, UpdateField ... updateFields) throws ServiceException, NotFoundException, NotImplementedException {
+	public void updateFields(TracciaSDI tracciaSDI, IExpression condition, UpdateField ... updateFields) throws ServiceException, NotFoundException, NotImplementedException {
 	
 		Connection connection = null;
 		boolean oldValueAutoCommit = false;
@@ -434,8 +430,8 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 		try{
 			
 			// check parameters
-			if(id==null){
-				throw new Exception("Parameter (type:"+IdComunicazione.class.getName()+") 'id' is null");
+			if(tracciaSDI==null){
+				throw new Exception("Parameter (type:"+TracciaSDI.class.getName()+") 'tracciaSDI' is null");
 			}
 			if(condition==null){
 				throw new Exception("Parameter (type:"+IExpression.class.getName()+") 'condition' is null");
@@ -456,7 +452,7 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 				connection.setAutoCommit(false);
 			}
 
-			this.serviceCRUD.updateFields(this.jdbcProperties,this.log,connection,sqlQueryObject,id,condition,updateFields);
+			this.serviceCRUD.updateFields(this.jdbcProperties,this.log,connection,sqlQueryObject,tracciaSDI,condition,updateFields);
 			
 		}catch(ServiceException e){
 			rollback = true;
@@ -496,7 +492,7 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 	}
 
 	@Override
-	public void updateFields(IdComunicazione id, UpdateModel ... updateModels) throws ServiceException, NotFoundException, NotImplementedException {
+	public void updateFields(TracciaSDI tracciaSDI, UpdateModel ... updateModels) throws ServiceException, NotFoundException, NotImplementedException {
 	
 		Connection connection = null;
 		boolean oldValueAutoCommit = false;
@@ -504,8 +500,8 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 		try{
 			
 			// check parameters
-			if(id==null){
-				throw new Exception("Parameter (type:"+IdComunicazione.class.getName()+") 'id' is null");
+			if(tracciaSDI==null){
+				throw new Exception("Parameter (type:"+TracciaSDI.class.getName()+") 'tracciaSDI' is null");
 			}
 			if(updateModels==null){
 				throw new Exception("Parameter (type:"+UpdateModel.class.getName()+") 'updateModels' is null");
@@ -523,7 +519,7 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 				connection.setAutoCommit(false);
 			}
 
-			this.serviceCRUD.updateFields(this.jdbcProperties,this.log,connection,sqlQueryObject,id,updateModels);
+			this.serviceCRUD.updateFields(this.jdbcProperties,this.log,connection,sqlQueryObject,tracciaSDI,updateModels);
 			
 		}catch(ServiceException e){
 			rollback = true;
@@ -767,9 +763,9 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 	}
 
 	@Override
-	public void updateOrCreate(IdComunicazione oldId, ComunicazioneSdi comunicazioneSdi) throws ServiceException, NotImplementedException {
+	public void updateOrCreate(TracciaSDI tracciaSDI) throws ServiceException, NotImplementedException {
 		try{
-			this.updateOrCreate(oldId, comunicazioneSdi, false, null);
+			this.updateOrCreate(tracciaSDI, false, null);
 		}catch(ValidationException vE){
 			// not possible
 			throw new ServiceException(vE.getMessage(), vE);
@@ -777,9 +773,9 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 	}
 	
 	@Override
-	public void updateOrCreate(IdComunicazione oldId, ComunicazioneSdi comunicazioneSdi, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws ServiceException, NotImplementedException {
+	public void updateOrCreate(TracciaSDI tracciaSDI, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws ServiceException, NotImplementedException {
 		try{
-			this.updateOrCreate(oldId, comunicazioneSdi, false, idMappingResolutionBehaviour);
+			this.updateOrCreate(tracciaSDI, false, idMappingResolutionBehaviour);
 		}catch(ValidationException vE){
 			// not possible
 			throw new ServiceException(vE.getMessage(), vE);
@@ -787,12 +783,12 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 	}
 
 	@Override
-	public void updateOrCreate(IdComunicazione oldId, ComunicazioneSdi comunicazioneSdi, boolean validate) throws ServiceException, NotImplementedException, ValidationException {
-		this.updateOrCreate(oldId, comunicazioneSdi, validate, null);
+	public void updateOrCreate(TracciaSDI tracciaSDI, boolean validate) throws ServiceException, NotImplementedException, ValidationException {
+		this.updateOrCreate(tracciaSDI, validate, null);
 	}
 
 	@Override
-	public void updateOrCreate(IdComunicazione oldId, ComunicazioneSdi comunicazioneSdi, boolean validate, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws ServiceException, NotImplementedException, ValidationException {
+	public void updateOrCreate(TracciaSDI tracciaSDI, boolean validate, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws ServiceException, NotImplementedException, ValidationException {
 	
 		Connection connection = null;
 		boolean oldValueAutoCommit = false;
@@ -800,16 +796,13 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 		try{
 			
 			// check parameters
-			if(comunicazioneSdi==null){
-				throw new Exception("Parameter (type:"+ComunicazioneSdi.class.getName()+") 'comunicazioneSdi' is null");
-			}
-			if(oldId==null){
-				throw new Exception("Parameter (type:"+IdComunicazione.class.getName()+") 'oldId' is null");
+			if(tracciaSDI==null){
+				throw new Exception("Parameter (type:"+TracciaSDI.class.getName()+") 'tracciaSDI' is null");
 			}
 
 			// validate
 			if(validate){
-				this.validate(comunicazioneSdi);
+				this.validate(tracciaSDI);
 			}
 
 			// ISQLQueryObject
@@ -824,7 +817,7 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 				connection.setAutoCommit(false);
 			}
 
-			this.serviceCRUD.updateOrCreate(this.jdbcProperties,this.log,connection,sqlQueryObject,oldId,comunicazioneSdi,idMappingResolutionBehaviour);
+			this.serviceCRUD.updateOrCreate(this.jdbcProperties,this.log,connection,sqlQueryObject,tracciaSDI,idMappingResolutionBehaviour);
 			
 		}catch(ServiceException e){
 			rollback = true;
@@ -864,9 +857,9 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 	}
 	
 	@Override
-	public void updateOrCreate(long tableId, ComunicazioneSdi comunicazioneSdi) throws ServiceException, NotImplementedException {
+	public void updateOrCreate(long tableId, TracciaSDI tracciaSDI) throws ServiceException, NotImplementedException {
 		try{
-			this.updateOrCreate(tableId, comunicazioneSdi, false, null);
+			this.updateOrCreate(tableId, tracciaSDI, false, null);
 		}catch(ValidationException vE){
 			// not possible
 			throw new ServiceException(vE.getMessage(), vE);
@@ -874,9 +867,9 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 	}
 	
 	@Override
-	public void updateOrCreate(long tableId, ComunicazioneSdi comunicazioneSdi, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws ServiceException, NotImplementedException {
+	public void updateOrCreate(long tableId, TracciaSDI tracciaSDI, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws ServiceException, NotImplementedException {
 		try{
-			this.updateOrCreate(tableId, comunicazioneSdi, false, idMappingResolutionBehaviour);
+			this.updateOrCreate(tableId, tracciaSDI, false, idMappingResolutionBehaviour);
 		}catch(ValidationException vE){
 			// not possible
 			throw new ServiceException(vE.getMessage(), vE);
@@ -884,12 +877,12 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 	}
 
 	@Override
-	public void updateOrCreate(long tableId, ComunicazioneSdi comunicazioneSdi, boolean validate) throws ServiceException, NotImplementedException, ValidationException {
-		this.updateOrCreate(tableId, comunicazioneSdi, validate, null);
+	public void updateOrCreate(long tableId, TracciaSDI tracciaSDI, boolean validate) throws ServiceException, NotImplementedException, ValidationException {
+		this.updateOrCreate(tableId, tracciaSDI, validate, null);
 	}
 
 	@Override
-	public void updateOrCreate(long tableId, ComunicazioneSdi comunicazioneSdi, boolean validate, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws ServiceException, NotImplementedException, ValidationException {
+	public void updateOrCreate(long tableId, TracciaSDI tracciaSDI, boolean validate, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws ServiceException, NotImplementedException, ValidationException {
 
 		Connection connection = null;
 		boolean oldValueAutoCommit = false;
@@ -897,8 +890,8 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 		try{
 			
 			// check parameters
-			if(comunicazioneSdi==null){
-				throw new Exception("Parameter (type:"+ComunicazioneSdi.class.getName()+") 'comunicazioneSdi' is null");
+			if(tracciaSDI==null){
+				throw new Exception("Parameter (type:"+TracciaSDI.class.getName()+") 'tracciaSDI' is null");
 			}
 			if(tableId<=0){
 				throw new Exception("Parameter (type:"+long.class.getName()+") 'tableId' is less equals 0");
@@ -906,7 +899,7 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 
 			// validate
 			if(validate){
-				this.validate(comunicazioneSdi);
+				this.validate(tracciaSDI);
 			}
 
 			// ISQLQueryObject
@@ -921,7 +914,7 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 				connection.setAutoCommit(false);
 			}
 
-			this.serviceCRUD.updateOrCreate(this.jdbcProperties,this.log,connection,sqlQueryObject,tableId,comunicazioneSdi,idMappingResolutionBehaviour);
+			this.serviceCRUD.updateOrCreate(this.jdbcProperties,this.log,connection,sqlQueryObject,tableId,tracciaSDI,idMappingResolutionBehaviour);
 
 		}catch(ServiceException e){
 			rollback = true;
@@ -961,7 +954,7 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 	}
 	
 	@Override
-	public void delete(ComunicazioneSdi comunicazioneSdi) throws ServiceException,NotImplementedException {
+	public void delete(TracciaSDI tracciaSDI) throws ServiceException,NotImplementedException {
 		
 		Connection connection = null;
 		boolean oldValueAutoCommit = false;
@@ -969,8 +962,8 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 		try{
 			
 			// check parameters
-			if(comunicazioneSdi==null){
-				throw new Exception("Parameter (type:"+ComunicazioneSdi.class.getName()+") 'comunicazioneSdi' is null");
+			if(tracciaSDI==null){
+				throw new Exception("Parameter (type:"+TracciaSDI.class.getName()+") 'tracciaSDI' is null");
 			}
 
 			// ISQLQueryObject
@@ -985,7 +978,7 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 				connection.setAutoCommit(false);
 			}
 
-			this.serviceCRUD.delete(this.jdbcProperties,this.log,connection,sqlQueryObject,comunicazioneSdi);	
+			this.serviceCRUD.delete(this.jdbcProperties,this.log,connection,sqlQueryObject,tracciaSDI);	
 
 		}catch(ServiceException e){
 			rollback = true;
@@ -1022,66 +1015,6 @@ public class JDBCComunicazioneSdiService extends JDBCComunicazioneSdiServiceSear
 	}
 	
 
-	@Override
-	public void deleteById(IdComunicazione id) throws ServiceException, NotImplementedException {
-
-		Connection connection = null;
-		boolean oldValueAutoCommit = false;
-		boolean rollback = false;
-		try{
-			
-			// check parameters
-			if(id==null){
-				throw new Exception("Parameter (type:"+IdComunicazione.class.getName()+") 'id' is null");
-			}
-
-			// ISQLQueryObject
-			ISQLQueryObject sqlQueryObject = this.jdbcSqlObjectFactory.createSQLQueryObject(this.jdbcProperties.getDatabase());
-			sqlQueryObject.setANDLogicOperator(true);
-			// Connection sql
-			connection = this.jdbcServiceManager.getConnection();
-
-			// transaction
-			if(this.jdbcProperties.isAutomaticTransactionManagement()){
-				oldValueAutoCommit = connection.getAutoCommit();
-				connection.setAutoCommit(false);
-			}
-
-			this.serviceCRUD.deleteById(this.jdbcProperties,this.log,connection,sqlQueryObject,id);			
-
-		}catch(ServiceException e){
-			rollback = true;
-			this.log.error(e,e); throw e;
-		}catch(NotImplementedException e){
-			rollback = true;
-			this.log.error(e,e); throw e;
-		}catch(Exception e){
-			rollback = true;
-			this.log.error(e,e); throw new ServiceException("DeleteById not completed: "+e.getMessage(),e);
-		}finally{
-			if(this.jdbcProperties.isAutomaticTransactionManagement()){
-				if(rollback){
-					try{
-						if(connection!=null)
-							connection.rollback();
-					}catch(Exception eIgnore){}
-				}else{
-					try{
-						if(connection!=null)
-							connection.commit();
-					}catch(Exception eIgnore){}
-				}
-				try{
-					if(connection!=null)
-						connection.setAutoCommit(oldValueAutoCommit);
-				}catch(Exception eIgnore){}
-			}
-			if(connection!=null){
-				this.jdbcServiceManager.closeConnection(connection);
-			}
-		}
-
-	}
 
 	@Override
 	public NonNegativeNumber deleteAll() throws ServiceException, NotImplementedException {

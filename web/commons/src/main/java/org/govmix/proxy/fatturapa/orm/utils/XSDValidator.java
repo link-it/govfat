@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
 import org.openspcoop2.utils.xml.AbstractValidatoreXSD;
 import org.openspcoop2.generic_project.exception.ServiceException;
 
-import org.govmix.proxy.fatturapa.orm.ComunicazioneSdi;
+import org.govmix.proxy.fatturapa.orm.LottoFatture;
 
 /** 
  * XSD Validator    
@@ -41,7 +41,7 @@ public class XSDValidator {
 	
 	private static synchronized void initValidator(Class<?> validatorImpl,Logger log) throws ServiceException{
 		if(validator==null){
-			validator = new org.openspcoop2.generic_project.utils.XSDValidator(log,ComunicazioneSdi.class, 
+			validator = new org.openspcoop2.generic_project.utils.XSDValidator(log,LottoFatture.class, 
 				"/FatturazioneElettronica.xsd"
 				// elencare in questa posizione altri schemi xsd che vengono inclusi/importati dallo schema /FatturazioneElettronica.xsd
 			);

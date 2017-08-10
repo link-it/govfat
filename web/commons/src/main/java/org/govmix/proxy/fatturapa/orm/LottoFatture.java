@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoArchivioInvioFatturaType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
+import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoInserimentoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import java.io.Serializable;
@@ -66,6 +67,8 @@ import java.io.Serializable;
  * 			&lt;element name="terzoIntermediarioOSoggettoEmittenteCodiceFiscale" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="codiceDestinatario" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="xml" type="{http://www.w3.org/2001/XMLSchema}base64Binary" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="fatturazioneAttiva" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="statoElaborazioneInUscita" type="{http://www.govmix.org/proxy/fatturapa/orm}StatoElaborazioneType" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="dataRicezione" type="{http://www.govmix.org/proxy/fatturapa/orm}date" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="statoInserimento" type="{http://www.govmix.org/proxy/fatturapa/orm}StatoInserimentoType" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="statoConsegna" type="{http://www.govmix.org/proxy/fatturapa/orm}StatoConsegnaType" minOccurs="1" maxOccurs="1"/>
@@ -114,6 +117,8 @@ import java.io.Serializable;
   	"terzoIntermediarioOSoggettoEmittenteCodiceFiscale",
   	"codiceDestinatario",
   	"xml",
+  	"fatturazioneAttiva",
+  	"statoElaborazioneInUscita",
   	"dataRicezione",
   	"statoInserimento",
   	"statoConsegna",
@@ -376,6 +381,38 @@ public class LottoFatture extends org.openspcoop2.utils.beans.BaseBean implement
     this.xml = xml;
   }
 
+  public boolean isFatturazioneAttiva() {
+    return this.fatturazioneAttiva;
+  }
+
+  public boolean getFatturazioneAttiva() {
+    return this.fatturazioneAttiva;
+  }
+
+  public void setFatturazioneAttiva(boolean fatturazioneAttiva) {
+    this.fatturazioneAttiva = fatturazioneAttiva;
+  }
+
+  public void set_value_statoElaborazioneInUscita(String value) {
+    this.statoElaborazioneInUscita = (StatoElaborazioneType) StatoElaborazioneType.toEnumConstantFromString(value);
+  }
+
+  public String get_value_statoElaborazioneInUscita() {
+    if(this.statoElaborazioneInUscita == null){
+    	return null;
+    }else{
+    	return this.statoElaborazioneInUscita.toString();
+    }
+  }
+
+  public org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType getStatoElaborazioneInUscita() {
+    return this.statoElaborazioneInUscita;
+  }
+
+  public void setStatoElaborazioneInUscita(org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType statoElaborazioneInUscita) {
+    this.statoElaborazioneInUscita = statoElaborazioneInUscita;
+  }
+
   public java.util.Date getDataRicezione() {
     return this.dataRicezione;
   }
@@ -622,6 +659,16 @@ public class LottoFatture extends org.openspcoop2.utils.beans.BaseBean implement
   @javax.xml.bind.annotation.XmlSchemaType(name="base64Binary")
   @XmlElement(name="xml",required=true,nillable=false)
   protected byte[] xml;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="boolean")
+  @XmlElement(name="fatturazioneAttiva",required=true,nillable=false)
+  protected boolean fatturazioneAttiva;
+
+  @XmlTransient
+  protected java.lang.String _value_statoElaborazioneInUscita;
+
+  @XmlElement(name="statoElaborazioneInUscita",required=false,nillable=false)
+  protected StatoElaborazioneType statoElaborazioneInUscita;
 
   @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.Date2String.class)
   @javax.xml.bind.annotation.XmlSchemaType(name="date")

@@ -61,6 +61,12 @@ public class DipartimentoFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "codice", Dipartimento.model().CODICE.getFieldType()));
 				setParameter(object, "setDescrizione", Dipartimento.model().DESCRIZIONE.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "descrizione", Dipartimento.model().DESCRIZIONE.getFieldType()));
+				setParameter(object, "setFatturazioneAttiva", Dipartimento.model().FATTURAZIONE_ATTIVA.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "fatturazione_attiva", Dipartimento.model().FATTURAZIONE_ATTIVA.getFieldType()));
+				setParameter(object, "setIdProcedimento", Dipartimento.model().ID_PROCEDIMENTO.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "id_procedimento", Dipartimento.model().ID_PROCEDIMENTO.getFieldType()));
+				setParameter(object, "setFirmaAutomatica", Dipartimento.model().FIRMA_AUTOMATICA.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "firma_automatica", Dipartimento.model().FIRMA_AUTOMATICA.getFieldType()));
 				setParameter(object, "setAccettazioneAutomatica", Dipartimento.model().ACCETTAZIONE_AUTOMATICA.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "accettazione_automatica", Dipartimento.model().ACCETTAZIONE_AUTOMATICA.getFieldType()));
 				setParameter(object, "setModalitaPush", Dipartimento.model().MODALITA_PUSH.getFieldType(),
@@ -107,6 +113,12 @@ public class DipartimentoFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"codice"));
 				setParameter(object, "setDescrizione", Dipartimento.model().DESCRIZIONE.getFieldType(),
 					this.getObjectFromMap(map,"descrizione"));
+				setParameter(object, "setFatturazioneAttiva", Dipartimento.model().FATTURAZIONE_ATTIVA.getFieldType(),
+					this.getObjectFromMap(map,"fatturazioneAttiva"));
+				setParameter(object, "setIdProcedimento", Dipartimento.model().ID_PROCEDIMENTO.getFieldType(),
+					this.getObjectFromMap(map,"idProcedimento"));
+				setParameter(object, "setFirmaAutomatica", Dipartimento.model().FIRMA_AUTOMATICA.getFieldType(),
+					this.getObjectFromMap(map,"firmaAutomatica"));
 				setParameter(object, "setAccettazioneAutomatica", Dipartimento.model().ACCETTAZIONE_AUTOMATICA.getFieldType(),
 					this.getObjectFromMap(map,"accettazioneAutomatica"));
 				setParameter(object, "setModalitaPush", Dipartimento.model().MODALITA_PUSH.getFieldType(),

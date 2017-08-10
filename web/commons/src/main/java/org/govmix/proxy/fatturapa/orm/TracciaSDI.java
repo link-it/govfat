@@ -26,30 +26,31 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
-import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
+import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-/** <p>Java class for ComunicazioneSdi complex type.
+/** <p>Java class for TracciaSDI complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="ComunicazioneSdi">
+ * &lt;complexType name="TracciaSDI">
  * 		&lt;sequence>
  * 			&lt;element name="identificativoSdi" type="{http://www.govmix.org/proxy/fatturapa/orm}integer" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="tipoComunicazione" type="{http://www.govmix.org/proxy/fatturapa/orm}TipoComunicazioneType" minOccurs="1" maxOccurs="1"/>
- * 			&lt;element name="progressivo" type="{http://www.w3.org/2001/XMLSchema}positiveInteger" minOccurs="1" maxOccurs="1"/>
- * 			&lt;element name="dataRicezione" type="{http://www.govmix.org/proxy/fatturapa/orm}date" minOccurs="1" maxOccurs="1"/>
- * 			&lt;element name="nomeFile" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="0" maxOccurs="1"/>
- * 			&lt;element name="contentType" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="1" maxOccurs="1"/>
- * 			&lt;element name="rawData" type="{http://www.w3.org/2001/XMLSchema}base64Binary" minOccurs="1" maxOccurs="1"/>
- * 			&lt;element name="statoConsegna" type="{http://www.govmix.org/proxy/fatturapa/orm}StatoConsegnaType" minOccurs="1" maxOccurs="1"/>
- * 			&lt;element name="dataConsegna" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0" maxOccurs="1"/>
- * 			&lt;element name="dettaglioConsegna" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="nomeFile" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="data" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="idEgov" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="rawData" type="{http://www.w3.org/2001/XMLSchema}base64Binary" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="statoProtocollazione" type="{http://www.govmix.org/proxy/fatturapa/orm}StatoProtocollazioneType" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="dataProtocollazione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="dataProssimaProtocollazione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="tentativiProtocollazione" type="{http://www.w3.org/2001/XMLSchema}nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="dettaglioProtocollazione" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="Metadato" type="{http://www.govmix.org/proxy/fatturapa/orm}Metadato" minOccurs="0" maxOccurs="unbounded"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
@@ -63,26 +64,27 @@ import java.util.List;
  * */
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ComunicazioneSdi", 
+@XmlType(name = "TracciaSDI", 
   propOrder = {
   	"_decimalWrapper_identificativoSdi",
   	"tipoComunicazione",
-  	"progressivo",
-  	"dataRicezione",
   	"nomeFile",
-  	"contentType",
+  	"data",
+  	"idEgov",
   	"rawData",
-  	"statoConsegna",
-  	"dataConsegna",
-  	"dettaglioConsegna",
+  	"statoProtocollazione",
+  	"dataProtocollazione",
+  	"dataProssimaProtocollazione",
+  	"tentativiProtocollazione",
+  	"dettaglioProtocollazione",
   	"metadato"
   }
 )
 
-@XmlRootElement(name = "ComunicazioneSdi")
+@XmlRootElement(name = "TracciaSDI")
 
-public class ComunicazioneSdi extends org.openspcoop2.utils.beans.BaseBean implements Serializable , Cloneable {
-  public ComunicazioneSdi() {
+public class TracciaSDI extends org.openspcoop2.utils.beans.BaseBean implements Serializable , Cloneable {
+  public TracciaSDI() {
   }
 
   public Long getId() {
@@ -133,22 +135,6 @@ public class ComunicazioneSdi extends org.openspcoop2.utils.beans.BaseBean imple
     this.tipoComunicazione = tipoComunicazione;
   }
 
-  public java.lang.Integer getProgressivo() {
-    return this.progressivo;
-  }
-
-  public void setProgressivo(java.lang.Integer progressivo) {
-    this.progressivo = progressivo;
-  }
-
-  public java.util.Date getDataRicezione() {
-    return this.dataRicezione;
-  }
-
-  public void setDataRicezione(java.util.Date dataRicezione) {
-    this.dataRicezione = dataRicezione;
-  }
-
   public java.lang.String getNomeFile() {
     return this.nomeFile;
   }
@@ -157,12 +143,20 @@ public class ComunicazioneSdi extends org.openspcoop2.utils.beans.BaseBean imple
     this.nomeFile = nomeFile;
   }
 
-  public java.lang.String getContentType() {
-    return this.contentType;
+  public java.util.Date getData() {
+    return this.data;
   }
 
-  public void setContentType(java.lang.String contentType) {
-    this.contentType = contentType;
+  public void setData(java.util.Date data) {
+    this.data = data;
+  }
+
+  public java.lang.String getIdEgov() {
+    return this.idEgov;
+  }
+
+  public void setIdEgov(java.lang.String idEgov) {
+    this.idEgov = idEgov;
   }
 
   public byte[] getRawData() {
@@ -173,40 +167,56 @@ public class ComunicazioneSdi extends org.openspcoop2.utils.beans.BaseBean imple
     this.rawData = rawData;
   }
 
-  public void set_value_statoConsegna(String value) {
-    this.statoConsegna = (StatoConsegnaType) StatoConsegnaType.toEnumConstantFromString(value);
+  public void set_value_statoProtocollazione(String value) {
+    this.statoProtocollazione = (StatoProtocollazioneType) StatoProtocollazioneType.toEnumConstantFromString(value);
   }
 
-  public String get_value_statoConsegna() {
-    if(this.statoConsegna == null){
+  public String get_value_statoProtocollazione() {
+    if(this.statoProtocollazione == null){
     	return null;
     }else{
-    	return this.statoConsegna.toString();
+    	return this.statoProtocollazione.toString();
     }
   }
 
-  public org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType getStatoConsegna() {
-    return this.statoConsegna;
+  public org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType getStatoProtocollazione() {
+    return this.statoProtocollazione;
   }
 
-  public void setStatoConsegna(org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType statoConsegna) {
-    this.statoConsegna = statoConsegna;
+  public void setStatoProtocollazione(org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType statoProtocollazione) {
+    this.statoProtocollazione = statoProtocollazione;
   }
 
-  public java.util.Date getDataConsegna() {
-    return this.dataConsegna;
+  public java.util.Date getDataProtocollazione() {
+    return this.dataProtocollazione;
   }
 
-  public void setDataConsegna(java.util.Date dataConsegna) {
-    this.dataConsegna = dataConsegna;
+  public void setDataProtocollazione(java.util.Date dataProtocollazione) {
+    this.dataProtocollazione = dataProtocollazione;
   }
 
-  public java.lang.String getDettaglioConsegna() {
-    return this.dettaglioConsegna;
+  public java.util.Date getDataProssimaProtocollazione() {
+    return this.dataProssimaProtocollazione;
   }
 
-  public void setDettaglioConsegna(java.lang.String dettaglioConsegna) {
-    this.dettaglioConsegna = dettaglioConsegna;
+  public void setDataProssimaProtocollazione(java.util.Date dataProssimaProtocollazione) {
+    this.dataProssimaProtocollazione = dataProssimaProtocollazione;
+  }
+
+  public java.lang.Integer getTentativiProtocollazione() {
+    return this.tentativiProtocollazione;
+  }
+
+  public void setTentativiProtocollazione(java.lang.Integer tentativiProtocollazione) {
+    this.tentativiProtocollazione = tentativiProtocollazione;
+  }
+
+  public java.lang.String getDettaglioProtocollazione() {
+    return this.dettaglioProtocollazione;
+  }
+
+  public void setDettaglioProtocollazione(java.lang.String dettaglioProtocollazione) {
+    this.dettaglioProtocollazione = dettaglioProtocollazione;
   }
 
   public void addMetadato(Metadato metadato) {
@@ -238,17 +248,17 @@ public class ComunicazioneSdi extends org.openspcoop2.utils.beans.BaseBean imple
   @XmlTransient
   private Long id;
 
-  private static org.govmix.proxy.fatturapa.orm.model.ComunicazioneSdiModel modelStaticInstance = null;
+  private static org.govmix.proxy.fatturapa.orm.model.TracciaSDIModel modelStaticInstance = null;
   private static synchronized void initModelStaticInstance(){
-	  if(org.govmix.proxy.fatturapa.orm.ComunicazioneSdi.modelStaticInstance==null){
-  			org.govmix.proxy.fatturapa.orm.ComunicazioneSdi.modelStaticInstance = new org.govmix.proxy.fatturapa.orm.model.ComunicazioneSdiModel();
+	  if(org.govmix.proxy.fatturapa.orm.TracciaSDI.modelStaticInstance==null){
+  			org.govmix.proxy.fatturapa.orm.TracciaSDI.modelStaticInstance = new org.govmix.proxy.fatturapa.orm.model.TracciaSDIModel();
 	  }
   }
-  public static org.govmix.proxy.fatturapa.orm.model.ComunicazioneSdiModel model(){
-	  if(org.govmix.proxy.fatturapa.orm.ComunicazioneSdi.modelStaticInstance==null){
+  public static org.govmix.proxy.fatturapa.orm.model.TracciaSDIModel model(){
+	  if(org.govmix.proxy.fatturapa.orm.TracciaSDI.modelStaticInstance==null){
 	  		initModelStaticInstance();
 	  }
-	  return org.govmix.proxy.fatturapa.orm.ComunicazioneSdi.modelStaticInstance;
+	  return org.govmix.proxy.fatturapa.orm.TracciaSDI.modelStaticInstance;
   }
 
 
@@ -266,41 +276,46 @@ public class ComunicazioneSdi extends org.openspcoop2.utils.beans.BaseBean imple
   @XmlElement(name="tipoComunicazione",required=true,nillable=false)
   protected TipoComunicazioneType tipoComunicazione;
 
-  @javax.xml.bind.annotation.XmlSchemaType(name="positiveInteger")
-  @XmlElement(name="progressivo",required=true,nillable=false)
-  protected java.lang.Integer progressivo;
-
-  @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.Date2String.class)
-  @javax.xml.bind.annotation.XmlSchemaType(name="date")
-  @XmlElement(name="dataRicezione",required=true,nillable=false,type=java.lang.String.class)
-  protected java.util.Date dataRicezione;
-
   @javax.xml.bind.annotation.XmlSchemaType(name="string")
-  @XmlElement(name="nomeFile",required=false,nillable=false)
+  @XmlElement(name="nomeFile",required=true,nillable=false)
   protected java.lang.String nomeFile;
-
-  @javax.xml.bind.annotation.XmlSchemaType(name="string")
-  @XmlElement(name="contentType",required=true,nillable=false)
-  protected java.lang.String contentType;
-
-  @javax.xml.bind.annotation.XmlSchemaType(name="base64Binary")
-  @XmlElement(name="rawData",required=true,nillable=false)
-  protected byte[] rawData;
-
-  @XmlTransient
-  protected java.lang.String _value_statoConsegna;
-
-  @XmlElement(name="statoConsegna",required=true,nillable=false)
-  protected StatoConsegnaType statoConsegna;
 
   @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.DateTime2String.class)
   @javax.xml.bind.annotation.XmlSchemaType(name="dateTime")
-  @XmlElement(name="dataConsegna",required=false,nillable=false,type=java.lang.String.class)
-  protected java.util.Date dataConsegna;
+  @XmlElement(name="data",required=true,nillable=false,type=java.lang.String.class)
+  protected java.util.Date data;
 
   @javax.xml.bind.annotation.XmlSchemaType(name="string")
-  @XmlElement(name="dettaglioConsegna",required=false,nillable=false)
-  protected java.lang.String dettaglioConsegna;
+  @XmlElement(name="idEgov",required=true,nillable=false)
+  protected java.lang.String idEgov;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="base64Binary")
+  @XmlElement(name="rawData",required=false,nillable=false)
+  protected byte[] rawData;
+
+  @XmlTransient
+  protected java.lang.String _value_statoProtocollazione;
+
+  @XmlElement(name="statoProtocollazione",required=true,nillable=false)
+  protected StatoProtocollazioneType statoProtocollazione;
+
+  @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.DateTime2String.class)
+  @javax.xml.bind.annotation.XmlSchemaType(name="dateTime")
+  @XmlElement(name="dataProtocollazione",required=false,nillable=false,type=java.lang.String.class)
+  protected java.util.Date dataProtocollazione;
+
+  @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.DateTime2String.class)
+  @javax.xml.bind.annotation.XmlSchemaType(name="dateTime")
+  @XmlElement(name="dataProssimaProtocollazione",required=false,nillable=false,type=java.lang.String.class)
+  protected java.util.Date dataProssimaProtocollazione;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="nonNegativeInteger")
+  @XmlElement(name="tentativiProtocollazione",required=true,nillable=false)
+  protected java.lang.Integer tentativiProtocollazione;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @XmlElement(name="dettaglioProtocollazione",required=false,nillable=false)
+  protected java.lang.String dettaglioProtocollazione;
 
   @XmlElement(name="Metadato",required=true,nillable=false)
   protected List<Metadato> metadato = new ArrayList<Metadato>();

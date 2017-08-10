@@ -45,6 +45,9 @@ public class DipartimentoModel extends AbstractModel<Dipartimento> {
 		this.CODICE = new Field("codice",java.lang.String.class,"Dipartimento",Dipartimento.class);
 		this.ENTE = new org.govmix.proxy.fatturapa.orm.model.IdEnteModel(new Field("ente",org.govmix.proxy.fatturapa.orm.IdEnte.class,"Dipartimento",Dipartimento.class));
 		this.DESCRIZIONE = new Field("descrizione",java.lang.String.class,"Dipartimento",Dipartimento.class);
+		this.FATTURAZIONE_ATTIVA = new Field("fatturazioneAttiva",boolean.class,"Dipartimento",Dipartimento.class);
+		this.ID_PROCEDIMENTO = new Field("idProcedimento",java.lang.String.class,"Dipartimento",Dipartimento.class);
+		this.FIRMA_AUTOMATICA = new Field("firmaAutomatica",boolean.class,"Dipartimento",Dipartimento.class);
 		this.ACCETTAZIONE_AUTOMATICA = new Field("accettazioneAutomatica",boolean.class,"Dipartimento",Dipartimento.class);
 		this.MODALITA_PUSH = new Field("modalitaPush",boolean.class,"Dipartimento",Dipartimento.class);
 		this.REGISTRO = new org.govmix.proxy.fatturapa.orm.model.IdRegistroModel(new Field("registro",org.govmix.proxy.fatturapa.orm.IdRegistro.class,"Dipartimento",Dipartimento.class));
@@ -60,6 +63,9 @@ public class DipartimentoModel extends AbstractModel<Dipartimento> {
 		this.CODICE = new ComplexField(father,"codice",java.lang.String.class,"Dipartimento",Dipartimento.class);
 		this.ENTE = new org.govmix.proxy.fatturapa.orm.model.IdEnteModel(new ComplexField(father,"ente",org.govmix.proxy.fatturapa.orm.IdEnte.class,"Dipartimento",Dipartimento.class));
 		this.DESCRIZIONE = new ComplexField(father,"descrizione",java.lang.String.class,"Dipartimento",Dipartimento.class);
+		this.FATTURAZIONE_ATTIVA = new ComplexField(father,"fatturazioneAttiva",boolean.class,"Dipartimento",Dipartimento.class);
+		this.ID_PROCEDIMENTO = new ComplexField(father,"idProcedimento",java.lang.String.class,"Dipartimento",Dipartimento.class);
+		this.FIRMA_AUTOMATICA = new ComplexField(father,"firmaAutomatica",boolean.class,"Dipartimento",Dipartimento.class);
 		this.ACCETTAZIONE_AUTOMATICA = new ComplexField(father,"accettazioneAutomatica",boolean.class,"Dipartimento",Dipartimento.class);
 		this.MODALITA_PUSH = new ComplexField(father,"modalitaPush",boolean.class,"Dipartimento",Dipartimento.class);
 		this.REGISTRO = new org.govmix.proxy.fatturapa.orm.model.IdRegistroModel(new ComplexField(father,"registro",org.govmix.proxy.fatturapa.orm.IdRegistro.class,"Dipartimento",Dipartimento.class));
@@ -75,6 +81,12 @@ public class DipartimentoModel extends AbstractModel<Dipartimento> {
 	public org.govmix.proxy.fatturapa.orm.model.IdEnteModel ENTE = null;
 	 
 	public IField DESCRIZIONE = null;
+	 
+	public IField FATTURAZIONE_ATTIVA = null;
+	 
+	public IField ID_PROCEDIMENTO = null;
+	 
+	public IField FIRMA_AUTOMATICA = null;
 	 
 	public IField ACCETTAZIONE_AUTOMATICA = null;
 	 

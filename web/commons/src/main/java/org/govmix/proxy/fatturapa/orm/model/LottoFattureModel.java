@@ -67,6 +67,8 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 		this.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE_FISCALE = new Field("terzoIntermediarioOSoggettoEmittenteCodiceFiscale",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.CODICE_DESTINATARIO = new Field("codiceDestinatario",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.XML = new Field("xml",byte[].class,"LottoFatture",LottoFatture.class);
+		this.FATTURAZIONE_ATTIVA = new Field("fatturazioneAttiva",boolean.class,"LottoFatture",LottoFatture.class);
+		this.STATO_ELABORAZIONE_IN_USCITA = new Field("statoElaborazioneInUscita",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.DATA_RICEZIONE = new Field("dataRicezione",java.util.Date.class,"LottoFatture",LottoFatture.class);
 		this.STATO_INSERIMENTO = new Field("statoInserimento",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.STATO_CONSEGNA = new Field("statoConsegna",java.lang.String.class,"LottoFatture",LottoFatture.class);
@@ -108,6 +110,8 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 		this.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE_FISCALE = new ComplexField(father,"terzoIntermediarioOSoggettoEmittenteCodiceFiscale",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.CODICE_DESTINATARIO = new ComplexField(father,"codiceDestinatario",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.XML = new ComplexField(father,"xml",byte[].class,"LottoFatture",LottoFatture.class);
+		this.FATTURAZIONE_ATTIVA = new ComplexField(father,"fatturazioneAttiva",boolean.class,"LottoFatture",LottoFatture.class);
+		this.STATO_ELABORAZIONE_IN_USCITA = new ComplexField(father,"statoElaborazioneInUscita",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.DATA_RICEZIONE = new ComplexField(father,"dataRicezione",java.util.Date.class,"LottoFatture",LottoFatture.class);
 		this.STATO_INSERIMENTO = new ComplexField(father,"statoInserimento",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.STATO_CONSEGNA = new ComplexField(father,"statoConsegna",java.lang.String.class,"LottoFatture",LottoFatture.class);
@@ -171,6 +175,10 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 	public IField CODICE_DESTINATARIO = null;
 	 
 	public IField XML = null;
+	 
+	public IField FATTURAZIONE_ATTIVA = null;
+	 
+	public IField STATO_ELABORAZIONE_IN_USCITA = null;
 	 
 	public IField DATA_RICEZIONE = null;
 	 

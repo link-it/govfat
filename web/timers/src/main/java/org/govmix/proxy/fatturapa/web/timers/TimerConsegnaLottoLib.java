@@ -99,11 +99,11 @@ public class TimerConsegnaLottoLib extends AbstractTimerLib {
 	
 								Endpoint endpoint = endpointSelector.findEndpoint(lotto);
 	
-								URL urlOriginale = endpoint.getEndpointConsegnaLotto().toURL();
+								URL urlOriginale = endpoint.getEndpoint().toURL();
 								
 								this.log.debug("Spedisco il lotto di fatture ["+idLotto.toJson()+"] all'endpoint ["+urlOriginale.toString()+"]");
 								
-								URL url = new URL(urlOriginale.toString());
+								URL url = new URL(urlOriginale.toString() + "/protocollazioneLotto");
 	
 								URLConnection conn = url.openConnection();
 								HttpURLConnection httpConn = (HttpURLConnection) conn;

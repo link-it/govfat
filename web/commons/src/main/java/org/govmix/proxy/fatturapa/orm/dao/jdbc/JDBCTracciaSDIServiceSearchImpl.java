@@ -33,8 +33,7 @@ import org.openspcoop2.utils.sql.ISQLQueryObject;
 import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
 import org.openspcoop2.generic_project.dao.jdbc.utils.IJDBCFetch;
 import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject;
-import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithId;
-import org.govmix.proxy.fatturapa.orm.IdProtocollo;
+import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithoutId;
 import org.openspcoop2.generic_project.utils.UtilsTemplate;
 import org.openspcoop2.generic_project.beans.CustomField;
 import org.openspcoop2.generic_project.beans.InUse;
@@ -52,41 +51,42 @@ import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
 import org.openspcoop2.generic_project.dao.jdbc.JDBCPaginatedExpression;
 
 import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.ProtocolloFieldConverter;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.ProtocolloFetch;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.TracciaSDIFieldConverter;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.TracciaSDIFetch;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCServiceManager;
 
-import org.govmix.proxy.fatturapa.orm.Protocollo;
+import org.govmix.proxy.fatturapa.orm.Metadato;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 
 /**     
- * JDBCProtocolloServiceSearchImpl
+ * JDBCTracciaSDIServiceSearchImpl
  *
  * @author Giuseppe Papandrea (papandrea@link.it)
  * @author Giovanni Bussu (bussu@link.it)
  * @author $Author$
  * @version $Rev$, $Date$
  */
-public class JDBCProtocolloServiceSearchImpl implements IJDBCServiceSearchWithId<Protocollo, IdProtocollo, JDBCServiceManager> {
+public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithoutId<TracciaSDI, JDBCServiceManager> {
 
-	private ProtocolloFieldConverter _protocolloFieldConverter = null;
-	public ProtocolloFieldConverter getProtocolloFieldConverter() {
-		if(this._protocolloFieldConverter==null){
-			this._protocolloFieldConverter = new ProtocolloFieldConverter(this.jdbcServiceManager.getJdbcProperties().getDatabaseType());
+	private TracciaSDIFieldConverter _tracciaSDIFieldConverter = null;
+	public TracciaSDIFieldConverter getTracciaSDIFieldConverter() {
+		if(this._tracciaSDIFieldConverter==null){
+			this._tracciaSDIFieldConverter = new TracciaSDIFieldConverter(this.jdbcServiceManager.getJdbcProperties().getDatabaseType());
 		}		
-		return this._protocolloFieldConverter;
+		return this._tracciaSDIFieldConverter;
 	}
 	@Override
 	public ISQLFieldConverter getFieldConverter() {
-		return this.getProtocolloFieldConverter();
+		return this.getTracciaSDIFieldConverter();
 	}
 	
-	private ProtocolloFetch protocolloFetch = new ProtocolloFetch();
-	public ProtocolloFetch getProtocolloFetch() {
-		return this.protocolloFetch;
+	private TracciaSDIFetch tracciaSDIFetch = new TracciaSDIFetch();
+	public TracciaSDIFetch getTracciaSDIFetch() {
+		return this.tracciaSDIFetch;
 	}
 	@Override
 	public IJDBCFetch getFetch() {
-		return getProtocolloFetch();
+		return getTracciaSDIFetch();
 	}
 	
 	
@@ -103,64 +103,19 @@ public class JDBCProtocolloServiceSearchImpl implements IJDBCServiceSearchWithId
 	}
 	
 
-	@Override
-	public IdProtocollo convertToId(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, Protocollo protocollo) throws NotImplementedException, ServiceException, Exception{
 	
-		IdProtocollo idProtocollo = new IdProtocollo();
-		idProtocollo.setNome(protocollo.getNome());
 	
-		return idProtocollo;
-	}
+	
 	
 	@Override
-	public Protocollo get(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdProtocollo id, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotFoundException, MultipleResultException, NotImplementedException, ServiceException,Exception {
-		Long id_protocollo = ( (id!=null && id.getId()!=null && id.getId()>0) ? id.getId() : this.findIdProtocollo(jdbcProperties, log, connection, sqlQueryObject, id, true));
-		return this._get(jdbcProperties, log, connection, sqlQueryObject, id_protocollo,idMappingResolutionBehaviour);
-		
-		
-	}
-	
-	@Override
-	public boolean exists(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdProtocollo id) throws MultipleResultException, NotImplementedException, ServiceException,Exception {
+	public List<TracciaSDI> findAll(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, JDBCPaginatedExpression expression, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotImplementedException, ServiceException,Exception {
 
-		Long id_protocollo = this.findIdProtocollo(jdbcProperties, log, connection, sqlQueryObject, id, false);
-		return id_protocollo != null && id_protocollo > 0;
-		
-	}
-	
-	@Override
-	public List<IdProtocollo> findAllIds(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, JDBCPaginatedExpression expression, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotImplementedException, ServiceException,Exception {
-
-		List<IdProtocollo> list = new ArrayList<IdProtocollo>();
-
-		// TODO: implementazione non efficente. 
-		// Per ottenere una implementazione efficente:
-		// 1. Usare metodo select di questa classe indirizzando esattamente i field necessari a create l'ID logico
-		// 2. Usare metodo getProtocolloFetch() sul risultato della select per ottenere un oggetto Protocollo
-		//	  La fetch con la map inserirà nell'oggetto solo i valori estratti 
-		// 3. Usare metodo convertToId per ottenere l'id
-
-        List<Long> ids = this.findAllTableIds(jdbcProperties, log, connection, sqlQueryObject, expression);
-        
-        for(Long id: ids) {
-        	Protocollo protocollo = this.get(jdbcProperties, log, connection, sqlQueryObject, id, idMappingResolutionBehaviour);
-			IdProtocollo idProtocollo = this.convertToId(jdbcProperties,log,connection,sqlQueryObject,protocollo);
-        	list.add(idProtocollo);
-        }
-
-        return list;
-		
-	}
-	
-	@Override
-	public List<Protocollo> findAll(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, JDBCPaginatedExpression expression, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotImplementedException, ServiceException,Exception {
-
-        List<Protocollo> list = new ArrayList<Protocollo>();
+        List<TracciaSDI> list = new ArrayList<TracciaSDI>();
         
         // TODO: implementazione non efficente. 
 		// Per ottenere una implementazione efficente:
 		// 1. Usare metodo select di questa classe indirizzando esattamente i field necessari
-		// 2. Usare metodo getProtocolloFetch() sul risultato della select per ottenere un oggetto Protocollo
+		// 2. Usare metodo getTracciaSDIFetch() sul risultato della select per ottenere un oggetto TracciaSDI
 		//	  La fetch con la map inserirà nell'oggetto solo i valori estratti 
 
         List<Long> ids = this.findAllTableIds(jdbcProperties, log, connection, sqlQueryObject, expression);
@@ -174,7 +129,7 @@ public class JDBCProtocolloServiceSearchImpl implements IJDBCServiceSearchWithId
 	}
 	
 	@Override
-	public Protocollo find(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, JDBCExpression expression, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) 
+	public TracciaSDI find(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, JDBCExpression expression, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) 
 		throws NotFoundException, MultipleResultException, NotImplementedException, ServiceException,Exception {
 
         long id = this.findTableId(jdbcProperties, log, connection, sqlQueryObject, expression);
@@ -190,23 +145,16 @@ public class JDBCProtocolloServiceSearchImpl implements IJDBCServiceSearchWithId
 	public NonNegativeNumber count(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, JDBCExpression expression) throws NotImplementedException, ServiceException,Exception {
 		
 		List<Object> listaQuery = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareCount(jdbcProperties, log, connection, sqlQueryObject, expression,
-												this.getProtocolloFieldConverter(), Protocollo.model());
+												this.getTracciaSDIFieldConverter(), TracciaSDI.model());
 		
-		sqlQueryObject.addSelectCountField(this.getProtocolloFieldConverter().toTable(Protocollo.model())+".id","tot",true);
+		sqlQueryObject.addSelectCountField(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model())+".id","tot",true);
 		
 		_join(expression,sqlQueryObject);
 		
 		return org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.count(jdbcProperties, log, connection, sqlQueryObject, expression,
-																			this.getProtocolloFieldConverter(), Protocollo.model(),listaQuery);
+																			this.getTracciaSDIFieldConverter(), TracciaSDI.model(),listaQuery);
 	}
 
-	@Override
-	public InUse inUse(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdProtocollo id) throws NotFoundException, NotImplementedException, ServiceException,Exception {
-		
-		Long id_protocollo = this.findIdProtocollo(jdbcProperties, log, connection, sqlQueryObject, id, true);
-        return this._inUse(jdbcProperties, log, connection, sqlQueryObject, id_protocollo);
-		
-	}
 
 	@Override
 	public List<Object> select(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
@@ -239,7 +187,7 @@ public class JDBCProtocolloServiceSearchImpl implements IJDBCServiceSearchWithId
 		
 			ISQLQueryObject sqlQueryObjectDistinct = 
 						org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareSqlQueryObjectForSelectDistinct(distinct,sqlQueryObject, paginatedExpression, log,
-												this.getProtocolloFieldConverter(), field);
+												this.getTracciaSDIFieldConverter(), field);
 
 			return _select(jdbcProperties, log, connection, sqlQueryObject, paginatedExpression, sqlQueryObjectDistinct);
 			
@@ -312,14 +260,14 @@ public class JDBCProtocolloServiceSearchImpl implements IJDBCServiceSearchWithId
 		List<Object> listaQuery = new ArrayList<Object>();
 		List<JDBCObject> listaParams = new ArrayList<JDBCObject>();
 		List<Object> returnField = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareSelect(jdbcProperties, log, connection, sqlQueryObject, 
-        						expression, this.getProtocolloFieldConverter(), Protocollo.model(), 
+        						expression, this.getTracciaSDIFieldConverter(), TracciaSDI.model(), 
         						listaQuery,listaParams);
 		
 		_join(expression,sqlQueryObject);
         
         List<Map<String,Object>> list = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.select(jdbcProperties, log, connection,
         								org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareSqlQueryObjectForSelectDistinct(sqlQueryObject,sqlQueryObjectDistinct), 
-        								expression, this.getProtocolloFieldConverter(), Protocollo.model(),
+        								expression, this.getTracciaSDIFieldConverter(), TracciaSDI.model(),
         								listaQuery,listaParams,returnField);
 		if(list!=null && list.size()>0){
 			return list;
@@ -336,7 +284,7 @@ public class JDBCProtocolloServiceSearchImpl implements IJDBCServiceSearchWithId
 		List<ISQLQueryObject> sqlQueryObjectInnerList = new ArrayList<ISQLQueryObject>();
 		List<JDBCObject> jdbcObjects = new ArrayList<JDBCObject>();
 		List<Class<?>> returnClassTypes = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareUnion(jdbcProperties, log, connection, sqlQueryObject, 
-        						this.getProtocolloFieldConverter(), Protocollo.model(), 
+        						this.getTracciaSDIFieldConverter(), TracciaSDI.model(), 
         						sqlQueryObjectInnerList, jdbcObjects, union, unionExpression);
 		
 		if(unionExpression!=null){
@@ -348,7 +296,7 @@ public class JDBCProtocolloServiceSearchImpl implements IJDBCServiceSearchWithId
 		}
         
         List<Map<String,Object>> list = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.union(jdbcProperties, log, connection, sqlQueryObject, 
-        								this.getProtocolloFieldConverter(), Protocollo.model(), 
+        								this.getTracciaSDIFieldConverter(), TracciaSDI.model(), 
         								sqlQueryObjectInnerList, jdbcObjects, returnClassTypes, union, unionExpression);
         if(list!=null && list.size()>0){
 			return list;
@@ -365,7 +313,7 @@ public class JDBCProtocolloServiceSearchImpl implements IJDBCServiceSearchWithId
 		List<ISQLQueryObject> sqlQueryObjectInnerList = new ArrayList<ISQLQueryObject>();
 		List<JDBCObject> jdbcObjects = new ArrayList<JDBCObject>();
 		List<Class<?>> returnClassTypes = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareUnionCount(jdbcProperties, log, connection, sqlQueryObject, 
-        						this.getProtocolloFieldConverter(), Protocollo.model(), 
+        						this.getTracciaSDIFieldConverter(), TracciaSDI.model(), 
         						sqlQueryObjectInnerList, jdbcObjects, union, unionExpression);
 		
 		if(unionExpression!=null){
@@ -377,7 +325,7 @@ public class JDBCProtocolloServiceSearchImpl implements IJDBCServiceSearchWithId
 		}
         
         NonNegativeNumber number = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.unionCount(jdbcProperties, log, connection, sqlQueryObject, 
-        								this.getProtocolloFieldConverter(), Protocollo.model(), 
+        								this.getTracciaSDIFieldConverter(), TracciaSDI.model(), 
         								sqlQueryObjectInnerList, jdbcObjects, returnClassTypes, union, unionExpression);
         if(number!=null && number.longValue()>=0){
 			return number;
@@ -394,7 +342,7 @@ public class JDBCProtocolloServiceSearchImpl implements IJDBCServiceSearchWithId
 	@Override
 	public JDBCExpression newExpression(Logger log) throws NotImplementedException, ServiceException {
 		try{
-			return new JDBCExpression(this.getProtocolloFieldConverter());
+			return new JDBCExpression(this.getTracciaSDIFieldConverter());
 		}catch(Exception e){
 			throw new ServiceException(e);
 		}
@@ -404,7 +352,7 @@ public class JDBCProtocolloServiceSearchImpl implements IJDBCServiceSearchWithId
 	@Override
 	public JDBCPaginatedExpression newPaginatedExpression(Logger log) throws NotImplementedException, ServiceException {
 		try{
-			return new JDBCPaginatedExpression(this.getProtocolloFieldConverter());
+			return new JDBCPaginatedExpression(this.getTracciaSDIFieldConverter());
 		}catch(Exception e){
 			throw new ServiceException(e);
 		}
@@ -432,58 +380,71 @@ public class JDBCProtocolloServiceSearchImpl implements IJDBCServiceSearchWithId
 	
 	// -- DB
 
-	@Override
-	public void mappingTableIds(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdProtocollo id, Protocollo obj) throws NotFoundException,NotImplementedException,ServiceException,Exception{
-		_mappingTableIds(jdbcProperties,log,connection,sqlQueryObject,obj,
-				this.get(jdbcProperties,log,connection,sqlQueryObject,id,null));
-	}
 	
 	@Override
-	public void mappingTableIds(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, long tableId, Protocollo obj) throws NotFoundException,NotImplementedException,ServiceException,Exception{
-		_mappingTableIds(jdbcProperties,log,connection,sqlQueryObject,obj,
-				this.get(jdbcProperties,log,connection,sqlQueryObject,tableId,null));
-	}
-	private void _mappingTableIds(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, Protocollo obj, Protocollo imgSaved) throws NotFoundException,NotImplementedException,ServiceException,Exception{
-		if(imgSaved==null){
-			return;
-		}
-		obj.setId(imgSaved.getId());
-
-	}
-	
-	@Override
-	public Protocollo get(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, long tableId, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotFoundException, MultipleResultException, NotImplementedException, ServiceException, Exception {
+	public TracciaSDI get(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, long tableId, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotFoundException, MultipleResultException, NotImplementedException, ServiceException, Exception {
 		return this._get(jdbcProperties, log, connection, sqlQueryObject, Long.valueOf(tableId), idMappingResolutionBehaviour);
 	}
 	
-	private Protocollo _get(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, Long tableId, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotFoundException, MultipleResultException, NotImplementedException, ServiceException, Exception {
+	private TracciaSDI _get(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, Long tableId, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotFoundException, MultipleResultException, NotImplementedException, ServiceException, Exception {
 	
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 
 					new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
 		
 		ISQLQueryObject sqlQueryObjectGet = sqlQueryObject.newSQLQueryObject();
 				
-		Protocollo protocollo = new Protocollo();
+		TracciaSDI tracciaSDI = new TracciaSDI();
 		
 
-		// Object protocollo
-		ISQLQueryObject sqlQueryObjectGet_protocollo = sqlQueryObjectGet.newSQLQueryObject();
-		sqlQueryObjectGet_protocollo.setANDLogicOperator(true);
-		sqlQueryObjectGet_protocollo.addFromTable(this.getProtocolloFieldConverter().toTable(Protocollo.model()));
-		sqlQueryObjectGet_protocollo.addSelectField("id");
-		sqlQueryObjectGet_protocollo.addSelectField(this.getProtocolloFieldConverter().toColumn(Protocollo.model().NOME,true));
-		sqlQueryObjectGet_protocollo.addSelectField(this.getProtocolloFieldConverter().toColumn(Protocollo.model().DESCRIZIONE,true));
-		sqlQueryObjectGet_protocollo.addSelectField(this.getProtocolloFieldConverter().toColumn(Protocollo.model().ENDPOINT,true));
-		sqlQueryObjectGet_protocollo.addWhereCondition("id=?");
+		// Object tracciaSDI
+		ISQLQueryObject sqlQueryObjectGet_tracciaSDI = sqlQueryObjectGet.newSQLQueryObject();
+		sqlQueryObjectGet_tracciaSDI.setANDLogicOperator(true);
+		sqlQueryObjectGet_tracciaSDI.addFromTable(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model()));
+		sqlQueryObjectGet_tracciaSDI.addSelectField("id");
+		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().IDENTIFICATIVO_SDI,true));
+		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().TIPO_COMUNICAZIONE,true));
+		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().NOME_FILE,true));
+		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().DATA,true));
+		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().ID_EGOV,true));
+		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().RAW_DATA,true));
+		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().STATO_PROTOCOLLAZIONE,true));
+		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().DATA_PROTOCOLLAZIONE,true));
+		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().DATA_PROSSIMA_PROTOCOLLAZIONE,true));
+		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().TENTATIVI_PROTOCOLLAZIONE,true));
+		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().DETTAGLIO_PROTOCOLLAZIONE,true));
+		sqlQueryObjectGet_tracciaSDI.addWhereCondition("id=?");
 
-		// Get protocollo
-		protocollo = (Protocollo) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_protocollo.createSQLQuery(), jdbcProperties.isShowSql(), Protocollo.model(), this.getProtocolloFetch(),
+		// Get tracciaSDI
+		tracciaSDI = (TracciaSDI) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_tracciaSDI.createSQLQuery(), jdbcProperties.isShowSql(), TracciaSDI.model(), this.getTracciaSDIFetch(),
 			new JDBCObject(tableId,Long.class));
 
 
 
+		// Object tracciaSDI_metadato
+		ISQLQueryObject sqlQueryObjectGet_tracciaSDI_metadato = sqlQueryObjectGet.newSQLQueryObject();
+		sqlQueryObjectGet_tracciaSDI_metadato.setANDLogicOperator(true);
+		sqlQueryObjectGet_tracciaSDI_metadato.addFromTable(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model().METADATO));
+		sqlQueryObjectGet_tracciaSDI_metadato.addSelectField("id");
+		sqlQueryObjectGet_tracciaSDI_metadato.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().METADATO.RICHIESTA,true));
+		sqlQueryObjectGet_tracciaSDI_metadato.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().METADATO.NOME,true));
+		sqlQueryObjectGet_tracciaSDI_metadato.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().METADATO.VALORE,true));
+		sqlQueryObjectGet_tracciaSDI_metadato.addWhereCondition("id_traccia_sdi=?");
+
+		// Get tracciaSDI_metadato
+		java.util.List<Object> tracciaSDI_metadato_list = (java.util.List<Object>) jdbcUtilities.executeQuery(sqlQueryObjectGet_tracciaSDI_metadato.createSQLQuery(), jdbcProperties.isShowSql(), TracciaSDI.model().METADATO, this.getTracciaSDIFetch(),
+			new JDBCObject(tracciaSDI.getId(),Long.class));
+
+		if(tracciaSDI_metadato_list != null) {
+			for (Object tracciaSDI_metadato_object: tracciaSDI_metadato_list) {
+				Metadato tracciaSDI_metadato = (Metadato) tracciaSDI_metadato_object;
+
+
+				tracciaSDI.addMetadato(tracciaSDI_metadato);
+			}
+		}
+
 		
-        return protocollo;  
+        return tracciaSDI;  
 	
 	} 
 	
@@ -497,52 +458,111 @@ public class JDBCProtocolloServiceSearchImpl implements IJDBCServiceSearchWithId
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 
 					new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
 				
-		boolean existsProtocollo = false;
+		boolean existsTracciaSDI = false;
 
 		sqlQueryObject = sqlQueryObject.newSQLQueryObject();
 		sqlQueryObject.setANDLogicOperator(true);
 
-		sqlQueryObject.addFromTable(this.getProtocolloFieldConverter().toTable(Protocollo.model()));
-		sqlQueryObject.addSelectField(this.getProtocolloFieldConverter().toColumn(Protocollo.model().NOME,true));
+		sqlQueryObject.addFromTable(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model()));
+		sqlQueryObject.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().IDENTIFICATIVO_SDI,true));
 		sqlQueryObject.addWhereCondition("id=?");
 
 
-		// Exists protocollo
-		existsProtocollo = jdbcUtilities.exists(sqlQueryObject.createSQLQuery(), jdbcProperties.isShowSql(),
+		// Exists tracciaSDI
+		existsTracciaSDI = jdbcUtilities.exists(sqlQueryObject.createSQLQuery(), jdbcProperties.isShowSql(),
 			new JDBCObject(tableId,Long.class));
 
 		
-        return existsProtocollo;
+        return existsTracciaSDI;
 	
 	}
 	
 	private void _join(IExpression expression, ISQLQueryObject sqlQueryObject) throws NotImplementedException, ServiceException, Exception{
+	
+		/* 
+		 * TODO: implement code that implement the join condition
+		*/
+		/*
+		if(expression.inUseModel(TracciaSDI.model().XXXX,false)){
+			String tableName1 = this.getTracciaSDIFieldConverter().toAliasTable(TracciaSDI.model());
+			String tableName2 = this.getTracciaSDIFieldConverter().toAliasTable(TracciaSDI.model().XXX);
+			sqlQueryObject.addWhereCondition(tableName1+".id="+tableName2+".id_table1");
+		}
+		*/
+		
+		/* 
+         * TODO: implementa il codice che aggiunge la condizione FROM Table per le condizioni di join di oggetti annidati dal secondo livello in poi 
+         *       La addFromTable deve essere aggiunta solo se l'oggetto del livello precedente non viene utilizzato nella espressione 
+         *		 altrimenti il metodo sopra 'toSqlForPreparedStatementWithFromCondition' si occupa gia' di aggiungerla
+        */
+        /*
+        if(expression.inUseModel(TracciaSDI.model().LEVEL1.LEVEL2,false)){
+			if(expression.inUseModel(TracciaSDI.model().LEVEL1,false)==false){
+				sqlQueryObject.addFromTable(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model().LEVEL1));
+			}
+		}
+		...
+		if(expression.inUseModel(TracciaSDI.model()....LEVELN.LEVELN+1,false)){
+			if(expression.inUseModel(TracciaSDI.model().LEVELN,false)==false){
+				sqlQueryObject.addFromTable(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model().LEVELN));
+			}
+		}
+		*/
+		
+		// Delete this line when you have implemented the join condition
+		int throwNotImplemented = 1;
+		if(throwNotImplemented==1){
+		        throw new NotImplementedException("NotImplemented");
+		}
+		// Delete this line when you have implemented the join condition
+        
 	}
 	
-	protected java.util.List<Object> _getRootTablePrimaryKeyValues(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdProtocollo id) throws NotFoundException, ServiceException, NotImplementedException, Exception{
+	protected java.util.List<Object> _getRootTablePrimaryKeyValues(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, TracciaSDI tracciaSDI) throws NotFoundException, ServiceException, NotImplementedException, Exception{
 	    // Identificativi
         java.util.List<Object> rootTableIdValues = new java.util.ArrayList<Object>();
-		Long longId = this.findIdProtocollo(jdbcProperties, log, connection, sqlQueryObject.newSQLQueryObject(), id, true);
-		rootTableIdValues.add(longId);
+        // TODO: Define the column values used to identify the primary key
+		rootTableIdValues.add(tracciaSDI.getId());
+        
+        // Delete this line when you have verified the method
+		int throwNotImplemented = 1;
+		if(throwNotImplemented==1){
+		        throw new NotImplementedException("NotImplemented");
+		}
+		// Delete this line when you have verified the method
         
         return rootTableIdValues;
 	}
 	
 	protected Map<String, List<IField>> _getMapTableToPKColumn() throws NotImplementedException, Exception{
 	
-		ProtocolloFieldConverter converter = this.getProtocolloFieldConverter();
+		TracciaSDIFieldConverter converter = this.getTracciaSDIFieldConverter();
 		Map<String, List<IField>> mapTableToPKColumn = new java.util.Hashtable<String, List<IField>>();
 		UtilsTemplate<IField> utilities = new UtilsTemplate<IField>();
 
+		// TODO: Define the columns used to identify the primary key
 		//		  If a table doesn't have a primary key, don't add it to this map
 
-		// Protocollo.model()
-		mapTableToPKColumn.put(converter.toTable(Protocollo.model()),
+		// TracciaSDI.model()
+		mapTableToPKColumn.put(converter.toTable(TracciaSDI.model()),
 			utilities.newList(
-				new CustomField("id", Long.class, "id", converter.toTable(Protocollo.model()))
+				new CustomField("id", Long.class, "id", converter.toTable(TracciaSDI.model()))
+			));
+
+		// TracciaSDI.model().METADATO
+		mapTableToPKColumn.put(converter.toTable(TracciaSDI.model().METADATO),
+			utilities.newList(
+				new CustomField("id", Long.class, "id", converter.toTable(TracciaSDI.model().METADATO))
 			));
 
 
+        // Delete this line when you have verified the method
+		int throwNotImplemented = 1;
+		if(throwNotImplemented==1){
+		        throw new NotImplementedException("NotImplemented");
+		}
+		// Delete this line when you have verified the method
+        
         return mapTableToPKColumn;		
 	}
 	
@@ -553,16 +573,16 @@ public class JDBCProtocolloServiceSearchImpl implements IJDBCServiceSearchWithId
 
 		sqlQueryObject.setSelectDistinct(true);
 		sqlQueryObject.setANDLogicOperator(true);
-		sqlQueryObject.addSelectField(this.getProtocolloFieldConverter().toTable(Protocollo.model())+".id");
+		sqlQueryObject.addSelectField(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model())+".id");
 		Class<?> objectIdClass = Long.class;
 		
 		List<Object> listaQuery = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareFindAll(jdbcProperties, log, connection, sqlQueryObject, paginatedExpression,
-												this.getProtocolloFieldConverter(), Protocollo.model());
+												this.getTracciaSDIFieldConverter(), TracciaSDI.model());
 		
 		_join(paginatedExpression,sqlQueryObject);
 		
 		List<Object> listObjects = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.findAll(jdbcProperties, log, connection, sqlQueryObject, paginatedExpression,
-																			this.getProtocolloFieldConverter(), Protocollo.model(), objectIdClass, listaQuery);
+																			this.getTracciaSDIFieldConverter(), TracciaSDI.model(), objectIdClass, listaQuery);
 		for(Object object: listObjects) {
 			list.add((Long)object);
 		}
@@ -576,16 +596,16 @@ public class JDBCProtocolloServiceSearchImpl implements IJDBCServiceSearchWithId
 	
 		sqlQueryObject.setSelectDistinct(true);
 		sqlQueryObject.setANDLogicOperator(true);
-		sqlQueryObject.addSelectField(this.getProtocolloFieldConverter().toTable(Protocollo.model())+".id");
+		sqlQueryObject.addSelectField(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model())+".id");
 		Class<?> objectIdClass = Long.class;
 		
 		List<Object> listaQuery = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareFind(jdbcProperties, log, connection, sqlQueryObject, expression,
-												this.getProtocolloFieldConverter(), Protocollo.model());
+												this.getTracciaSDIFieldConverter(), TracciaSDI.model());
 		
 		_join(expression,sqlQueryObject);
 
 		Object res = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.find(jdbcProperties, log, connection, sqlQueryObject, expression,
-														this.getProtocolloFieldConverter(), Protocollo.model(), objectIdClass, listaQuery);
+														this.getTracciaSDIFieldConverter(), TracciaSDI.model(), objectIdClass, listaQuery);
 		if(res!=null && (((Long) res).longValue()>0) ){
 			return ((Long) res).longValue();
 		}
@@ -620,54 +640,7 @@ public class JDBCProtocolloServiceSearchImpl implements IJDBCServiceSearchWithId
 
 	}
 	
-	@Override
-	public IdProtocollo findId(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, long tableId, boolean throwNotFound)
-			throws NotFoundException, ServiceException, NotImplementedException, Exception {
-		
-		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
 
-		ISQLQueryObject sqlQueryObjectGet = sqlQueryObject.newSQLQueryObject();
-
-		// Object _protocollo
-		sqlQueryObjectGet.addFromTable(this.getProtocolloFieldConverter().toTable(Protocollo.model()));
-		sqlQueryObjectGet.addSelectField(this.getProtocolloFieldConverter().toColumn(Protocollo.model().NOME,true));
-		sqlQueryObjectGet.setANDLogicOperator(true);
-		sqlQueryObjectGet.addWhereCondition("id=?");
-
-		// Recupero _protocollo
-		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject [] searchParams_protocollo = new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject [] { 
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tableId,Long.class)
-		};
-		List<Class<?>> listaFieldIdReturnType_protocollo = new ArrayList<Class<?>>();
-		listaFieldIdReturnType_protocollo.add(Protocollo.model().NOME.getFieldType());
-		//...
-		//listaFieldIdReturnType_protocollo.add(IdN.class);
-		org.govmix.proxy.fatturapa.orm.IdProtocollo id_protocollo = null;
-		List<Object> listaFieldId_protocollo = jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet.createSQLQuery(), jdbcProperties.isShowSql(),
-				listaFieldIdReturnType_protocollo, searchParams_protocollo);
-		if(listaFieldId_protocollo==null || listaFieldId_protocollo.size()<=0){
-			if(throwNotFound){
-				throw new NotFoundException("Not Found");
-			}
-		}
-		else{
-			// set _protocollo
-			id_protocollo = new org.govmix.proxy.fatturapa.orm.IdProtocollo();
-			id_protocollo.setNome((String)listaFieldId_protocollo.get(0));
-		}
-		
-		return id_protocollo;
-		
-	}
-
-	@Override
-	public Long findTableId(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdProtocollo id, boolean throwNotFound)
-			throws NotFoundException, ServiceException, NotImplementedException, Exception {
-	
-		return this.findIdProtocollo(jdbcProperties,log,connection,sqlQueryObject,id,throwNotFound);
-			
-	}
 	
 	@Override
 	public List<List<Object>> nativeQuery(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
@@ -678,40 +651,4 @@ public class JDBCProtocolloServiceSearchImpl implements IJDBCServiceSearchWithId
 														
 	}
 	
-	protected Long findIdProtocollo(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdProtocollo id, boolean throwNotFound) throws NotFoundException, ServiceException, NotImplementedException, Exception {
-
-		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
-
-		ISQLQueryObject sqlQueryObjectGet = sqlQueryObject.newSQLQueryObject();
-
-		// Object _protocollo
-		sqlQueryObjectGet.addFromTable(this.getProtocolloFieldConverter().toTable(Protocollo.model()));
-		sqlQueryObjectGet.addSelectField("id");
-		// Devono essere mappati nella where condition i metodi dell'oggetto id.getXXX
-		sqlQueryObjectGet.setANDLogicOperator(true);
-		sqlQueryObjectGet.setSelectDistinct(true);
-		sqlQueryObjectGet.addWhereCondition(this.getProtocolloFieldConverter().toColumn(Protocollo.model().NOME,true)+"=?");
-
-		// Recupero _protocollo
-		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject [] searchParams_protocollo = new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject [] { 
-				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id.getNome(),Protocollo.model().NOME.getFieldType()),
-		};
-		Long id_protocollo = null;
-		try{
-			id_protocollo = (Long) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet.createSQLQuery(), jdbcProperties.isShowSql(),
-						Long.class, searchParams_protocollo);
-		}catch(NotFoundException notFound){
-			if(throwNotFound){
-				throw new NotFoundException(notFound);
-			}
-		}
-		if(id_protocollo==null || id_protocollo<=0){
-			if(throwNotFound){
-				throw new NotFoundException("Not Found");
-			}
-		}
-		
-		return id_protocollo;
-	}
 }

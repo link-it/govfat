@@ -30,11 +30,13 @@ package org.govmix.proxy.fatturapa.orm.model;
  */
 public class ModelFactory {
 
-	public static ComunicazioneSdiModel COMUNICAZIONE_SDI = new ComunicazioneSdiModel();
-	
 	public static LottoFattureModel LOTTO_FATTURE = new LottoFattureModel();
 	
+	public static TracciaSDIModel TRACCIA_SDI = new TracciaSDIModel();
+	
 	public static FatturaElettronicaModel FATTURA_ELETTRONICA = new FatturaElettronicaModel();
+	
+	public static DipartimentoModel DIPARTIMENTO = new DipartimentoModel();
 	
 	public static NotificaEsitoCommittenteModel NOTIFICA_ESITO_COMMITTENTE = new NotificaEsitoCommittenteModel();
 	
@@ -51,8 +53,6 @@ public class ModelFactory {
 	public static RegistroPropertyModel REGISTRO_PROPERTY = new RegistroPropertyModel();
 	
 	public static UtenteModel UTENTE = new UtenteModel();
-	
-	public static DipartimentoModel DIPARTIMENTO = new DipartimentoModel();
 	
 	public static DipartimentoPropertyModel DIPARTIMENTO_PROPERTY = new DipartimentoPropertyModel();
 	

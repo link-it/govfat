@@ -6,7 +6,7 @@
 	<xsd:annotation>
 		<xsd:appinfo>
 			<linkit:project_generator xmlns:linkit="http://www.link.it/project_generator">
-				<linkit:info version="1.0" project-name="fatturaPA">
+				<linkit:info version="2.0" project-name="fatturaPA">
 					<linkit:authors>
 						<linkit:author name="Giuseppe Papandrea" mail="papandrea@link.it" />
 						<linkit:author name="Giovanni Bussu" mail="bussu@link.it" />
@@ -49,6 +49,7 @@
 								<linkit:sql-table object-name="PccPagamento" object-type="PccPagamento" />
 								<linkit:sql-table object-name="PccRispedizione" object-type="PccRispedizione" />
 								<linkit:sql-table object-name="PccNotifica" object-type="PccNotifica" />
+								<linkit:sql-table object-name="Evento" object-type="Evento" />
 							</linkit:sql-table-list>
 						</linkit:sql-script>
 						<linkit:sql-mapping single-table-mapping="false"
@@ -770,7 +771,7 @@
 			<xsd:appinfo>
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:sql-table-mapping generate-sql="true"
-						name="metadati" on-delete-cascade="false" comment="Metadati inviati e ricevuti in una comunicazione con lo SdI">
+						name="metadati" on-delete-cascade="false">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -788,7 +789,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-lotto" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="lotti" on-delete-cascade="false" comment="Lotti di fatture inviate o ricevute dallo SdI">
+						name="lotti" on-delete-cascade="false">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field
 								name="identificativoSdi" />
@@ -1018,7 +1019,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="tracce_sdi" on-delete-cascade="false" comment="Tracciamento delle comunicazioni con lo SdI (solo ciclo attivo)">
+						name="tracce_sdi" on-delete-cascade="false">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -1068,7 +1069,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-fattura" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="fatture" on-delete-cascade="false" comment="Fatture inviate o ricevute dallo SdI">
+						name="fatture" on-delete-cascade="false">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field
 								name="identificativoSdi" />
@@ -1236,6 +1237,29 @@
 					</xsd:appinfo>
 				</xsd:annotation>
 			</xsd:element>
+			
+			<!-- elementi per agevolare la ricerca, non mappati sul db -->
+			<xsd:element name="Dipartimento" type="Dipartimento" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-id-mapping object-name="Dipartimento"
+								object-type="Dipartimento" relationship="none" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+
+			<xsd:element name="LottoFatture" type="LottoFatture" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-id-mapping object-name="LottoFatture"
+								object-type="LottoFatture" relationship="none" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
 
@@ -1245,7 +1269,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="esito_committente" on-delete-cascade="true" comment="Esiti inviati al committente per le fatture ricevute">
+						name="esito_committente" on-delete-cascade="true">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -1310,7 +1334,7 @@
 					<linkit:interface crud="true"
 						id="id-notifica-decorrenza-termini" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="decorrenza_termini" on-delete-cascade="true" comment="Notifiche di decorrenza dei termini ricevute dallo SdI in seguito alla ricezione di fatture">
+						name="decorrenza_termini" on-delete-cascade="true">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field
 								name="identificativoSdi" />
@@ -1337,7 +1361,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="allegati" on-delete-cascade="false" comment="Allegati alle fatture inviate o ricevute">
+						name="allegati" on-delete-cascade="false">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -1371,7 +1395,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-ente" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="enti" on-delete-cascade="false" comment="Enti censiti nel sistema">
+						name="enti" on-delete-cascade="false">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field
 								name="nome" />
@@ -1394,7 +1418,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-protocollo" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="protocolli" on-delete-cascade="false" comment="Sistemi di protocollazione censiti nel sistema">
+						name="protocolli" on-delete-cascade="false">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field
 								name="nome" />
@@ -1418,7 +1442,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-registro" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="registri" on-delete-cascade="false" comment="Registri di protocollo censiti nel sistema">
+						name="registri" on-delete-cascade="false">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field
 								name="nome" />
@@ -1461,7 +1485,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-registro-property" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="registri_props" on-delete-cascade="false" comment="Proprietà custom che ogni registro di un protocollo deve istanziare">
+						name="registri_props" on-delete-cascade="false">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field name="nome" />
 							<linkit:sql-table-unique-column name="id_protocollo" />
@@ -1492,7 +1516,7 @@
 			<xsd:appinfo>
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:sql-table-mapping generate-sql="true"
-						name="registri_prop_values" on-delete-cascade="false" comment="Valori delle proprietà custom di un registro">
+						name="registri_prop_values" on-delete-cascade="false">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-column
 								name="id_registro_property" />
@@ -1525,7 +1549,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-utente" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="utenti" on-delete-cascade="false" comment="Utenti censiti nel sistema">
+						name="utenti" on-delete-cascade="false">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field
 								name="username" />
@@ -1561,7 +1585,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-dipartimento" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="dipartimenti" on-delete-cascade="false" comment="Unità organizzative censite nel sistema">
+						name="dipartimenti" on-delete-cascade="false">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field
 								name="codice" />
@@ -1634,7 +1658,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-dipartimento-property" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="dipartimenti_props" on-delete-cascade="false" comment="Proprietà custom che ogni dipartimento di un ente deve istanziare">
+						name="dipartimenti_props" on-delete-cascade="false">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field
 								name="nome" />
@@ -1667,7 +1691,7 @@
 			<xsd:appinfo>
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:sql-table-mapping generate-sql="true"
-						name="dipartimenti_prop_values" on-delete-cascade="false" comment="Valori delle proprietà di un dipartimento">
+						name="dipartimenti_prop_values" on-delete-cascade="false">
 						<linkit:sql-table-constraint unique="un_dipart_prop_values"
 							index="idx_dipart_prop_values" foreign-key="fk_dipart_prop_values"
 							primary-key="pk_dipart_prop_values" />
@@ -1701,7 +1725,7 @@
 			<xsd:appinfo>
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:sql-table-mapping generate-sql="true"
-						name="utenti_dipartimenti" on-delete-cascade="false" comment="Associazione tra utenti e dipartimenti">
+						name="utenti_dipartimenti" on-delete-cascade="false">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -1727,7 +1751,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-operazione" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="pcc_operazioni" on-delete-cascade="false" comment="Operazioni PCC consentite nel sistema">
+						name="pcc_operazioni" on-delete-cascade="false">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field name="nome" />
 						</linkit:sql-table-unique>
@@ -1748,7 +1772,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="dipartimenti_operazioni" on-delete-cascade="false" comment="Associazione tra Operazioni PCC e dipartimenti che possono eseguirle">
+						name="dipartimenti_operazioni" on-delete-cascade="false">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -1784,7 +1808,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="pcc_utenti_operazioni" on-delete-cascade="false" comment="Associazione tra Operazioni PCC e utenti che possono eseguirle">
+						name="pcc_utenti_operazioni" on-delete-cascade="false">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -1824,7 +1848,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-contabilizzazione" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="pcc_contabilizzazioni" on-delete-cascade="false" comment="Contabilizzazioni PCC inserite tramite il sistema">
+						name="pcc_contabilizzazioni" on-delete-cascade="false">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field name="idImporto" />
 							<linkit:sql-table-unique-field name="sistemaRichiedente" />
@@ -1870,7 +1894,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-scadenza" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="pcc_scadenze" on-delete-cascade="false" comment="Scadenze PCC inserite tramite il sistema">
+						name="pcc_scadenze" on-delete-cascade="false">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -1904,7 +1928,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-pagamento" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="pcc_pagamenti" on-delete-cascade="false" comment="Pagamenti PCC inseriti tramite il sistema">
+						name="pcc_pagamenti" on-delete-cascade="false">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -1945,7 +1969,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-traccia" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="pcc_tracce" on-delete-cascade="false" comment="Tracce delle interazioni tra il sistema e PCC">
+						name="pcc_tracce" on-delete-cascade="false">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -2013,7 +2037,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-trasmissione" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="pcc_tracce_trasmissioni" on-delete-cascade="false" comment="Trasmissioni di una stessa interazione tra il sistema e la PCC">
+						name="pcc_tracce_trasmissioni" on-delete-cascade="false">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -2067,7 +2091,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-trasmissione-esito" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="tracce_trasmissioni_esiti" on-delete-cascade="false" comment="Esiti di una trasmissione PCC">
+						name="tracce_trasmissioni_esiti" on-delete-cascade="false">
 						<linkit:sql-table-constraint check="chk_esiti" />
 					</linkit:sql-table-mapping>
 				</linkit:generator>
@@ -2130,7 +2154,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="pcc_errori_elaborazione" on-delete-cascade="false" comment="Errori occorsi nell'ambito di una trasmissione PCC">
+						name="pcc_errori_elaborazione" on-delete-cascade="false">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -2170,7 +2194,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" id="id-rispedizione" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="pcc_rispedizioni" on-delete-cascade="false" comment="Politiche di reinoltro di un messaggio verso la PCC basate sull'errore">
+						name="pcc_rispedizioni" on-delete-cascade="false">
 						<linkit:sql-table-unique create-index="true">
 							<linkit:sql-table-unique-field name="codiceErrore" />
 						</linkit:sql-table-unique>
@@ -2203,7 +2227,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="pcc_notifiche" on-delete-cascade="false" comment="Notifiche inviate agli utenti in seguito ad errori nell'interazione con PCC">
+						name="pcc_notifiche" on-delete-cascade="false">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -2260,7 +2284,7 @@
 	
 	<!-- ********* PLUGINS PER GLI EVENTI ************* -->
 	
-	<!--xsd:element name="Evento" type="Evento" />
+	<xsd:element name="Evento" type="Evento" />
 	<xsd:complexType name="Evento">
 		<xsd:annotation>
 			<xsd:appinfo>
@@ -2356,7 +2380,7 @@
 					</xsd:annotation>			        
 				</xsd:element>
 			</xsd:sequence>
-		</xsd:complexType-->
+		</xsd:complexType>
 	
 
 	<xsd:element name="LottoFatture" type="LottoFatture" />

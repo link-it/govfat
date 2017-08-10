@@ -92,6 +92,10 @@
     <value name="tipoComunicazione" field="tipoComunicazione" usage="required" enum-value-method="toString"/>
     <value name="progressivo" field="progressivo" usage="required"/>
   </mapping>
+  <mapping name="id-documento" class="org.govmix.proxy.fatturapa.orm.IdDocumento">
+    <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
+    <value name="idDocumento" field="idDocumento" usage="required"/>
+  </mapping>
   <mapping name="id-property" class="org.govmix.proxy.fatturapa.orm.IdDipartimentoProperty">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
     <value name="nome" field="nome" usage="required"/>
@@ -124,24 +128,9 @@
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
     <value name="idTrasmissioneEsito" field="idTrasmissioneEsito" usage="required"/>
   </mapping>
-  <mapping name="ComunicazioneSdi" class="org.govmix.proxy.fatturapa.orm.ComunicazioneSdi">
-    <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
-    <value name="identificativoSdi" field="identificativoSdi" usage="required"/>
-    <value name="tipoComunicazione" field="tipoComunicazione" usage="required" enum-value-method="toString"/>
-    <value name="progressivo" field="progressivo" usage="required"/>
-    <value name="dataRicezione" field="dataRicezione" usage="required"/>
-    <value name="nomeFile" field="nomeFile" usage="optional"/>
-    <value name="contentType" field="contentType" usage="required"/>
-    <value name="rawData" field="rawData" usage="required"/>
-    <value name="statoConsegna" field="statoConsegna" usage="required" enum-value-method="toString"/>
-    <value name="dataConsegna" field="dataConsegna" usage="optional"/>
-    <value name="dettaglioConsegna" field="dettaglioConsegna" usage="optional"/>
-    <collection field="metadato" create-type="java.util.ArrayList">
-      <structure map-as="org.govmix.proxy.fatturapa.orm.Metadato"/>
-    </collection>
-  </mapping>
   <mapping name="Metadato" class="org.govmix.proxy.fatturapa.orm.Metadato">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
+    <value name="richiesta" field="richiesta" usage="required"/>
     <value name="nome" field="nome" usage="required"/>
     <value name="valore" field="valore" usage="required"/>
   </mapping>
@@ -172,6 +161,8 @@
     <value name="terzoIntermediarioOSoggettoEmittenteCodiceFiscale" field="terzoIntermediarioOSoggettoEmittenteCodiceFiscale" usage="optional"/>
     <value name="codiceDestinatario" field="codiceDestinatario" usage="required"/>
     <value name="xml" field="xml" usage="required"/>
+    <value name="fatturazioneAttiva" field="fatturazioneAttiva" usage="required"/>
+    <value name="statoElaborazioneInUscita" field="statoElaborazioneInUscita" usage="optional" enum-value-method="toString"/>
     <value name="dataRicezione" field="dataRicezione" usage="required"/>
     <value name="statoInserimento" field="statoInserimento" usage="required" enum-value-method="toString"/>
     <value name="statoConsegna" field="statoConsegna" usage="required" enum-value-method="toString"/>
@@ -182,9 +173,27 @@
     <value name="protocollo" field="protocollo" usage="optional"/>
     <value name="id-egov" field="idEgov" usage="optional"/>
   </mapping>
+  <mapping name="TracciaSDI" class="org.govmix.proxy.fatturapa.orm.TracciaSDI">
+    <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
+    <value name="identificativoSdi" field="identificativoSdi" usage="required"/>
+    <value name="tipoComunicazione" field="tipoComunicazione" usage="required" enum-value-method="toString"/>
+    <value name="nomeFile" field="nomeFile" usage="required"/>
+    <value name="data" field="data" usage="required"/>
+    <value name="idEgov" field="idEgov" usage="required"/>
+    <value name="rawData" field="rawData" usage="optional"/>
+    <value name="statoProtocollazione" field="statoProtocollazione" usage="required" enum-value-method="toString"/>
+    <value name="dataProtocollazione" field="dataProtocollazione" usage="optional"/>
+    <value name="dataProssimaProtocollazione" field="dataProssimaProtocollazione" usage="optional"/>
+    <value name="tentativiProtocollazione" field="tentativiProtocollazione" usage="required"/>
+    <value name="dettaglioProtocollazione" field="dettaglioProtocollazione" usage="optional"/>
+    <collection field="metadato" create-type="java.util.ArrayList">
+      <structure map-as="org.govmix.proxy.fatturapa.orm.Metadato"/>
+    </collection>
+  </mapping>
   <mapping name="FatturaElettronica" class="org.govmix.proxy.fatturapa.orm.FatturaElettronica">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
     <value name="formatoTrasmissione" field="formatoTrasmissione" usage="required" enum-value-method="toString"/>
+    <value name="fatturazioneAttiva" field="fatturazioneAttiva" usage="required"/>
     <value name="identificativoSdi" field="identificativoSdi" usage="required"/>
     <value name="dataRicezione" field="dataRicezione" usage="required"/>
     <value name="nomeFile" field="nomeFile" usage="required"/>
@@ -223,6 +232,8 @@
     <structure field="idDecorrenzaTermini" usage="optional" map-as="org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini"/>
     <structure name="idEsitoContabilizzazione" field="idEsitoContabilizzazione" usage="optional" map-as="_IdTrasmissioneEsito_Type"/>
     <structure name="idEsitoScadenza" field="idEsitoScadenza" usage="optional" map-as="_IdTrasmissioneEsito_Type"/>
+    <structure name="Dipartimento" field="dipartimento" usage="optional" map-as="_Dipartimento_Type"/>
+    <structure field="lottoFatture" usage="optional" map-as="org.govmix.proxy.fatturapa.orm.LottoFatture"/>
   </mapping>
   <mapping name="NotificaEsitoCommittente" class="org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
@@ -279,8 +290,6 @@
     <value name="nome" field="nome" usage="required"/>
     <value name="descrizione" field="descrizione" usage="optional"/>
     <value name="endpoint" field="endpoint" usage="required"/>
-    <value name="endpointConsegnaLotto" field="endpointConsegnaLotto" usage="optional"/>
-    <value name="endpointRichiediProtocollo" field="endpointRichiediProtocollo" usage="optional"/>
   </mapping>
   <mapping name="Registro" class="org.govmix.proxy.fatturapa.orm.Registro">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
@@ -317,11 +326,31 @@
       <structure map-as="org.govmix.proxy.fatturapa.orm.UtenteDipartimento"/>
     </collection>
   </mapping>
-  <mapping name="Dipartimento" class="org.govmix.proxy.fatturapa.orm.Dipartimento">
+  <mapping name="Dipartimento" class="org.govmix.proxy.fatturapa.orm.Dipartimento" abstract="false">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
     <value name="codice" field="codice" usage="required"/>
     <structure name="ente" field="ente" usage="required" map-as="_IdEnte_Type"/>
     <value name="descrizione" field="descrizione" usage="required"/>
+    <value name="fatturazioneAttiva" field="fatturazioneAttiva" default="false" usage="required"/>
+    <value name="idProcedimento" field="idProcedimento" usage="optional"/>
+    <value name="firmaAutomatica" field="firmaAutomatica" default="false" usage="required"/>
+    <value name="accettazioneAutomatica" field="accettazioneAutomatica" default="false" usage="required"/>
+    <value name="modalitaPush" field="modalitaPush" default="true" usage="required"/>
+    <structure field="registro" usage="optional" map-as="org.govmix.proxy.fatturapa.orm.IdRegistro"/>
+    <value name="listaEmailNotifiche" field="listaEmailNotifiche" usage="optional"/>
+    <collection field="dipartimentoPropertyValue" create-type="java.util.ArrayList">
+      <structure map-as="org.govmix.proxy.fatturapa.orm.DipartimentoPropertyValue"/>
+    </collection>
+  </mapping>
+
+  <mapping type-name="_Dipartimento_Type" class="org.govmix.proxy.fatturapa.orm.Dipartimento" abstract="true">
+    <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
+    <value name="codice" field="codice" usage="required"/>
+    <structure name="ente" field="ente" usage="required" map-as="_IdEnte_Type"/>
+    <value name="descrizione" field="descrizione" usage="required"/>
+    <value name="fatturazioneAttiva" field="fatturazioneAttiva" default="false" usage="required"/>
+    <value name="idProcedimento" field="idProcedimento" usage="optional"/>
+    <value name="firmaAutomatica" field="firmaAutomatica" default="false" usage="required"/>
     <value name="accettazioneAutomatica" field="accettazioneAutomatica" default="false" usage="required"/>
     <value name="modalitaPush" field="modalitaPush" default="true" usage="required"/>
     <structure field="registro" usage="optional" map-as="org.govmix.proxy.fatturapa.orm.IdRegistro"/>
@@ -491,7 +520,7 @@
     <value name="dataCreazione" field="dataCreazione" usage="required"/>
     <value name="dataConsegna" field="dataConsegna" usage="optional"/>
     <structure field="pccTraccia" usage="optional" map-as="org.govmix.proxy.fatturapa.orm.PccTraccia"/>
-    <structure field="dipartimento" usage="optional" map-as="org.govmix.proxy.fatturapa.orm.Dipartimento"/>
+    <structure name="Dipartimento" field="dipartimento" usage="optional" map-as="_Dipartimento_Type"/>
   </mapping>
   <mapping name="Evento" class="org.govmix.proxy.fatturapa.orm.Evento">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>

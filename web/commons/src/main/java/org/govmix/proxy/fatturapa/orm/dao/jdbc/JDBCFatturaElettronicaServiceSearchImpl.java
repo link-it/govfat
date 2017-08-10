@@ -167,6 +167,7 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 			fields.add(new CustomField(id, Long.class, id, this.getFatturaElettronicaFieldConverter().toTable(FatturaElettronica.model())));
 			fields.add(FatturaElettronica.model().FORMATO_TRASMISSIONE);
 			fields.add(FatturaElettronica.model().IDENTIFICATIVO_SDI);
+			fields.add(FatturaElettronica.model().FATTURAZIONE_ATTIVA);
 			fields.add(FatturaElettronica.model().DATA_RICEZIONE);
 			fields.add(FatturaElettronica.model().NOME_FILE);
 			fields.add(FatturaElettronica.model().MESSAGE_ID);
@@ -699,6 +700,18 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 			String tableName1 = this.getFatturaElettronicaFieldConverter().toAliasTable(FatturaElettronica.model());
 			String tableName2 = this.getFatturaElettronicaFieldConverter().toAliasTable(FatturaElettronica.model().ID_DECORRENZA_TERMINI);
 			sqlQueryObject.addWhereCondition(tableName1+".id_notifica_decorrenza_termini="+tableName2+".id");
+		}
+
+		if(expression.inUseModel(FatturaElettronica.model().DIPARTIMENTO,false)){
+			String tableName1 = this.getFatturaElettronicaFieldConverter().toAliasTable(FatturaElettronica.model());
+			String tableName2 = this.getFatturaElettronicaFieldConverter().toAliasTable(FatturaElettronica.model().DIPARTIMENTO);
+			sqlQueryObject.addWhereCondition(tableName1+".codice_destinatario="+tableName2+".codice");
+		}
+
+		if(expression.inUseModel(FatturaElettronica.model().LOTTO_FATTURE,false)){
+			String tableName1 = this.getFatturaElettronicaFieldConverter().toAliasTable(FatturaElettronica.model());
+			String tableName2 = this.getFatturaElettronicaFieldConverter().toAliasTable(FatturaElettronica.model().LOTTO_FATTURE);
+			sqlQueryObject.addWhereCondition(tableName1+".identificativo_sdi="+tableName2+".identificativo_sdi");
 		}
 
 	}

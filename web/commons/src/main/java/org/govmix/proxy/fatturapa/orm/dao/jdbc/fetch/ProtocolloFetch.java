@@ -61,10 +61,6 @@ public class ProtocolloFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "descrizione", Protocollo.model().DESCRIZIONE.getFieldType()));
 				setParameter(object, "setEndpoint", Protocollo.model().ENDPOINT.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "endpoint", Protocollo.model().ENDPOINT.getFieldType()));
-				setParameter(object, "setEndpointConsegnaLotto", Protocollo.model().ENDPOINT_CONSEGNA_LOTTO.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "endpoint_consegna_lotto", Protocollo.model().ENDPOINT_CONSEGNA_LOTTO.getFieldType()));
-				setParameter(object, "setEndpointRichiediProtocollo", Protocollo.model().ENDPOINT_RICHIEDI_PROTOCOLLO.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "endpoint_richiedi_protocollo", Protocollo.model().ENDPOINT_RICHIEDI_PROTOCOLLO.getFieldType()));
 				return object;
 			}
 			
@@ -93,10 +89,6 @@ public class ProtocolloFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"descrizione"));
 				setParameter(object, "setEndpoint", Protocollo.model().ENDPOINT.getFieldType(),
 					this.getObjectFromMap(map,"endpoint"));
-				setParameter(object, "setEndpointConsegnaLotto", Protocollo.model().ENDPOINT_CONSEGNA_LOTTO.getFieldType(),
-					this.getObjectFromMap(map,"endpointConsegnaLotto"));
-				setParameter(object, "setEndpointRichiediProtocollo", Protocollo.model().ENDPOINT_RICHIEDI_PROTOCOLLO.getFieldType(),
-					this.getObjectFromMap(map,"endpointRichiediProtocollo"));
 				return object;
 			}
 			

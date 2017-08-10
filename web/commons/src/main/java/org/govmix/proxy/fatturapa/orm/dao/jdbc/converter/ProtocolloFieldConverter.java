@@ -89,20 +89,6 @@ public class ProtocolloFieldConverter extends AbstractSQLFieldConverter {
 				return "endpoint";
 			}
 		}
-		if(field.equals(Protocollo.model().ENDPOINT_CONSEGNA_LOTTO)){
-			if(appendTablePrefix){
-				return this.toAliasTable(field)+".endpoint_consegna_lotto";
-			}else{
-				return "endpoint_consegna_lotto";
-			}
-		}
-		if(field.equals(Protocollo.model().ENDPOINT_RICHIEDI_PROTOCOLLO)){
-			if(appendTablePrefix){
-				return this.toAliasTable(field)+".endpoint_richiedi_protocollo";
-			}else{
-				return "endpoint_richiedi_protocollo";
-			}
-		}
 
 
 		return super.toColumn(field,returnAlias,appendTablePrefix);
@@ -123,12 +109,6 @@ public class ProtocolloFieldConverter extends AbstractSQLFieldConverter {
 			return this.toTable(Protocollo.model(), returnAlias);
 		}
 		if(field.equals(Protocollo.model().ENDPOINT)){
-			return this.toTable(Protocollo.model(), returnAlias);
-		}
-		if(field.equals(Protocollo.model().ENDPOINT_CONSEGNA_LOTTO)){
-			return this.toTable(Protocollo.model(), returnAlias);
-		}
-		if(field.equals(Protocollo.model().ENDPOINT_RICHIEDI_PROTOCOLLO)){
 			return this.toTable(Protocollo.model(), returnAlias);
 		}
 

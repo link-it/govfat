@@ -20,15 +20,8 @@
  */
 package org.govmix.proxy.fatturapa.web.commons.ricevicomunicazionesdi;
 
-import java.sql.Connection;
-import java.util.Date;
-
 import org.apache.log4j.Logger;
-import org.govmix.proxy.fatturapa.orm.ComunicazioneSdi;
-import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.ComunicazioneSdiBD;
-import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 
 public class RiceviComunicazioneSdI {
 
@@ -58,47 +51,47 @@ public class RiceviComunicazioneSdI {
 	}
 
 
-	public void ricevi(Integer identificativoSDI, Integer x_SDI_IdentificativoSDIFattura, TipoComunicazioneType tipo, String contentType, String nomeFile, byte[] raw) throws Exception {
-		
-		ComunicazioneSdi comunicazioneSdI = new ComunicazioneSdi();
-		
-		comunicazioneSdI.setIdentificativoSdi(identificativoSDI);
-		comunicazioneSdI.setTipoComunicazione(tipo);
-		comunicazioneSdI.setDataRicezione(new Date());
-		comunicazioneSdI.setContentType(contentType);
-		comunicazioneSdI.setNomeFile(nomeFile);
-		comunicazioneSdI.setRawData(raw);
-		comunicazioneSdI.setStatoConsegna(StatoConsegnaType.NON_CONSEGNATA);
-		
-		this.ricevi(comunicazioneSdI);
-
-	}
-	public void ricevi(ComunicazioneSdi comunicazioneSdI) throws Exception {
-	
-		
-		Connection connection = null;
-		try {
-			connection = DAOFactory.getInstance().getConnection();
-			connection.setAutoCommit(false);
-
-			ComunicazioneSdiBD comunicazioneBD = new ComunicazioneSdiBD(this.log, connection, false);
-
-			int progressivo = comunicazioneBD.getNextProgressivo(comunicazioneSdI.getIdentificativoSdi(), comunicazioneSdI.getTipoComunicazione());
-			comunicazioneSdI.setProgressivo(progressivo);
-
-
-			comunicazioneBD.create(comunicazioneSdI);
-			
-			connection.commit();
-		} catch(Exception e) {
-			connection.rollback();
-			throw e;
-		} finally {
-			if(connection != null) {
-				try {
-					connection.close();
-				} catch(Exception e) {}
-			}
-		}
-	}
+//	public void ricevi(Integer identificativoSDI, Integer x_SDI_IdentificativoSDIFattura, TipoComunicazioneType tipo, String contentType, String nomeFile, byte[] raw) throws Exception {
+//		
+//		ComunicazioneSdi comunicazioneSdI = new ComunicazioneSdi();
+//		
+//		comunicazioneSdI.setIdentificativoSdi(identificativoSDI);
+//		comunicazioneSdI.setTipoComunicazione(tipo);
+//		comunicazioneSdI.setDataRicezione(new Date());
+//		comunicazioneSdI.setContentType(contentType);
+//		comunicazioneSdI.setNomeFile(nomeFile);
+//		comunicazioneSdI.setRawData(raw);
+//		comunicazioneSdI.setStatoConsegna(StatoConsegnaType.NON_CONSEGNATA);
+//		
+//		this.ricevi(comunicazioneSdI);
+//
+//	}
+//	public void ricevi(ComunicazioneSdi comunicazioneSdI) throws Exception {
+//	
+//		
+//		Connection connection = null;
+//		try {
+//			connection = DAOFactory.getInstance().getConnection();
+//			connection.setAutoCommit(false);
+//
+//			ComunicazioneSdiBD comunicazioneBD = new ComunicazioneSdiBD(this.log, connection, false);
+//
+//			int progressivo = comunicazioneBD.getNextProgressivo(comunicazioneSdI.getIdentificativoSdi(), comunicazioneSdI.getTipoComunicazione());
+//			comunicazioneSdI.setProgressivo(progressivo);
+//
+//
+//			comunicazioneBD.create(comunicazioneSdI);
+//			
+//			connection.commit();
+//		} catch(Exception e) {
+//			connection.rollback();
+//			throw e;
+//		} finally {
+//			if(connection != null) {
+//				try {
+//					connection.close();
+//				} catch(Exception e) {}
+//			}
+//		}
+//	}
 }

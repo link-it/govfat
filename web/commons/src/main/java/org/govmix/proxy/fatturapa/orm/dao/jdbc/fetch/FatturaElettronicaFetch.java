@@ -57,6 +57,8 @@ public class FatturaElettronicaFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "id", Long.class));
 				setParameter(object, "set_value_formatoTrasmissione", String.class,
 					jdbcParameterUtilities.readParameter(rs, "formato_trasmissione", FatturaElettronica.model().FORMATO_TRASMISSIONE.getFieldType())+"");
+				setParameter(object, "setFatturazioneAttiva", FatturaElettronica.model().FATTURAZIONE_ATTIVA.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "fatturazione_attiva", FatturaElettronica.model().FATTURAZIONE_ATTIVA.getFieldType()));
 				setParameter(object, "setIdentificativoSdi", FatturaElettronica.model().IDENTIFICATIVO_SDI.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "identificativo_sdi", FatturaElettronica.model().IDENTIFICATIVO_SDI.getFieldType()));
 				setParameter(object, "setDataRicezione", FatturaElettronica.model().DATA_RICEZIONE.getFieldType(),
@@ -151,6 +153,8 @@ public class FatturaElettronicaFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"id"));
 				setParameter(object, "set_value_formatoTrasmissione", String.class,
 					this.getObjectFromMap(map,"formatoTrasmissione"));
+				setParameter(object, "setFatturazioneAttiva", FatturaElettronica.model().FATTURAZIONE_ATTIVA.getFieldType(),
+					this.getObjectFromMap(map,"fatturazioneAttiva"));
 				setParameter(object, "setIdentificativoSdi", FatturaElettronica.model().IDENTIFICATIVO_SDI.getFieldType(),
 					this.getObjectFromMap(map,"identificativoSdi"));
 				setParameter(object, "setDataRicezione", FatturaElettronica.model().DATA_RICEZIONE.getFieldType(),

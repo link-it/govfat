@@ -27,33 +27,33 @@ import org.openspcoop2.generic_project.beans.IEnumeration;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 
 /**     
- * Enumeration dell'elemento TracciaSDI.tipoComunicazione xsd (tipo:string) 
+ * Enumeration dell'elemento LottoFatture.statoElaborazioneInUscita xsd (tipo:string) 
  *
  * @author Giuseppe Papandrea (papandrea@link.it)
  * @author Giovanni Bussu (bussu@link.it)
  * @author $Author$
  * @version $Rev$, $Date$
  */
-@javax.xml.bind.annotation.XmlType(name = "TipoComunicazioneType")
+@javax.xml.bind.annotation.XmlType(name = "StatoElaborazioneType")
 @javax.xml.bind.annotation.XmlEnum(String.class)
-public enum TipoComunicazioneType implements IEnumeration , Serializable , Cloneable {
+public enum StatoElaborazioneType implements IEnumeration , Serializable , Cloneable {
 
-	@javax.xml.bind.annotation.XmlEnumValue("FATTURA_USCITA")
-	FATTURA_USCITA ("FATTURA_USCITA"),
-	@javax.xml.bind.annotation.XmlEnumValue("NOTIFICA_SCARTO")
-	NOTIFICA_SCARTO ("NOTIFICA_SCARTO"),
-	@javax.xml.bind.annotation.XmlEnumValue("RICEVUTA_CONSEGNA")
-	RICEVUTA_CONSEGNA ("RICEVUTA_CONSEGNA"),
-	@javax.xml.bind.annotation.XmlEnumValue("NOTIFICA_MANCATA_CONSEGNA")
-	NOTIFICA_MANCATA_CONSEGNA ("NOTIFICA_MANCATA_CONSEGNA"),
-	@javax.xml.bind.annotation.XmlEnumValue("ATTESTAZIONE_TRASMISSIONE_FATTURA")
-	ATTESTAZIONE_TRASMISSIONE_FATTURA ("ATTESTAZIONE_TRASMISSIONE_FATTURA"),
-	@javax.xml.bind.annotation.XmlEnumValue("NOTIFICA_ESITO_COMMITTENTE")
-	NOTIFICA_ESITO_COMMITTENTE ("NOTIFICA_ESITO_COMMITTENTE"),
-	@javax.xml.bind.annotation.XmlEnumValue("NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE")
-	NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE ("NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE"),
-	@javax.xml.bind.annotation.XmlEnumValue("AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO")
-	AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO ("AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO");
+	@javax.xml.bind.annotation.XmlEnumValue("NON_FIRMATO")
+	NON_FIRMATO ("NON_FIRMATO"),
+	@javax.xml.bind.annotation.XmlEnumValue("ERRORE_FIRMA")
+	ERRORE_FIRMA ("ERRORE_FIRMA"),
+	@javax.xml.bind.annotation.XmlEnumValue("FIRMA_OK")
+	FIRMA_OK ("FIRMA_OK"),
+	@javax.xml.bind.annotation.XmlEnumValue("ERRORE_PROTOCOLLAZIONE")
+	ERRORE_PROTOCOLLAZIONE ("ERRORE_PROTOCOLLAZIONE"),
+	@javax.xml.bind.annotation.XmlEnumValue("PROTOCOLLAZIONE_OK")
+	PROTOCOLLAZIONE_OK ("PROTOCOLLAZIONE_OK"),
+	@javax.xml.bind.annotation.XmlEnumValue("ERRORE_SPEDIZIONE")
+	ERRORE_SPEDIZIONE ("ERRORE_SPEDIZIONE"),
+	@javax.xml.bind.annotation.XmlEnumValue("SPEDIZIONE_OK")
+	SPEDIZIONE_OK ("SPEDIZIONE_OK"),
+	@javax.xml.bind.annotation.XmlEnumValue("SPEDIZIONE_NON_ATTIVA")
+	SPEDIZIONE_NON_ATTIVA ("SPEDIZIONE_NON_ATTIVA");
 	
 	
 	/** Value */
@@ -66,7 +66,7 @@ public enum TipoComunicazioneType implements IEnumeration , Serializable , Clone
 
 
 	/** Official Constructor */
-	TipoComunicazioneType(String value)
+	StatoElaborazioneType(String value)
 	{
 		this.value = value;
 	}
@@ -77,7 +77,7 @@ public enum TipoComunicazioneType implements IEnumeration , Serializable , Clone
 	public String toString(){
 		return this.value;
 	}
-	public boolean equals(TipoComunicazioneType object){
+	public boolean equals(StatoElaborazioneType object){
 		if(object==null)
 			return false;
 		if(object.getValue()==null)
@@ -94,10 +94,10 @@ public enum TipoComunicazioneType implements IEnumeration , Serializable , Clone
 	
 	/** compatibility with the generated bean (reflection) */
 	public boolean equals(Object object,List<String> fieldsNotCheck){
-		if( !(object instanceof TipoComunicazioneType) ){
+		if( !(object instanceof StatoElaborazioneType) ){
 			throw new RuntimeException("Wrong type: "+object.getClass().getName());
 		}
-		return this.equals(((TipoComunicazioneType)object));
+		return this.equals(((StatoElaborazioneType)object));
 	}
 	public String toString(boolean reportHTML){
 		return toString();
@@ -118,7 +118,7 @@ public enum TipoComunicazioneType implements IEnumeration , Serializable , Clone
 	public static String[] toArray(){
 		String[] res = new String[values().length];
 		int i=0;
-		for (TipoComunicazioneType tmp : values()) {
+		for (StatoElaborazioneType tmp : values()) {
 			res[i]=tmp.getValue();
 			i++;
 		}
@@ -127,7 +127,7 @@ public enum TipoComunicazioneType implements IEnumeration , Serializable , Clone
 	public static String[] toStringArray(){
 		String[] res = new String[values().length];
 		int i=0;
-		for (TipoComunicazioneType tmp : values()) {
+		for (StatoElaborazioneType tmp : values()) {
 			res[i]=tmp.toString();
 			i++;
 		}
@@ -136,7 +136,7 @@ public enum TipoComunicazioneType implements IEnumeration , Serializable , Clone
 	public static String[] toEnumNameArray(){
 		String[] res = new String[values().length];
 		int i=0;
-		for (TipoComunicazioneType tmp : values()) {
+		for (StatoElaborazioneType tmp : values()) {
 			res[i]=tmp.name();
 			i++;
 		}
@@ -147,16 +147,16 @@ public enum TipoComunicazioneType implements IEnumeration , Serializable , Clone
 		return toEnumConstant(value)!=null;
 	}
 	
-	public static TipoComunicazioneType toEnumConstant(String value){
+	public static StatoElaborazioneType toEnumConstant(String value){
 		try{
 			return toEnumConstant(value,false);
 		}catch(NotFoundException notFound){
 			return null;
 		}
 	}
-	public static TipoComunicazioneType toEnumConstant(String value, boolean throwNotFoundException) throws NotFoundException{
-		TipoComunicazioneType res = null;
-		for (TipoComunicazioneType tmp : values()) {
+	public static StatoElaborazioneType toEnumConstant(String value, boolean throwNotFoundException) throws NotFoundException{
+		StatoElaborazioneType res = null;
+		for (StatoElaborazioneType tmp : values()) {
 			if(tmp.getValue().equals(value)){
 				res = tmp;
 				break;
@@ -176,8 +176,8 @@ public enum TipoComunicazioneType implements IEnumeration , Serializable , Clone
 		}
 	}
 	public static IEnumeration toEnumConstantFromString(String value, boolean throwNotFoundException) throws NotFoundException{
-		TipoComunicazioneType res = null;
-		for (TipoComunicazioneType tmp : values()) {
+		StatoElaborazioneType res = null;
+		for (StatoElaborazioneType tmp : values()) {
 			if(tmp.toString().equals(value)){
 				res = tmp;
 				break;

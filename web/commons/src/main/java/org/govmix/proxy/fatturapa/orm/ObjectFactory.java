@@ -194,6 +194,13 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link TracciaSDI }
+     */
+    public TracciaSDI createTracciaSDI() {
+        return new TracciaSDI();
+    }
+
+    /**
      * Create an instance of {@link PccRispedizione }
      */
     public PccRispedizione createPccRispedizione() {
@@ -313,13 +320,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ComunicazioneSdi }
-     */
-    public ComunicazioneSdi createComunicazioneSdi() {
-        return new ComunicazioneSdi();
-    }
-
-    /**
      * Create an instance of {@link RegistroProperty }
      */
     public RegistroProperty createRegistroProperty() {
@@ -345,6 +345,13 @@ public class ObjectFactory {
      */
     public PccTraccia createPccTraccia() {
         return new PccTraccia();
+    }
+
+    /**
+     * Create an instance of {@link IdDocumento }
+     */
+    public IdDocumento createIdDocumento() {
+        return new IdDocumento();
     }
 
     /**

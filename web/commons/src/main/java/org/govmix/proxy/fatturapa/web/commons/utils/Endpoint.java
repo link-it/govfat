@@ -25,8 +25,6 @@ import java.net.URI;
 public class Endpoint {
 
 	private URI endpoint;
-	private URI endpointConsegnaLotto;
-	private URI endpointAssociazioneLotto;
 	
 	private String username;
 	private String password;
@@ -48,17 +46,5 @@ public class Endpoint {
 	}
 	public void setPassword(String password) {
 		this.password = password;
-	}
-	public URI getEndpointConsegnaLotto() {
-		return endpointConsegnaLotto;
-	}
-	public void setEndpointConsegnaLotto(URI endpointConsegnaLotto) {
-		this.endpointConsegnaLotto = endpointConsegnaLotto;
-	}
-	public URI getEndpointAssociazioneLotto() {
-		return endpointAssociazioneLotto;
-	}
-	public void setEndpointAssociazioneLotto(URI endpointAssociazioneLotto) {
-		this.endpointAssociazioneLotto = endpointAssociazioneLotto;
 	}
 }

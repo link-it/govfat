@@ -120,7 +120,7 @@ public class TimerConsegnaFatturaLib extends AbstractTimerLib {
 								String response = null;
 								boolean asincrono = false;
 								int responseCode = -1;
-								URL url = new URL(urlOriginale.toString() + "?" + URL_PARAM_ID_SDI+"="+idFattura.getIdentificativoSdi() + "&"+URL_PARAM_POSIZIONE+"="+idFattura.getPosizione());
+								URL url = new URL(urlOriginale.toString() + "/protocollazioneFattura?" + URL_PARAM_ID_SDI+"="+idFattura.getIdentificativoSdi() + "&"+URL_PARAM_POSIZIONE+"="+idFattura.getPosizione());
 
 								try{
 									

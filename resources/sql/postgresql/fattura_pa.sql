@@ -27,6 +27,8 @@ CREATE TABLE lotti
 	se_codicefiscale VARCHAR(28),
 	codice_destinatario VARCHAR(7) NOT NULL,
 	xml BYTEA NOT NULL,
+	fatturazione_attiva BOOLEAN NOT NULL,
+	stato_elaborazione_in_uscita VARCHAR(255),
 	data_ricezione DATE NOT NULL,
 	stato_inserimento VARCHAR(255) NOT NULL,
 	stato_consegna VARCHAR(255) NOT NULL,
@@ -44,6 +46,7 @@ CREATE TABLE lotti
 	CONSTRAINT chk_lotti_3 CHECK (stato_inserimento IN ('NON_INSERITO','ERRORE_INSERIMENTO','INSERITO')),
 	CONSTRAINT chk_lotti_4 CHECK (stato_consegna IN ('NON_CONSEGNATA','IN_RICONSEGNA','ERRORE_CONSEGNA','CONSEGNATA')),
 	CONSTRAINT chk_lotti_5 CHECK (stato_protocollazione IN ('NON_PROTOCOLLATA','PROTOCOLLATA_IN_ELABORAZIONE','ERRORE_PROTOCOLLAZIONE','PROTOCOLLATA')),
+	CONSTRAINT chk_lotti_3 CHECK (stato_elaborazione_in_uscita IN ('NON_FIRMATO','ERRORE_FIRMA','FIRMA_OK','ERRORE_PROTOCOLLAZIONE','PROTOCOLLAZIONE_OK','ERRORE_SPEDIZIONE','SPEDIZIONE_OK','SPEDIZIONE_NON_ATTIVA')),	-- unique constraints
 	-- unique constraints
 	CONSTRAINT unique_lotti_1 UNIQUE (identificativo_sdi),
 	-- fk/pk keys constraints
@@ -273,29 +276,28 @@ CREATE TABLE allegati
 
 
 
-CREATE SEQUENCE seq_comunicazioni_sdi start 1 increment 1 maxvalue 9223372036854775807 minvalue 1 cache 1 NO CYCLE;
+CREATE SEQUENCE seq_tracce_sdi start 1 increment 1 maxvalue 9223372036854775807 minvalue 1 cache 1 NO CYCLE;
 
-CREATE TABLE comunicazioni_sdi
+CREATE TABLE tracce_sdi
 (
 	identificativo_sdi INT NOT NULL,
 	tipo_comunicazione VARCHAR(255) NOT NULL,
-	progressivo INT NOT NULL,
-	data_ricezione DATE NOT NULL,
-	nome_file VARCHAR(50),
-	content_type VARCHAR(255) NOT NULL,
-	raw_data BYTEA NOT NULL,
-	stato_consegna VARCHAR(255) NOT NULL,
-	data_consegna TIMESTAMP,
-	dettaglio_consegna VARCHAR(255),
+	nome_file VARCHAR(50) NOT NULL,
+	data TIMESTAMP NOT NULL,
+	id_egov VARCHAR(255) NOT NULL,
+	raw_data BYTEA,
+	stato_protocollazione VARCHAR(255) NOT NULL,
+	data_protocollazione TIMESTAMP,
+	data_prossima_protocollazione TIMESTAMP,
+	tentativi_protocollazione INT NOT NULL,
+	dettaglio_protocollazione VARCHAR(255),
 	-- fk/pk columns
-	id BIGINT DEFAULT nextval('seq_comunicazioni_sdi') NOT NULL,
+	id BIGINT DEFAULT nextval('seq_tracce_sdi') NOT NULL,
 	-- check constraints
-	CONSTRAINT chk_comunicazioni_sdi_1 CHECK (tipo_comunicazione IN ('FATTURA_USCITA','NOTIFICA_SCARTO','RICEVUTA_CONSEGNA','NOTIFICA_MANCATA_CONSEGNA','ATTESTAZIONE_TRASMISSIONE_FATTURA','NOTIFICA_ESITO_COMMITTENTE','NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE','AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO')),
-	CONSTRAINT chk_comunicazioni_sdi_2 CHECK (stato_consegna IN ('NON_CONSEGNATA','IN_RICONSEGNA','ERRORE_CONSEGNA','CONSEGNATA')),
-	-- unique constraints
-	CONSTRAINT unique_comunicazioni_sdi_1 UNIQUE (identificativo_sdi,tipo_comunicazione,progressivo),
+	CONSTRAINT chk_tracce_sdi_1 CHECK (tipo_comunicazione IN ('FATTURA_USCITA','NOTIFICA_SCARTO','RICEVUTA_CONSEGNA','NOTIFICA_MANCATA_CONSEGNA','ATTESTAZIONE_TRASMISSIONE_FATTURA','NOTIFICA_ESITO_COMMITTENTE','NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE','AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO')),
+	CONSTRAINT chk_tracce_sdi_2 CHECK (stato_protocollazione IN ('NON_PROTOCOLLATA','PROTOCOLLATA_IN_ELABORAZIONE','ERRORE_PROTOCOLLAZIONE','PROTOCOLLATA')),
 	-- fk/pk keys constraints
-	CONSTRAINT pk_comunicazioni_sdi PRIMARY KEY (id)
+	CONSTRAINT pk_tracce_sdi PRIMARY KEY (id)
 );
 
 
@@ -305,13 +307,14 @@ CREATE SEQUENCE seq_metadati start 1 increment 1 maxvalue 9223372036854775807 mi
 
 CREATE TABLE metadati
 (
+	richiesta BOOLEAN NOT NULL,
 	nome VARCHAR(255) NOT NULL,
 	valore VARCHAR(255) NOT NULL,
 	-- fk/pk columns
 	id BIGINT DEFAULT nextval('seq_metadati') NOT NULL,
-	id_comunicazione_sdi BIGINT,
+	id_traccia_sdi BIGINT,
 	-- fk/pk keys constraints
-	CONSTRAINT fk_metadati_1 FOREIGN KEY (id_comunicazione_sdi) REFERENCES comunicazioni_sdi(id),
+	CONSTRAINT fk_metadati_1 FOREIGN KEY (id_traccia_sdi) REFERENCES tracce_sdi(id),
 	CONSTRAINT pk_metadati PRIMARY KEY (id)
 );
 
@@ -344,8 +347,6 @@ CREATE TABLE protocolli
 	nome VARCHAR(255) NOT NULL,
 	descrizione VARCHAR(255),
 	endpoint VARCHAR(255) NOT NULL,
-	endpoint_consegna_lotto VARCHAR(255),
-	endpoint_richiedi_protocollo VARCHAR(255),
 	-- fk/pk columns
 	id BIGINT DEFAULT nextval('seq_protocolli') NOT NULL,
 	-- unique constraints
@@ -488,6 +489,9 @@ CREATE TABLE dipartimenti
 (
 	codice VARCHAR(7) NOT NULL,
 	descrizione VARCHAR(255) NOT NULL,
+	fatturazione_attiva BOOLEAN NOT NULL DEFAULT false,
+	id_procedimento VARCHAR(255),
+	firma_automatica BOOLEAN NOT NULL DEFAULT false,
 	accettazione_automatica BOOLEAN NOT NULL DEFAULT false,
 	modalita_push BOOLEAN NOT NULL DEFAULT true,
 	lista_email_notifiche TEXT,
@@ -571,7 +575,7 @@ CREATE TABLE pcc_operazioni
 	-- fk/pk columns
 	id BIGINT DEFAULT nextval('seq_pcc_operazioni') NOT NULL,
 	-- check constraints
-	CONSTRAINT chk_pcc_operazioni_1 CHECK (nome IN ('ConsultazioneTracce','DatiFattura','PagamentoIva','InserimentoFattura','StatoFattura','ElencoMovimentiErarioIva','DownloadDocumento','OperazioneContabile_CP','OperazioneContabile_CO','OperazioneContabile_CS','OperazioneContabile_CCS','OperazioneContabile_SP','OperazioneContabile_RF','OperazioneContabile_SC','OperazioneContabile_RC')),
+	CONSTRAINT chk_pcc_operazioni_1 CHECK (nome IN ('ConsultazioneTracce','DatiFattura','PagamentoIva','InserimentoFattura','StatoFattura','ElencoMovimentiErarioIva','DownloadDocumento','OperazioneContabile_CP','OperazioneContabile_CO','OperazioneContabile_CS','OperazioneContabile_CCS','OperazioneContabile_CPS','OperazioneContabile_CSPC','OperazioneContabile_SP','OperazioneContabile_RF','OperazioneContabile_SC','OperazioneContabile_RC')),
 	-- unique constraints
 	CONSTRAINT unique_pcc_operazioni_1 UNIQUE (nome),
 	-- fk/pk keys constraints

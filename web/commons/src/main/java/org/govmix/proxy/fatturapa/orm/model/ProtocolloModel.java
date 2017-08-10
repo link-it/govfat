@@ -45,8 +45,6 @@ public class ProtocolloModel extends AbstractModel<Protocollo> {
 		this.NOME = new Field("nome",java.lang.String.class,"Protocollo",Protocollo.class);
 		this.DESCRIZIONE = new Field("descrizione",java.lang.String.class,"Protocollo",Protocollo.class);
 		this.ENDPOINT = new Field("endpoint",java.net.URI.class,"Protocollo",Protocollo.class);
-		this.ENDPOINT_CONSEGNA_LOTTO = new Field("endpointConsegnaLotto",java.net.URI.class,"Protocollo",Protocollo.class);
-		this.ENDPOINT_RICHIEDI_PROTOCOLLO = new Field("endpointRichiediProtocollo",java.net.URI.class,"Protocollo",Protocollo.class);
 	
 	}
 	
@@ -57,8 +55,6 @@ public class ProtocolloModel extends AbstractModel<Protocollo> {
 		this.NOME = new ComplexField(father,"nome",java.lang.String.class,"Protocollo",Protocollo.class);
 		this.DESCRIZIONE = new ComplexField(father,"descrizione",java.lang.String.class,"Protocollo",Protocollo.class);
 		this.ENDPOINT = new ComplexField(father,"endpoint",java.net.URI.class,"Protocollo",Protocollo.class);
-		this.ENDPOINT_CONSEGNA_LOTTO = new ComplexField(father,"endpointConsegnaLotto",java.net.URI.class,"Protocollo",Protocollo.class);
-		this.ENDPOINT_RICHIEDI_PROTOCOLLO = new ComplexField(father,"endpointRichiediProtocollo",java.net.URI.class,"Protocollo",Protocollo.class);
 	
 	}
 	
@@ -69,10 +65,6 @@ public class ProtocolloModel extends AbstractModel<Protocollo> {
 	public IField DESCRIZIONE = null;
 	 
 	public IField ENDPOINT = null;
-	 
-	public IField ENDPOINT_CONSEGNA_LOTTO = null;
-	 
-	public IField ENDPOINT_RICHIEDI_PROTOCOLLO = null;
 	 
 
 	@Override
