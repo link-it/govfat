@@ -36,7 +36,7 @@ import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.NotificaEsitoCommittenteBD;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
@@ -482,7 +482,7 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 	public String ritentaConsegna(){
 		try{
 
-			FatturaElettronicaBD fatturaBD = new FatturaElettronicaBD(log);
+			FatturaPassivaBD fatturaBD = new FatturaPassivaBD(log);
 			FatturaElettronica current = this.selectedElement.getDTO();
 			fatturaBD.forzaRispedizioneFattura(current);
 			MessageUtils.addInfoMsg(Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegna.cambioStatoOK"));

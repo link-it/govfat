@@ -36,7 +36,6 @@ import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
-import org.openspcoop2.generic_project.expression.IExpression;
 
 public class LottoSingleFileExporter extends AbstractSingleFileExporter<LottoFatture, IdLotto> {
 
@@ -106,11 +105,10 @@ public class LottoSingleFileExporter extends AbstractSingleFileExporter<LottoFat
 	}
 
 	@Override
-	protected List<IdFattura> findIdFattura(String[] ids, boolean isAll,
-			IExpression fattExpr) throws ServiceException, NotFoundException {
+	protected List<IdFattura> findIdFattura(String[] ids, boolean isAll) throws ServiceException, NotFoundException {
 		try {
 			LottoFatture lotto = ((JDBCLottoFattureServiceSearch)this.lottoFattureSearchDAO).get(Long.parseLong(ids[0]));
-			return this.fatturaBD.findAllIdFatturaByIdentificativoSdi(lotto.getIdentificativoSdi());
+			return this.getFatturaBD().findAllIdFatturaByIdentificativoSdi(lotto.getIdentificativoSdi());
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}

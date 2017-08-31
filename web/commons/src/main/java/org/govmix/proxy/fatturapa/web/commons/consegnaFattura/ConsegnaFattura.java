@@ -28,7 +28,7 @@ import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.AllegatoFatturaBD;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.AbstractFatturaConverter;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FPA12Converter;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FatturaV10Converter;
@@ -36,7 +36,7 @@ import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FatturaV11Conver
 
 public class ConsegnaFattura {
 
-	private FatturaElettronicaBD fatturaBD;
+	private FatturaPassivaBD fatturaBD;
 	private AllegatoFatturaBD allegatoBD;
 	private boolean validazioneDAOAbilitata;
 	private Logger log;
@@ -44,14 +44,14 @@ public class ConsegnaFattura {
 	public ConsegnaFattura(Logger log, boolean validazioneDaoAbilitata) throws Exception {
 		this.log = log;
 		this.validazioneDAOAbilitata = validazioneDaoAbilitata;
-		this.fatturaBD = new FatturaElettronicaBD(this.log);
+		this.fatturaBD = new FatturaPassivaBD(this.log);
 		this.allegatoBD = new AllegatoFatturaBD(this.log);
 	}
 
 	public ConsegnaFattura(Logger log, boolean validazioneDaoAbilitata, Connection conn, boolean autocommit) throws Exception {
 		this.log = log;
 		this.validazioneDAOAbilitata = validazioneDaoAbilitata;
-		this.fatturaBD = new FatturaElettronicaBD(this.log, conn, autocommit);
+		this.fatturaBD = new FatturaPassivaBD(this.log, conn, autocommit);
 		this.allegatoBD = new AllegatoFatturaBD(this.log, conn, autocommit);
 	}
 
@@ -87,7 +87,7 @@ public class ConsegnaFattura {
 			}	
 		}
 
-		this.fatturaBD.create(fatturaElettronica);
+		this.fatturaBD.createFatturaPassiva(fatturaElettronica);
 
 		if(allegatiLst != null) {
 			for(AllegatoFattura allegato: allegatiLst) {

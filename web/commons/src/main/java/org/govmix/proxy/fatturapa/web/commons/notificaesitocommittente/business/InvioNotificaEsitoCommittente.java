@@ -34,7 +34,7 @@ import org.govmix.proxy.fatturapa.orm.IdUtente;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoCommittenteType;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.NotificaEsitoCommittenteBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.UtenteBD;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
@@ -97,7 +97,7 @@ public class InvioNotificaEsitoCommittente {
 
 		NotificaEsitoCommittente notificaEsitoCommittente = converter.getNotificaEsitoCommittente();
 		
-		FatturaElettronicaBD fatturaElettronicaBD = new FatturaElettronicaBD(this.log, connection, false);
+		FatturaPassivaBD fatturaElettronicaBD = new FatturaPassivaBD(this.log, connection, false);
 		FatturaElettronica fattura = fatturaElettronicaBD.get(notificaEsitoCommittente.getIdFattura());
 		if(fattura.getIdDecorrenzaTermini() != null) {
 			throw new Exception("Impossibile inviare la Notifica di Esito Committente, in quanto e' stata gia' ricevuta una Notifica di Decorrenza Termini per la fattura con id ["+notificaEsitoCommittente.getIdFattura().toJson()+"]");

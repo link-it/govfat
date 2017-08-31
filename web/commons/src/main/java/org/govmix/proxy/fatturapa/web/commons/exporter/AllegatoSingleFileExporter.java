@@ -41,7 +41,6 @@ import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
-import org.openspcoop2.generic_project.expression.IExpression;
 import org.openspcoop2.generic_project.expression.IPaginatedExpression;
 import org.openspcoop2.generic_project.expression.SortOrder;
 import org.openspcoop2.utils.UtilsException;
@@ -127,7 +126,7 @@ public class AllegatoSingleFileExporter extends	AbstractSingleFileExporter<Alleg
 
 
 	@Override
-	protected List<IdFattura> findIdFattura(String[] ids, boolean isAll, IExpression fattExpr) throws ServiceException, NotFoundException {
+	protected List<IdFattura> findIdFattura(String[] ids, boolean isAll) throws ServiceException, NotFoundException {
 		try {
 			List<IdFattura> idFatturaRichiesti = new ArrayList<IdFattura>();
 			AllegatoFattura allegato = ((JDBCAllegatoFatturaServiceSearch)this.allegatoSearchDAO).get(Long.parseLong(ids[0]));

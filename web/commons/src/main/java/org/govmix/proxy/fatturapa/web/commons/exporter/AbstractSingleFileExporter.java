@@ -36,7 +36,6 @@ import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.constants.UserRole;
-import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.IUtenteServiceSearch;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
@@ -65,22 +64,19 @@ public abstract class AbstractSingleFileExporter<T, K> {
 
 	protected Logger log;
 	private IUtenteServiceSearch utenteSearchDAO;
-	protected FatturaElettronicaBD fatturaBD;
-	private IFatturaElettronicaServiceSearch fatturaSearchDAO;
+	private FatturaElettronicaBD fatturaBD;
 
 
 	public AbstractSingleFileExporter(Logger log, Connection connection, boolean autocommit) throws ServiceException, NotImplementedException, Exception {
 		this.log = log;
 		this.utenteSearchDAO = DAOFactory.getInstance().getServiceManager(connection, autocommit).getUtenteServiceSearch();
 		this.fatturaBD = new FatturaElettronicaBD(log, connection, autocommit);
-		this.fatturaSearchDAO = DAOFactory.getInstance().getServiceManager(connection, autocommit).getFatturaElettronicaServiceSearch();
 	}
 
 	public AbstractSingleFileExporter(Logger log) throws ServiceException, NotImplementedException, Exception {
 		this.log = log;
 		this.utenteSearchDAO = DAOFactory.getInstance().getServiceManager().getUtenteServiceSearch();
 		this.fatturaBD = new FatturaElettronicaBD(log);
-		this.fatturaSearchDAO = DAOFactory.getInstance().getServiceManager().getFatturaElettronicaServiceSearch();
 	}
 
 	public abstract void export(T object, OutputStream out, FORMAT format) throws ExportException;
@@ -217,9 +213,9 @@ public abstract class AbstractSingleFileExporter<T, K> {
 	}
 
 
-	protected abstract List<IdFattura> findIdFattura(String[] ids, boolean isAll, IExpression fattExpr) throws ServiceException, NotFoundException;
+	protected abstract List<IdFattura> findIdFattura(String[] ids, boolean isAll) throws ServiceException, NotFoundException;
 
-	public boolean checkautorizzazioneExport(String username, String []ids, boolean isAll,IExpression fattExpr) throws ExportException {
+	public boolean checkautorizzazioneExport(String username, String []ids, boolean isAll) throws ExportException {
 
 		try {
 			log.debug("Controllo autorizzazione per l'utente ["+username+"] in corso...");
@@ -243,7 +239,7 @@ public abstract class AbstractSingleFileExporter<T, K> {
 
 			List<IdFattura> idFatturaRichiesti = null;
 			try {
-				idFatturaRichiesti = findIdFattura(ids, isAll, fattExpr);
+				idFatturaRichiesti = findIdFattura(ids, isAll);
 			}catch(NotFoundException e){
 				log.debug("Impossibile trovare la risorsa richiesta.");
 				throw new ExportException("Impossibile trovare la risorsa richiesta.");
@@ -275,9 +271,13 @@ public abstract class AbstractSingleFileExporter<T, K> {
 		}
 
 	}
+//
+//	public IFatturaElettronicaServiceSearch getFatturaSearchDAO() {
+//		return fatturaSearchDAO;
+//	}
 
-	public IFatturaElettronicaServiceSearch getFatturaSearchDAO() {
-		return fatturaSearchDAO;
+	public FatturaElettronicaBD getFatturaBD() {
+		return fatturaBD;
 	}
 
 }

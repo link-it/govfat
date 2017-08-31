@@ -39,7 +39,7 @@ import org.apache.soap.encoding.soapenc.Base64;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.exporter.FatturaSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.sonde.Sonda;
@@ -77,7 +77,7 @@ public class TimerConsegnaFatturaLib extends AbstractTimerLib {
 		Connection connection = null;
 		try {
 			connection = DAOFactory.getInstance().getConnection();
-			FatturaElettronicaBD fatturaElettronicaBD = new FatturaElettronicaBD(log, connection, false);
+			FatturaPassivaBD fatturaElettronicaBD = new FatturaPassivaBD(log, connection, false);
 			FatturaSingleFileExporter sfe = new FatturaSingleFileExporter(this.log, connection, false);
 
 			Date limitDate = new Date();

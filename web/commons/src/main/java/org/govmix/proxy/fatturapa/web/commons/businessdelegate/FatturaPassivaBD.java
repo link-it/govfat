@@ -21,16 +21,35 @@
 package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
+import org.govmix.proxy.fatturapa.orm.IdFattura;
+import org.govmix.proxy.fatturapa.orm.IdLotto;
+import org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini;
+import org.govmix.proxy.fatturapa.orm.PccTracciaTrasmissioneEsito;
+import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
+import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
+import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
+import org.govmix.proxy.fatturapa.orm.dao.IDBFatturaElettronicaServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaService;
 import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaServiceSearch;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaAttivaFilter;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.FatturaElettronicaFieldConverter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaPassivaFilter;
+import org.govmix.proxy.pcc.fatture.tracciamento.OperazioneNonPermessaException;
+import org.openspcoop2.generic_project.beans.CustomField;
+import org.openspcoop2.generic_project.beans.UpdateField;
+import org.openspcoop2.generic_project.exception.ExpressionException;
+import org.openspcoop2.generic_project.exception.ExpressionNotImplementedException;
+import org.openspcoop2.generic_project.exception.MultipleResultException;
+import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
+import org.openspcoop2.generic_project.expression.IPaginatedExpression;
 
 public class FatturaPassivaBD extends BaseBD {
 
@@ -62,6 +81,19 @@ public class FatturaPassivaBD extends BaseBD {
 		}
 	}
 	
+	public void validate(FatturaElettronica fattura) throws Exception {
+		try {
+
+			this.service.validate(fattura);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la validate: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la validate: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
 	public long count(FatturaPassivaFilter filter)throws Exception {
 		return this.serviceSearch.count(filter.toExpression()).longValue();
 	}
@@ -71,4 +103,552 @@ public class FatturaPassivaBD extends BaseBD {
 	public FatturaPassivaFilter newFilter() {
 		return new FatturaPassivaFilter(this.serviceSearch);
 	}
+	
+	public FatturaElettronica get(IdFattura id) throws Exception {
+		try {
+
+			FatturaPassivaFilter filter = this.newFilter();
+			filter.setIdentificativoSdi(id.getIdentificativoSdi());
+			filter.setPosizione(id.getPosizione());
+			
+			if(this.service.count(filter.toExpression()).longValue() == 0) {
+				throw new NotFoundException("Fattura passiva ["+id.toJson()+"] non esistente nel sistema.");
+			}
+
+			return this.service.findAll(filter.toPaginatedExpression()).get(0);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la get: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la get: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+	
+	public void updateEsito(IdFattura idFattura, EsitoType esito) throws Exception {
+		try {
+			UpdateField esitoField = new UpdateField(FatturaElettronica.model().ESITO, esito);
+			this.service.updateFields(idFattura, esitoField);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la updateEsito: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la updateEsito: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+
+	public FatturaElettronica findByIdSdiNumero(Integer identificativoSdi, String numero) throws Exception {
+		try {
+
+			IPaginatedExpression exp = this.service.newPaginatedExpression();
+			exp.equals(FatturaElettronica.model().IDENTIFICATIVO_SDI, identificativoSdi);
+			exp.equals(FatturaElettronica.model().NUMERO, numero);
+			
+			List<FatturaElettronica> findAllIds = this.service.findAll(exp);
+			
+			if(findAllIds == null || findAllIds.isEmpty())
+				throw new NotFoundException();
+			if(findAllIds.size() > 1)
+				throw new MultipleResultException();
+			
+			return findAllIds.get(0);
+			
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la get: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la get: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public IdFattura convertToId(FatturaElettronica fattura) throws Exception {
+		try {
+			return this.service.convertToId(fattura);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la create: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la create: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public IdFattura findId(long idFisico) throws Exception {
+		try {
+			return this.service.convertToId(this.getById(idFisico));
+
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la findId: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la findId: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public FatturaElettronica getById(long idFisico) throws Exception {
+		try {
+			return ((IDBFatturaElettronicaServiceSearch)this.service).get(idFisico);
+
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la getById: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la getById: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public FatturaElettronica findByIdFiscaleNumeroDataImporto(String idFiscaleFornitore, String numero, Date date, Double importo) throws Exception {
+		try {
+
+			
+			String codNazione = null;
+			String idFiscale = null;
+			IPaginatedExpression exp = this.service.newPaginatedExpression();
+			
+			if(idFiscaleFornitore.length() > 2) {
+				codNazione = idFiscaleFornitore.substring(0, 2);
+				idFiscale = idFiscaleFornitore.substring(2);
+				exp.equals(FatturaElettronica.model().CEDENTE_PRESTATORE_PAESE, codNazione);
+			} else {
+				idFiscale = idFiscaleFornitore;
+			}
+			
+			exp.equals(FatturaElettronica.model().CEDENTE_PRESTATORE_CODICE_FISCALE, idFiscale);
+			exp.equals(FatturaElettronica.model().NUMERO, numero);
+			
+			Calendar cal = Calendar.getInstance();
+			cal.setTimeInMillis(date.getTime());
+			cal.set(Calendar.HOUR, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			
+			Calendar cal2 = Calendar.getInstance();
+			cal2.setTimeInMillis(cal.getTimeInMillis());
+			cal2.add(Calendar.DATE, 1);
+			
+			exp.between(FatturaElettronica.model().DATA, date, cal2.getTime());
+
+			
+			if(importo != null)
+				exp.equals(FatturaElettronica.model().IMPORTO_TOTALE_DOCUMENTO, importo);
+
+			List<FatturaElettronica> findAllIds = this.service.findAll(exp);
+			
+			if(findAllIds == null || findAllIds.isEmpty())
+				throw new NotFoundException();
+			if(findAllIds.size() > 1)
+				throw new MultipleResultException();
+			
+			return findAllIds.get(0);
+			
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la get: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la get: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public FatturaElettronica findByIdPcc(String idPcc) throws Exception {
+		throw new NotImplementedException();
+	}
+	
+	public boolean exists(IdFattura id) throws Exception {
+		try {
+			FatturaPassivaFilter filter = this.newFilter();
+			filter.setIdentificativoSdi(id.getIdentificativoSdi());
+			filter.setPosizione(id.getPosizione());
+			return this.count(filter) > 0;
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la exists: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la exists: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+	
+	public List<IdFattura> findAllIdFatturaByIdentificativoSdi(Integer identificativoSdI) throws Exception {
+		try {
+			FatturaPassivaFilter filter = this.newFilter();
+			filter.setIdentificativoSdi(identificativoSdI);
+			List<FatturaElettronica> findAll = this.findAll(filter);
+			List<IdFattura> findAllIds = new ArrayList<IdFattura>();
+			for(FatturaElettronica fatt: findAll) {
+				findAllIds.add(this.convertToId(fatt));
+			}
+			
+			return findAllIds;
+			
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la findAllIdFatturaByIdentificativoSdi: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la findAllIdFatturaByIdentificativoSdi: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (ExpressionNotImplementedException e) {
+			this.log.error("Errore durante la findAllIdFatturaByIdentificativoSdi: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (ExpressionException e) {
+			this.log.error("Errore durante la findAllIdFatturaByIdentificativoSdi: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public void updateDecorrenzaTermini(IdFattura idF,
+			IdNotificaDecorrenzaTermini idNotificaDecorrenzaTermini) throws Exception {
+		try {
+			FatturaElettronica fattura = this.get(idF);
+			fattura.setIdDecorrenzaTermini(idNotificaDecorrenzaTermini);
+			this.service.update(idF, fattura);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la updateDecorrenzaTermini: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotFoundException e) {
+			this.log.error("Errore durante la updateDecorrenzaTermini: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (MultipleResultException e) {
+			this.log.error("Errore durante la updateDecorrenzaTermini: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la updateDecorrenzaTermini: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public void assegnaProtocolloAInteroLotto(IdLotto idLotto, String protocollo) throws Exception {
+		try {
+
+			StringBuffer update = new StringBuffer();
+
+			List<Class<?>> listClass = new ArrayList<Class<?>>();
+			List<Object> listObjects = new ArrayList<Object>();
+
+			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase());
+			
+			update.append("update "+converter.toTable(FatturaElettronica.model())+" set ");
+			if(protocollo != null) {
+				update.append(converter.toColumn(FatturaElettronica.model().PROTOCOLLO, false)).append(" = ? , ");
+				listClass.add(FatturaElettronica.model().PROTOCOLLO.getFieldType());
+				listObjects.add(protocollo);
+			}
+
+			update.append(converter.toColumn(FatturaElettronica.model().STATO_PROTOCOLLAZIONE, false)).append(" = ? , ");
+			listClass.add(FatturaElettronica.model().STATO_PROTOCOLLAZIONE.getFieldType());
+			listObjects.add(protocollo != null ? StatoProtocollazioneType.PROTOCOLLATA : StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE);
+			
+			update.append(converter.toColumn(FatturaElettronica.model().DATA_PROTOCOLLAZIONE, false)).append(" = ? ");
+			listClass.add(FatturaElettronica.model().DATA_PROTOCOLLAZIONE.getFieldType());
+			listObjects.add(new Date());
+			
+			update.append(" where ").append(converter.toColumn(FatturaElettronica.model().IDENTIFICATIVO_SDI, false)).append(" = ? ");
+			listClass.add(FatturaElettronica.model().IDENTIFICATIVO_SDI.getFieldType());
+			listObjects.add(idLotto.getIdentificativoSdi());
+			
+			this.service.nativeQuery(update.toString(), listClass, listObjects);
+			
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la updateProtocollo: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la updateProtocollo: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public void erroreProtocolloAInteroLotto(IdLotto idLotto) throws Exception {
+		this.assegnaProtocolloAInteroLotto(idLotto, null);
+	}
+	
+	public List<FatturaElettronica> getFattureDaSpedireContestuale(int offset, int limit, Date date) throws Exception {
+		try {
+			FatturaPassivaFilter filter = getFattureDaSpedireFilter(date, true);
+			filter.setOffset(offset);
+			filter.setLimit(limit);
+			return this.findAll(filter);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la getFattureDaSpedireContestuale: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la getFattureDaSpedireContestuale: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public long countFattureDaSpedireContestuale(Date date) throws Exception {
+		try {
+			FatturaPassivaFilter filter = getFattureDaSpedireFilter(date, true);
+			return this.count(filter);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la countFattureDaSpedireContestuale: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la countFattureDaSpedireContestuale: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+
+	public List<FatturaElettronica> getFattureDaSpedire(int offset, int limit, Date date) throws Exception {
+		try {
+			FatturaPassivaFilter filter = getFattureDaSpedireFilter(date, false);
+			return this.findAll(filter);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la getFattureDaSpedire: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la getFattureDaSpedire: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public long countFattureDaSpedire(Date date) throws Exception {
+		try {
+			FatturaPassivaFilter filter = getFattureDaSpedireFilter(date, false);
+			return this.count(filter);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la countFattureDaSpedire: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la countFattureDaSpedire: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	private FatturaPassivaFilter getFattureDaSpedireFilter(Date date, boolean contestuale) {
+		FatturaPassivaFilter filter = this.newFilter();
+		filter.setModalitaPush(true);
+		filter.setConsegnaContestuale(contestuale);
+		filter.setDataRicezioneMin(date);
+		List<StatoConsegnaType> statiConsegna = new ArrayList<StatoConsegnaType>();
+		statiConsegna.add(StatoConsegnaType.NON_CONSEGNATA);
+		statiConsegna.add(StatoConsegnaType.IN_RICONSEGNA);
+		filter.setStatiConsegna(statiConsegna);
+		return filter;
+	}
+
+	public List<FatturaElettronica> getFattureDaAccettare(int offset, int limit, Date date) throws Exception {
+		try {
+			FatturaPassivaFilter filter = getFattureDaAccettareFilter(date);
+			filter.setOffset(offset);
+			filter.setLimit(limit);
+			return this.findAll(filter);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la getFattureDaAccettare: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la getFattureDaAccettare: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public long countFattureDaAccettare(Date date) throws Exception {
+		try {
+			FatturaPassivaFilter filter = getFattureDaAccettareFilter(date);
+			return this.count(filter);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la countFattureDaAccettare: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la countFattureDaAccettare: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	private FatturaPassivaFilter getFattureDaAccettareFilter(Date date) {
+		FatturaPassivaFilter filter = this.newFilter();
+		filter.setDataRicezioneMin(date);
+		filter.setDaAccettareAutomaticamente(true);
+		return filter;
+	}
+
+	public void updateProtocollo(IdFattura idFattura, StatoProtocollazioneType statoProtocollazioneAttuale, String protocollo, boolean asincrono) throws Exception {
+		try {
+			
+			List<UpdateField> lst = new ArrayList<UpdateField>();
+			lst.add(new UpdateField(FatturaElettronica.model().STATO_CONSEGNA, StatoConsegnaType.CONSEGNATA));
+			lst.add(new UpdateField(FatturaElettronica.model().DETTAGLIO_CONSEGNA, null));
+			lst.add(new UpdateField(FatturaElettronica.model().DATA_CONSEGNA, new Date()));
+			
+			if(asincrono) {
+				 // Lo stato potrebbe essere gia' stato aggiornato nel frattempo dal passaggio del batch di associazione protocollo
+				// Se non e' stato aggiornato, lo aggiorno 
+				if(!StatoProtocollazioneType.PROTOCOLLATA.equals(statoProtocollazioneAttuale))
+					lst.add(new UpdateField(FatturaElettronica.model().STATO_PROTOCOLLAZIONE, StatoProtocollazioneType.PROTOCOLLATA_IN_ELABORAZIONE));
+			} else if(protocollo != null) {
+				lst.add(new UpdateField(FatturaElettronica.model().STATO_PROTOCOLLAZIONE, StatoProtocollazioneType.PROTOCOLLATA));
+				lst.add(new UpdateField(FatturaElettronica.model().DATA_PROTOCOLLAZIONE, new Date()));
+				lst.add(new UpdateField(FatturaElettronica.model().PROTOCOLLO, protocollo));
+			} else {
+				lst.add(new UpdateField(FatturaElettronica.model().STATO_PROTOCOLLAZIONE, StatoProtocollazioneType.NON_PROTOCOLLATA));
+			}
+
+			this.service.updateFields(idFattura, lst.toArray(new UpdateField[1]));
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la updateProtocollo: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la updateProtocollo: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public void updateStatoConsegna(IdFattura idFattura, String dettaglio) throws Exception {
+		this.updateStatoConsegna(idFattura, StatoConsegnaType.ERRORE_CONSEGNA, dettaglio);
+	}
+
+	public void updateStatoConsegna(IdFattura idFattura, StatoConsegnaType statoConsegna, String dettaglio) throws Exception {
+		try {
+			List<UpdateField> lstFields = new ArrayList<UpdateField>();
+			lstFields.add(new UpdateField(FatturaElettronica.model().STATO_CONSEGNA, statoConsegna));
+			lstFields.add(new UpdateField(FatturaElettronica.model().DATA_CONSEGNA, new Date()));
+			if(dettaglio != null)
+				lstFields.add(new UpdateField(FatturaElettronica.model().DETTAGLIO_CONSEGNA, dettaglio));
+			
+			this.service.updateFields(idFattura, lstFields.toArray(new UpdateField[]{}));
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la updateStatoConsegna: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la updateStatoConsegna: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public void updateStatoConsegna(FatturaElettronica fattura) throws Exception {
+		try {
+			List<UpdateField> lstFields = new ArrayList<UpdateField>();
+			lstFields.add(new UpdateField(FatturaElettronica.model().STATO_CONSEGNA, fattura.getStatoConsegna()));
+			lstFields.add(new UpdateField(FatturaElettronica.model().DATA_CONSEGNA, new Date()));
+			lstFields.add(new UpdateField(FatturaElettronica.model().DETTAGLIO_CONSEGNA, fattura.getDettaglioConsegna()));
+			lstFields.add(new UpdateField(FatturaElettronica.model().DATA_PROSSIMA_CONSEGNA, fattura.getDataProssimaConsegna()));
+			lstFields.add(new UpdateField(FatturaElettronica.model().TENTATIVI_CONSEGNA, fattura.getTentativiConsegna()));
+
+			this.service.updateFields(this.service.convertToId(fattura), lstFields.toArray(new UpdateField[]{}));
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la updateStatoConsegna: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la updateStatoConsegna: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public void forzaRispedizioneFattura(FatturaElettronica fattura) throws Exception {
+		try {
+			IdFattura idFattura = this.convertToId(fattura); 
+			FatturaElettronica fatturaDaDB = this.get(idFattura);
+			if(StatoConsegnaType.ERRORE_CONSEGNA.equals(fatturaDaDB.getStatoConsegna()) || StatoConsegnaType.IN_RICONSEGNA.equals(fatturaDaDB.getStatoConsegna())) {
+				fatturaDaDB.setStatoConsegna(StatoConsegnaType.IN_RICONSEGNA);
+				fatturaDaDB.setDataProssimaConsegna(new Date());
+				fatturaDaDB.setTentativiConsegna(new Integer(0));
+				this.service.update(idFattura, fatturaDaDB);
+			} else
+				throw new Exception("La fattura ["+idFattura.toJson()+"] non puo' essere forzata in riconsegna perche' il suo stato attuale e' ["+fatturaDaDB.getStatoConsegna()+"]");
+			
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la forzaRispedizioneFattura: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la forzaRispedizioneFattura: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+
+	public void updateEsitoScadenza(IdFattura idFattura, PccTracciaTrasmissioneEsito esito)  throws Exception {
+		try {
+			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase()); 
+			CustomField esitoCustomField = new CustomField("id_scadenza", Long.class, "id_scadenza", converter.toTable(FatturaElettronica.model()));
+			UpdateField esitoField = null;
+			if(esito != null) {
+				esitoField = new UpdateField(esitoCustomField, esito.getId());
+			}else {
+				esitoField = new UpdateField(esitoCustomField, null);					
+			}
+			this.service.updateFields(idFattura, esitoField);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la updateEsito: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la updateEsito: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public void checkEsitoScadenza(IdFattura idFattura)  throws Exception {
+		try {
+			FatturaElettronica f = this.get(idFattura);
+			if((f.getIdEsitoScadenza() == null || f.getIdEsitoScadenza().getIdTrasmissioneEsito() < 0)) {
+				throw new OperazioneNonPermessaException("Fattura ["+idFattura.toJson()+"] in stato di elaborazione, impossibile inviare un piano di scadenze");
+			}
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la checkEsitoScadenza: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la checkEsitoScadenza: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public void updateEsitoContabilizzazione(IdFattura idFattura, PccTracciaTrasmissioneEsito esito)  throws Exception {
+		try {
+			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase()); 
+			CustomField esitoCustomField = new CustomField("id_contabilizzazione", Long.class, "id_contabilizzazione", converter.toTable(FatturaElettronica.model()));
+			UpdateField esitoField = null;
+			if(esito != null) {
+				esitoField = new UpdateField(esitoCustomField, esito.getId());
+			}else {
+				esitoField = new UpdateField(esitoCustomField, null);					
+			}
+
+			this.service.updateFields(idFattura, esitoField);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la updateEsito: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la updateEsito: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public void checkEsitoContabilizzazione(IdFattura idFattura)  throws Exception {
+		try {
+			FatturaElettronica f = this.get(idFattura);
+			if((f.getIdEsitoContabilizzazione() == null || f.getIdEsitoContabilizzazione().getIdTrasmissioneEsito() < 0)) {
+				throw new OperazioneNonPermessaException("Fattura ["+idFattura.toJson()+"] in stato di elaborazione, impossibile inviare un piano di contabilizzazioni");
+			}
+
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la checkEsitoContabilizzazione: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la checkEsitoContabilizzazione: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public void updateDataScadenza(IdFattura idFattura, Date dataScadenza, boolean daPagare) throws Exception {
+		try {
+			
+			UpdateField updateField = new UpdateField(FatturaElettronica.model().DATA_SCADENZA, dataScadenza);
+			UpdateField updateField2 = new UpdateField(FatturaElettronica.model().DA_PAGARE, daPagare);
+
+			this.service.updateFields(idFattura, updateField, updateField2);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la aggiornaDataScadenza: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la aggiornaDataScadenza: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+
 }

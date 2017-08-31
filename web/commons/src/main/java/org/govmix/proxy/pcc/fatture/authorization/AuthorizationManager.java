@@ -34,7 +34,7 @@ import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.constants.UserRole;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.DipartimentoBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.EnteBD;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.PccAutorizzazioneBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.UtenteBD;
 import org.govmix.proxy.pcc.fatture.utils.PccProperties;
@@ -47,13 +47,13 @@ public class AuthorizationManager {
 	private UtenteBD utenteBD;
 	private DipartimentoBD dipartimentoBD;
 	private EnteBD enteBD;
-	private FatturaElettronicaBD fatturaBD;
+	private FatturaPassivaBD fatturaBD;
 	private Logger log;
 	public AuthorizationManager(Logger log) throws Exception {
 		this.log = log;
 		this.authBD = new PccAutorizzazioneBD(log);
 		this.utenteBD = new UtenteBD(log);
-		this.fatturaBD = new FatturaElettronicaBD(log);
+		this.fatturaBD = new FatturaPassivaBD(log);
 		this.dipartimentoBD = new DipartimentoBD(log);
 		this.enteBD = new EnteBD(log);
 	}

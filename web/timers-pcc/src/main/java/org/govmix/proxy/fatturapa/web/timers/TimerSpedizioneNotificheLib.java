@@ -34,7 +34,7 @@ import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.PccNotifica;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.SpedizioneNotificheBD;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.sonde.Sonda;
@@ -125,7 +125,7 @@ public class TimerSpedizioneNotificheLib extends AbstractTimerLib {
 			connection = DAOFactory.getInstance().getConnection();
 
 			SpedizioneNotificheBD notBd = new SpedizioneNotificheBD(log, connection, false);
-			FatturaElettronicaBD fatturaElettronicaBd = new FatturaElettronicaBD(log, connection, false);
+			FatturaPassivaBD fatturaElettronicaBd = new FatturaPassivaBD(log, connection, false);
 
 			this.log.info("Cerco notifiche da consegnare");
 			Date date = new Date();

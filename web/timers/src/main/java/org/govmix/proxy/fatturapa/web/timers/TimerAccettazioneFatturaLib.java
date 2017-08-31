@@ -32,7 +32,7 @@ import org.govmix.proxy.fatturapa.notificaesitocommittente.NotificaEC;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdUtente;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.UtenteBD;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.business.InvioNotificaEsitoCommittente;
@@ -66,7 +66,7 @@ public class TimerAccettazioneFatturaLib extends AbstractTimerLib {
 		try {
 			connection = DAOFactory.getInstance().getConnection();
 			
-			FatturaElettronicaBD fatturaElettronicaBD = new FatturaElettronicaBD(log, connection, false);
+			FatturaPassivaBD fatturaElettronicaBD = new FatturaPassivaBD(log, connection, false);
 			UtenteBD utenteBD = new UtenteBD(log, connection, false);
 			InvioNotificaEsitoCommittente invio = new InvioNotificaEsitoCommittente(this.log);
 			

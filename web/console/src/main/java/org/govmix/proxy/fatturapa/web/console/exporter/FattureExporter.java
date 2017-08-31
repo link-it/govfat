@@ -38,9 +38,10 @@ import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
-import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.orm.PccTraccia;
-import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaServiceSearch;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FilterSortWrapper;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter.FORMAT;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AllegatoSingleFileExporter;
@@ -57,7 +58,6 @@ import org.govmix.proxy.fatturapa.web.console.search.FatturaElettronicaSearchFor
 import org.govmix.proxy.fatturapa.web.console.service.FatturaElettronicaService;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.expression.IExpression;
-import org.openspcoop2.generic_project.expression.IPaginatedExpression;
 import org.openspcoop2.generic_project.expression.SortOrder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -152,8 +152,7 @@ public class FattureExporter  extends HttpServlet{
 						response.addHeader("Cache-Control", "private");
 						response.setStatus(200);
 
-						IFatturaElettronicaServiceSearch fatturaSearchDAO = sfe.getFatturaSearchDAO();
-						//						response.setBufferSize(1024);
+						FatturaElettronicaBD fatturaSearchDAO = sfe.getFatturaBD();
 						if(isAll){
 							try{
 								ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(this.getServletContext());
@@ -170,7 +169,7 @@ public class FattureExporter  extends HttpServlet{
 							}
 						}
 
-						boolean autorizzato = sfe.checkautorizzazioneExport(username, ids, isAll, expressionFromSearch);
+						boolean autorizzato = sfe.checkautorizzazioneExport(username, ids, isAll);
 
 						// utente non autorizzato ad accerdere alla risorsa
 						if(!autorizzato){
@@ -368,31 +367,36 @@ public class FattureExporter  extends HttpServlet{
 		}
 	}
 
-	private List<IdFattura> getLstIdFattura(IFatturaElettronicaServiceSearch fatturaSearchDAO, IExpression expressionFromSearch) throws Exception {
-		IPaginatedExpression pagExpr = null;
+	private List<IdFattura> getLstIdFattura(FatturaElettronicaBD fatturaBD, IExpression expressionFromSearch) throws Exception {
 
+		FatturaFilter filter = null;
 		int start = 0;
 		int limit = 1000;
 		if(expressionFromSearch != null){
-			pagExpr = fatturaSearchDAO.toPaginatedExpression(expressionFromSearch);
-			pagExpr.sortOrder(SortOrder.DESC);
-			pagExpr.addOrder(FatturaElettronica.model().DATA_RICEZIONE);
-		}
-		else 
-			pagExpr = fatturaSearchDAO.newPaginatedExpression();
+			filter = fatturaBD.newFilter(expressionFromSearch);
+			List<FilterSortWrapper> filterSortList = new ArrayList<FilterSortWrapper>();
+			FilterSortWrapper wrap = new FilterSortWrapper();
+			wrap.setField(FatturaElettronica.model().DATA_RICEZIONE);
+			wrap.setSortOrder(SortOrder.DESC);
+			filterSortList.add(wrap);
+			filter.setFilterSortList(filterSortList);
+		} else {
+			filter = fatturaBD.newFilter();
+		} 
 
-		pagExpr.offset(start);
-		pagExpr.limit(limit);
-		List<IdFattura> listFattura = fatturaSearchDAO.findAllIds(pagExpr);
+		filter.setOffset(start);
+		filter.setLimit(limit);
+		
+		List<IdFattura> listFattura = fatturaBD.findAllIds(filter);
 
 		int size = listFattura.size();
 		while(size>0){
 
 			start+=listFattura.size();
-			pagExpr.offset(start);
-			pagExpr.limit(limit);
+			filter.setOffset(start);
+			filter.setLimit(limit);
 
-			List<IdFattura> findAllIds = fatturaSearchDAO.findAllIds(pagExpr);
+			List<IdFattura> findAllIds = fatturaBD.findAllIds(filter);
 			listFattura.addAll(findAllIds);
 			size = findAllIds.size();
 		}

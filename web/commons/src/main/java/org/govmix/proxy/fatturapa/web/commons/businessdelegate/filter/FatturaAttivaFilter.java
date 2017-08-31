@@ -19,10 +19,6 @@ public class FatturaAttivaFilter extends AbstractFatturaFilter {
 			return expression;
 		} catch (NotImplementedException e) {
 			throw new ServiceException(e);
-//		} catch (ExpressionNotImplementedException e) {
-//			throw new ServiceException(e);
-//		} catch (ExpressionException e) {
-//			throw new ServiceException(e);
 		}
 	}
 

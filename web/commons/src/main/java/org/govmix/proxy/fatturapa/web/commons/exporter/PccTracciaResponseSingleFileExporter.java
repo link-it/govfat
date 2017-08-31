@@ -30,7 +30,6 @@ import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdTraccia;
 import org.govmix.proxy.fatturapa.orm.PccTraccia;
-import org.govmix.proxy.fatturapa.orm.dao.IDBFatturaElettronicaServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.IPccTracciaServiceSearch;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.exporter.exception.ExportException;
@@ -39,7 +38,6 @@ import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
-import org.openspcoop2.generic_project.expression.IExpression;
 
 public class PccTracciaResponseSingleFileExporter extends AbstractSingleFileXMLExporter<PccTraccia, IdTraccia> {
 
@@ -89,20 +87,15 @@ public class PccTracciaResponseSingleFileExporter extends AbstractSingleFileXMLE
 	}
 
 	@Override
-	protected List<IdFattura> findIdFattura(String[] ids, boolean isAll,
-			IExpression fattExpr) throws ServiceException, NotFoundException {
+	protected List<IdFattura> findIdFattura(String[] ids, boolean isAll) throws ServiceException, NotFoundException {
 		try {
 			List<IdFattura> idFatturaRichiesti = new ArrayList<IdFattura>();
 			PccTraccia traccia =  this.convertToObject(ids[0]);
 			
-			IdFattura id = this.getFatturaSearchDAO().convertToId(((IDBFatturaElettronicaServiceSearch)this.getFatturaSearchDAO()).get(traccia.getIdFattura()));
+			IdFattura id = this.getFatturaBD().convertToId(this.getFatturaBD().getById(traccia.getIdFattura()));
 			idFatturaRichiesti.add(id);
 			return idFatturaRichiesti;
 		} catch (NumberFormatException e) {
-			throw new ServiceException(e);
-		} catch (MultipleResultException e) {
-			throw new ServiceException(e);
-		} catch (NotImplementedException e) {
 			throw new ServiceException(e);
 		} catch (ExportException e) {
 			throw new ServiceException(e);

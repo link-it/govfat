@@ -37,14 +37,11 @@ import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCFatturaElettronicaServiceSearch;
 import org.govmix.proxy.fatturapa.web.commons.exporter.exception.ExportException;
 import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
-import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
-import org.openspcoop2.generic_project.expression.IExpression;
 
 public class FatturaSingleFileExporter extends AbstractSingleFileXMLExporter<FatturaElettronica, IdFattura> {
 
@@ -83,14 +80,10 @@ public class FatturaSingleFileExporter extends AbstractSingleFileXMLExporter<Fat
 	@Override
 	public FatturaElettronica convertToObject(IdFattura id) throws ExportException {
 		try {
-			return this.getFatturaSearchDAO().get(id);
+			return this.getFatturaBD().get(id);
 		} catch(NotFoundException e) {
 			throw new ExportException(e);
 		} catch (ServiceException e) {
-			throw new ExportException(e);
-		} catch (MultipleResultException e) {
-			throw new ExportException(e);
-		} catch (NotImplementedException e) {
 			throw new ExportException(e);
 		}
 	}
@@ -124,7 +117,7 @@ public class FatturaSingleFileExporter extends AbstractSingleFileXMLExporter<Fat
 
 			
 			String allegatiDir = fatturaDir +   "allegati"+ File.separatorChar;
-			IdFattura idFattura = this.getFatturaSearchDAO().convertToId(object);
+			IdFattura idFattura = this.getFatturaBD().convertToId(object);
 			List<AllegatoFattura> lstAllegati = this.allegatoSFE.getAllegatiPerFattura(idFattura);
 
 			if(lstAllegati != null && !lstAllegati.isEmpty())
@@ -176,20 +169,16 @@ public class FatturaSingleFileExporter extends AbstractSingleFileXMLExporter<Fat
 	}
 
 	@Override
-	protected List<IdFattura> findIdFattura(String[] ids, boolean isAll, IExpression fattExpr) throws ServiceException, NotFoundException {
+	protected List<IdFattura> findIdFattura(String[] ids, boolean isAll) throws ServiceException, NotFoundException {
 		try {
 			List<IdFattura> idFatturaRichiesti = new ArrayList<IdFattura>();
 			for (String idFattura : ids) {
-				FatturaElettronica fattura = ((JDBCFatturaElettronicaServiceSearch)this.getFatturaSearchDAO()).get(Long.parseLong(idFattura));
-				IdFattura idFattura2 = this.getFatturaSearchDAO().convertToId(fattura);
+				FatturaElettronica fattura = this.getFatturaBD().getById(Long.parseLong(idFattura));
+				IdFattura idFattura2 = this.getFatturaBD().convertToId(fattura);
 				idFatturaRichiesti.add(idFattura2);
 			}
 			return idFatturaRichiesti;
 		} catch (NumberFormatException e) {
-			throw new ServiceException(e);
-		} catch (MultipleResultException e) {
-			throw new ServiceException(e);
-		} catch (NotImplementedException e) {
 			throw new ServiceException(e);
 		}
 	}
@@ -243,14 +232,10 @@ public class FatturaSingleFileExporter extends AbstractSingleFileXMLExporter<Fat
 	@Override
 	public FatturaElettronica convertToObject(String id) throws ExportException {
 		try {
-			return ((JDBCFatturaElettronicaServiceSearch)this.getFatturaSearchDAO()).get(Long.parseLong(id));
-		} catch(NotFoundException e) {
+			return this.getFatturaBD().getById(Long.parseLong(id));
+		} catch (NotFoundException e) {
 			throw new ExportException(e);
 		} catch (ServiceException e) {
-			throw new ExportException(e);
-		} catch (MultipleResultException e) {
-			throw new ExportException(e);
-		} catch (NotImplementedException e) {
 			throw new ExportException(e);
 		}
 	}

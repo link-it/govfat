@@ -20,14 +20,6 @@
  */
 package org.govmix.proxy.pcc.wsclient;
 
-import it.tesoro.fatture.EsitoOkKoTipo;
-import it.tesoro.fatture.FattureWS_Service;
-import it.tesoro.fatture.OperazioneTipo;
-import it.tesoro.fatture.QueryPagamentoIvaRichiestaTipo;
-import it.tesoro.fatture.StrutturaDatiOperazioneTipo;
-import it.tesoro.fatture.TestataAsyncTipo;
-import it.tesoro.fatture.TipoOperazioneTipo;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -73,7 +65,7 @@ import org.govmix.proxy.fatturapa.orm.PccTracciaTrasmissioneEsito;
 import org.govmix.proxy.fatturapa.orm.constants.NomePccOperazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.OperazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoType;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.utils.TransformUtils;
 import org.govmix.proxy.pcc.fatture.authorization.AuthorizationBeanFactory;
 import org.govmix.proxy.pcc.fatture.authorization.AuthorizationBeanRequest;
@@ -88,13 +80,21 @@ import org.govmix.proxy.pcc.fatture.tracciamento.TracciamentoUtils;
 import org.govmix.proxy.pcc.fatture.utils.PccProperties;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 
+import it.tesoro.fatture.EsitoOkKoTipo;
+import it.tesoro.fatture.FattureWS_Service;
+import it.tesoro.fatture.OperazioneTipo;
+import it.tesoro.fatture.QueryPagamentoIvaRichiestaTipo;
+import it.tesoro.fatture.StrutturaDatiOperazioneTipo;
+import it.tesoro.fatture.TestataAsyncTipo;
+import it.tesoro.fatture.TipoOperazioneTipo;
+
 public class PccWsClient {
 
 	private FattureWS_Service fattureService;
 	private Logger log;
 	private TracciamentoUtils tracciamentoUtils;
 	private TracciamentoOperazioneContabileUtils tracciamentoOperazioneContabileUtils;
-	private FatturaElettronicaBD fatturaBD;
+	private FatturaPassivaBD fatturaBD;
 
 	private JAXBSerializer jaxbSerializer;
 
@@ -110,7 +110,7 @@ public class PccWsClient {
 		this.log.info("Inizializzazione FattureWS_Service completata");
 		this.tracciamentoUtils = new TracciamentoUtils(this.log);
 		this.tracciamentoOperazioneContabileUtils = new TracciamentoOperazioneContabileUtils(this.log);
-		this.fatturaBD = new FatturaElettronicaBD(log);
+		this.fatturaBD = new FatturaPassivaBD(log);
 
 		this.jaxbSerializer = new JAXBSerializer();
 		this.log.info("Inizializzazione Client WSPCC completata");

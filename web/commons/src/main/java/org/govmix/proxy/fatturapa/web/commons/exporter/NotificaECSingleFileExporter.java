@@ -43,7 +43,6 @@ import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
-import org.openspcoop2.generic_project.expression.IExpression;
 import org.openspcoop2.generic_project.expression.IPaginatedExpression;
 import org.openspcoop2.generic_project.expression.SortOrder;
 
@@ -136,8 +135,7 @@ public class NotificaECSingleFileExporter extends AbstractSingleFileXMLExporter<
 	}
 	
 	@Override
-	protected List<IdFattura> findIdFattura(String[] ids, boolean isAll,
-			IExpression fattExpr) throws ServiceException, NotFoundException {
+	protected List<IdFattura> findIdFattura(String[] ids, boolean isAll) throws ServiceException, NotFoundException {
 		try {
 			List<IdFattura> idFatturaRichiesti = new ArrayList<IdFattura>();
 			NotificaEsitoCommittente notifica = ((JDBCNotificaEsitoCommittenteServiceSearch)this.notificaECSearchDAO).get(Long.parseLong(ids[0]));

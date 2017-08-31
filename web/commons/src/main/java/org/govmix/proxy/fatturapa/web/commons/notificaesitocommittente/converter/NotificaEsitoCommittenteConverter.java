@@ -32,7 +32,7 @@ import org.govmix.proxy.fatturapa.orm.IdUtente;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoCommittenteType;
 import org.govmix.proxy.fatturapa.notificaesitocommittente.NotificaEC;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 
 public class NotificaEsitoCommittenteConverter {
 
@@ -50,7 +50,7 @@ public class NotificaEsitoCommittenteConverter {
 	private NotificaEC esito;
 	private IdUtente idUtente;
 	private boolean modalitaBatch;
-	private FatturaElettronicaBD fatturaElettronicaBD;
+	private FatturaPassivaBD fatturaElettronicaBD;
 	
 	public NotificaEsitoCommittenteConverter(InputStream is, IdUtente idUtente) throws Exception {
 		this((NotificaEC) unmarshaller.unmarshal(is), idUtente);
@@ -64,7 +64,7 @@ public class NotificaEsitoCommittenteConverter {
 		this.esito =  esito;
 		this.idUtente = idUtente;
 		this.modalitaBatch = modalitaBatch;
-		this.fatturaElettronicaBD = new FatturaElettronicaBD();
+		this.fatturaElettronicaBD = new FatturaPassivaBD();
 		
 	}
 	

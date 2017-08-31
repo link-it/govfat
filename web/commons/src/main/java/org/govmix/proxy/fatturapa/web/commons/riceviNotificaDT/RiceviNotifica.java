@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.NotificaDecorrenzaTerminiBD;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.notificadecorrenzatermini.NotificaDecorrenzaTerminiConverter;
@@ -52,7 +52,7 @@ public class RiceviNotifica {
 			connection = DAOFactory.getInstance().getConnection();
 			connection.setAutoCommit(false);
 
-			FatturaElettronicaBD fatturaElettronicaBD = new FatturaElettronicaBD(log, connection, false);
+			FatturaPassivaBD fatturaElettronicaBD = new FatturaPassivaBD(log, connection, false);
 
 			List<IdFattura> lstIdFattura = new ArrayList<IdFattura>();
 	

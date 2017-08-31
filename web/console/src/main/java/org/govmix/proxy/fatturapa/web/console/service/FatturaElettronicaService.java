@@ -35,6 +35,7 @@ import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCFatturaElettronicaServiceSearch;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.PccOperazioneContabileBD;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
@@ -298,6 +299,11 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 	@Override
 	public void store(FatturaElettronicaBean arg0) throws ServiceException {
 
+	}
+
+	public IExpression getExpressionFromSearch(FatturaElettronicaBD fatturaBD, FatturaElettronicaSearchForm search) throws Exception{
+		//TODO implement
+		return fatturaBD.newFilter().toExpression();
 	}
 
 	public IExpression getExpressionFromSearch(IFatturaElettronicaServiceSearch fatturaSearchDao, FatturaElettronicaSearchForm search) throws Exception{

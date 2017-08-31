@@ -30,7 +30,6 @@ import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.dao.INotificaDecorrenzaTerminiServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCFatturaElettronicaServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCNotificaDecorrenzaTerminiServiceSearch;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.exporter.exception.ExportException;
@@ -41,7 +40,6 @@ import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
-import org.openspcoop2.generic_project.expression.IExpression;
 import org.openspcoop2.generic_project.expression.IPaginatedExpression;
 import org.openspcoop2.generic_project.expression.SortOrder;
 
@@ -70,16 +68,16 @@ public class NotificaDTSingleFileExporter extends AbstractSingleFileXMLExporter<
 	@Override
 	public NotificaDecorrenzaTermini convertToObject(Long id) throws ExportException {
 		try {
-			FatturaElettronica fattura = ((JDBCFatturaElettronicaServiceSearch) this.getFatturaSearchDAO()).get(id);
+			FatturaElettronica fattura = this.getFatturaBD().getById(id);
 
 			return this.notificaDTSearchDAO.get(fattura.getIdDecorrenzaTermini());
 		} catch (ServiceException e) {
 			throw new ExportException(e);
-		} catch (NotFoundException e) {
-			throw new ExportException(e);
 		} catch (MultipleResultException e) {
 			throw new ExportException(e);
 		} catch (NotImplementedException e) {
+			throw new ExportException(e);
+		} catch (NotFoundException e) {
 			throw new ExportException(e);
 		}
 	}
@@ -121,10 +119,10 @@ public class NotificaDTSingleFileExporter extends AbstractSingleFileXMLExporter<
 	
 
 	@Override
-	protected List<IdFattura> findIdFattura(String[] ids, boolean isAll, IExpression fattExpr) throws ServiceException, NotFoundException {
+	protected List<IdFattura> findIdFattura(String[] ids, boolean isAll) throws ServiceException, NotFoundException {
 		try {
 			NotificaDecorrenzaTermini decorrenza = ((JDBCNotificaDecorrenzaTerminiServiceSearch)this.notificaDTSearchDAO).get(Long.parseLong(ids[0]));
-			return this.fatturaBD.findAllIdFatturaByIdentificativoSdi(decorrenza.getIdentificativoSdi());
+			return this.getFatturaBD().findAllIdFatturaByIdentificativoSdi(decorrenza.getIdentificativoSdi());
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}

@@ -23,6 +23,7 @@ package org.govmix.proxy.fatturapa.web.commons.recuperaFatture;
 import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -39,12 +40,14 @@ import org.govmix.proxy.fatturapa.recuperofatture.Fattura;
 import org.govmix.proxy.fatturapa.recuperofatture.ListaFattureNonConsegnateResponse;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.DipartimentoBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.UtenteBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaPassivaFilter;
 import org.govmix.proxy.fatturapa.web.commons.exporter.FatturaSingleFileExporter;
 
 public class RecuperaFatture {
 
-	private FatturaElettronicaBD fatturaElettronicaBD;
+	private FatturaPassivaBD fatturaPassivaBD;
 	private DipartimentoBD dipartimentoBD;
 	private UtenteBD utenteBD;
 	private FatturaSingleFileExporter sfe;
@@ -65,7 +68,7 @@ public class RecuperaFatture {
 	}
 	
 	public RecuperaFatture(Logger log) throws Exception {
-		this.fatturaElettronicaBD = new FatturaElettronicaBD(log);
+		this.fatturaPassivaBD = new FatturaPassivaBD(log);
 		this.dipartimentoBD = new DipartimentoBD(log);
 		this.utenteBD = new UtenteBD(log);
 		
@@ -75,8 +78,15 @@ public class RecuperaFatture {
 	
 	public String cercaFattureNonConsegnate(IdUtente idUtente, Integer limit) throws Exception {
 		Utente utente = this.utenteBD.findByUsername(idUtente.getUsername());
-		List<FatturaElettronica> lst = this.fatturaElettronicaBD.
-				getIdFattureNonConsegnate(utente, limit);
+		
+		FatturaPassivaFilter filter = this.fatturaPassivaBD.newFilter();
+		filter.setUtente(utente);
+		filter.setModalitaPush(false);
+		filter.setOffset(0);
+		filter.setLimit(limit);
+		filter.setDataRicezioneMin(new Date());
+
+		List<FatturaElettronica> lst = this.fatturaPassivaBD.findAll(filter);
 		
 		ListaFattureNonConsegnateResponse response = new ListaFattureNonConsegnateResponse();
 		
@@ -109,11 +119,11 @@ public class RecuperaFatture {
 			this.checkFattura(idUtente, idFattura);
 			
 			//aggiorno lo stato della consegna
-			this.fatturaElettronicaBD.updateStatoConsegna(idFattura, StatoConsegnaType.CONSEGNATA, null);
+			this.fatturaPassivaBD.updateStatoConsegna(idFattura, StatoConsegnaType.CONSEGNATA, null);
 			
 			
 			os = new ByteArrayOutputStream();
-			FatturaElettronica fattura = this.fatturaElettronicaBD.get(idFattura); 
+			FatturaElettronica fattura = this.fatturaPassivaBD.get(idFattura); 
 			sfe.exportAsZip(Arrays.asList(fattura), os);
 			return os.toByteArray();
 		} finally {
@@ -129,7 +139,7 @@ public class RecuperaFatture {
 
 	private void checkFattura(IdUtente idUtente, IdFattura idFattura) throws Exception {
 
-		FatturaElettronica fattura = fatturaElettronicaBD.get(idFattura);
+		FatturaElettronica fattura = fatturaPassivaBD.get(idFattura);
 
 		//check fattura consegnata
 		//NOTA: 8-04-2015: Vincolo rilassato
