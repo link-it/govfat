@@ -14,6 +14,7 @@ import org.openspcoop2.generic_project.exception.ExpressionNotImplementedExcepti
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
+import org.openspcoop2.generic_project.expression.LikeMode;
 
 public abstract class AbstractFatturaFilter extends AbstractFilter {
 
@@ -41,6 +42,7 @@ public abstract class AbstractFatturaFilter extends AbstractFilter {
 	private String codiceDestinatario;
 
 	private String numero;
+	private String numeroLike;
 	
 	private List<String> cpDenominazioneList;
 	private String cpCodiceFiscale;
@@ -97,6 +99,10 @@ public abstract class AbstractFatturaFilter extends AbstractFilter {
 				expression.equals(FatturaElettronica.model().NUMERO, this.numero);
 			}
 			
+			if(this.numeroLike != null) {
+				expression.ilike(FatturaElettronica.model().NUMERO, this.numeroLike, LikeMode.ANYWHERE);
+			}
+			
 			if(this.tipoDocumento != null) {
 				expression.equals(FatturaElettronica.model().TIPO_DOCUMENTO, this.tipoDocumento);
 			}
@@ -107,17 +113,13 @@ public abstract class AbstractFatturaFilter extends AbstractFilter {
 			
 			if(this.cpDenominazioneList != null) {
 				if(cpDenominazioneList.size() == 1) {
-					expression.ilike(FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE, this.cpDenominazioneList.get(0));
+					expression.ilike(FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE, this.cpDenominazioneList.get(0), LikeMode.ANYWHERE);
 				} else {
-					try{
-						IExpression newExpression = this.newExpression();
-						for(String cpDenom: cpDenominazioneList) {
-							newExpression.or().ilike(FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE, cpDenom);
-						}
-						expression.and(newExpression);
-					} catch(NotImplementedException e) {
-						throw new ServiceException(e);
+					IExpression newExpression = this.newExpression();
+					for(String cpDenom: cpDenominazioneList) {
+						newExpression.or().ilike(FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE, cpDenom, LikeMode.ANYWHERE);
 					}
+					expression.and(newExpression);
 				}
 					
 			}
@@ -149,6 +151,8 @@ public abstract class AbstractFatturaFilter extends AbstractFilter {
 			}
 			return expression;
 		} catch (ExpressionNotImplementedException e) {
+			throw new ServiceException(e);
+		} catch(NotImplementedException e) {
 			throw new ServiceException(e);
 		} catch (ExpressionException e) {
 			throw new ServiceException(e);
@@ -275,6 +279,22 @@ public abstract class AbstractFatturaFilter extends AbstractFilter {
 
 	public void setProtocollo(String protocollo) {
 		this.protocollo = protocollo;
+	}
+
+	public Date getDataRicezioneMax() {
+		return dataRicezioneMax;
+	}
+
+	public void setDataRicezioneMax(Date dataRicezioneMax) {
+		this.dataRicezioneMax = dataRicezioneMax;
+	}
+
+	public String getNumeroLike() {
+		return numeroLike;
+	}
+
+	public void setNumeroLike(String numeroLike) {
+		this.numeroLike = numeroLike;
 	}
 
 }

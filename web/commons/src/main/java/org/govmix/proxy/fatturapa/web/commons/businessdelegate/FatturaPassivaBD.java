@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
@@ -41,6 +42,7 @@ import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.FatturaElettronicaField
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaPassivaFilter;
 import org.govmix.proxy.pcc.fatture.tracciamento.OperazioneNonPermessaException;
 import org.openspcoop2.generic_project.beans.CustomField;
+import org.openspcoop2.generic_project.beans.IField;
 import org.openspcoop2.generic_project.beans.UpdateField;
 import org.openspcoop2.generic_project.exception.ExpressionException;
 import org.openspcoop2.generic_project.exception.ExpressionNotImplementedException;
@@ -89,12 +91,32 @@ public class FatturaPassivaBD extends BaseBD {
 		}
 	}
 
-	public long count(FatturaPassivaFilter filter)throws Exception {
-		return this.service.count(filter.toExpression()).longValue();
+	public long count(FatturaPassivaFilter filter)throws ServiceException {
+		try {
+			return this.service.count(filter.toExpression()).longValue();
+		} catch (NotImplementedException e) {
+			throw new ServiceException(e);
+		}
 	}
-	public List<FatturaElettronica> findAll(FatturaPassivaFilter filter)throws Exception {
-		return this.service.findAll(filter.toPaginatedExpression());
+
+	public List<Map<String,Object>> select(FatturaPassivaFilter filter, IField... fields) throws ServiceException {
+		try {
+			return this.service.select(filter.toPaginatedExpression(), fields);
+		} catch (NotFoundException e) {
+			return null;
+		} catch (NotImplementedException e) {
+			throw new ServiceException(e);
+		}
 	}
+
+	public List<FatturaElettronica> findAll(FatturaPassivaFilter filter)throws ServiceException {
+		try {
+			return this.service.findAll(filter.toPaginatedExpression());
+		} catch (NotImplementedException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
 	public FatturaPassivaFilter newFilter() {
 		return new FatturaPassivaFilter(this.service);
 	}
@@ -112,9 +134,6 @@ public class FatturaPassivaBD extends BaseBD {
 
 			return this.findAll(filter).get(0);
 		} catch (ServiceException e) {
-			this.log.error("Errore durante la get: " + e.getMessage(), e);
-			throw new Exception(e);
-		} catch (NotImplementedException e) {
 			this.log.error("Errore durante la get: " + e.getMessage(), e);
 			throw new Exception(e);
 		}
@@ -148,9 +167,6 @@ public class FatturaPassivaBD extends BaseBD {
 			return this.findAll(filter).get(0);
 			
 		} catch (ServiceException e) {
-			this.log.error("Errore durante la get: " + e.getMessage(), e);
-			throw new Exception(e);
-		} catch (NotImplementedException e) {
 			this.log.error("Errore durante la get: " + e.getMessage(), e);
 			throw new Exception(e);
 		}
@@ -242,9 +258,6 @@ public class FatturaPassivaBD extends BaseBD {
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la get: " + e.getMessage(), e);
 			throw new Exception(e);
-		} catch (NotImplementedException e) {
-			this.log.error("Errore durante la get: " + e.getMessage(), e);
-			throw new Exception(e);
 		}
 	}
 
@@ -259,9 +272,6 @@ public class FatturaPassivaBD extends BaseBD {
 			filter.setPosizione(id.getPosizione());
 			return this.count(filter) > 0;
 		} catch (ServiceException e) {
-			this.log.error("Errore durante la exists: " + e.getMessage(), e);
-			throw new Exception(e);
-		} catch (NotImplementedException e) {
 			this.log.error("Errore durante la exists: " + e.getMessage(), e);
 			throw new Exception(e);
 		}
@@ -368,9 +378,6 @@ public class FatturaPassivaBD extends BaseBD {
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la getFattureDaSpedireContestuale: " + e.getMessage(), e);
 			throw new Exception(e);
-		} catch (NotImplementedException e) {
-			this.log.error("Errore durante la getFattureDaSpedireContestuale: " + e.getMessage(), e);
-			throw new Exception(e);
 		}
 	}
 
@@ -379,9 +386,6 @@ public class FatturaPassivaBD extends BaseBD {
 			FatturaPassivaFilter filter = getFattureDaSpedireFilter(date, true);
 			return this.count(filter);
 		} catch (ServiceException e) {
-			this.log.error("Errore durante la countFattureDaSpedireContestuale: " + e.getMessage(), e);
-			throw new Exception(e);
-		} catch (NotImplementedException e) {
 			this.log.error("Errore durante la countFattureDaSpedireContestuale: " + e.getMessage(), e);
 			throw new Exception(e);
 		}
@@ -395,9 +399,6 @@ public class FatturaPassivaBD extends BaseBD {
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la getFattureDaSpedire: " + e.getMessage(), e);
 			throw new Exception(e);
-		} catch (NotImplementedException e) {
-			this.log.error("Errore durante la getFattureDaSpedire: " + e.getMessage(), e);
-			throw new Exception(e);
 		}
 	}
 
@@ -406,9 +407,6 @@ public class FatturaPassivaBD extends BaseBD {
 			FatturaPassivaFilter filter = getFattureDaSpedireFilter(date, false);
 			return this.count(filter);
 		} catch (ServiceException e) {
-			this.log.error("Errore durante la countFattureDaSpedire: " + e.getMessage(), e);
-			throw new Exception(e);
-		} catch (NotImplementedException e) {
 			this.log.error("Errore durante la countFattureDaSpedire: " + e.getMessage(), e);
 			throw new Exception(e);
 		}
@@ -435,9 +433,6 @@ public class FatturaPassivaBD extends BaseBD {
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la getFattureDaAccettare: " + e.getMessage(), e);
 			throw new Exception(e);
-		} catch (NotImplementedException e) {
-			this.log.error("Errore durante la getFattureDaAccettare: " + e.getMessage(), e);
-			throw new Exception(e);
 		}
 	}
 
@@ -446,9 +441,6 @@ public class FatturaPassivaBD extends BaseBD {
 			FatturaPassivaFilter filter = getFattureDaAccettareFilter(date);
 			return this.count(filter);
 		} catch (ServiceException e) {
-			this.log.error("Errore durante la countFattureDaAccettare: " + e.getMessage(), e);
-			throw new Exception(e);
-		} catch (NotImplementedException e) {
 			this.log.error("Errore durante la countFattureDaAccettare: " + e.getMessage(), e);
 			throw new Exception(e);
 		}
@@ -643,5 +635,94 @@ public class FatturaPassivaBD extends BaseBD {
 		}
 	}
 
+	public Long getIdEsitoScadenza(long idFattura) throws ServiceException, NotFoundException, MultipleResultException {
+		try {
+			String idEsito = "id_scadenza";
+			CustomField esitoField = new CustomField(idEsito, Long.class, idEsito, this.getRootTable(this.service));
+			FatturaPassivaFilter newFilter = newFilter();
+			newFilter.setId(idFattura);
+			
+			List<Map<String,Object>> select = this.select(newFilter, esitoField);
+
+			if(select.size() > 1) {
+				throw new MultipleResultException();
+			} else if(select.size() > 0) {
+				Object idEsitoObj = select.get(0).get(idEsito);
+				if(idEsitoObj instanceof Long)
+					return (Long) idEsitoObj;
+				else
+					return null;
+			} else {
+				throw new NotFoundException();
+			}
+
+		} catch (ExpressionException e) {
+			throw new ServiceException(e);
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public Long getIdEsitoContabilizzazione(long idFattura) throws ServiceException, NotFoundException, MultipleResultException {
+		try {
+			String idEsito = "id_contabilizzazione";
+			CustomField esitoField = new CustomField(idEsito, Long.class, idEsito, this.getRootTable(this.service));
+			FatturaPassivaFilter newFilter = newFilter();
+			newFilter.setId(idFattura);
+			
+			List<Map<String,Object>> select = this.select(newFilter, esitoField);
+
+			if(select.size() > 1) {
+				throw new MultipleResultException();
+			} else if(select.size() > 0) {
+				Object idEsitoObj = select.get(0).get(idEsito);
+				if(idEsitoObj instanceof Long)
+					return (Long) idEsitoObj;
+				else
+					return null;
+			} else {
+				throw new NotFoundException();
+			}
+
+		} catch (ExpressionException e) {
+			throw new ServiceException(e);
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	public List<String> getAutocompletamentoCedentePrestatoreDenominazione(String valore) throws ServiceException {
+		IField field = FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE;
+		FatturaPassivaFilter newFilter = newFilter();
+		newFilter.getCpDenominazioneList().add(valore);
+		
+		List<Map<String,Object>> select = this.select(newFilter, field);
+
+		List<String> cpValues = new ArrayList<String>();
+		if(select.size() > 0) {
+			for(Map<String, Object> record: select) {
+				cpValues.add((String)record.get(field));
+			}
+		}
+		
+		return cpValues;
+	}
+	
+	public List<String> getAutocompletamentoNumero(String valore) throws ServiceException {
+		IField field = FatturaElettronica.model().NUMERO;
+		FatturaPassivaFilter newFilter = newFilter();
+		newFilter.setNumeroLike(valore);
+		
+		List<Map<String,Object>> select = this.select(newFilter, field);
+
+		List<String> cpValues = new ArrayList<String>();
+		if(select.size() > 0) {
+			for(Map<String, Object> record: select) {
+				cpValues.add((String)record.get(field));
+			}
+		}
+		
+		return cpValues;
+	}
 
 }
