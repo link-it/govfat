@@ -635,7 +635,7 @@ public class FatturaPassivaBD extends BaseBD {
 		}
 	}
 
-	public Long getIdEsitoScadenza(long idFattura) throws ServiceException, NotFoundException, MultipleResultException {
+	public Long getIdEsitoScadenza(long idFattura) throws ServiceException, NotFoundException {
 		try {
 			String idEsito = "id_scadenza";
 			CustomField esitoField = new CustomField(idEsito, Long.class, idEsito, this.getRootTable(this.service));
@@ -655,15 +655,14 @@ public class FatturaPassivaBD extends BaseBD {
 			} else {
 				throw new NotFoundException();
 			}
-
-		} catch (ExpressionException e) {
+		} catch (MultipleResultException e) {
 			throw new ServiceException(e);
-		} catch (Exception e) {
+		} catch (ExpressionException e) {
 			throw new ServiceException(e);
 		}
 	}
 
-	public Long getIdEsitoContabilizzazione(long idFattura) throws ServiceException, NotFoundException, MultipleResultException {
+	public Long getIdEsitoContabilizzazione(long idFattura) throws ServiceException, NotFoundException {
 		try {
 			String idEsito = "id_contabilizzazione";
 			CustomField esitoField = new CustomField(idEsito, Long.class, idEsito, this.getRootTable(this.service));
@@ -684,19 +683,19 @@ public class FatturaPassivaBD extends BaseBD {
 				throw new NotFoundException();
 			}
 
+		} catch (MultipleResultException e) {
+			throw new ServiceException(e);
 		} catch (ExpressionException e) {
 			throw new ServiceException(e);
-		} catch (Exception e) {
-			throw new ServiceException(e);
+//		} catch (Exception e) {
+//			throw new ServiceException(e);
 		}
 	}
 	
-	public List<String> getAutocompletamentoCedentePrestatoreDenominazione(String valore) throws ServiceException {
+	public List<String> getAutocompletamentoCedentePrestatoreDenominazione(FatturaPassivaFilter filter) throws ServiceException {
 		IField field = FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE;
-		FatturaPassivaFilter newFilter = newFilter();
-		newFilter.getCpDenominazioneList().add(valore);
 		
-		List<Map<String,Object>> select = this.select(newFilter, field);
+		List<Map<String,Object>> select = this.select(filter, field);
 
 		List<String> cpValues = new ArrayList<String>();
 		if(select.size() > 0) {
@@ -708,12 +707,10 @@ public class FatturaPassivaBD extends BaseBD {
 		return cpValues;
 	}
 	
-	public List<String> getAutocompletamentoNumero(String valore) throws ServiceException {
+	public List<String> getAutocompletamentoNumero(FatturaPassivaFilter filter) throws ServiceException {
 		IField field = FatturaElettronica.model().NUMERO;
-		FatturaPassivaFilter newFilter = newFilter();
-		newFilter.setNumeroLike(valore);
 		
-		List<Map<String,Object>> select = this.select(newFilter, field);
+		List<Map<String,Object>> select = this.select(filter, field);
 
 		List<String> cpValues = new ArrayList<String>();
 		if(select.size() > 0) {

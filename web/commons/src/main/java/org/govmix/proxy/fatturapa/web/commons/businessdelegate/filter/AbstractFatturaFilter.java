@@ -258,6 +258,8 @@ public abstract class AbstractFatturaFilter extends AbstractFilter {
 	}
 
 	public List<String> getCpDenominazioneList() {
+		if(this.cpDenominazioneList == null) this.cpDenominazioneList = new ArrayList<String>();
+		
 		return cpDenominazioneList;
 	}
 

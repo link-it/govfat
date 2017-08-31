@@ -1,5 +1,6 @@
 package org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
@@ -96,6 +97,7 @@ public class FatturaPassivaFilter extends AbstractFatturaFilter {
 	}
 
 	public List<StatoConsegnaType> getStatiConsegna() {
+		if(this.statiConsegna == null) statiConsegna = new ArrayList<StatoConsegnaType>();
 		return statiConsegna;
 	}
 
