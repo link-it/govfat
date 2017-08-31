@@ -11,6 +11,7 @@ import org.openspcoop2.generic_project.beans.CustomField;
 import org.openspcoop2.generic_project.dao.IExpressionConstructor;
 import org.openspcoop2.generic_project.exception.ExpressionException;
 import org.openspcoop2.generic_project.exception.ExpressionNotImplementedException;
+import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
 
@@ -30,9 +31,25 @@ public abstract class AbstractFatturaFilter extends AbstractFilter {
 	private Boolean fatturazioneAttiva;
 	
 
-	/** Dati della fattura **/
+	/** Metadati della fattura **/
 	private Date dataRicezioneMin;
 	private Date dataRicezioneMax;
+	
+	private Date dataFatturaMin;
+	private Date dataFatturaMax;
+
+	private String codiceDestinatario;
+
+	private String numero;
+	
+	private List<String> cpDenominazioneList;
+	private String cpCodiceFiscale;
+	private String cpPaese;
+
+	private Double importo;
+	private String tipoDocumento;
+	
+	private String protocollo;
 	
 	public AbstractFatturaFilter(IExpressionConstructor expressionConstructor, Boolean fatturazioneAttiva) {
 		super(expressionConstructor);
@@ -66,6 +83,59 @@ public abstract class AbstractFatturaFilter extends AbstractFilter {
 			
 			if(this.dataRicezioneMax != null) {
 				expression.lessEquals(FatturaElettronica.model().DATA_RICEZIONE, this.dataRicezioneMax);
+			}
+			
+			if(this.dataFatturaMin != null) {
+				expression.greaterEquals(FatturaElettronica.model().DATA, this.dataFatturaMin);
+			}
+			
+			if(this.dataFatturaMax != null) {
+				expression.lessEquals(FatturaElettronica.model().DATA, this.dataFatturaMax);
+			}
+			
+			if(this.numero != null) {
+				expression.equals(FatturaElettronica.model().NUMERO, this.numero);
+			}
+			
+			if(this.tipoDocumento != null) {
+				expression.equals(FatturaElettronica.model().TIPO_DOCUMENTO, this.tipoDocumento);
+			}
+			
+			if(this.protocollo != null) {
+				expression.ilike(FatturaElettronica.model().PROTOCOLLO, this.protocollo);
+			}
+			
+			if(this.cpDenominazioneList != null) {
+				if(cpDenominazioneList.size() == 1) {
+					expression.ilike(FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE, this.cpDenominazioneList.get(0));
+				} else {
+					try{
+						IExpression newExpression = this.newExpression();
+						for(String cpDenom: cpDenominazioneList) {
+							newExpression.or().ilike(FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE, cpDenom);
+						}
+						expression.and(newExpression);
+					} catch(NotImplementedException e) {
+						throw new ServiceException(e);
+					}
+				}
+					
+			}
+			
+			if(this.cpCodiceFiscale != null) {
+				expression.equals(FatturaElettronica.model().CEDENTE_PRESTATORE_CODICE_FISCALE, this.cpCodiceFiscale);
+			}
+			
+			if(this.cpPaese != null) {
+				expression.equals(FatturaElettronica.model().CEDENTE_PRESTATORE_PAESE, this.cpPaese);
+			}
+			
+			if(this.codiceDestinatario != null) {
+				expression.equals(FatturaElettronica.model().CODICE_DESTINATARIO, this.codiceDestinatario);
+			}
+			
+			if(this.importo != null) {
+				expression.equals(FatturaElettronica.model().IMPORTO_TOTALE_DOCUMENTO, this.importo);
 			}
 			
 			if(this.utente != null) {
@@ -125,6 +195,86 @@ public abstract class AbstractFatturaFilter extends AbstractFilter {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getNumero() {
+		return numero;
+	}
+
+	public void setNumero(String numero) {
+		this.numero = numero;
+	}
+
+	public Date getDataFatturaMin() {
+		return dataFatturaMin;
+	}
+
+	public void setDataFatturaMin(Date dataFatturaMin) {
+		this.dataFatturaMin = dataFatturaMin;
+	}
+
+	public Date getDataFatturaMax() {
+		return dataFatturaMax;
+	}
+
+	public void setDataFatturaMax(Date dataFatturaMax) {
+		this.dataFatturaMax = dataFatturaMax;
+	}
+
+	public String getCpCodiceFiscale() {
+		return cpCodiceFiscale;
+	}
+
+	public void setCpCodiceFiscale(String cpCodiceFiscale) {
+		this.cpCodiceFiscale = cpCodiceFiscale;
+	}
+
+	public String getCpPaese() {
+		return cpPaese;
+	}
+
+	public void setCpPaese(String cpPaese) {
+		this.cpPaese = cpPaese;
+	}
+
+	public String getCodiceDestinatario() {
+		return codiceDestinatario;
+	}
+
+	public void setCodiceDestinatario(String codiceDestinatario) {
+		this.codiceDestinatario = codiceDestinatario;
+	}
+
+	public Double getImporto() {
+		return importo;
+	}
+
+	public void setImporto(Double importo) {
+		this.importo = importo;
+	}
+
+	public List<String> getCpDenominazioneList() {
+		return cpDenominazioneList;
+	}
+
+	public void setCpDenominazioneList(List<String> cpDenominazioneList) {
+		this.cpDenominazioneList = cpDenominazioneList;
+	}
+
+	public String getTipoDocumento() {
+		return tipoDocumento;
+	}
+
+	public void setTipoDocumento(String tipoDocumento) {
+		this.tipoDocumento = tipoDocumento;
+	}
+
+	public String getProtocollo() {
+		return protocollo;
+	}
+
+	public void setProtocollo(String protocollo) {
+		this.protocollo = protocollo;
 	}
 
 }

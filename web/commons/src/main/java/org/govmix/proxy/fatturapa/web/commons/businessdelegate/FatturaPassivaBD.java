@@ -37,7 +37,6 @@ import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.dao.IDBFatturaElettronicaServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaService;
-import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.FatturaElettronicaFieldConverter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaPassivaFilter;
 import org.govmix.proxy.pcc.fatture.tracciamento.OperazioneNonPermessaException;
@@ -49,23 +48,19 @@ import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
-import org.openspcoop2.generic_project.expression.IPaginatedExpression;
 
 public class FatturaPassivaBD extends BaseBD {
 
-	private IFatturaElettronicaServiceSearch serviceSearch;
 	private IFatturaElettronicaService service;
 
 	public FatturaPassivaBD(Logger log) throws Exception {
 		super(log);
 		this.service = this.serviceManager.getFatturaElettronicaService();
-		this.serviceSearch = this.serviceManager.getFatturaElettronicaServiceSearch();
 	}
 
 	public FatturaPassivaBD(Logger log, Connection connection, boolean autocommit) throws Exception {
 		super(log, connection, autocommit);
 		this.service = this.serviceManager.getFatturaElettronicaService();
-		this.serviceSearch = this.serviceManager.getFatturaElettronicaServiceSearch();
 	}
 
 	public FatturaPassivaBD() throws Exception {
@@ -95,13 +90,13 @@ public class FatturaPassivaBD extends BaseBD {
 	}
 
 	public long count(FatturaPassivaFilter filter)throws Exception {
-		return this.serviceSearch.count(filter.toExpression()).longValue();
+		return this.service.count(filter.toExpression()).longValue();
 	}
 	public List<FatturaElettronica> findAll(FatturaPassivaFilter filter)throws Exception {
-		return this.serviceSearch.findAll(filter.toPaginatedExpression());
+		return this.service.findAll(filter.toPaginatedExpression());
 	}
 	public FatturaPassivaFilter newFilter() {
-		return new FatturaPassivaFilter(this.serviceSearch);
+		return new FatturaPassivaFilter(this.service);
 	}
 	
 	public FatturaElettronica get(IdFattura id) throws Exception {
@@ -111,11 +106,11 @@ public class FatturaPassivaBD extends BaseBD {
 			filter.setIdentificativoSdi(id.getIdentificativoSdi());
 			filter.setPosizione(id.getPosizione());
 			
-			if(this.service.count(filter.toExpression()).longValue() == 0) {
+			if(this.count(filter) == 0) {
 				throw new NotFoundException("Fattura passiva ["+id.toJson()+"] non esistente nel sistema.");
 			}
 
-			return this.service.findAll(filter.toPaginatedExpression()).get(0);
+			return this.findAll(filter).get(0);
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la get: " + e.getMessage(), e);
 			throw new Exception(e);
@@ -142,18 +137,15 @@ public class FatturaPassivaBD extends BaseBD {
 	public FatturaElettronica findByIdSdiNumero(Integer identificativoSdi, String numero) throws Exception {
 		try {
 
-			IPaginatedExpression exp = this.service.newPaginatedExpression();
-			exp.equals(FatturaElettronica.model().IDENTIFICATIVO_SDI, identificativoSdi);
-			exp.equals(FatturaElettronica.model().NUMERO, numero);
+			FatturaPassivaFilter filter = this.newFilter();
+			filter.setIdentificativoSdi(identificativoSdi);
+			filter.setNumero(numero);
 			
-			List<FatturaElettronica> findAllIds = this.service.findAll(exp);
-			
-			if(findAllIds == null || findAllIds.isEmpty())
+			if(this.count(filter) == 0) {
 				throw new NotFoundException();
-			if(findAllIds.size() > 1)
-				throw new MultipleResultException();
-			
-			return findAllIds.get(0);
+			}
+
+			return this.findAll(filter).get(0);
 			
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la get: " + e.getMessage(), e);
@@ -208,36 +200,37 @@ public class FatturaPassivaBD extends BaseBD {
 			
 			String codNazione = null;
 			String idFiscale = null;
-			IPaginatedExpression exp = this.service.newPaginatedExpression();
-			
+
+			FatturaPassivaFilter filter = this.newFilter();
+
 			if(idFiscaleFornitore.length() > 2) {
 				codNazione = idFiscaleFornitore.substring(0, 2);
 				idFiscale = idFiscaleFornitore.substring(2);
-				exp.equals(FatturaElettronica.model().CEDENTE_PRESTATORE_PAESE, codNazione);
+				filter.setCpPaese(codNazione);
 			} else {
 				idFiscale = idFiscaleFornitore;
 			}
-			
-			exp.equals(FatturaElettronica.model().CEDENTE_PRESTATORE_CODICE_FISCALE, idFiscale);
-			exp.equals(FatturaElettronica.model().NUMERO, numero);
-			
-			Calendar cal = Calendar.getInstance();
-			cal.setTimeInMillis(date.getTime());
-			cal.set(Calendar.HOUR, 0);
-			cal.set(Calendar.MINUTE, 0);
-			cal.set(Calendar.SECOND, 0);
-			
-			Calendar cal2 = Calendar.getInstance();
-			cal2.setTimeInMillis(cal.getTimeInMillis());
-			cal2.add(Calendar.DATE, 1);
-			
-			exp.between(FatturaElettronica.model().DATA, date, cal2.getTime());
 
+			filter.setCpCodiceFiscale(idFiscale);
+			filter.setNumero(numero);
+			
+			Calendar dataMin = Calendar.getInstance();
+			dataMin.setTimeInMillis(date.getTime());
+			dataMin.set(Calendar.HOUR, 0);
+			dataMin.set(Calendar.MINUTE, 0);
+			dataMin.set(Calendar.SECOND, 0);
+			
+			Calendar dataMax = Calendar.getInstance();
+			dataMax.setTimeInMillis(dataMin.getTimeInMillis());
+			dataMax.add(Calendar.DATE, 1);
+			
+			filter.setDataFatturaMin(dataMin.getTime());
+			filter.setDataFatturaMax(dataMax.getTime());
 			
 			if(importo != null)
-				exp.equals(FatturaElettronica.model().IMPORTO_TOTALE_DOCUMENTO, importo);
+				filter.setImporto(importo);
 
-			List<FatturaElettronica> findAllIds = this.service.findAll(exp);
+			List<FatturaElettronica> findAllIds = this.findAll(filter);
 			
 			if(findAllIds == null || findAllIds.isEmpty())
 				throw new NotFoundException();
