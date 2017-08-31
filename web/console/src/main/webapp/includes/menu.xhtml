@@ -40,6 +40,7 @@
 					</rich:panelMenuGroup>
 					<rich:panelMenuGroup label="#{msg['menu.group.operazioni']}" expanded="true">
 						<rich:panelMenuItem id="menuLink1" label="#{msg['menu.group.operazioni.listaFatture']}" action="#{fatturaElettronicaMBean.menuAction}" />
+						<rich:panelMenuItem id="menuLink3" label="#{msg['menu.group.operazioni.listaFattureAttive']}" action="#{fatturaElettronicaAttivaMBean.menuAction}" />
 						<rich:panelMenuItem id="menuLink2" label="#{msg['menu.group.operazioni.listaOperazioni']}" action="#{operazioneMBean.menuAction}" rendered="#{loginBean.showMenuItemOperazioniPCC}" actionListener="#{operazioneSearchForm.initSearchListener}">
 						</rich:panelMenuItem>
 					</rich:panelMenuGroup>

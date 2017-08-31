@@ -65,6 +65,10 @@ public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IB
 	private Text stornoContabilizzazione = null;
 	private Text ricezioneFattura = null;
 	private Text rifiutoFattura = null;
+	
+	private Text fatturazioneAttiva = null;
+	private Text firmaAutomatica = null;
+	private Text codiceProcedimento = null;
 
 	// Gruppo Informazioni Dati Genareli
 	private OutputGroup fieldsDatiGenerali = null;
@@ -119,6 +123,10 @@ public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IB
 		this.stornoContabilizzazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("stornoContabilizzazione","dipartimento.pcc.stornoContabilizzazione");
 		this.ricezioneFattura = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("ricezioneFattura","dipartimento.pcc.ricezioneFattura");
 		this.rifiutoFattura = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("rifiutoFattura","dipartimento.pcc.rifiutoFattura");
+		
+		this.fatturazioneAttiva = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("fatturazioneAttiva","dipartimento.fatturazioneAttiva");
+		this.firmaAutomatica = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("firmaAutomatica","dipartimento.firmaAutomatica");
+		this.codiceProcedimento = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("codiceProcedimento","dipartimento.codiceProcedimento");
 
 		this.setField(this.codice);
 		this.setField(this.descrizione);
@@ -144,6 +152,10 @@ public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IB
 		this.setField(this.ricezioneFattura);
 		this.setField(this.rifiutoFattura);
 		
+		this.setField(this.fatturazioneAttiva);
+		this.setField(this.firmaAutomatica);
+		this.setField(this.codiceProcedimento);
+		
 		this.fieldsDatiGenerali = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
 		this.fieldsDatiGenerali.addField(this.codice);
 		this.fieldsDatiGenerali.addField(this.descrizione);
@@ -151,6 +163,10 @@ public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IB
 		this.fieldsDatiGenerali.addField(this.registro);
 		this.fieldsDatiGenerali.addField(this.notificaAutomatica);
 		this.fieldsDatiGenerali.addField(this.modalitaPush);
+		
+		this.fieldsDatiGenerali.addField(this.fatturazioneAttiva);
+		this.fieldsDatiGenerali.addField(this.firmaAutomatica);
+		this.fieldsDatiGenerali.addField(this.codiceProcedimento);
 		
 		this.fieldsDatiGenerali.setStyleClass("datiTrasmissioneTable"); 
 		this.fieldsDatiGenerali.setColumnClasses("labelAllineataDx,valueAllineataSx");
@@ -209,6 +225,9 @@ public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IB
 
 		this.indirizziNotifica.setValue(this.getDTO().getListaEmailNotifiche());
 		
+		this.fatturazioneAttiva.setValue(Utils.getBooleanAsLabel(true,"commons.label.si", "commons.label.no"));
+		this.firmaAutomatica.setValue(Utils.getBooleanAsLabel(true,"commons.label.si", "commons.label.no"));
+		this.codiceProcedimento.setValue("AZaz09");
 	}
 	
 	public void setProprietaPCC(List<PccOperazione> listaProprietaConsentiteAiDipartimenti, List<PccDipartimentoOperazione> listaProprietaAbilitate){
@@ -512,6 +531,30 @@ public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IB
 
 	public void setDownloadDocumento(Text downloadDocumento) {
 		this.downloadDocumento = downloadDocumento;
+	}
+
+	public Text getFatturazioneAttiva() {
+		return fatturazioneAttiva;
+	}
+
+	public void setFatturazioneAttiva(Text fatturazioneAttiva) {
+		this.fatturazioneAttiva = fatturazioneAttiva;
+	}
+
+	public Text getFirmaAutomatica() {
+		return firmaAutomatica;
+	}
+
+	public void setFirmaAutomatica(Text firmaAutomatica) {
+		this.firmaAutomatica = firmaAutomatica;
+	}
+
+	public Text getCodiceProcedimento() {
+		return codiceProcedimento;
+	}
+
+	public void setCodiceProcedimento(Text codiceProcedimento) {
+		this.codiceProcedimento = codiceProcedimento;
 	}
 
 }

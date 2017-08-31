@@ -74,6 +74,13 @@
 
 				</op2web:fieldset>
 				<rich:spacer height="10"/>
+				
+				<op2web:fieldset legend="#{msg['dipartimento.form.fatturazioneAttiva.label']}" collapsible="false" closed="false" rendered="#{true}">
+
+					<op2web:formFields nomiFields="#{'fatturazioneAttiva,firmaAutomatica,codiceProcedimento'}"/>
+
+				</op2web:fieldset>
+				<rich:spacer height="10"/>
 				<op2web:fieldset legend="#{msg['dipartimento.form.properties.label']}" collapsible="false" closed="false" rendered="#{dipartimentoMBean.form.showProperties}">
 					<c:forEach items="#{dipartimentoMBean.form.properties}" var="prop">
 						<!-- Proprieta i-esima -->
@@ -102,7 +109,7 @@
 
 					<!-- Dati Generali  -->
 					<op2web:fieldset legend="#{msg['dipartimento.label.generale']}" rendered="#{true}">
-						<op2web:outputGroup group="#{dipartimentoMBean.selectedElement.fieldsDatiGenerali}" nomiFields="#{'codice,descrizione,ente,registro,notificaAutomatica,modalitaPush'}"/>
+						<op2web:outputGroup group="#{dipartimentoMBean.selectedElement.fieldsDatiGenerali}" nomiFields="#{'codice,descrizione,ente,registro,notificaAutomatica,modalitaPush,fatturazioneAttiva,firmaAutomatica,codiceProcedimento'}"/>
 					</op2web:fieldset>
 
 					<op2web:fieldset legend="#{msg['dipartimento.label.properties']}" rendered="#{not empty dipartimentoMBean.selectedElement.fieldsProperties.fields}">

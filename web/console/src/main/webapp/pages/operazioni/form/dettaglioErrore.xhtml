@@ -52,6 +52,11 @@
 	<ui:define name="body">
 		<a4j:keepAlive beanName="fatturaElettronicaMBean" />
 		<a4j:keepAlive beanName="esitoMBean"  />
+		<script type="text/javascript">
+				 jQuery(document).ready(function() {
+					_force_get = true;
+				 });
+		</script>
 
 		<rich:panel id="panelContainer1" style="padding:0"
 			headerClass="outpanelHeader" styleClass="noborder">

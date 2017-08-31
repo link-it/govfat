@@ -27,6 +27,18 @@
 		</managed-property>
 	</managed-bean>
 	
+		<!-- FatturaelettronicaAttiva -->
+	<managed-bean>
+		<managed-bean-name>fatturaElettronicaAttivaDM</managed-bean-name>
+		<managed-bean-class>org.govmix.proxy.fatturapa.web.console.datamodel.FatturaElettronicaAttivaDM</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>dataProvider</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.iservice.IFatturaElettronicaAttivaService</property-class>
+			<value>#{fatturaElettronicaAttivaService}</value>
+		</managed-property>
+	</managed-bean>
+	
 			<!-- Scadenze -->
 	<managed-bean>
 		<managed-bean-name>scadenzaMBean</managed-bean-name>
@@ -532,6 +544,32 @@
 			<to-view-id>/pages/fattura/form/dettaglioFatturaPCC.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
+	
+		<!-- Navigazione dalla pagina listaFattureAttive -->
+	<navigation-rule>
+		<from-view-id>/pages/fattura/list/listaFattureAttive.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>dettaglioAttiva</from-outcome>
+			<to-view-id>/pages/fattura/form/dettaglioFatturaAttiva.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<!-- Navigazione dalla pagina dettaglioFattura -->
+	<navigation-rule>
+		<from-view-id>/pages/fattura/form/dettaglioFatturaAttiva.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>listaFattureAttive</from-outcome>
+			<to-view-id>/pages/fattura/list/listaFattureAttive.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>dettaglioOperazione</from-outcome>
+			<to-view-id>/pages/operazioni/form/dettaglioOperazioneCompatta.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>dettaglioErrore</from-outcome>
+			<to-view-id>/pages/operazioni/form/dettaglioErrore.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
 
 	<!-- Regole globali -->
 	<navigation-rule>
@@ -551,6 +589,10 @@
 		<navigation-case>
 			<from-outcome>listaFatture</from-outcome>
 			<to-view-id>/pages/fattura/list/listaFatture.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>listaFattureAttive</from-outcome>
+			<to-view-id>/pages/fattura/list/listaFattureAttive.xhtml</to-view-id>
 		</navigation-case>
 		<navigation-case>
 			<from-outcome>listaOperazioni</from-outcome>

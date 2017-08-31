@@ -32,30 +32,21 @@ import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
-import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
-import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCFatturaElettronicaServiceSearch;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.PccOperazioneContabileBD;
-import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaPassivaFilter;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FilterSortWrapper;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.bean.FatturaElettronicaBean;
 import org.govmix.proxy.fatturapa.web.console.iservice.IFatturaElettronicaService;
 import org.govmix.proxy.fatturapa.web.console.search.FatturaElettronicaSearchForm;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
-import org.openspcoop2.generic_project.beans.CustomField;
 import org.openspcoop2.generic_project.beans.IModel;
-import org.openspcoop2.generic_project.beans.NonNegativeNumber;
 import org.openspcoop2.generic_project.dao.IDBServiceUtilities;
 import org.openspcoop2.generic_project.dao.IExpressionConstructor;
 import org.openspcoop2.generic_project.exception.ExpressionException;
-import org.openspcoop2.generic_project.exception.ExpressionNotImplementedException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
-import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
-import org.openspcoop2.generic_project.expression.IExpression;
-import org.openspcoop2.generic_project.expression.IPaginatedExpression;
-import org.openspcoop2.generic_project.expression.LikeMode;
 import org.openspcoop2.generic_project.expression.SortOrder;
 import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
@@ -73,16 +64,15 @@ import org.openspcoop2.generic_project.web.service.BaseService;
  */
 public class FatturaElettronicaService extends BaseService<FatturaElettronicaSearchForm> implements IFatturaElettronicaService {
 
-	private IFatturaElettronicaServiceSearch fatturaSearchDao = null;
-
 	private static Logger log = LoggerManager.getDaoLogger();
 
 	private PccOperazioneContabileBD operazioneContabileBD = null;
+	private FatturaPassivaBD fatturaPassivaBD= null;
 
 	public FatturaElettronicaService(){
 		try{
-			this.fatturaSearchDao = DAOFactory.getInstance().getServiceManager().getFatturaElettronicaServiceSearch();
 			this.operazioneContabileBD = new PccOperazioneContabileBD(FatturaElettronicaService.log);
+			this.fatturaPassivaBD = new FatturaPassivaBD(log);
 		}catch(Exception e){
 			FatturaElettronicaService.log.error("Si e' verificato un errore durante l'inizializzazione del service:" + e.getMessage(), e);
 		}
@@ -96,50 +86,18 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 
 
 		try {
+			
+			FatturaPassivaFilter filter = this.fatturaPassivaBD.newFilter();
+			
+			filter.setUtente(Utils.getLoggedUtente());
+			filter.getCpDenominazioneList().add(val.toLowerCase());
+			
+			listaMittenti = this.fatturaPassivaBD.getAutocompletamentoCedentePrestatoreDenominazione(filter);
 
-			IPaginatedExpression pagExpr = this.fatturaSearchDao.newPaginatedExpression();
-
-			pagExpr.sortOrder(SortOrder.ASC);
-			pagExpr.addOrder(FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE);
-			pagExpr.ilike(FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE,	val.toLowerCase(), LikeMode.ANYWHERE);
-
-			List<Dipartimento> listaDipartimentiLoggedUtente = Utils.getListaDipartimentiLoggedUtente();
-
-			if(listaDipartimentiLoggedUtente != null && listaDipartimentiLoggedUtente.size() > 0){
-				Object values []= new Object[listaDipartimentiLoggedUtente.size()];
-				for (int i = 0; i < listaDipartimentiLoggedUtente.size(); i++) {
-					values[i] = listaDipartimentiLoggedUtente.get(i).getCodice();
-				}
-
-				pagExpr.in(FatturaElettronica.model().CODICE_DESTINATARIO, values);
-			} else { // Se la lista dei dipartimenti e' vuota restituisco una lista vuota
-				return listaMittenti;
-			}
-
-
-			List<Object> select = this.fatturaSearchDao.select(pagExpr, true, FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE);
-
-			if(select != null && select.size() > 0){
-				for (Object object : select) {
-					listaMittenti.add((String) object);
-				}
-			}
-
-		} catch (NotFoundException e) {
-			FatturaElettronicaService.log.debug("Nessun risultato trovato! Metodo ["+methodName+"]: "+ e.getMessage(), e);
-		} catch (NotImplementedException e) {
-			FatturaElettronicaService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
-			throw new ServiceException(e);
-		} catch(ServiceException e) {
+		}  catch(ServiceException e) {
 			FatturaElettronicaService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 			throw e;
-		} catch (ExpressionNotImplementedException e) {
-			FatturaElettronicaService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
-			throw new ServiceException(e);
-		} catch (ExpressionException e) {
-			FatturaElettronicaService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
-			throw new ServiceException(e);
-		}
+		}  
 
 
 		return listaMittenti;
@@ -154,20 +112,25 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 
 		try{
 			if(abilitaRicerca()){
+				FatturaPassivaFilter filter = this.getFilterFromSearch(fatturaPassivaBD, this.form);
 
-				IExpression expr = this.getExpressionFromSearch( this.fatturaSearchDao,this.form);
-
+				//order by
 				if(this.form.isUsaDataScadenza()){
-					expr.addOrder(FatturaElettronica.model().DATA_SCADENZA, SortOrder.ASC);
-				} 
-				expr.addOrder(FatturaElettronica.model().DATA_RICEZIONE,SortOrder.DESC);
+					FilterSortWrapper fsw = new FilterSortWrapper();
+					fsw.setSortOrder(SortOrder.ASC);
+					fsw.setField(FatturaElettronica.model().DATA_SCADENZA);
+					filter.getFilterSortList().add(fsw);
+				}
+				
+				FilterSortWrapper fsw = new FilterSortWrapper();
+				fsw.setSortOrder(SortOrder.ASC);
+				fsw.setField(FatturaElettronica.model().DATA_RICEZIONE);
+				filter.getFilterSortList().add(fsw);
 
-				IPaginatedExpression pagExpr = this.fatturaSearchDao.toPaginatedExpression(expr);
-
-				pagExpr.offset(arg0);
-				pagExpr.limit(arg1);
-
-				List<FatturaElettronica> findAll = this.fatturaSearchDao.findAll(pagExpr);
+				filter.setOffset(arg0);
+				filter.setLimit(arg1);
+				
+				List<FatturaElettronica> findAll = this.fatturaPassivaBD.findAll(filter);
 
 				if(findAll != null && findAll.size() > 0){
 					for (FatturaElettronica fatturaElettronica : findAll) {
@@ -192,13 +155,8 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 		try{
 
 			if(abilitaRicerca()){
-				IExpression expr = this.getExpressionFromSearch( this.fatturaSearchDao,this.form);
-
-				NonNegativeNumber nnn = this.fatturaSearchDao.count(expr);
-
-				if(nnn != null)
-					cnt =(int) nnn.longValue();
-
+				FatturaPassivaFilter filter = this.getFilterFromSearch(fatturaPassivaBD, this.form);
+				cnt = (int)   this.fatturaPassivaBD.count(filter);						
 			}
 			else 
 				return 0;
@@ -241,19 +199,22 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 
 		try{
 			if(abilitaRicerca()){
-				IExpression expr = this.getExpressionFromSearch( this.fatturaSearchDao,this.form);
+				FatturaPassivaFilter filter = this.getFilterFromSearch(fatturaPassivaBD, this.form);
 
 				//order by
 				if(this.form.isUsaDataScadenza()){
-					expr.addOrder(FatturaElettronica.model().DATA_SCADENZA, SortOrder.ASC);
+					FilterSortWrapper fsw = new FilterSortWrapper();
+					fsw.setSortOrder(SortOrder.ASC);
+					fsw.setField(FatturaElettronica.model().DATA_SCADENZA);
+					filter.getFilterSortList().add(fsw);
 				}
+				
+				FilterSortWrapper fsw = new FilterSortWrapper();
+				fsw.setSortOrder(SortOrder.ASC);
+				fsw.setField(FatturaElettronica.model().DATA_RICEZIONE);
+				filter.getFilterSortList().add(fsw);
 
-				expr.addOrder(FatturaElettronica.model().DATA_RICEZIONE,SortOrder.DESC);
-
-
-				IPaginatedExpression pagExpr = this.fatturaSearchDao.toPaginatedExpression(expr);
-
-				List<FatturaElettronica> findAll = this.fatturaSearchDao.findAll(pagExpr);
+				List<FatturaElettronica> findAll = this.fatturaPassivaBD.findAll(filter);
 
 				if(findAll != null && findAll.size() > 0){
 					for (FatturaElettronica fatturaElettronica : findAll) {
@@ -281,7 +242,7 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 
 
 		try{
-			FatturaElettronica f = ((JDBCFatturaElettronicaServiceSearch)this.fatturaSearchDao).get(arg0.longValue());
+			FatturaElettronica f = this.fatturaPassivaBD.getById(arg0.longValue());
 			FatturaElettronicaBean fat = new FatturaElettronicaBean();
 			fat.setDTO(f);
 
@@ -301,24 +262,17 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 
 	}
 
-	public IExpression getExpressionFromSearch(FatturaElettronicaBD fatturaBD, FatturaElettronicaSearchForm search) throws Exception{
-		//TODO implement
-		return fatturaBD.newFilter().toExpression();
-	}
-
-	public IExpression getExpressionFromSearch(IFatturaElettronicaServiceSearch fatturaSearchDao, FatturaElettronicaSearchForm search) throws Exception{
-		IExpression expr = null;
+	public FatturaPassivaFilter getFilterFromSearch(FatturaPassivaBD fatturaBD, FatturaElettronicaSearchForm search) throws Exception{
+		FatturaPassivaFilter filter =  this.getFilterDateFromSearch(fatturaBD, search);
 
 		try{
-			expr =  fatturaSearchDao.newExpression();
-
 			// selezione mittente, se non viene scelto dovrei cercare solo le fatture destinate all'ente dell'utente loggato
 			// ma questo vincolo e' gia' rispettato dal filtro sul dipartimento.
 			if(search.getCedentePrestatore().getValue() != null && !StringUtils.isEmpty(search.getCedentePrestatore().getValue()) && !CostantiForm.NON_SELEZIONATO.equals(search.getCedentePrestatore().getValue())){
 				List<SelectItem> cedPrestVals = this.form.getCedPrestSelList();
 				String trimSelCedPrest = search.getCedentePrestatore().getValue().trim();
 
-				log.debug("Confronto TRIM["+trimSelCedPrest+"]");
+//				log.debug("Confronto TRIM["+trimSelCedPrest+"]");
 				List<String> valoriCedPret = new ArrayList<String>();
 				for (SelectItem selectItem : cedPrestVals) {
 					String val = selectItem.getValue();
@@ -328,48 +282,31 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 						noSpaceRes = noSpaceRes.replace("  ", " ");
 					}
 
-					log.debug("Confronto NSRES["+noSpaceRes+"]");
+//					log.debug("Confronto NSRES["+noSpaceRes+"]");
 					// Se il valore trimmato selezionato dall'utente corrisponde ad uno dei valori nella lista allora li uso per fare il confronto
 					if(noSpaceRes.equals(trimSelCedPrest)){
 						valoriCedPret.add(val);
 					}
 				}
 
-				if(valoriCedPret.size() == 0)
-					expr.ilike(FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE, search.getCedentePrestatore().getValue(), LikeMode.ANYWHERE);
-				else {
-					IExpression orExpr = fatturaSearchDao.newExpression();
-					for (String val : valoriCedPret) {
-						orExpr.ilike(FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE, val, LikeMode.ANYWHERE).or();
-					}
-					expr.and(orExpr);
+				if(valoriCedPret.size() == 0) {
+					filter.getCpDenominazioneList().add(search.getCedentePrestatore().getValue());
+					
+				}else {
+					filter.getCpDenominazioneList().addAll(valoriCedPret);
 				}
-				//				expr.equals(FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE, search.getCedentePrestatore().getValue());
 			}
 
 			// se l'utente seleziona un dipartimento utilizzo il codice esatto altrimenti la ricerca deve essere effettuata solo sui dipartimenti che puo' vedere
 			if(search.getDipartimento().getValue() != null && !StringUtils.isEmpty(search.getDipartimento().getValue().getValue()) && !search.getDipartimento().getValue().getValue().equals("*")){
-				expr.equals(FatturaElettronica.model().CODICE_DESTINATARIO, search.getDipartimento().getValue().getValue());
+				filter.setCodiceDestinatario(search.getDipartimento().getValue().getValue());
 			} else {
-				List<Dipartimento> listaDipartimentiLoggedUtente = Utils.getListaDipartimentiLoggedUtente();
-
-				if(listaDipartimentiLoggedUtente != null && listaDipartimentiLoggedUtente.size() > 0){
-					Object values []= new Object[listaDipartimentiLoggedUtente.size()];
-					for (int i = 0; i < listaDipartimentiLoggedUtente.size(); i++) {
-						values[i] = listaDipartimentiLoggedUtente.get(i).getCodice();
-					}
-
-					expr.in(FatturaElettronica.model().CODICE_DESTINATARIO, values);
-				}
+				filter.setUtente(Utils.getLoggedUtente());
 			}
-
-			expr.and(this.getExpressionDateFromSearch(fatturaSearchDao,search)).and();
 
 			if(search.getTipoDocumento().getValue() != null &&
 					!StringUtils.isEmpty(search.getTipoDocumento().getValue().getValue()) && !search.getTipoDocumento().getValue().getValue().equals("*")){
-				TipoDocumentoType tipoDoc = TipoDocumentoType.toEnumConstant(search.getTipoDocumento().getValue().getValue());
-
-				expr.equals(FatturaElettronica.model().TIPO_DOCUMENTO, tipoDoc);
+				filter.setTipoDocumento(search.getTipoDocumento().getValue().getValue());
 			}
 
 			// Esito Committente
@@ -378,94 +315,68 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 
 				if(!search.getNotificaEsitoCommittente().getValue().getValue().equals("E")){
 					EsitoType esitoType = EsitoType.toEnumConstant(search.getNotificaEsitoCommittente().getValue().getValue());
-					IExpression esitoExpr = this.fatturaSearchDao.newExpression();
-
-					//					if(esitoType.equals(EsitoType.ACCETTATO)){
-					//						esitoExpr.equals(FatturaElettronica.model().ESITO, EsitoType.IN_ELABORAZIONE_ACCETTATO);
-					//						esitoExpr.equals(FatturaElettronica.model().ESITO, esitoType);
-					//						esitoExpr.or();
-					//					} else if(esitoType.equals(EsitoType.RIFIUTATO)){
-					//						esitoExpr.equals(FatturaElettronica.model().ESITO, EsitoType.IN_ELABORAZIONE_RIFIUTATO);
-					//						esitoExpr.equals(FatturaElettronica.model().ESITO, esitoType);
-					//						esitoExpr.or();
-					//					} else if(esitoType.equals(EsitoType.IN_ELABORAZIONE_RIFIUTATO) || esitoType.equals(EsitoType.IN_ELABORAZIONE_ACCETTATO)){
-					//						esitoExpr.equals(FatturaElettronica.model().ESITO, EsitoType.IN_ELABORAZIONE_RIFIUTATO);
-					//						esitoExpr.equals(FatturaElettronica.model().ESITO, EsitoType.IN_ELABORAZIONE_ACCETTATO);
-					//						esitoExpr.or();
-					//					} else 
-					esitoExpr.equals(FatturaElettronica.model().ESITO, esitoType);
-
-					expr.and(esitoExpr);
+					filter.setEsito(esitoType);
 				} else {
-					expr.isNull(FatturaElettronica.model().ESITO);
+					filter.setEsitoNull(true);
 				}
 			}
 
 			// Decorrenza Termini
 			if(search.getNotificaDecorrenzaTermini().getValue() != null &&
 					!StringUtils.isEmpty(search.getNotificaDecorrenzaTermini().getValue().getValue()) && !search.getNotificaDecorrenzaTermini().getValue().getValue().equals("*")){
-
-				CustomField cf = new CustomField("id_notifica_decorrenza_termini", Long.class, "id_notifica_decorrenza_termini", this.getRootTable(this.fatturaSearchDao)); 
-				
 				if(search.getNotificaDecorrenzaTermini().getValue().getValue().equals("Y")){
-					expr.isNotNull(cf);
+					filter.setDecorrenzaTermini(true);
 				} else {
-					expr.isNull(cf);
+					filter.setDecorrenzaTermini(false);
 				}
 			}
 
 			// numero
-			//			if(search.getNumero().getValue() != null && !StringUtils.isEmpty(search.getNumero().getValue())){
-			//				expr.equals(FatturaElettronica.model().NUMERO, search.getNumero().getValue());
-			//			}
-			//			
 			if(search.getNumero().getValue() != null && !StringUtils.isEmpty(search.getNumero().getValue()) && !CostantiForm.NON_SELEZIONATO.equals(search.getNumero().getValue())){
-				expr.ilike(FatturaElettronica.model().NUMERO, search.getNumero().getValue(), LikeMode.START);
-				//				expr.equals(FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE, search.getCedentePrestatore().getValue());
+				filter.setNumero(search.getNumero().getValue());
 			}
 
 			// identificativoSDI
 			if(search.getIdentificativoLotto().getValue() != null && !StringUtils.isEmpty(search.getIdentificativoLotto().getValue())){
-				expr.equals(FatturaElettronica.model().IDENTIFICATIVO_SDI, Integer.parseInt(search.getIdentificativoLotto().getValue()));
+				filter.setIdentificativoSdi(Integer.parseInt(search.getIdentificativoLotto().getValue()));
 			}
 
 			// data Fattura
 			if(search.getDataEsatta().getValue() != null){
-				expr.equals(FatturaElettronica.model().DATA, search.getDataEsatta().getValue());
+				filter.setDataFatturaMin(search.getDataEsatta().getValue());
+				filter.setDataFatturaMax(search.getDataEsatta().getValue());
 			}
 
 			// identificativo Protocollo
 			if(search.getIdentificativoProtocollo().getValue() != null && !StringUtils.isEmpty(search.getIdentificativoProtocollo().getValue())){
-				expr.ilike(FatturaElettronica.model().PROTOCOLLO, search.getIdentificativoProtocollo().getValue(),LikeMode.ANYWHERE);
+				filter.setProtocollo(search.getIdentificativoProtocollo().getValue());
 			}
 
 			// stato consegna
 			if(search.getStatoConsegna().getValue() != null &&
 					!StringUtils.isEmpty(search.getStatoConsegna().getValue().getValue()) && !search.getStatoConsegna().getValue().getValue().equals("*")){
 				StatoConsegnaType statoConsegnaType = StatoConsegnaType.toEnumConstant(search.getStatoConsegna().getValue().getValue());
-				expr.equals(FatturaElettronica.model().STATO_CONSEGNA, statoConsegnaType);
+				filter.getStatiConsegna().add(statoConsegnaType);
 			}
 
 			// filtro per le fatture in scadenza
 			if(this.form.isUsaDataScadenza()){
-				expr.equals(FatturaElettronica.model().DA_PAGARE, true);
+				filter.setInScadenza(true);
 			}
+
 
 		}catch(Exception e){
 			FatturaElettronicaService.log.error("Si e' verificato un errore durante la conversione del filtro di ricerca: " + e.getMessage(), e);
 			throw e;
 		}
 
-		return expr;
+		return filter;
 	}
 
-
-	private IExpression getExpressionDateFromSearch(IFatturaElettronicaServiceSearch fatturaSearchDao,FatturaElettronicaSearchForm search) throws Exception{
-		IExpression expr = null;
+	public FatturaPassivaFilter getFilterDateFromSearch(FatturaPassivaBD fatturaBD, FatturaElettronicaSearchForm search) throws Exception{
+		FatturaPassivaFilter filter = fatturaBD.newFilter();
 
 		try{
-			expr = fatturaSearchDao.newExpression();
-
 			SelectList<SelectItem> dataRicezionePeriodo = search.getDataRicezionePeriodo();
 			DateTime dataRicezione = search.getDataRicezione();
 
@@ -529,13 +440,11 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 
 
 			if(dataInizio != null){
-				expr.greaterEquals(FatturaElettronica.model().DATA_RICEZIONE, dataInizio);
-				expr.and();
+				filter.setDataRicezioneMin(dataInizio);
 			}
 
 			if(dataFine != null){
-				expr.lessEquals(FatturaElettronica.model().DATA_RICEZIONE, dataFine);
-				expr.and();
+				filter.setDataRicezioneMax(dataFine);
 			}
 
 		}catch(Exception e){
@@ -543,7 +452,7 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 			throw e;
 		}
 
-		return expr;
+		return filter;
 	}
 
 	@Override
@@ -554,50 +463,18 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 
 
 		try {
+			
+			FatturaPassivaFilter filter = this.fatturaPassivaBD.newFilter();
+			
+			filter.setUtente(Utils.getLoggedUtente());
+			filter.setNumeroLike(val.toLowerCase());
+			
+			listaID = this.fatturaPassivaBD.getAutocompletamentoNumero(filter);
 
-			IPaginatedExpression pagExpr = this.fatturaSearchDao.newPaginatedExpression();
-
-			pagExpr.sortOrder(SortOrder.ASC);
-			pagExpr.addOrder(FatturaElettronica.model().NUMERO);
-			pagExpr.ilike(FatturaElettronica.model().NUMERO,	val.toLowerCase(), LikeMode.START);
-
-			List<Dipartimento> listaDipartimentiLoggedUtente = Utils.getListaDipartimentiLoggedUtente();
-
-			if(listaDipartimentiLoggedUtente != null && listaDipartimentiLoggedUtente.size() > 0){
-				Object values []= new Object[listaDipartimentiLoggedUtente.size()];
-				for (int i = 0; i < listaDipartimentiLoggedUtente.size(); i++) {
-					values[i] = listaDipartimentiLoggedUtente.get(i).getCodice();
-				}
-
-				pagExpr.in(FatturaElettronica.model().CODICE_DESTINATARIO, values);
-			} else { // Se la lista dei dipartimenti e' vuota restituisco una lista vuota
-				return listaID;
-			}
-
-			List<Object> select = this.fatturaSearchDao.select(pagExpr, true, FatturaElettronica.model().NUMERO);
-
-			if(select != null && select.size() > 0){
-				for (Object object : select) {
-					listaID.add((String) object);
-				}
-			}
-
-		} catch (NotFoundException e) {
-			FatturaElettronicaService.log.debug("Nessun risultato trovato! Metodo ["+methodName+"]: "+ e.getMessage(), e);
-		} catch (NotImplementedException e) {
-			FatturaElettronicaService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
-			throw new ServiceException(e);
-		} catch(ServiceException e) {
+		}  catch(ServiceException e) {
 			FatturaElettronicaService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 			throw e;
-		} catch (ExpressionNotImplementedException e) {
-			FatturaElettronicaService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
-			throw new ServiceException(e);
-		} catch (ExpressionException e) {
-			FatturaElettronicaService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
-			throw new ServiceException(e);
-		}
-
+		}  
 
 		return listaID;
 	}
@@ -617,36 +494,13 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 		String methodName = "getIdEsitoScadenza()";
 		try {
 
-			CustomField baseField = new CustomField("id", Long.class, "id", getRootTable(this.fatturaSearchDao));
-			CustomField esitoField = new CustomField("id_scadenza", Long.class, "id_scadenza", getRootTable(this.fatturaSearchDao));
-			IPaginatedExpression pagExpr = this.fatturaSearchDao.newPaginatedExpression();
-			pagExpr.equals(baseField, idFattura);
-			pagExpr.sortOrder(SortOrder.ASC);
-			pagExpr.addOrder(baseField);
-
-			List<Object> select = this.fatturaSearchDao.select(pagExpr, esitoField);
-
-			if(select != null && select.size() == 1){
-				Object o = select.get(0);
-
-				if(o instanceof Long)
-					return (Long) o;
-			}
+			return this.fatturaPassivaBD.getIdEsitoScadenza(idFattura);
 		} catch (NotFoundException e) {
 			FatturaElettronicaService.log.debug("Nessun risultato trovato! Metodo ["+methodName+"]: "+ e.getMessage(), e);
-		} catch (NotImplementedException e) {
-			FatturaElettronicaService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
-			throw new ServiceException(e);
 		} catch(ServiceException e) {
 			FatturaElettronicaService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 			throw e;
-		} catch (ExpressionNotImplementedException e) {
-			FatturaElettronicaService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
-			throw new ServiceException(e);
-		} catch (ExpressionException e) {
-			FatturaElettronicaService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
-			throw new ServiceException(e);
-		}
+		} 
 
 		return null;
 	}
@@ -655,37 +509,15 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 	public Long getIdEsitoContabilizzazione(Long idFattura) throws ServiceException {
 		String methodName = "getIdEsitoContabilizzazione()";
 		try {
+			
+			return this.fatturaPassivaBD.getIdEsitoContabilizzazione(idFattura);
 
-			CustomField baseField = new CustomField("id", Long.class, "id", getRootTable(this.fatturaSearchDao));
-			CustomField esitoField = new CustomField("id_contabilizzazione", Long.class, "id_contabilizzazione", getRootTable(this.fatturaSearchDao));
-			IPaginatedExpression pagExpr = this.fatturaSearchDao.newPaginatedExpression();
-			pagExpr.equals(baseField, idFattura);
-			pagExpr.sortOrder(SortOrder.ASC);
-			pagExpr.addOrder(baseField);
-
-			List<Object> select = this.fatturaSearchDao.select(pagExpr, esitoField);
-
-			if(select != null && select.size() == 1){
-				Object o = select.get(0);
-
-				if(o instanceof Long)
-					return (Long) o;
-			}
 		} catch (NotFoundException e) {
 			FatturaElettronicaService.log.debug("Nessun risultato trovato! Metodo ["+methodName+"]: "+ e.getMessage(), e);
-		} catch (NotImplementedException e) {
-			FatturaElettronicaService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
-			throw new ServiceException(e);
 		} catch(ServiceException e) {
 			FatturaElettronicaService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 			throw e;
-		} catch (ExpressionNotImplementedException e) {
-			FatturaElettronicaService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
-			throw new ServiceException(e);
-		} catch (ExpressionException e) {
-			FatturaElettronicaService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
-			throw new ServiceException(e);
-		}
+		} 
 
 		return null;
 	}

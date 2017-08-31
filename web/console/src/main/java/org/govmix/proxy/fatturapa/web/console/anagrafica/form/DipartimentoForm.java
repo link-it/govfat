@@ -99,6 +99,10 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 	private FormField<String> stornoContabilizzazione = null;
 	private FormField<String> ricezioneFattura = null;
 	private FormField<String> rifiutoFattura = null;
+	
+	private BooleanCheckBox fatturazioneAttiva= null;
+	private BooleanCheckBox firmaAutomatica= null;
+	private FormField<String> codiceProcedimento = null;
 
 	private List<DipartimentoProperty> listaNomiProperties = null;
 
@@ -173,6 +177,14 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 			this.stornoContabilizzazione = inputFieldFactory.createRadioButtonFatturaPA("stornoContabilizzazione","dipartimento.pcc.stornoContabilizzazione", null, false);
 			this.ricezioneFattura = inputFieldFactory.createRadioButtonFatturaPA("ricezioneFattura","dipartimento.pcc.ricezioneFattura", null, false);
 			this.rifiutoFattura =  inputFieldFactory.createRadioButtonFatturaPA("rifiutoFattura","dipartimento.pcc.rifiutoFattura", null, false);
+			
+			this.fatturazioneAttiva = inputFieldFactory.createBooleanCheckBox("fatturazioneAttiva","dipartimento.form.fatturazioneAttiva",null,false);
+			this.fatturazioneAttiva.setFieldsToUpdate(this.getId() + "_formPnl"); 
+			this.fatturazioneAttiva.setForm(this); 
+			this.firmaAutomatica = inputFieldFactory.createBooleanCheckBox("firmaAutomatica","dipartimento.form.firmaAutomatica",null,false);
+			this.codiceProcedimento = inputFieldFactory.createText("codiceProcedimento","dipartimento.form.codiceProcedimento",null,false);
+			
+			this._setFatturazioneAttiva();
 
 			this.setField(this.codice);
 			this.setField(this.descrizione);
@@ -201,6 +213,10 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 			this.setField(this.stornoContabilizzazione);
 			this.setField(this.ricezioneFattura);
 			this.setField(this.rifiutoFattura);
+			
+			this.setField(this.fatturazioneAttiva);
+			this.setField(this.firmaAutomatica);
+			this.setField(this.codiceProcedimento);
 
 			this.properties = new ArrayList<Text>();
 
@@ -221,9 +237,15 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		this.ente .reset();
 		this.registro .reset();
 		this.codicePCC.reset();
-
+		
 		this._setModalitaPush();
-
+		
+		this.fatturazioneAttiva.reset();
+		this.firmaAutomatica.reset();
+		this.codiceProcedimento.reset();
+		
+		this._setFatturazioneAttiva();
+		
 		for (FormField<String> prop : this.properties) {
 			prop.reset();
 		}
@@ -968,4 +990,56 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		this.downloadDocumento = downloadDocumento;
 	}
 
+	public BooleanCheckBox getFatturazioneAttiva() {
+		return fatturazioneAttiva;
+	}
+
+	public void setFatturazioneAttiva(BooleanCheckBox fatturazioneAttiva) {
+		this.fatturazioneAttiva = fatturazioneAttiva;
+	}
+
+	public BooleanCheckBox getFirmaAutomatica() {
+		this.firmaAutomatica.setRendered(false);
+		boolean mod = this.fatturazioneAttiva.getValue() != null ? (this.fatturazioneAttiva.getValue() ? true : false) : false;
+
+		if(mod)
+			this.firmaAutomatica.setRendered(true);
+
+		return this.firmaAutomatica;
+	}
+
+	public void setFirmaAutomatica(BooleanCheckBox firmaAutomatica) {
+		this.firmaAutomatica = firmaAutomatica;
+	}
+
+	public FormField<String> getCodiceProcedimento() {
+		this.codiceProcedimento.setRendered(false);
+		boolean mod = this.fatturazioneAttiva.getValue() != null ? (this.fatturazioneAttiva.getValue() ? true : false) : false;
+
+		if(mod)
+			this.codiceProcedimento.setRendered(true);
+
+		return this.codiceProcedimento;
+	}
+
+	public void setCodiceProcedimento(FormField<String> codiceProcedimento) {
+		this.codiceProcedimento = codiceProcedimento;
+	}
+	
+	public void fatturazioneAttivaOnChangeListener(ActionEvent ae){
+		this._setFatturazioneAttiva();
+	}
+
+	private void _setFatturazioneAttiva() {
+		this.codiceProcedimento.setRendered(false);
+		this.firmaAutomatica.setRendered(false);
+
+		boolean mod = this.fatturazioneAttiva.getValue() != null ? (this.fatturazioneAttiva.getValue() ? true : false) : false;
+
+		if(mod){
+			this.codiceProcedimento.setRendered(true);
+			this.firmaAutomatica.setRendered(true);
+		}
+
+	}
 }
