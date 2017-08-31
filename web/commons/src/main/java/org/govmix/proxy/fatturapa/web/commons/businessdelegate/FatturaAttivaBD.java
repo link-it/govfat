@@ -21,31 +21,21 @@
 package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 
 import java.sql.Connection;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
-import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaService;
-import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaServiceSearch;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaAttivaFilter;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 
-public class FatturaAttivaBD extends BaseBD {
+public class FatturaAttivaBD extends FatturaBD {
 
-	private IFatturaElettronicaServiceSearch serviceSearch;
-	private IFatturaElettronicaService service;
 
 	public FatturaAttivaBD(Logger log) throws Exception {
 		super(log);
-		this.service = this.serviceManager.getFatturaElettronicaService();
-		this.serviceSearch = this.serviceManager.getFatturaElettronicaServiceSearch();
 	}
 
 	public FatturaAttivaBD(Logger log, Connection connection, boolean autocommit) throws Exception {
 		super(log, connection, autocommit);
-		this.service = this.serviceManager.getFatturaElettronicaService();
-		this.serviceSearch = this.serviceManager.getFatturaElettronicaServiceSearch();
 	}
 
 	public FatturaAttivaBD() throws Exception {
@@ -59,15 +49,5 @@ public class FatturaAttivaBD extends BaseBD {
 		} catch (NotImplementedException e) {
 			throw new ServiceException(e);
 		}
-	}
-	
-	public long count(FatturaAttivaFilter filter)throws Exception {
-		return this.serviceSearch.count(filter.toExpression()).longValue();
-	}
-	public List<FatturaElettronica> findAll(FatturaAttivaFilter filter)throws Exception {
-		return this.serviceSearch.findAll(filter.toPaginatedExpression());
-	}
-	public FatturaAttivaFilter newFilter() {
-		return new FatturaAttivaFilter(this.serviceSearch);
 	}
 }

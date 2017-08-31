@@ -39,10 +39,8 @@ import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.PccTraccia;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaPassivaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FilterSortWrapper;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter.FORMAT;
@@ -59,7 +57,6 @@ import org.govmix.proxy.fatturapa.web.console.mbean.LoginMBean;
 import org.govmix.proxy.fatturapa.web.console.search.FatturaElettronicaSearchForm;
 import org.govmix.proxy.fatturapa.web.console.service.FatturaElettronicaService;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
-import org.openspcoop2.generic_project.expression.IExpression;
 import org.openspcoop2.generic_project.expression.SortOrder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -122,7 +119,7 @@ public class FattureExporter  extends HttpServlet{
 
 			// Then we have to get the Response where to write our file
 			//			HttpServletResponse response = resp;
-			FatturaPassivaFilter expressionFromSearch = null;
+			FatturaFilter expressionFromSearch = null;
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			HttpSession sessione = req.getSession(); 
 			String username = null;
@@ -154,7 +151,7 @@ public class FattureExporter  extends HttpServlet{
 						response.addHeader("Cache-Control", "private");
 						response.setStatus(200);
 
-						FatturaPassivaBD fatturaSearchDAO = null; // TODO sfe.getFatturaBD();
+						FatturaBD fatturaSearchDAO = sfe.getFatturaBD();
 						if(isAll){
 							try{
 								ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(this.getServletContext());
@@ -369,9 +366,9 @@ public class FattureExporter  extends HttpServlet{
 		}
 	}
 
-	private List<IdFattura> getLstIdFattura(FatturaPassivaBD fatturaBD, FatturaPassivaFilter expressionFromSearch) throws Exception {
+	private List<IdFattura> getLstIdFattura(FatturaBD fatturaBD, FatturaFilter expressionFromSearch) throws Exception {
 
-		FatturaPassivaFilter filter = null;
+		FatturaFilter filter = null;
 		int start = 0;
 		int limit = 1000;
 		if(expressionFromSearch != null){
@@ -389,7 +386,7 @@ public class FattureExporter  extends HttpServlet{
 		filter.setOffset(start);
 		filter.setLimit(limit);
 		
-		List<IdFattura> listFattura = null; // TODO fatturaBD.findAllIds(filter);
+		List<IdFattura> listFattura = fatturaBD.findAllIds(filter);
 
 		int size = listFattura.size();
 		while(size>0){
@@ -398,7 +395,7 @@ public class FattureExporter  extends HttpServlet{
 			filter.setOffset(start);
 			filter.setLimit(limit);
 
-			List<IdFattura> findAllIds =  null; // TODO fatturaBD.findAllIds(filter);
+			List<IdFattura> findAllIds =  fatturaBD.findAllIds(filter);
 			listFattura.addAll(findAllIds);
 			size = findAllIds.size();
 		}

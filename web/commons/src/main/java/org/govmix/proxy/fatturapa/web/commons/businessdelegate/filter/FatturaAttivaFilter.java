@@ -5,7 +5,7 @@ import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
 
-public class FatturaAttivaFilter extends AbstractFatturaFilter {
+public class FatturaAttivaFilter extends FatturaFilter {
 
 	public FatturaAttivaFilter(IExpressionConstructor expressionConstructor) {
 		super(expressionConstructor, true);

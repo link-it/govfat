@@ -37,7 +37,7 @@ import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.constants.UserRole;
 import org.govmix.proxy.fatturapa.orm.dao.IUtenteServiceSearch;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.exporter.exception.ExportException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
@@ -64,19 +64,19 @@ public abstract class AbstractSingleFileExporter<T, K> {
 
 	protected Logger log;
 	private IUtenteServiceSearch utenteSearchDAO;
-	private FatturaElettronicaBD fatturaBD;
+	private FatturaBD fatturaBD;
 
 
 	public AbstractSingleFileExporter(Logger log, Connection connection, boolean autocommit) throws ServiceException, NotImplementedException, Exception {
 		this.log = log;
 		this.utenteSearchDAO = DAOFactory.getInstance().getServiceManager(connection, autocommit).getUtenteServiceSearch();
-		this.fatturaBD = new FatturaElettronicaBD(log, connection, autocommit);
+		this.fatturaBD = new FatturaBD(log, connection, autocommit);
 	}
 
 	public AbstractSingleFileExporter(Logger log) throws ServiceException, NotImplementedException, Exception {
 		this.log = log;
 		this.utenteSearchDAO = DAOFactory.getInstance().getServiceManager().getUtenteServiceSearch();
-		this.fatturaBD = new FatturaElettronicaBD(log);
+		this.fatturaBD = new FatturaBD(log);
 	}
 
 	public abstract void export(T object, OutputStream out, FORMAT format) throws ExportException;
@@ -276,7 +276,7 @@ public abstract class AbstractSingleFileExporter<T, K> {
 //		return fatturaSearchDAO;
 //	}
 
-	public FatturaElettronicaBD getFatturaBD() {
+	public FatturaBD getFatturaBD() {
 		return fatturaBD;
 	}
 

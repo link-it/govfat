@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
 import org.govmix.proxy.fatturapa.web.commons.sonde.RisultatoSonda.STATO;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 
@@ -38,7 +38,7 @@ public abstract class AbstractServletSonda extends HttpServlet {
 	protected static final long serialVersionUID = 1L;
 	
 	protected Logger log;
-	protected FatturaElettronicaBD fatturaElettronicaBD;
+	protected FatturaBD fatturaElettronicaBD;
 	private List<String> urls;
 
 	public AbstractServletSonda() throws Exception {
@@ -47,7 +47,7 @@ public abstract class AbstractServletSonda extends HttpServlet {
 
 	public AbstractServletSonda(List<String> urls) throws Exception {
 		this.urls = urls;
-		this.fatturaElettronicaBD = new FatturaElettronicaBD();
+		this.fatturaElettronicaBD = new FatturaBD();
 		this.log = LoggerManager.getSondaLogger();
 	}
 

@@ -32,8 +32,10 @@ import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.PccOperazioneContabileBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaPassivaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FilterSortWrapper;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
@@ -112,7 +114,7 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 
 		try{
 			if(abilitaRicerca()){
-				FatturaPassivaFilter filter = this.getFilterFromSearch(fatturaPassivaBD, this.form);
+				FatturaPassivaFilter filter = (FatturaPassivaFilter) this.getFilterFromSearch(fatturaPassivaBD, this.form);
 
 				//order by
 				if(this.form.isUsaDataScadenza()){
@@ -155,7 +157,7 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 		try{
 
 			if(abilitaRicerca()){
-				FatturaPassivaFilter filter = this.getFilterFromSearch(fatturaPassivaBD, this.form);
+				FatturaPassivaFilter filter = (FatturaPassivaFilter) this.getFilterFromSearch(fatturaPassivaBD, this.form);
 				cnt = (int)   this.fatturaPassivaBD.count(filter);						
 			}
 			else 
@@ -199,7 +201,7 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 
 		try{
 			if(abilitaRicerca()){
-				FatturaPassivaFilter filter = this.getFilterFromSearch(fatturaPassivaBD, this.form);
+				FatturaPassivaFilter filter = (FatturaPassivaFilter) this.getFilterFromSearch(fatturaPassivaBD, this.form);
 
 				//order by
 				if(this.form.isUsaDataScadenza()){
@@ -262,8 +264,8 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 
 	}
 
-	public FatturaPassivaFilter getFilterFromSearch(FatturaPassivaBD fatturaBD, FatturaElettronicaSearchForm search) throws Exception{
-		FatturaPassivaFilter filter =  this.getFilterDateFromSearch(fatturaBD, search);
+	public FatturaFilter getFilterFromSearch(FatturaBD fatturaBD, FatturaElettronicaSearchForm search) throws Exception{
+		FatturaPassivaFilter filter = (FatturaPassivaFilter) this.getFilterDateFromSearch(fatturaBD, search);
 
 		try{
 			// selezione mittente, se non viene scelto dovrei cercare solo le fatture destinate all'ente dell'utente loggato
@@ -373,8 +375,8 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 		return filter;
 	}
 
-	public FatturaPassivaFilter getFilterDateFromSearch(FatturaPassivaBD fatturaBD, FatturaElettronicaSearchForm search) throws Exception{
-		FatturaPassivaFilter filter = fatturaBD.newFilter();
+	public FatturaFilter getFilterDateFromSearch(FatturaBD fatturaBD, FatturaElettronicaSearchForm search) throws Exception{
+		FatturaPassivaFilter filter = fatturaPassivaBD.newFilter();
 
 		try{
 			SelectList<SelectItem> dataRicezionePeriodo = search.getDataRicezionePeriodo();

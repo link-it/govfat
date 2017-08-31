@@ -14,7 +14,7 @@ import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
 
-public class FatturaPassivaFilter extends AbstractFatturaFilter {
+public class FatturaPassivaFilter extends FatturaFilter {
 
 	private Boolean daAccettareAutomaticamente; 
 	private Boolean modalitaPush; 
