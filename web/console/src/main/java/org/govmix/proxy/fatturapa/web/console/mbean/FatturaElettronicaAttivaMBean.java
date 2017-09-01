@@ -469,7 +469,7 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 			FatturaAttivaBD fatturaBD = new FatturaAttivaBD(log);
 			FatturaElettronica current = this.selectedElement.getDTO();
 			// [TODO]
-		//	fatturaBD.forzaRispedizioneFattura(current);
+//			fatturaBD.forzaRispedizioneFattura(current);
 			MessageUtils.addInfoMsg(Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegna.cambioStatoOK"));
 
 			current.setStatoConsegna(StatoConsegnaType.IN_RICONSEGNA);

@@ -20,10 +20,8 @@
  */
 package org.govmix.proxy.fatturapa.web.console.iservice;
 
-import java.util.Date;
 import java.util.List;
 
-import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.web.console.bean.FatturaElettronicaAttivaBean;
 import org.govmix.proxy.fatturapa.web.console.search.FatturaElettronicaAttivaSearchForm;
 import org.openspcoop2.generic_project.exception.ServiceException;

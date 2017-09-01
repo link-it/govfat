@@ -81,7 +81,7 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		this.setClosable(false);
 
 		// Init dei FormField
-		this.cessionarioCommittente = factory.getInputFieldFactory().createText("cessionarioCommittente","fattura.search.cessionarioCommittenteDenominazione",null,false);
+		this.cessionarioCommittente = factory.getInputFieldFactory().createText("cessionarioCommittente","fatturaAttiva.search.cessionarioCommittenteDenominazione",null,false);
 		
 		this.cessionarioCommittente.setAutoComplete(true);
 		this.cessionarioCommittente.setEnableManualInput(true);

@@ -479,6 +479,7 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 
 			TestataRispTipo testataRisposta = wSProxyOperazioneContabile.getTestataRisposta();
 			EsitoOkKoTipo esito = testataRisposta.getEsito();
+			@SuppressWarnings("unused")
 			String detail = testataRisposta.getDetail();
 			OrigineTipo origine = testataRisposta.getOrigine();
 

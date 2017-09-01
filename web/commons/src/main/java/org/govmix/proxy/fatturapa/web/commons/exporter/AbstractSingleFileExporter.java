@@ -61,6 +61,7 @@ public abstract class AbstractSingleFileExporter<T, K> {
 	public static final String PARAMETRO_ACTION_NOTIFICA_DT = "dt";
 	public static final String PARAMETRO_ACTION_SCARTO = "sc";
     public static final String PARAMETRO_ACTION_PCC_RIALLINEAMENTO = "pccDf";
+    public static final String PARAMETRO_ACTION_COMUNICAZIONE = "com";
 
 	protected Logger log;
 	private IUtenteServiceSearch utenteSearchDAO;

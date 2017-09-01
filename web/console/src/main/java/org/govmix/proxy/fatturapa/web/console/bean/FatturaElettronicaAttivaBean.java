@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
-import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
@@ -156,7 +155,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.identificativoSdi = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("identificativoSdi","fattura.identificativoSdi");
 		this.posizione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("posizione","fattura.posizione");
 		this.cedentePrestatoreCF = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("cedentePrestatoreCF","fattura.cedentePrestatoreCF");
-		this.cessionarioCommittente = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("cessionarioCommittente","fattura.cessionarioCommittente");
+		this.cessionarioCommittente = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("cessionarioCommittente","fattura.cessionarioCommittenteDenominazione");
 		this.cessionarioCommittentePaese = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("cessionarioCommittentePaese","fattura.cessionarioCommittentePaese");
 		this.cessionarioCommittenteCF = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("cessionarioCommittenteCF","fattura.cessionarioCommittenteCF");
 		this.terzoIntermediarioOSoggettoEmittente = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("terzoIntermediarioOSoggettoEmittente","fattura.terzoIntermediarioOSoggettoEmittente");

@@ -136,25 +136,18 @@ public class AllegatiService implements IAllegatiService{
 
 	@Override
 	public void store(AllegatoFatturaBean obj) throws ServiceException {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void deleteById(Long key) throws ServiceException {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void delete(AllegatoFatturaBean obj) throws ServiceException {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public AllegatoFatturaBean findById(Long key) throws ServiceException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

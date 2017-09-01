@@ -57,10 +57,10 @@
 
 						<ui:define name="prop1">
 							<op2web:prop label="#{commonsMsg['form.component.dal']}" 
-								styleClass="insideLeftProp" rendered="#{fatturaElettronicaAttivaMBean.search.dataRicezione.rendered}">
-								<rich:calendar id="input1_#{fatturaElettronicaAttivaMBean.search.dataRicezione.name}" value="#{fatturaElettronicaAttivaMBean.search.dataRicezione.value}"
-									disabled="#{fatturaElettronicaAttivaMBean.search.dataRicezione.disabled}" style="#{fatturaElettronicaAttivaMBean.search.dataRicezione.style}" bypassUpdates="true"
-									datePattern="#{fatturaElettronicaAttivaMBean.search.dataRicezione.pattern}" defaultTime="00:00" validatorMessage="#{msg['fattura.search.dataRicezione.da.formatoNonValido']}"
+								styleClass="insideLeftProp" rendered="#{fatturaElettronicaAttivaMBean.search.dataInvio.rendered}">
+								<rich:calendar id="input1_#{fatturaElettronicaAttivaMBean.search.dataInvio.name}" value="#{fatturaElettronicaAttivaMBean.search.dataInvio.value}"
+									disabled="#{fatturaElettronicaAttivaMBean.search.dataInvio.disabled}" style="#{fatturaElettronicaAttivaMBean.search.dataInvio.style}" bypassUpdates="true"
+									datePattern="#{fatturaElettronicaAttivaMBean.search.dataInvio.pattern}" defaultTime="00:00" validatorMessage="#{msg['fattura.search.dataInvio.da.formatoNonValido']}"
 									enableManualInput="true" validator="#{fatturaElettronicaAttivaMBean.search.dataInizioValidator}" valueChangeListener="#{fatturaElettronicaAttivaMBean.search.dataInizioChangeListener}"
 									converter="dateConverter" >
 								 </rich:calendar>
@@ -69,10 +69,10 @@
 
 						<ui:define name="prop2">
 							<op2web:prop label="#{commonsMsg['form.component.al']}"
-								styleClass="insideRightProp" rendered="#{fatturaElettronicaAttivaMBean.search.dataRicezione.rendered}">
-								<rich:calendar id="input2_#{fatturaElettronicaAttivaMBean.search.dataRicezione.name}" value="#{fatturaElettronicaAttivaMBean.search.dataRicezione.value2}"
-									disabled="#{fatturaElettronicaAttivaMBean.search.dataRicezione.disabled}" style="#{fatturaElettronicaAttivaMBean.search.dataRicezione.style}"
-									datePattern="#{fatturaElettronicaAttivaMBean.search.dataRicezione.pattern}" defaultTime="23:59" converter="dateConverter" 
+								styleClass="insideRightProp" rendered="#{fatturaElettronicaAttivaMBean.search.dataInvio.rendered}">
+								<rich:calendar id="input2_#{fatturaElettronicaAttivaMBean.search.dataInvio.name}" value="#{fatturaElettronicaAttivaMBean.search.dataInvio.value2}"
+									disabled="#{fatturaElettronicaAttivaMBean.search.dataInvio.disabled}" style="#{fatturaElettronicaAttivaMBean.search.dataInvio.style}"
+									datePattern="#{fatturaElettronicaAttivaMBean.search.dataInvio.pattern}" defaultTime="23:59" converter="dateConverter" 
 									enableManualInput="true" />
 							</op2web:prop>
 						</ui:define>
@@ -100,12 +100,12 @@
 					rendered="#{true}" collapsible="false" closed="false">
 					<op2web:formField field="#{fatturaElettronicaAttivaMBean.search.identificativoProtocollo}" />
 						
-					<op2web:formField field="#{fatturaElettronicaAttivaMBean.search.statoConsegna}" />
+					<op2web:formField field="#{fatturaElettronicaAttivaMBean.search.statoElaborazione}" />
 				</op2web:fieldset>
 				
 				<ui:define name="buttons">
 					<a4j:commandButton id="filtraButton"
-						value="#{msg['fattura.search.button.filtra.dataRicezione']}" styleClass="icon-refresh"
+						value="#{msg['commons.button.filtra']}" styleClass="icon-refresh"
 						reRender="fatturaElettronicaTable" status="mainStatus" action="#{fatturaElettronicaAttivaMBean.filtra}">
 					</a4j:commandButton>
 		
@@ -121,7 +121,7 @@
 			<op2web:managedPagedListView  value="#{fatturaElettronicaAttivaDM}" mBean="#{fatturaElettronicaAttivaMBean}" >
 				
 				<!-- Colonne mittente,destinatario,identificativoSDI, annonumero, data, dataricezione, importo -->
-				<op2web:tableColumns nomiColonne="#{'cedentePrestatore,dipartimento,identificativoSdi,annoNumero,data,dataRicezione'}" />
+				<op2web:tableColumns nomiColonne="#{'cessionarioCommittente,dipartimento,identificativoSdi,annoNumero,data,dataInvio'}" />
 				
 				<!-- Colonne mittente,destinatario,identificativoSDI, annonumero, data, dataricezione, importo -->
 				<op2web:tableColumns nomiColonne="#{'importo'}" />

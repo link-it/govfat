@@ -87,6 +87,7 @@ public class FattureExporter  extends HttpServlet{
 	public static final String PARAMETRO_ACTION_NOTIFICA_DT = AbstractSingleFileExporter.PARAMETRO_ACTION_NOTIFICA_DT;
 	public static final String PARAMETRO_ACTION_SCARTO = AbstractSingleFileExporter.PARAMETRO_ACTION_SCARTO;
 	public static final String PARAMETRO_ACTION_PCC_RIALLINEAMENTO = AbstractSingleFileExporter.PARAMETRO_ACTION_PCC_RIALLINEAMENTO;
+	public static final String PARAMETRO_ACTION_COMUNICAZIONE = AbstractSingleFileExporter.PARAMETRO_ACTION_COMUNICAZIONE;
 
 	public static final String FATTURE_EXPORTER = "pages/fattureexporter";
 
