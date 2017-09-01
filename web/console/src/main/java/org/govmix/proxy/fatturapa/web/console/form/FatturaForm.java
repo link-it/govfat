@@ -51,6 +51,8 @@ public class FatturaForm extends BaseForm implements Form {
 		this.dipartimento = factory.getInputFieldFactory().createSelectList("cf_dipartimento","fattura.form.dipartimento",new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*",  ("commons.label.qualsiasi")),true);
 		((SelectListImpl)this.dipartimento).setCheckItemWidth(true); 
 		this.dipartimento.setFontName("Arial"); //"Arial,Verdana,sans-serif" 
+		this.dipartimento.setFieldsToUpdate(this.getId() + "_formPnl"); 
+		this.dipartimento.setForm(this); 
 		
 		this.descrittoreFattura = factory.getInputFieldFactory().createText("descrittoreFattura","fattura.form.descrittoreFattura",null,true);
 		
@@ -226,4 +228,7 @@ public class FatturaForm extends BaseForm implements Form {
 		this.mostraFormCorservazione = mostraFormCorservazione;
 	}
 	
+	public void cf_dipartimentoSelectListener(ActionEvent ae){
+		 
+	}
 }

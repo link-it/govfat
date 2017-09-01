@@ -42,15 +42,15 @@ import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.bean.AllegatoFatturaBean;
-import org.govmix.proxy.fatturapa.web.console.bean.TracciaSDIBean;
 import org.govmix.proxy.fatturapa.web.console.bean.ConservazioneBean;
 import org.govmix.proxy.fatturapa.web.console.bean.FatturaElettronicaAttivaBean;
+import org.govmix.proxy.fatturapa.web.console.bean.TracciaSDIBean;
 import org.govmix.proxy.fatturapa.web.console.datamodel.FatturaElettronicaAttivaDM;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
 import org.govmix.proxy.fatturapa.web.console.form.FatturaForm;
 import org.govmix.proxy.fatturapa.web.console.iservice.IAllegatiService;
-import org.govmix.proxy.fatturapa.web.console.iservice.ITracciaSDIService;
 import org.govmix.proxy.fatturapa.web.console.iservice.IFatturaElettronicaAttivaService;
+import org.govmix.proxy.fatturapa.web.console.iservice.ITracciaSDIService;
 import org.govmix.proxy.fatturapa.web.console.search.FatturaElettronicaAttivaSearchForm;
 import org.govmix.proxy.fatturapa.web.console.service.AllegatiService;
 import org.govmix.proxy.fatturapa.web.console.service.TracciaSDIService;
@@ -118,7 +118,7 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 		this.form = new FatturaForm();
 		this.form.setmBean(this); 
 		this.form.setRendered(true);
-		((SelectListImpl)this.form.getDipartimento()).setElencoSelectItems(this.getDipartimenti());
+		((SelectListImpl)this.form.getDipartimento()).setElencoSelectItems(this._getDipartimenti(true));
 //		((SelectListImpl)this.form.getFascicolo()).setElencoSelectItems(this.getFascicoli());
 		this.form.reset();
 
@@ -322,19 +322,44 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 
 	public List<SelectItem> getDipartimenti() {
 		this.listaDipartimenti = new ArrayList<SelectItem>();
+		this.listaDipartimenti = this._getDipartimenti(false);
+		return this.listaDipartimenti;
+	}
+	
+	
+	public List<SelectItem> _getDipartimenti(boolean fatturazioneAttiva) {
+		List<SelectItem> listaDipartimenti = new ArrayList<SelectItem>();
 
-		this.listaDipartimenti.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*",  ("commons.label.qualsiasi"))));
+		listaDipartimenti.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*",  ("commons.label.qualsiasi"))));
 
 		List<Dipartimento> listaDipartimentiLoggedUtente = org.govmix.proxy.fatturapa.web.console.util.Utils.getListaDipartimentiLoggedUtente();
 		if(listaDipartimentiLoggedUtente != null && listaDipartimentiLoggedUtente.size() > 0)
 			for (Dipartimento dipartimento : listaDipartimentiLoggedUtente) {
-				this.listaDipartimenti.add(
-						new SelectItem(
+				boolean add = true;
+				
+				if(fatturazioneAttiva) {
+					add = dipartimento.isFatturazioneAttiva();
+				}
+				
+				if(add)
+				listaDipartimenti.add(new SelectItem(
 								new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(dipartimento.getCodice(),dipartimento.getDescrizione() + " ("+dipartimento.getCodice()+")")));
 			}
 
 
-		return this.listaDipartimenti;
+		return listaDipartimenti;
+	}
+	
+	
+	public Dipartimento getDipartimento(String codice) {
+		List<Dipartimento> listaDipartimentiLoggedUtente = org.govmix.proxy.fatturapa.web.console.util.Utils.getListaDipartimentiLoggedUtente();
+		if(listaDipartimentiLoggedUtente != null && listaDipartimentiLoggedUtente.size() > 0)
+			for (Dipartimento dipartimento : listaDipartimentiLoggedUtente) {
+				if(dipartimento.getCodice().equals(codice))
+					return dipartimento;
+			}
+
+		return null;
 	}
 	
 	public List<SelectItem> getFascicoli() {
@@ -521,13 +546,16 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 	public String preparaFormConservazione(){
 		this.listaConservazione = null;
 		List<String> nomeFile = this.form.getFatturaFile().getNomeFile();
+		String codDip = this.form.getDipartimento().getValue().getValue();
+		Dipartimento dipartimento =  this.getDipartimento(codDip);
+		String registro = dipartimento.getRegistro().getNome(); 
+		
 		for (String string : nomeFile) {
 			ConservazioneBean conservazioneBean = new ConservazioneBean();
 			conservazioneBean.setNomeFile(string);
 			conservazioneBean.setAnno("");
 			conservazioneBean.setProtocollo("");
-			// [TODO] decodificare il dipartimento dalla fattura
-			conservazioneBean.setRegistro("14.03"); 
+			conservazioneBean.setRegistro(registro); 
 			this.getListaConservazione().add(conservazioneBean );
 		}
 		

@@ -225,9 +225,9 @@ public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IB
 
 		this.indirizziNotifica.setValue(this.getDTO().getListaEmailNotifiche());
 		
-		this.fatturazioneAttiva.setValue(Utils.getBooleanAsLabel(true,"commons.label.si", "commons.label.no"));
-		this.firmaAutomatica.setValue(Utils.getBooleanAsLabel(true,"commons.label.si", "commons.label.no"));
-		this.codiceProcedimento.setValue("AZaz09");
+		this.fatturazioneAttiva.setValue(Utils.getBooleanAsLabel(this.getDTO().isFatturazioneAttiva(),"commons.label.si", "commons.label.no"));
+		this.firmaAutomatica.setValue(Utils.getBooleanAsLabel(this.getDTO().isFirmaAutomatica(),"commons.label.si", "commons.label.no"));
+		this.codiceProcedimento.setValue(this.getDTO().getIdProcedimento());
 	}
 	
 	public void setProprietaPCC(List<PccOperazione> listaProprietaConsentiteAiDipartimenti, List<PccDipartimentoOperazione> listaProprietaAbilitate){
