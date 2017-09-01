@@ -43,9 +43,5 @@ public interface IFatturaElettronicaAttivaService extends IBaseService<FatturaEl
 	
 	public List<String> getNumeroAutoComplete(String val) throws ServiceException;
 
-	public Long getIdEsitoContabilizzazione(Long idFattura) throws ServiceException;
-	
-	public Long getIdEsitoScadenza(Long idFattura) throws ServiceException;
-	
-	public Date getDataUltimaOperazioneByIdFattura(IdFattura idFattura) throws ServiceException;
+//	public Date getDataUltimaOperazioneByIdFattura(IdFattura idFattura) throws ServiceException;
 }

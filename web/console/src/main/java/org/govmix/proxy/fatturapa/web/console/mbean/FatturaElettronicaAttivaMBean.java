@@ -38,45 +38,28 @@ import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.NotificaEsitoCommittenteBD;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
-import org.govmix.proxy.fatturapa.web.console.anagrafica.bean.EnteBean;
-import org.govmix.proxy.fatturapa.web.console.anagrafica.iservice.IEnteService;
-import org.govmix.proxy.fatturapa.web.console.anagrafica.service.EnteService;
 import org.govmix.proxy.fatturapa.web.console.bean.AllegatoFatturaBean;
-import org.govmix.proxy.fatturapa.web.console.bean.ComunicazioneBean;
+import org.govmix.proxy.fatturapa.web.console.bean.TracciaSDIBean;
 import org.govmix.proxy.fatturapa.web.console.bean.ConservazioneBean;
 import org.govmix.proxy.fatturapa.web.console.bean.FatturaElettronicaAttivaBean;
-import org.govmix.proxy.fatturapa.web.console.bean.FatturaElettronicaBean;
-import org.govmix.proxy.fatturapa.web.console.bean.NotificaDTBean;
-import org.govmix.proxy.fatturapa.web.console.bean.NotificaECBean;
 import org.govmix.proxy.fatturapa.web.console.datamodel.FatturaElettronicaAttivaDM;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
 import org.govmix.proxy.fatturapa.web.console.form.FatturaForm;
-import org.govmix.proxy.fatturapa.web.console.form.NotificaECForm;
 import org.govmix.proxy.fatturapa.web.console.iservice.IAllegatiService;
-import org.govmix.proxy.fatturapa.web.console.iservice.IComunicazioneService;
+import org.govmix.proxy.fatturapa.web.console.iservice.ITracciaSDIService;
 import org.govmix.proxy.fatturapa.web.console.iservice.IFatturaElettronicaAttivaService;
-import org.govmix.proxy.fatturapa.web.console.iservice.IFatturaElettronicaService;
-import org.govmix.proxy.fatturapa.web.console.iservice.INotificaDTService;
-import org.govmix.proxy.fatturapa.web.console.iservice.INotificaECService;
 import org.govmix.proxy.fatturapa.web.console.search.FatturaElettronicaAttivaSearchForm;
-import org.govmix.proxy.fatturapa.web.console.search.FatturaElettronicaSearchForm;
 import org.govmix.proxy.fatturapa.web.console.service.AllegatiService;
-import org.govmix.proxy.fatturapa.web.console.service.NotificaDTService;
-import org.govmix.proxy.fatturapa.web.console.service.NotificaECService;
+import org.govmix.proxy.fatturapa.web.console.service.TracciaSDIService;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
-import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.BaseMBean;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.DataModelListView;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.FiltraException;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.MenuActionException;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.MessageUtils;
-import org.openspcoop2.generic_project.web.table.PagedDataTable;
 
 /**
  * FatturaElettronicaMBean ManagedBean per le schermate di visualizzazione delle fatture.
@@ -114,14 +97,14 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 	private List<SelectItem> listaDipartimenti = null;
 
 	// Stato Consegna
-	private List<SelectItem> listaStatoConsegna = null;
+	private List<SelectItem> listaStatoElaborazione = null;
 	
 	// fascicoli
 	private List<SelectItem> listaFascicoli = null;
 
 	// supporto per il caricamento dal db del dettaglio (Allegati, NotificheEC, NotificheDT)
 	private IAllegatiService allegatiService = null;
-	private IComunicazioneService comunicazioneService = null;
+	private ITracciaSDIService comunicazioneService = null;
 	private IdFattura selectedIdFattura = null;
 
 	private String selectedTab = null;
@@ -177,14 +160,8 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 	}
 	
 	
-	public String filtraScadenza()throws FiltraException {
-		this.search.setUsaDataScadenza(true);
-		return super._filtra();
-	}
-	
 	@Override
 	protected String _filtra() throws FiltraException {
-		this.search.setUsaDataScadenza(false);
 		return super._filtra();
 	}
 
@@ -198,10 +175,8 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 		((SelectListImpl)this.search.getTipoDocumento()).setElencoSelectItems(this.getListaTipoDocumento());
 		((SelectListImpl)this.search.getTipoComunicazione()).setElencoSelectItems(this.getListaTipoComunicazione());
 		((SelectListImpl)this.search.getDataInvioPeriodo()).setElencoSelectItems(this.getListaPeriodoTemporale());
-		((SelectListImpl)this.search.getNotificaDecorrenzaTermini()).setElencoSelectItems(this.getListaNotificaDT());
-		((SelectListImpl)this.search.getNotificaEsitoCommittente()).setElencoSelectItems(this.getListaNotificaEC());
 		((SelectListImpl)this.search.getDipartimento()).setElencoSelectItems(this.getDipartimenti());
-		((SelectListImpl)this.search.getStatoConsegna()).setElencoSelectItems(this.getListaStatoConsegna()); 
+		((SelectListImpl)this.search.getStatoElaborazione()).setElencoSelectItems(this.getListaStatoElaborazione()); 
 		this.search.setmBean(this);
 	}
 
@@ -239,22 +214,15 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 			this.selectedElement.setAllegati(listaAllegati);
 
 			// Lista Comunicazioni
-			List<ComunicazioneBean> listaComunicazioni = new ArrayList<ComunicazioneBean>();
-			// TODO
-			// caricare le informazioni su comunicazioni 
-//			if(this.comunicazioneService == null)
-//				this.comunicazioneService = new ComunicazioneService();
+			List<TracciaSDIBean> listaComunicazioni = new ArrayList<TracciaSDIBean>();
+
+			if(this.comunicazioneService == null)
+				this.comunicazioneService = new TracciaSDIService();
 //
-//			this.comunicazioneService.setIdFattura(this.selectedIdFattura);
+			this.comunicazioneService.setIdFattura(this.selectedIdFattura);
 			
 			try{
-		//		listaComunicazioni = this.comunicazioneService.findAll();
-
-				//				if(listaAllegati != null && listaAllegati.size() > 0){
-				//					for (AllegatoFatturaBean allegatoBean : listaAllegati) {
-				//						allegatoBean.setIdFattura(this.selectedElement.getDTO().getId());
-				//					}
-				//				}
+				listaComunicazioni = this.comunicazioneService.findAll();
 			}catch(Exception e){
 				this.log.debug("Si e' verificato un errore durante il caricamento delle comunicazioni: "+ e.getMessage(), e);
 
@@ -332,18 +300,18 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 		return this.listaTipoDocumento;
 	}
 
-	public List<SelectItem> getListaStatoConsegna() {
-		if (this.listaStatoConsegna == null) {
-			this.listaStatoConsegna = new ArrayList<SelectItem>();
+	public List<SelectItem> getListaStatoElaborazione() {
+		if (this.listaStatoElaborazione == null) {
+			this.listaStatoElaborazione = new ArrayList<SelectItem>();
 
-			this.listaStatoConsegna.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi"))));
-			this.listaStatoConsegna.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoConsegnaType.NON_CONSEGNATA.getValue(),  ("fattura.statoConsegna.nonConsegnata"))));
-			this.listaStatoConsegna.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoConsegnaType.IN_RICONSEGNA.getValue(),  ("fattura.statoConsegna.inRiconsegna"))));
-			this.listaStatoConsegna.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoConsegnaType.ERRORE_CONSEGNA.getValue(),  ("fattura.statoConsegna.erroreConsegna"))));
-			this.listaStatoConsegna.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoConsegnaType.CONSEGNATA.getValue(),  ("fattura.statoConsegna.consegnataLabel"))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi"))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoConsegnaType.NON_CONSEGNATA.getValue(),  ("fattura.statoConsegna.nonConsegnata"))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoConsegnaType.IN_RICONSEGNA.getValue(),  ("fattura.statoConsegna.inRiconsegna"))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoConsegnaType.ERRORE_CONSEGNA.getValue(),  ("fattura.statoConsegna.erroreConsegna"))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoConsegnaType.CONSEGNATA.getValue(),  ("fattura.statoConsegna.consegnataLabel"))));
 		}
 
-		return this.listaStatoConsegna;
+		return this.listaStatoElaborazione;
 	}
 
 	public List<SelectItem> getDipartimenti() {

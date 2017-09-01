@@ -338,11 +338,11 @@ public class FatturaBD extends BaseBD {
 		return this.getListAutocomplete(filter, FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE);
 	}
 	
-	public List<String> getAutocompletamentoCessionarioCommittenteDenominazione(FatturaPassivaFilter filter) throws ServiceException {
+	public List<String> getAutocompletamentoCessionarioCommittenteDenominazione(FatturaFilter filter) throws ServiceException {
 		return this.getListAutocomplete(filter, FatturaElettronica.model().CESSIONARIO_COMMITTENTE_DENOMINAZIONE);
 	}
 	
-	public List<String> getAutocompletamentoNumero(FatturaPassivaFilter filter) throws ServiceException {
+	public List<String> getAutocompletamentoNumero(FatturaFilter filter) throws ServiceException {
 		return this.getListAutocomplete(filter, FatturaElettronica.model().NUMERO);
 	}
 

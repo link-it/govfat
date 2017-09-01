@@ -314,8 +314,10 @@ public class OperazioneMBean extends BaseMBean<TracciaPccEstesaBean, Long, Opera
 			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("OperazioneContabile_SP", ("pccOperazione.nome.OperazioneContabile_SP"))));
 			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("OperazioneContabile_CS", ("pccOperazione.nome.OperazioneContabile_CS"))));
 			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("OperazioneContabile_CCS", ("pccOperazione.nome.OperazioneContabile_CCS"))));
+			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("OperazioneContabile_CSPC", ("pccOperazione.nome.OperazioneContabile_CSPC"))));
 			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("OperazioneContabile_CO", ("pccOperazione.nome.OperazioneContabile_CO"))));
 			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("OperazioneContabile_SC", ("pccOperazione.nome.OperazioneContabile_SC"))));
+			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("OperazioneContabile_CPS", ("pccOperazione.nome.OperazioneContabile_CPS"))));
 			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("OperazioneContabile_RC", ("pccOperazione.nome.OperazioneContabile_RC"))));
 			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("OperazioneContabile_RF", ("pccOperazione.nome.OperazioneContabile_RF"))));
 		}

@@ -106,9 +106,9 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 	private List<AllegatoFatturaBean> allegati = new ArrayList<AllegatoFatturaBean>();
 
 	//Metadata Comunicazioni
-	private ComunicazioneBean metadataComunicazione = new ComunicazioneBean();
+	private TracciaSDIBean metadataComunicazione = new TracciaSDIBean();
 	// Lista Comunicazioni
-	private List<ComunicazioneBean> listaComunicazioni = new ArrayList<ComunicazioneBean>();
+	private List<TracciaSDIBean> listaComunicazioni = new ArrayList<TracciaSDIBean>();
 
 	// Gruppo Informazioni Dati Genareli
 	private OutputGroup datiIntestazione = null;
@@ -941,19 +941,19 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.dataScadenzaAssente = dataScadenzaAssente;
 	}
 
-	public ComunicazioneBean getMetadataComunicazione() {
+	public TracciaSDIBean getMetadataComunicazione() {
 		return metadataComunicazione;
 	}
 
-	public void setMetadataComunicazione(ComunicazioneBean metadataComunicazione) {
+	public void setMetadataComunicazione(TracciaSDIBean metadataComunicazione) {
 		this.metadataComunicazione = metadataComunicazione;
 	}
 
-	public List<ComunicazioneBean> getListaComunicazioni() {
+	public List<TracciaSDIBean> getListaComunicazioni() {
 		return listaComunicazioni;
 	}
 
-	public void setListaComunicazioni(List<ComunicazioneBean> listaComunicazioni) {
+	public void setListaComunicazioni(List<TracciaSDIBean> listaComunicazioni) {
 		this.listaComunicazioni = listaComunicazioni;
 	}
 

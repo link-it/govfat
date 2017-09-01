@@ -350,6 +350,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 
 			TestataRispTipo testataRisposta = wSProxyOperazioneContabile.getTestataRisposta();
 			EsitoOkKoTipo esito = testataRisposta.getEsito();
+			@SuppressWarnings("unused")
 			String detail = testataRisposta.getDetail();
 			OrigineTipo origine = testataRisposta.getOrigine();
 

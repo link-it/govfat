@@ -554,20 +554,12 @@
 		</navigation-case>
 	</navigation-rule>
 
-	<!-- Navigazione dalla pagina dettaglioFattura -->
+	<!-- Navigazione dalla pagina dettaglioFatturaAttiva -->
 	<navigation-rule>
 		<from-view-id>/pages/fattura/form/dettaglioFatturaAttiva.xhtml</from-view-id>
 		<navigation-case>
 			<from-outcome>listaFattureAttive</from-outcome>
 			<to-view-id>/pages/fattura/list/listaFattureAttive.xhtml</to-view-id>
-		</navigation-case>
-		<navigation-case>
-			<from-outcome>dettaglioOperazione</from-outcome>
-			<to-view-id>/pages/operazioni/form/dettaglioOperazioneCompatta.xhtml</to-view-id>
-		</navigation-case>
-		<navigation-case>
-			<from-outcome>dettaglioErrore</from-outcome>
-			<to-view-id>/pages/operazioni/form/dettaglioErrore.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 

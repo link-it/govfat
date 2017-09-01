@@ -60,18 +60,12 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 	private DateTime dataInvio = null;
 	private SelectList<SelectItem> tipoDocumento = null;
 	private SelectList<SelectItem> tipoComunicazione = null;
-	private SelectList<SelectItem> notificaEsitoCommittente = null;
-	private SelectList<SelectItem> notificaDecorrenzaTermini = null;
 	private FatturaElettronicaAttivaMBean mBean = null;
 	private DateTime dataEsatta = null;
 	private Text numero = null;
 	private Text identificativoLotto = null;
-
 	private Text identificativoProtocollo = null;
-	private SelectList<SelectItem> statoConsegna = null;
-	
-	private boolean usaDataScadenza = false;
-	
+	private SelectList<SelectItem> statoElaborazione = null;
 
 	public FatturaElettronicaAttivaSearchForm()throws Exception{
 		this.init();
@@ -98,23 +92,21 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		((SelectListImpl)this.dipartimento).setCheckItemWidth(true); 
 		this.dipartimento.setFontName("Arial"); //"Arial,Verdana,sans-serif" 
 
-//		this.dataRicezionePeriodo = new SelectListField();
-//		this.dataRicezionePeriodo.setName("dataRicezionePeriodo");
+//		this.dataInvioPeriodo = new SelectListField();
+//		this.dataInvioPeriodo.setName("dataInvioPeriodo");
 		//NOTA: Modificato a seguito della CR 80
-		this.dataInvioPeriodo = factory.getInputFieldFactory().createSelectList("dataRicezionePeriodo","fattura.search.dataRicezione",new SelectItem(FatturaElettronicaAttivaSearchForm.DATA_INVIO_PERIODO_ULTIMO_MESE,"fattura.search.dataRicezione.ultimoMese"),false);
+		this.dataInvioPeriodo = factory.getInputFieldFactory().createSelectList("dataInvioPeriodo","fattura.search.dataInvio",new SelectItem(FatturaElettronicaAttivaSearchForm.DATA_INVIO_PERIODO_ULTIMO_MESE,"fattura.search.dataInvio.ultimoMese"),false);
 
 		this.dataInvioPeriodo.setFieldsToUpdate(this.getId () + "_searchPnl");
 		this.dataInvioPeriodo.setForm(this);
 
-		this.dataInvio = factory.getInputFieldFactory().createDateTimeInterval("dataRicezione","fattura.search.dataRicezione.personalizzato","dd/M/yyyy",null,null,false);
+		this.dataInvio = factory.getInputFieldFactory().createDateTimeInterval("dataInvio","fattura.search.dataInvio.personalizzato","dd/M/yyyy",null,null,false);
 		this.dataEsatta = factory.getInputFieldFactory().createDateTime("dataEsatta","fattura.search.dataEsatta","dd/M/yyyy",null,false);
 		
 		// imposto i valori di default per le date
 		this._setPeriodo();
 
 		this.tipoDocumento = factory.getInputFieldFactory().createSelectList("tipoDocumento","fattura.search.tipoDocumento",null,false);
-		this.notificaEsitoCommittente = factory.getInputFieldFactory().createSelectList("notificaEsitoCommittente","fattura.search.notificaEC",null,false);
-		this.notificaDecorrenzaTermini = factory.getInputFieldFactory().createSelectList( "notificaDecorrenzaTermini","fattura.search.notificaDT",null,false);
 		this.numero = factory.getInputFieldFactory().createText("numero","fattura.search.numero",null,false);
 		
 		this.numero.setAutoComplete(true);
@@ -127,7 +119,7 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		this.identificativoProtocollo = factory.getInputFieldFactory().createText("identificativoProtocollo",
 				"fattura.search.identificativoProtocollo",null,false);
 
-		this.statoConsegna = factory.getInputFieldFactory().createSelectList("statoConsegna","fattura.search.statoConsegna",null,false);
+		this.statoElaborazione = factory.getInputFieldFactory().createSelectList("statoElaborazione","fattura.search.statoElaborazione",null,false);
 		
 		this.tipoComunicazione = factory.getInputFieldFactory().createSelectList("tipoComunicazione","fattura.search.tipoComunicazione",null,false);
 		
@@ -139,12 +131,10 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		this.setField(this.dataEsatta);
 		
 		this.setField(this.tipoDocumento); 
-		this.setField(this.notificaEsitoCommittente); 
-		this.setField(this.notificaDecorrenzaTermini); 
 		this.setField(this.numero); 
 		this.setField(this.identificativoLotto);
 		this.setField(this.identificativoProtocollo); 
-		this.setField(this.statoConsegna); 
+		this.setField(this.statoElaborazione); 
 
 		this.setField(this.tipoComunicazione); 
 		
@@ -172,17 +162,14 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		this._setPeriodo();
 		this.tipoDocumento.reset();
 		this.tipoComunicazione.reset();
-		this.notificaEsitoCommittente.reset();
-		this.notificaDecorrenzaTermini.reset();
 		
 		this.identificativoLotto.reset();
 		this.dataEsatta.reset(); 
 		this.numero.reset();
 		
-		this.statoConsegna.reset();
+		this.statoElaborazione.reset();
 		this.identificativoProtocollo.reset();
 
-		this.usaDataScadenza = false;
 	}
 
 	
@@ -231,13 +218,13 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		return this.dataInvioPeriodo;
 	}
 
-	public void setDataInvioPeriodo(SelectList<SelectItem> dataRicezionePeriodo) {
-		this.dataInvioPeriodo = dataRicezionePeriodo;
+	public void setDataInvioPeriodo(SelectList<SelectItem> dataInvioPeriodo) {
+		this.dataInvioPeriodo = dataInvioPeriodo;
 	}
 
 	public DateTime getDataInvio() {
 		boolean rendered = (this.getDataInvioPeriodo().getValue() != null && this.getDataInvioPeriodo().getValue().getValue()
-				.equals(FatturaElettronicaAttivaSearchForm.DATA_INVIO_PERIODO_PERSONALIZZATO)); //Utils.getMessageFromResourceBundle("fattura.search.dataRicezione.personalizzato")));
+				.equals(FatturaElettronicaAttivaSearchForm.DATA_INVIO_PERIODO_PERSONALIZZATO)); //Utils.getMessageFromResourceBundle("fattura.search.dataInvio.personalizzato")));
 
 		this.dataInvio.setRendered(rendered);
 
@@ -254,24 +241,6 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 
 	public void setTipoDocumento(SelectList<SelectItem> tipoDocumento) {
 		this.tipoDocumento = tipoDocumento;
-	}
-
-	public SelectList<SelectItem> getNotificaEsitoCommittente() {
-		return this.notificaEsitoCommittente;
-	}
-
-	public void setNotificaEsitoCommittente(
-			SelectList<SelectItem> notificaEsitoCommittente) {
-		this.notificaEsitoCommittente = notificaEsitoCommittente;
-	}
-
-	public SelectList<SelectItem> getNotificaDecorrenzaTermini() {
-		return this.notificaDecorrenzaTermini;
-	}
-
-	public void setNotificaDecorrenzaTermini(
-			SelectList<SelectItem> notificaDecorrenzaTermini) {
-		this.notificaDecorrenzaTermini = notificaDecorrenzaTermini;
 	}
 
 	public List<SelectItem> cessionarioCommittenteAutoComplete(Object val){
@@ -300,7 +269,7 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		return listToRet;
 	}
 	
-	public void dataRicezionePeriodoSelectListener(ActionEvent ae){
+	public void dataInvioPeriodoSelectListener(ActionEvent ae){
 		this._setPeriodo();
 	}
 	
@@ -398,14 +367,14 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		this.identificativoProtocollo = identificativoProtocollo;
 	}
 
-	public SelectList<SelectItem> getStatoConsegna() {
-		return statoConsegna;
+	public SelectList<SelectItem> getStatoElaborazione() {
+		return statoElaborazione;
 	}
 
-	public void setStatoConsegna(SelectList<SelectItem> statoConsegna) {
-		this.statoConsegna = statoConsegna;
+	public void setStatoElaborazione(SelectList<SelectItem> statoElaborazione) {
+		this.statoElaborazione = statoElaborazione;
 	}
-	
+
 	public void dataInizioChangeListener(javax.faces.event.ValueChangeEvent event){
 		Logger log = LoggerManager.getConsoleLogger();
 
@@ -439,14 +408,6 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 //		} else 
 //			log.debug("Data Esatta inserita: NULL");
 
-	}
-
-	public boolean isUsaDataScadenza() {
-		return usaDataScadenza;
-	}
-
-	public void setUsaDataScadenza(boolean usaDataScadenza) {
-		this.usaDataScadenza = usaDataScadenza;
 	}
 
 	public SelectList<SelectItem> getTipoComunicazione() {
