@@ -89,7 +89,7 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 			FatturaAttivaFilter filter = this.fatturaAttivaBD.newFilter();
 			
 			filter.setUtente(Utils.getLoggedUtente());
-			filter.getCpDenominazioneList().add(val.toLowerCase());
+			filter.getCcDenominazioneList().add(val.toLowerCase());
 			
 			listaMittenti = this.fatturaAttivaBD.getAutocompletamentoCessionarioCommittenteDenominazione(filter);
 

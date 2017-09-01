@@ -74,7 +74,7 @@ public class FatturaPassivaFilter extends FatturaFilter {
 				}
 			}
 
-			if(this.inScadenza) {
+			if(this.inScadenza != null) {
 				expression.equals(FatturaElettronica.model().DA_PAGARE, this.inScadenza);
 			}
 

@@ -258,7 +258,7 @@ public class FatturaBD extends BaseBD {
 		try {
 			return this.service.select(filter.toPaginatedExpression(), fields);
 		} catch (NotFoundException e) {
-			return null;
+			return new ArrayList<Map<String,Object>>();
 		} catch (NotImplementedException e) {
 			throw new ServiceException(e);
 		}
@@ -266,14 +266,15 @@ public class FatturaBD extends BaseBD {
 	
 	public List<String> getListAutocomplete(FatturaFilter filter, IField field) throws ServiceException {
 		
-		List<Map<String,Object>> select = this.select(filter, field);
-
+		List<Map<String,Object>> select = null;
+		select = this.select(filter, field);
 		List<String> cpValues = new ArrayList<String>();
 		if(select.size() > 0) {
 			for(Map<String, Object> record: select) {
-				cpValues.add((String)record.get(field));
+				cpValues.add((String)record.get(field.getFieldName()));
 			}
 		}
+		
 		
 		return cpValues;
 	}

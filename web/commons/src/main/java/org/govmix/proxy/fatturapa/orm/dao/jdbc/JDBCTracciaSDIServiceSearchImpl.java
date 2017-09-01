@@ -479,57 +479,18 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithou
 	
 	private void _join(IExpression expression, ISQLQueryObject sqlQueryObject) throws NotImplementedException, ServiceException, Exception{
 	
-		/* 
-		 * TODO: implement code that implement the join condition
-		*/
-		/*
-		if(expression.inUseModel(TracciaSDI.model().XXXX,false)){
+		if(expression.inUseModel(TracciaSDI.model().METADATO,false)){
 			String tableName1 = this.getTracciaSDIFieldConverter().toAliasTable(TracciaSDI.model());
-			String tableName2 = this.getTracciaSDIFieldConverter().toAliasTable(TracciaSDI.model().XXX);
-			sqlQueryObject.addWhereCondition(tableName1+".id="+tableName2+".id_table1");
+			String tableName2 = this.getTracciaSDIFieldConverter().toAliasTable(TracciaSDI.model().METADATO);
+			sqlQueryObject.addWhereCondition(tableName1+".id="+tableName2+".id_traccia_sdi");
 		}
-		*/
-		
-		/* 
-         * TODO: implementa il codice che aggiunge la condizione FROM Table per le condizioni di join di oggetti annidati dal secondo livello in poi 
-         *       La addFromTable deve essere aggiunta solo se l'oggetto del livello precedente non viene utilizzato nella espressione 
-         *		 altrimenti il metodo sopra 'toSqlForPreparedStatementWithFromCondition' si occupa gia' di aggiungerla
-        */
-        /*
-        if(expression.inUseModel(TracciaSDI.model().LEVEL1.LEVEL2,false)){
-			if(expression.inUseModel(TracciaSDI.model().LEVEL1,false)==false){
-				sqlQueryObject.addFromTable(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model().LEVEL1));
-			}
-		}
-		...
-		if(expression.inUseModel(TracciaSDI.model()....LEVELN.LEVELN+1,false)){
-			if(expression.inUseModel(TracciaSDI.model().LEVELN,false)==false){
-				sqlQueryObject.addFromTable(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model().LEVELN));
-			}
-		}
-		*/
-		
-		// Delete this line when you have implemented the join condition
-		int throwNotImplemented = 1;
-		if(throwNotImplemented==1){
-		        throw new NotImplementedException("NotImplemented");
-		}
-		// Delete this line when you have implemented the join condition
         
 	}
 	
 	protected java.util.List<Object> _getRootTablePrimaryKeyValues(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, TracciaSDI tracciaSDI) throws NotFoundException, ServiceException, NotImplementedException, Exception{
 	    // Identificativi
         java.util.List<Object> rootTableIdValues = new java.util.ArrayList<Object>();
-        // TODO: Define the column values used to identify the primary key
 		rootTableIdValues.add(tracciaSDI.getId());
-        
-        // Delete this line when you have verified the method
-		int throwNotImplemented = 1;
-		if(throwNotImplemented==1){
-		        throw new NotImplementedException("NotImplemented");
-		}
-		// Delete this line when you have verified the method
         
         return rootTableIdValues;
 	}
@@ -539,9 +500,6 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithou
 		TracciaSDIFieldConverter converter = this.getTracciaSDIFieldConverter();
 		Map<String, List<IField>> mapTableToPKColumn = new java.util.Hashtable<String, List<IField>>();
 		UtilsTemplate<IField> utilities = new UtilsTemplate<IField>();
-
-		// TODO: Define the columns used to identify the primary key
-		//		  If a table doesn't have a primary key, don't add it to this map
 
 		// TracciaSDI.model()
 		mapTableToPKColumn.put(converter.toTable(TracciaSDI.model()),
@@ -556,13 +514,6 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithou
 			));
 
 
-        // Delete this line when you have verified the method
-		int throwNotImplemented = 1;
-		if(throwNotImplemented==1){
-		        throw new NotImplementedException("NotImplemented");
-		}
-		// Delete this line when you have verified the method
-        
         return mapTableToPKColumn;		
 	}
 	

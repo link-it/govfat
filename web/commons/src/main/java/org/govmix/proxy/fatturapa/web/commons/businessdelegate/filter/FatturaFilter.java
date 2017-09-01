@@ -45,6 +45,8 @@ public class FatturaFilter extends AbstractFilter {
 	private String numero;
 	private String numeroLike;
 	
+	private List<String> ccDenominazioneList;
+
 	private List<String> cpDenominazioneList;
 	private String cpCodiceFiscale;
 	private String cpPaese;
@@ -123,6 +125,19 @@ public class FatturaFilter extends AbstractFilter {
 					IExpression newExpression = this.newExpression();
 					for(String cpDenom: cpDenominazioneList) {
 						newExpression.or().ilike(FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE, cpDenom, LikeMode.ANYWHERE);
+					}
+					expression.and(newExpression);
+				}
+					
+			}
+			
+			if(this.ccDenominazioneList != null) {
+				if(ccDenominazioneList.size() == 1) {
+					expression.ilike(FatturaElettronica.model().CESSIONARIO_COMMITTENTE_DENOMINAZIONE, this.ccDenominazioneList.get(0), LikeMode.ANYWHERE);
+				} else {
+					IExpression newExpression = this.newExpression();
+					for(String cpDenom: ccDenominazioneList) {
+						newExpression.or().ilike(FatturaElettronica.model().CESSIONARIO_COMMITTENTE_DENOMINAZIONE, cpDenom, LikeMode.ANYWHERE);
 					}
 					expression.and(newExpression);
 				}
@@ -308,6 +323,16 @@ public class FatturaFilter extends AbstractFilter {
 
 	public void setNumeroLike(String numeroLike) {
 		this.numeroLike = numeroLike;
+	}
+
+	public List<String> getCcDenominazioneList() {
+		if(this.ccDenominazioneList == null) this.ccDenominazioneList = new ArrayList<String>();
+
+		return ccDenominazioneList;
+	}
+
+	public void setCcDenominazioneList(List<String> ccDenominazioneList) {
+		this.ccDenominazioneList = ccDenominazioneList;
 	}
 
 }
