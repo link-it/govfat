@@ -563,6 +563,9 @@ public class JDBCDipartimentoServiceSearchImpl implements IJDBCDipartimentoServi
 		sqlQueryObjectGet_dipartimento.addSelectField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().ACCETTAZIONE_AUTOMATICA,true));
 		sqlQueryObjectGet_dipartimento.addSelectField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().MODALITA_PUSH,true));
 		sqlQueryObjectGet_dipartimento.addSelectField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().LISTA_EMAIL_NOTIFICHE,true));
+		sqlQueryObjectGet_dipartimento.addSelectField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().FATTURAZIONE_ATTIVA,true));
+		sqlQueryObjectGet_dipartimento.addSelectField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().FIRMA_AUTOMATICA,true));
+		sqlQueryObjectGet_dipartimento.addSelectField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().ID_PROCEDIMENTO,true));
 		sqlQueryObjectGet_dipartimento.addWhereCondition("id=?");
 
 		// Get dipartimento
