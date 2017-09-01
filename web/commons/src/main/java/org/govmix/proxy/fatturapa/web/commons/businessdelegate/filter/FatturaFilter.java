@@ -7,6 +7,7 @@ import java.util.List;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.UtenteDipartimento;
+import org.govmix.proxy.fatturapa.orm.constants.UserRole;
 import org.openspcoop2.generic_project.beans.CustomField;
 import org.openspcoop2.generic_project.dao.IExpressionConstructor;
 import org.openspcoop2.generic_project.exception.ExpressionException;
@@ -144,7 +145,7 @@ public class FatturaFilter extends AbstractFilter {
 				expression.equals(FatturaElettronica.model().IMPORTO_TOTALE_DOCUMENTO, this.importo);
 			}
 			
-			if(this.utente != null) {
+			if(this.utente != null && !this.utente.getRole().equals(UserRole.ADMIN)) {
 				List<String> dipartimenti = new ArrayList<String>(); 
 				if(utente.getUtenteDipartimentoList()!=null && !utente.getUtenteDipartimentoList().isEmpty()) {
 					for(UtenteDipartimento ud: utente.getUtenteDipartimentoList()) {
