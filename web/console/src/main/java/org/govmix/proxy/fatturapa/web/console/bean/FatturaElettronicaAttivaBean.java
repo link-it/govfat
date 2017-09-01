@@ -33,6 +33,7 @@ import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
+import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
@@ -91,7 +92,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 	private Text numero = null;
 	private Text anno = null;
 	private Text causale = null;
-	private Text statoConsegna = null;
+	private Text statoElaborazione = null;
 	private Text protocollo = null;
 	private DateTime dataConsegna = null;
 	private Text formatoTrasmissione = null;
@@ -174,7 +175,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.causale = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("causale","fattura.causale","fattura.causale.assente");
 		this.causale.setValueStyleClass("whiteSpaceNewLine");
 		this.protocollo = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("protocollo","fattura.protocollo","fattura.protocollo.assente");
-		this.statoConsegna = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("statoConsegna","fattura.statoConsegna");
+		this.statoElaborazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("statoElaborazione","fattura.statoElaborazione");
 		this.formatoTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("formatoTrasmissione","fattura.formatoTrasmissione");
 
 		this.dataProssimaConsegna = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataProssimaConsegna","fattura.dataProssimaConsegna","dd/MM/yyyy HH:mm");
@@ -213,7 +214,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.setField(this.anno);
 		this.setField(this.causale);
 		this.setField(this.protocollo);
-		this.setField(this.statoConsegna);
+		this.setField(this.statoElaborazione);
 		this.setField(this.formatoTrasmissione);
 		this.setField(this.dataProssimaConsegna);
 		//this.setField(this.dataScadenza);
@@ -253,7 +254,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.datiTrasmissione1.addField(this.dataInvio);
 		this.datiTrasmissione1.addField(this.dataConsegna);
 		this.datiTrasmissione1.addField(this.dataProssimaConsegna);
-		this.datiTrasmissione1.addField(this.statoConsegna);
+		this.datiTrasmissione1.addField(this.statoElaborazione);
 		this.datiTrasmissione1.addField(this.protocollo);
 
 		this.contenutoFattura = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("contenutoFattura",4);
@@ -452,26 +453,23 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 
 		}
 
-		StatoConsegnaType statoConsegnaE = this.getDTO().getLottoFatture() != null ? this.getDTO().getLottoFatture().getStatoConsegna() : null; 
+		StatoElaborazioneType statoEelaborazione = this.getDTO().getLottoFatture() != null ? this.getDTO().getLottoFatture().getStatoElaborazioneInUscita() : null; 
 
 		//		if(this.getDTO().getProtocollo() != null) {
 		//			this.statoConsegna.setValue("fattura.statoConsegna.protocollata");
 		//		} else {
-		if(statoConsegnaE != null) {
-			switch (statoConsegnaE) {
-			case CONSEGNATA:
-				this.statoConsegna.setValue("fattura.statoConsegna.consegnata");
-				break;
-			case ERRORE_CONSEGNA:
-				this.statoConsegna.setValue("fattura.statoConsegna.erroreConsegna");
-				break;
-			case IN_RICONSEGNA:
-				this.statoConsegna.setValue("fattura.statoConsegna.inRiconsegna");
-				this.dataProssimaConsegna.setRendered(true);
-				break;
-			case NON_CONSEGNATA:
+		if(statoEelaborazione != null) {
+			switch (statoEelaborazione) {
+			case ERRORE_FIRMA:
+			case ERRORE_PROTOCOLLAZIONE:
+			case ERRORE_SPEDIZIONE:
+			case FIRMA_OK:
+			case NON_FIRMATO:
+			case PROTOCOLLAZIONE_OK:
+			case SPEDIZIONE_NON_ATTIVA:
+			case SPEDIZIONE_OK:
 			default:
-				this.statoConsegna.setValue("fattura.statoConsegna.nonConsegnata");
+				this.statoElaborazione.setValue("fattura.statoElaborazione."+statoEelaborazione.getValue());
 				break;
 			}
 		}
@@ -723,13 +721,14 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 			Text terzoIntermediarioOSoggettoEmittentePaese) {
 		this.terzoIntermediarioOSoggettoEmittentePaese = terzoIntermediarioOSoggettoEmittentePaese;
 	}
+	
 
-	public Text getStatoConsegna() {
-		return this.statoConsegna;
+	public Text getStatoElaborazione() {
+		return statoElaborazione;
 	}
 
-	public void setStatoConsegna(Text statoConsegna) {
-		this.statoConsegna = statoConsegna;
+	public void setStatoElaborazione(Text statoElaborazione) {
+		this.statoElaborazione = statoElaborazione;
 	}
 
 	private void prepareUrls(){

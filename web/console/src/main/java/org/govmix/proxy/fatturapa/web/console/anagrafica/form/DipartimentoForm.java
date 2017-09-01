@@ -328,6 +328,10 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 
 
 				this.indirizziNotifica.setDefaultValue(bean.getDTO().getListaEmailNotifiche());
+				
+				this.fatturazioneAttiva.setDefaultValue(bean.getDTO().isFatturazioneAttiva());
+				this.firmaAutomatica.setDefaultValue(bean.getDTO().isFirmaAutomatica());
+				this.codiceProcedimento.setDefaultValue(bean.getDTO().getIdProcedimento()); 
 
 
 				// prelevo le properties abilitate
@@ -362,6 +366,10 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 				this.codicePCC.setDefaultValue(false);
 
 				this.indirizziNotifica.setDefaultValue(null); 
+				
+				this.fatturazioneAttiva.setDefaultValue(false);
+				this.firmaAutomatica.setDefaultValue(false);
+				this.codiceProcedimento.setDefaultValue(null); 
 
 				// tutte le properties false
 				Utils.impostaValoreProprietaPCCDipartimentoForm(this.listaProprietaConsentiteAiDipartimenti, listaProprietaAbilitate, NomePccOperazioneType.PAGAMENTO_IVA, this.pagamentoIVA,true);
@@ -608,6 +616,21 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 			}
 			
 		}
+		
+		// fatturazione attiva
+		
+		boolean fattAttiva = this.fatturazioneAttiva.getValue() != null ? (this.fatturazioneAttiva.getValue() ? true : false) : false;
+		
+		if(fattAttiva)  {
+			
+			
+			// [TODO] codice procedimento non obbligatorio ma validare pattern 
+			String _codiceProcedimento = this.codiceProcedimento.getValue();
+			if(StringUtils.isNotEmpty(_codiceProcedimento)) {
+				
+			}
+		}
+		
 
 		return null;
 	}
@@ -687,6 +710,16 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		if(this.codicePCC.getValue()){
 			dipartimento.setListaEmailNotifiche(this.indirizziNotifica.getValue()); 
 		}
+		
+		
+		// fatturazione attiva
+		boolean _fatturazioneAttiva = this.fatturazioneAttiva.getValue() != null ? (this.fatturazioneAttiva.getValue() ? true : false) : false;
+		boolean _firmaAutomatica = this.firmaAutomatica.getValue() != null ? (this.firmaAutomatica.getValue() ? true : false) : false;
+		String _codiceProcedimento = this.codiceProcedimento.getValue();
+		
+		dipartimento.setFatturazioneAttiva(_fatturazioneAttiva);
+		dipartimento.setFirmaAutomatica(_firmaAutomatica);
+		dipartimento.setIdProcedimento(_codiceProcedimento); 
 
 		return dipartimento;
 	}

@@ -36,6 +36,7 @@ import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
+import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
@@ -305,10 +306,15 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 			this.listaStatoElaborazione = new ArrayList<SelectItem>();
 
 			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi"))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoConsegnaType.NON_CONSEGNATA.getValue(),  ("fattura.statoConsegna.nonConsegnata"))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoConsegnaType.IN_RICONSEGNA.getValue(),  ("fattura.statoConsegna.inRiconsegna"))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoConsegnaType.ERRORE_CONSEGNA.getValue(),  ("fattura.statoConsegna.erroreConsegna"))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoConsegnaType.CONSEGNATA.getValue(),  ("fattura.statoConsegna.consegnataLabel"))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.SPEDIZIONE_OK.getValue(),  ("fattura.statoConsegna."+StatoElaborazioneType.SPEDIZIONE_OK.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.SPEDIZIONE_NON_ATTIVA.getValue(),  ("fattura.statoConsegna."+StatoElaborazioneType.SPEDIZIONE_NON_ATTIVA.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.PROTOCOLLAZIONE_OK.getValue(),  ("fattura.statoConsegna."+StatoElaborazioneType.PROTOCOLLAZIONE_OK.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.NON_FIRMATO.getValue(),  ("fattura.statoConsegna."+StatoElaborazioneType.NON_FIRMATO.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.FIRMA_OK.getValue(),  ("fattura.statoConsegna."+StatoElaborazioneType.FIRMA_OK.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.ERRORE_SPEDIZIONE.getValue(),  ("fattura.statoConsegna."+StatoElaborazioneType.ERRORE_SPEDIZIONE.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.ERRORE_PROTOCOLLAZIONE.getValue(),  ("fattura.statoConsegna."+StatoElaborazioneType.ERRORE_PROTOCOLLAZIONE.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.ERRORE_FIRMA.getValue(),  ("fattura.statoConsegna."+StatoElaborazioneType.ERRORE_FIRMA.getValue()))));
+			
 		}
 
 		return this.listaStatoElaborazione;

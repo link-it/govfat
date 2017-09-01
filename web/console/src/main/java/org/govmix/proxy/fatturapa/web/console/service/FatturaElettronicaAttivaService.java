@@ -275,10 +275,10 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 				}
 
 				if(valoriCedPret.size() == 0) {
-					filter.getCpDenominazioneList().add(search.getCessionarioCommittente().getValue());
+					filter.getCcDenominazioneList().add(search.getCessionarioCommittente().getValue());
 					
 				}else {
-					filter.getCpDenominazioneList().addAll(valoriCedPret);
+					filter.getCcDenominazioneList().addAll(valoriCedPret);
 				}
 			}
 
