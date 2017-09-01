@@ -24,6 +24,7 @@ import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaAttivaFilter;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 
@@ -49,5 +50,9 @@ public class FatturaAttivaBD extends FatturaBD {
 		} catch (NotImplementedException e) {
 			throw new ServiceException(e);
 		}
+	}
+
+	public FatturaAttivaFilter newFilter() {
+		return new FatturaAttivaFilter(this.service);
 	}
 }

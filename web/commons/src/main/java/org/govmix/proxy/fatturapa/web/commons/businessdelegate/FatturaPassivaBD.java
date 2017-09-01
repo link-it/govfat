@@ -24,7 +24,6 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
@@ -40,8 +39,6 @@ import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaPas
 import org.govmix.proxy.pcc.fatture.tracciamento.OperazioneNonPermessaException;
 import org.openspcoop2.generic_project.beans.CustomField;
 import org.openspcoop2.generic_project.beans.UpdateField;
-import org.openspcoop2.generic_project.exception.ExpressionException;
-import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
@@ -168,69 +165,6 @@ public class FatturaPassivaBD extends FatturaBD {
 		filter.setDataRicezioneMin(date);
 		filter.setDaAccettareAutomaticamente(true);
 		return filter;
-	}
-
-	public Long getIdEsitoScadenza(long idFattura) throws ServiceException, NotFoundException {
-		try {
-			String idEsito = "id_scadenza";
-			CustomField esitoField = new CustomField(idEsito, Long.class, idEsito, this.getRootTable(this.service));
-			FatturaPassivaFilter newFilter = this.newFilter();
-			newFilter.setId(idFattura);
-			
-			List<Map<String,Object>> select = this.select(newFilter, esitoField);
-
-			if(select.size() > 1) {
-				throw new MultipleResultException();
-			} else if(select.size() > 0) {
-				Object idEsitoObj = select.get(0).get(idEsito);
-				if(idEsitoObj instanceof Long)
-					return (Long) idEsitoObj;
-				else
-					return null;
-			} else {
-				throw new NotFoundException();
-			}
-		} catch (MultipleResultException e) {
-			throw new ServiceException(e);
-		} catch (ExpressionException e) {
-			throw new ServiceException(e);
-		}
-	}
-
-	public Long getIdEsitoContabilizzazione(long idFattura) throws ServiceException, NotFoundException {
-		try {
-			String idEsito = "id_contabilizzazione";
-			CustomField esitoField = new CustomField(idEsito, Long.class, idEsito, this.getRootTable(this.service));
-			FatturaPassivaFilter newFilter = this.newFilter();
-			newFilter.setId(idFattura);
-			
-			List<Map<String,Object>> select = this.select(newFilter, esitoField);
-
-			if(select.size() > 1) {
-				throw new MultipleResultException();
-			} else if(select.size() > 0) {
-				Object idEsitoObj = select.get(0).get(idEsito);
-				if(idEsitoObj instanceof Long)
-					return (Long) idEsitoObj;
-				else
-					return null;
-			} else {
-				throw new NotFoundException();
-			}
-
-		} catch (MultipleResultException e) {
-			throw new ServiceException(e);
-		} catch (ExpressionException e) {
-			throw new ServiceException(e);
-		}
-	}
-	
-	public List<String> getAutocompletamentoCedentePrestatoreDenominazione(FatturaPassivaFilter filter) throws ServiceException {
-		return this.getListAutocomplete(filter, FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE);
-	}
-	
-	public List<String> getAutocompletamentoNumero(FatturaPassivaFilter filter) throws ServiceException {
-		return this.getListAutocomplete(filter, FatturaElettronica.model().NUMERO);
 	}
 
 	public void updateEsito(IdFattura idFattura, EsitoType esito) throws Exception {

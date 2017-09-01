@@ -36,7 +36,9 @@ import org.govmix.proxy.fatturapa.orm.dao.IDBFatturaElettronicaService;
 import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaService;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaPassivaFilter;
+import org.openspcoop2.generic_project.beans.CustomField;
 import org.openspcoop2.generic_project.beans.IField;
+import org.openspcoop2.generic_project.exception.ExpressionException;
 import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
@@ -276,6 +278,75 @@ public class FatturaBD extends BaseBD {
 		return cpValues;
 	}
 	
+	public Long getIdEsitoScadenza(long idFattura) throws ServiceException, NotFoundException {
+		try {
+			String idEsito = "id_scadenza";
+			CustomField esitoField = new CustomField(idEsito, Long.class, idEsito, this.getRootTable(this.service));
+			FatturaFilter newFilter = this.newFilter();
+			newFilter.setId(idFattura);
+			
+			List<Map<String,Object>> select = this.select(newFilter, esitoField);
+
+			if(select.size() > 1) {
+				throw new MultipleResultException();
+			} else if(select.size() > 0) {
+				Object idEsitoObj = select.get(0).get(idEsito);
+				if(idEsitoObj instanceof Long)
+					return (Long) idEsitoObj;
+				else
+					return null;
+			} else {
+				throw new NotFoundException();
+			}
+		} catch (MultipleResultException e) {
+			throw new ServiceException(e);
+		} catch (ExpressionException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public Long getIdEsitoContabilizzazione(long idFattura) throws ServiceException, NotFoundException {
+		try {
+			String idEsito = "id_contabilizzazione";
+			CustomField esitoField = new CustomField(idEsito, Long.class, idEsito, this.getRootTable(this.service));
+			FatturaFilter newFilter = this.newFilter();
+			newFilter.setId(idFattura);
+			
+			List<Map<String,Object>> select = this.select(newFilter, esitoField);
+
+			if(select.size() > 1) {
+				throw new MultipleResultException();
+			} else if(select.size() > 0) {
+				Object idEsitoObj = select.get(0).get(idEsito);
+				if(idEsitoObj instanceof Long)
+					return (Long) idEsitoObj;
+				else
+					return null;
+			} else {
+				throw new NotFoundException();
+			}
+
+		} catch (MultipleResultException e) {
+			throw new ServiceException(e);
+		} catch (ExpressionException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+
+	public List<String> getAutocompletamentoCedentePrestatoreDenominazione(FatturaPassivaFilter filter) throws ServiceException {
+		return this.getListAutocomplete(filter, FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE);
+	}
+	
+	public List<String> getAutocompletamentoCessionarioCommittenteDenominazione(FatturaPassivaFilter filter) throws ServiceException {
+		return this.getListAutocomplete(filter, FatturaElettronica.model().CESSIONARIO_COMMITTENTE_DENOMINAZIONE);
+	}
+	
+	public List<String> getAutocompletamentoNumero(FatturaPassivaFilter filter) throws ServiceException {
+		return this.getListAutocomplete(filter, FatturaElettronica.model().NUMERO);
+	}
+
+
 	public FatturaFilter newFilter() {
 		return new FatturaFilter(this.service);
 	}
