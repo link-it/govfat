@@ -22,6 +22,9 @@ package org.govmix.proxy.fatturapa.web.console.iservice;
 
 import java.util.List;
 
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoRequest;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoResponse;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoSoloConservazioneRequest;
 import org.govmix.proxy.fatturapa.web.console.bean.FatturaElettronicaAttivaBean;
 import org.govmix.proxy.fatturapa.web.console.search.FatturaElettronicaAttivaSearchForm;
 import org.openspcoop2.generic_project.exception.ServiceException;
@@ -40,6 +43,10 @@ public interface IFatturaElettronicaAttivaService extends IBaseService<FatturaEl
 	public List<String> getDestinatarioAutoComplete(String val) throws ServiceException;
 	
 	public List<String> getNumeroAutoComplete(String val) throws ServiceException;
+	
+	public InserimentoLottoResponse salvaFatture(List<InserimentoLottoRequest> listaFatture) throws ServiceException;
+	
+	public InserimentoLottoResponse salvaFattureSoloConservazione(List<InserimentoLottoSoloConservazioneRequest> listaFatture) throws ServiceException;
 
 //	public Date getDataUltimaOperazioneByIdFattura(IdFattura idFattura) throws ServiceException;
 }

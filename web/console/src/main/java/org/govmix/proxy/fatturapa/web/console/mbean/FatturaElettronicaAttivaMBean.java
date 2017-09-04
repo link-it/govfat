@@ -23,6 +23,8 @@ package org.govmix.proxy.fatturapa.web.console.mbean;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -38,6 +40,10 @@ import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoRequest;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoResponse;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoResponse.ESITO;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoSoloConservazioneRequest;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.bean.AllegatoFatturaBean;
@@ -53,13 +59,13 @@ import org.govmix.proxy.fatturapa.web.console.iservice.ITracciaSDIService;
 import org.govmix.proxy.fatturapa.web.console.search.FatturaElettronicaAttivaSearchForm;
 import org.govmix.proxy.fatturapa.web.console.service.AllegatiService;
 import org.govmix.proxy.fatturapa.web.console.service.TracciaSDIService;
-import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.DataModelListView;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.FiltraException;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.MenuActionException;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.MessageUtils;
+import org.richfaces.model.UploadItem;
 
 /**
  * FatturaElettronicaMBean ManagedBean per le schermate di visualizzazione delle fatture.
@@ -69,8 +75,8 @@ import org.openspcoop2.generic_project.web.impl.jsf1.utils.MessageUtils;
  *
  */
 public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElettronicaAttivaBean, Long,
-	FatturaElettronicaAttivaSearchForm, FatturaForm, FatturaElettronicaAttivaDM, FatturaElettronica, 
-		IFatturaElettronicaAttivaService>{
+FatturaElettronicaAttivaSearchForm, FatturaForm, FatturaElettronicaAttivaDM, FatturaElettronica, 
+IFatturaElettronicaAttivaService>{
 
 	/**
 	 * 
@@ -84,7 +90,7 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 
 	// Tipo Documento
 	private List<SelectItem> listaTipoDocumento = null;
-	
+
 	// Tipo Comunicazione
 	private List<SelectItem> listaTipoComunicazione = null;
 
@@ -93,7 +99,7 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 
 	// Stato Consegna
 	private List<SelectItem> listaStatoElaborazione = null;
-	
+
 	// supporto per il caricamento dal db del dettaglio (Allegati, NotificheEC, NotificheDT)
 	private IAllegatiService allegatiService = null;
 	private ITracciaSDIService comunicazioneService = null;
@@ -101,16 +107,26 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 
 	private String selectedTab = null;
 
+	public static final String PROTOCOLLO_PATTERN = "^[0-9]*$";
+
+	public static final String ANNO_PATTERN = "^(19|20)\\d{2}$";
+
+	private Pattern protocolloPattern = null;
+	private Pattern annoPattern = null;
+
 	public FatturaElettronicaAttivaMBean(){
 		super(LoggerManager.getConsoleLogger());
 		this.initTables();
 		this.setOutcomes();
-		
+
 		this.form = new FatturaForm();
 		this.form.setmBean(this); 
 		this.form.setRendered(true);
-		((SelectListImpl)this.form.getDipartimento()).setElencoSelectItems(this._getDipartimenti(true));
+		((SelectListImpl)this.form.getDipartimento()).setElencoSelectItems(this._getDipartimenti(false,true));
 		this.form.reset();
+
+		this.protocolloPattern = Pattern.compile(FatturaElettronicaAttivaMBean.PROTOCOLLO_PATTERN);
+		this.annoPattern = Pattern.compile(FatturaElettronicaAttivaMBean.ANNO_PATTERN);
 
 		this.log.debug("FatturaAttiva MBean");
 
@@ -149,8 +165,8 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 		this.getNavigationManager().setResetOutcome("listaFattureAttive?faces-redirect=true");
 		this.getNavigationManager().setRestoreSearchOutcome("listaFattureAttive");
 	}
-	
-	
+
+
 	@Override
 	protected String _filtra() throws FiltraException {
 		return super._filtra();
@@ -209,9 +225,9 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 
 			if(this.comunicazioneService == null)
 				this.comunicazioneService = new TracciaSDIService();
-//
+			//
 			this.comunicazioneService.setIdFattura(this.selectedIdFattura);
-			
+
 			try{
 				listaComunicazioni = this.comunicazioneService.findAll();
 			}catch(Exception e){
@@ -274,7 +290,7 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.ERRORE_SPEDIZIONE.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.ERRORE_SPEDIZIONE.getValue()))));
 			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.ERRORE_PROTOCOLLAZIONE.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.ERRORE_PROTOCOLLAZIONE.getValue()))));
 			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.ERRORE_FIRMA.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.ERRORE_FIRMA.getValue()))));
-			
+
 		}
 
 		return this.listaStatoElaborazione;
@@ -284,35 +300,36 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 		this.listaDipartimenti = new ArrayList<SelectItem>();
 		// Se si vogliono tutti i dipartimenti chiamare il metodo con parametro false.
 		// passando true vengono restituiti solo i dipartimenti che hanno la fatturazione attiva
-		this.listaDipartimenti = this._getDipartimenti(true);
+		this.listaDipartimenti = this._getDipartimenti(true,true);
 		return this.listaDipartimenti;
 	}
-	
-	
-	public List<SelectItem> _getDipartimenti(boolean fatturazioneAttiva) {
+
+
+	public List<SelectItem> _getDipartimenti(boolean addQualsiasi, boolean fatturazioneAttiva) {
 		List<SelectItem> listaDipartimenti = new ArrayList<SelectItem>();
 
-		listaDipartimenti.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*",  ("commons.label.qualsiasi"))));
+		if(addQualsiasi)
+			listaDipartimenti.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*",  ("commons.label.qualsiasi"))));
 
 		List<Dipartimento> listaDipartimentiLoggedUtente = org.govmix.proxy.fatturapa.web.console.util.Utils.getListaDipartimentiLoggedUtente();
 		if(listaDipartimentiLoggedUtente != null && listaDipartimentiLoggedUtente.size() > 0)
 			for (Dipartimento dipartimento : listaDipartimentiLoggedUtente) {
 				boolean add = true;
-				
+
 				if(fatturazioneAttiva) {
 					add = dipartimento.isFatturazioneAttiva();
 				}
-				
+
 				if(add)
-				listaDipartimenti.add(new SelectItem(
-								new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(dipartimento.getCodice(),dipartimento.getDescrizione() + " ("+dipartimento.getCodice()+")")));
+					listaDipartimenti.add(new SelectItem(
+							new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(dipartimento.getCodice(),dipartimento.getDescrizione() + " ("+dipartimento.getCodice()+")")));
 			}
 
 
 		return listaDipartimenti;
 	}
-	
-	
+
+
 	public Dipartimento getDipartimento(String codice) {
 		List<Dipartimento> listaDipartimentiLoggedUtente = org.govmix.proxy.fatturapa.web.console.util.Utils.getListaDipartimentiLoggedUtente();
 		if(listaDipartimentiLoggedUtente != null && listaDipartimentiLoggedUtente.size() > 0)
@@ -323,7 +340,7 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 
 		return null;
 	}
-	
+
 	public List<SelectItem> getListaTipoComunicazione() {
 		if (this.listaTipoComunicazione == null) {
 			this.listaTipoComunicazione = new ArrayList<SelectItem>();
@@ -385,7 +402,7 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							Utils.getInstance().getMessageFromResourceBundle("fattura.export.genericError"),null));
+							org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.export.genericError"),null));
 		}
 
 		return null;
@@ -451,8 +468,8 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 			FatturaAttivaBD fatturaBD = new FatturaAttivaBD(log);
 			FatturaElettronica current = this.selectedElement.getDTO();
 			// [TODO]
-//			fatturaBD.forzaRispedizioneFattura(current);
-			MessageUtils.addInfoMsg(Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegna.cambioStatoOK"));
+			//			fatturaBD.forzaRispedizioneFattura(current);
+			MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegna.cambioStatoOK"));
 
 			current.setStatoConsegna(StatoConsegnaType.IN_RICONSEGNA);
 
@@ -460,7 +477,7 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 
 		}catch(Exception e){
 			log.error("Errore durante l'aggiornamento dello stato fattura [Errore Consegna -> In Riconsegna]: "+ e.getMessage(),e);
-			MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegna.erroreGenerico"));
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegna.erroreGenerico"));
 		}
 		return null;
 	}
@@ -484,23 +501,48 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 	public void setSelectedTab(String selectedTab) {
 		this.selectedTab = selectedTab;
 	}
-	
+
 	public void nuovaFatturaListener(ActionEvent ae) {
 		this.form.setValues(null); 
+
+		// reset form valore dipartimento, se mettiamo null non valida il form e richfaces non valida gli altri campi.
+		List<SelectItem> lst = this._getDipartimenti(false, true);
+		if(lst != null && lst.size() > 0) {
+			SelectItem selectItem = lst.get(0);
+			this.form.getDipartimento().setDefaultValue((org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem) selectItem.getValue());
+		}
+
 		this.form.reset();
 		this.listaConservazione = null;
 		this.form.getFatturaFile().clear(ae);
 		this.checkConservazione = false;
+		this.salvataggioOk = false;
+		this.checkFormFattura = false;
+		this.checkFormFatturaMessage = null;
 	}
-	
-	
+
+
 	public String preparaFormConservazione(){
+
+		// prima di mostrare la form della conservazione controllo il form 
+		this.checkFormFattura = false;
+		this.checkFormFatturaMessage = this.validaFormFatture();
+		if(this.checkFormFatturaMessage != null) {
+			this.checkFormFattura = false;
+			//			MessageUtils.addErrorMsg(this.checkFormFatturaMessage);
+			return null;
+		}
+
+		this.checkFormFattura = true;
+
+		this.form.getFatturaFile().checkCaricamenti();
+
 		this.listaConservazione = null;
 		List<String> nomeFile = this.form.getFatturaFile().getNomeFile();
 		String codDip = this.form.getDipartimento().getValue().getValue();
 		Dipartimento dipartimento =  this.getDipartimento(codDip);
 		String registro = dipartimento.getRegistro().getNome(); 
-		
+
 		for (String string : nomeFile) {
 			ConservazioneBean conservazioneBean = new ConservazioneBean();
 			conservazioneBean.setNomeFile(string);
@@ -509,39 +551,165 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 			conservazioneBean.setRegistro(registro); 
 			this.getListaConservazione().add(conservazioneBean );
 		}
-		
+
 		return null;
 	}
 	public String salvaFatture(){
+		this.salvataggioOk = false;
+		this.checkFormFatturaMessage = null;
+		this.checkFormFattura = false;
+		try {
+
+			this.checkFormFatturaMessage = this.validaFormFatture();
+
+			if(this.checkFormFatturaMessage != null) {
+				this.checkFormFattura = false;
+				//				MessageUtils.addErrorMsg(this.checkFormFatturaMessage);
+				return null;
+			}
+
+			this.checkFormFattura = true;
+
+			this.form.getFatturaFile().checkCaricamenti();
+
+			List<UploadItem> files = this.form.getFatturaFile().getFilesCache();
+
+			List<InserimentoLottoRequest> toSave = new ArrayList<InserimentoLottoRequest>();
+			// scorro la lista dei files e creo le fatture
+			for (int i = 0; i < files.size(); i++) {
+				String nomeFattura = this.form.getFatturaFile().getNomeFile().get(i);
+				byte[] xml = this.form.getFatturaFile().getContenuto().get(i);
+				InserimentoLottoRequest dto = new InserimentoLottoRequest();
+				dto.setNomeFile(nomeFattura);
+				dto.setXml(xml);
+				dto.setDipartimento(this.form.getDipartimento().getValue().getValue());
+				toSave.add(dto);
+			}
+
+			InserimentoLottoResponse salvaFatture = ((IFatturaElettronicaAttivaService)this.service).salvaFatture(toSave);
+			
+			if(salvaFatture.getEsito().equals(ESITO.OK)) {
+				this.salvataggioOk = true;
+				MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura.salvataggioOk"));
+			} else {
+				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle(salvaFatture.getDettaglio())); 
+			}
+		}catch(Exception e) {
+			log.error("Errore durante il salvataggio delle fatture: "+ e.getMessage(),e);
+			//			MessageUtils.addErrorMsg("errorDsUploadMessages",org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura.erroreGenerico"));
+			this.checkFormFatturaMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura.erroreGenerico");
+		}
+
+
 		return null;
 	}
-	
+
+	public String validaFormFatture() {
+		String toRet = null;
+
+		List<UploadItem> files = this.form.getFatturaFile().getFilesCache();
+
+		if(files == null || (files != null && files.size() == 0)) {
+			return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura.nessunFileSelezionato");
+		}		
+
+
+		// Dipartimento
+		org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem _dipartimento = this.form.getDipartimento().getValue();
+
+		String valueCodiceDipartimento = null; 
+
+		if(_dipartimento != null)
+			valueCodiceDipartimento = _dipartimento.getValue();
+
+		if( valueCodiceDipartimento == null || (valueCodiceDipartimento != null && valueCodiceDipartimento.equals(CostantiForm.ALL)))
+			return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromCommonsResourceBundle(CostantiForm.SELECT_VALORE_NON_VALIDO,this.form.getDipartimento().getLabel());
+
+
+		return toRet;
+	}
+
 	public String salvaFormCorservazione(){
 		this.checkConservazione = false;
 		for (ConservazioneBean conservazione : this.listaConservazione) {
 			if(StringUtils.isEmpty(conservazione.getProtocollo())){
-				MessageUtils.addErrorMsg("Il campo Protocollo per la fattura "+ conservazione.getNomeFile() + " non puo' essere vuoto.");
+				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.protocolloVuoto",conservazione.getNomeFile()));
 				return null;
 			}
-			
+
+			Matcher matcher = this.protocolloPattern.matcher(conservazione.getProtocollo());
+
+			if(!matcher.matches()) {
+				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.protocolloNonValido",conservazione.getNomeFile()));
+				return null;
+			}
+
 			if(StringUtils.isEmpty(conservazione.getAnno())){
-				MessageUtils.addErrorMsg("Il campo Anno per la fattura "+ conservazione.getNomeFile() + " non puo' essere vuoto.");
+				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.annoVuoto",conservazione.getNomeFile()));
 				return null;
 			}
-			
+
+			matcher = this.annoPattern.matcher(conservazione.getAnno());
+
+			if(!matcher.matches()) {
+				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.annoNonValido",conservazione.getNomeFile()));
+				return null;
+			}
+
 			if(StringUtils.isEmpty(conservazione.getRegistro())){
-				MessageUtils.addErrorMsg("Il campo Registro per la fattura "+ conservazione.getNomeFile() + " non puo' essere vuoto.");
+				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.registroVuoto",conservazione.getNomeFile()));
 				return null;
 			}
+
+			//formato registro?
+			// registro si puo' modificare?
 		}
-		this.checkConservazione = true;
+
+		try {
+
+			// collezionare le informazioni della conservazione e chiamare il salvataggio
+
+			List<UploadItem> files = this.form.getFatturaFile().getFilesCache();
+
+			List<InserimentoLottoSoloConservazioneRequest> toSave = new ArrayList<InserimentoLottoSoloConservazioneRequest>();
+			// scorro la lista dei files e creo le fatture
+			for (int i = 0; i < files.size(); i++) {
+				String nomeFattura = this.form.getFatturaFile().getNomeFile().get(i);
+				byte[] xml = this.form.getFatturaFile().getContenuto().get(i);
+
+				InserimentoLottoSoloConservazioneRequest dto = new InserimentoLottoSoloConservazioneRequest();
+				dto.setNomeFile(nomeFattura);
+				dto.setXml(xml);
+				dto.setDipartimento(this.form.getDipartimento().getValue().getValue());
+
+				// conservazione
+				ConservazioneBean conservazioneBean = this.listaConservazione.get(i);
+				dto.setNumeroProtocollo(conservazioneBean.getProtocollo());
+				dto.setAnnoProtocollo(conservazioneBean.getAnno());
+				dto.setRegistroProtocollo(conservazioneBean.getRegistro()); 
+
+				toSave.add(dto);
+			}
+
+			InserimentoLottoResponse salvaFattureSoloConservazione = ((IFatturaElettronicaAttivaService)this.service).salvaFattureSoloConservazione(toSave);
+
+			if(salvaFattureSoloConservazione.getEsito().equals(ESITO.OK)) {
+				this.checkConservazione = true;
+				MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFatturaSoloConservazione.salvataggioOk"));
+			} else {
+				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle(salvaFattureSoloConservazione.getDettaglio())); 
+			}
+		}catch(Exception e) {
+			log.error("Errore durante il salvataggio delle fatture: "+ e.getMessage(),e);
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFatturaSoloConservazione.erroreGenerico"));
+		}
 		return null;
 	}
-	
+
 	public List<ConservazioneBean> getListaConservazione() {
 		if(listaConservazione ==null)
 			listaConservazione = new ArrayList<ConservazioneBean>();
-		
+
 		return listaConservazione;
 	}
 
@@ -559,5 +727,49 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 
 	private List<ConservazioneBean> listaConservazione = null;
 	private boolean checkConservazione = false;
-	
+	private boolean salvataggioOk = false;
+	private boolean checkFormFattura = false;
+	private String checkFormFatturaMessage = null;
+
+	public boolean isSalvataggioOk() {
+		return salvataggioOk;
+	}
+
+	public void setSalvataggioOk(boolean salvataggioOk) {
+		this.salvataggioOk = salvataggioOk;
+	}
+
+	public boolean isCheckFormFattura() {
+		return checkFormFattura;
+	}
+
+	public void setCheckFormFattura(boolean checkFormFattura) {
+		this.checkFormFattura = checkFormFattura;
+	}
+
+	public String getCheckFormFatturaMessage() {
+		if(this.checkFormFatturaMessage == null && this.form != null) {
+			this.checkFormFatturaMessage =  this.form.getFatturaFile().getFileUploadErrorMessage();
+		}
+
+
+		return checkFormFatturaMessage;
+	}
+
+	public void setCheckFormFatturaMessage(String checkFormFatturaMessage) {
+		this.checkFormFatturaMessage = checkFormFatturaMessage;
+	}
+
+
+	public boolean isVisualizzaTastoCaricaFattura() {
+		this.visualizzaTastoCaricaFattura = this._getDipartimenti(false, true).size() > 0;
+
+		return visualizzaTastoCaricaFattura;
+	}
+
+	public void setVisualizzaTastoCaricaFattura(boolean visualizzaTastoCaricaFattura) {
+		this.visualizzaTastoCaricaFattura = visualizzaTastoCaricaFattura;
+	}
+
+	private boolean visualizzaTastoCaricaFattura = false;
 }

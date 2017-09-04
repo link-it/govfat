@@ -3,6 +3,7 @@ package org.govmix.proxy.fatturapa.web.commons.consegnaFattura;
 import java.util.List;
 
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoResponse.ESITO;
 
 public class InserimentoLotti {
 
@@ -13,12 +14,17 @@ public class InserimentoLotti {
 	}
 	
 	public InserimentoLottoResponse inserisciLotto(List<InserimentoLottoRequest> request) {
+		InserimentoLottoResponse inserimentoLottoResponse = new InserimentoLottoResponse();
+		inserimentoLottoResponse.setEsito(ESITO.OK);
+
 		//TODO
-		return null;
+		return inserimentoLottoResponse;
 	}
 
 	public InserimentoLottoResponse inserisciLottoSoloConservazione(List<InserimentoLottoSoloConservazioneRequest> request) {
+		InserimentoLottoResponse inserimentoLottoResponse = new InserimentoLottoResponse();
+		inserimentoLottoResponse.setEsito(ESITO.OK);
 		//TODO
-		return null;
+		return inserimentoLottoResponse;
 	}
 }

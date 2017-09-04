@@ -453,13 +453,13 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 
 		}
 
-		StatoElaborazioneType statoEelaborazione = this.getDTO().getLottoFatture() != null ? this.getDTO().getLottoFatture().getStatoElaborazioneInUscita() : null; 
+		StatoElaborazioneType _statoElaborazione = this.getDTO().getLottoFatture() != null ? this.getDTO().getLottoFatture().getStatoElaborazioneInUscita() : null; 
 
 		//		if(this.getDTO().getProtocollo() != null) {
 		//			this.statoConsegna.setValue("fattura.statoConsegna.protocollata");
 		//		} else {
-		if(statoEelaborazione != null) {
-			switch (statoEelaborazione) {
+		if(_statoElaborazione != null) {
+			switch (_statoElaborazione) {
 			case ERRORE_FIRMA:
 			case ERRORE_PROTOCOLLAZIONE:
 			case ERRORE_SPEDIZIONE:
@@ -469,7 +469,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 			case SPEDIZIONE_NON_ATTIVA:
 			case SPEDIZIONE_OK:
 			default:
-				this.statoElaborazione.setValue("fattura.statoElaborazione."+statoEelaborazione.getValue());
+				this.statoElaborazione.setValue("fattura.statoElaborazione."+_statoElaborazione.getValue());
 				break;
 			}
 		}

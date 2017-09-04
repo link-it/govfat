@@ -171,10 +171,11 @@
 					</h:commandLink>
 					
 					<a4j:commandButton id="carica-iconLink" styleClass="icon-add" style="color: #dd2c0d; padding: 4px 6px 4px 5px;"
-											reRender="fileUploadModalPnl" value="#{msg['fattura.button.carica']}"
-											actionListener="#{fatturaElettronicaAttivaMBean.nuovaFatturaListener}"
-											oncomplete="#{rich:component('fileUploadModalPnl')}.show()">
-										</a4j:commandButton>
+						reRender="fileUploadModalPnl" value="#{msg['fattura.button.carica']}"
+						actionListener="#{fatturaElettronicaAttivaMBean.nuovaFatturaListener}"
+						rendered="#{fatturaElettronicaAttivaMBean.visualizzaTastoCaricaFattura}"
+						oncomplete="#{rich:component('fileUploadModalPnl')}.show()">
+					</a4j:commandButton>
 				</ui:define>
 			</op2web:managedPagedListView>
 		</rich:panel>
@@ -191,26 +192,27 @@
 					</h:panelGroup>
 				</f:facet>
 				<a4j:outputPanel id="dsFileUploadErrorsCtr" ajaxRendered="true">
-					<h:panelGroup  styleClass="errors" layout="block" rendered="#{not empty fatturaElettronicaAttivaMBean.form.fatturaFile.fileUploadErrorMessage}">
-							<h:panelGroup rendered="#{not empty fatturaElettronicaAttivaMBean.form.fatturaFile.fileUploadErrorMessage}">
-									<p>
-										<em>
-											<h:outputText value="Si sono verificati degli errori:"/>
-										</em>
-									</p>
-									<div class="errorsSpacer"/>
-								</h:panelGroup>
-								<div class="errorsSpacer"/>
-									<rich:messages id="errorDsUploadMessages">
-									</rich:messages>
-							<h:outputText id="dsFileUploadErrors"  
-								value="#{fatturaElettronicaAttivaMBean.form.fatturaFile.fileUploadErrorMessage}"
-								rendered="#{not empty fatturaElettronicaAttivaMBean.form.fatturaFile.fileUploadErrorMessage}" />
+					<h:panelGroup  styleClass="errors" layout="block" rendered="#{not empty fatturaElettronicaAttivaMBean.checkFormFatturaMessage}">
+						<h:panelGroup rendered="#{not empty fatturaElettronicaAttivaMBean.checkFormFatturaMessage}">
+							<p>
+								<em>
+									<h:outputText value="#{msg['fattura.form.modale.presenzaErrori']}"/>
+								</em>
+							</p>
+							<div class="errorsSpacer"/>
+						</h:panelGroup>
+						<div class="errorsSpacer"/>
+						<rich:messages id="errorDsUploadMessages">
+						</rich:messages>
+						<h:outputText id="dsFileUploadErrors"  
+							value="#{fatturaElettronicaAttivaMBean.checkFormFatturaMessage}"
+							rendered="#{not empty fatturaElettronicaAttivaMBean.checkFormFatturaMessage}" />
 					</h:panelGroup>
 				</a4j:outputPanel>
 				<div class="form-container noborder">
 					<a4j:outputPanel layout="block" id="formCaricaFattura_formPnl" ajaxRendered="false">
 					<h:form id="dSFormUploadPnl" prependId="false">
+					<h:inputHidden value = "#{fatturaElettronicaAttivaMBean.checkFormFattura}" id = "checkFormFatturaHidden" /> 
 						<style>
 						.rich-fileupload-del {
 							visibility: hidden;
@@ -227,7 +229,7 @@
 						<op2web:fieldset legend="#{msg['fattura.fieldset.datiFattura']}" collapsible="false" closed="false">
 							
 							<op2web:prop label="#{fatturaElettronicaAttivaMBean.form.descrittoreFattura.label}" required="#{true}"
-								note="Tipi accettati: xml,p7m">
+								note="#{msg['fattura.form.descrittoreFattura.note']}">
 								<rich:fileUpload allowFlash="true" acceptedTypes="xml,p7m"
 									fileUploadListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.fileUploadListener}"
 									maxFilesQuantity="#{fatturaElettronicaAttivaMBean.form.fatturaFile.numeroFile}"
@@ -266,15 +268,15 @@
 							</div>
 						</op2web:fieldset>
 						<a4j:outputPanel layout="block" id="formCaricaFattura_btnPnl" ajaxRendered="false">
-							<div class="buttonrow" style="    margin-left: 290px; margin-top:20px;">
+							<div class="buttonrow" style="margin-left: 290px; margin-top:20px;">
 								<a4j:commandButton styleClass="icon-save positive" style="padding: 4px 6px 4px 5px;"
 									value="#{msg['fattura.button.salva']}" action="#{fatturaElettronicaAttivaMBean.preparaFormConservazione}"
-									reRender="conservazioneFattureForm_formPnl" rendered="#{fatturaElettronicaAttivaMBean.form.mostraFormCorservazione}"
-									oncomplete="#{rich:component('pannelloConservazioneFatture')}.show();" />
+									reRender="dsFileUploadErrorsCtr,conservazioneFattureForm_formPnl" rendered="#{fatturaElettronicaAttivaMBean.form.mostraFormCorservazione}"
+									oncomplete="if (#{fatturaElettronicaAttivaMBean.checkFormFattura == 'true'}) { #{rich:component('pannelloConservazioneFatture')}.show(); }" />
 								<a4j:commandButton styleClass="icon-save positive" style="padding: 4px 6px 4px 5px;"
 									value="#{msg['fattura.button.salva']}" action="#{fatturaElettronicaAttivaMBean.salvaFatture}"
-									reRender="mainct" rendered="#{not fatturaElettronicaAttivaMBean.form.mostraFormCorservazione}"
-									oncomplete="#{rich:component('fileUploadModalPnl')}.hide();" />
+									reRender="dsFileUploadErrorsCtr" rendered="#{not fatturaElettronicaAttivaMBean.form.mostraFormCorservazione}"
+									oncomplete="if (#{fatturaElettronicaAttivaMBean.salvataggioOk == 'true'}) { #{rich:component('fileUploadModalPnl')}.hide(); }" />
 							</div>
 						</a4j:outputPanel>		
 					</h:form>	
@@ -282,7 +284,7 @@
 				</div>
 			</rich:modalPanel>
 			
-			<rich:modalPanel id="pannelloConservazioneFatture" width="700" autosized="true">
+			<rich:modalPanel id="pannelloConservazioneFatture" width="750" autosized="true">
 			   <f:facet name="header">
 			   	<h:outputText value="#{msg['fattura.conservazioneFattureForm.titoloFinestra']}" />
 			   </f:facet>
@@ -300,8 +302,8 @@
 							<h:panelGroup id="panelGroupParametroError22"
 								rendered="#{facesContext.maximumSeverity.ordinal>=2}">
 								<p>
-									<em> <h:outputText id="outParametroError22"
-											value="Si sono verificati degli errori:" />
+									<em>
+										<h:outputText value="#{msg['fattura.form.modale.presenzaErrori']}" />
 									</em>
 								</p>
 								<div class="errorsSpacer"/>
@@ -325,25 +327,25 @@
 										rowClasses="even,odd" width="100%">
 								 	<rich:column>
 								 		<f:facet name="header">
-			                                 <h:outputText value="Fattura" />	
+			                                 <h:outputText value="#{msg['fattura.form.nomeFileFattura']}" />	
 		                                </f:facet>
 		                                <h:outputText id="outNomeFile" value="#{item.nomeFile}"/>
 		                            </rich:column>
 		                            <rich:column>
 			                            <f:facet name="header">
-			                                <h:outputText value="Protocollo (*)" />
+			                                <h:outputText value="#{msg['fattura.form.protocollo.obbligatorio']}" />
 		                                </f:facet>
 		                                <h:inputText id="input_protocollo_tab" value="#{item.protocollo}" style="width: 99%;"/>
 		                            </rich:column>
 		                            <rich:column>
 			                            <f:facet name="header">
-			                                <h:outputText value="Anno (*)" />
+			                                <h:outputText value="#{msg['fattura.form.anno.obbligatorio']}" />
 		                                </f:facet>
 		                                 <h:inputText id="input_anno_tab" value="#{item.anno}" style="width: 99%;"/>
 		                            </rich:column>
 		                            <rich:column>
 			                            <f:facet name="header">
-			                                <h:outputText value="Registro (*)" />
+			                                <h:outputText value="#{msg['fattura.form.registro.obbligatorio']}" />
 		                                </f:facet>
 		                                 <h:inputText id="input_registro_tab" value="#{item.registro}" style="width: 99%;"/>
 		                            </rich:column>

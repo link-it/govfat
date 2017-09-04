@@ -35,6 +35,10 @@ import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaAttivaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FilterSortWrapper;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLotti;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoRequest;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoResponse;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoSoloConservazioneRequest;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.bean.FatturaElettronicaAttivaBean;
 import org.govmix.proxy.fatturapa.web.console.iservice.IFatturaElettronicaAttivaService;
@@ -65,13 +69,14 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 
 	private static Logger log = LoggerManager.getDaoLogger();
 
-//	private PccOperazioneContabileBD operazioneContabileBD = null;
 	private FatturaAttivaBD fatturaAttivaBD= null;
-
+	private InserimentoLotti inserimentoLotti = null;
+	
+	
 	public FatturaElettronicaAttivaService(){
 		try{
-//			this.operazioneContabileBD = new PccOperazioneContabileBD(FatturaElettronicaAttivaService.log);
 			this.fatturaAttivaBD = new FatturaAttivaBD(log);
+			this.inserimentoLotti = new InserimentoLotti(this.fatturaAttivaBD);
 		}catch(Exception e){
 			FatturaElettronicaAttivaService.log.error("Si e' verificato un errore durante l'inizializzazione del service:" + e.getMessage(), e);
 		}
@@ -243,8 +248,33 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 	}
 
 	@Override
-	public void store(FatturaElettronicaAttivaBean arg0) throws ServiceException {
-
+	public void store(FatturaElettronicaAttivaBean arg0) throws ServiceException {}
+	
+	@Override
+	public InserimentoLottoResponse salvaFatture(List<InserimentoLottoRequest> listaFatture) throws ServiceException {
+		String methodName = "salvaFatture(listaFatture)";
+		
+		FatturaElettronicaAttivaService.log.debug("Esecuzione ["+methodName+"] in corso...");
+		
+		InserimentoLottoResponse inserimentoLottoResponse = this.inserimentoLotti.inserisciLotto(listaFatture);
+		
+		FatturaElettronicaAttivaService.log.debug("Esecuzione ["+methodName+"] completato.");
+		
+		return inserimentoLottoResponse;
+	}
+	
+	@Override
+	public InserimentoLottoResponse salvaFattureSoloConservazione(
+			List<InserimentoLottoSoloConservazioneRequest> listaFatture) throws ServiceException {
+		String methodName = "store(salvaFattureSoloConservazione)";
+		
+		FatturaElettronicaAttivaService.log.debug("Esecuzione ["+methodName+"] in corso...");
+		
+		InserimentoLottoResponse inserimentoLottoResponse = this.inserimentoLotti.inserisciLottoSoloConservazione(listaFatture);
+		
+		FatturaElettronicaAttivaService.log.debug("Esecuzione ["+methodName+"] completato.");
+		
+		return inserimentoLottoResponse;
 	}
 
 	public FatturaFilter getFilterFromSearch(FatturaBD fatturaBD, FatturaElettronicaAttivaSearchForm search) throws Exception{
