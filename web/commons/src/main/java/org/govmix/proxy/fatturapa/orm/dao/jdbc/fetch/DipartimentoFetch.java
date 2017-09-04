@@ -20,20 +20,19 @@
  */
 package org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch;
 
+import java.sql.ResultSet;
+import java.util.Map;
+
+import org.govmix.proxy.fatturapa.orm.Dipartimento;
+import org.govmix.proxy.fatturapa.orm.DipartimentoPropertyValue;
+import org.govmix.proxy.fatturapa.orm.IdEnte;
+import org.govmix.proxy.fatturapa.orm.IdRegistro;
 import org.openspcoop2.generic_project.beans.IModel;
 import org.openspcoop2.generic_project.dao.jdbc.utils.AbstractJDBCFetch;
 import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCParameterUtilities;
 import org.openspcoop2.generic_project.exception.ServiceException;
-
-import java.sql.ResultSet;
-import java.util.Map;
-
 import org.openspcoop2.utils.TipiDatabase;
 import org.openspcoop2.utils.jdbc.IKeyGeneratorObject;
-
-import org.govmix.proxy.fatturapa.orm.IdEnte;
-import org.govmix.proxy.fatturapa.orm.DipartimentoPropertyValue;
-import org.govmix.proxy.fatturapa.orm.Dipartimento;
 
 
 /**     
@@ -89,6 +88,12 @@ public class DipartimentoFetch extends AbstractJDBCFetch {
 						jdbcParameterUtilities.readParameter(rs, "nome", Dipartimento.model().ENTE.NOME.getFieldType()));
 				return object;
 			}
+			if(model.equals(Dipartimento.model().REGISTRO)){
+				IdRegistro object = new IdRegistro();
+				setParameter(object, "setNome", Dipartimento.model().REGISTRO.NOME.getFieldType(),
+						jdbcParameterUtilities.readParameter(rs, "nome", Dipartimento.model().REGISTRO.NOME.getFieldType()));
+				return object;
+			}
 			
 			else{
 				throw new ServiceException("Model ["+model.toString()+"] not supported by fetch: "+this.getClass().getName());
@@ -139,6 +144,12 @@ public class DipartimentoFetch extends AbstractJDBCFetch {
 				IdEnte object = new IdEnte();
 				setParameter(object, "setNome", Dipartimento.model().ENTE.NOME.getFieldType(),
 					this.getObjectFromMap(map,"ente.nome"));
+				return object;
+			}
+			if(model.equals(Dipartimento.model().REGISTRO)){
+				IdRegistro object = new IdRegistro();
+				setParameter(object, "setNome", Dipartimento.model().REGISTRO.NOME.getFieldType(),
+					this.getObjectFromMap(map,"registro.nome"));
 				return object;
 			}
 			

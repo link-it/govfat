@@ -704,6 +704,12 @@ public class JDBCDipartimentoServiceSearchImpl implements IJDBCDipartimentoServi
 			sqlQueryObject.addWhereCondition(tableName1+".id_ente="+tableName2+".id");
 		}
 
+		if(expression.inUseModel(Dipartimento.model().REGISTRO,false)){
+			String tableName1 = this.getDipartimentoFieldConverter().toAliasTable(Dipartimento.model());
+			String tableName2 = this.getDipartimentoFieldConverter().toAliasTable(Dipartimento.model().REGISTRO);
+			sqlQueryObject.addWhereCondition(tableName1+".id_registro="+tableName2+".id");
+		}
+
 		if(expression.inUseModel(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE,false)){
 			String tableName1 = this.getDipartimentoFieldConverter().toAliasTable(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE);
 			String tableName2 = this.getDipartimentoFieldConverter().toAliasTable(Dipartimento.model());

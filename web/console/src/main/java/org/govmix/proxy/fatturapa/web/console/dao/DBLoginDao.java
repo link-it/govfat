@@ -29,6 +29,7 @@ import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.Ente;
 import org.govmix.proxy.fatturapa.orm.Evento;
 import org.govmix.proxy.fatturapa.orm.IdDipartimento;
+import org.govmix.proxy.fatturapa.orm.IdRegistro;
 import org.govmix.proxy.fatturapa.orm.Protocollo;
 import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.UtenteDipartimento;
@@ -218,12 +219,14 @@ public class DBLoginDao implements ILoginDao{
 
 				List<Map<String,Object>> select = this.dipartimentoDAO.select(pagExpr, true,
 						Dipartimento.model().CODICE,Dipartimento.model().DESCRIZIONE,
-						Dipartimento.model().ACCETTAZIONE_AUTOMATICA, Dipartimento.model().MODALITA_PUSH, Dipartimento.model().FATTURAZIONE_ATTIVA);
+						Dipartimento.model().ACCETTAZIONE_AUTOMATICA, Dipartimento.model().MODALITA_PUSH, Dipartimento.model().FATTURAZIONE_ATTIVA,Dipartimento.model().REGISTRO.NOME);
 
 				if(select != null && select.size()  >0)
 					for (Map<String,Object> dipMap : select) {
 						DipartimentoFetch dipFetch = new DipartimentoFetch();
-						listDipartimenti.add((Dipartimento) dipFetch.fetch(DAOFactory.getInstance().getServiceManagerProperties().getDatabase(), Dipartimento.model(), dipMap)); 
+						Dipartimento dipartimento = (Dipartimento) dipFetch.fetch(DAOFactory.getInstance().getServiceManagerProperties().getDatabase(), Dipartimento.model(), dipMap);
+						dipartimento.setRegistro((IdRegistro) dipFetch.fetch(DAOFactory.getInstance().getServiceManagerProperties().getDatabase(), Dipartimento.model().REGISTRO, dipMap));
+						listDipartimenti.add(dipartimento); 
 					}
 			} else {
 				List<UtenteDipartimento> utenteDipartimentoList = utente.getUtenteDipartimentoList();

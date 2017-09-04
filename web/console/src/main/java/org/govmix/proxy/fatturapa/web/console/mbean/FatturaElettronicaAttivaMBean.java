@@ -34,7 +34,6 @@ import org.apache.commons.lang.StringUtils;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
-import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
@@ -79,11 +78,6 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 	private static final long serialVersionUID = 1L;
 
 	// Select List Statiche 
-	//Notifica Esito Committente
-	private List<SelectItem> listaNotificaEC = null;
-
-	// Notifica Decorrenza Termini
-	private List<SelectItem> listaNotificaDT = null;
 
 	// Filtro date
 	private List<SelectItem> listaPeriodoTemporale = null;
@@ -100,9 +94,6 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 	// Stato Consegna
 	private List<SelectItem> listaStatoElaborazione = null;
 	
-	// fascicoli
-	private List<SelectItem> listaFascicoli = null;
-
 	// supporto per il caricamento dal db del dettaglio (Allegati, NotificheEC, NotificheDT)
 	private IAllegatiService allegatiService = null;
 	private ITracciaSDIService comunicazioneService = null;
@@ -119,7 +110,6 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 		this.form.setmBean(this); 
 		this.form.setRendered(true);
 		((SelectListImpl)this.form.getDipartimento()).setElencoSelectItems(this._getDipartimenti(true));
-//		((SelectListImpl)this.form.getFascicolo()).setElencoSelectItems(this.getFascicoli());
 		this.form.reset();
 
 		this.log.debug("FatturaAttiva MBean");
@@ -240,36 +230,6 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 
 	// Valori delle select List
 
-	public List<SelectItem> getListaNotificaEC() {
-		if (this.listaNotificaEC == null) {
-			this.listaNotificaEC = new ArrayList<SelectItem>();
-
-			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi"))));
-			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("E",   ("fattura.search.notificaEC.nonPresente"))));
-			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(EsitoType.IN_ELABORAZIONE_ACCETTATO.getValue(),   ("fattura.search.notificaEC.inElaborazione.accettato"))));
-			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(EsitoType.IN_ELABORAZIONE_RIFIUTATO.getValue(),  ("fattura.search.notificaEC.inElaborazione.rifiutato"))));
-			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(EsitoType.INVIATA_ACCETTATO.getValue(),   ("fattura.search.notificaEC.inviata.accettato"))));
-			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(EsitoType.INVIATA_RIFIUTATO.getValue() ,  ("fattura.search.notificaEC.inviata.rifiutato"))));
-			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(EsitoType.SCARTATA_ACCETTATO.getValue(),   ("fattura.search.notificaEC.scartata.accettato"))));
-			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(EsitoType.SCARTATA_RIFIUTATO.getValue() ,  ("fattura.search.notificaEC.scartata.rifiutato"))));
-
-		}
-
-		return this.listaNotificaEC;
-	}
-
-	public List<SelectItem> getListaNotificaDT() {
-		if (this.listaNotificaDT == null) {
-			this.listaNotificaDT = new ArrayList<SelectItem>();
-
-			this.listaNotificaDT.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*",  ("commons.label.qualsiasi"))));
-			this.listaNotificaDT.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("Y",   ("commons.label.presente"))));
-			this.listaNotificaDT.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("N",   ("commons.label.nonPresente"))));
-		}
-
-		return this.listaNotificaDT;
-	}
-
 	public List<SelectItem> getListaPeriodoTemporale() {
 		if (this.listaPeriodoTemporale == null) {
 			this.listaPeriodoTemporale = new ArrayList<SelectItem>();
@@ -306,14 +266,14 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 			this.listaStatoElaborazione = new ArrayList<SelectItem>();
 
 			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi"))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.SPEDIZIONE_OK.getValue(),  ("fattura.statoConsegna."+StatoElaborazioneType.SPEDIZIONE_OK.getValue()))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.SPEDIZIONE_NON_ATTIVA.getValue(),  ("fattura.statoConsegna."+StatoElaborazioneType.SPEDIZIONE_NON_ATTIVA.getValue()))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.PROTOCOLLAZIONE_OK.getValue(),  ("fattura.statoConsegna."+StatoElaborazioneType.PROTOCOLLAZIONE_OK.getValue()))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.NON_FIRMATO.getValue(),  ("fattura.statoConsegna."+StatoElaborazioneType.NON_FIRMATO.getValue()))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.FIRMA_OK.getValue(),  ("fattura.statoConsegna."+StatoElaborazioneType.FIRMA_OK.getValue()))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.ERRORE_SPEDIZIONE.getValue(),  ("fattura.statoConsegna."+StatoElaborazioneType.ERRORE_SPEDIZIONE.getValue()))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.ERRORE_PROTOCOLLAZIONE.getValue(),  ("fattura.statoConsegna."+StatoElaborazioneType.ERRORE_PROTOCOLLAZIONE.getValue()))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.ERRORE_FIRMA.getValue(),  ("fattura.statoConsegna."+StatoElaborazioneType.ERRORE_FIRMA.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.SPEDIZIONE_OK.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.SPEDIZIONE_OK.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.SPEDIZIONE_NON_ATTIVA.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.SPEDIZIONE_NON_ATTIVA.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.PROTOCOLLAZIONE_OK.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.PROTOCOLLAZIONE_OK.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.NON_FIRMATO.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.NON_FIRMATO.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.FIRMA_OK.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.FIRMA_OK.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.ERRORE_SPEDIZIONE.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.ERRORE_SPEDIZIONE.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.ERRORE_PROTOCOLLAZIONE.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.ERRORE_PROTOCOLLAZIONE.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.ERRORE_FIRMA.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.ERRORE_FIRMA.getValue()))));
 			
 		}
 
@@ -322,7 +282,9 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 
 	public List<SelectItem> getDipartimenti() {
 		this.listaDipartimenti = new ArrayList<SelectItem>();
-		this.listaDipartimenti = this._getDipartimenti(false);
+		// Se si vogliono tutti i dipartimenti chiamare il metodo con parametro false.
+		// passando true vengono restituiti solo i dipartimenti che hanno la fatturazione attiva
+		this.listaDipartimenti = this._getDipartimenti(true);
 		return this.listaDipartimenti;
 	}
 	
@@ -360,17 +322,6 @@ public class FatturaElettronicaAttivaMBean extends DataModelListView<FatturaElet
 			}
 
 		return null;
-	}
-	
-	public List<SelectItem> getFascicoli() {
-		this.listaFascicoli = new ArrayList<SelectItem>();
-
-		this.listaFascicoli.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*",  ("commons.label.qualsiasi"))));
-		this.listaFascicoli.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("fascicolo1","Fascicolo 1")));
-		this.listaFascicoli.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("fascicolo2","Fascicolo 2")));
-		this.listaFascicoli.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("fascicolo3","Fascicolo 3")));
-
-		return this.listaFascicoli;
 	}
 	
 	public List<SelectItem> getListaTipoComunicazione() {
