@@ -174,20 +174,8 @@ public class ConsegnaFatturaUtils {
 			String formatoArchivioInvioFatturaString,
 			String formatoArchivioBase64, String messageId,
 			boolean fatturazioneAttiva,
-			InputStream fatturaStream) throws Exception, IOException {
+			byte[] xml) throws Exception, IOException {
 		
-		
-		
-		
-		boolean isBase64 = false;
-		if(formatoArchivioBase64 != null) {
-			try {
-				isBase64= Boolean.parseBoolean(formatoArchivioBase64);
-			} catch(Exception e){
-				throw new Exception("Parametro [X-SDI-FormatoArchivioBase64] non valido:" + formatoArchivioBase64);
-			}
-		}
-		byte[] xml = getXmlBytes(fatturaStream, isBase64);
 		byte[] xmlDecoded = getLottoXml(FormatoArchivioInvioFatturaType.toEnumConstant(formatoArchivioInvioFatturaString), xml, identificativoSDI, LoggerManager.getEndpointPdDLogger());
 		
 		ConsegnaFatturaParameters params;
@@ -313,6 +301,28 @@ public class ConsegnaFatturaUtils {
 		}
 
 		return params;
+	}
+
+	public static ConsegnaFatturaParameters getParameters(String formatoFatturaPA,
+			Integer identificativoSDI, String nomeFile,
+			String formatoArchivioInvioFatturaString,
+			String formatoArchivioBase64, String messageId,
+			boolean fatturazioneAttiva,
+			InputStream fatturaStream) throws Exception, IOException {
+		
+		
+		
+		
+		boolean isBase64 = false;
+		if(formatoArchivioBase64 != null) {
+			try {
+				isBase64= Boolean.parseBoolean(formatoArchivioBase64);
+			} catch(Exception e){
+				throw new Exception("Parametro [X-SDI-FormatoArchivioBase64] non valido:" + formatoArchivioBase64);
+			}
+		}
+		byte[] xml = getXmlBytes(fatturaStream, isBase64);
+		return getParameters(formatoFatturaPA, identificativoSDI, nomeFile, formatoArchivioInvioFatturaString, formatoArchivioBase64, messageId, fatturazioneAttiva, xml);
 	}
 
 	public static ConsegnaFatturaParameters getParameters(LottoFatture lotto,
