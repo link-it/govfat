@@ -137,6 +137,7 @@ public class EndpointPdDImpl implements EndpointPdD {
 						identificativoSDI, nomeFile,
 						formatoArchivioInvioFatturaString, formatoArchivioBase64,
 						messageId,
+						false,
 						fatturaStream);
 
 
@@ -182,7 +183,8 @@ public class EndpointPdDImpl implements EndpointPdD {
 				lotto.setMessageId(params.getMessageId());
 
 				lotto.setXml(params.getXml());
-
+				lotto.setFatturazioneAttiva(false);
+				
 				lotto.setDataRicezione(new Date());
 				lotto.setStatoConsegna(StatoConsegnaType.NON_CONSEGNATA);
 				lotto.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
@@ -283,6 +285,8 @@ public class EndpointPdDImpl implements EndpointPdD {
 		}
 
 
+		params.setFatturazioneAttiva(false);
+		
 		try {
 			params.setXml(IOUtils.readBytesFromStream(fattura));
 			try {

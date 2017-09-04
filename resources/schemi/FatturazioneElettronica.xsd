@@ -1010,6 +1010,19 @@
 			</xsd:element>
 			
 			<xsd:element name="id-egov" type="xsd:string" minOccurs="0"/>
+			
+			
+			<!-- elementi per agevolare la ricerca, non mappati sul db -->
+			<xsd:element name="Dipartimento" type="Dipartimento" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-id-mapping object-name="Dipartimento"
+								object-type="Dipartimento" relationship="none" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
 	

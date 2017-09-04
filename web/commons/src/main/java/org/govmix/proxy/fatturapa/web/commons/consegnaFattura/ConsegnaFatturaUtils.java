@@ -64,6 +64,7 @@ public class ConsegnaFatturaUtils {
 			String terzoIntermediarioOSoggettoEmittenteCodiceFiscale,
 			String terzoIntermediarioOSoggettoEmittenteIdCodice,
 			String terzoIntermediarioOSoggettoEmittenteIdPaese,
+			boolean fatturazioneAttiva,
 			InputStream fatturaStream) throws Exception, IOException {
 		
 		boolean isBase64 = false;
@@ -80,7 +81,7 @@ public class ConsegnaFatturaUtils {
 				cedentePrestatoreDenominazione, cedentePrestatoreNome, cedentePrestatoreCognome, cedentePrestatoreCodiceFiscale, cedentePrestatoreIdCodice, cedentePrestatoreIdPaese, 
 				cessionarioCommittenteDenominazione, cessionarioCommittenteNome, cessionarioCommittenteCognome, cessionarioCommittenteCodiceFiscale, cessionarioCommittenteIdCodice, cessionarioCommittenteIdPaese, 
 				terzoIntermediarioOSoggettoEmittenteDenominazione, terzoIntermediarioOSoggettoEmittenteNome, terzoIntermediarioOSoggettoEmittenteCognome, terzoIntermediarioOSoggettoEmittenteCodiceFiscale, 
-				terzoIntermediarioOSoggettoEmittenteIdCodice, terzoIntermediarioOSoggettoEmittenteIdPaese, getXmlBytes(fatturaStream, isBase64));
+				terzoIntermediarioOSoggettoEmittenteIdCodice, terzoIntermediarioOSoggettoEmittenteIdPaese, fatturazioneAttiva, getXmlBytes(fatturaStream, isBase64));
 	}
 	
 
@@ -104,6 +105,7 @@ public class ConsegnaFatturaUtils {
 			String terzoIntermediarioOSoggettoEmittenteCodiceFiscale,
 			String terzoIntermediarioOSoggettoEmittenteIdCodice,
 			String terzoIntermediarioOSoggettoEmittenteIdPaese,
+			boolean fatturazioneAttiva,
 			byte[] xml) throws Exception, IOException {
 		ConsegnaFatturaParameters params = new ConsegnaFatturaParameters();
 
@@ -148,6 +150,7 @@ public class ConsegnaFatturaUtils {
 
 		params.setCessionarioCommittente(cessionarioCommittente);
 
+		params.setFatturazioneAttiva(fatturazioneAttiva);
 		if(terzoIntermediarioOSoggettoEmittenteIdCodice != null || terzoIntermediarioOSoggettoEmittenteIdPaese != null
 				|| terzoIntermediarioOSoggettoEmittenteNome != null ||
 				terzoIntermediarioOSoggettoEmittenteCognome != null ||
@@ -170,7 +173,7 @@ public class ConsegnaFatturaUtils {
 			Integer identificativoSDI, String nomeFile,
 			String formatoArchivioInvioFatturaString,
 			String formatoArchivioBase64, String messageId,
-//			String codiceDestinatario,
+			boolean fatturazioneAttiva,
 			InputStream fatturaStream) throws Exception, IOException {
 		
 		
@@ -225,7 +228,7 @@ public class ConsegnaFatturaUtils {
 					 anagraficaCC.getDenominazione(), anagraficaCC.getNome(), anagraficaCC.getCognome(), 
 					 datiAnagraficiCC.getCodiceFiscale(), idFiscaleCC.getIdCodice(), idFiscaleCC.getIdPaese(),
 					 anagraficaTI.getDenominazione(), anagraficaTI.getNome(), anagraficaTI.getCognome(),
-					 datiAnagraficiTI.getCodiceFiscale(), idFiscaleTI.getIdCodice(), idFiscaleTI.getIdPaese(), xml);
+					 datiAnagraficiTI.getCodiceFiscale(), idFiscaleTI.getIdCodice(), idFiscaleTI.getIdPaese(), fatturazioneAttiva, xml);
 		} else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.equals(formatoFatturaPA)) {
 			it.gov.fatturapa.sdi.fatturapa.v1_1.utils.serializer.JaxbDeserializer deserializer11 = new it.gov.fatturapa.sdi.fatturapa.v1_1.utils.serializer.JaxbDeserializer();
 			it.gov.fatturapa.sdi.fatturapa.v1_1.FatturaElettronicaType fattura = deserializer11.readFatturaElettronicaType(xmlDecoded);
@@ -264,7 +267,7 @@ public class ConsegnaFatturaUtils {
 					 anagraficaCC.getDenominazione(), anagraficaCC.getNome(), anagraficaCC.getCognome(), 
 					 datiAnagraficiCC.getCodiceFiscale(), idFiscaleCC.getIdCodice(), idFiscaleCC.getIdPaese(),
 					 anagraficaTI.getDenominazione(), anagraficaTI.getNome(), anagraficaTI.getCognome(),
-					 datiAnagraficiTI.getCodiceFiscale(), idFiscaleTI.getIdCodice(), idFiscaleTI.getIdPaese(), xml);
+					 datiAnagraficiTI.getCodiceFiscale(), idFiscaleTI.getIdCodice(), idFiscaleTI.getIdPaese(), fatturazioneAttiva, xml);
 		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.equals(formatoFatturaPA) || 
 				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.equals(formatoFatturaPA)) {
 			it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.utils.serializer.JaxbDeserializer deserializer12 = new it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.utils.serializer.JaxbDeserializer();
@@ -304,7 +307,7 @@ public class ConsegnaFatturaUtils {
 					 anagraficaCC.getDenominazione(), anagraficaCC.getNome(), anagraficaCC.getCognome(), 
 					 datiAnagraficiCC.getCodiceFiscale(), idFiscaleCC.getIdCodice(), idFiscaleCC.getIdPaese(),
 					 anagraficaTI.getDenominazione(), anagraficaTI.getNome(), anagraficaTI.getCognome(),
-					 datiAnagraficiTI.getCodiceFiscale(), idFiscaleTI.getIdCodice(), idFiscaleTI.getIdPaese(), xml);
+					 datiAnagraficiTI.getCodiceFiscale(), idFiscaleTI.getIdCodice(), idFiscaleTI.getIdPaese(), fatturazioneAttiva, xml);
 		} else {
 			throw new Exception("Formato FatturaPA ["+formatoFatturaPA+"] non riconosciuto");
 		}
@@ -321,7 +324,7 @@ public class ConsegnaFatturaUtils {
 				lotto.getCessionarioCommittenteDenominazione(), lotto.getCessionarioCommittenteNome(), lotto.getCessionarioCommittenteCognome(), lotto.getCessionarioCommittenteCodiceFiscale(), 
 				lotto.getCessionarioCommittenteCodice(), lotto.getCessionarioCommittentePaese(), 
 				lotto.getTerzoIntermediarioOSoggettoEmittenteDenominazione(), lotto.getTerzoIntermediarioOSoggettoEmittenteNome(), lotto.getTerzoIntermediarioOSoggettoEmittenteCognome(), 
-				lotto.getTerzoIntermediarioOSoggettoEmittenteCodiceFiscale(), lotto.getTerzoIntermediarioOSoggettoEmittenteCodice(), lotto.getTerzoIntermediarioOSoggettoEmittentePaese(), xml);
+				lotto.getTerzoIntermediarioOSoggettoEmittenteCodiceFiscale(), lotto.getTerzoIntermediarioOSoggettoEmittenteCodice(), lotto.getTerzoIntermediarioOSoggettoEmittentePaese(), lotto.getFatturazioneAttiva(), xml);
 		params.setPosizioneFatturaPA(posizione);
 		
 		return params;

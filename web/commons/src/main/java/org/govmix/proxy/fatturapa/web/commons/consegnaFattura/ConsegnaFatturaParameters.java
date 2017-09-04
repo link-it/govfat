@@ -41,6 +41,7 @@ public class ConsegnaFatturaParameters {
 	private Soggetto cessionarioCommittente;
 	private Soggetto terzoIntermediarioOSoggettoEmittente;
 
+	private boolean fatturazioneAttiva;
 	private Date dataRicezione;
 	
 	public String getFormatoFatturaPA() {
@@ -309,6 +310,14 @@ public class ConsegnaFatturaParameters {
 
 	public void setXml(byte[] xml) {
 		this.xml = xml;
+	}
+
+	public boolean isFatturazioneAttiva() {
+		return fatturazioneAttiva;
+	}
+
+	public void setFatturazioneAttiva(boolean fatturazioneAttiva) {
+		this.fatturazioneAttiva = fatturazioneAttiva;
 	}
 
 }

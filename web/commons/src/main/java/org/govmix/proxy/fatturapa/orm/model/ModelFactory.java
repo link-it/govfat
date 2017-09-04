@@ -32,11 +32,11 @@ public class ModelFactory {
 
 	public static LottoFattureModel LOTTO_FATTURE = new LottoFattureModel();
 	
+	public static DipartimentoModel DIPARTIMENTO = new DipartimentoModel();
+	
 	public static TracciaSDIModel TRACCIA_SDI = new TracciaSDIModel();
 	
 	public static FatturaElettronicaModel FATTURA_ELETTRONICA = new FatturaElettronicaModel();
-	
-	public static DipartimentoModel DIPARTIMENTO = new DipartimentoModel();
 	
 	public static NotificaEsitoCommittenteModel NOTIFICA_ESITO_COMMITTENTE = new NotificaEsitoCommittenteModel();
 	

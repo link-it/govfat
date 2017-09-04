@@ -78,6 +78,7 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 		this.DATA_PROTOCOLLAZIONE = new Field("dataProtocollazione",java.util.Date.class,"LottoFatture",LottoFatture.class);
 		this.PROTOCOLLO = new Field("protocollo",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.ID_EGOV = new Field("id-egov",java.lang.String.class,"LottoFatture",LottoFatture.class);
+		this.DIPARTIMENTO = new org.govmix.proxy.fatturapa.orm.model.DipartimentoModel(new Field("Dipartimento",org.govmix.proxy.fatturapa.orm.Dipartimento.class,"LottoFatture",LottoFatture.class));
 	
 	}
 	
@@ -121,6 +122,7 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 		this.DATA_PROTOCOLLAZIONE = new ComplexField(father,"dataProtocollazione",java.util.Date.class,"LottoFatture",LottoFatture.class);
 		this.PROTOCOLLO = new ComplexField(father,"protocollo",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.ID_EGOV = new ComplexField(father,"id-egov",java.lang.String.class,"LottoFatture",LottoFatture.class);
+		this.DIPARTIMENTO = new org.govmix.proxy.fatturapa.orm.model.DipartimentoModel(new ComplexField(father,"Dipartimento",org.govmix.proxy.fatturapa.orm.Dipartimento.class,"LottoFatture",LottoFatture.class));
 	
 	}
 	
@@ -197,6 +199,8 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 	public IField PROTOCOLLO = null;
 	 
 	public IField ID_EGOV = null;
+	 
+	public org.govmix.proxy.fatturapa.orm.model.DipartimentoModel DIPARTIMENTO = null;
 	 
 
 	@Override

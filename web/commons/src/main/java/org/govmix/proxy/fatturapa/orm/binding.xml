@@ -172,6 +172,7 @@
     <value name="dataProtocollazione" field="dataProtocollazione" usage="optional"/>
     <value name="protocollo" field="protocollo" usage="optional"/>
     <value name="id-egov" field="idEgov" usage="optional"/>
+    <structure name="Dipartimento" field="dipartimento" usage="optional" map-as="_Dipartimento_Type"/>
   </mapping>
   <mapping name="TracciaSDI" class="org.govmix.proxy.fatturapa.orm.TracciaSDI">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>

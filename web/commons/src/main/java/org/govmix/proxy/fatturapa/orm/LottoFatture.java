@@ -78,6 +78,7 @@ import java.io.Serializable;
  * 			&lt;element name="dataProtocollazione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="protocollo" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="id-egov" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="Dipartimento" type="{http://www.govmix.org/proxy/fatturapa/orm}Dipartimento" minOccurs="0" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -127,7 +128,8 @@ import java.io.Serializable;
   	"statoProtocollazione",
   	"dataProtocollazione",
   	"protocollo",
-  	"idEgov"
+  	"idEgov",
+  	"dipartimento"
   }
 )
 
@@ -521,6 +523,14 @@ public class LottoFatture extends org.openspcoop2.utils.beans.BaseBean implement
     this.idEgov = idEgov;
   }
 
+  public Dipartimento getDipartimento() {
+    return this.dipartimento;
+  }
+
+  public void setDipartimento(Dipartimento dipartimento) {
+    this.dipartimento = dipartimento;
+  }
+
   private static final long serialVersionUID = 1L;
 
   @XmlTransient
@@ -714,5 +724,8 @@ public class LottoFatture extends org.openspcoop2.utils.beans.BaseBean implement
   @javax.xml.bind.annotation.XmlSchemaType(name="string")
   @XmlElement(name="id-egov",required=false,nillable=false)
   protected java.lang.String idEgov;
+
+  @XmlElement(name="Dipartimento",required=false,nillable=false)
+  protected Dipartimento dipartimento;
 
 }

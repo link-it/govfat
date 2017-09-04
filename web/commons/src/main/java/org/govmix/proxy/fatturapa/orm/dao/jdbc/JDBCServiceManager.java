@@ -20,74 +20,69 @@
  */
 package org.govmix.proxy.fatturapa.orm.dao.jdbc;
 
-import org.openspcoop2.generic_project.exception.NotImplementedException;
-import org.openspcoop2.generic_project.exception.ServiceException;
-import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
-import org.openspcoop2.generic_project.utils.ServiceManagerProperties;
-
-import org.govmix.proxy.fatturapa.orm.dao.ILottoFattureServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.ILottoFattureService;
-import org.govmix.proxy.fatturapa.orm.dao.ITracciaSDIServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.ITracciaSDIService;
-import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaService;
-import org.govmix.proxy.fatturapa.orm.dao.INotificaEsitoCommittenteServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.INotificaEsitoCommittenteService;
-import org.govmix.proxy.fatturapa.orm.dao.INotificaDecorrenzaTerminiServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.INotificaDecorrenzaTerminiService;
-import org.govmix.proxy.fatturapa.orm.dao.IAllegatoFatturaServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IAllegatoFatturaService;
-import org.govmix.proxy.fatturapa.orm.dao.IEnteServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IEnteService;
-import org.govmix.proxy.fatturapa.orm.dao.IProtocolloServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IProtocolloService;
-import org.govmix.proxy.fatturapa.orm.dao.IRegistroServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IRegistroService;
-import org.govmix.proxy.fatturapa.orm.dao.IRegistroPropertyServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IRegistroPropertyService;
-import org.govmix.proxy.fatturapa.orm.dao.IUtenteServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IUtenteService;
-import org.govmix.proxy.fatturapa.orm.dao.IDipartimentoServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IDipartimentoService;
-import org.govmix.proxy.fatturapa.orm.dao.IDipartimentoPropertyServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IDipartimentoPropertyService;
-import org.govmix.proxy.fatturapa.orm.dao.IPccOperazioneServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IPccOperazioneService;
-import org.govmix.proxy.fatturapa.orm.dao.IPccDipartimentoOperazioneServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IPccDipartimentoOperazioneService;
-import org.govmix.proxy.fatturapa.orm.dao.IPccUtenteOperazioneServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IPccUtenteOperazioneService;
-import org.govmix.proxy.fatturapa.orm.dao.IPccContabilizzazioneServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IPccContabilizzazioneService;
-import org.govmix.proxy.fatturapa.orm.dao.IPccScadenzaServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IPccScadenzaService;
-import org.govmix.proxy.fatturapa.orm.dao.IPccPagamentoServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IPccPagamentoService;
-import org.govmix.proxy.fatturapa.orm.dao.IPccTracciaServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IPccTracciaService;
-import org.govmix.proxy.fatturapa.orm.dao.IPccTracciaTrasmissioneServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IPccTracciaTrasmissioneService;
-import org.govmix.proxy.fatturapa.orm.dao.IPccTracciaTrasmissioneEsitoServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IPccTracciaTrasmissioneEsitoService;
-import org.govmix.proxy.fatturapa.orm.dao.IPccErroreElaborazioneServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IPccErroreElaborazioneService;
-import org.govmix.proxy.fatturapa.orm.dao.IPccRispedizioneServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IPccRispedizioneService;
-import org.govmix.proxy.fatturapa.orm.dao.IPccNotificaServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IPccNotificaService;
-import org.govmix.proxy.fatturapa.orm.dao.IEventoServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IEventoService;
-
-import org.govmix.proxy.fatturapa.orm.dao.IServiceManager;
-
 import java.sql.Connection;
 import java.util.Properties;
 
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
-import org.govmix.proxy.fatturapa.orm.dao.IExtendedFatturaElettronicaServiceSearch;
-import org.govmix.proxy.fatturapa.orm.dao.IExtendedLottoFattureServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.IAllegatoFatturaService;
+import org.govmix.proxy.fatturapa.orm.dao.IAllegatoFatturaServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.IDipartimentoPropertyService;
+import org.govmix.proxy.fatturapa.orm.dao.IDipartimentoPropertyServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.IDipartimentoService;
+import org.govmix.proxy.fatturapa.orm.dao.IDipartimentoServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.IEnteService;
+import org.govmix.proxy.fatturapa.orm.dao.IEnteServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.IEventoService;
+import org.govmix.proxy.fatturapa.orm.dao.IEventoServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaService;
+import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.ILottoFattureService;
+import org.govmix.proxy.fatturapa.orm.dao.ILottoFattureServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.INotificaDecorrenzaTerminiService;
+import org.govmix.proxy.fatturapa.orm.dao.INotificaDecorrenzaTerminiServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.INotificaEsitoCommittenteService;
+import org.govmix.proxy.fatturapa.orm.dao.INotificaEsitoCommittenteServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.IPccContabilizzazioneService;
+import org.govmix.proxy.fatturapa.orm.dao.IPccContabilizzazioneServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.IPccDipartimentoOperazioneService;
+import org.govmix.proxy.fatturapa.orm.dao.IPccDipartimentoOperazioneServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.IPccErroreElaborazioneService;
+import org.govmix.proxy.fatturapa.orm.dao.IPccErroreElaborazioneServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.IPccNotificaService;
+import org.govmix.proxy.fatturapa.orm.dao.IPccNotificaServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.IPccOperazioneService;
+import org.govmix.proxy.fatturapa.orm.dao.IPccOperazioneServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.IPccPagamentoService;
+import org.govmix.proxy.fatturapa.orm.dao.IPccPagamentoServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.IPccRispedizioneService;
+import org.govmix.proxy.fatturapa.orm.dao.IPccRispedizioneServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.IPccScadenzaService;
+import org.govmix.proxy.fatturapa.orm.dao.IPccScadenzaServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.IPccTracciaService;
+import org.govmix.proxy.fatturapa.orm.dao.IPccTracciaServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.IPccTracciaTrasmissioneEsitoService;
+import org.govmix.proxy.fatturapa.orm.dao.IPccTracciaTrasmissioneEsitoServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.IPccTracciaTrasmissioneService;
+import org.govmix.proxy.fatturapa.orm.dao.IPccTracciaTrasmissioneServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.IPccUtenteOperazioneService;
+import org.govmix.proxy.fatturapa.orm.dao.IPccUtenteOperazioneServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.IProtocolloService;
+import org.govmix.proxy.fatturapa.orm.dao.IProtocolloServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.IRegistroPropertyService;
+import org.govmix.proxy.fatturapa.orm.dao.IRegistroPropertyServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.IRegistroService;
+import org.govmix.proxy.fatturapa.orm.dao.IRegistroServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.IServiceManager;
+import org.govmix.proxy.fatturapa.orm.dao.ITracciaSDIService;
+import org.govmix.proxy.fatturapa.orm.dao.ITracciaSDIServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.IUtenteService;
+import org.govmix.proxy.fatturapa.orm.dao.IUtenteServiceSearch;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
+import org.openspcoop2.generic_project.exception.NotImplementedException;
+import org.openspcoop2.generic_project.exception.ServiceException;
+import org.openspcoop2.generic_project.utils.ServiceManagerProperties;
 /**     
  * Manager that allows you to obtain the services of research and management of objects
  *
@@ -261,18 +256,6 @@ public class JDBCServiceManager extends org.openspcoop2.generic_project.dao.jdbc
 		return new JDBCTracciaSDIService(this);
 	}
 	
-	/**
-	 * Return a service used to research on the backend on objects of type {@link org.govmix.proxy.fatturapa.LottoFatture}
-	 *
-	 * @return Service used to research on the backend on objects of type {@link org.govmix.proxy.fatturapa.LottoFatture}	
-	 * @throws ServiceException Exception thrown when an error occurs during processing of the request
-	 * @throws NotImplementedException Exception thrown when the method is not implemented
-	 */
-	@Override
-	public IExtendedLottoFattureServiceSearch getExtendedLottoFattureServiceSearch() throws ServiceException,NotImplementedException{
-		return new JDBCExtendedLottoFattureServiceSearch(this);
-	}
-	
 	/*
 	 =====================================================================================================================
 	 Services relating to the object with name:FatturaElettronica type:FatturaElettronica
@@ -302,19 +285,6 @@ public class JDBCServiceManager extends org.openspcoop2.generic_project.dao.jdbc
 	public IFatturaElettronicaService getFatturaElettronicaService() throws ServiceException,NotImplementedException{
 		return new JDBCFatturaElettronicaService(this);
 	}
-	
-	/**
-	 * Return a service used to research on the backend on objects of type {@link org.govmix.proxy.fatturapa.FatturaElettronica}
-	 *
-	 * @return Service used to research on the backend on objects of type {@link org.govmix.proxy.fatturapa.FatturaElettronica}	
-	 * @throws ServiceException Exception thrown when an error occurs during processing of the request
-	 * @throws NotImplementedException Exception thrown when the method is not implemented
-	 */
-	@Override
-	public IExtendedFatturaElettronicaServiceSearch getExtendedFatturaElettronicaServiceSearch() throws ServiceException,NotImplementedException{
-		return new JDBCExtendedFatturaElettronicaServiceSearch(this);
-	}
-	
 	
 	/*
 	 =====================================================================================================================

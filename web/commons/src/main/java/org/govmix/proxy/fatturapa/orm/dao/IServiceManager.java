@@ -59,8 +59,6 @@ public interface IServiceManager {
 	 */
 	public ILottoFattureService getLottoFattureService() throws ServiceException,NotImplementedException;
 	
-		public IExtendedLottoFattureServiceSearch getExtendedLottoFattureServiceSearch() throws ServiceException,NotImplementedException;
-	
 	/*
 	 =====================================================================================================================
 	 Services relating to the object with name:TracciaSDI type:TracciaSDI
@@ -110,9 +108,6 @@ public interface IServiceManager {
 	 * @throws NotImplementedException Exception thrown when the method is not implemented
 	 */
 	public IFatturaElettronicaService getFatturaElettronicaService() throws ServiceException,NotImplementedException;
-	
-	public IExtendedFatturaElettronicaServiceSearch getExtendedFatturaElettronicaServiceSearch() throws ServiceException, NotImplementedException;
-	
 	
 	/*
 	 =====================================================================================================================
