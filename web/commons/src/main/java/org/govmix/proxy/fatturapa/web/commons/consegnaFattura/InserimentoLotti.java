@@ -2,15 +2,16 @@ package org.govmix.proxy.fatturapa.web.commons.consegnaFattura;
 
 import java.util.List;
 
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
+import org.apache.log4j.Logger;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoResponse.ESITO;
 
 public class InserimentoLotti {
 
-	private FatturaAttivaBD fatturaAttivaBD;
+	private LottoBD lottoBD;
 	
-	public InserimentoLotti(FatturaAttivaBD fatturaAttivaBD) {
-		this.fatturaAttivaBD = fatturaAttivaBD;
+	public InserimentoLotti(Logger log) throws Exception {
+		this.lottoBD = new LottoBD(log);
 	}
 	
 	public InserimentoLottoResponse inserisciLotto(List<InserimentoLottoRequest> request) {
