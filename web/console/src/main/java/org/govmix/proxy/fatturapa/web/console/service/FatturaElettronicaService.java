@@ -125,7 +125,7 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 				}
 				
 				FilterSortWrapper fsw = new FilterSortWrapper();
-				fsw.setSortOrder(SortOrder.ASC);
+				fsw.setSortOrder(SortOrder.DESC);
 				fsw.setField(FatturaElettronica.model().DATA_RICEZIONE);
 				filter.getFilterSortList().add(fsw);
 
@@ -212,7 +212,7 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 				}
 				
 				FilterSortWrapper fsw = new FilterSortWrapper();
-				fsw.setSortOrder(SortOrder.ASC);
+				fsw.setSortOrder(SortOrder.DESC);
 				fsw.setField(FatturaElettronica.model().DATA_RICEZIONE);
 				filter.getFilterSortList().add(fsw);
 
