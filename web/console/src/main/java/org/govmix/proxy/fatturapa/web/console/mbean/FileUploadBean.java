@@ -68,7 +68,7 @@ public class FileUploadBean implements Serializable{
 //			this.contenuto.add(item.getData());
 //			this.nomeFile.add(item.getFileName());
 //			this.dimensioneFile.add(item.getFileSize());
-//			this.caricato = true;
+//			this.caricato = true; uploadData="#{fatturaElettronicaAttivaMBean.form.fatturaFile.files}"
 		}
 		else {
 			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fileUpload.uploadError"));

@@ -46,6 +46,14 @@
 		</style>
 		
 		<rich:panel styleClass="noborder" id="pagina" >
+		
+			<h:form id="formRicaricaListaFattureAttive">
+            	<a4j:outputPanel layout="block" ajaxRendered="false">
+					<a4j:jsFunction name="ricaricaListaFattureAttive" reRender="fatturaElettronicaTable" limitToList="true">
+            		</a4j:jsFunction>
+           		</a4j:outputPanel>
+       		</h:form>
+			
 			
 			<op2web:searchForm searchBean="#{fatturaElettronicaAttivaMBean.search}">
 		
@@ -276,7 +284,7 @@
 								<a4j:commandButton styleClass="icon-save positive" style="padding: 4px 6px 4px 5px;"
 									value="#{msg['fattura.button.salva']}" action="#{fatturaElettronicaAttivaMBean.salvaFatture}"
 									reRender="dsFileUploadErrorsCtr" rendered="#{not fatturaElettronicaAttivaMBean.form.mostraFormCorservazione}"
-									oncomplete="if (#{fatturaElettronicaAttivaMBean.salvataggioOk == 'true'}) { #{rich:component('fileUploadModalPnl')}.hide(); }" />
+									oncomplete="if (#{fatturaElettronicaAttivaMBean.salvataggioOk == 'true'}) { #{rich:component('fileUploadModalPnl')}.hide(); ricaricaListaFattureAttive(); }" />
 							</div>
 						</a4j:outputPanel>		
 					</h:form>	
@@ -295,22 +303,23 @@
 					</h:panelGroup>
 				</f:facet>
 		   		<div class="form-container noborder">
-					<a4j:outputPanel id="outPanelParametroError21" ajaxRendered="true">
-						<h:panelGroup id="panelGroupParametroError21" layout="block"
-							styleClass="#{facesContext.maximumSeverity.ordinal>=2 ? 'errors' : 'info'}"
-							rendered="#{not empty facesContext.maximumSeverity}">
-							<h:panelGroup id="panelGroupParametroError22"
-								rendered="#{facesContext.maximumSeverity.ordinal>=2}">
+					<a4j:outputPanel id="outPanelFormConservazioneError" ajaxRendered="true">
+						<h:panelGroup id="panelGroupFormConservazioneError" layout="block"
+							styleClass="errors" rendered="#{not empty fatturaElettronicaAttivaMBean.checkFormConservazioneMessage}">
+								<h:panelGroup rendered="#{not empty fatturaElettronicaAttivaMBean.checkFormConservazioneMessage}">
 								<p>
 									<em>
-										<h:outputText value="#{msg['fattura.form.modale.presenzaErrori']}" />
+										<h:outputText value="#{msg['fattura.form.modale.presenzaErrori']}"/>
 									</em>
 								</p>
 								<div class="errorsSpacer"/>
 							</h:panelGroup>
 							<div class="errorsSpacer"/>
-							<rich:messages id="msgParametroError2">
+							<rich:messages id="errorFormConservazioneMessages">
 							</rich:messages>
+							<h:outputText id="dsFormConservazioneErrors"  
+								value="#{fatturaElettronicaAttivaMBean.checkFormConservazioneMessage}"
+								rendered="#{not empty fatturaElettronicaAttivaMBean.checkFormConservazioneMessage}" />
 						</h:panelGroup>
 					</a4j:outputPanel>
 		   			<a4j:outputPanel layout="block" id="conservazioneFattureForm_formPnl" ajaxRendered="false">
@@ -352,14 +361,10 @@
 								 </rich:dataTable>
 				        	</op2web:fieldset>
 				        	<div class="buttonrow" style="margin-left: 290px;">
-				        		<a4j:commandButton styleClass="icon-delete negative" style="padding: 4px 6px 4px 5px;"
-									value="#{msg['commons.button.annulla']}"
-									reRender="mainct" rendered="false"
-									oncomplete="#{rich:component('pannelloConservazioneFatture')}.hide(); #{rich:component('fileUploadModalPnl')}.show();" />
 				        		<a4j:commandButton styleClass="icon-save positive" style="padding: 4px 6px 4px 5px;"
 									value="#{msg['fattura.button.invia']}" action="#{fatturaElettronicaAttivaMBean.salvaFormCorservazione}"
-									reRender="conservazioneFattureForm_formPnl"
-									oncomplete="if (#{fatturaElettronicaAttivaMBean.checkConservazione == 'true'}) { #{rich:component('pannelloConservazioneFatture')}.hide(); #{rich:component('fileUploadModalPnl')}.hide();  }" />
+									reRender="conservazioneFattureForm_formPnl,outPanelFormConservazioneError"
+									oncomplete="if (#{fatturaElettronicaAttivaMBean.checkConservazione == 'true'}) { #{rich:component('pannelloConservazioneFatture')}.hide(); #{rich:component('fileUploadModalPnl')}.hide(); ricaricaListaFattureAttive(); }" />
 				        	</div>
 			        		
 			       		</h:form>

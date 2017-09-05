@@ -519,6 +519,7 @@ IFatturaElettronicaAttivaService>{
 		this.salvataggioOk = false;
 		this.checkFormFattura = false;
 		this.checkFormFatturaMessage = null;
+		this.checkFormConservazioneMessage = null;
 	}
 
 
@@ -526,10 +527,10 @@ IFatturaElettronicaAttivaService>{
 
 		// prima di mostrare la form della conservazione controllo il form 
 		this.checkFormFattura = false;
+		this.checkFormConservazioneMessage = null;
 		this.checkFormFatturaMessage = this.validaFormFatture();
 		if(this.checkFormFatturaMessage != null) {
 			this.checkFormFattura = false;
-			//			MessageUtils.addErrorMsg(this.checkFormFatturaMessage);
 			return null;
 		}
 
@@ -564,7 +565,6 @@ IFatturaElettronicaAttivaService>{
 
 			if(this.checkFormFatturaMessage != null) {
 				this.checkFormFattura = false;
-				//				MessageUtils.addErrorMsg(this.checkFormFatturaMessage);
 				return null;
 			}
 
@@ -592,7 +592,13 @@ IFatturaElettronicaAttivaService>{
 				this.salvataggioOk = true;
 				MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura.salvataggioOk"));
 			} else {
-				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle(salvaFatture.getDettaglio())); 
+				if(StringUtils.isNotEmpty(salvaFatture.getDettaglio())) {
+				//	MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle(salvaFatture.getDettaglio()));
+					this.checkFormFatturaMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle(salvaFatture.getDettaglio());
+				}else { 
+				//	MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura.salvataggioKo"));
+					this.checkFormFatturaMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura.salvataggioKo");
+				}
 			}
 		}catch(Exception e) {
 			log.error("Errore durante il salvataggio delle fatture: "+ e.getMessage(),e);
@@ -631,38 +637,10 @@ IFatturaElettronicaAttivaService>{
 
 	public String salvaFormCorservazione(){
 		this.checkConservazione = false;
-		for (ConservazioneBean conservazione : this.listaConservazione) {
-			if(StringUtils.isEmpty(conservazione.getProtocollo())){
-				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.protocolloVuoto",conservazione.getNomeFile()));
-				return null;
-			}
+		this.checkFormConservazioneMessage = this.validaFormConservazione();
 
-			Matcher matcher = this.protocolloPattern.matcher(conservazione.getProtocollo());
-
-			if(!matcher.matches()) {
-				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.protocolloNonValido",conservazione.getNomeFile()));
-				return null;
-			}
-
-			if(StringUtils.isEmpty(conservazione.getAnno())){
-				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.annoVuoto",conservazione.getNomeFile()));
-				return null;
-			}
-
-			matcher = this.annoPattern.matcher(conservazione.getAnno());
-
-			if(!matcher.matches()) {
-				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.annoNonValido",conservazione.getNomeFile()));
-				return null;
-			}
-
-			if(StringUtils.isEmpty(conservazione.getRegistro())){
-				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.registroVuoto",conservazione.getNomeFile()));
-				return null;
-			}
-
-			//formato registro?
-			// registro si puo' modificare?
+		if(this.checkFormConservazioneMessage != null) {
+			return null;
 		}
 
 		try {
@@ -697,12 +675,52 @@ IFatturaElettronicaAttivaService>{
 				this.checkConservazione = true;
 				MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFatturaSoloConservazione.salvataggioOk"));
 			} else {
-				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle(salvaFattureSoloConservazione.getDettaglio())); 
+				if(StringUtils.isNotEmpty(salvaFattureSoloConservazione.getDettaglio())) {
+//					MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle(salvaFattureSoloConservazione.getDettaglio()));
+					this.checkFormConservazioneMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle(salvaFattureSoloConservazione.getDettaglio());
+				}else { 
+//					MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFatturaSoloConservazione.salvataggioKo"));
+					this.checkFormConservazioneMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFatturaSoloConservazione.salvataggioKo");
+				}
 			}
 		}catch(Exception e) {
 			log.error("Errore durante il salvataggio delle fatture: "+ e.getMessage(),e);
-			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFatturaSoloConservazione.erroreGenerico"));
+//			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFatturaSoloConservazione.erroreGenerico"));
+			this.checkFormConservazioneMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFatturaSoloConservazione.erroreGenerico");
 		}
+		return null;
+	}
+
+	public String validaFormConservazione() {
+		for (ConservazioneBean conservazione : this.listaConservazione) {
+			if(StringUtils.isEmpty(conservazione.getProtocollo())){
+				return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.protocolloVuoto",conservazione.getNomeFile());
+			}
+
+			Matcher matcher = this.protocolloPattern.matcher(conservazione.getProtocollo());
+
+			if(!matcher.matches()) {
+				return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.protocolloNonValido",conservazione.getNomeFile());
+			}
+
+			if(StringUtils.isEmpty(conservazione.getAnno())){
+				return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.annoVuoto",conservazione.getNomeFile());
+			}
+
+			matcher = this.annoPattern.matcher(conservazione.getAnno());
+
+			if(!matcher.matches()) {
+				return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.annoNonValido",conservazione.getNomeFile());
+			}
+
+			if(StringUtils.isEmpty(conservazione.getRegistro())){
+				return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.registroVuoto",conservazione.getNomeFile());
+			}
+
+			//formato registro?
+			// registro si puo' modificare?
+		}
+		
 		return null;
 	}
 
@@ -730,6 +748,7 @@ IFatturaElettronicaAttivaService>{
 	private boolean salvataggioOk = false;
 	private boolean checkFormFattura = false;
 	private String checkFormFatturaMessage = null;
+	private String checkFormConservazioneMessage = null;
 
 	public boolean isSalvataggioOk() {
 		return salvataggioOk;
@@ -769,6 +788,14 @@ IFatturaElettronicaAttivaService>{
 
 	public void setVisualizzaTastoCaricaFattura(boolean visualizzaTastoCaricaFattura) {
 		this.visualizzaTastoCaricaFattura = visualizzaTastoCaricaFattura;
+	}
+
+	public String getCheckFormConservazioneMessage() {
+		return checkFormConservazioneMessage;
+	}
+
+	public void setCheckFormConservazioneMessage(String checkFormConservazioneMessage) {
+		this.checkFormConservazioneMessage = checkFormConservazioneMessage;
 	}
 
 	private boolean visualizzaTastoCaricaFattura = false;
