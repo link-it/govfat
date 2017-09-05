@@ -16,7 +16,6 @@ import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoResponse.ESITO;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.openspcoop2.generic_project.exception.DeserializerException;
-import org.openspcoop2.generic_project.exception.ValidationException;
 
 public class InserimentoLotti {
 
@@ -29,10 +28,11 @@ public class InserimentoLotti {
 	public InserimentoLottoResponse inserisciLotto(List<InserimentoLottoRequest> requestList) {
 		InserimentoLottoResponse inserimentoLottoResponse = new InserimentoLottoResponse();
 
-
+		Connection connection = null;
 		try {
-			Connection connection = DAOFactory.getInstance().getConnection();
+			connection = DAOFactory.getInstance().getConnection();
 
+			connection.setAutoCommit(false);
 			LottoBD lottoBD = new LottoBD(log, connection, false);
 			ConsegnaFattura consegnaFattura = new ConsegnaFattura(log, false, connection, false);
 
@@ -55,11 +55,18 @@ public class InserimentoLotti {
 				insertLotto(lotto, lottoBD, consegnaFattura);
 			}
 			
+			connection.commit();
 			
 			inserimentoLottoResponse.setEsito(ESITO.OK);
+			
 		} catch(Exception e) {
+			if(connection != null) try {connection.rollback();} catch(Exception ex) {}
+			
+			this.log.error("Errore durante il caricamento dei lotti: " + e.getMessage(), e);
 			inserimentoLottoResponse.setEsito(ESITO.KO);
 			inserimentoLottoResponse.setDettaglio(e.getMessage());
+		} finally {
+			if(connection != null) try {connection.close();} catch(Exception ex) {}
 		}
 
 		return inserimentoLottoResponse;
@@ -79,34 +86,25 @@ public class InserimentoLotti {
 		List<byte[]> fattureLst =ConsegnaFatturaUtils.getXmlWithSDIUtils(lottoXML);
 		
 		for (int i = 0; i < fattureLst.size(); i++) {
-			inserisciFattura(consegnaFattura, lotto, (i+1), nomeFile, fattureLst.get(i));
-		}
 
-	}
-
-	public void inserisciFattura(ConsegnaFattura consegnaFattura, LottoFatture lotto,
-			int posizione, String nomeFile, byte[] xml) throws Exception, ValidationException {
-		ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(lotto, posizione, nomeFile, xml);
-
-		try {
-
-			if(xml == null) {
+			if(fattureLst.get(i) == null) {
 				throw new Exception("La fattura ricevuta in ingresso e' null");
 			}
-
-			consegnaFattura.consegnaFattura(params);//, fatturaString);
-		} catch(Exception e) {
-			this.log.error("riceviFattura completata con errore:"+ e.getMessage(), e);
-			throw e;
+			
+			ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(lotto, (i+1), nomeFile, fattureLst.get(i));
+			consegnaFattura.consegnaFattura(params);
 		}
+
 	}
 
-	
 	public InserimentoLottoResponse inserisciLottoSoloConservazione(List<InserimentoLottoSoloConservazioneRequest> requestList) {
 		InserimentoLottoResponse inserimentoLottoResponse = new InserimentoLottoResponse();
 		
+		Connection connection = null;
+		
 		try {
-			Connection connection = DAOFactory.getInstance().getConnection();
+			connection = DAOFactory.getInstance().getConnection();
+			connection.setAutoCommit(false);
 
 			LottoBD lottoBD = new LottoBD(log, connection, false);
 			ConsegnaFattura consegnaFattura = new ConsegnaFattura(log, false, connection, false);
@@ -127,10 +125,15 @@ public class InserimentoLotti {
 				
 				insertLotto(lotto, lottoBD, consegnaFattura);
 			}
+			connection.commit();
 			inserimentoLottoResponse.setEsito(ESITO.OK);
 		} catch(Exception e) {
+			if(connection != null) try {connection.rollback();} catch(Exception ex) {}
+			this.log.error("Errore durante il caricamento dei lotti: " + e.getMessage(), e);
 			inserimentoLottoResponse.setEsito(ESITO.KO);
 			inserimentoLottoResponse.setDettaglio(e.getMessage());
+		} finally {
+			if(connection != null) try {connection.close();} catch(Exception ex) {}
 		}
 		
 		return inserimentoLottoResponse;
@@ -223,8 +226,12 @@ public class InserimentoLotti {
 	private static int counter = 0;
 	private static int padding = 3;
 	
+	public static void main(String[] args) {
+		System.out.println(generaIdentificativo());
+	}
+	
 	private static synchronized Integer generaIdentificativo() {
-		SimpleDateFormat sdf = new SimpleDateFormat("MMddhhmm");
+		SimpleDateFormat sdf = new SimpleDateFormat("ddhhmm");
 		String format = sdf.format(new Date());
 		if(!currentMinute.equals(format)) {
 			counter = 0;
@@ -236,7 +243,7 @@ public class InserimentoLotti {
 		for(;i<padding;i++)
 			paddedCounter += "0";
 		paddedCounter += counter;
-		return Integer.parseInt(format + "" + paddedCounter);
+		return Integer.parseInt("1" + format + "" + paddedCounter);
 		
 	}
 }

@@ -204,11 +204,17 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 			fields.add(FatturaElettronica.model().XML);
 			String idDecorrenzaTerminiField = "id_notifica_decorrenza_termini";
 			fields.add(new CustomField(idDecorrenzaTerminiField, Long.class, idDecorrenzaTerminiField, this.getFatturaElettronicaFieldConverter().toTable(FatturaElettronica.model())));
+			String idEsitoContabilizzazioneField = "id_contabilizzazione";
+			fields.add(new CustomField(idEsitoContabilizzazioneField, Long.class, idEsitoContabilizzazioneField, this.getFatturaElettronicaFieldConverter().toTable(FatturaElettronica.model())));
+			String idEsitoScadenzaField = "id_scadenza";
+			fields.add(new CustomField(idEsitoScadenzaField, Long.class, idEsitoScadenzaField, this.getFatturaElettronicaFieldConverter().toTable(FatturaElettronica.model())));
 
 			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));
 
 			for(Map<String, Object> map: returnMap) {
 				Object idFK_fatturaElettronica_notificaDecorrenzaTermini = map.remove(idDecorrenzaTerminiField);
+				Object idFK_fatturaElettronica_esitoContabilizzazione = map.remove(idEsitoContabilizzazioneField);
+				Object idFK_fatturaElettronica_esitoScadenza = map.remove(idEsitoScadenzaField);
 
 				FatturaElettronica fatturaElettronica = (FatturaElettronica)this.getFatturaElettronicaFetch().fetch(jdbcProperties.getDatabase(), FatturaElettronica.model(), map);
 
@@ -225,6 +231,45 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 							}
 							id_fatturaElettronica_notificaDecorrenzaTermini.setId((Long) idFK_fatturaElettronica_notificaDecorrenzaTermini);
 							fatturaElettronica.setIdDecorrenzaTermini(id_fatturaElettronica_notificaDecorrenzaTermini);
+						}
+				}
+				
+				if(idFK_fatturaElettronica_esitoContabilizzazione != null && idFK_fatturaElettronica_esitoContabilizzazione instanceof Long) {
+					if(idMappingResolutionBehaviour==null ||
+							(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
+						){
+							try {
+								// Object _fatturaElettronica_pccTracciaTrasmissioneEsito (recupero id)
+								Long idFK_fatturaElettronica_pccTracciaTrasmissioneEsito = (Long) idFK_fatturaElettronica_esitoContabilizzazione;
+								
+								org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito id_fatturaElettronica_pccTracciaTrasmissioneEsito = null;
+								if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
+									id_fatturaElettronica_pccTracciaTrasmissioneEsito = ((JDBCPccTracciaTrasmissioneEsitoServiceSearch)(this.getServiceManager().getPccTracciaTrasmissioneEsitoServiceSearch())).findId(idFK_fatturaElettronica_pccTracciaTrasmissioneEsito, false);
+								}else{
+									id_fatturaElettronica_pccTracciaTrasmissioneEsito = new org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito();
+								}
+								id_fatturaElettronica_pccTracciaTrasmissioneEsito.setId(idFK_fatturaElettronica_pccTracciaTrasmissioneEsito);
+								fatturaElettronica.setIdEsitoContabilizzazione(id_fatturaElettronica_pccTracciaTrasmissioneEsito);
+							}catch(NotFoundException e) {}
+						}
+				}
+
+				if(idFK_fatturaElettronica_esitoScadenza != null && idFK_fatturaElettronica_esitoScadenza instanceof Long) {
+					if(idMappingResolutionBehaviour==null ||
+							(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
+						){
+							try {
+								Long idFK_fatturaElettronica_pccTracciaTrasmissioneEsito = (Long) idFK_fatturaElettronica_esitoScadenza;
+								
+								org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito id_fatturaElettronica_pccTracciaTrasmissioneEsito = null;
+								if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
+									id_fatturaElettronica_pccTracciaTrasmissioneEsito = ((JDBCPccTracciaTrasmissioneEsitoServiceSearch)(this.getServiceManager().getPccTracciaTrasmissioneEsitoServiceSearch())).findId(idFK_fatturaElettronica_pccTracciaTrasmissioneEsito, false);
+								}else{
+									id_fatturaElettronica_pccTracciaTrasmissioneEsito = new org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito();
+								}
+								id_fatturaElettronica_pccTracciaTrasmissioneEsito.setId(idFK_fatturaElettronica_pccTracciaTrasmissioneEsito);
+								fatturaElettronica.setIdEsitoScadenza(id_fatturaElettronica_pccTracciaTrasmissioneEsito);
+							}catch(NotFoundException e) {}
 						}
 				}
 
@@ -533,135 +578,152 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 	
 	private FatturaElettronica _get(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, Long tableId, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotFoundException, MultipleResultException, NotImplementedException, ServiceException, Exception {
 	
-		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 
-					new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
+		JDBCPaginatedExpression expression = this.newPaginatedExpression(log);
+		CustomField idField = new CustomField("id", Long.class, "id", this.getFatturaElettronicaFieldConverter().toTable(FatturaElettronica.model()));
+		expression.equals(idField, tableId);
+		expression.offset(0);
+		expression.limit(2);
 		
-		ISQLQueryObject sqlQueryObjectGet = sqlQueryObject.newSQLQueryObject();
-				
-		FatturaElettronica fatturaElettronica = new FatturaElettronica();
+		expression.addOrder(idField, org.openspcoop2.generic_project.expression.SortOrder.ASC);
+		List<FatturaElettronica> lst = this.findAll(jdbcProperties, log, connection, sqlQueryObject, expression, idMappingResolutionBehaviour);
 		
-
-		// Object fatturaElettronica
-		ISQLQueryObject sqlQueryObjectGet_fatturaElettronica = sqlQueryObjectGet.newSQLQueryObject();
-		sqlQueryObjectGet_fatturaElettronica.setANDLogicOperator(true);
-		sqlQueryObjectGet_fatturaElettronica.addFromTable(this.getFatturaElettronicaFieldConverter().toTable(FatturaElettronica.model()));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField("id");
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().FORMATO_TRASMISSIONE,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().IDENTIFICATIVO_SDI,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DATA_RICEZIONE,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().NOME_FILE,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().MESSAGE_ID,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().CEDENTE_PRESTATORE_PAESE,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().CEDENTE_PRESTATORE_CODICE_FISCALE,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().CESSIONARIO_COMMITTENTE_DENOMINAZIONE,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().CESSIONARIO_COMMITTENTE_PAESE,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().CESSIONARIO_COMMITTENTE_CODICE_FISCALE,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_DENOMINAZIONE,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_PAESE,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE_FISCALE,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().POSIZIONE,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().CODICE_DESTINATARIO,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().TIPO_DOCUMENTO,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DIVISA,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DATA,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().ANNO,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().NUMERO,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().ESITO,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DA_PAGARE,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().IMPORTO_TOTALE_DOCUMENTO,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().IMPORTO_TOTALE_RIEPILOGO,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().CAUSALE,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().STATO_CONSEGNA,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DATA_CONSEGNA,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DATA_PROSSIMA_CONSEGNA,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().TENTATIVI_CONSEGNA,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DETTAGLIO_CONSEGNA,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().STATO_PROTOCOLLAZIONE,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DATA_SCADENZA,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DATA_PROTOCOLLAZIONE,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().PROTOCOLLO,true));
-		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().XML,true));
-		sqlQueryObjectGet_fatturaElettronica.addWhereCondition("id=?");
-
-		// Get fatturaElettronica
-		fatturaElettronica = (FatturaElettronica) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_fatturaElettronica.createSQLQuery(), jdbcProperties.isShowSql(), FatturaElettronica.model(), this.getFatturaElettronicaFetch(),
-			new JDBCObject(tableId,Long.class));
-
-
-		if(idMappingResolutionBehaviour==null ||
-			(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
-		){
-			try{
-				// Object _fatturaElettronica_notificaDecorrenzaTermini (recupero id)
-				ISQLQueryObject sqlQueryObjectGet_fatturaElettronica_notificaDecorrenzaTermini_readFkId = sqlQueryObjectGet.newSQLQueryObject();
-				sqlQueryObjectGet_fatturaElettronica_notificaDecorrenzaTermini_readFkId.addFromTable(this.getFatturaElettronicaFieldConverter().toTable(org.govmix.proxy.fatturapa.orm.FatturaElettronica.model()));
-				sqlQueryObjectGet_fatturaElettronica_notificaDecorrenzaTermini_readFkId.addSelectField("id_notifica_decorrenza_termini");
-				sqlQueryObjectGet_fatturaElettronica_notificaDecorrenzaTermini_readFkId.addWhereCondition("id=?");
-				sqlQueryObjectGet_fatturaElettronica_notificaDecorrenzaTermini_readFkId.setANDLogicOperator(true);
-				Long idFK_fatturaElettronica_notificaDecorrenzaTermini = (Long) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_fatturaElettronica_notificaDecorrenzaTermini_readFkId.createSQLQuery(), jdbcProperties.isShowSql(),Long.class,
-						new JDBCObject(fatturaElettronica.getId(),Long.class));
-				
-				org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini id_fatturaElettronica_notificaDecorrenzaTermini = null;
-				if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
-					id_fatturaElettronica_notificaDecorrenzaTermini = ((JDBCNotificaDecorrenzaTerminiServiceSearch)(this.getServiceManager().getNotificaDecorrenzaTerminiServiceSearch())).findId(idFK_fatturaElettronica_notificaDecorrenzaTermini, false);
-				}else{
-					id_fatturaElettronica_notificaDecorrenzaTermini = new org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini();
-				}
-				id_fatturaElettronica_notificaDecorrenzaTermini.setId(idFK_fatturaElettronica_notificaDecorrenzaTermini);
-				fatturaElettronica.setIdDecorrenzaTermini(id_fatturaElettronica_notificaDecorrenzaTermini);
-			} catch(NotFoundException e) {}
+		if(lst == null || lst.size() == 0) {
+			throw new NotFoundException();
+		} else if(lst.size() > 1) {
+			throw new MultipleResultException();
+		} else {
+			return lst.get(0);
 		}
-
-		if(idMappingResolutionBehaviour==null ||
-			(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
-		){
-			try {
-				// Object _fatturaElettronica_pccTracciaTrasmissioneEsito (recupero id)
-				ISQLQueryObject sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId = sqlQueryObjectGet.newSQLQueryObject();
-				sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId.addFromTable(this.getFatturaElettronicaFieldConverter().toTable(org.govmix.proxy.fatturapa.orm.FatturaElettronica.model()));
-				sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId.addSelectField("id_contabilizzazione");
-				sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId.addWhereCondition("id=?");
-				sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId.setANDLogicOperator(true);
-				Long idFK_fatturaElettronica_pccTracciaTrasmissioneEsito = (Long) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId.createSQLQuery(), jdbcProperties.isShowSql(),Long.class,
-						new JDBCObject(fatturaElettronica.getId(),Long.class));
-				
-				org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito id_fatturaElettronica_pccTracciaTrasmissioneEsito = null;
-				if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
-					id_fatturaElettronica_pccTracciaTrasmissioneEsito = ((JDBCPccTracciaTrasmissioneEsitoServiceSearch)(this.getServiceManager().getPccTracciaTrasmissioneEsitoServiceSearch())).findId(idFK_fatturaElettronica_pccTracciaTrasmissioneEsito, false);
-				}else{
-					id_fatturaElettronica_pccTracciaTrasmissioneEsito = new org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito();
-				}
-				id_fatturaElettronica_pccTracciaTrasmissioneEsito.setId(idFK_fatturaElettronica_pccTracciaTrasmissioneEsito);
-				fatturaElettronica.setIdEsitoContabilizzazione(id_fatturaElettronica_pccTracciaTrasmissioneEsito);
-			}catch(NotFoundException e) {}
-		}
-
-		if(idMappingResolutionBehaviour==null ||
-			(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
-		){
-			try {
-				// Object _fatturaElettronica_pccTracciaTrasmissioneEsito (recupero id)
-				ISQLQueryObject sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId = sqlQueryObjectGet.newSQLQueryObject();
-				sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId.addFromTable(this.getFatturaElettronicaFieldConverter().toTable(org.govmix.proxy.fatturapa.orm.FatturaElettronica.model()));
-				sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId.addSelectField("id_scadenza");
-				sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId.addWhereCondition("id=?");
-				sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId.setANDLogicOperator(true);
-				Long idFK_fatturaElettronica_pccTracciaTrasmissioneEsito = (Long) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId.createSQLQuery(), jdbcProperties.isShowSql(),Long.class,
-						new JDBCObject(fatturaElettronica.getId(),Long.class));
-				
-				org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito id_fatturaElettronica_pccTracciaTrasmissioneEsito = null;
-				if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
-					id_fatturaElettronica_pccTracciaTrasmissioneEsito = ((JDBCPccTracciaTrasmissioneEsitoServiceSearch)(this.getServiceManager().getPccTracciaTrasmissioneEsitoServiceSearch())).findId(idFK_fatturaElettronica_pccTracciaTrasmissioneEsito, false);
-				}else{
-					id_fatturaElettronica_pccTracciaTrasmissioneEsito = new org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito();
-				}
-				id_fatturaElettronica_pccTracciaTrasmissioneEsito.setId(idFK_fatturaElettronica_pccTracciaTrasmissioneEsito);
-				fatturaElettronica.setIdEsitoScadenza(id_fatturaElettronica_pccTracciaTrasmissioneEsito);
-			}catch(NotFoundException e) {}
-		}
-
-        return fatturaElettronica;  
+//		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 
+//					new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
+		
+//		ISQLQueryObject sqlQueryObjectGet = sqlQueryObject.newSQLQueryObject();
+//				
+//		FatturaElettronica fatturaElettronica = new FatturaElettronica();
+//		
+//
+//		// Object fatturaElettronica
+//		ISQLQueryObject sqlQueryObjectGet_fatturaElettronica = sqlQueryObjectGet.newSQLQueryObject();
+//		sqlQueryObjectGet_fatturaElettronica.setANDLogicOperator(true);
+//		sqlQueryObjectGet_fatturaElettronica.addFromTable(this.getFatturaElettronicaFieldConverter().toTable(FatturaElettronica.model()));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField("id");
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().FORMATO_TRASMISSIONE,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().FATTURAZIONE_ATTIVA,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().IDENTIFICATIVO_SDI,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DATA_RICEZIONE,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().NOME_FILE,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().MESSAGE_ID,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().CEDENTE_PRESTATORE_PAESE,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().CEDENTE_PRESTATORE_CODICE_FISCALE,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().CESSIONARIO_COMMITTENTE_DENOMINAZIONE,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().CESSIONARIO_COMMITTENTE_PAESE,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().CESSIONARIO_COMMITTENTE_CODICE_FISCALE,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_DENOMINAZIONE,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_PAESE,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE_FISCALE,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().POSIZIONE,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().CODICE_DESTINATARIO,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().TIPO_DOCUMENTO,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DIVISA,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DATA,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().ANNO,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().NUMERO,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().ESITO,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DA_PAGARE,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().IMPORTO_TOTALE_DOCUMENTO,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().IMPORTO_TOTALE_RIEPILOGO,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().CAUSALE,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().STATO_CONSEGNA,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DATA_CONSEGNA,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DATA_PROSSIMA_CONSEGNA,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().TENTATIVI_CONSEGNA,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DETTAGLIO_CONSEGNA,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().STATO_PROTOCOLLAZIONE,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DATA_SCADENZA,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DATA_PROTOCOLLAZIONE,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().PROTOCOLLO,true));
+//		sqlQueryObjectGet_fatturaElettronica.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().XML,true));
+//		sqlQueryObjectGet_fatturaElettronica.addWhereCondition("id=?");
+//
+//		// Get fatturaElettronica
+//		fatturaElettronica = (FatturaElettronica) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_fatturaElettronica.createSQLQuery(), jdbcProperties.isShowSql(), FatturaElettronica.model(), this.getFatturaElettronicaFetch(),
+//			new JDBCObject(tableId,Long.class));
+//
+//
+//		if(idMappingResolutionBehaviour==null ||
+//			(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
+//		){
+//			try{
+//				// Object _fatturaElettronica_notificaDecorrenzaTermini (recupero id)
+//				ISQLQueryObject sqlQueryObjectGet_fatturaElettronica_notificaDecorrenzaTermini_readFkId = sqlQueryObjectGet.newSQLQueryObject();
+//				sqlQueryObjectGet_fatturaElettronica_notificaDecorrenzaTermini_readFkId.addFromTable(this.getFatturaElettronicaFieldConverter().toTable(org.govmix.proxy.fatturapa.orm.FatturaElettronica.model()));
+//				sqlQueryObjectGet_fatturaElettronica_notificaDecorrenzaTermini_readFkId.addSelectField("id_notifica_decorrenza_termini");
+//				sqlQueryObjectGet_fatturaElettronica_notificaDecorrenzaTermini_readFkId.addWhereCondition("id=?");
+//				sqlQueryObjectGet_fatturaElettronica_notificaDecorrenzaTermini_readFkId.setANDLogicOperator(true);
+//				Long idFK_fatturaElettronica_notificaDecorrenzaTermini = (Long) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_fatturaElettronica_notificaDecorrenzaTermini_readFkId.createSQLQuery(), jdbcProperties.isShowSql(),Long.class,
+//						new JDBCObject(fatturaElettronica.getId(),Long.class));
+//				
+//				org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini id_fatturaElettronica_notificaDecorrenzaTermini = null;
+//				if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
+//					id_fatturaElettronica_notificaDecorrenzaTermini = ((JDBCNotificaDecorrenzaTerminiServiceSearch)(this.getServiceManager().getNotificaDecorrenzaTerminiServiceSearch())).findId(idFK_fatturaElettronica_notificaDecorrenzaTermini, false);
+//				}else{
+//					id_fatturaElettronica_notificaDecorrenzaTermini = new org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini();
+//				}
+//				id_fatturaElettronica_notificaDecorrenzaTermini.setId(idFK_fatturaElettronica_notificaDecorrenzaTermini);
+//				fatturaElettronica.setIdDecorrenzaTermini(id_fatturaElettronica_notificaDecorrenzaTermini);
+//			} catch(NotFoundException e) {}
+//		}
+//
+//		if(idMappingResolutionBehaviour==null ||
+//			(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
+//		){
+//			try {
+//				// Object _fatturaElettronica_pccTracciaTrasmissioneEsito (recupero id)
+//				ISQLQueryObject sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId = sqlQueryObjectGet.newSQLQueryObject();
+//				sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId.addFromTable(this.getFatturaElettronicaFieldConverter().toTable(org.govmix.proxy.fatturapa.orm.FatturaElettronica.model()));
+//				sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId.addSelectField("id_contabilizzazione");
+//				sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId.addWhereCondition("id=?");
+//				sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId.setANDLogicOperator(true);
+//				Long idFK_fatturaElettronica_pccTracciaTrasmissioneEsito = (Long) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId.createSQLQuery(), jdbcProperties.isShowSql(),Long.class,
+//						new JDBCObject(fatturaElettronica.getId(),Long.class));
+//				
+//				org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito id_fatturaElettronica_pccTracciaTrasmissioneEsito = null;
+//				if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
+//					id_fatturaElettronica_pccTracciaTrasmissioneEsito = ((JDBCPccTracciaTrasmissioneEsitoServiceSearch)(this.getServiceManager().getPccTracciaTrasmissioneEsitoServiceSearch())).findId(idFK_fatturaElettronica_pccTracciaTrasmissioneEsito, false);
+//				}else{
+//					id_fatturaElettronica_pccTracciaTrasmissioneEsito = new org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito();
+//				}
+//				id_fatturaElettronica_pccTracciaTrasmissioneEsito.setId(idFK_fatturaElettronica_pccTracciaTrasmissioneEsito);
+//				fatturaElettronica.setIdEsitoContabilizzazione(id_fatturaElettronica_pccTracciaTrasmissioneEsito);
+//			}catch(NotFoundException e) {}
+//		}
+//
+//		if(idMappingResolutionBehaviour==null ||
+//			(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
+//		){
+//			try {
+//				// Object _fatturaElettronica_pccTracciaTrasmissioneEsito (recupero id)
+//				ISQLQueryObject sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId = sqlQueryObjectGet.newSQLQueryObject();
+//				sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId.addFromTable(this.getFatturaElettronicaFieldConverter().toTable(org.govmix.proxy.fatturapa.orm.FatturaElettronica.model()));
+//				sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId.addSelectField("id_scadenza");
+//				sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId.addWhereCondition("id=?");
+//				sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId.setANDLogicOperator(true);
+//				Long idFK_fatturaElettronica_pccTracciaTrasmissioneEsito = (Long) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_fatturaElettronica_pccTracciaTrasmissioneEsito_readFkId.createSQLQuery(), jdbcProperties.isShowSql(),Long.class,
+//						new JDBCObject(fatturaElettronica.getId(),Long.class));
+//				
+//				org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito id_fatturaElettronica_pccTracciaTrasmissioneEsito = null;
+//				if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
+//					id_fatturaElettronica_pccTracciaTrasmissioneEsito = ((JDBCPccTracciaTrasmissioneEsitoServiceSearch)(this.getServiceManager().getPccTracciaTrasmissioneEsitoServiceSearch())).findId(idFK_fatturaElettronica_pccTracciaTrasmissioneEsito, false);
+//				}else{
+//					id_fatturaElettronica_pccTracciaTrasmissioneEsito = new org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito();
+//				}
+//				id_fatturaElettronica_pccTracciaTrasmissioneEsito.setId(idFK_fatturaElettronica_pccTracciaTrasmissioneEsito);
+//				fatturaElettronica.setIdEsitoScadenza(id_fatturaElettronica_pccTracciaTrasmissioneEsito);
+//			}catch(NotFoundException e) {}
+//		}
+//
+//        return fatturaElettronica;  
 	
 	} 
 	

@@ -150,7 +150,6 @@ public class ConsegnaFatturaUtils {
 
 		params.setCessionarioCommittente(cessionarioCommittente);
 
-		params.setFatturazioneAttiva(fatturazioneAttiva);
 		if(terzoIntermediarioOSoggettoEmittenteIdCodice != null || terzoIntermediarioOSoggettoEmittenteIdPaese != null
 				|| terzoIntermediarioOSoggettoEmittenteNome != null ||
 				terzoIntermediarioOSoggettoEmittenteCognome != null ||
@@ -166,6 +165,8 @@ public class ConsegnaFatturaUtils {
 
 			params.setTerzoIntermediarioOSoggettoEmittente(terzoIntermediarioOSoggettoEmittente);
 		}
+		params.setFatturazioneAttiva(fatturazioneAttiva);
+
 		return params;
 	}
 

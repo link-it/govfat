@@ -5,6 +5,7 @@ public class InserimentoLottoRequest {
 	private String nomeFile;
 	private byte[] xml;
 	private String dipartimento;
+	
 	public String getNomeFile() {
 		return nomeFile;
 	}
