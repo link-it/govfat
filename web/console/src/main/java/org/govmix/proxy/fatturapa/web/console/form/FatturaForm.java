@@ -1,3 +1,23 @@
+/*
+ * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
+ * http://www.gov4j.it/fatturapa
+ * 
+ * Copyright (c) 2014-2017 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2017 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package org.govmix.proxy.fatturapa.web.console.form;
 
 import javax.faces.event.ActionEvent;
@@ -17,16 +37,10 @@ public class FatturaForm extends BaseForm implements Form {
 
 	private SelectList<SelectItem> dipartimento = null;
 
-	// BEAN per gestire upload file descrittoreServizio
+	// BEAN per gestire upload file descrittoreFattura
 	private Text descrittoreFattura = null;
 	private FileUploadBean fatturaFile= null;
-//	private BooleanCheckBox firmato = null;
-//	private BooleanCheckBox fascicoloEsistente = null;
-//	private SelectList<SelectItem> fascicolo = null;
-	
 	private BooleanCheckBox conservazione = null;
-	
-//	private boolean mostraConferma = false;
 	private boolean mostraFormCorservazione = false;
 
 	private FatturaElettronicaAttivaMBean mBean =null; 
@@ -54,31 +68,13 @@ public class FatturaForm extends BaseForm implements Form {
 
 		this.descrittoreFattura = factory.getInputFieldFactory().createText("descrittoreFattura","fattura.form.descrittoreFattura",null,true);
 		
-//		this.firmato = factory.getInputFieldFactory().createBooleanCheckBox("firmato","fattura.form.firmato",null,false);
-//		this.firmato.setFieldsToUpdate(this.getId() + "_formPnl"); 
-//		this.firmato.setForm(this); 
-//		
-//		this.fascicoloEsistente = factory.getInputFieldFactory().createBooleanCheckBox("fascicoloEsistente","fattura.form.fascicoloEsistente",null,false);
-//		this.fascicoloEsistente.setFieldsToUpdate(this.getId() + "_formPnl"); 
-//		this.fascicoloEsistente.setForm(this); 
-//		
-//		this.fascicolo = factory.getInputFieldFactory().createSelectList("fascicolo","fattura.form.fascicolo",new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*",  ("commons.label.qualsiasi")),true);
-//		((SelectListImpl)this.fascicolo).setCheckItemWidth(true); 
-//		this.fascicolo.setFontName("Arial"); //"Arial,Verdana,sans-serif" 
-		
 		this.conservazione = factory.getInputFieldFactory().createBooleanCheckBox("conservazione","fattura.form.conservazione",null,false);
 		this.conservazione.setFieldsToUpdate(this.getId() + "_btnPnl"); 
 		this.conservazione.setForm(this);
 		this.conservazione.setNote("Informativa che spiega il significato di questo flag.");
 		
-//		this._setFascioloEsistente();
-//		this._setFirmato();
-		
 		this.setField(this.dipartimento);
 		this.setField(this.descrittoreFattura);
-//		this.setField(this.firmato);
-//		this.setField(this.fascicoloEsistente);
-//		this.setField(this.fascicolo);
 		this.setField(this.conservazione);
 		
 		this._setMostraConservazione();
@@ -93,25 +89,16 @@ public class FatturaForm extends BaseForm implements Form {
 	public void reset() {
 		this.dipartimento.reset();
 		this.descrittoreFattura.reset();
-//		this.firmato.reset();
-//		this.fascicoloEsistente.reset();
-//		this.fascicolo.reset();
 		this.conservazione.reset();
 		
-//		this.mostraConferma = false;
 		this.mostraFormCorservazione= false;
 		
-//		this._setFascioloEsistente();
-//		this._setFirmato();
-
 		this._setMostraConservazione();
 	}
 	
 	public void setValues(Object object ){
 		this.fatturaFile.setDto(true, null, null); 
 		this._setMostraConservazione();
-//		this._setFascioloEsistente();
-//		this._setFirmato();
 	}
 	
 	public SelectList<SelectItem> getDipartimento() {
@@ -139,68 +126,6 @@ public class FatturaForm extends BaseForm implements Form {
 	public void setmBean(FatturaElettronicaAttivaMBean mBean) {
 		this.mBean = mBean;
 	}
-
-//	public BooleanCheckBox getFirmato() {
-//		return firmato;
-//	}
-//
-//	public void setFirmato(BooleanCheckBox firmato) {
-//		this.firmato = firmato;
-//	}
-//
-//	public BooleanCheckBox getFascicoloEsistente() {
-//		return fascicoloEsistente;
-//	}
-//
-//	public void setFascicoloEsistente(BooleanCheckBox fascicoloEsistente) {
-//		this.fascicoloEsistente = fascicoloEsistente;
-//	}
-//
-//	public SelectList<SelectItem> getFascicolo() {
-//		this.fascicolo.setRendered(false);
-//
-//		boolean mod = this.fascicoloEsistente.getValue() != null ? (this.fascicoloEsistente.getValue() ? true : false) : false;
-//
-//		if(mod)
-//			this.fascicolo.setRendered(true);
-//
-//		return this.fascicolo;
-//		
-//	}
-//
-//	public void setFascicolo(SelectList<SelectItem> fascicolo) {
-//		this.fascicolo = fascicolo;
-//	}
-//	
-//	public void fascicoloEsistenteOnChangeListener(ActionEvent ae){
-//		this._setFascioloEsistente();
-//	}
-//	
-//	public void firmatoOnChangeListener(ActionEvent ae){
-//		this._setFirmato();
-//	}
-//	
-//	private void _setFirmato() {
-//		this.mostraConferma = ! (this.firmato.getValue() != null ? (this.firmato.getValue() ? true : false) : false);
-//	}
-//
-//	private void _setFascioloEsistente() {
-//		this.fascicolo.setRendered(false);
-//
-//		boolean mod = this.fascicoloEsistente.getValue() != null ? (this.fascicoloEsistente.getValue() ? true : false) : false;
-//
-//		if(mod){
-//			this.fascicolo.setRendered(true);
-//		}
-//	}
-
-//	public boolean isMostraConferma() {
-//		return mostraConferma;
-//	}
-//
-//	public void setMostraConferma(boolean mostraConferma) {
-//		this.mostraConferma = mostraConferma;
-//	}
 	
 	private void _setMostraConservazione() {
 		this.mostraFormCorservazione = (this.conservazione.getValue() != null ? (this.conservazione.getValue() ? true : false) : false);
