@@ -103,17 +103,17 @@
     </filter-mapping>
 	
 	 <!-- Filtro Visualizzazione IE -->
-  <filter>
-        <display-name>IE Filter</display-name>
-        <filter-name>iefilter</filter-name>
-        <filter-class>org.openspcoop2.generic_project.web.filter.IEFilter</filter-class>
-    </filter>
+<!--   <filter> -->
+<!--         <display-name>IE Filter</display-name> -->
+<!--         <filter-name>iefilter</filter-name> -->
+<!--         <filter-class>org.openspcoop2.generic_project.web.filter.IEFilter</filter-class> -->
+<!--     </filter> -->
 
-	<filter-mapping>
-        <filter-name>iefilter</filter-name>
-        <url-pattern>*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-    </filter-mapping>
+<!-- 	<filter-mapping> -->
+<!--         <filter-name>iefilter</filter-name> -->
+<!--         <url-pattern>*</url-pattern> -->
+<!--         <dispatcher>REQUEST</dispatcher> -->
+<!--     </filter-mapping> -->
 	
 	<!-- RichFaces -->
 	<filter>

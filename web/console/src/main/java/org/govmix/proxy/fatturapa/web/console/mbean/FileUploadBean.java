@@ -80,6 +80,10 @@ public class FileUploadBean implements Serializable{
 		return this.files;
 	}
 	
+	public void setFiles(List<UploadItem> files) {
+		this.files = files;
+	}
+
 	public final List<UploadItem> getFilesCache() {
 		return this.filesCache;
 	}
