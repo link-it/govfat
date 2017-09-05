@@ -36,6 +36,7 @@ import org.apache.commons.lang.StringUtils;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
+import org.govmix.proxy.fatturapa.orm.IdRegistro;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
@@ -542,7 +543,8 @@ IFatturaElettronicaAttivaService>{
 		List<String> nomeFile = this.form.getFatturaFile().getNomeFile();
 		String codDip = this.form.getDipartimento().getValue().getValue();
 		Dipartimento dipartimento =  this.getDipartimento(codDip);
-		String registro = dipartimento.getRegistro().getNome(); 
+		IdRegistro idRegistro = dipartimento.getRegistro();
+		String registro = (idRegistro != null && StringUtils.isNotEmpty(idRegistro.getNome())) ? idRegistro.getNome() : "";  
 
 		for (String string : nomeFile) {
 			ConservazioneBean conservazioneBean = new ConservazioneBean();
