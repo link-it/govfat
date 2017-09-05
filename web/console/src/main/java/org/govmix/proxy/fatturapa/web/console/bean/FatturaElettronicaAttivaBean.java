@@ -38,7 +38,7 @@ import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
-import org.openspcoop2.generic_project.web.bean.IBean;
+import org.openspcoop2.generic_project.web.view.IViewBean;
 import org.openspcoop2.generic_project.web.factory.Costanti;
 import org.openspcoop2.generic_project.web.factory.FactoryException;
 import org.openspcoop2.generic_project.web.impl.jsf1.bean.BaseBean;
@@ -56,7 +56,7 @@ import org.openspcoop2.generic_project.web.output.Text;
  * @author $Author: pintori $
  *
  */
-public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, Long> implements IBean<FatturaElettronica, Long>{
+public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, Long> implements IViewBean<FatturaElettronica, Long>{
 
 
 	// Field Che visualizzo nella maschera di ricerca
@@ -130,57 +130,57 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 	}
 
 	private void init() throws FactoryException{
-		this.cedentePrestatore = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("cedentePrestatore","fattura.cedentePrestatoreDenominazione");
-		this.cedentePrestatorePaese = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("cedentePrestatorePaese","fattura.cedentePrestatorePaese");
-		this.dipartimento = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("dipartimento","fattura.dipartimento");
-		this.annoNumero = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("annoNumero","fattura.annoNumero");
-		this.dataInvio = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataRicezione","fattura.dataInvio","dd/M/yyyy");
+		this.cedentePrestatore = this.getFactory().getOutputFieldFactory().createText("cedentePrestatore","fattura.cedentePrestatoreDenominazione");
+		this.cedentePrestatorePaese = this.getFactory().getOutputFieldFactory().createText("cedentePrestatorePaese","fattura.cedentePrestatorePaese");
+		this.dipartimento = this.getFactory().getOutputFieldFactory().createText("dipartimento","fattura.dipartimento");
+		this.annoNumero = this.getFactory().getOutputFieldFactory().createText("annoNumero","fattura.annoNumero");
+		this.dataInvio = this.getFactory().getOutputFieldFactory().createDateTime("dataRicezione","fattura.dataInvio","dd/M/yyyy");
 
-		this.importo = this.getWebGenericProjectFactory().getOutputFieldFactory().createNumber("importo","fattura.importoTotaleDocumento");
+		this.importo = this.getFactory().getOutputFieldFactory().createNumber("importo","fattura.importoTotaleDocumento");
 		this.importo.setConverterType(Costanti.CONVERT_TYPE_CURRENCY);
 		this.importo.setCurrencySymbol(Costanti.CURRENCY_SYMBOL_EURO);
 		this.importo.setTableColumnStyleClass("allinatoDX");
 
-		this.importoRiepilogo = this.getWebGenericProjectFactory().getOutputFieldFactory().createNumber("importoRiepilogo","fattura.importoTotaleRiepilogo");
+		this.importoRiepilogo = this.getFactory().getOutputFieldFactory().createNumber("importoRiepilogo","fattura.importoTotaleRiepilogo");
 		this.importoRiepilogo.setValueStyleClass("diag_error");
 		this.importoRiepilogo.setConverterType(Costanti.CONVERT_TYPE_CURRENCY);
 		this.importoRiepilogo.setCurrencySymbol(Costanti.CURRENCY_SYMBOL_EURO);
 
-		this.notificaEC = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("notificaEC","fattura.notificaEC");
-		this.notificaDT = this.getWebGenericProjectFactory().getOutputFieldFactory().createImage("notificaDT","fattura.notificaDT");
+		this.notificaEC = this.getFactory().getOutputFieldFactory().createButton("notificaEC","fattura.notificaEC");
+		this.notificaDT = this.getFactory().getOutputFieldFactory().createImage("notificaDT","fattura.notificaDT");
 
-		this.xml = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("xml","commons.label.xml",null,"/images/fatturapa/icons/xml.png","commons.label.xml.iconTitle","commons.label.xml.iconTitle");
-		this.pdf = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("pdf","commons.label.pdf",null,"/images/fatturapa/icons/pdf.png","commons.label.pdf.iconTitle","commons.label.pdf.iconTitle");
-		this.zip = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("zip","commons.button.scaricaTutto",null,"/images/fatturapa/icons/zip.png","commons.button.scaricaTutto.iconTitle","commons.button.scaricaTutto.iconTitle");
+		this.xml = this.getFactory().getOutputFieldFactory().createButton("xml","commons.label.xml",null,"/images/fatturapa/icons/xml.png","commons.label.xml.iconTitle","commons.label.xml.iconTitle");
+		this.pdf = this.getFactory().getOutputFieldFactory().createButton("pdf","commons.label.pdf",null,"/images/fatturapa/icons/pdf.png","commons.label.pdf.iconTitle","commons.label.pdf.iconTitle");
+		this.zip = this.getFactory().getOutputFieldFactory().createButton("zip","commons.button.scaricaTutto",null,"/images/fatturapa/icons/zip.png","commons.button.scaricaTutto.iconTitle","commons.button.scaricaTutto.iconTitle");
 
-		this.identificativoSdi = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("identificativoSdi","fattura.identificativoSdi");
-		this.posizione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("posizione","fattura.posizione");
-		this.cedentePrestatoreCF = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("cedentePrestatoreCF","fattura.cedentePrestatoreCF");
-		this.cessionarioCommittente = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("cessionarioCommittente","fattura.cessionarioCommittenteDenominazione");
-		this.cessionarioCommittentePaese = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("cessionarioCommittentePaese","fattura.cessionarioCommittentePaese");
-		this.cessionarioCommittenteCF = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("cessionarioCommittenteCF","fattura.cessionarioCommittenteCF");
-		this.terzoIntermediarioOSoggettoEmittente = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("terzoIntermediarioOSoggettoEmittente","fattura.terzoIntermediarioOSoggettoEmittente");
-		this.terzoIntermediarioOSoggettoEmittentePaese = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("terzoIntermediarioOSoggettoEmittentePaese","fattura.terzoIntermediarioOSoggettoEmittentePaese");
-		this.terzoIntermediarioOSoggettoEmittenteCF = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("terzoIntermediarioOSoggettoEmittenteCF","fattura.terzoIntermediarioOSoggettoEmittenteCF");
-		this.codiceDestinatario = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("codiceDestinatario","fattura.dipartimento");
-		this.tipoDocumento = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("tipoDocumento","fattura.tipoDocumento");
-		this.nomeFile = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("nomeFile","fattura.nomeFile");
-		this.messageId = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("messageId","fattura.messageId");
-		this.divisa = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("divisa","fattura.divisa");
-		this.data = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("data","fattura.data","dd/M/yyyy");
-		this.dataConsegna = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataConsegna","fattura.dataConsegna","dd/M/yyyy");
+		this.identificativoSdi = this.getFactory().getOutputFieldFactory().createText("identificativoSdi","fattura.identificativoSdi");
+		this.posizione = this.getFactory().getOutputFieldFactory().createText("posizione","fattura.posizione");
+		this.cedentePrestatoreCF = this.getFactory().getOutputFieldFactory().createText("cedentePrestatoreCF","fattura.cedentePrestatoreCF");
+		this.cessionarioCommittente = this.getFactory().getOutputFieldFactory().createText("cessionarioCommittente","fattura.cessionarioCommittenteDenominazione");
+		this.cessionarioCommittentePaese = this.getFactory().getOutputFieldFactory().createText("cessionarioCommittentePaese","fattura.cessionarioCommittentePaese");
+		this.cessionarioCommittenteCF = this.getFactory().getOutputFieldFactory().createText("cessionarioCommittenteCF","fattura.cessionarioCommittenteCF");
+		this.terzoIntermediarioOSoggettoEmittente = this.getFactory().getOutputFieldFactory().createText("terzoIntermediarioOSoggettoEmittente","fattura.terzoIntermediarioOSoggettoEmittente");
+		this.terzoIntermediarioOSoggettoEmittentePaese = this.getFactory().getOutputFieldFactory().createText("terzoIntermediarioOSoggettoEmittentePaese","fattura.terzoIntermediarioOSoggettoEmittentePaese");
+		this.terzoIntermediarioOSoggettoEmittenteCF = this.getFactory().getOutputFieldFactory().createText("terzoIntermediarioOSoggettoEmittenteCF","fattura.terzoIntermediarioOSoggettoEmittenteCF");
+		this.codiceDestinatario = this.getFactory().getOutputFieldFactory().createText("codiceDestinatario","fattura.dipartimento");
+		this.tipoDocumento = this.getFactory().getOutputFieldFactory().createText("tipoDocumento","fattura.tipoDocumento");
+		this.nomeFile = this.getFactory().getOutputFieldFactory().createText("nomeFile","fattura.nomeFile");
+		this.messageId = this.getFactory().getOutputFieldFactory().createText("messageId","fattura.messageId");
+		this.divisa = this.getFactory().getOutputFieldFactory().createText("divisa","fattura.divisa");
+		this.data = this.getFactory().getOutputFieldFactory().createDateTime("data","fattura.data","dd/M/yyyy");
+		this.dataConsegna = this.getFactory().getOutputFieldFactory().createDateTime("dataConsegna","fattura.dataConsegna","dd/M/yyyy");
 
-		this.numero = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("numero","fattura.numero");
-		this.anno = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("anno","fattura.anno");
-		this.causale = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("causale","fattura.causale","fattura.causale.assente");
+		this.numero = this.getFactory().getOutputFieldFactory().createText("numero","fattura.numero");
+		this.anno = this.getFactory().getOutputFieldFactory().createText("anno","fattura.anno");
+		this.causale = this.getFactory().getOutputFieldFactory().createText("causale","fattura.causale","fattura.causale.assente");
 		this.causale.setValueStyleClass("whiteSpaceNewLine");
-		this.protocollo = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("protocollo","fattura.protocollo","fattura.protocollo.assente");
-		this.statoElaborazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("statoElaborazione","fattura.statoElaborazione");
-		this.formatoTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("formatoTrasmissione","fattura.formatoTrasmissione");
+		this.protocollo = this.getFactory().getOutputFieldFactory().createText("protocollo","fattura.protocollo","fattura.protocollo.assente");
+		this.statoElaborazione = this.getFactory().getOutputFieldFactory().createText("statoElaborazione","fattura.statoElaborazione");
+		this.formatoTrasmissione = this.getFactory().getOutputFieldFactory().createText("formatoTrasmissione","fattura.formatoTrasmissione");
 
-		this.dataProssimaConsegna = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataProssimaConsegna","fattura.dataProssimaConsegna","dd/MM/yyyy HH:mm");
-		//this.dataScadenza = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataScadenza","fattura.dataScadenza","dd/M/yyyy");
-		this.dataScadenzaAssente = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("dataScadenzaAssente","fattura.dataScadenzaAssente");
+		this.dataProssimaConsegna = this.getFactory().getOutputFieldFactory().createDateTime("dataProssimaConsegna","fattura.dataProssimaConsegna","dd/MM/yyyy HH:mm");
+		//this.dataScadenza = this.getFactory().getOutputFieldFactory().createDateTime("dataScadenza","fattura.dataScadenza","dd/M/yyyy");
+		this.dataScadenzaAssente = this.getFactory().getOutputFieldFactory().createText("dataScadenzaAssente","fattura.dataScadenzaAssente");
 
 		this.setField(this.cedentePrestatore);
 		this.setField(this.cedentePrestatorePaese);
@@ -220,7 +220,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		//this.setField(this.dataScadenza);
 		this.setField(this.dataScadenzaAssente);
 
-		this.datiIntestazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiIntestazione",6);
+		this.datiIntestazione = this.getFactory().getOutputFieldFactory().createOutputGroup("datiIntestazione",6);
 		this.datiIntestazione.setRendered(true);
 		this.datiIntestazione.setStyleClass("datiTrasmissioneTable"); 
 		this.datiIntestazione.setColumnClasses("labelAllineataDx,valueAllineataSx,labelAllineataDx,valueAllineataSx,labelAllineataDx,valueAllineataSx");
@@ -239,7 +239,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 
 		//Dati Trasmissione Riga 1
 
-		this.datiTrasmissione1 = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiTrasmissione1",5);
+		this.datiTrasmissione1 = this.getFactory().getOutputFieldFactory().createOutputGroup("datiTrasmissione1",5);
 		this.datiTrasmissione1.setRendered(true);
 		this.datiTrasmissione1.setStyleClass("datiTrasmissioneTable"); 
 		this.datiTrasmissione1.setColumnClasses("labelAllineataDx,valueAllineataSx,labelAllineataDx,valueAllineataSx,valueAllineataSx");
@@ -257,7 +257,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.datiTrasmissione1.addField(this.statoElaborazione);
 		this.datiTrasmissione1.addField(this.protocollo);
 
-		this.contenutoFattura = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("contenutoFattura",4);
+		this.contenutoFattura = this.getFactory().getOutputFieldFactory().createOutputGroup("contenutoFattura",4);
 		this.contenutoFattura.setRendered(true);
 		this.contenutoFattura.setStyleClass("datiTrasmissioneTable"); 
 		this.contenutoFattura.setColumnClasses("labelAllineataDx,valueAllineataSx,labelAllineataDx,valueAllineataSx");
@@ -268,7 +268,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.contenutoFattura.addField(this.numero);
 
 
-		this.causaleFattura = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("causaleFattura",2);
+		this.causaleFattura = this.getFactory().getOutputFieldFactory().createOutputGroup("causaleFattura",2);
 		this.causaleFattura.setRendered(true);
 		this.causaleFattura.setStyleClass("datiTrasmissioneTable"); 
 		this.causaleFattura.setColumnClasses("labelAllineataDx align-top,valueAllineataSx");

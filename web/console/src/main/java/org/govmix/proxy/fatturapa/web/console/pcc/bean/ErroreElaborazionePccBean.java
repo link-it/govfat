@@ -22,7 +22,7 @@ package org.govmix.proxy.fatturapa.web.console.pcc.bean;
 
 import org.govmix.proxy.fatturapa.orm.PccErroreElaborazione;
 import org.govmix.proxy.fatturapa.orm.constants.TipoOperazioneType;
-import org.openspcoop2.generic_project.web.bean.IBean;
+import org.openspcoop2.generic_project.web.view.IViewBean;
 import org.openspcoop2.generic_project.web.factory.Costanti;
 import org.openspcoop2.generic_project.web.factory.FactoryException;
 import org.openspcoop2.generic_project.web.impl.jsf1.bean.BaseBean;
@@ -30,7 +30,7 @@ import org.openspcoop2.generic_project.web.output.OutputGroup;
 import org.openspcoop2.generic_project.web.output.OutputNumber;
 import org.openspcoop2.generic_project.web.output.Text;
 
-public class ErroreElaborazionePccBean extends BaseBean<PccErroreElaborazione, Long> implements IBean<PccErroreElaborazione, Long>{
+public class ErroreElaborazionePccBean extends BaseBean<PccErroreElaborazione, Long> implements IViewBean<PccErroreElaborazione, Long>{
 
 	private Text tipoOperazione = null;
 	private OutputNumber progressivoOperazione = null;
@@ -50,13 +50,13 @@ public class ErroreElaborazionePccBean extends BaseBean<PccErroreElaborazione, L
 	}
 
 	private void init() throws FactoryException{
-		this.tipoOperazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("tipoOperazione","erroreElaborazione.tipoOperazione");
-		this.progressivoOperazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createNumber("progressivoOperazione","erroreElaborazione.progressivoOperazione");
+		this.tipoOperazione = this.getFactory().getOutputFieldFactory().createText("tipoOperazione","erroreElaborazione.tipoOperazione");
+		this.progressivoOperazione = this.getFactory().getOutputFieldFactory().createNumber("progressivoOperazione","erroreElaborazione.progressivoOperazione");
 		this.progressivoOperazione.setConverterType(Costanti.CONVERT_TYPE_NUMBER); 
-		this.codiceEsito = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("codiceEsito","erroreElaborazione.codiceEsito");
-		this.descrizioneEsito = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("descrizioneEsito","erroreElaborazione.descrizioneEsito");
+		this.codiceEsito = this.getFactory().getOutputFieldFactory().createText("codiceEsito","erroreElaborazione.codiceEsito");
+		this.descrizioneEsito = this.getFactory().getOutputFieldFactory().createText("descrizioneEsito","erroreElaborazione.descrizioneEsito");
 		this.descrizioneEsito.setValueStyleClass("whiteSpaceNewLine");
-		this.tipoErrore = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("tipoErrore","erroreElaborazione.tipoErrore");
+		this.tipoErrore = this.getFactory().getOutputFieldFactory().createText("tipoErrore","erroreElaborazione.tipoErrore");
 		
 		
 		
@@ -66,7 +66,7 @@ public class ErroreElaborazionePccBean extends BaseBean<PccErroreElaborazione, L
 		this.setField(this.descrizioneEsito);
 		this.setField(this.tipoErrore);
 
-		this.fieldsDatiGenerali = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
+		this.fieldsDatiGenerali = this.getFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
 		this.fieldsDatiGenerali.addField(this.tipoOperazione);
 		this.fieldsDatiGenerali.addField(this.progressivoOperazione);
 		this.fieldsDatiGenerali.addField(this.codiceEsito);

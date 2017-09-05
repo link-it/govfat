@@ -24,7 +24,7 @@ import javax.faces.context.FacesContext;
 
 import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
-import org.openspcoop2.generic_project.web.bean.IBean;
+import org.openspcoop2.generic_project.web.view.IViewBean;
 import org.openspcoop2.generic_project.web.factory.FactoryException;
 import org.openspcoop2.generic_project.web.impl.jsf1.bean.BaseBean;
 import org.openspcoop2.generic_project.web.output.Button;
@@ -37,7 +37,7 @@ import org.openspcoop2.generic_project.web.output.Text;
  * @author $Author: pintori $
  *
  */
-public class AllegatoFatturaBean extends BaseBean<AllegatoFattura, Long> implements IBean<AllegatoFattura, Long>{
+public class AllegatoFatturaBean extends BaseBean<AllegatoFattura, Long> implements IViewBean<AllegatoFattura, Long>{
 
 	private Text nomeAttachment =null;
 	private Text algoritmoCompressione =null;
@@ -54,11 +54,11 @@ public class AllegatoFatturaBean extends BaseBean<AllegatoFattura, Long> impleme
 	}
 
 	private void init() throws FactoryException{
-		this.nomeAttachment = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("nomeAttachment","allegatoFattura.nomeAttachment");
-		this.algoritmoCompressione =   this.getWebGenericProjectFactory().getOutputFieldFactory().createText("algoritmoCompressione","allegatoFattura.algoritmoCompressione");
-		this.formatoAttachment =  this.getWebGenericProjectFactory().getOutputFieldFactory().createText("formatoAttachment","allegatoFattura.formatoAttachment");
-		this.descrizioneAttachment =  this.getWebGenericProjectFactory().getOutputFieldFactory().createText("descrizioneAttachment","allegatoFattura.descrizioneAttachment");
-		this.attachment =  this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("attachment","allegatoFattura.attachment.visualizza",null,"/images/fatturapa/icons/document.png","allegatoFattura.attachment.visualizza.iconTitle","allegatoFattura.attachment.visualizza.iconTitle");
+		this.nomeAttachment = this.getFactory().getOutputFieldFactory().createText("nomeAttachment","allegatoFattura.nomeAttachment");
+		this.algoritmoCompressione =   this.getFactory().getOutputFieldFactory().createText("algoritmoCompressione","allegatoFattura.algoritmoCompressione");
+		this.formatoAttachment =  this.getFactory().getOutputFieldFactory().createText("formatoAttachment","allegatoFattura.formatoAttachment");
+		this.descrizioneAttachment =  this.getFactory().getOutputFieldFactory().createText("descrizioneAttachment","allegatoFattura.descrizioneAttachment");
+		this.attachment =  this.getFactory().getOutputFieldFactory().createButton("attachment","allegatoFattura.attachment.visualizza",null,"/images/fatturapa/icons/document.png","allegatoFattura.attachment.visualizza.iconTitle","allegatoFattura.attachment.visualizza.iconTitle");
 		
 		this.setField(this.nomeAttachment);
 		this.setField(this.algoritmoCompressione);

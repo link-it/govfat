@@ -29,13 +29,13 @@ import org.govmix.proxy.fatturapa.orm.constants.NomePccOperazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.UserRole;
 import org.govmix.proxy.fatturapa.orm.constants.UserType;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
-import org.openspcoop2.generic_project.web.bean.IBean;
+import org.openspcoop2.generic_project.web.view.IViewBean;
 import org.openspcoop2.generic_project.web.factory.FactoryException;
 import org.openspcoop2.generic_project.web.impl.jsf1.bean.BaseBean;
 import org.openspcoop2.generic_project.web.output.OutputGroup;
 import org.openspcoop2.generic_project.web.output.Text;
 
-public class UtenteBean extends BaseBean<Utente, Long> implements IBean<Utente, Long>{
+public class UtenteBean extends BaseBean<Utente, Long> implements IViewBean<Utente, Long>{
 
 	private Text username = null;
 	private Text password = null;
@@ -90,32 +90,32 @@ public class UtenteBean extends BaseBean<Utente, Long> implements IBean<Utente, 
 
 	private void init() throws FactoryException{
 
-		this.username = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("username","utente.username");
-		this.password = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("password","utente.password");
+		this.username = this.getFactory().getOutputFieldFactory().createText("username","utente.username");
+		this.password = this.getFactory().getOutputFieldFactory().createText("password","utente.password");
 		this.password.setSecret(true); 
-		this.cognome = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("cognome","utente.cognome");
-		this.nome = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("nome","utente.nome");
-//		this.ente = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("ente","utente.ente");
-		this.ruolo = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("ruolo","utente.ruolo");
-		this.profilo = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("profilo","utente.profilo"); 
+		this.cognome = this.getFactory().getOutputFieldFactory().createText("cognome","utente.cognome");
+		this.nome = this.getFactory().getOutputFieldFactory().createText("nome","utente.nome");
+//		this.ente = this.getFactory().getOutputFieldFactory().createText("ente","utente.ente");
+		this.ruolo = this.getFactory().getOutputFieldFactory().createText("ruolo","utente.ruolo");
+		this.profilo = this.getFactory().getOutputFieldFactory().createText("profilo","utente.profilo"); 
 
-		this.utenteEsterno = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("utenteEsterno","utente.pcc.utenteEsterno");
-		this.sistemaEsterno = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("sistemaEsterno","utente.pcc.sistemaEsterno");
-		this.pagamentoIVA = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("pagamentoIVA","utente.pcc.pagamentoIVA");
-		this.datiFattura = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("datiFattura","utente.pcc.datiFattura");
-		this.inserimentoFattura = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("inserimentoFattura","utente.pcc.inserimentoFattura");
-		this.statoFattura = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("statoFattura","utente.pcc.statoFattura");
-		this.movimentiErarioIVA = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("movimentiErarioIVA","utente.pcc.movimentiErarioIVA");
-		this.downloadDocumento = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("downloadDocumento","utente.pcc.downloadDocumento");
-		this.consultazioneTracce = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("consultazioneTracce","utente.pcc.consultazioneTracce");
-		this.pagamento = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("pagamento","utente.pcc.pagamento");
-		this.stornoPagamento = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("stornoPagamento","utente.pcc.stornoPagamento");
-		this.comunicazioneScadenza = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("comunicazioneScadenza","utente.pcc.comunicazioneScadenza");
-		this.cancellazioneScadenze = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("cancellazioneScadenze","utente.pcc.cancellazioneScadenze");
-		this.contabilizzazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("contabilizzazione","utente.pcc.contabilizzazione");
-		this.stornoContabilizzazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("stornoContabilizzazione","utente.pcc.stornoContabilizzazione");
-		this.ricezioneFattura = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("ricezioneFattura","utente.pcc.ricezioneFattura");
-		this.rifiutoFattura = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("rifiutoFattura","utente.pcc.rifiutoFattura");
+		this.utenteEsterno = this.getFactory().getOutputFieldFactory().createText("utenteEsterno","utente.pcc.utenteEsterno");
+		this.sistemaEsterno = this.getFactory().getOutputFieldFactory().createText("sistemaEsterno","utente.pcc.sistemaEsterno");
+		this.pagamentoIVA = this.getFactory().getOutputFieldFactory().createText("pagamentoIVA","utente.pcc.pagamentoIVA");
+		this.datiFattura = this.getFactory().getOutputFieldFactory().createText("datiFattura","utente.pcc.datiFattura");
+		this.inserimentoFattura = this.getFactory().getOutputFieldFactory().createText("inserimentoFattura","utente.pcc.inserimentoFattura");
+		this.statoFattura = this.getFactory().getOutputFieldFactory().createText("statoFattura","utente.pcc.statoFattura");
+		this.movimentiErarioIVA = this.getFactory().getOutputFieldFactory().createText("movimentiErarioIVA","utente.pcc.movimentiErarioIVA");
+		this.downloadDocumento = this.getFactory().getOutputFieldFactory().createText("downloadDocumento","utente.pcc.downloadDocumento");
+		this.consultazioneTracce = this.getFactory().getOutputFieldFactory().createText("consultazioneTracce","utente.pcc.consultazioneTracce");
+		this.pagamento = this.getFactory().getOutputFieldFactory().createText("pagamento","utente.pcc.pagamento");
+		this.stornoPagamento = this.getFactory().getOutputFieldFactory().createText("stornoPagamento","utente.pcc.stornoPagamento");
+		this.comunicazioneScadenza = this.getFactory().getOutputFieldFactory().createText("comunicazioneScadenza","utente.pcc.comunicazioneScadenza");
+		this.cancellazioneScadenze = this.getFactory().getOutputFieldFactory().createText("cancellazioneScadenze","utente.pcc.cancellazioneScadenze");
+		this.contabilizzazione = this.getFactory().getOutputFieldFactory().createText("contabilizzazione","utente.pcc.contabilizzazione");
+		this.stornoContabilizzazione = this.getFactory().getOutputFieldFactory().createText("stornoContabilizzazione","utente.pcc.stornoContabilizzazione");
+		this.ricezioneFattura = this.getFactory().getOutputFieldFactory().createText("ricezioneFattura","utente.pcc.ricezioneFattura");
+		this.rifiutoFattura = this.getFactory().getOutputFieldFactory().createText("rifiutoFattura","utente.pcc.rifiutoFattura");
 
 
 		this.setField(this.cognome);
@@ -142,7 +142,7 @@ public class UtenteBean extends BaseBean<Utente, Long> implements IBean<Utente, 
 		this.setField(this.ricezioneFattura);
 		this.setField(this.rifiutoFattura);
 
-		this.fieldsDatiGenerali = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
+		this.fieldsDatiGenerali = this.getFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
 		this.fieldsDatiGenerali.setStyleClass("datiTrasmissioneTable"); 
 		this.fieldsDatiGenerali.setColumnClasses("labelAllineataDx,valueAllineataSx");
 
@@ -153,7 +153,7 @@ public class UtenteBean extends BaseBean<Utente, Long> implements IBean<Utente, 
 		this.fieldsDatiGenerali.addField(this.profilo);
 //		this.fieldsDatiGenerali.addField(this.ente);
 
-		this.fieldsDatiPCC = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiPCC",2);
+		this.fieldsDatiPCC = this.getFactory().getOutputFieldFactory().createOutputGroup("datiPCC",2);
 		this.fieldsDatiPCC.setStyleClass("datiTrasmissioneTable"); 
 		this.fieldsDatiPCC.setColumnClasses("labelAllineataDx,valueAllineataSx");
 

@@ -29,14 +29,14 @@ import org.govmix.proxy.fatturapa.orm.PccTracciaTrasmissione;
 import org.govmix.proxy.fatturapa.orm.PccTracciaTrasmissioneEsito;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoEsitoTrasmissioneType;
-import org.openspcoop2.generic_project.web.bean.IBean;
+import org.openspcoop2.generic_project.web.view.IViewBean;
 import org.openspcoop2.generic_project.web.factory.FactoryException;
 import org.openspcoop2.generic_project.web.impl.jsf1.bean.BaseBean;
 import org.openspcoop2.generic_project.web.output.DateTime;
 import org.openspcoop2.generic_project.web.output.OutputGroup;
 import org.openspcoop2.generic_project.web.output.Text;
 
-public class TracciaTrasmissionePCCBean extends BaseBean<PccTracciaTrasmissione, Long> implements IBean<PccTracciaTrasmissione, Long> {
+public class TracciaTrasmissionePCCBean extends BaseBean<PccTracciaTrasmissione, Long> implements IViewBean<PccTracciaTrasmissione, Long> {
 
 
 	private DateTime tsTrasmissione;
@@ -65,16 +65,16 @@ public class TracciaTrasmissionePCCBean extends BaseBean<PccTracciaTrasmissione,
 	private void init() throws FactoryException{
 		this.listaEsiti = new ArrayList<EsitoPccBean>();
 
-		this.tsTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("tsTrasmissione","trasmissionePcc.tsTrasmissione","dd/M/yyyy HH:mm:ss");
+		this.tsTrasmissione = this.getFactory().getOutputFieldFactory().createDateTime("tsTrasmissione","trasmissionePcc.tsTrasmissione","dd/M/yyyy HH:mm:ss");
 		this.sdf = new SimpleDateFormat(this.tsTrasmissione.getPattern());
-		this.idPccTransazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("idPccTransazione","trasmissionePcc.idPccTransazione");
-		this.esitoTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("esitoTrasmissione","trasmissionePcc.esitoTrasmissione");
-		this.statoEsito = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("statoEsito","trasmissionePcc.statoEsito");
-		this.gdo = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("gdo","trasmissionePcc.gdo","dd/M/yyyy HH:mm:ss"); 
-		this.dataFineElaborazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataFineElaborazione","trasmissionePcc.dataFineElaborazione","dd/M/yyyy HH:mm:ss");
-		this.dettaglioErroreTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("dettaglioErroreTrasmissione","trasmissionePcc.dettaglioErroreTrasmissione");
+		this.idPccTransazione = this.getFactory().getOutputFieldFactory().createText("idPccTransazione","trasmissionePcc.idPccTransazione");
+		this.esitoTrasmissione = this.getFactory().getOutputFieldFactory().createText("esitoTrasmissione","trasmissionePcc.esitoTrasmissione");
+		this.statoEsito = this.getFactory().getOutputFieldFactory().createText("statoEsito","trasmissionePcc.statoEsito");
+		this.gdo = this.getFactory().getOutputFieldFactory().createDateTime("gdo","trasmissionePcc.gdo","dd/M/yyyy HH:mm:ss"); 
+		this.dataFineElaborazione = this.getFactory().getOutputFieldFactory().createDateTime("dataFineElaborazione","trasmissionePcc.dataFineElaborazione","dd/M/yyyy HH:mm:ss");
+		this.dettaglioErroreTrasmissione = this.getFactory().getOutputFieldFactory().createText("dettaglioErroreTrasmissione","trasmissionePcc.dettaglioErroreTrasmissione");
 		this.dettaglioErroreTrasmissione.setValueStyleClass("whiteSpaceNewLine");
-		this.idEgovRichiesta = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("idEgovRichiesta","trasmissionePcc.idEgovRichiesta");
+		this.idEgovRichiesta = this.getFactory().getOutputFieldFactory().createText("idEgovRichiesta","trasmissionePcc.idEgovRichiesta");
 
 
 		this.setField(this.tsTrasmissione);
@@ -88,7 +88,7 @@ public class TracciaTrasmissionePCCBean extends BaseBean<PccTracciaTrasmissione,
 	
 
 
-		this.fieldsDatiGenerali = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
+		this.fieldsDatiGenerali = this.getFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
 		this.fieldsDatiGenerali.addField(this.tsTrasmissione);
 		this.fieldsDatiGenerali.addField(this.idPccTransazione);
 		this.fieldsDatiGenerali.addField(this.esitoTrasmissione);

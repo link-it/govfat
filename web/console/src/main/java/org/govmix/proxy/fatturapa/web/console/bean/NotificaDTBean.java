@@ -25,7 +25,7 @@ import javax.faces.context.FacesContext;
 import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
-import org.openspcoop2.generic_project.web.bean.IBean;
+import org.openspcoop2.generic_project.web.view.IViewBean;
 import org.openspcoop2.generic_project.web.factory.FactoryException;
 import org.openspcoop2.generic_project.web.impl.jsf1.bean.BaseBean;
 import org.openspcoop2.generic_project.web.output.Button;
@@ -40,7 +40,7 @@ import org.openspcoop2.generic_project.web.output.Text;
  * @author $Author: pintori $
  *
  */
-public class NotificaDTBean extends BaseBean<NotificaDecorrenzaTermini, Long> implements IBean<NotificaDecorrenzaTermini, Long> { 
+public class NotificaDTBean extends BaseBean<NotificaDecorrenzaTermini, Long> implements IViewBean<NotificaDecorrenzaTermini, Long> { 
 	
   	private Text nomeFile =null;
 	private Text descrizione =null;
@@ -60,12 +60,12 @@ public class NotificaDTBean extends BaseBean<NotificaDecorrenzaTermini, Long> im
 	}
 
 	private void init() throws FactoryException{
-		this.note = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("note","notificaDecorrenzaTermini.note");
-		this.nomeFile = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("nomeFile","notificaDecorrenzaTermini.nomeFile");
-		this.dataRicezione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataRicezione","notificaDecorrenzaTermini.dataRicezione","dd/M/yyyy");
-		this.descrizione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("descrizione","notificaDecorrenzaTermini.descrizione");
-		this.xml = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("xml","commons.label.xml",null,"/images/fatturapa/icons/xml.png","commons.label.xml.iconTitle","commons.label.xml.iconTitle");
-		this.pdf = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("pdf","commons.label.pdf",null,"/images/fatturapa/icons/pdf.png","commons.label.pdf.iconTitle","commons.label.pdf.iconTitle");
+		this.note = this.getFactory().getOutputFieldFactory().createText("note","notificaDecorrenzaTermini.note");
+		this.nomeFile = this.getFactory().getOutputFieldFactory().createText("nomeFile","notificaDecorrenzaTermini.nomeFile");
+		this.dataRicezione = this.getFactory().getOutputFieldFactory().createDateTime("dataRicezione","notificaDecorrenzaTermini.dataRicezione","dd/M/yyyy");
+		this.descrizione = this.getFactory().getOutputFieldFactory().createText("descrizione","notificaDecorrenzaTermini.descrizione");
+		this.xml = this.getFactory().getOutputFieldFactory().createButton("xml","commons.label.xml",null,"/images/fatturapa/icons/xml.png","commons.label.xml.iconTitle","commons.label.xml.iconTitle");
+		this.pdf = this.getFactory().getOutputFieldFactory().createButton("pdf","commons.label.pdf",null,"/images/fatturapa/icons/pdf.png","commons.label.pdf.iconTitle","commons.label.pdf.iconTitle");
 	
 		this.setField(this.note);
 		this.setField(this.nomeFile);

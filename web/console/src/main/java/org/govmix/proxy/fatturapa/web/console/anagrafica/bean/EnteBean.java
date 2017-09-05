@@ -21,13 +21,13 @@
 package org.govmix.proxy.fatturapa.web.console.anagrafica.bean;
 
 import org.govmix.proxy.fatturapa.orm.Ente;
-import org.openspcoop2.generic_project.web.bean.IBean;
+import org.openspcoop2.generic_project.web.view.IViewBean;
 import org.openspcoop2.generic_project.web.factory.FactoryException;
 import org.openspcoop2.generic_project.web.impl.jsf1.bean.BaseBean;
 import org.openspcoop2.generic_project.web.output.OutputGroup;
 import org.openspcoop2.generic_project.web.output.Text;
 
-public class EnteBean extends BaseBean<Ente, Long> implements IBean<Ente, Long>{
+public class EnteBean extends BaseBean<Ente, Long> implements IViewBean<Ente, Long>{
 
 	private Text nome = null;
 	private Text descrizione = null;
@@ -45,16 +45,16 @@ public class EnteBean extends BaseBean<Ente, Long> implements IBean<Ente, Long>{
 		}
 	}
 
-	private void init() throws FactoryException{
-		this.nome = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("ente","ente.nome");
-		this.descrizione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("descrizione","ente.descrizione");
-		this.idPccAmministrazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("idPccAmministrazione","ente.idPccAmministrazione");
+	public void init() throws FactoryException{
+		this.nome = this.getFactory().getOutputFieldFactory().createText("ente","ente.nome");
+		this.descrizione = this.getFactory().getOutputFieldFactory().createText("descrizione","ente.descrizione");
+		this.idPccAmministrazione = this.getFactory().getOutputFieldFactory().createText("idPccAmministrazione","ente.idPccAmministrazione");
 		
 		this.setField(this.nome);
 		this.setField(this.descrizione);
 		this.setField(this.idPccAmministrazione);
 
-		this.fieldsDatiGenerali = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
+		this.fieldsDatiGenerali = this.getFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
 		this.fieldsDatiGenerali.setStyleClass("datiTrasmissioneTable"); 
 		this.fieldsDatiGenerali.setColumnClasses("labelAllineataDx,valueAllineataSx");
 

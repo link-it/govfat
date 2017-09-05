@@ -29,7 +29,7 @@ import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
-import org.openspcoop2.generic_project.web.bean.IBean;
+import org.openspcoop2.generic_project.web.view.IViewBean;
 import org.openspcoop2.generic_project.web.factory.FactoryException;
 import org.openspcoop2.generic_project.web.impl.jsf1.bean.BaseBean;
 import org.openspcoop2.generic_project.web.output.Button;
@@ -43,7 +43,7 @@ import org.openspcoop2.generic_project.web.output.Text;
  * @author $Author: pintori $
  *
  */
-public class NotificaECBean extends BaseBean<NotificaEsitoCommittente, Long> implements IBean<NotificaEsitoCommittente, Long>{
+public class NotificaECBean extends BaseBean<NotificaEsitoCommittente, Long> implements IViewBean<NotificaEsitoCommittente, Long>{
 
 	private Text esito =null;
 	private DateTime  dataInvio =null;
@@ -72,25 +72,25 @@ public class NotificaECBean extends BaseBean<NotificaEsitoCommittente, Long> imp
 	}
 
 	private void init() throws FactoryException{
-		this.scarto = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("scarto","notificaEsitoCommittente.scarto");
-		this.scartoNote = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("scartoNote","notificaEsitoCommittente.scartoNote");
-		this.esito = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("esito","notificaEsitoCommittente.esito");
-		this.data = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("data","notificaEsitoCommittente.data","dd/M/yyyy");
-		this.dataInvio = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataInvio","notificaEsitoCommittente.dataInvio","dd/M/yyyy");
-		this.descrizione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("descrizione","notificaEsitoCommittente.descrizione");
-		this.modalitaBatch = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("modalitaBatch","notificaEsitoCommittente.modalitaBatch");
+		this.scarto = this.getFactory().getOutputFieldFactory().createText("scarto","notificaEsitoCommittente.scarto");
+		this.scartoNote = this.getFactory().getOutputFieldFactory().createText("scartoNote","notificaEsitoCommittente.scartoNote");
+		this.esito = this.getFactory().getOutputFieldFactory().createText("esito","notificaEsitoCommittente.esito");
+		this.data = this.getFactory().getOutputFieldFactory().createDateTime("data","notificaEsitoCommittente.data","dd/M/yyyy");
+		this.dataInvio = this.getFactory().getOutputFieldFactory().createDateTime("dataInvio","notificaEsitoCommittente.dataInvio","dd/M/yyyy");
+		this.descrizione = this.getFactory().getOutputFieldFactory().createText("descrizione","notificaEsitoCommittente.descrizione");
+		this.modalitaBatch = this.getFactory().getOutputFieldFactory().createText("modalitaBatch","notificaEsitoCommittente.modalitaBatch");
 
-		this.xml = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("xml","notificaEsitoCommittente.label.xml",null,"/images/fatturapa/icons/xml.png","notificaEsitoCommittente.label.xml.iconTitle","notificaEsitoCommittente.label.xml.iconTitle");
-		this.pdf = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("pdf","notificaEsitoCommittente.label.pdf",null,"/images/fatturapa/icons/pdf.png","notificaEsitoCommittente.label.pdf.iconTitle","notificaEsitoCommittente.label.pdf.iconTitle");
-		this.scartoXml = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("scartoXml","notificaEsitoCommittente.scarto.label.xml",null,"/images/fatturapa/icons/xml.png","notificaEsitoCommittente.scarto.label.xml.iconTitle","notificaEsitoCommittente.scarto.label.xml.iconTitle");
-		this.scartoPdf = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("scartoPdf","notificaEsitoCommittente.scarto.label.pdf",null,"/images/fatturapa/icons/pdf.png","notificaEsitoCommittente.scarto.label.pdf.iconTitle","notificaEsitoCommittente.scarto.label.pdf.iconTitle");
-		this.utente = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("utente","notificaEsitoCommittente.utente");
+		this.xml = this.getFactory().getOutputFieldFactory().createButton("xml","notificaEsitoCommittente.label.xml",null,"/images/fatturapa/icons/xml.png","notificaEsitoCommittente.label.xml.iconTitle","notificaEsitoCommittente.label.xml.iconTitle");
+		this.pdf = this.getFactory().getOutputFieldFactory().createButton("pdf","notificaEsitoCommittente.label.pdf",null,"/images/fatturapa/icons/pdf.png","notificaEsitoCommittente.label.pdf.iconTitle","notificaEsitoCommittente.label.pdf.iconTitle");
+		this.scartoXml = this.getFactory().getOutputFieldFactory().createButton("scartoXml","notificaEsitoCommittente.scarto.label.xml",null,"/images/fatturapa/icons/xml.png","notificaEsitoCommittente.scarto.label.xml.iconTitle","notificaEsitoCommittente.scarto.label.xml.iconTitle");
+		this.scartoPdf = this.getFactory().getOutputFieldFactory().createButton("scartoPdf","notificaEsitoCommittente.scarto.label.pdf",null,"/images/fatturapa/icons/pdf.png","notificaEsitoCommittente.scarto.label.pdf.iconTitle","notificaEsitoCommittente.scarto.label.pdf.iconTitle");
+		this.utente = this.getFactory().getOutputFieldFactory().createText("utente","notificaEsitoCommittente.utente");
 		
-		this.separatore = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("separatore",null);
+		this.separatore = this.getFactory().getOutputFieldFactory().createText("separatore",null);
 		this.separatore.setValue(" "); 
 		
-		this.statoConsegnaSdi = this.getWebGenericProjectFactory().getOutputFieldFactory().createText( "statoConsegnaSdi","notificaEsitoCommittente.statoConsegna");
-		this.dataProssimaConsegnaSdi = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataProssimaConsegnaSdi","notificaEsitoCommittente.dataProssimaConsegna","dd/M/yyyy HH:mm" );
+		this.statoConsegnaSdi = this.getFactory().getOutputFieldFactory().createText( "statoConsegnaSdi","notificaEsitoCommittente.statoConsegna");
+		this.dataProssimaConsegnaSdi = this.getFactory().getOutputFieldFactory().createDateTime("dataProssimaConsegnaSdi","notificaEsitoCommittente.dataProssimaConsegna","dd/M/yyyy HH:mm" );
 
 		this.setField(this.scarto);
 		this.setField(this.scartoNote);

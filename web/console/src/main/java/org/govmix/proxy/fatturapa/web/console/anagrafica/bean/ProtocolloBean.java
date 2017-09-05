@@ -23,13 +23,13 @@ package org.govmix.proxy.fatturapa.web.console.anagrafica.bean;
 import java.net.URI;
 
 import org.govmix.proxy.fatturapa.orm.Protocollo;
-import org.openspcoop2.generic_project.web.bean.IBean;
+import org.openspcoop2.generic_project.web.view.IViewBean;
 import org.openspcoop2.generic_project.web.factory.FactoryException;
 import org.openspcoop2.generic_project.web.impl.jsf1.bean.BaseBean;
 import org.openspcoop2.generic_project.web.output.OutputGroup;
 import org.openspcoop2.generic_project.web.output.Text;
 
-public class ProtocolloBean extends BaseBean<Protocollo, Long> implements IBean<Protocollo, Long> {
+public class ProtocolloBean extends BaseBean<Protocollo, Long> implements IViewBean<Protocollo, Long> {
 
 	
 	private Text nome = null;
@@ -48,16 +48,16 @@ public class ProtocolloBean extends BaseBean<Protocollo, Long> implements IBean<
 		}
 	}
 
-	private void init() throws FactoryException{
-		this.nome = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("nome","protocollo.nome");
-		this.descrizione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("descrizione","protocollo.descrizione");
-		this.endpoint = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("endpoint","protocollo.endpoint");
+	public void init() throws FactoryException{
+		this.nome = this.getFactory().getOutputFieldFactory().createText("nome","protocollo.nome");
+		this.descrizione = this.getFactory().getOutputFieldFactory().createText("descrizione","protocollo.descrizione");
+		this.endpoint = this.getFactory().getOutputFieldFactory().createText("endpoint","protocollo.endpoint");
 		
 		this.setField(this.nome);
 		this.setField(this.descrizione);
 		this.setField(this.endpoint);
 
-		this.fieldsDatiGenerali = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
+		this.fieldsDatiGenerali = this.getFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
 		this.fieldsDatiGenerali.setStyleClass("datiTrasmissioneTable"); 
 		this.fieldsDatiGenerali.setColumnClasses("labelAllineataDx,valueAllineataSx");
 

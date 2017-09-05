@@ -22,7 +22,7 @@ package org.govmix.proxy.fatturapa.web.console.pcc.bean;
 
 import org.govmix.proxy.fatturapa.orm.PccPagamento;
 import org.govmix.proxy.fatturapa.orm.constants.NaturaSpesaType;
-import org.openspcoop2.generic_project.web.bean.IBean;
+import org.openspcoop2.generic_project.web.view.IViewBean;
 import org.openspcoop2.generic_project.web.factory.Costanti;
 import org.openspcoop2.generic_project.web.factory.FactoryException;
 import org.openspcoop2.generic_project.web.impl.jsf1.bean.BaseBean;
@@ -31,7 +31,7 @@ import org.openspcoop2.generic_project.web.output.OutputGroup;
 import org.openspcoop2.generic_project.web.output.OutputNumber;
 import org.openspcoop2.generic_project.web.output.Text;
 
-public class PagamentoPccBean extends BaseBean<PccPagamento, Long> implements IBean<PccPagamento, Long>{ 
+public class PagamentoPccBean extends BaseBean<PccPagamento, Long> implements IViewBean<PccPagamento, Long>{ 
 
 	private OutputNumber importoPagato;
 	private Text  naturaSpesa;
@@ -59,23 +59,23 @@ public class PagamentoPccBean extends BaseBean<PccPagamento, Long> implements IB
 	}
 
 	private void init() throws FactoryException{
-		this.importoPagato = this.getWebGenericProjectFactory().getOutputFieldFactory().createNumber("importoPagato","pagamentoPcc.importoPagato");
+		this.importoPagato = this.getFactory().getOutputFieldFactory().createNumber("importoPagato","pagamentoPcc.importoPagato");
 		this.importoPagato.setConverterType(Costanti.CONVERT_TYPE_CURRENCY);
 		this.importoPagato.setCurrencySymbol(Costanti.CURRENCY_SYMBOL_EURO);
 		this.importoPagato.setTableColumnStyleClass("allinatoDX");
 		
-		this.naturaSpesa = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("naturaSpesa","pagamentoPcc.naturaSpesa");
-		this.capitoliSpesa = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("capitoliSpesa","pagamentoPcc.capitoliSpesa");
-		this.estremiImpegno = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("estremiImpegno","pagamentoPcc.estremiImpegno");
-		this.numeroMandato = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("numeroMandato","pagamentoPcc.numeroMandato");
-		this.dataMandato = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataMandato","pagamentoPcc.dataMandato","dd/M/yyyy HH:mm:ss");
-		this.idFiscaleIvaBeneficiario = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("idFiscaleIvaBeneficiario","pagamentoPcc.idFiscaleIvaBeneficiario");
-		this.codiceCig = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("codiceCig","pagamentoPcc.codiceCig"); 
-		this.codiceCup = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("codiceCup","pagamentoPcc.codiceCup");
-		this.descrizione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("descrizione","pagamentoPcc.descrizione");
-//		this.stato = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("stato","pagamentoPcc.stato");
-		this.dataRichiesta = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataRichiesta","pagamentoPcc.dataRichiesta","dd/M/yyyy HH:mm:ss");
-		this.dataQuery = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataQuery","pagamentoPcc.dataQuery","dd/M/yyyy HH:mm:ss"); 
+		this.naturaSpesa = this.getFactory().getOutputFieldFactory().createText("naturaSpesa","pagamentoPcc.naturaSpesa");
+		this.capitoliSpesa = this.getFactory().getOutputFieldFactory().createText("capitoliSpesa","pagamentoPcc.capitoliSpesa");
+		this.estremiImpegno = this.getFactory().getOutputFieldFactory().createText("estremiImpegno","pagamentoPcc.estremiImpegno");
+		this.numeroMandato = this.getFactory().getOutputFieldFactory().createText("numeroMandato","pagamentoPcc.numeroMandato");
+		this.dataMandato = this.getFactory().getOutputFieldFactory().createDateTime("dataMandato","pagamentoPcc.dataMandato","dd/M/yyyy HH:mm:ss");
+		this.idFiscaleIvaBeneficiario = this.getFactory().getOutputFieldFactory().createText("idFiscaleIvaBeneficiario","pagamentoPcc.idFiscaleIvaBeneficiario");
+		this.codiceCig = this.getFactory().getOutputFieldFactory().createText("codiceCig","pagamentoPcc.codiceCig"); 
+		this.codiceCup = this.getFactory().getOutputFieldFactory().createText("codiceCup","pagamentoPcc.codiceCup");
+		this.descrizione = this.getFactory().getOutputFieldFactory().createText("descrizione","pagamentoPcc.descrizione");
+//		this.stato = this.getFactory().getOutputFieldFactory().createText("stato","pagamentoPcc.stato");
+		this.dataRichiesta = this.getFactory().getOutputFieldFactory().createDateTime("dataRichiesta","pagamentoPcc.dataRichiesta","dd/M/yyyy HH:mm:ss");
+		this.dataQuery = this.getFactory().getOutputFieldFactory().createDateTime("dataQuery","pagamentoPcc.dataQuery","dd/M/yyyy HH:mm:ss"); 
 
 		this.setField(this.importoPagato);
 		this.setField(this.naturaSpesa);
@@ -91,7 +91,7 @@ public class PagamentoPccBean extends BaseBean<PccPagamento, Long> implements IB
 		this.setField(this.dataRichiesta);
 		this.setField(this.dataQuery);
 
-		this.fieldsDatiGenerali = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
+		this.fieldsDatiGenerali = this.getFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
 		this.fieldsDatiGenerali.addField(this.importoPagato);
 		this.fieldsDatiGenerali.addField(this.naturaSpesa);
 		this.fieldsDatiGenerali.addField(this.capitoliSpesa);

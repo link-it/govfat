@@ -26,7 +26,7 @@ import org.govmix.proxy.fatturapa.orm.constants.NaturaSpesaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoDebitoType;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.util.ConsoleProperties;
-import org.openspcoop2.generic_project.web.bean.IBean;
+import org.openspcoop2.generic_project.web.view.IViewBean;
 import org.openspcoop2.generic_project.web.factory.Costanti;
 import org.openspcoop2.generic_project.web.factory.FactoryException;
 import org.openspcoop2.generic_project.web.impl.jsf1.bean.BaseBean;
@@ -35,7 +35,7 @@ import org.openspcoop2.generic_project.web.output.OutputGroup;
 import org.openspcoop2.generic_project.web.output.OutputNumber;
 import org.openspcoop2.generic_project.web.output.Text;
 
-public class ContabilizzazionePccBean  extends BaseBean<PccContabilizzazione, Long> implements IBean<PccContabilizzazione, Long>{
+public class ContabilizzazionePccBean  extends BaseBean<PccContabilizzazione, Long> implements IViewBean<PccContabilizzazione, Long>{
 
 	private OutputNumber importoMovimento;
 	private Text naturaSpesa;
@@ -69,24 +69,24 @@ public class ContabilizzazionePccBean  extends BaseBean<PccContabilizzazione, Lo
 	}
 
 	private void init() throws FactoryException{
-		this.importoMovimento = this.getWebGenericProjectFactory().getOutputFieldFactory().createNumber("importoMovimento","contabilizzazione.importoMovimento");
+		this.importoMovimento = this.getFactory().getOutputFieldFactory().createNumber("importoMovimento","contabilizzazione.importoMovimento");
 		this.importoMovimento.setConverterType(Costanti.CONVERT_TYPE_CURRENCY);
 		this.importoMovimento.setCurrencySymbol(Costanti.CURRENCY_SYMBOL_EURO);
 		this.importoMovimento.setTableColumnStyleClass("allinatoDX");
-		this.naturaSpesa = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("naturaSpesa","contabilizzazione.naturaSpesa");
-		this.capitoliSpesa = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("capitoliSpesa","contabilizzazione.capitoliSpesa");
-		this.statoDebito = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("statoDebito","contabilizzazione.statoDebito");
-		this.causale = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("causale","contabilizzazione.causale");
-		this.descrizione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("descrizione","contabilizzazione.descrizione");
-		this.estremiImpiego = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("estremiImpiego","contabilizzazione.estremiImpiego");
-		this.codiceCig = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("codiceCig","contabilizzazione.codiceCig"); 
-		this.codiceCup = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("codiceCup","contabilizzazione.codiceCup");
-		this.idImporto = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("idImporto","contabilizzazione.idImporto");
-//		this.stato = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("stato","contabilizzazione.stato");
-		this.dataRichiesta = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataRichiesta","contabilizzazione.dataRichiesta","dd/M/yyyy HH:mm:ss");
-		this.dataQuery = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataQuery","contabilizzazione.dataQuery","dd/M/yyyy HH:mm:ss"); 
-		this.sistemaRichiedente = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("sistemaRichiedente","contabilizzazione.sistemaRichiedente");
-		this.utenteRichiedente = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("utenteRichiedente","contabilizzazione.utenteRichiedente");
+		this.naturaSpesa = this.getFactory().getOutputFieldFactory().createText("naturaSpesa","contabilizzazione.naturaSpesa");
+		this.capitoliSpesa = this.getFactory().getOutputFieldFactory().createText("capitoliSpesa","contabilizzazione.capitoliSpesa");
+		this.statoDebito = this.getFactory().getOutputFieldFactory().createText("statoDebito","contabilizzazione.statoDebito");
+		this.causale = this.getFactory().getOutputFieldFactory().createText("causale","contabilizzazione.causale");
+		this.descrizione = this.getFactory().getOutputFieldFactory().createText("descrizione","contabilizzazione.descrizione");
+		this.estremiImpiego = this.getFactory().getOutputFieldFactory().createText("estremiImpiego","contabilizzazione.estremiImpiego");
+		this.codiceCig = this.getFactory().getOutputFieldFactory().createText("codiceCig","contabilizzazione.codiceCig"); 
+		this.codiceCup = this.getFactory().getOutputFieldFactory().createText("codiceCup","contabilizzazione.codiceCup");
+		this.idImporto = this.getFactory().getOutputFieldFactory().createText("idImporto","contabilizzazione.idImporto");
+//		this.stato = this.getFactory().getOutputFieldFactory().createText("stato","contabilizzazione.stato");
+		this.dataRichiesta = this.getFactory().getOutputFieldFactory().createDateTime("dataRichiesta","contabilizzazione.dataRichiesta","dd/M/yyyy HH:mm:ss");
+		this.dataQuery = this.getFactory().getOutputFieldFactory().createDateTime("dataQuery","contabilizzazione.dataQuery","dd/M/yyyy HH:mm:ss"); 
+		this.sistemaRichiedente = this.getFactory().getOutputFieldFactory().createText("sistemaRichiedente","contabilizzazione.sistemaRichiedente");
+		this.utenteRichiedente = this.getFactory().getOutputFieldFactory().createText("utenteRichiedente","contabilizzazione.utenteRichiedente");
 	
 		
 		this.setField(this.importoMovimento);
@@ -105,7 +105,7 @@ public class ContabilizzazionePccBean  extends BaseBean<PccContabilizzazione, Lo
 		this.setField(this.sistemaRichiedente);
 		this.setField(this.utenteRichiedente);
 
-		this.fieldsDatiGenerali = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
+		this.fieldsDatiGenerali = this.getFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
 		this.fieldsDatiGenerali.addField(this.importoMovimento);
 		this.fieldsDatiGenerali.addField(this.naturaSpesa);
 		this.fieldsDatiGenerali.addField(this.capitoliSpesa);

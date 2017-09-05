@@ -21,7 +21,7 @@
 package org.govmix.proxy.fatturapa.web.console.pcc.bean;
 
 import org.govmix.proxy.fatturapa.orm.PccScadenza;
-import org.openspcoop2.generic_project.web.bean.IBean;
+import org.openspcoop2.generic_project.web.view.IViewBean;
 import org.openspcoop2.generic_project.web.factory.Costanti;
 import org.openspcoop2.generic_project.web.factory.FactoryException;
 import org.openspcoop2.generic_project.web.impl.jsf1.bean.BaseBean;
@@ -30,7 +30,7 @@ import org.openspcoop2.generic_project.web.output.OutputGroup;
 import org.openspcoop2.generic_project.web.output.OutputNumber;
 import org.openspcoop2.generic_project.web.output.Text;
 
-public class ScadenzaPccBean  extends BaseBean<PccScadenza, Long> implements IBean<PccScadenza, Long>{
+public class ScadenzaPccBean  extends BaseBean<PccScadenza, Long> implements IViewBean<PccScadenza, Long>{
 
 	private OutputNumber importo = null;
 	private DateTime dataScadenza = null;
@@ -58,17 +58,17 @@ public class ScadenzaPccBean  extends BaseBean<PccScadenza, Long> implements IBe
 
 	private void init() throws FactoryException{
 
-		this.importo = this.getWebGenericProjectFactory().getOutputFieldFactory().createNumber("importo","scadenza.importo");
+		this.importo = this.getFactory().getOutputFieldFactory().createNumber("importo","scadenza.importo");
 		this.importo.setConverterType(Costanti.CONVERT_TYPE_CURRENCY);
 		this.importo.setCurrencySymbol(Costanti.CURRENCY_SYMBOL_EURO);
 		this.importo.setTableColumnStyleClass("allinatoDX");
 
-		this.dataScadenza = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataScadenza","scadenza.dataScadenza","dd/M/yyyy");
-		this.dataRichiesta = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataRichiesta","scadenza.dataRichiesta","dd/M/yyyy HH:mm:ss");
-		this.dataQuery = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataQuery","scadenza.dataQuery","dd/M/yyyy HH:mm:ss");
-//		this.stato = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("stato","scadenza.stato");
-		this.sistemaRichiedente = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("sistemaRichiedente","scadenza.sistemaRichiedente");
-		this.utenteRichiedente = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("utenteRichiedente","scadenza.utenteRichiedente");
+		this.dataScadenza = this.getFactory().getOutputFieldFactory().createDateTime("dataScadenza","scadenza.dataScadenza","dd/M/yyyy");
+		this.dataRichiesta = this.getFactory().getOutputFieldFactory().createDateTime("dataRichiesta","scadenza.dataRichiesta","dd/M/yyyy HH:mm:ss");
+		this.dataQuery = this.getFactory().getOutputFieldFactory().createDateTime("dataQuery","scadenza.dataQuery","dd/M/yyyy HH:mm:ss");
+//		this.stato = this.getFactory().getOutputFieldFactory().createText("stato","scadenza.stato");
+		this.sistemaRichiedente = this.getFactory().getOutputFieldFactory().createText("sistemaRichiedente","scadenza.sistemaRichiedente");
+		this.utenteRichiedente = this.getFactory().getOutputFieldFactory().createText("utenteRichiedente","scadenza.utenteRichiedente");
 		
 		this.setField(this.importo);
 		this.setField(this.dataScadenza);
@@ -78,7 +78,7 @@ public class ScadenzaPccBean  extends BaseBean<PccScadenza, Long> implements IBe
 		this.setField(this.sistemaRichiedente);
 		this.setField(this.utenteRichiedente);
 
-		this.fieldsDatiGenerali = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
+		this.fieldsDatiGenerali = this.getFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
 		this.fieldsDatiGenerali.addField(this.importo);
 		this.fieldsDatiGenerali.addField(this.dataScadenza);
 //		this.fieldsDatiGenerali.addField(this.stato);

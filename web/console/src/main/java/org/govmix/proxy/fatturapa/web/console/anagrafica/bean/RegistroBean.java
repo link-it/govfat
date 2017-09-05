@@ -25,13 +25,13 @@ import java.util.List;
 import org.govmix.proxy.fatturapa.orm.Registro;
 import org.govmix.proxy.fatturapa.orm.RegistroProperty;
 import org.govmix.proxy.fatturapa.orm.RegistroPropertyValue;
-import org.openspcoop2.generic_project.web.bean.IBean;
+import org.openspcoop2.generic_project.web.view.IViewBean;
 import org.openspcoop2.generic_project.web.factory.FactoryException;
 import org.openspcoop2.generic_project.web.impl.jsf1.bean.BaseBean;
 import org.openspcoop2.generic_project.web.output.OutputGroup;
 import org.openspcoop2.generic_project.web.output.Text;
 
-public class RegistroBean extends BaseBean<Registro, Long> implements IBean<Registro, Long> {
+public class RegistroBean extends BaseBean<Registro, Long> implements IViewBean<Registro, Long> {
 
 	private Text nome = null;
 	private Text username = null;
@@ -53,17 +53,17 @@ public class RegistroBean extends BaseBean<Registro, Long> implements IBean<Regi
 		}
 	}
 
-	private void init() throws FactoryException{
-		this.nome = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("nome","registro.nome");
-		this.username = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("username","registro.username");
-		this.password = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("password","registro.password");
+	public void init() throws FactoryException{
+		this.nome = this.getFactory().getOutputFieldFactory().createText("nome","registro.nome");
+		this.username = this.getFactory().getOutputFieldFactory().createText("username","registro.username");
+		this.password = this.getFactory().getOutputFieldFactory().createText("password","registro.password");
 		this.password.setSecret(true);
 		
 		this.setField(this.nome);
 		this.setField(this.username);
 		this.setField(this.password);
 
-		this.fieldsDatiGenerali = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
+		this.fieldsDatiGenerali = this.getFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
 		this.fieldsDatiGenerali.setStyleClass("datiTrasmissioneTable"); 
 		this.fieldsDatiGenerali.setColumnClasses("labelAllineataDx,valueAllineataSx");
 
@@ -71,7 +71,7 @@ public class RegistroBean extends BaseBean<Registro, Long> implements IBean<Regi
 		this.fieldsDatiGenerali.addField(this.username);
 		this.fieldsDatiGenerali.addField(this.password);
 
-		this.fieldsProperties = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("registroProperties",2);
+		this.fieldsProperties = this.getFactory().getOutputFieldFactory().createOutputGroup("registroProperties",2);
 		this.fieldsProperties.setRendered(true);
 		this.fieldsProperties.setStyleClass("datiTrasmissioneTable"); 
 		this.fieldsProperties.setColumnClasses("labelAllineataDx,valueAllineataSx");
@@ -102,7 +102,7 @@ public class RegistroBean extends BaseBean<Registro, Long> implements IBean<Regi
 				int i = 0;
 				for (RegistroProperty dipartimentoProperty : listaProperties) {
 					boolean found = false;
-					proprieta  = this.getWebGenericProjectFactory().getOutputFieldFactory().createText();
+					proprieta  = this.getFactory().getOutputFieldFactory().createText();
 					proprieta.setLabel(dipartimentoProperty.getLabel());
 					proprieta.setName("prop_" + (i++));
 

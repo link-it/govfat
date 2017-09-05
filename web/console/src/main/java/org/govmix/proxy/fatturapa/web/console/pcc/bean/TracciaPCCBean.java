@@ -37,7 +37,7 @@ import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporte
 import org.govmix.proxy.fatturapa.web.console.bean.FatturaElettronicaBean;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
-import org.openspcoop2.generic_project.web.bean.IBean;
+import org.openspcoop2.generic_project.web.view.IViewBean;
 import org.openspcoop2.generic_project.web.factory.Costanti;
 import org.openspcoop2.generic_project.web.factory.FactoryException;
 import org.openspcoop2.generic_project.web.impl.jsf1.bean.BaseBean;
@@ -48,7 +48,7 @@ import org.openspcoop2.generic_project.web.output.OutputGroup;
 import org.openspcoop2.generic_project.web.output.OutputNumber;
 import org.openspcoop2.generic_project.web.output.Text;
 
-public class TracciaPCCBean extends BaseBean<PccTraccia, Long> implements IBean<PccTraccia, Long>{
+public class TracciaPCCBean extends BaseBean<PccTraccia, Long> implements IViewBean<PccTraccia, Long>{
 
 
 	private DateTime dataCreazione;
@@ -94,37 +94,37 @@ public class TracciaPCCBean extends BaseBean<PccTraccia, Long> implements IBean<
 	private void init() throws FactoryException{
 		this.listaTrasmissioni = new ArrayList<TracciaTrasmissionePCCBean>();
 
-		this.rifFattura = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("rifFattura","tracciaPcc.rifFattura");
-		this.cfTrasmittente = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("cfTrasmittente","tracciaPcc.cfTrasmittente");
-		this.versioneApplicativa = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("versioneApplicativa","tracciaPcc.versioneApplicativa");
-		this.idPccAmministrazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("idPccAmministrazione","tracciaPcc.idPccAmministrazione");
-		this.idPaTransazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("idPaTransazione","tracciaPcc.idPaTransazione");
-		this.sistemaRichiedente = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("sistemaRichiedente","tracciaPcc.sistemaRichiedente");
-		this.utenteRichiedente = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("utenteRichiedente","tracciaPcc.utenteRichiedente");
-		this.operazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("operazione","tracciaPcc.operazione");
-		this.tipoOperazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("tipoOperazione","tracciaPcc.tipoOperazione");
-		this.stato = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("stato","tracciaPcc.stato");
-		this.dataUltimoTentativoEsito = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataUltimoTentativoEsito","tracciaPcc.dataUltimoTentativoEsito","dd/M/yyyy HH:mm:ss");
-		this.rispedizione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("rispedizione","tracciaPcc.rispedizione");
-		this.rispedizioneMaxTentativi = this.getWebGenericProjectFactory().getOutputFieldFactory().createNumber("rispedizioneMaxTentativi","tracciaPcc.rispedizioneMaxTentativi");
+		this.rifFattura = this.getFactory().getOutputFieldFactory().createText("rifFattura","tracciaPcc.rifFattura");
+		this.cfTrasmittente = this.getFactory().getOutputFieldFactory().createText("cfTrasmittente","tracciaPcc.cfTrasmittente");
+		this.versioneApplicativa = this.getFactory().getOutputFieldFactory().createText("versioneApplicativa","tracciaPcc.versioneApplicativa");
+		this.idPccAmministrazione = this.getFactory().getOutputFieldFactory().createText("idPccAmministrazione","tracciaPcc.idPccAmministrazione");
+		this.idPaTransazione = this.getFactory().getOutputFieldFactory().createText("idPaTransazione","tracciaPcc.idPaTransazione");
+		this.sistemaRichiedente = this.getFactory().getOutputFieldFactory().createText("sistemaRichiedente","tracciaPcc.sistemaRichiedente");
+		this.utenteRichiedente = this.getFactory().getOutputFieldFactory().createText("utenteRichiedente","tracciaPcc.utenteRichiedente");
+		this.operazione = this.getFactory().getOutputFieldFactory().createText("operazione","tracciaPcc.operazione");
+		this.tipoOperazione = this.getFactory().getOutputFieldFactory().createText("tipoOperazione","tracciaPcc.tipoOperazione");
+		this.stato = this.getFactory().getOutputFieldFactory().createText("stato","tracciaPcc.stato");
+		this.dataUltimoTentativoEsito = this.getFactory().getOutputFieldFactory().createDateTime("dataUltimoTentativoEsito","tracciaPcc.dataUltimoTentativoEsito","dd/M/yyyy HH:mm:ss");
+		this.rispedizione = this.getFactory().getOutputFieldFactory().createText("rispedizione","tracciaPcc.rispedizione");
+		this.rispedizioneMaxTentativi = this.getFactory().getOutputFieldFactory().createNumber("rispedizioneMaxTentativi","tracciaPcc.rispedizioneMaxTentativi");
 		this.rispedizioneMaxTentativi.setConverterType(Costanti.CONVERT_TYPE_NUMBER);
 		this.rispedizioneMaxTentativi.setTableColumnStyleClass("allinatoDX");
-		this.dataUltimaTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataUltimaTrasmissione","tracciaPcc.dataUltimaTrasmissione","dd/M/yyyy HH:mm:ss");
-		this.dataCreazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataCreazione","tracciaPcc.dataCreazione","dd/M/yyyy HH:mm:ss");
+		this.dataUltimaTrasmissione = this.getFactory().getOutputFieldFactory().createDateTime("dataUltimaTrasmissione","tracciaPcc.dataUltimaTrasmissione","dd/M/yyyy HH:mm:ss");
+		this.dataCreazione = this.getFactory().getOutputFieldFactory().createDateTime("dataCreazione","tracciaPcc.dataCreazione","dd/M/yyyy HH:mm:ss");
 
 
-		this.rispedizioneProssimoTentativo = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("rispedizioneProssimoTentativo","tracciaPcc.rispedizioneProssimoTentativo","dd/M/yyyy HH:mm:ss");
-		this.rispedizioneNumeroTentativi = this.getWebGenericProjectFactory().getOutputFieldFactory().createNumber("rispedizioneNumeroTentativi","tracciaPcc.rispedizioneNumeroTentativi");
+		this.rispedizioneProssimoTentativo = this.getFactory().getOutputFieldFactory().createDateTime("rispedizioneProssimoTentativo","tracciaPcc.rispedizioneProssimoTentativo","dd/M/yyyy HH:mm:ss");
+		this.rispedizioneNumeroTentativi = this.getFactory().getOutputFieldFactory().createNumber("rispedizioneNumeroTentativi","tracciaPcc.rispedizioneNumeroTentativi");
 		this.rispedizioneNumeroTentativi.setConverterType(Costanti.CONVERT_TYPE_NUMBER);
 		this.rispedizioneNumeroTentativi.setTableColumnStyleClass("allinatoDX");
-		this.rispedizioneUltimoTentativo = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("rispedizioneUltimoTentativo","tracciaPcc.rispedizioneUltimoTentativo","dd/M/yyyy HH:mm:ss");
+		this.rispedizioneUltimoTentativo = this.getFactory().getOutputFieldFactory().createDateTime("rispedizioneUltimoTentativo","tracciaPcc.rispedizioneUltimoTentativo","dd/M/yyyy HH:mm:ss");
 
-		this.richiesta = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("tracciaRichiesta","tracciaPcc.tracciaRichiesta",null,
+		this.richiesta = this.getFactory().getOutputFieldFactory().createButton("tracciaRichiesta","tracciaPcc.tracciaRichiesta",null,
 					"/images/fatturapa/icons/xml.png","tracciaPcc.tracciaRichiesta.iconTitle","tracciaPcc.tracciaRichiesta.iconTitle");
-		this.risposta = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("tracciaRisposta","tracciaPcc.tracciaRisposta",null,
+		this.risposta = this.getFactory().getOutputFieldFactory().createButton("tracciaRisposta","tracciaPcc.tracciaRisposta",null,
 					"/images/fatturapa/icons/xml.png","tracciaPcc.tracciaRisposta.iconTitle","tracciaPcc.tracciaRisposta.iconTitle");
 		
-		this.pdfRiallineamento = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("pdfRiallineamento","tracciaPcc.pdfRiallineamento",null,
+		this.pdfRiallineamento = this.getFactory().getOutputFieldFactory().createButton("pdfRiallineamento","tracciaPcc.pdfRiallineamento",null,
 				"/images/fatturapa/icons/pdf.png","tracciaPcc.pdfRiallineamento.iconTitle","tracciaPcc.pdfRiallineamento.iconTitle");
 
 
@@ -150,7 +150,7 @@ public class TracciaPCCBean extends BaseBean<PccTraccia, Long> implements IBean<
 		this.setField(this.risposta);
 		this.setField(this.pdfRiallineamento);
 
-		this.fieldsDatiGenerali = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",3);
+		this.fieldsDatiGenerali = this.getFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",3);
 
 		this.fieldsDatiGenerali.addField(this.dataCreazione);
 		this.fieldsDatiGenerali.addField(this.dataUltimaTrasmissione);

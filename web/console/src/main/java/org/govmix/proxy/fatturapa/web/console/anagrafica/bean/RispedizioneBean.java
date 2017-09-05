@@ -23,13 +23,13 @@ package org.govmix.proxy.fatturapa.web.console.anagrafica.bean;
 import org.govmix.proxy.fatturapa.orm.PccRispedizione;
 import org.govmix.proxy.fatturapa.orm.constants.TipoErroreType;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
-import org.openspcoop2.generic_project.web.bean.IBean;
+import org.openspcoop2.generic_project.web.view.IViewBean;
 import org.openspcoop2.generic_project.web.factory.FactoryException;
 import org.openspcoop2.generic_project.web.impl.jsf1.bean.BaseBean;
 import org.openspcoop2.generic_project.web.output.OutputGroup;
 import org.openspcoop2.generic_project.web.output.Text;
 
-public class RispedizioneBean extends BaseBean<PccRispedizione, Long> implements IBean<PccRispedizione, Long>{
+public class RispedizioneBean extends BaseBean<PccRispedizione, Long> implements IViewBean<PccRispedizione, Long>{
 	
 	private Text codiceErrore = null;
 	private Text descrizioneErrore = null;
@@ -51,14 +51,14 @@ public class RispedizioneBean extends BaseBean<PccRispedizione, Long> implements
 		}
 	}
 
-	private void init() throws FactoryException{
-		this.codiceErrore = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("codiceErrore","rispedizione.codiceErrore");	
-		this.descrizioneErrore = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("descrizioneErrore","rispedizione.descrizioneErrore");
-		this.tipoErrore = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("tipoErrore","rispedizione.tipoErrore");
-		this.tentativi = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("tentativi","rispedizione.tentativi");
-		this.intervallo = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("intervallo","rispedizione.intervallo");
-		this.rispedizioneAutomatica = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("rispedizioneAutomatica","rispedizione.rispedizioneAutomatica");
-//		this.regolaDefault = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("regolaDefault","rispedizione.regolaDefault");
+	public void init() throws FactoryException{
+		this.codiceErrore = this.getFactory().getOutputFieldFactory().createText("codiceErrore","rispedizione.codiceErrore");	
+		this.descrizioneErrore = this.getFactory().getOutputFieldFactory().createText("descrizioneErrore","rispedizione.descrizioneErrore");
+		this.tipoErrore = this.getFactory().getOutputFieldFactory().createText("tipoErrore","rispedizione.tipoErrore");
+		this.tentativi = this.getFactory().getOutputFieldFactory().createText("tentativi","rispedizione.tentativi");
+		this.intervallo = this.getFactory().getOutputFieldFactory().createText("intervallo","rispedizione.intervallo");
+		this.rispedizioneAutomatica = this.getFactory().getOutputFieldFactory().createText("rispedizioneAutomatica","rispedizione.rispedizioneAutomatica");
+//		this.regolaDefault = this.getFactory().getOutputFieldFactory().createText("regolaDefault","rispedizione.regolaDefault");
 		
 		this.setField(this.codiceErrore);
 		this.setField(this.descrizioneErrore);
@@ -68,7 +68,7 @@ public class RispedizioneBean extends BaseBean<PccRispedizione, Long> implements
 		this.setField(this.intervallo);
 //		this.setField(this.regolaDefault);
 		
-		this.fieldsDatiGenerali = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
+		this.fieldsDatiGenerali = this.getFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
 		this.fieldsDatiGenerali.addField(this.codiceErrore);
 		this.fieldsDatiGenerali.addField(this.descrizioneErrore);
 		this.fieldsDatiGenerali.addField(this.tipoErrore);
