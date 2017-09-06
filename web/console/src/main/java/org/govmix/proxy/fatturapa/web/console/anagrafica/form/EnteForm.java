@@ -43,7 +43,7 @@ public class EnteForm extends BaseForm implements Form {
 	@Override
 	public void init() throws Exception{
 		
-		WebGenericProjectFactory factory = this.getWebGenericProjectFactory();
+		WebGenericProjectFactory factory = this.getFactory();
 		
 		this.nome = factory.getInputFieldFactory().createText("nome","ente.form.nome",null,false);
 		this.descrizione = factory.getInputFieldFactory().createText("descrizione","ente.form.descrizione",null,false);

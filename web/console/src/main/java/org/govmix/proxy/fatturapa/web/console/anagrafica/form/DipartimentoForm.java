@@ -51,7 +51,7 @@ import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
 import org.openspcoop2.generic_project.web.form.Form;
 import org.openspcoop2.generic_project.web.impl.jsf1.form.BaseForm;
-import org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem;
+import org.openspcoop2.generic_project.web.input.SelectItem;
 import org.openspcoop2.generic_project.web.input.BooleanCheckBox;
 import org.openspcoop2.generic_project.web.input.FormField;
 import org.openspcoop2.generic_project.web.input.InputSecret;
@@ -73,11 +73,11 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 	private Text username;
 	private InputSecret password;
 	private Text endpoint;
-	private SelectList<SelectItem> ente = null; 
+	private SelectList ente = null; 
 	private BooleanCheckBox codicePCC= null;
 	private boolean showProperties = false;
 
-	private SelectList<SelectItem> registro = null; 
+	private SelectList registro = null; 
 
 	private List<Text> properties = null;
 
@@ -280,12 +280,14 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 	 * 
 	 * @param bean
 	 */
-	public void setValues(DipartimentoBean bean){
+	@Override
+	public void setObject(Object obj) throws Exception {
 		try{
-			WebGenericProjectFactory factory =   this.getWebGenericProjectFactory();
+			WebGenericProjectFactory factory =   this.getFactory();
 			List<PccDipartimentoOperazione> listaProprietaAbilitate = new ArrayList<PccDipartimentoOperazione>();
 			// Aggiornamento
-			if(bean != null){
+			if(obj != null){
+				DipartimentoBean bean = (DipartimentoBean) obj;
 				this.codice.setDefaultValue(bean.getDTO().getCodice());
 				this.codice.setDisabled(true);
 				this.descrizione.setDefaultValue(bean.getDTO().getDescrizione());
@@ -408,7 +410,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		// se e' nuovo creo l'elenco delle properties
 		if(this.listaNomiProperties != null && this.listaNomiProperties.size() > 0){
 			try{
-				WebGenericProjectFactory factory =  this.getWebGenericProjectFactory();
+				WebGenericProjectFactory factory =  this.getFactory();
 
 				String namePrefix = "prop_";
 				if(this.codice.getDefaultValue() == null){
@@ -635,6 +637,11 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 
 		return null;
 	}
+	
+	@Override
+	public Object getObject() throws Exception {
+		return null;
+	}
 
 	public Dipartimento getDipartimento(){
 		Dipartimento dipartimento = new Dipartimento();
@@ -776,7 +783,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		this.properties = properties;
 	}
 
-	public SelectList<SelectItem> getRegistro() {
+	public SelectList getRegistro() {
 		this.registro.setRequired(false);
 		boolean mod = this.modalitaPush.getValue() != null ? (this.getModalitaPush().getValue() ? true : false) : false;
 		// [TODO] agganciare
@@ -811,7 +818,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		this.resetSezionePCC();
 	}
 
-	public void setRegistro(SelectList<SelectItem> registro) {
+	public void setRegistro(SelectList registro) {
 		this.registro = registro;
 	}
 
@@ -976,11 +983,11 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		this.listaProprietaConsentiteAiDipartimenti = listaProprietaConsentiteAiDipartimenti;
 	}
 
-	public SelectList<SelectItem> getEnte() {
+	public SelectList getEnte() {
 		return ente;
 	}
 
-	public void setEnte(SelectList<SelectItem> ente) {
+	public void setEnte(SelectList ente) {
 		this.ente = ente;
 	}
 

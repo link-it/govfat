@@ -68,7 +68,7 @@ public class ContabilizzazionePccBean  extends BaseBean<PccContabilizzazione, Lo
 		}
 	}
 
-	private void init() throws FactoryException{
+	public void init() throws FactoryException{
 		this.importoMovimento = this.getFactory().getOutputFieldFactory().createNumber("importoMovimento","contabilizzazione.importoMovimento");
 		this.importoMovimento.setConverterType(Costanti.CONVERT_TYPE_CURRENCY);
 		this.importoMovimento.setCurrencySymbol(Costanti.CURRENCY_SYMBOL_EURO);

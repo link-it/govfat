@@ -55,7 +55,7 @@ public class RegistroForm extends BaseForm implements Form{
 	@Override
 	public void init() throws Exception {
 
-		WebGenericProjectFactory factory = this.getWebGenericProjectFactory();
+		WebGenericProjectFactory factory = this.getFactory();
 
 		this.nome = factory.getInputFieldFactory().createText("nome","registro.form.nome",null,true);
 		this.password = factory.getInputFieldFactory().createInputSecret("password","registro.form.password",null,true);
@@ -91,7 +91,7 @@ public class RegistroForm extends BaseForm implements Form{
 
 				this.properties.clear();
 				Text proprieta = null;
-				WebGenericProjectFactory factory = this.getWebGenericProjectFactory();
+				WebGenericProjectFactory factory = this.getFactory();
 				for (RegistroPropertyValue prop : bean.getDTO().getRegistroPropertyValueList()) {
 					proprieta = factory.getInputFieldFactory().createText();
 					proprieta.setRequired(true);
@@ -119,7 +119,7 @@ public class RegistroForm extends BaseForm implements Form{
 	public void setListaNomiProperties(List<RegistroProperty> listaProperties){
 		try{
 			this.listaNomiProperties = listaProperties;
-			WebGenericProjectFactory factory = this.getWebGenericProjectFactory();
+			WebGenericProjectFactory factory = this.getFactory();
 			// se e' nuovo creo l'elenco delle properties
 			if(this.listaNomiProperties != null && this.listaNomiProperties.size() > 0){
 				String namePrefix = "prop_";

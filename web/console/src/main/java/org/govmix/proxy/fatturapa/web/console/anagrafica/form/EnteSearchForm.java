@@ -37,7 +37,7 @@ public class EnteSearchForm extends BaseSearchForm implements SearchForm {
 	@Override
 	public void init() throws Exception {
 		
-		WebGenericProjectFactory factory = this.getWebGenericProjectFactory();
+		WebGenericProjectFactory factory = this.getFactory();
 		
 		this.nome = factory.getInputFieldFactory().createText("nome","ente.search.nome",null,false);
 		

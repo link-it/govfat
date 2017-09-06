@@ -70,15 +70,15 @@ public class TracciaPccEstesaBean extends TracciaPCCBean{
 	}
 	
 	private void init2() throws FactoryException{
-		this.dataPrimaTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataPrimaTrasmissione","tracciaPcc.dataPrimaTrasmissione","dd/M/yyyy HH:mm:ss");
-		this.dataEsito = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataEsito","tracciaPcc.dataEsito","dd/M/yyyy HH:mm:ss");
+		this.dataPrimaTrasmissione = this.getFactory().getOutputFieldFactory().createDateTime("dataPrimaTrasmissione","tracciaPcc.dataPrimaTrasmissione","dd/M/yyyy HH:mm:ss");
+		this.dataEsito = this.getFactory().getOutputFieldFactory().createDateTime("dataEsito","tracciaPcc.dataEsito","dd/M/yyyy HH:mm:ss");
 		
-		this.operazioneContabile = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("operazioneContabile","tracciaPcc.operazione");
-		this.idEgovTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("idEgovTrasmissione","tracciaPcc.idEgovTrasmissione");
-		this.idEgovEsito = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("idEgovEsito","tracciaPcc.idEgovEsito");
-		this.esitoElaborazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("esitoElaborazione","tracciaPcc.esitoElaborazione");
-		this.esitoTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("esitoTrasmissione","tracciaPcc.esitoTrasmissione");
-		this.idPccTransazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("idPccTransazione","trasmissionePcc.idPccTransazione");
+		this.operazioneContabile = this.getFactory().getOutputFieldFactory().createText("operazioneContabile","tracciaPcc.operazione");
+		this.idEgovTrasmissione = this.getFactory().getOutputFieldFactory().createText("idEgovTrasmissione","tracciaPcc.idEgovTrasmissione");
+		this.idEgovEsito = this.getFactory().getOutputFieldFactory().createText("idEgovEsito","tracciaPcc.idEgovEsito");
+		this.esitoElaborazione = this.getFactory().getOutputFieldFactory().createText("esitoElaborazione","tracciaPcc.esitoElaborazione");
+		this.esitoTrasmissione = this.getFactory().getOutputFieldFactory().createText("esitoTrasmissione","tracciaPcc.esitoTrasmissione");
+		this.idPccTransazione = this.getFactory().getOutputFieldFactory().createText("idPccTransazione","trasmissionePcc.idPccTransazione");
 		
 		//field.getName(), field
 		this.getFields().put(this.dataPrimaTrasmissione.getName(), this.dataPrimaTrasmissione);
@@ -90,7 +90,7 @@ public class TracciaPccEstesaBean extends TracciaPCCBean{
 		this.getFields().put(this.esitoTrasmissione.getName(), this.esitoTrasmissione);
 		this.getFields().put(this.idPccTransazione.getName(), this.idPccTransazione);
 		
-		this.fieldsDatiTraccia = this.getWebGenericProjectFactory().getOutputFieldFactory()
+		this.fieldsDatiTraccia = this.getFactory().getOutputFieldFactory()
 				.createOutputGroup("datiTraccia",3);
 		
 		

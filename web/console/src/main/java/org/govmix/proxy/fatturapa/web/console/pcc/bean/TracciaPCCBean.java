@@ -91,7 +91,7 @@ public class TracciaPCCBean extends BaseBean<PccTraccia, Long> implements IViewB
 		}
 	}
 
-	private void init() throws FactoryException{
+	public void init() throws FactoryException{
 		this.listaTrasmissioni = new ArrayList<TracciaTrasmissionePCCBean>();
 
 		this.rifFattura = this.getFactory().getOutputFieldFactory().createText("rifFattura","tracciaPcc.rifFattura");

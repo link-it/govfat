@@ -36,7 +36,7 @@ public class RegistroSearchForm extends BaseSearchForm implements SearchForm{
 	@Override
 	public void init() throws Exception {
 
-		WebGenericProjectFactory factory = this.getWebGenericProjectFactory();
+		WebGenericProjectFactory factory = this.getFactory();
 		
 		this.protocollo = factory.getInputFieldFactory().createText("protocollo","registro.search.protocollo",null,false);
 		

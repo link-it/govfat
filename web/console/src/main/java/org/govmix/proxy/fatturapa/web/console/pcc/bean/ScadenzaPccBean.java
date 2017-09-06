@@ -56,7 +56,7 @@ public class ScadenzaPccBean  extends BaseBean<PccScadenza, Long> implements IVi
 		}
 	}
 
-	private void init() throws FactoryException{
+	public void init() throws FactoryException{
 
 		this.importo = this.getFactory().getOutputFieldFactory().createNumber("importo","scadenza.importo");
 		this.importo.setConverterType(Costanti.CONVERT_TYPE_CURRENCY);

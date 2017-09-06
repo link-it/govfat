@@ -49,7 +49,7 @@ public class ErroreElaborazionePccBean extends BaseBean<PccErroreElaborazione, L
 		}
 	}
 
-	private void init() throws FactoryException{
+	public void init() throws FactoryException{
 		this.tipoOperazione = this.getFactory().getOutputFieldFactory().createText("tipoOperazione","erroreElaborazione.tipoOperazione");
 		this.progressivoOperazione = this.getFactory().getOutputFieldFactory().createNumber("progressivoOperazione","erroreElaborazione.progressivoOperazione");
 		this.progressivoOperazione.setConverterType(Costanti.CONVERT_TYPE_NUMBER); 

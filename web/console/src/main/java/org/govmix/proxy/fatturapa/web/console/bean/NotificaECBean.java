@@ -71,7 +71,7 @@ public class NotificaECBean extends BaseBean<NotificaEsitoCommittente, Long> imp
 		}
 	}
 
-	private void init() throws FactoryException{
+	public void init() throws FactoryException{
 		this.scarto = this.getFactory().getOutputFieldFactory().createText("scarto","notificaEsitoCommittente.scarto");
 		this.scartoNote = this.getFactory().getOutputFieldFactory().createText("scartoNote","notificaEsitoCommittente.scartoNote");
 		this.esito = this.getFactory().getOutputFieldFactory().createText("esito","notificaEsitoCommittente.esito");

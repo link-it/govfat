@@ -88,7 +88,7 @@ public class UtenteBean extends BaseBean<Utente, Long> implements IViewBean<Uten
 		}
 	}
 
-	private void init() throws FactoryException{
+	public void init() throws FactoryException{
 
 		this.username = this.getFactory().getOutputFieldFactory().createText("username","utente.username");
 		this.password = this.getFactory().getOutputFieldFactory().createText("password","utente.password");

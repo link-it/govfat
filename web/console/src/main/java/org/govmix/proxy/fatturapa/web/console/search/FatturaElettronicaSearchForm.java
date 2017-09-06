@@ -33,7 +33,7 @@ import org.govmix.proxy.fatturapa.web.console.mbean.FatturaElettronicaMBean;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.SearchForm;
 import org.openspcoop2.generic_project.web.impl.jsf1.form.BaseSearchForm;
-import org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem;
+import org.openspcoop2.generic_project.web.input.SelectItem;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
 import org.openspcoop2.generic_project.web.input.DateTime;
 import org.openspcoop2.generic_project.web.input.SelectList;
@@ -55,19 +55,19 @@ public class FatturaElettronicaSearchForm extends BaseSearchForm implements Sear
 	
 	private Text cedentePrestatore = null;
 	private List<SelectItem> cedPrestSelList = null;
-	private SelectList<SelectItem> dipartimento = null;
-	private SelectList<SelectItem> dataRicezionePeriodo = null;
+	private SelectList dipartimento = null;
+	private SelectList dataRicezionePeriodo = null;
 	private DateTime dataRicezione = null;
-	private SelectList<SelectItem> tipoDocumento = null;
-	private SelectList<SelectItem> notificaEsitoCommittente = null;
-	private SelectList<SelectItem> notificaDecorrenzaTermini = null;
+	private SelectList tipoDocumento = null;
+	private SelectList notificaEsitoCommittente = null;
+	private SelectList notificaDecorrenzaTermini = null;
 	private FatturaElettronicaMBean mBean = null;
 	private DateTime dataEsatta = null;
 	private Text numero = null;
 	private Text identificativoLotto = null;
 
 	private Text identificativoProtocollo = null;
-	private SelectList<SelectItem> statoConsegna = null;
+	private SelectList statoConsegna = null;
 	
 	private boolean usaDataScadenza = false;
 	
@@ -79,7 +79,7 @@ public class FatturaElettronicaSearchForm extends BaseSearchForm implements Sear
 	@Override
 	public void init() throws Exception {
 		
-		WebGenericProjectFactory factory = this.getWebGenericProjectFactory();
+		WebGenericProjectFactory factory = this.getFactory();
 		// Properties del form
 		this.setId("formFattura");
 		this.setNomeForm("fattura.label.ricercaFatture");
@@ -213,19 +213,19 @@ public class FatturaElettronicaSearchForm extends BaseSearchForm implements Sear
 		this.cedentePrestatore = cedentePrestatore;
 	}
 
-	public SelectList<SelectItem>  getDipartimento() {
+	public SelectList  getDipartimento() {
 		return this.dipartimento;
 	}
 
-	public void setDipartimento(SelectList<SelectItem>  dipartimento) {
+	public void setDipartimento(SelectList  dipartimento) {
 		this.dipartimento = dipartimento;
 	}
 
-	public SelectList<SelectItem>  getDataRicezionePeriodo() {
+	public SelectList  getDataRicezionePeriodo() {
 		return this.dataRicezionePeriodo;
 	}
 
-	public void setDataRicezionePeriodo(SelectList<SelectItem> dataRicezionePeriodo) {
+	public void setDataRicezionePeriodo(SelectList dataRicezionePeriodo) {
 		this.dataRicezionePeriodo = dataRicezionePeriodo;
 	}
 
@@ -242,29 +242,29 @@ public class FatturaElettronicaSearchForm extends BaseSearchForm implements Sear
 		this.dataRicezione = dataRicezione;
 	}
 
-	public SelectList<SelectItem> getTipoDocumento() {
+	public SelectList getTipoDocumento() {
 		return this.tipoDocumento;
 	}
 
-	public void setTipoDocumento(SelectList<SelectItem> tipoDocumento) {
+	public void setTipoDocumento(SelectList tipoDocumento) {
 		this.tipoDocumento = tipoDocumento;
 	}
 
-	public SelectList<SelectItem> getNotificaEsitoCommittente() {
+	public SelectList getNotificaEsitoCommittente() {
 		return this.notificaEsitoCommittente;
 	}
 
 	public void setNotificaEsitoCommittente(
-			SelectList<SelectItem> notificaEsitoCommittente) {
+			SelectList notificaEsitoCommittente) {
 		this.notificaEsitoCommittente = notificaEsitoCommittente;
 	}
 
-	public SelectList<SelectItem> getNotificaDecorrenzaTermini() {
+	public SelectList getNotificaDecorrenzaTermini() {
 		return this.notificaDecorrenzaTermini;
 	}
 
 	public void setNotificaDecorrenzaTermini(
-			SelectList<SelectItem> notificaDecorrenzaTermini) {
+			SelectList notificaDecorrenzaTermini) {
 		this.notificaDecorrenzaTermini = notificaDecorrenzaTermini;
 	}
 
@@ -392,11 +392,11 @@ public class FatturaElettronicaSearchForm extends BaseSearchForm implements Sear
 		this.identificativoProtocollo = identificativoProtocollo;
 	}
 
-	public SelectList<SelectItem> getStatoConsegna() {
+	public SelectList getStatoConsegna() {
 		return statoConsegna;
 	}
 
-	public void setStatoConsegna(SelectList<SelectItem> statoConsegna) {
+	public void setStatoConsegna(SelectList statoConsegna) {
 		this.statoConsegna = statoConsegna;
 	}
 	

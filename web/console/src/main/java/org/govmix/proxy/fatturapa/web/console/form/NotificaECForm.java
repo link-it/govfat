@@ -27,7 +27,7 @@ import org.govmix.proxy.fatturapa.orm.constants.EsitoCommittenteType;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.Form;
 import org.openspcoop2.generic_project.web.impl.jsf1.form.BaseForm;
-import org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem;
+import org.openspcoop2.generic_project.web.input.SelectItem;
 import org.openspcoop2.generic_project.web.input.SelectList;
 import org.openspcoop2.generic_project.web.input.TextArea;
 
@@ -40,7 +40,7 @@ import org.openspcoop2.generic_project.web.input.TextArea;
  */
 public class NotificaECForm extends BaseForm implements Form {
 
-	private SelectList<SelectItem> esito= null;
+	private SelectList esito= null;
 	private TextArea descrizione = null;
 	
 	public NotificaECForm()throws Exception{
@@ -50,13 +50,13 @@ public class NotificaECForm extends BaseForm implements Form {
 	@Override
 	public void init() throws Exception {
 		
-		WebGenericProjectFactory factory = this.getWebGenericProjectFactory();
+		WebGenericProjectFactory factory = this.getFactory();
 		
 		this.setClosable(false);
 		this.setId("iNEC");
 		this.setNomeForm(null); 
 		
-		this.esito = factory.getInputFieldFactory().createSelectList("esito","notificaEsitoCommittente.esito",new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*","--"),true);
+		this.esito = factory.getInputFieldFactory().createSelectList("esito","notificaEsitoCommittente.esito",new org.openspcoop2.generic_project.web.input.SelectItem("*","--"),true);
 
 		this.esito.setFieldsToUpdate("iNEC_formPnl");
 		this.esito.setForm(this);
@@ -77,11 +77,11 @@ public class NotificaECForm extends BaseForm implements Form {
 		
 	}
 
-	public SelectList<SelectItem> getEsito() {
+	public SelectList getEsito() {
 		return this.esito;
 	}
 
-	public void setEsito(SelectList<SelectItem> esito) {
+	public void setEsito(SelectList esito) {
 		this.esito = esito;
 	}
 

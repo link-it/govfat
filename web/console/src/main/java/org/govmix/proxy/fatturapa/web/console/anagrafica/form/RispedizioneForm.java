@@ -35,7 +35,7 @@ import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
 import org.openspcoop2.generic_project.web.form.Form;
 import org.openspcoop2.generic_project.web.impl.jsf1.form.BaseForm;
-import org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem;
+import org.openspcoop2.generic_project.web.input.SelectItem;
 import org.openspcoop2.generic_project.web.input.FormField;
 import org.openspcoop2.generic_project.web.input.SelectList;
 import org.openspcoop2.generic_project.web.input.Text;
@@ -46,7 +46,7 @@ public class RispedizioneForm extends BaseForm implements Form{
 	private Text descrizioneErrore = null; 
 	private Text numeroTentativi = null;  
 	private Text intervalloRispedizione = null;
-	private SelectList<SelectItem> tipoErrore = null;
+	private SelectList tipoErrore = null;
 	private FormField<String> rispedizioneAutomatica= null;
 //	private BooleanCheckBox regolaDefault;
 
@@ -250,11 +250,11 @@ public class RispedizioneForm extends BaseForm implements Form{
 		this.intervalloRispedizione = intervalloRispedizione;
 	}
 
-	public SelectList<SelectItem> getTipoErrore() {
+	public SelectList getTipoErrore() {
 		return tipoErrore;
 	}
 
-	public void setTipoErrore(SelectList<SelectItem> tipoErrore) {
+	public void setTipoErrore(SelectList tipoErrore) {
 		this.tipoErrore = tipoErrore;
 	}
 

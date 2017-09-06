@@ -33,7 +33,7 @@ import org.govmix.proxy.fatturapa.web.console.mbean.FatturaElettronicaAttivaMBea
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.SearchForm;
 import org.openspcoop2.generic_project.web.impl.jsf1.form.BaseSearchForm;
-import org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem;
+import org.openspcoop2.generic_project.web.input.SelectItem;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
 import org.openspcoop2.generic_project.web.input.DateTime;
 import org.openspcoop2.generic_project.web.input.SelectList;
@@ -55,17 +55,17 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 	
 	private Text cessionarioCommittente = null;
 	private List<SelectItem> cessCommSelList = null;
-	private SelectList<SelectItem> dipartimento = null;
-	private SelectList<SelectItem> dataInvioPeriodo = null;
+	private SelectList dipartimento = null;
+	private SelectList dataInvioPeriodo = null;
 	private DateTime dataInvio = null;
-	private SelectList<SelectItem> tipoDocumento = null;
-	private SelectList<SelectItem> tipoComunicazione = null;
+	private SelectList tipoDocumento = null;
+	private SelectList tipoComunicazione = null;
 	private FatturaElettronicaAttivaMBean mBean = null;
 	private DateTime dataEsatta = null;
 	private Text numero = null;
 	private Text identificativoLotto = null;
 	private Text identificativoProtocollo = null;
-	private SelectList<SelectItem> statoElaborazione = null;
+	private SelectList statoElaborazione = null;
 
 	public FatturaElettronicaAttivaSearchForm()throws Exception{
 		this.init();
@@ -74,7 +74,7 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 	@Override
 	public void init() throws Exception {
 		
-		WebGenericProjectFactory factory = this.getWebGenericProjectFactory();
+		WebGenericProjectFactory factory = this.getFactory();
 		// Properties del form
 		this.setId("formFattura");
 		this.setNomeForm("fatturaAttiva.label.ricercaFattureAttive");
@@ -206,19 +206,19 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		this.cessionarioCommittente = cessionarioCommittente;
 	}
 
-	public SelectList<SelectItem>  getDipartimento() {
+	public SelectList  getDipartimento() {
 		return this.dipartimento;
 	}
 
-	public void setDipartimento(SelectList<SelectItem>  dipartimento) {
+	public void setDipartimento(SelectList  dipartimento) {
 		this.dipartimento = dipartimento;
 	}
 
-	public SelectList<SelectItem>  getDataInvioPeriodo() {
+	public SelectList  getDataInvioPeriodo() {
 		return this.dataInvioPeriodo;
 	}
 
-	public void setDataInvioPeriodo(SelectList<SelectItem> dataInvioPeriodo) {
+	public void setDataInvioPeriodo(SelectList dataInvioPeriodo) {
 		this.dataInvioPeriodo = dataInvioPeriodo;
 	}
 
@@ -235,11 +235,11 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		this.dataInvio = dataInvio;
 	}
 
-	public SelectList<SelectItem> getTipoDocumento() {
+	public SelectList getTipoDocumento() {
 		return this.tipoDocumento;
 	}
 
-	public void setTipoDocumento(SelectList<SelectItem> tipoDocumento) {
+	public void setTipoDocumento(SelectList tipoDocumento) {
 		this.tipoDocumento = tipoDocumento;
 	}
 
@@ -367,11 +367,11 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		this.identificativoProtocollo = identificativoProtocollo;
 	}
 
-	public SelectList<SelectItem> getStatoElaborazione() {
+	public SelectList getStatoElaborazione() {
 		return statoElaborazione;
 	}
 
-	public void setStatoElaborazione(SelectList<SelectItem> statoElaborazione) {
+	public void setStatoElaborazione(SelectList statoElaborazione) {
 		this.statoElaborazione = statoElaborazione;
 	}
 
@@ -410,11 +410,11 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 
 	}
 
-	public SelectList<SelectItem> getTipoComunicazione() {
+	public SelectList getTipoComunicazione() {
 		return tipoComunicazione;
 	}
 
-	public void setTipoComunicazione(SelectList<SelectItem> tipoComunicazione) {
+	public void setTipoComunicazione(SelectList tipoComunicazione) {
 		this.tipoComunicazione = tipoComunicazione;
 	}	
 	

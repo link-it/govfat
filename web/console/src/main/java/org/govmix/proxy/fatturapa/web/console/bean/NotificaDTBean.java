@@ -59,7 +59,7 @@ public class NotificaDTBean extends BaseBean<NotificaDecorrenzaTermini, Long> im
 		}
 	}
 
-	private void init() throws FactoryException{
+	public void init() throws FactoryException{
 		this.note = this.getFactory().getOutputFieldFactory().createText("note","notificaDecorrenzaTermini.note");
 		this.nomeFile = this.getFactory().getOutputFieldFactory().createText("nomeFile","notificaDecorrenzaTermini.nomeFile");
 		this.dataRicezione = this.getFactory().getOutputFieldFactory().createDateTime("dataRicezione","notificaDecorrenzaTermini.dataRicezione","dd/M/yyyy");

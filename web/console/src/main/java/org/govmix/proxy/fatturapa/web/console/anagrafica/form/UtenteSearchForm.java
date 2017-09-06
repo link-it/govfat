@@ -28,7 +28,7 @@ import org.govmix.proxy.fatturapa.web.console.anagrafica.mbean.UtenteMBean;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.SearchForm;
 import org.openspcoop2.generic_project.web.impl.jsf1.form.BaseSearchForm;
-import org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem;
+import org.openspcoop2.generic_project.web.input.SelectItem;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
 import org.openspcoop2.generic_project.web.input.SelectList;
 import org.openspcoop2.generic_project.web.input.Text;
@@ -38,9 +38,9 @@ public class UtenteSearchForm extends BaseSearchForm implements SearchForm{
 
 	private Text denominazione = null;
 
-	private SelectList<SelectItem> dipartimento = null;
+	private SelectList dipartimento = null;
 
-	private SelectList<SelectItem> ente = null;
+	private SelectList ente = null;
 
 	private UtenteMBean mBean = null;
 
@@ -55,7 +55,7 @@ public class UtenteSearchForm extends BaseSearchForm implements SearchForm{
 		this.setNomeForm("utente.label.ricercaUtenti");
 		this.setClosable(false);
 
-		WebGenericProjectFactory factory = this.getWebGenericProjectFactory();
+		WebGenericProjectFactory factory = this.getFactory();
 
 		// Init dei FormField
 		this.denominazione = factory.getInputFieldFactory().createText("denominazione","utente.search.denominazione",null,false);
@@ -95,11 +95,11 @@ public class UtenteSearchForm extends BaseSearchForm implements SearchForm{
 		this.denominazione = denominazione;
 	}
 
-	public SelectList<SelectItem> getDipartimento() {
+	public SelectList getDipartimento() {
 		return this.dipartimento;
 	}
 
-	public void setDipartimento(SelectList<SelectItem> dipartimento) {
+	public void setDipartimento(SelectList dipartimento) {
 		this.dipartimento = dipartimento;
 	}
 
@@ -119,11 +119,11 @@ public class UtenteSearchForm extends BaseSearchForm implements SearchForm{
 		//do something
 	}
 
-	public SelectList<SelectItem> getEnte() {
+	public SelectList getEnte() {
 		return ente;
 	}
 
-	public void setEnte(SelectList<SelectItem> ente) {
+	public void setEnte(SelectList ente) {
 		this.ente = ente;
 	}
 

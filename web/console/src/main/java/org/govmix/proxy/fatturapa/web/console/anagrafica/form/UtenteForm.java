@@ -48,7 +48,7 @@ import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
 import org.openspcoop2.generic_project.web.form.Form;
 import org.openspcoop2.generic_project.web.impl.jsf1.form.BaseForm;
-import org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem;
+import org.openspcoop2.generic_project.web.input.SelectItem;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.PickListImpl;
 import org.openspcoop2.generic_project.web.input.BooleanCheckBox;
 import org.openspcoop2.generic_project.web.input.FormField;
@@ -67,9 +67,9 @@ public class UtenteForm extends BaseForm implements Form, Serializable{
 	private InputSecret password;
 	private Text nome;
 	private Text cognome;
-	private SelectList<SelectItem> ruolo; 
-	private SelectList<SelectItem> profilo;
-	//	private SelectList<SelectItem> ente;
+	private SelectList ruolo; 
+	private SelectList profilo;
+	//	private SelectList ente;
 	private BooleanCheckBox codicePCC= null;
 	private BooleanCheckBox showUOandPCC = null;
 	private PickList<SelectItem> dipartimento = null; 
@@ -257,7 +257,7 @@ public class UtenteForm extends BaseForm implements Form, Serializable{
 			for (DipartimentoBean dbean : bean.getListaDipartimenti()) {
 				Dipartimento dipartimento = dbean.getDTO();
 				String descrizioneConCodice = dipartimento.getDescrizione()+ " (" + dipartimento.getCodice() + ")";
-				org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem item = new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(
+				org.openspcoop2.generic_project.web.input.SelectItem item = new org.openspcoop2.generic_project.web.input.SelectItem(
 						dipartimento.getCodice(),descrizioneConCodice.trim());
 				listaDipartimentiEnte.add(item);
 			}
@@ -657,19 +657,19 @@ public class UtenteForm extends BaseForm implements Form, Serializable{
 		this.mBean = mBean;
 	}
 
-	public SelectList<SelectItem> getRuolo() {
+	public SelectList getRuolo() {
 		return this.ruolo;
 	}
 
-	public void setRuolo(SelectList<SelectItem> ruolo) {
+	public void setRuolo(SelectList ruolo) {
 		this.ruolo = ruolo;
 	}
 
-	public SelectList<SelectItem> getProfilo() {
+	public SelectList getProfilo() {
 		return this.profilo;
 	}
 
-	public void setProfilo(SelectList<SelectItem> profilo) {
+	public void setProfilo(SelectList profilo) {
 		this.profilo = profilo;
 	}
 

@@ -51,7 +51,7 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IViewB
 		}
 	}
 	
-	private void init() throws FactoryException{
+	public void init() throws FactoryException{
 		this.identificativoSdi = this.getFactory().getOutputFieldFactory().createText("nomeAttachment","allegatoFattura.nomeAttachment");
 		this.tipoComunicazione =   this.getFactory().getOutputFieldFactory().createText("algoritmoCompressione","allegatoFattura.algoritmoCompressione");
 		this.nomeFile =  this.getFactory().getOutputFieldFactory().createText("formatoAttachment","allegatoFattura.formatoAttachment");

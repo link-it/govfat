@@ -31,7 +31,7 @@ import org.openspcoop2.generic_project.web.factory.FactoryException;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.SearchForm;
 import org.openspcoop2.generic_project.web.impl.jsf1.form.BaseSearchForm;
-import org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem;
+import org.openspcoop2.generic_project.web.input.SelectItem;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils;
 import org.openspcoop2.generic_project.web.input.SelectList;
@@ -43,7 +43,7 @@ public class DipartimentoSearchForm extends BaseSearchForm implements SearchForm
 
 	private Text codice = null;
 	
-	private SelectList<SelectItem> ente = null;
+	private SelectList ente = null;
 
 	private DipartimentoMBean mBean = null;
 	
@@ -150,11 +150,11 @@ public class DipartimentoSearchForm extends BaseSearchForm implements SearchForm
 		//do something
 	}
 
-	public SelectList<SelectItem> getEnte() {
+	public SelectList getEnte() {
 		return ente;
 	}
 
-	public void setEnte(SelectList<SelectItem> ente) {
+	public void setEnte(SelectList ente) {
 		this.ente = ente;
 	}
 

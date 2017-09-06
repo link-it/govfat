@@ -137,7 +137,7 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 		}
 	}
 
-	private void init() throws FactoryException{
+	public void init() throws FactoryException{
 		this.cedentePrestatore = this.getFactory().getOutputFieldFactory().createText("cedentePrestatore","fattura.cedentePrestatoreDenominazione");
 		this.cedentePrestatorePaese = this.getFactory().getOutputFieldFactory().createText("cedentePrestatorePaese","fattura.cedentePrestatorePaese");
 		this.dipartimento = this.getFactory().getOutputFieldFactory().createText("dipartimento","fattura.dipartimento");

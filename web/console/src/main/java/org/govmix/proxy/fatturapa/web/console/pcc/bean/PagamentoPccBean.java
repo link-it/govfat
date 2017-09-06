@@ -58,7 +58,7 @@ public class PagamentoPccBean extends BaseBean<PccPagamento, Long> implements IV
 		}
 	}
 
-	private void init() throws FactoryException{
+	public void init() throws FactoryException{
 		this.importoPagato = this.getFactory().getOutputFieldFactory().createNumber("importoPagato","pagamentoPcc.importoPagato");
 		this.importoPagato.setConverterType(Costanti.CONVERT_TYPE_CURRENCY);
 		this.importoPagato.setCurrencySymbol(Costanti.CURRENCY_SYMBOL_EURO);

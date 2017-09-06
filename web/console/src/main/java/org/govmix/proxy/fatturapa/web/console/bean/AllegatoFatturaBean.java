@@ -53,7 +53,7 @@ public class AllegatoFatturaBean extends BaseBean<AllegatoFattura, Long> impleme
 		}
 	}
 
-	private void init() throws FactoryException{
+	public void init() throws FactoryException{
 		this.nomeAttachment = this.getFactory().getOutputFieldFactory().createText("nomeAttachment","allegatoFattura.nomeAttachment");
 		this.algoritmoCompressione =   this.getFactory().getOutputFieldFactory().createText("algoritmoCompressione","allegatoFattura.algoritmoCompressione");
 		this.formatoAttachment =  this.getFactory().getOutputFieldFactory().createText("formatoAttachment","allegatoFattura.formatoAttachment");

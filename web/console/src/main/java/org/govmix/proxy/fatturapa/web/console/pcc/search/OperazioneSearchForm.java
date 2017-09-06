@@ -31,7 +31,7 @@ import org.govmix.proxy.fatturapa.web.console.pcc.mbean.OperazioneMBean;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.SearchForm;
 import org.openspcoop2.generic_project.web.impl.jsf1.form.BaseSearchForm;
-import org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem;
+import org.openspcoop2.generic_project.web.input.SelectItem;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
 import org.openspcoop2.generic_project.web.input.DateTime;
 import org.openspcoop2.generic_project.web.input.SelectList;
@@ -44,22 +44,22 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 	public static final String DATA_PERIODO_ULTIMO_MESE = "1";
 	public static final String DATA_PERIODO_ULTIMA_SETTIMANA = "0";
 
-	private SelectList<SelectItem> operazione = null;
+	private SelectList operazione = null;
 	private Text sistemaRichiedente = null;
 	private List<SelectItem> sistemaRichiedenteSelList = null;
 	private Text utenteRichiedente = null;
 	private List<SelectItem> utenteRichiedenteSelList = null;
 
-	private SelectList<SelectItem> dataPeriodo = null;
+	private SelectList dataPeriodo = null;
 	private DateTime data = null;
 
-	private SelectList<SelectItem> esito = null;
+	private SelectList esito = null;
 	private Text cedentePrestatore = null;
 	private List<SelectItem> cedPrestSelList = null;
 	private Text numero = null;
 	private Text identificativoLotto = null;
 	private Text idPaTransazione = null;
-	private SelectList<SelectItem> codiceErrore = null;
+	private SelectList codiceErrore = null;
 
 	private OperazioneMBean mBean = null;
 
@@ -71,7 +71,7 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 	@Override
 	public void init() throws Exception {
 
-		WebGenericProjectFactory factory = this.getWebGenericProjectFactory();
+		WebGenericProjectFactory factory = this.getFactory();
 		// Properties del form
 		this.setId("rOp");
 		this.setNomeForm("operazione.label.ricercaOperazioni");
@@ -96,7 +96,7 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 		this.operazione = factory.getInputFieldFactory().createSelectList("oper","operazione.search.operazione",null,false);
 		((SelectListImpl)this.operazione).setCheckItemWidth(true); 
 		this.operazione.setFontName("Arial"); //"Arial,Verdana,sans-serif" 
-		this.operazione.setDefaultValue(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi")));
+		this.operazione.setDefaultValue(new org.openspcoop2.generic_project.web.input.SelectItem("*", ("commons.label.qualsiasi")));
 
 		this.sistemaRichiedente = factory.getInputFieldFactory()
 				.createText("sisRic","operazione.search.sistemaRichiedente",null,false);
@@ -116,7 +116,7 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 		this._setPeriodo();
 
 		this.esito = factory.getInputFieldFactory().createSelectList( "esito","tracciaPcc.stato",null,false);
-		this.esito.setDefaultValue(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi")));
+		this.esito.setDefaultValue(new org.openspcoop2.generic_project.web.input.SelectItem("*", ("commons.label.qualsiasi")));
 		this.numero = factory.getInputFieldFactory().createText("numero","operazione.search.numero",null,false);
 
 		this.numero.setAutoComplete(true);
@@ -129,7 +129,7 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 		this.idPaTransazione = factory.getInputFieldFactory().createText("idPaTrans","operazione.search.idPaTransazione",null,false);
 		
 		this.codiceErrore = factory.getInputFieldFactory().createSelectList("codiceErrore","operazione.search.codiceErrore",null,false);
-		this.codiceErrore.setDefaultValue(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi")));
+		this.codiceErrore.setDefaultValue(new org.openspcoop2.generic_project.web.input.SelectItem("*", ("commons.label.qualsiasi")));
 
 		this.setField(this.cedentePrestatore);
 		this.setField(this.utenteRichiedente);
@@ -199,11 +199,11 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 		this.cedentePrestatore = cedentePrestatore;
 	}
 
-	public SelectList<SelectItem>  getDataPeriodo() {
+	public SelectList  getDataPeriodo() {
 		return this.dataPeriodo;
 	}
 
-	public void setDataPeriodo(SelectList<SelectItem> dataRicezionePeriodo) {
+	public void setDataPeriodo(SelectList dataRicezionePeriodo) {
 		this.dataPeriodo = dataRicezionePeriodo;
 	}
 
@@ -222,11 +222,11 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 
 
 
-	public SelectList<SelectItem> getOperazione() {
+	public SelectList getOperazione() {
 		return operazione;
 	}
 
-	public void setOperazione(SelectList<SelectItem> operazione) {
+	public void setOperazione(SelectList operazione) {
 		this.operazione = operazione;
 	}
 
@@ -246,11 +246,11 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 		this.utenteRichiedente = utenteRichiedente;
 	}
 
-	public SelectList<SelectItem> getEsito() {
+	public SelectList getEsito() {
 		return esito;
 	}
 
-	public void setEsito(SelectList<SelectItem> esito) {
+	public void setEsito(SelectList esito) {
 		this.esito = esito;
 	}
 
@@ -460,11 +460,11 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 		this.idPaTransazione = idPaTransazione;
 	}
 
-	public SelectList<SelectItem> getCodiceErrore() {
+	public SelectList getCodiceErrore() {
 		return codiceErrore;
 	}
 
-	public void setCodiceErrore(SelectList<SelectItem> codiceErrore) {
+	public void setCodiceErrore(SelectList codiceErrore) {
 		this.codiceErrore = codiceErrore;
 	}
 }

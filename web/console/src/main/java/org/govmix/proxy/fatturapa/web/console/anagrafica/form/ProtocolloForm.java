@@ -45,7 +45,7 @@ public class ProtocolloForm extends BaseForm implements Form {
 	@Override
 	public void init() throws Exception{
 		
-		WebGenericProjectFactory factory = this.getWebGenericProjectFactory();
+		WebGenericProjectFactory factory = this.getFactory();
 		
 		this.nome = factory.getInputFieldFactory().createText("nome","protocollo.form.nome",null,true);
 		this.descrizione = factory.getInputFieldFactory().createText("descrizione","protocollo.form.descrizione",null,false);

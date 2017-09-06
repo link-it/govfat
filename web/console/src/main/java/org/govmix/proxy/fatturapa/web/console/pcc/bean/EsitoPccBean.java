@@ -61,7 +61,7 @@ public class EsitoPccBean extends BaseBean<PccTracciaTrasmissioneEsito, Long> im
 		}
 	}
 
-	private void init() throws FactoryException{
+	public void init() throws FactoryException{
 		this.esitoElaborazione = this.getFactory().getOutputFieldFactory().createText("esitoElaborazione","esitoPcc.esitoElaborazione");
 		this.descrizioneElaborazione = this.getFactory().getOutputFieldFactory().createText("descrizioneElaborazione","esitoPcc.descrizioneElaborazione");
 		this.idTrasmissione = this.getFactory().getOutputFieldFactory().createText("idTrasmissione","esitoPcc.idTrasmissione");

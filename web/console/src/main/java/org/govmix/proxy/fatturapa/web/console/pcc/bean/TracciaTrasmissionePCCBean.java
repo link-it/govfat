@@ -62,7 +62,7 @@ public class TracciaTrasmissionePCCBean extends BaseBean<PccTracciaTrasmissione,
 		}
 	}
 
-	private void init() throws FactoryException{
+	public void init() throws FactoryException{
 		this.listaEsiti = new ArrayList<EsitoPccBean>();
 
 		this.tsTrasmissione = this.getFactory().getOutputFieldFactory().createDateTime("tsTrasmissione","trasmissionePcc.tsTrasmissione","dd/M/yyyy HH:mm:ss");

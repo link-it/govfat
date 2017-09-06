@@ -27,7 +27,7 @@ import org.govmix.proxy.fatturapa.web.console.mbean.FileUploadBean;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.Form;
 import org.openspcoop2.generic_project.web.impl.jsf1.form.BaseForm;
-import org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem;
+import org.openspcoop2.generic_project.web.input.SelectItem;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
 import org.openspcoop2.generic_project.web.input.BooleanCheckBox;
 import org.openspcoop2.generic_project.web.input.SelectList;
@@ -35,7 +35,7 @@ import org.openspcoop2.generic_project.web.input.Text;
 
 public class FatturaForm extends BaseForm implements Form {
 
-	private SelectList<SelectItem> dipartimento = null;
+	private SelectList dipartimento = null;
 
 	// BEAN per gestire upload file descrittoreFattura
 	private Text descrittoreFattura = null;
@@ -56,7 +56,7 @@ public class FatturaForm extends BaseForm implements Form {
 	@Override
 	public void init() throws Exception {
 		
-		WebGenericProjectFactory factory = this.getWebGenericProjectFactory();
+		WebGenericProjectFactory factory = this.getFactory();
 		// Properties del form
 		this.setId("formCaricaFattura"); 
 		this.setClosable(false);
@@ -101,10 +101,10 @@ public class FatturaForm extends BaseForm implements Form {
 		this._setMostraConservazione();
 	}
 	
-	public SelectList<SelectItem> getDipartimento() {
+	public SelectList getDipartimento() {
 		return dipartimento;
 	}
-	public void setDipartimento(SelectList<SelectItem> dipartimento) {
+	public void setDipartimento(SelectList dipartimento) {
 		this.dipartimento = dipartimento;
 	}
 	public Text getDescrittoreFattura() {
