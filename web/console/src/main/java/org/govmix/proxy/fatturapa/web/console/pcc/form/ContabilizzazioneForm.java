@@ -38,25 +38,25 @@ import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
 import org.openspcoop2.generic_project.web.form.Form;
 import org.openspcoop2.generic_project.web.impl.jsf1.form.BaseForm;
-import org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem;
+import org.openspcoop2.generic_project.web.input.SelectItem;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
 import org.openspcoop2.generic_project.web.input.SelectList;
 import org.openspcoop2.generic_project.web.input.Text;
 
 public class ContabilizzazioneForm extends BaseForm implements Form {
 
-	private SelectList<SelectItem> causale = null;
-	private SelectList<SelectItem>  stato = null;
+	private SelectList causale = null;
+	private SelectList  stato = null;
 	private Text descrizione = null;
 	private Text importo = null;
 	private String idImporto = null;
 	private Pattern euroPattern = null;
-	
+
 	private ContabilizzazioneMBean mBean = null;
 	private static String TWO_DIGITS_PATTERN = "^(\\-)?[0-9]+(\\,[0-9]{1,2})?$";
-//	private static String EURO_PATTERN = "^\\s*-?((\\d{1,3}(\\.(\\d){3})*)|\\d*)(,\\d{1,2})?\\s?(\\u20AC)?\\s*$";
-	
-//	private static String NUMBER_PATTER
+	//	private static String EURO_PATTERN = "^\\s*-?((\\d{1,3}(\\.(\\d){3})*)|\\d*)(,\\d{1,2})?\\s?(\\u20AC)?\\s*$";
+
+	//	private static String NUMBER_PATTER
 
 	public ContabilizzazioneForm() throws Exception{
 		this.init();
@@ -64,10 +64,10 @@ public class ContabilizzazioneForm extends BaseForm implements Form {
 
 	@Override
 	public void init() throws Exception {
-		
+
 		this.euroPattern = Pattern.compile(TWO_DIGITS_PATTERN);
-		
-		WebGenericProjectFactory factory = this.getWebGenericProjectFactory();
+
+		WebGenericProjectFactory factory = this.getFactory();
 
 		this.setClosable(false);
 		this.setId("addContForm");
@@ -88,14 +88,14 @@ public class ContabilizzazioneForm extends BaseForm implements Form {
 		this.stato.setRequired(true);
 		this.stato.setFieldsToUpdate(this.getId()+"_formPnl");
 		this.stato.setForm(this);
-		
+
 		//this._setStato();
-		
+
 		this.importo = factory.getInputFieldFactory()
 				.createText("cont_importo","contabilizzazione.importo",null,false);
 		this.importo.setStyle("width: 200px;");
 		this.importo.setRequired(true);              
-//		this.importo.setConverterType(Costanti.CONVERT_TYPE_NUMBER); 
+		//		this.importo.setConverterType(Costanti.CONVERT_TYPE_NUMBER); 
 
 
 
@@ -115,20 +115,21 @@ public class ContabilizzazioneForm extends BaseForm implements Form {
 
 	}
 
-	public void setValues (ContabilizzazionePccBean bean){
-		if(bean != null){
-			
-			
-			
+	@Override
+	public void setObject(Object arg0) throws Exception {
+		if(arg0 != null){
+			ContabilizzazionePccBean bean = (ContabilizzazionePccBean) arg0;
+
+
 			String descr = bean.getDTO().getDescrizione();
-			
+
 			descr = TransformUtils.toStringDescrizioneImportoContabilizzazione(descr);  
-			
+
 			this.descrizione.setDefaultValue(descr);
 			double importoMovimento = bean.getDTO().getImportoMovimento();
-			
+
 			this.importo.setDefaultValue(String.format(Locale.ITALIAN,"%.2f", importoMovimento)); 
-			
+
 			StatoDebitoType statoDebito2 = bean.getDTO().getStatoDebito();
 			if(statoDebito2 !=  null){
 				this.stato.setDefaultValue(new SelectItem(statoDebito2.getValue(), "pccStatoDebito."+statoDebito2.getValue())); 
@@ -138,23 +139,23 @@ public class ContabilizzazioneForm extends BaseForm implements Form {
 				this.causale.setDefaultValue(new SelectItem(causale2.getValue(),"pccCausale." + causale2.getValue()));
 			} else 
 				this.causale.setDefaultValue(new SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO)); 
-			
+
 			this.idImporto = bean.getDTO().getIdImporto();
 		}else {
 			this.descrizione.setDefaultValue(null);
 			this.importo.setDefaultValue(null);
 
-			this.stato.setDefaultValue(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoDebitoType.NOLIQ.getValue(), "pccStatoDebito."+StatoDebitoType.NOLIQ.getValue()));
+			this.stato.setDefaultValue(new org.openspcoop2.generic_project.web.input.SelectItem(StatoDebitoType.NOLIQ.getValue(), "pccStatoDebito."+StatoDebitoType.NOLIQ.getValue()));
 			this.causale.setDefaultValue(new SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO));
-			//this.causale.setDefaultValue(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CausaleType.CONT.getValue(), "pccCausale."+CausaleType.CONT.getValue())); 
+			//this.causale.setDefaultValue(new org.openspcoop2.generic_project.web.input.SelectItem(CausaleType.CONT.getValue(), "pccCausale."+CausaleType.CONT.getValue())); 
 			this.idImporto = null;
 		}
 
 		this.reset();
 	}
 
-
-	public PccContabilizzazione getContabilizzazione(){
+	@Override
+	public Object getObject() throws Exception {
 		PccContabilizzazione c = new PccContabilizzazione();
 
 		if(StringUtils.isNotEmpty(this.getDescrizione().getValue()))
@@ -162,14 +163,14 @@ public class ContabilizzazioneForm extends BaseForm implements Form {
 
 		String value = this.getStato().getValue().getValue();
 		c.setStatoDebito(StatoDebitoType.toEnumConstant(value)); 
-		
-		
+
+
 		SelectItem causaleSI = this.causale.getValue();
 
 		String valueCausale = null; 
 		if(causaleSI != null)
 			valueCausale= causaleSI.getValue();
-		
+
 		if(StringUtils.isNotEmpty(valueCausale) && !valueCausale.equals(CostantiForm.NON_SELEZIONATO))
 			c.setCausale(CausaleType.toEnumConstant(valueCausale));  
 		else 
@@ -177,33 +178,33 @@ public class ContabilizzazioneForm extends BaseForm implements Form {
 
 		Number n =  Utils.getNumber(this.getImporto().getValue());
 		c .setImportoMovimento(n.doubleValue());
-		
+
 		c.setSistemaRichiedente(Utils.getSistemaRichiedente());
 		c.setUtenteRichiedente(Utils.getLoggedUtente().getUsername());
-		
-//		if(this.idImporto == null)
-//			c.setIdImporto(Utils.generaIdentificativoImporto());
-//		else 
-			c.setIdImporto(this.idImporto);
-		
+
+		//		if(this.idImporto == null)
+		//			c.setIdImporto(Utils.generaIdentificativoImporto());
+		//		else 
+		c.setIdImporto(this.idImporto);
+
 		return c; 
 	}
-	
+
 	public String valida(){
 
 		String _importo = this.importo.getValue();
 		if(StringUtils.isEmpty(_importo))
 			return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromCommonsResourceBundle(CostantiForm.FIELD_NON_PUO_ESSERE_VUOTO, this.importo.getLabel());
-		
+
 		Matcher matcher = this.euroPattern.matcher(_importo);
 
 		if(!matcher.matches())
 			return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.importoFormatoNonValido");
 
-//		if(StringUtils.isEmpty(this.getDescrizione().getValue()))
-//			return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromCommonsResourceBundle(CostantiForm.FIELD_NON_PUO_ESSERE_VUOTO, this.descrizione.getLabel());
+		//		if(StringUtils.isEmpty(this.getDescrizione().getValue()))
+		//			return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromCommonsResourceBundle(CostantiForm.FIELD_NON_PUO_ESSERE_VUOTO, this.descrizione.getLabel());
 
-		
+
 		SelectItem _ruolo = this.stato.getValue();
 
 		String valueRuolo = null; 
@@ -214,45 +215,45 @@ public class ContabilizzazioneForm extends BaseForm implements Form {
 		if( valueRuolo == null || (valueRuolo != null && valueRuolo.equals(CostantiForm.NON_SELEZIONATO)))
 			return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromCommonsResourceBundle(CostantiForm.SELECT_VALORE_NON_VALIDO,this.stato.getLabel());
 
-//		_ruolo = this.causale.getValue();
-//
-//		valueRuolo = null; 
-//
-//		if(_ruolo != null)
-//			valueRuolo = _ruolo.getValue();
-//
-//		if( valueRuolo == null || (valueRuolo != null && valueRuolo.equals(CostantiForm.NON_SELEZIONATO)))
-//			return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromCommonsResourceBundle(CostantiForm.SELECT_VALORE_NON_VALIDO,this.causale.getLabel());
+		//		_ruolo = this.causale.getValue();
+		//
+		//		valueRuolo = null; 
+		//
+		//		if(_ruolo != null)
+		//			valueRuolo = _ruolo.getValue();
+		//
+		//		if( valueRuolo == null || (valueRuolo != null && valueRuolo.equals(CostantiForm.NON_SELEZIONATO)))
+		//			return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromCommonsResourceBundle(CostantiForm.SELECT_VALORE_NON_VALIDO,this.causale.getLabel());
 
 		return null;
 
 	}
-	
+
 	public void statoSelectListener(ActionEvent ae){
-		 SelectItem statoSI = this.stato.getValue();
-			
+		SelectItem statoSI = this.stato.getValue();
+
 		String valueStato = null; 
 
 		if(statoSI != null)
 			valueStato = statoSI.getValue();
-		
+
 		((SelectListImpl)this.causale).setElencoSelectItems(this.mBean.getListaCausali(valueStato));
 		this.causale.setDefaultValue(new SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO));
 	}
-	
-	public SelectList<SelectItem> getCausale() {
+
+	public SelectList getCausale() {
 		return this.causale;
 	}
 
-	public void setCausale(SelectList<SelectItem> causale) {
+	public void setCausale(SelectList causale) {
 		this.causale = causale;
 	}
 
-	public SelectList<SelectItem> getStato() {
+	public SelectList getStato() {
 		return this.stato;
 	}
 
-	public void setStato(SelectList<SelectItem> stato) {
+	public void setStato(SelectList stato) {
 		this.stato = stato;
 	}
 
@@ -279,6 +280,6 @@ public class ContabilizzazioneForm extends BaseForm implements Form {
 	public void setmBean(ContabilizzazioneMBean mBean) {
 		this.mBean = mBean;
 	}
-	
-	
+
+
 }

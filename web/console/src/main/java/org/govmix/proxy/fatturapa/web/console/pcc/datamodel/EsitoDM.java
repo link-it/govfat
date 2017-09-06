@@ -41,7 +41,7 @@ import org.openspcoop2.generic_project.web.impl.jsf1.datamodel.ParameterizedData
 
 public class EsitoDM extends
 
-ParameterizedDataModel<Long, EsitoPccBean, IEsitoService, PccTracciaTrasmissioneEsito, EsitoSearchForm>{
+ParameterizedDataModel<PccTracciaTrasmissioneEsito, Long, EsitoPccBean, IEsitoService,  EsitoSearchForm>{
 
 	/**
 	 * 

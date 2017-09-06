@@ -38,11 +38,11 @@ import org.govmix.proxy.fatturapa.web.console.anagrafica.iservice.IRegistroServi
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.BaseListView;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.AnnullaException;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.InviaException;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.ModificaException;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.MessageUtils;
 import org.openspcoop2.generic_project.web.iservice.IBaseService;
+import org.openspcoop2.generic_project.web.mbean.exception.AnnullaException;
+import org.openspcoop2.generic_project.web.mbean.exception.InviaException;
+import org.openspcoop2.generic_project.web.mbean.exception.ModificaException;
 
 public class RegistroMBean extends BaseListView<RegistroBean, Long, RegistroSearchForm,RegistroForm, Registro>{ 
 
@@ -63,6 +63,10 @@ public class RegistroMBean extends BaseListView<RegistroBean, Long, RegistroSear
 		super(LoggerManager.getConsoleLogger());
 		this.log.debug("RegistroMBean");
 
+	}
+	
+	@Override
+	public void init() throws Exception {
 		this.form = new RegistroForm();
 		this.form.setRendered(false);
 		this.form.reset();
@@ -75,13 +79,10 @@ public class RegistroMBean extends BaseListView<RegistroBean, Long, RegistroSear
 		Protocollo protocollo =  Utils.getProtocollo();
 		selectedProtocollo = new ProtocolloBean();
 		selectedProtocollo.setDTO(protocollo);
-
-
-		this.setOutcomes();
 	}
 
-
-	private void setOutcomes(){
+	@Override
+	public void initNavigationManager() throws Exception {
 		this.getNavigationManager().setAnnullaOutcome(null);
 		this.getNavigationManager().setDeleteOutcome(null);
 		this.getNavigationManager().setDettaglioOutcome("registro");
@@ -133,22 +134,22 @@ public class RegistroMBean extends BaseListView<RegistroBean, Long, RegistroSear
 	}
 
 	@Override
-	protected String _modifica() throws ModificaException {
+	public String azioneModifica() throws ModificaException {
 		try{
 			this.showForm = true;
 			this.azione = "update";
 			this.form.setRendered(this.showForm);
-			this.form.setValues(this.selectedElement);
+			this.form.setObject(this.selectedElement);
 			this.form.setListaNomiProperties(this.getListaRegistroProperties());
 			this.form.reset();
 		}catch(Exception e){
 			throw new ModificaException(e);
 		}
-		return super._modifica();
+		return super.azioneModifica();
 	}
 
 	@Override
-	protected String _invia() throws InviaException{
+	public String azioneInvia() throws InviaException {
 		String msg = this.form.valida();
 
 		if(msg!= null){
@@ -157,7 +158,7 @@ public class RegistroMBean extends BaseListView<RegistroBean, Long, RegistroSear
 
 		try{
 			long oldId = -1;
-			Registro newRegistro = this.form.getRegistro();
+			Registro newRegistro = (Registro) this.form.getObject();
 			newRegistro.setIdProtocollo(Utils.getIdProtocollo());
 			//	boolean isAdmin = false;
 			// Add
@@ -201,7 +202,7 @@ public class RegistroMBean extends BaseListView<RegistroBean, Long, RegistroSear
 	}
 
 	@Override
-	protected String _annulla() throws AnnullaException {
+	public String azioneAnnulla() throws AnnullaException {
 		this.getNavigationManager().setAnnullaOutcome("protocollo");
 
 		if(this.azione.equals("update")){
@@ -215,7 +216,7 @@ public class RegistroMBean extends BaseListView<RegistroBean, Long, RegistroSear
 		if(this.getNavigationManager().getAnnullaOutcome().equals("protocollo"))
 			return this.getProtocolloMBean().restoreSearch();
 		else 
-			return super._annulla();
+			return super.azioneAnnulla();
 	}
 
 	@Override
@@ -225,7 +226,11 @@ public class RegistroMBean extends BaseListView<RegistroBean, Long, RegistroSear
 		this.selectedId = null;
 		this.showForm = true;
 		this.azione = "new";
-		this.form.setValues(null);
+		try {
+			this.form.setObject(null);
+		} catch (Exception e) {
+			this.log.error("Si e' verificato un errore durante l'inizializzazione del form di creazione registro: " + e.getMessage(), e);
+		}
 		this.form.setListaNomiProperties(this.getListaRegistroProperties());
 		this.form.setRendered(this.showForm); 
 		this.form.reset();

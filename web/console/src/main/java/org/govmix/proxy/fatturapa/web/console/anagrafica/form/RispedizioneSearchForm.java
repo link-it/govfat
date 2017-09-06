@@ -33,5 +33,8 @@ public class RispedizioneSearchForm extends BaseSearchForm implements SearchForm
 	public void reset() {
 		this.resetParametriPaginazione();
 	}
-
+	@Override
+	public String valida() throws Exception {
+		return null;
+	}
 }

@@ -26,14 +26,24 @@ import org.openspcoop2.generic_project.web.impl.jsf1.form.BaseForm;
 public class ErroreForm  extends BaseForm implements Form{
 	@Override
 	public void init() throws Exception {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
-		
+	}
+
+	@Override
+	public Object getObject() throws Exception {
+		return null;
+	}
+
+	@Override
+	public void setObject(Object arg0) throws Exception {
+	}
+
+	@Override
+	public String valida() throws Exception {
+		return null;
 	}
 
 }

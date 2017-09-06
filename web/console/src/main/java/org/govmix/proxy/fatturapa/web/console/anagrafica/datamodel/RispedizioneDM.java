@@ -26,7 +26,7 @@ import org.govmix.proxy.fatturapa.web.console.anagrafica.form.RispedizioneSearch
 import org.govmix.proxy.fatturapa.web.console.anagrafica.iservice.IRispedizioneService;
 import org.openspcoop2.generic_project.web.impl.jsf1.datamodel.ParameterizedDataModel;
 
-public class RispedizioneDM extends ParameterizedDataModel<Long, RispedizioneBean, IRispedizioneService, PccRispedizione, RispedizioneSearchForm> {
+public class RispedizioneDM extends ParameterizedDataModel<PccRispedizione,Long, RispedizioneBean, IRispedizioneService,  RispedizioneSearchForm> {
 
 	/**
 	 * 

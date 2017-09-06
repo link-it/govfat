@@ -57,4 +57,8 @@ public class ProtocolloSearchForm extends BaseSearchForm implements SearchForm {
 	public void setNome(Text nome) {
 		this.nome = nome;
 	}
+	@Override
+	public String valida() throws Exception {
+		return null;
+	}
 }

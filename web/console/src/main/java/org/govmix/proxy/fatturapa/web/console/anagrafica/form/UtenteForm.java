@@ -72,7 +72,7 @@ public class UtenteForm extends BaseForm implements Form, Serializable{
 	//	private SelectList ente;
 	private BooleanCheckBox codicePCC= null;
 	private BooleanCheckBox showUOandPCC = null;
-	private PickList<SelectItem> dipartimento = null; 
+	private PickList dipartimento = null; 
 
 	private UtenteMBean mBean = null;
 
@@ -240,11 +240,13 @@ public class UtenteForm extends BaseForm implements Form, Serializable{
 	 * 
 	 * @param bean
 	 */
-	public void setValues(UtenteBean bean){
+	@Override
+	public void setObject(Object arg0) throws Exception {
 
 		List<PccUtenteOperazione> listaProprietaAbilitate = new ArrayList<PccUtenteOperazione>();
 		// Aggiornamento
-		if(bean != null){
+		if(arg0 != null){
+			UtenteBean bean = (UtenteBean) arg0;
 			this.cognome.setDefaultValue(bean.getDTO().getCognome()); 
 			this.nome.setDefaultValue(bean.getDTO().getNome());
 			this.username.setDefaultValue(bean.getDTO().getUsername());
@@ -432,7 +434,9 @@ public class UtenteForm extends BaseForm implements Form, Serializable{
 		return null;
 	}
 
-	public Utente getUtente(){
+	
+	@Override
+	public Object getObject() throws Exception {
 		Utente utente = new Utente();
 
 		utente.setCognome(this.cognome.getValue());
@@ -571,11 +575,11 @@ public class UtenteForm extends BaseForm implements Form, Serializable{
 		this.cognome = cognome;
 	}
 
-	public PickList<SelectItem> getDipartimento() {
+	public PickList getDipartimento() {
 		return this.dipartimento;
 	}
 
-	public void setDipartimento(PickList<SelectItem> dipartimento) {
+	public void setDipartimento(PickList dipartimento) {
 		this.dipartimento = dipartimento;
 	}
 

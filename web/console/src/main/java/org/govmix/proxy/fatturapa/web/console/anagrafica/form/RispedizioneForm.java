@@ -102,8 +102,11 @@ public class RispedizioneForm extends BaseForm implements Form{
 //		this.regolaDefault.reset();
 	}
 
-	public void setValues(RispedizioneBean bean){
-		if(bean != null){
+	
+	@Override
+	public void setObject(Object arg0) throws Exception {
+		if(arg0 != null){
+			RispedizioneBean bean = (RispedizioneBean) arg0;
 			this.codiceErrore.setDefaultValue(bean.getDTO().getCodiceErrore());
 			this.codiceErrore.setDisabled(true);
 			this.descrizioneErrore.setDefaultValue(bean.getDTO().getDescrizioneErrore());
@@ -200,7 +203,8 @@ public class RispedizioneForm extends BaseForm implements Form{
 	}
 
 
-	public PccRispedizione getRispedizione(){
+	@Override
+	public Object getObject() throws Exception {
 		PccRispedizione rispedizione = new PccRispedizione();
 
 		rispedizione.setCodiceErrore(this.codiceErrore.getValue());

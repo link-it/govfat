@@ -48,7 +48,7 @@ import org.openspcoop2.generic_project.web.impl.jsf1.datamodel.ParameterizedData
  */
 public class OperazioneDM extends
 
-ParameterizedDataModel<Long, TracciaPccEstesaBean, IOperazioneService, PccTraccia, OperazioneSearchForm>{
+ParameterizedDataModel<PccTraccia, Long, TracciaPccEstesaBean, IOperazioneService, OperazioneSearchForm>{
 
 	/**
 	 * 

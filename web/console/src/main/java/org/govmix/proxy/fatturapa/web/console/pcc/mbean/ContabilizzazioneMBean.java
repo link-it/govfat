@@ -81,10 +81,10 @@ import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.BaseMBean;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.DeleteException;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.InviaException;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.MessageUtils;
 import org.openspcoop2.generic_project.web.iservice.IBaseService;
+import org.openspcoop2.generic_project.web.mbean.exception.DeleteException;
+import org.openspcoop2.generic_project.web.mbean.exception.InviaException;
 import org.openspcoop2.generic_project.web.output.Button;
 import org.openspcoop2.generic_project.web.output.OutputGroup;
 import org.openspcoop2.generic_project.web.output.Text;
@@ -92,8 +92,12 @@ import org.openspcoop2.generic_project.web.table.PagedDataTable;
 
 public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean, Long, ContabilizzazioneSearchForm> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private ContabilizzazioneForm form;
-	private PagedDataTable<List<ContabilizzazionePccBean>, OperazioneForm, ContabilizzazioneSearchForm> table;
+	private PagedDataTable<List<ContabilizzazionePccBean>, ContabilizzazioneSearchForm, OperazioneForm> table;
 	private String contabilizzazioneAction = "add";
 	private boolean checkContabilizzazione = false;
 
@@ -126,10 +130,6 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 	public ContabilizzazioneMBean(){
 		super(LoggerManager.getConsoleLogger());
 		this.log.debug("ContabilizzazioneMBean");
-
-		this.setOutcomes();
-		this.init();
-
 		this.esitoService = new EsitoService();
 		this.fatturaService = new FatturaElettronicaService();
 		this.operazioneService = new OperazioneService();
@@ -140,24 +140,8 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 		super.setSearch(search);
 	}
 
-	public void initTables() {
-		try{
-			this.table = this.factory.getTableFactory().createPagedDataTable();
-			this.getTable().setId("panelContabilizzazione"); 
-			this.getTable().setEnableDelete(false);
-			this.getTable().setShowAddButton(false);
-			this.getTable().setShowDetailColumn(false);
-			this.getTable().setShowSelectAll(true);
-			this.getTable().setHeaderText("contabilizzazione.label.ricercaContabilizzazioni.tabellaRisultati");
-			//	this.table.setMBean(this);
-			this.getTable().setMetadata(this.getMetadata()); 
-
-		}catch (Exception e) {
-
-		}
-	}
-
-	private void setOutcomes(){
+	@Override
+	public void initNavigationManager() throws Exception {
 		this.getNavigationManager().setAnnullaOutcome(null);
 		this.getNavigationManager().setDeleteOutcome(null);
 		//this.getNavigationManager().setDettaglioOutcome("utente");
@@ -170,13 +154,25 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 		//		this.getNavigationManager().setRestoreSearchOutcome("listaUtenti");
 	}
 
-	private void init (){
+	@Override
+	public void init() throws Exception {
 		try{
+			this.table = this.factory.getTableFactory().createPagedDataTable();
+			this.getTable().setId("panelContabilizzazione"); 
+			this.getTable().setEnableDelete(false);
+			this.getTable().setShowAddButton(false);
+			this.getTable().setShowDetailColumn(false);
+			this.getTable().setShowSelectAll(true);
+			this.getTable().setHeaderText("contabilizzazione.label.ricercaContabilizzazioni.tabellaRisultati");
+			//	this.table.setMBean(this);
+			this.getTable().setMetadata(this.getMetadata()); 
+
+
 			this.properties = ConsoleProperties.getInstance(log);
 			this.form = new ContabilizzazioneForm();
 			this.form.setmBean(this); 
 			((SelectListImpl)this.form.getStato()).setElencoSelectItems(this.getListaStati());
-			org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem statoSI = this.form.getStato().getValue();
+			org.openspcoop2.generic_project.web.input.SelectItem statoSI = this.form.getStato().getValue();
 
 			String valueStato = null; 
 
@@ -212,44 +208,52 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 
 	@Override
 	public void addNewListener(ActionEvent ae) {
-		super.addNewListener(ae);
-		this.editMode = true;
-		this.selectedElement = null;
-		this.selectedId = null;
-		this.checkContabilizzazione = false;
-		this.contabilizzazioneAction = "add";
-		this.form.setValues(this.selectedElement);
+		try {
+			super.addNewListener(ae);
+			this.editMode = true;
+			this.selectedElement = null;
+			this.selectedId = null;
+			this.checkContabilizzazione = false;
+			this.contabilizzazioneAction = "add";
+			this.form.setObject(this.selectedElement);
 
-		org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem statoSI = this.form.getStato().getValue();
+			org.openspcoop2.generic_project.web.input.SelectItem statoSI = this.form.getStato().getValue();
 
-		String valueStato = null; 
+			String valueStato = null; 
 
-		if(statoSI != null)
-			valueStato = statoSI.getValue();
+			if(statoSI != null)
+				valueStato = statoSI.getValue();
 
-		((SelectListImpl)this.form.getCausale()).setElencoSelectItems(this.getListaCausali(valueStato));
+			((SelectListImpl)this.form.getCausale()).setElencoSelectItems(this.getListaCausali(valueStato));
+		}catch (Exception e) {
+			this.log.error("Errore durante la init del form di creazione contabilizzazione: " + e.getMessage(),e);
+		}
 	}
 
 
 	@Override
 	public void setSelectedElement(ContabilizzazionePccBean selectedElement) {
 		super.setSelectedElement(selectedElement);
-		this.editMode = true;
-		this.checkContabilizzazione = false;
-		this.contabilizzazioneAction = "edit";
-		this.form.setValues(this.selectedElement);
-		org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem statoSI = this.form.getStato().getValue();
+		try {
+			this.editMode = true;
+			this.checkContabilizzazione = false;
+			this.contabilizzazioneAction = "edit";
+			this.form.setObject(this.selectedElement);
+			org.openspcoop2.generic_project.web.input.SelectItem statoSI = this.form.getStato().getValue();
 
-		String valueStato = null; 
+			String valueStato = null; 
 
-		if(statoSI != null)
-			valueStato = statoSI.getValue();
+			if(statoSI != null)
+				valueStato = statoSI.getValue();
 
-		((SelectListImpl)this.form.getCausale()).setElencoSelectItems(this.getListaCausali(valueStato));
+			((SelectListImpl)this.form.getCausale()).setElencoSelectItems(this.getListaCausali(valueStato));
+		}catch (Exception e) {
+			this.log.error("Errore durante la setSelectedElement: " + e.getMessage(),e);
+		}
 	}
 
 	@Override
-	protected String _invia() throws InviaException {
+	public String azioneInvia() throws InviaException {
 		this.editMode = true;
 		String msg = this.form.valida();
 
@@ -260,7 +264,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 		try{
 			long oldId = -1;
 			String idImporto = null;
-			PccContabilizzazione nuovaContabilizzazione = this.form.getContabilizzazione();
+			PccContabilizzazione nuovaContabilizzazione = (PccContabilizzazione) this.form.getObject();
 			// Add
 			if(!this.contabilizzazioneAction.equals("edit")){
 				//generaId importo
@@ -293,7 +297,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 
 
 	@Override
-	protected String _delete() throws DeleteException {
+	public String azioneDelete() throws DeleteException {
 		try{
 			this.editMode = true;
 			if(this.contabilizzazioneAction.equals("delete")){
@@ -308,7 +312,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 	public String inviaOperazioneContabile(){
 		this.operazioneAsincrona = false;
 		this.scadenzaMBean.setOperazioneAsincrona(this.operazioneAsincrona);
-		
+
 		ProxyOperazioneContabileRichiestaTipo richiesta = new ProxyOperazioneContabileRichiestaTipo();
 		try {
 			Date dataUltimaOperazioneAttuale = this.calcolaDataUltimaOperazione();
@@ -368,7 +372,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 				}
 				this.editMode = false;	
 				this.scadenzaMBean.setDataUltimaOperazione(this.dataUltimaOperazione); 
-				
+
 			}else {
 				MessageUtils.addErrorMsg(Utils.getInstance().getMessageWithParamsFromResourceBundle("contabilizzazione.form.operazioneContabilePresaInCaricoKO.parametri",origine.toString()));
 			}
@@ -378,28 +382,28 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 		} catch (WSAuthorizationFault e) {
 			this.log.error("Si e' verificato un errore durante il salvataggio della contabilizzazione: " + e.getMessage(), e);
 			String authDetail = e.getFaultInfo().getDetail();
-			
+
 			// Utente non autorizzato all'operazione
 			if(authDetail.startsWith("Utente")) 
 				MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneContabileKO.utenteNonAutorizzato"));
 			else{ // Dipartimento non autorizzata 
 				MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneContabileKO.dipartimentoNonAutorizzato"));
 			}
-			
+
 		}
 		catch (Exception e) {
 			this.log.error("Si e' verificato un errore durante il salvataggio della contabilizzazione: " + e.getMessage(), e);
-			
+
 			if(e instanceof javax.xml.ws.soap.SOAPFaultException){
 				if(e.getMessage() != null && e.getMessage().contains("Could not send Message")){
 					MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneContabileErroreConnessione"));
 					return null;
 				}
-				
+
 				MessageUtils.addErrorMsg(e.getMessage());	
 				return null;
 			}
-			
+
 			MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneContabileErroreGenerico"));
 		}finally {
 			if(!this.editMode)
@@ -544,7 +548,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 		} catch (WSAuthorizationFault e) {
 			this.log.error("Si e' verificato un errore durante il salvataggio della contabilizzazione: " + e.getMessage(), e);
 			String authDetail = e.getFaultInfo().getDetail();
-			
+
 			// Utente non autorizzato all'operazione
 			if(authDetail.startsWith("Utente")) 
 				MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoKO.utenteNonAutorizzato"));
@@ -554,17 +558,17 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 		} 
 		catch (Exception e) {
 			this.log.error("Si e' verificato un errore durante il salvataggio della contabilizzazione: " + e.getMessage(), e);
-			
+
 			if(e instanceof javax.xml.ws.soap.SOAPFaultException){
 				if(e.getMessage() != null && e.getMessage().contains("Could not send Message")){
 					MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoErroreConnessione"));
 					return null;
 				}
-				
+
 				MessageUtils.addErrorMsg(e.getMessage());	
 				return null;
 			}
-			
+
 			MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoErroreGenerico"));
 		}finally {
 			if(!this.editMode)
@@ -578,12 +582,12 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 	public List<SelectItem> getListaStati() {
 		List<SelectItem> lista = new ArrayList<SelectItem>(); 
 
-		//lista.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO)));
-		//lista.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoDebitoType.LIQ.getValue(), "pccStatoDebito."+StatoDebitoType.LIQ.getValue())));
+		//lista.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO)));
+		//lista.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoDebitoType.LIQ.getValue(), "pccStatoDebito."+StatoDebitoType.LIQ.getValue())));
 		lista.add(new SelectItem(
-				new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoDebitoType.NOLIQ.getValue(), "pccStatoDebito."+StatoDebitoType.NOLIQ.getValue())));
+				new org.openspcoop2.generic_project.web.input.SelectItem(StatoDebitoType.NOLIQ.getValue(), "pccStatoDebito."+StatoDebitoType.NOLIQ.getValue())));
 		lista.add(new SelectItem(
-				new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoDebitoType.SOSP.getValue(), "pccStatoDebito."+StatoDebitoType.SOSP.getValue())));
+				new org.openspcoop2.generic_project.web.input.SelectItem(StatoDebitoType.SOSP.getValue(), "pccStatoDebito."+StatoDebitoType.SOSP.getValue())));
 
 
 		return lista;
@@ -593,32 +597,32 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 		List<SelectItem> lista = new ArrayList<SelectItem>();
 
 		StatoDebitoType statoDebitoType = valueStato != null ?  StatoDebitoType.toEnumConstant(valueStato) : StatoDebitoType.NOLIQ;
-				
+
 		TipoDocumentoType tipoDocumento = this.fattura != null ? this.fattura.getDTO().getTipoDocumento() : TipoDocumentoType.TD01;
-		
+
 		TipoDocumentoType notadicredito = TipoDocumentoType.TD04; // nota di credito 
 
 		switch (statoDebitoType) {
 		case NOLIQ:
-			lista.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO)));
+			lista.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO)));
 			lista.add(new SelectItem(
-					new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CausaleType.CONT.getValue(), "pccCausale."+CausaleType.CONT.getValue())));
+					new org.openspcoop2.generic_project.web.input.SelectItem(CausaleType.CONT.getValue(), "pccCausale."+CausaleType.CONT.getValue())));
 			if(!notadicredito.equals(tipoDocumento))
-				lista.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CausaleType.ATTNC.getValue(), "pccCausale."+CausaleType.ATTNC.getValue())));
+				lista.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(CausaleType.ATTNC.getValue(), "pccCausale."+CausaleType.ATTNC.getValue())));
 			if(notadicredito.equals(tipoDocumento))
-				lista.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CausaleType.NCRED.getValue(), "pccCausale."+CausaleType.NCRED.getValue())));
-			
+				lista.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(CausaleType.NCRED.getValue(), "pccCausale."+CausaleType.NCRED.getValue())));
+
 			lista.add(new SelectItem(
-					new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CausaleType.PAGTERZI.getValue(), "pccCausale."+CausaleType.PAGTERZI.getValue())));
+					new org.openspcoop2.generic_project.web.input.SelectItem(CausaleType.PAGTERZI.getValue(), "pccCausale."+CausaleType.PAGTERZI.getValue())));
 			lista.add(new SelectItem(
-					new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CausaleType.IVARC.getValue(), "pccCausale."+CausaleType.IVARC.getValue())));
+					new org.openspcoop2.generic_project.web.input.SelectItem(CausaleType.IVARC.getValue(), "pccCausale."+CausaleType.IVARC.getValue())));
 			break;
 		case SOSP: 
-			lista.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO)));
+			lista.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO)));
 			lista.add(new SelectItem(
-					new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CausaleType.ATTLIQ.getValue(), "pccCausale."+CausaleType.ATTLIQ.getValue())));
+					new org.openspcoop2.generic_project.web.input.SelectItem(CausaleType.ATTLIQ.getValue(), "pccCausale."+CausaleType.ATTLIQ.getValue())));
 			lista.add(new SelectItem(
-					new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CausaleType.CONT.getValue(), "pccCausale."+CausaleType.CONT.getValue())));
+					new org.openspcoop2.generic_project.web.input.SelectItem(CausaleType.CONT.getValue(), "pccCausale."+CausaleType.CONT.getValue())));
 			break;
 		case LIQ:
 		default:
@@ -638,11 +642,11 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 		this.form = form;
 	}
 
-	public PagedDataTable<List<ContabilizzazionePccBean>, OperazioneForm, ContabilizzazioneSearchForm> getTable() {
+	public PagedDataTable<List<ContabilizzazionePccBean>, ContabilizzazioneSearchForm, OperazioneForm> getTable() {
 		return this.table;
 	}
 
-	public void setTable(PagedDataTable<List<ContabilizzazionePccBean>, OperazioneForm, ContabilizzazioneSearchForm> table) {
+	public void setTable(PagedDataTable<List<ContabilizzazionePccBean>, ContabilizzazioneSearchForm, OperazioneForm> table) {
 		this.table = table;
 	}
 
@@ -682,7 +686,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 					log.error("Errore durante la lettura delle contabilizzazioni:" + e.getMessage() , e);
 				}
 			}
-	
+
 			// carico la fattura
 			try {
 				this.fattura = this.fatturaService.findById(this.idFattura.getId());
@@ -690,7 +694,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 			} catch (ServiceException e) {
 				this.log.debug("Si e' verificato un errore durante il caricamento del dettaglio fattura: "+ e.getMessage(), e);
 			}
-	
+
 			this.abilitaOperazioni();
 		}
 	}
@@ -826,7 +830,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 			if(this.operazioneAsincrona){
 				try {
 					int val = this.operazioneService.countTracce(this.idFattura, StatoType.AS_PRESA_IN_CARICO);
-					
+
 					if(val == 0){
 						((ContabilizzazioneService) this.service).setIdFattura(this.idFattura); 
 						try {
@@ -838,15 +842,15 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 						}
 						this.scadenzaMBean.setDataUltimaOperazione(this.dataUltimaOperazione); 
 						this.operazioneAsincrona = false;
-//						this.scadenzaMBean.setOperazioneAsincrona(this.operazioneAsincrona);
+						//						this.scadenzaMBean.setOperazioneAsincrona(this.operazioneAsincrona);
 					}
 				} catch (ServiceException e) {	}
 			}
-			
+
 			this.abilitaOperazioni();
-			
+
 		}
-		
+
 		return this.linkErroreContabilizzazioni.isRendered();
 	}
 
@@ -912,7 +916,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 		} catch (WSAuthorizationFault e) {
 			this.log.error("Si e' verificato un errore durante il salvataggio della contabilizzazione: " + e.getMessage(), e);
 			String authDetail = e.getFaultInfo().getDetail();
-			
+
 			// Utente non autorizzato all'operazione
 			if(authDetail.startsWith("Utente")) 
 				MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoAsincronaKO.utenteNonAutorizzato"));
@@ -922,24 +926,24 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 		} 
 		catch (Exception e) {
 			this.log.error("Si e' verificato un errore durante il salvataggio della contabilizzazione: " + e.getMessage(), e);
-			
+
 			if(e instanceof javax.xml.ws.soap.SOAPFaultException){
 				if(e.getMessage() != null && e.getMessage().contains("Could not send Message")){
 					MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoAsincronaErroreConnessione"));
 					return null;
 				}
-					
+
 				MessageUtils.addErrorMsg(e.getMessage());	
 				return null;
 			}
-			
+
 			MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoAsincronaErroreGenerico"));
 		}finally {
 			if(!this.editMode){
 				if(this.operazioneAsincrona){
 					try {
 						int val = this.operazioneService.countTracce(this.idFattura, StatoType.AS_PRESA_IN_CARICO);
-						
+
 						if(val == 0){
 							((ContabilizzazioneService) this.service).setIdFattura(this.idFattura); 
 							try {
@@ -951,11 +955,11 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 							}
 							this.scadenzaMBean.setDataUltimaOperazione(this.dataUltimaOperazione); 
 							this.operazioneAsincrona = false;
-//							this.scadenzaMBean.setOperazioneAsincrona(this.operazioneAsincrona);
+							//							this.scadenzaMBean.setOperazioneAsincrona(this.operazioneAsincrona);
 						}
 					} catch (ServiceException e) {	}
 				}
-				
+
 				this.abilitaOperazioni();
 				this.scadenzaMBean.abilitaOperazioni();
 			}
@@ -1033,6 +1037,6 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 	public void setVisualizzaRiallineamentoSincrono(boolean visualizzaRiallineamentoSincrono) {
 		this.visualizzaRiallineamentoSincrono = visualizzaRiallineamentoSincrono;
 	}
-	
-	
+
+
 }

@@ -37,7 +37,7 @@ import org.govmix.proxy.fatturapa.web.console.pcc.iservice.IPagamentoService;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.web.impl.jsf1.datamodel.BaseDataModel;
 
-public class PagamentoDM extends BaseDataModel<Long, PagamentoPccBean, IPagamentoService> {
+public class PagamentoDM extends BaseDataModel<PagamentoPccBean,Long,  IPagamentoService> {
 
 	/**
 	 * 

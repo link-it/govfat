@@ -29,7 +29,7 @@ import org.openspcoop2.generic_project.web.impl.jsf1.datamodel.ParameterizedData
 public class RegistroDM  
 
 
-extends ParameterizedDataModel<Long, RegistroBean, IRegistroService, Registro, RegistroSearchForm> {
+extends ParameterizedDataModel<Registro,Long, RegistroBean, IRegistroService,  RegistroSearchForm> {
 
 	/**
 	 * 

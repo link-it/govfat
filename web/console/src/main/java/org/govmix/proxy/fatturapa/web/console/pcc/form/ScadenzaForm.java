@@ -50,7 +50,7 @@ public class ScadenzaForm extends BaseForm implements Form {
 	@Override
 	public void init() throws Exception {
 		this.euroPattern = Pattern.compile(TWO_DIGITS_PATTERN);
-		WebGenericProjectFactory factory = this.getWebGenericProjectFactory();
+		WebGenericProjectFactory factory = this.getFactory();
 
 		this.setClosable(false);
 		this.setId("addScadForm");
@@ -71,9 +71,11 @@ public class ScadenzaForm extends BaseForm implements Form {
 		this.setField(this.importo);
 
 	}
-
-	public void setValues (ScadenzaPccBean bean){
-		if(bean != null){
+	
+	@Override
+	public void setObject(Object arg0) throws Exception {
+		if(arg0 != null){
+			ScadenzaPccBean bean = (ScadenzaPccBean) arg0;
 			this.pagatoRicontabilizzato = bean.getDTO().getPagatoRicontabilizzato();
 			
 			this.data.setDefaultValue(bean.getDTO().getDataScadenza());
@@ -90,7 +92,8 @@ public class ScadenzaForm extends BaseForm implements Form {
 		this.reset();
 	}
 
-	public PccScadenza getScadenza(){
+	@Override
+	public Object getObject() throws Exception {
 		PccScadenza scadenza = new PccScadenza();
 
 		scadenza.setDataScadenza(this.getData().getValue());

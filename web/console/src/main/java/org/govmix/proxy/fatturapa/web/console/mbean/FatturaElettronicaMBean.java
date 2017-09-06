@@ -48,7 +48,7 @@ import org.govmix.proxy.fatturapa.web.console.bean.FatturaElettronicaBean;
 import org.govmix.proxy.fatturapa.web.console.bean.NotificaDTBean;
 import org.govmix.proxy.fatturapa.web.console.bean.NotificaECBean;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
-import org.govmix.proxy.fatturapa.web.console.form.NotificaECForm;
+import org.govmix.proxy.fatturapa.web.console.form.FatturaForm;
 import org.govmix.proxy.fatturapa.web.console.iservice.IAllegatiService;
 import org.govmix.proxy.fatturapa.web.console.iservice.IFatturaElettronicaService;
 import org.govmix.proxy.fatturapa.web.console.iservice.INotificaDTService;
@@ -62,9 +62,9 @@ import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.BaseMBean;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.FiltraException;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.MenuActionException;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.MessageUtils;
+import org.openspcoop2.generic_project.web.mbean.exception.FiltraException;
+import org.openspcoop2.generic_project.web.mbean.exception.MenuActionException;
 import org.openspcoop2.generic_project.web.table.PagedDataTable;
 
 /**
@@ -75,6 +75,11 @@ import org.openspcoop2.generic_project.web.table.PagedDataTable;
  *
  */
 public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, Long, FatturaElettronicaSearchForm>{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	// Select List Statiche 
 	//Notifica Esito Committente
@@ -95,7 +100,7 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 	// Stato Consegna
 	private List<SelectItem> listaStatoConsegna = null;
 
-	private PagedDataTable<List<FatturaElettronicaBean>, NotificaECForm, FatturaElettronicaSearchForm> table;
+	private PagedDataTable<List<FatturaElettronicaBean>, FatturaElettronicaSearchForm, FatturaForm> table;
 
 	// supporto per il caricamento dal db del dettaglio (Allegati, NotificheEC, NotificheDT)
 	private INotificaECService notificaECService = null;
@@ -110,7 +115,6 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 
 	public FatturaElettronicaMBean(){
 		super(LoggerManager.getConsoleLogger());
-		this.initTables();this.setOutcomes();
 
 		this.log.debug("Fattura MBean");
 
@@ -119,8 +123,9 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 	 * enableDelete="false"
 				headerText="#{msg['fattura.label.ricercaFatture.tabellaRisultati']}" showSelectAll="true"  id="panelFatture"
 	 * */
-
-	public void initTables() {
+	
+	@Override
+	public void init() throws Exception {
 		try{
 			this.table = this.factory.getTableFactory().createPagedDataTable();
 			this.getTable().setId("fatturaElettronicaTable"); 
@@ -137,7 +142,8 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 		}
 	}
 
-	private void setOutcomes(){
+	@Override
+	public void initNavigationManager() throws Exception {
 		this.getNavigationManager().setAnnullaOutcome(null);
 		this.getNavigationManager().setDeleteOutcome(null);
 		this.getNavigationManager().setDettaglioOutcome(null);
@@ -153,13 +159,14 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 	
 	public String filtraScadenza()throws FiltraException {
 		this.search.setUsaDataScadenza(true);
-		return super._filtra();
+		return super.azioneFiltra();
 	}
 	
+	
 	@Override
-	protected String _filtra() throws FiltraException {
+	public String azioneFiltra() throws FiltraException {
 		this.search.setUsaDataScadenza(false);
-		return super._filtra();
+		return super.azioneFiltra();
 	}
 
 	// Override del set della ricerca, popolo i field di tipo selectList.
@@ -269,9 +276,9 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 	}
 
 	@Override
-	protected String _menuAction() throws MenuActionException {
+	public String azioneMenuAction() throws MenuActionException {
 		this.search.setRestoreSearch(true);
-		return super._menuAction();
+		return super.azioneMenuAction();
 	}
 
 	// Valori delle select List
@@ -280,14 +287,14 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 		if (this.listaNotificaEC == null) {
 			this.listaNotificaEC = new ArrayList<SelectItem>();
 
-			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi"))));
-			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("E",   ("fattura.search.notificaEC.nonPresente"))));
-			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(EsitoType.IN_ELABORAZIONE_ACCETTATO.getValue(),   ("fattura.search.notificaEC.inElaborazione.accettato"))));
-			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(EsitoType.IN_ELABORAZIONE_RIFIUTATO.getValue(),  ("fattura.search.notificaEC.inElaborazione.rifiutato"))));
-			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(EsitoType.INVIATA_ACCETTATO.getValue(),   ("fattura.search.notificaEC.inviata.accettato"))));
-			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(EsitoType.INVIATA_RIFIUTATO.getValue() ,  ("fattura.search.notificaEC.inviata.rifiutato"))));
-			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(EsitoType.SCARTATA_ACCETTATO.getValue(),   ("fattura.search.notificaEC.scartata.accettato"))));
-			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(EsitoType.SCARTATA_RIFIUTATO.getValue() ,  ("fattura.search.notificaEC.scartata.rifiutato"))));
+			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("*", ("commons.label.qualsiasi"))));
+			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("E",   ("fattura.search.notificaEC.nonPresente"))));
+			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(EsitoType.IN_ELABORAZIONE_ACCETTATO.getValue(),   ("fattura.search.notificaEC.inElaborazione.accettato"))));
+			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(EsitoType.IN_ELABORAZIONE_RIFIUTATO.getValue(),  ("fattura.search.notificaEC.inElaborazione.rifiutato"))));
+			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(EsitoType.INVIATA_ACCETTATO.getValue(),   ("fattura.search.notificaEC.inviata.accettato"))));
+			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(EsitoType.INVIATA_RIFIUTATO.getValue() ,  ("fattura.search.notificaEC.inviata.rifiutato"))));
+			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(EsitoType.SCARTATA_ACCETTATO.getValue(),   ("fattura.search.notificaEC.scartata.accettato"))));
+			this.listaNotificaEC.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(EsitoType.SCARTATA_RIFIUTATO.getValue() ,  ("fattura.search.notificaEC.scartata.rifiutato"))));
 
 		}
 
@@ -298,9 +305,9 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 		if (this.listaNotificaDT == null) {
 			this.listaNotificaDT = new ArrayList<SelectItem>();
 
-			this.listaNotificaDT.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*",  ("commons.label.qualsiasi"))));
-			this.listaNotificaDT.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("Y",   ("commons.label.presente"))));
-			this.listaNotificaDT.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("N",   ("commons.label.nonPresente"))));
+			this.listaNotificaDT.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("*",  ("commons.label.qualsiasi"))));
+			this.listaNotificaDT.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("Y",   ("commons.label.presente"))));
+			this.listaNotificaDT.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("N",   ("commons.label.nonPresente"))));
 		}
 
 		return this.listaNotificaDT;
@@ -310,10 +317,10 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 		if (this.listaPeriodoTemporale == null) {
 			this.listaPeriodoTemporale = new ArrayList<SelectItem>();
 
-			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(FatturaElettronicaSearchForm.DATA_RICEZIONE_PERIODO_ULTIMA_SETTIMANA, ("fattura.search.dataRicezione.ultimaSettimana"))));
-			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(FatturaElettronicaSearchForm.DATA_RICEZIONE_PERIODO_ULTIMO_MESE, ("fattura.search.dataRicezione.ultimoMese"))));
-			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(FatturaElettronicaSearchForm.DATA_RICEZIONE_PERIODO_ULTIMI_TRE_MESI, ("fattura.search.dataRicezione.ultimiTreMesi"))));
-			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(FatturaElettronicaSearchForm.DATA_RICEZIONE_PERIODO_PERSONALIZZATO, ("fattura.search.dataRicezione.personalizzato"))));
+			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(FatturaElettronicaSearchForm.DATA_RICEZIONE_PERIODO_ULTIMA_SETTIMANA, ("fattura.search.dataRicezione.ultimaSettimana"))));
+			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(FatturaElettronicaSearchForm.DATA_RICEZIONE_PERIODO_ULTIMO_MESE, ("fattura.search.dataRicezione.ultimoMese"))));
+			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(FatturaElettronicaSearchForm.DATA_RICEZIONE_PERIODO_ULTIMI_TRE_MESI, ("fattura.search.dataRicezione.ultimiTreMesi"))));
+			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(FatturaElettronicaSearchForm.DATA_RICEZIONE_PERIODO_PERSONALIZZATO, ("fattura.search.dataRicezione.personalizzato"))));
 
 		}
 
@@ -324,13 +331,13 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 		if (this.listaTipoDocumento == null) {
 			this.listaTipoDocumento = new ArrayList<SelectItem>();
 
-			this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi"))));
-			this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoDocumentoType.TD01.getValue(),  ("fattura.tipoDocumento.TD01"))));
-			this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoDocumentoType.TD02.getValue(),  ("fattura.tipoDocumento.TD02"))));
-			this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoDocumentoType.TD03.getValue(),  ("fattura.tipoDocumento.TD03"))));
-			this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoDocumentoType.TD04.getValue(),  ("fattura.tipoDocumento.TD04"))));
-			this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoDocumentoType.TD05.getValue(),  ("fattura.tipoDocumento.TD05"))));
-			this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoDocumentoType.TD06.getValue(),  ("fattura.tipoDocumento.TD06"))));
+			this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("*", ("commons.label.qualsiasi"))));
+			this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(TipoDocumentoType.TD01.getValue(),  ("fattura.tipoDocumento.TD01"))));
+			this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(TipoDocumentoType.TD02.getValue(),  ("fattura.tipoDocumento.TD02"))));
+			this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(TipoDocumentoType.TD03.getValue(),  ("fattura.tipoDocumento.TD03"))));
+			this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(TipoDocumentoType.TD04.getValue(),  ("fattura.tipoDocumento.TD04"))));
+			this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(TipoDocumentoType.TD05.getValue(),  ("fattura.tipoDocumento.TD05"))));
+			this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(TipoDocumentoType.TD06.getValue(),  ("fattura.tipoDocumento.TD06"))));
 
 		}
 
@@ -341,11 +348,11 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 		if (this.listaStatoConsegna == null) {
 			this.listaStatoConsegna = new ArrayList<SelectItem>();
 
-			this.listaStatoConsegna.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi"))));
-			this.listaStatoConsegna.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoConsegnaType.NON_CONSEGNATA.getValue(),  ("fattura.statoConsegna.nonConsegnata"))));
-			this.listaStatoConsegna.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoConsegnaType.IN_RICONSEGNA.getValue(),  ("fattura.statoConsegna.inRiconsegna"))));
-			this.listaStatoConsegna.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoConsegnaType.ERRORE_CONSEGNA.getValue(),  ("fattura.statoConsegna.erroreConsegna"))));
-			this.listaStatoConsegna.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoConsegnaType.CONSEGNATA.getValue(),  ("fattura.statoConsegna.consegnataLabel"))));
+			this.listaStatoConsegna.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("*", ("commons.label.qualsiasi"))));
+			this.listaStatoConsegna.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoConsegnaType.NON_CONSEGNATA.getValue(),  ("fattura.statoConsegna.nonConsegnata"))));
+			this.listaStatoConsegna.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoConsegnaType.IN_RICONSEGNA.getValue(),  ("fattura.statoConsegna.inRiconsegna"))));
+			this.listaStatoConsegna.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoConsegnaType.ERRORE_CONSEGNA.getValue(),  ("fattura.statoConsegna.erroreConsegna"))));
+			this.listaStatoConsegna.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoConsegnaType.CONSEGNATA.getValue(),  ("fattura.statoConsegna.consegnataLabel"))));
 		}
 
 		return this.listaStatoConsegna;
@@ -354,14 +361,14 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 	public List<SelectItem> getDipartimenti() {
 		this.listaDipartimenti = new ArrayList<SelectItem>();
 
-		this.listaDipartimenti.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*",  ("commons.label.qualsiasi"))));
+		this.listaDipartimenti.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("*",  ("commons.label.qualsiasi"))));
 
 		List<Dipartimento> listaDipartimentiLoggedUtente = org.govmix.proxy.fatturapa.web.console.util.Utils.getListaDipartimentiLoggedUtente();
 		if(listaDipartimentiLoggedUtente != null && listaDipartimentiLoggedUtente.size() > 0)
 			for (Dipartimento dipartimento : listaDipartimentiLoggedUtente) {
 				this.listaDipartimenti.add(
 						new SelectItem(
-								new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(dipartimento.getCodice(),dipartimento.getDescrizione() + " ("+dipartimento.getCodice()+")")));
+								new org.openspcoop2.generic_project.web.input.SelectItem(dipartimento.getCodice(),dipartimento.getDescrizione() + " ("+dipartimento.getCodice()+")")));
 			}
 
 
@@ -417,20 +424,20 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 		return null;
 	}
 
-	public List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> cedentePrestatoreAutoComplete(Object val) {
-		List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> lst = new ArrayList<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem>();
+	public List<org.openspcoop2.generic_project.web.input.SelectItem> cedentePrestatoreAutoComplete(Object val) {
+		List<org.openspcoop2.generic_project.web.input.SelectItem> lst = new ArrayList<org.openspcoop2.generic_project.web.input.SelectItem>();
 
-		org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem item0 = new  org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO);
+		org.openspcoop2.generic_project.web.input.SelectItem item0 = new  org.openspcoop2.generic_project.web.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO);
 
 		try{
 			if(val==null || StringUtils.isEmpty((String)val) || ((String)val).equals(CostantiForm.NON_SELEZIONATO))
-				lst = new ArrayList<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem>();
+				lst = new ArrayList<org.openspcoop2.generic_project.web.input.SelectItem>();
 			else{
 				List<String> listaMittenti = ((IFatturaElettronicaService)this.service).getMittenteAutoComplete((String)val);
 
 				if(listaMittenti != null && listaMittenti.size() > 0){
 					for (String string : listaMittenti) {
-						lst.add(new  org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(string,string));
+						lst.add(new  org.openspcoop2.generic_project.web.input.SelectItem(string,string));
 					}
 				}
 			}
@@ -444,20 +451,20 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 		return lst;
 	}
 
-	public List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> numeroAutoComplete(Object val) {
-		List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> lst = new ArrayList<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem>();
+	public List<org.openspcoop2.generic_project.web.input.SelectItem> numeroAutoComplete(Object val) {
+		List<org.openspcoop2.generic_project.web.input.SelectItem> lst = new ArrayList<org.openspcoop2.generic_project.web.input.SelectItem>();
 
-		org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem item0 = new  org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO);
+		org.openspcoop2.generic_project.web.input.SelectItem item0 = new  org.openspcoop2.generic_project.web.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO);
 
 		try{
 			if(val==null || StringUtils.isEmpty((String)val) || ((String)val).equals(CostantiForm.NON_SELEZIONATO))
-				lst = new ArrayList<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem>();
+				lst = new ArrayList<org.openspcoop2.generic_project.web.input.SelectItem>();
 			else{
 				List<String> lstDipartimenti = ((IFatturaElettronicaService)this.service).getNumeroAutoComplete((String)val);
 
 				if(lstDipartimenti != null && lstDipartimenti.size() > 0){
 					for (String string : lstDipartimenti) {
-						lst.add(new  org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(string,string));
+						lst.add(new  org.openspcoop2.generic_project.web.input.SelectItem(string,string));
 					}
 				}
 			}
@@ -471,11 +478,11 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 		return lst;
 	}
 
-	public PagedDataTable<List<FatturaElettronicaBean>, NotificaECForm, FatturaElettronicaSearchForm> getTable() {
+	public PagedDataTable<List<FatturaElettronicaBean>, FatturaElettronicaSearchForm, FatturaForm> getTable() {
 		return this.table;
 	}
 
-	public void setTable(PagedDataTable<List<FatturaElettronicaBean>, NotificaECForm, FatturaElettronicaSearchForm> table) {
+	public void setTable(PagedDataTable<List<FatturaElettronicaBean>, FatturaElettronicaSearchForm, FatturaForm> table) {
 		this.table = table;
 	}
 

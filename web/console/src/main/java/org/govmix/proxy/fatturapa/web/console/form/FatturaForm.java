@@ -20,18 +20,21 @@
  */
 package org.govmix.proxy.fatturapa.web.console.form;
 
+import java.util.List;
+
 import javax.faces.event.ActionEvent;
 
 import org.govmix.proxy.fatturapa.web.console.mbean.FatturaElettronicaAttivaMBean;
 import org.govmix.proxy.fatturapa.web.console.mbean.FileUploadBean;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
+import org.openspcoop2.generic_project.web.form.CostantiForm;
 import org.openspcoop2.generic_project.web.form.Form;
 import org.openspcoop2.generic_project.web.impl.jsf1.form.BaseForm;
-import org.openspcoop2.generic_project.web.input.SelectItem;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
 import org.openspcoop2.generic_project.web.input.BooleanCheckBox;
 import org.openspcoop2.generic_project.web.input.SelectList;
 import org.openspcoop2.generic_project.web.input.Text;
+import org.richfaces.model.UploadItem;
 
 public class FatturaForm extends BaseForm implements Form {
 
@@ -96,9 +99,15 @@ public class FatturaForm extends BaseForm implements Form {
 		this._setMostraConservazione();
 	}
 	
-	public void setValues(Object object ){
+	@Override
+	public void setObject(Object arg0) throws Exception {
 		this.fatturaFile.setDto(true, null, null); 
 		this._setMostraConservazione();
+	}
+	
+	@Override
+	public Object getObject() throws Exception {
+		return null;
 	}
 	
 	public SelectList getDipartimento() {
@@ -149,5 +158,31 @@ public class FatturaForm extends BaseForm implements Form {
 
 	public void setMostraFormCorservazione(boolean mostraFormCorservazione) {
 		this.mostraFormCorservazione = mostraFormCorservazione;
+	}
+
+	@Override
+	public String valida() throws Exception {
+		String toRet = null;
+
+		List<UploadItem> files = this.getFatturaFile().getFilesCache();
+
+		if(files == null || (files != null && files.size() == 0)) {
+			return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura.nessunFileSelezionato");
+		}		
+
+
+		// Dipartimento
+		org.openspcoop2.generic_project.web.input.SelectItem _dipartimento = this.getDipartimento().getValue();
+
+		String valueCodiceDipartimento = null; 
+
+		if(_dipartimento != null)
+			valueCodiceDipartimento = _dipartimento.getValue();
+
+		if( valueCodiceDipartimento == null || (valueCodiceDipartimento != null && valueCodiceDipartimento.equals(CostantiForm.ALL)))
+			return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromCommonsResourceBundle(CostantiForm.SELECT_VALORE_NON_VALIDO,this.getDipartimento().getLabel());
+
+
+		return toRet;
 	}
 }

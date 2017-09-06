@@ -37,7 +37,12 @@ import org.openspcoop2.generic_project.web.table.PagedDataTable;
 public class ErroreMBean extends BaseMBean<ErroreElaborazionePccBean, Long, ErroreSearchForm>{
 
 
-	private PagedDataTable<List<EsitoPccBean>, ErroreForm, EsitoSearchForm> table;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private PagedDataTable<List<EsitoPccBean>, EsitoSearchForm, ErroreForm> table;
 
 
 	private FatturaElettronicaBean fattura = null;
@@ -45,18 +50,16 @@ public class ErroreMBean extends BaseMBean<ErroreElaborazionePccBean, Long, Erro
 	private String paginaFrom = null; // menu oppure dettaglioFattura
 
 	private TracciaPccEstesaBean traccia = null;
-	
+
 	private TracciaTrasmissionePCCBean trasmissione = null;
-	
+
 	public ErroreMBean(){
 		super(LoggerManager.getConsoleLogger());
-		this.initTables();
-		this.setOutcomes();
-
 		this.log.debug("ErroreElaborazionePcc MBean");
 	}
 
-	public void initTables() {
+	@Override
+	public void init() throws Exception {
 		try{
 			this.table = this.factory.getTableFactory().createPagedDataTable();
 			this.getTable().setId("panelErrori"); 
@@ -72,8 +75,8 @@ public class ErroreMBean extends BaseMBean<ErroreElaborazionePccBean, Long, Erro
 
 		}
 	}
-
-	private void setOutcomes(){
+	@Override
+	public void initNavigationManager() throws Exception {
 		this.getNavigationManager().setAnnullaOutcome(null);
 		this.getNavigationManager().setDeleteOutcome(null);
 		this.getNavigationManager().setDettaglioOutcome("dettaglioEsito");
@@ -85,17 +88,17 @@ public class ErroreMBean extends BaseMBean<ErroreElaborazionePccBean, Long, Erro
 		this.getNavigationManager().setResetOutcome(null);
 		this.getNavigationManager().setRestoreSearchOutcome(null);
 	}
- 
+
 	@Override
 	public void setSelectedElement(ErroreElaborazionePccBean selectedElement) {
 		this.selectedElement = selectedElement;
 	}
-	
-	public PagedDataTable<List<EsitoPccBean>, ErroreForm, EsitoSearchForm> getTable() {
+
+	public PagedDataTable<List<EsitoPccBean>, EsitoSearchForm, ErroreForm> getTable() {
 		return table;
 	}
 
-	public void setTable(PagedDataTable<List<EsitoPccBean>, ErroreForm, EsitoSearchForm> table) {
+	public void setTable(PagedDataTable<List<EsitoPccBean>, EsitoSearchForm, ErroreForm> table) {
 		this.table = table;
 	}
 

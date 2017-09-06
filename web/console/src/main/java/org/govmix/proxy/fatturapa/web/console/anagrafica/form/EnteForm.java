@@ -67,9 +67,12 @@ public class EnteForm extends BaseForm implements Form {
 	 * 
 	 * @param bean
 	 */
-	public void setValues(EnteBean bean){
+
+	@Override
+	public void setObject(Object arg0) throws Exception {
 		// Aggiornamento
-		if(bean != null){
+		if(arg0 != null){
+			EnteBean bean = (EnteBean) arg0;
 			this.nome.setDefaultValue(bean.getDTO().getNome());
 			this.nome.setDisabled(true);
 			this.descrizione.setDefaultValue(bean.getDTO().getDescrizione());
@@ -104,8 +107,9 @@ public class EnteForm extends BaseForm implements Form {
 		return null;
 	}
 
-
-	public Ente getEnte(){
+	
+	@Override
+	public Object getObject() throws Exception {
 		Ente ente = new Ente();
 
 		ente.setNome(this.nome.getValue());
@@ -135,6 +139,4 @@ public class EnteForm extends BaseForm implements Form {
 	public void setIdPccAmministrazione(Text idPccAmministrazione) {
 		this.idPccAmministrazione = idPccAmministrazione;
 	}
-	
-	
 }

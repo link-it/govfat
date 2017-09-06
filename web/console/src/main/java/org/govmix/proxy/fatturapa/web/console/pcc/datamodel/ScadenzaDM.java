@@ -38,7 +38,7 @@ import org.govmix.proxy.fatturapa.web.console.pcc.mbean.ScadenzaMBean;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.web.impl.jsf1.datamodel.BaseDataModel;
 
-public class ScadenzaDM extends BaseDataModel<Long, ScadenzaPccBean, IScadenzaService> {
+public class ScadenzaDM extends BaseDataModel<ScadenzaPccBean, Long,  IScadenzaService> {
 
 	/**
 	 * 

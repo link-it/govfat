@@ -28,7 +28,7 @@ import org.openspcoop2.generic_project.web.input.Text;
 public class RegistroSearchForm extends BaseSearchForm implements SearchForm{
 
 	private Text protocollo = null;
-	
+
 	public RegistroSearchForm() throws Exception{
 		this.init();
 	}
@@ -37,9 +37,9 @@ public class RegistroSearchForm extends BaseSearchForm implements SearchForm{
 	public void init() throws Exception {
 
 		WebGenericProjectFactory factory = this.getFactory();
-		
+
 		this.protocollo = factory.getInputFieldFactory().createText("protocollo","registro.search.protocollo",null,false);
-		
+
 		this.setField(this.protocollo);
 	}
 
@@ -57,6 +57,9 @@ public class RegistroSearchForm extends BaseSearchForm implements SearchForm{
 		this.protocollo = protocollo;
 	}
 
- 
+	@Override
+	public String valida() throws Exception {
+		return null;
+	}
 
 }

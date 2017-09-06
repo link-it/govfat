@@ -27,14 +27,14 @@ import java.util.List;
 import javax.faces.model.SelectItem;
 
 import org.apache.commons.lang.StringUtils;
+import org.govmix.proxy.fatturapa.notificaesitocommittente.EsitoCommittente;
+import org.govmix.proxy.fatturapa.notificaesitocommittente.NotificaEC;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdUtente;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoCommittenteType;
-import org.govmix.proxy.fatturapa.notificaesitocommittente.EsitoCommittente;
-import org.govmix.proxy.fatturapa.notificaesitocommittente.NotificaEC;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.business.InvioNotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.business.exception.NotificaGiaInviataException;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
@@ -45,10 +45,10 @@ import org.govmix.proxy.fatturapa.web.console.iservice.IFatturaElettronicaServic
 import org.govmix.proxy.fatturapa.web.console.service.FatturaElettronicaService;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.BaseFormMBean;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.InviaException;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.MessageUtils;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils;
 import org.openspcoop2.generic_project.web.input.TextArea;
+import org.openspcoop2.generic_project.web.mbean.exception.InviaException;
 
 /**
  * NotificaECMBean MBean per la gestione della schermata di invio Notifica EC.
@@ -58,6 +58,11 @@ import org.openspcoop2.generic_project.web.input.TextArea;
  *
  */
 public class NotificaECMBean extends BaseFormMBean<NotificaECBean, Long, NotificaECForm> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private String fromPage= null;
 
@@ -72,12 +77,15 @@ public class NotificaECMBean extends BaseFormMBean<NotificaECBean, Long, Notific
 	public NotificaECMBean(){
 		super(LoggerManager.getConsoleLogger());
 		this.fatturaService = new FatturaElettronicaService();
-
 		this.selectedElement = null;
-		this.setOutcomes();
 	}
-
-	private void setOutcomes(){
+	
+	@Override
+	public void init() throws Exception {
+	}
+	
+	@Override
+	public void initNavigationManager() throws Exception {
 		this.getNavigationManager().setAnnullaOutcome("annulla");
 		this.getNavigationManager().setDeleteOutcome(null);
 		this.getNavigationManager().setDettaglioOutcome(null);
@@ -149,13 +157,13 @@ public class NotificaECMBean extends BaseFormMBean<NotificaECBean, Long, Notific
 		this.listaEsiti = new ArrayList<SelectItem>();
 
 		this.listaEsiti.add(new SelectItem(
-				new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*","--")));
+				new org.openspcoop2.generic_project.web.input.SelectItem("*","--")));
 
 		this.listaEsiti.add(new SelectItem(
-				new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(
+				new org.openspcoop2.generic_project.web.input.SelectItem(
 						EsitoCommittenteType.EC01.getValue(), ("notificaEsitoCommittente.esito.EC01"))));
 		this.listaEsiti.add(new SelectItem(
-				new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(
+				new org.openspcoop2.generic_project.web.input.SelectItem(
 						EsitoCommittenteType.EC02.getValue(),   ("notificaEsitoCommittente.esito.EC02"))));
 
 
@@ -166,9 +174,9 @@ public class NotificaECMBean extends BaseFormMBean<NotificaECBean, Long, Notific
 		this.listaEsiti = listaEsiti;
 	}
 
-
+	
 	@Override
-	protected String _invia() throws InviaException {
+	public String azioneInvia() throws InviaException {
 		this.log.debug("Inserimento della notifica in corso...");
 
 		try{
@@ -226,7 +234,7 @@ public class NotificaECMBean extends BaseFormMBean<NotificaECBean, Long, Notific
 
 	public String validaInput(){
 		String msg = null;
-		org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem selectedEsito = this.form.getEsito().getValue();
+		org.openspcoop2.generic_project.web.input.SelectItem selectedEsito = this.form.getEsito().getValue();
 
 		if(selectedEsito.getValue().equals("*"))
 			return Utils.getInstance().getMessageFromResourceBundle("notificaEsitoCommittente.formInvia.error.esitoVuoto");

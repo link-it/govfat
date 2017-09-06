@@ -640,10 +640,6 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 	
 	@Override
 	public Object getObject() throws Exception {
-		return null;
-	}
-
-	public Dipartimento getDipartimento(){
 		Dipartimento dipartimento = new Dipartimento();
 
 		dipartimento.setCodice(this.codice.getValue());

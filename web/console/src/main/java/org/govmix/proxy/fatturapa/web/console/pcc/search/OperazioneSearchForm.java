@@ -467,4 +467,9 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 	public void setCodiceErrore(SelectList codiceErrore) {
 		this.codiceErrore = codiceErrore;
 	}
+	
+	@Override
+	public String valida() throws Exception {
+		return null;
+	}
 }

@@ -41,7 +41,7 @@ import org.openspcoop2.generic_project.web.impl.jsf1.datamodel.ParameterizedData
 
 public class ErroreDM extends
 
-ParameterizedDataModel<Long, ErroreElaborazionePccBean, IErroreService, PccErroreElaborazione, ErroreSearchForm>{
+ParameterizedDataModel<PccErroreElaborazione, Long, ErroreElaborazionePccBean, IErroreService, ErroreSearchForm>{
 
 	/**
 	 * 

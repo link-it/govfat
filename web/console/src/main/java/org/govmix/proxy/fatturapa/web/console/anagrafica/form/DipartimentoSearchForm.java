@@ -60,7 +60,7 @@ public class DipartimentoSearchForm extends BaseSearchForm implements SearchForm
 		this.setClosable(false);
 
 		try{
-			WebGenericProjectFactory factory =  this.getWebGenericProjectFactory();
+			WebGenericProjectFactory factory =  this.getFactory();
 
 			// Init dei FormField
 			this.descrizione = factory.getInputFieldFactory().createText("descrizione","dipartimento.search.descrizione",null,false);
@@ -176,6 +176,11 @@ public class DipartimentoSearchForm extends BaseSearchForm implements SearchForm
 			
 			return listaId;
 		}
+		return null;
+	}
+
+	@Override
+	public String valida() throws Exception {
 		return null;
 	}
 }

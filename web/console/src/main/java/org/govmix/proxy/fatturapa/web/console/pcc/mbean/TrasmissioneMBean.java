@@ -35,7 +35,13 @@ import org.openspcoop2.generic_project.web.table.PagedDataTable;
 public class TrasmissioneMBean extends BaseMBean<TracciaTrasmissionePCCBean, Long, TrasmissioneSearchForm>{
 
 
-	private PagedDataTable<List<TracciaTrasmissionePCCBean>, TrasmissioneForm, TrasmissioneSearchForm> table;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
+	private PagedDataTable<List<TracciaTrasmissionePCCBean>, TrasmissioneSearchForm, TrasmissioneForm> table;
 
 
 	private FatturaElettronicaBean fattura = null;
@@ -48,13 +54,11 @@ public class TrasmissioneMBean extends BaseMBean<TracciaTrasmissionePCCBean, Lon
 
 	public TrasmissioneMBean(){
 		super(LoggerManager.getConsoleLogger());
-		this.initTables();
-		this.setOutcomes();
-
 		this.log.debug("Trasmissione MBean");
 	}
 
-	public void initTables() {
+	@Override
+	public void init() throws Exception {
 		try{
 			this.table = this.factory.getTableFactory().createPagedDataTable();
 			this.getTable().setId("panelTrasmissioni"); 
@@ -71,7 +75,8 @@ public class TrasmissioneMBean extends BaseMBean<TracciaTrasmissionePCCBean, Lon
 		}
 	}
 
-	private void setOutcomes(){
+	@Override
+	public void initNavigationManager() throws Exception {
 		this.getNavigationManager().setAnnullaOutcome(null);
 		this.getNavigationManager().setDeleteOutcome(null);
 		this.getNavigationManager().setDettaglioOutcome("dettaglioTrasmissione");
@@ -96,11 +101,11 @@ public class TrasmissioneMBean extends BaseMBean<TracciaTrasmissionePCCBean, Lon
 		}
 	}
 
-	public PagedDataTable<List<TracciaTrasmissionePCCBean>, TrasmissioneForm, TrasmissioneSearchForm> getTable() {
+	public PagedDataTable<List<TracciaTrasmissionePCCBean>, TrasmissioneSearchForm, TrasmissioneForm> getTable() {
 		return table;
 	}
 
-	public void setTable(PagedDataTable<List<TracciaTrasmissionePCCBean>, TrasmissioneForm, TrasmissioneSearchForm> table) {
+	public void setTable(PagedDataTable<List<TracciaTrasmissionePCCBean>, TrasmissioneSearchForm, TrasmissioneForm> table) {
 		this.table = table;
 	}
 

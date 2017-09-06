@@ -443,5 +443,9 @@ public class FatturaElettronicaSearchForm extends BaseSearchForm implements Sear
 		this.usaDataScadenza = usaDataScadenza;
 	}	
 	
+	@Override
+	public String valida() throws Exception {
+		return null;
+	}
 	
 }

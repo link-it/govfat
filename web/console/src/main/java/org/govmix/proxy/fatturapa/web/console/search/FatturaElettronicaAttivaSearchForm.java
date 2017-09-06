@@ -418,5 +418,8 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		this.tipoComunicazione = tipoComunicazione;
 	}	
 	
-	
+	@Override
+	public String valida() throws Exception {
+		return null;
+	}
 }

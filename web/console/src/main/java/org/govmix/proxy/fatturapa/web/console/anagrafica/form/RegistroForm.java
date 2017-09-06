@@ -80,10 +80,13 @@ public class RegistroForm extends BaseForm implements Form{
 		}
 	}
 
-	public void setValues(RegistroBean bean){
+	
+	@Override
+	public void setObject(Object arg0) throws Exception {
 		try{
 			// Aggiornamento
-			if(bean != null){
+			if(arg0 != null){
+				RegistroBean bean = (RegistroBean) arg0;
 				this.nome.setDefaultValue(bean.getDTO().getNome());
 				this.nome.setDisabled(true);
 				this.username.setDefaultValue(bean.getDTO().getUsername());
@@ -208,7 +211,8 @@ public class RegistroForm extends BaseForm implements Form{
 		return null;
 	}
 
-	public Registro getRegistro(){
+	@Override
+	public Object getObject() throws Exception {
 		Registro registro = new Registro();
 
 		registro.setNome(this.nome.getValue());

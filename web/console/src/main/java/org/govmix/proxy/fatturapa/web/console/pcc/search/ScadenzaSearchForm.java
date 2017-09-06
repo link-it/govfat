@@ -40,4 +40,8 @@ public class ScadenzaSearchForm  extends BaseSearchForm implements SearchForm{
 		
 	}
 
+	@Override
+	public String valida() throws Exception {
+		return null;
+	}
 }

@@ -51,7 +51,7 @@ import org.openspcoop2.generic_project.expression.IPaginatedExpression;
 import org.openspcoop2.generic_project.expression.LikeMode;
 import org.openspcoop2.generic_project.expression.SortOrder;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
-import org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem;
+import org.openspcoop2.generic_project.web.input.SelectItem;
 import org.openspcoop2.generic_project.web.input.DateTime;
 import org.openspcoop2.generic_project.web.input.SelectList;
 import org.openspcoop2.generic_project.web.service.BaseService;
@@ -463,7 +463,7 @@ public class OperazioneService extends BaseService<OperazioneSearchForm> impleme
 		try{
 			expr = tracciamentoBD.newExpression();
 
-			SelectList<SelectItem> dataRicezionePeriodo = search.getDataPeriodo();
+			SelectList dataRicezionePeriodo = search.getDataPeriodo();
 			DateTime dataRicezione = search.getData();
 
 			Date dataInizio = dataRicezione.getValue();

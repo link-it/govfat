@@ -26,7 +26,7 @@ import org.govmix.proxy.fatturapa.web.console.anagrafica.form.UtenteSearchForm;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.iservice.IUtenteService;
 import org.openspcoop2.generic_project.web.impl.jsf1.datamodel.ParameterizedDataModel;
 
-public class UtenteDM extends ParameterizedDataModel<Long, UtenteBean, IUtenteService, Utente, UtenteSearchForm>{ 
+public class UtenteDM extends ParameterizedDataModel<Utente, Long, UtenteBean, IUtenteService, UtenteSearchForm>{ 
 
 	/**
 	 * 

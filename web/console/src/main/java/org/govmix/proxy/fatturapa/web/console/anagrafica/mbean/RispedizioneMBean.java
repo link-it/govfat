@@ -40,14 +40,14 @@ import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.DataModelListView;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.AnnullaException;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.DeleteException;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.InviaException;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.MenuActionException;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.ModificaException;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.MessageUtils;
+import org.openspcoop2.generic_project.web.mbean.exception.AnnullaException;
+import org.openspcoop2.generic_project.web.mbean.exception.DeleteException;
+import org.openspcoop2.generic_project.web.mbean.exception.InviaException;
+import org.openspcoop2.generic_project.web.mbean.exception.MenuActionException;
+import org.openspcoop2.generic_project.web.mbean.exception.ModificaException;
 
-public class RispedizioneMBean extends DataModelListView<RispedizioneBean, Long, RispedizioneSearchForm,RispedizioneForm,RispedizioneDM,PccRispedizione,IRispedizioneService>{
+public class RispedizioneMBean extends DataModelListView<PccRispedizione, Long, RispedizioneBean,  RispedizioneSearchForm,RispedizioneForm,RispedizioneDM,IRispedizioneService>{
 
 	/**
 	 * 
@@ -60,25 +60,23 @@ public class RispedizioneMBean extends DataModelListView<RispedizioneBean, Long,
 
 	public RispedizioneMBean() throws Exception{
 		super(LoggerManager.getConsoleLogger());
-		this.showForm = false;
 		this.log.debug("Dipartimento MBean");
-		this.form = new RispedizioneForm();
-		this.form.setRendered(this.showForm);
-		this.form.reset();
-
-		((RadioButtonImpl)this.form.getRispedizioneAutomatica()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
-		((SelectListImpl)this.form.getTipoErrore()).setElencoSelectItems(getOpzioniTipoErrore());
-
-
-
-		this.azione = null;
-		this.initTables();
-		this.setOutcomes();
-
 	}
 
-	public void initTables() {
+
+	@Override
+	public void init() throws Exception {
 		try{
+			this.showForm = false;
+			this.form = new RispedizioneForm();
+			this.form.setRendered(this.showForm);
+			this.form.reset();
+
+			((RadioButtonImpl)this.form.getRispedizioneAutomatica()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
+			((SelectListImpl)this.form.getTipoErrore()).setElencoSelectItems(getOpzioniTipoErrore());
+
+			this.azione = null;
+
 			this.table = this.factory.getTableFactory().createPagedDataTable();
 			this.table.setId("rispedizioniListView"); 
 			this.table.setEnableDelete(true);
@@ -87,7 +85,7 @@ public class RispedizioneMBean extends DataModelListView<RispedizioneBean, Long,
 			this.table.setShowSelectAll(true);
 			this.table.setHeaderText("rispedizione.tabellaRisultati.label");
 			this.table.setDetailLinkText("rispedizione.dettaglioTitle"); 
-			this.table.setMBean(this);
+			//			this.table.setMBean(this);
 			this.table.setMetadata(this.getMetadata()); 
 
 		}catch (Exception e) {
@@ -95,7 +93,8 @@ public class RispedizioneMBean extends DataModelListView<RispedizioneBean, Long,
 		}
 	}
 
-	private void setOutcomes(){
+	@Override
+	public void initNavigationManager() throws Exception {
 		this.getNavigationManager().setAnnullaOutcome(null);
 		this.getNavigationManager().setDeleteOutcome(null);
 		this.getNavigationManager().setDettaglioOutcome("rispedizionePCC");
@@ -119,9 +118,9 @@ public class RispedizioneMBean extends DataModelListView<RispedizioneBean, Long,
 	private List<SelectItem> getOpzioniRadioButtonAbilita() {
 		List<SelectItem> lista = new ArrayList<SelectItem>();
 
-		org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem siOption = Utils.getSiOption("commons.label.abilitata");
+		org.openspcoop2.generic_project.web.input.SelectItem siOption = Utils.getSiOption("commons.label.abilitata");
 		SelectItem elem0 = new SelectItem(siOption,siOption.getLabel());
-		org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem noOption = Utils.getNoOption("commons.label.nonAbilitata");
+		org.openspcoop2.generic_project.web.input.SelectItem noOption = Utils.getNoOption("commons.label.nonAbilitata");
 		SelectItem elem1 = new SelectItem(noOption,noOption.getLabel()); 
 
 
@@ -134,13 +133,13 @@ public class RispedizioneMBean extends DataModelListView<RispedizioneBean, Long,
 	private List<SelectItem> getOpzioniTipoErrore() {
 		List<SelectItem> lista = new ArrayList<SelectItem>();
 
-		SelectItem elem0 = new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO));
+		SelectItem elem0 = new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO));
 
 		lista.add(elem0);
 
 
-		lista.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoErroreType.ELABORAZIONE.getValue(), "rispedizione.tipoErrore.elaborazione")));
-		lista.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoErroreType.TRASMISSIONE.getValue(), "rispedizione.tipoErrore.trasmissione")));
+		lista.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(TipoErroreType.ELABORAZIONE.getValue(), "rispedizione.tipoErrore.elaborazione")));
+		lista.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(TipoErroreType.TRASMISSIONE.getValue(), "rispedizione.tipoErrore.trasmissione")));
 
 		return lista;
 	}
@@ -173,27 +172,28 @@ public class RispedizioneMBean extends DataModelListView<RispedizioneBean, Long,
 	}
 
 	@Override
-	protected String _menuAction() throws MenuActionException {
+	public String azioneMenuAction() throws MenuActionException {
 		this.search.setRestoreSearch(true);
-		return super._menuAction();
+		return super.azioneMenuAction();
 	}
 
 	@Override
-	protected String _modifica() throws ModificaException {
+	public String azioneModifica() throws ModificaException {
 		try{
 			this.showForm = true;
 			this.azione = "update";
 			this.form.setRendered(this.showForm);
-			this.form.setValues(this.selectedElement);
+			this.form.setObject(this.selectedElement);
 			this.form.reset();
 		}catch(Exception e){
 			throw new ModificaException(e);
 		}
-		return super._modifica();
+		return super.azioneModifica();
 	}
 
+
 	@Override
-	protected String _invia() throws InviaException{
+	public String azioneInvia() throws InviaException {
 		String msg = this.form.valida();
 
 		if(msg!= null){
@@ -202,7 +202,7 @@ public class RispedizioneMBean extends DataModelListView<RispedizioneBean, Long,
 
 		try{
 			long oldId = -1;
-			PccRispedizione newRisp = this.form.getRispedizione();
+			PccRispedizione newRisp = (PccRispedizione) this.form.getObject();
 			// Add
 			if(!this.azione.equals("update")){
 				RispedizioneBean bean = new RispedizioneBean();
@@ -240,7 +240,7 @@ public class RispedizioneMBean extends DataModelListView<RispedizioneBean, Long,
 	}
 
 	@Override
-	protected String _annulla() throws AnnullaException {
+	public String azioneAnnulla() throws AnnullaException {
 		this.getNavigationManager().setAnnullaOutcome( "listaRispedizioniPCC");
 
 		if(this.azione.equals("update")){
@@ -251,7 +251,7 @@ public class RispedizioneMBean extends DataModelListView<RispedizioneBean, Long,
 		this.form.setRendered(this.showForm); 
 		this.form.reset();
 
-		return super._annulla();
+		return super.azioneAnnulla();
 	}
 
 	@Override
@@ -261,7 +261,11 @@ public class RispedizioneMBean extends DataModelListView<RispedizioneBean, Long,
 		this.selectedId = null;
 		this.showForm = true;
 		this.azione = "new";
-		this.form.setValues(null);
+		try {
+			this.form.setObject(null);
+		} catch (Exception e) {
+			this.log.error("Si e' verificato un errore durante l'inizializzazione del form di creazione rispedizione: " + e.getMessage(), e);
+		}
 		this.form.setRendered(this.showForm); 
 		this.form.reset();
 	}
@@ -290,7 +294,7 @@ public class RispedizioneMBean extends DataModelListView<RispedizioneBean, Long,
 		String deleteMsg = null;
 
 		try{
-			deleteMsg = super._delete();
+			deleteMsg = super.azioneDelete();
 		}catch(DeleteException e){
 			deleteMsg = e.getMessage();
 		}
@@ -311,18 +315,18 @@ public class RispedizioneMBean extends DataModelListView<RispedizioneBean, Long,
 
 	public String toggleRispedizioneAutomatica (){
 		if(this.selectedElement != null){
-			this.form.setValues(this.selectedElement);
-
-			String msg = this.form.valida();
-
-			if(msg!= null){
-				MessageUtils.addErrorMsg
-				(Utils.getInstance().getMessageFromResourceBundle("rispedizione.form.erroreValidazione")+": " + msg);
-				return null;
-			}
-
 			try{
-				PccRispedizione newRisp = this.form.getRispedizione();
+				this.form.setObject(this.selectedElement);
+
+				String msg = this.form.valida();
+
+				if(msg!= null){
+					MessageUtils.addErrorMsg
+					(Utils.getInstance().getMessageFromResourceBundle("rispedizione.form.erroreValidazione")+": " + msg);
+					return null;
+				}
+
+				PccRispedizione newRisp = (PccRispedizione) this.form.getObject();
 				boolean nuovoValoreAbilitato = !newRisp.isAbilitato();
 				newRisp.setAbilitato(nuovoValoreAbilitato);
 				String v = nuovoValoreAbilitato ? "abilitata" : "disabilitata";
@@ -343,6 +347,4 @@ public class RispedizioneMBean extends DataModelListView<RispedizioneBean, Long,
 
 		return null;
 	}
-
-
 }

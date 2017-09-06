@@ -27,7 +27,6 @@ import org.govmix.proxy.fatturapa.orm.constants.EsitoCommittenteType;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.Form;
 import org.openspcoop2.generic_project.web.impl.jsf1.form.BaseForm;
-import org.openspcoop2.generic_project.web.input.SelectItem;
 import org.openspcoop2.generic_project.web.input.SelectList;
 import org.openspcoop2.generic_project.web.input.TextArea;
 
@@ -107,6 +106,20 @@ public class NotificaECForm extends BaseForm implements Form {
 	
 	public void esitoSelectListener(ActionEvent ae){
 		this._setEsito();
+	}
+
+	@Override
+	public Object getObject() throws Exception {
+		return null;
+	}
+
+	@Override
+	public void setObject(Object arg0) throws Exception {
+	}
+
+	@Override
+	public String valida() throws Exception {
+		return null;
 	}
 
 }

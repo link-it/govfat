@@ -52,14 +52,14 @@ import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.DataModelListView;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.AnnullaException;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.DeleteException;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.InviaException;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.MenuActionException;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.ModificaException;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.MessageUtils;
+import org.openspcoop2.generic_project.web.mbean.exception.AnnullaException;
+import org.openspcoop2.generic_project.web.mbean.exception.DeleteException;
+import org.openspcoop2.generic_project.web.mbean.exception.InviaException;
+import org.openspcoop2.generic_project.web.mbean.exception.MenuActionException;
+import org.openspcoop2.generic_project.web.mbean.exception.ModificaException;
 
-public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long, DipartimentoSearchForm,DipartimentoForm,DipartimentoDM,Dipartimento,IDipartimentoService>{
+public class DipartimentoMBean extends DataModelListView<Dipartimento, Long,  DipartimentoBean, DipartimentoSearchForm,DipartimentoForm,DipartimentoDM,IDipartimentoService>{
 
 	/**
 	 * 
@@ -71,47 +71,46 @@ public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long,
 	private String azione = null;
 
 	private IRegistroService registroService = null;
-	
+
 	private IEnteService enteService = null;
-	
+
 	public DipartimentoMBean() {
 		super(LoggerManager.getConsoleLogger());
 		this.log.debug("Dipartimento MBean");
-		this.form = new DipartimentoForm();
-		this.form.setRendered(false);
-		this.form.setMbean(this); 
-		this.form.reset();
-
-		((RadioButtonImpl)this.form.getPagamentoIVA()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
-		((RadioButtonImpl)this.form.getMovimentiErarioIVA()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
-		((RadioButtonImpl)this.form.getDownloadDocumento()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
-
-		
-		((RadioButtonImpl)this.form.getDatiFattura()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
-		((RadioButtonImpl)this.form.getInserimentoFattura()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
-		((RadioButtonImpl)this.form.getStatoFattura()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
-		((RadioButtonImpl)this.form.getConsultazioneTracce()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
-		((RadioButtonImpl)this.form.getPagamento()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
-		((RadioButtonImpl)this.form.getStornoPagamento()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
-		((RadioButtonImpl)this.form.getComunicazioneScadenza()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
-		((RadioButtonImpl)this.form.getCancellazioneScadenze()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
-		((RadioButtonImpl)this.form.getContabilizzazione()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
-		((RadioButtonImpl)this.form.getStornoContabilizzazione()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
-		((RadioButtonImpl)this.form.getRicezioneFattura()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
-		((RadioButtonImpl)this.form.getRifiutoFattura()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
-
-
-		this.showForm = false;
-		this.azione = null;
-		this.registroService = new RegistroService();
-		this.enteService = new EnteService();
-		
-		this.initTables();
-		this.setOutcomes();
 	}
-	
-	public void initTables() {
+
+	@Override
+	public void init() throws Exception {
 		try{
+			this.form = new DipartimentoForm();
+			this.form.setRendered(false);
+			this.form.setMbean(this); 
+			this.form.reset();
+
+			((RadioButtonImpl)this.form.getPagamentoIVA()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
+			((RadioButtonImpl)this.form.getMovimentiErarioIVA()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
+			((RadioButtonImpl)this.form.getDownloadDocumento()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
+
+
+			((RadioButtonImpl)this.form.getDatiFattura()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
+			((RadioButtonImpl)this.form.getInserimentoFattura()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
+			((RadioButtonImpl)this.form.getStatoFattura()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
+			((RadioButtonImpl)this.form.getConsultazioneTracce()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
+			((RadioButtonImpl)this.form.getPagamento()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
+			((RadioButtonImpl)this.form.getStornoPagamento()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
+			((RadioButtonImpl)this.form.getComunicazioneScadenza()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
+			((RadioButtonImpl)this.form.getCancellazioneScadenze()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
+			((RadioButtonImpl)this.form.getContabilizzazione()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
+			((RadioButtonImpl)this.form.getStornoContabilizzazione()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
+			((RadioButtonImpl)this.form.getRicezioneFattura()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
+			((RadioButtonImpl)this.form.getRifiutoFattura()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
+
+
+			this.showForm = false;
+			this.azione = null;
+			this.registroService = new RegistroService();
+			this.enteService = new EnteService();
+
 			this.table = this.factory.getTableFactory().createPagedDataTable();
 			this.table.setId("dipartimentiListView"); 
 			this.table.setEnableDelete(this.isAbilitaCreazioneDipartimenti());
@@ -120,15 +119,16 @@ public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long,
 			this.table.setShowSelectAll(this.isAbilitaCreazioneDipartimenti());
 			this.table.setHeaderText("dipartimento.tabellaRisultati.label");
 			this.table.setDetailLinkText("dipartimento.dettaglioTitle"); 
-			this.table.setMBean(this);
+			//			this.table.setMBean(this);
 			this.table.setMetadata(this.getMetadata()); 
-			
+
 		}catch (Exception e) {
-			 
+
 		}
 	}
 
-	private void setOutcomes(){
+	@Override
+	public void initNavigationManager() throws Exception {
 		this.getNavigationManager().setAnnullaOutcome(null);
 		this.getNavigationManager().setDeleteOutcome(null);
 		this.getNavigationManager().setDettaglioOutcome("dipartimento");
@@ -149,13 +149,13 @@ public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long,
 		this.selectedId = null;
 
 		((SelectListImpl)this.search.getEnte()).setElencoSelectItems(this.getListaEnti());
-		
+
 		//se sei un DEPT_ADMIN vedi solo i tuoi dipartimenti 
 		//[Pintori 2016/06/10] Vincolo rilasciato il DeptAdmin gestisce l'anagrafica di tutti i dipartimenti
-//		if(Utils.getLoginBean().isDeptAdmin()){
-//			this.search.setListaUtenteDipartimenti(Utils.getLoggedUtente().getUtenteDipartimentoList()); 
-//		}
-		
+		//		if(Utils.getLoginBean().isDeptAdmin()){
+		//			this.search.setListaUtenteDipartimenti(Utils.getLoggedUtente().getUtenteDipartimentoList()); 
+		//		}
+
 		this.search.setmBean(this);
 	}
 
@@ -169,11 +169,11 @@ public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long,
 			try {
 				//carico dettaglio utente
 				DipartimentoBean dettaglioDipartimento = this.service.findById(this.selectedId);
-				
+
 				EnteBean ente = this.enteService.findEnteByNome(dettaglioDipartimento.getDTO().getEnte().getNome());
-					
+
 				dettaglioDipartimento.setEnteBean(ente); 
-				
+
 				this.setSelectedElement(dettaglioDipartimento); 
 			} catch (ServiceException e) {
 				this.log.error("Si e' verificato un errore durante il caricamento del dettaglio dipartimento: " + e.getMessage(), e);
@@ -195,19 +195,19 @@ public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long,
 	// Metodo Menu Action
 
 	@Override
-	protected String _menuAction() throws MenuActionException {
+	public String azioneMenuAction() throws MenuActionException {
 		this.search.setRestoreSearch(true);
-		return super._menuAction();
+		return super.azioneMenuAction();
 	}
 
 	@Override
-	protected String _modifica() throws ModificaException {
+	public String azioneModifica() throws ModificaException {
 		try{
 			this.showForm = true;
 			this.azione = "update";
 			this.form.setRendered(this.showForm);
 			this.form.setListaProprietaConsentiteAiDipartimenti(((IDipartimentoService)this.service).getListaOperazioniConsentiteUnitaOrganizzativa());
-			this.form.setValues(this.selectedElement);
+			this.form.setObject(this.selectedElement);
 			this.form.setListaNomiProperties(this.getListaDipartimentoProperties());
 			((SelectListImpl)this.form.getEnte()).setElencoSelectItems(this.getListaEnti());
 			((SelectListImpl)this.form.getRegistro()).setElencoSelectItems(this.getListaRegistri());
@@ -215,11 +215,11 @@ public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long,
 		}catch(Exception e){
 			throw new ModificaException(e);
 		}
-		return super._modifica();
+		return super.azioneModifica();
 	}
 
 	@Override
-	protected String _invia() throws InviaException{
+	public String azioneInvia() throws InviaException {
 		String msg = this.form.valida();
 
 		if(msg!= null){
@@ -228,7 +228,7 @@ public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long,
 
 		try{
 			long oldId = -1;
-			Dipartimento newDip = this.form.getDipartimento();
+			Dipartimento newDip = (Dipartimento) this.form.getObject();
 			// Add
 			if(!this.azione.equals("update")){
 				DipartimentoBean bean = new DipartimentoBean();
@@ -251,17 +251,17 @@ public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long,
 			bean.setDTO(newDip);
 			bean.setListaNomiProperties(this.getListaDipartimentoProperties());
 			bean.setEnteBean(this.getEnteByNome(bean.getDTO().getEnte().getNome())); 
-			
+
 			IdDipartimento idDipartimento = new IdDipartimento();
 			idDipartimento.setCodice(newDip.getCodice());
 			List<PccDipartimentoOperazione> listaOperazioni = this.form.getOperazioniAbilitate();
-			
+
 			((IDipartimentoService)this.service).salvaDipartimento(bean, idDipartimento, listaOperazioni);
-			
+
 			MessageUtils.addInfoMsg(Utils.getInstance().getMessageFromResourceBundle("dipartimento.form.salvataggioOk"));
-			
+
 			Long id = bean.getDTO().getId();
-			
+
 			this.setSelectedId(id);
 
 			// reset lista dei dipartimenti dell'utente
@@ -276,9 +276,8 @@ public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long,
 		}
 	}
 
-
 	@Override
-	protected String _annulla() throws AnnullaException {
+	public String azioneAnnulla() throws AnnullaException {
 		this.getNavigationManager().setAnnullaOutcome("listaDipartimenti");
 
 		if(this.azione.equals("update")){
@@ -289,23 +288,23 @@ public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long,
 		this.form.setRendered(this.showForm); 
 		this.form.reset();
 
-		return super._annulla();
+		return super.azioneAnnulla();
 	}
 
-	public List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> descrizioneAutoComplete(Object val,String nomeEnte) {
-		List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> lst = new ArrayList<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem>();
+	public List<org.openspcoop2.generic_project.web.input.SelectItem> descrizioneAutoComplete(Object val,String nomeEnte) {
+		List<org.openspcoop2.generic_project.web.input.SelectItem> lst = new ArrayList<org.openspcoop2.generic_project.web.input.SelectItem>();
 
-		org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem item0 = new  org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO);
+		org.openspcoop2.generic_project.web.input.SelectItem item0 = new  org.openspcoop2.generic_project.web.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO);
 
 		try{
 			if(val==null || StringUtils.isEmpty((String)val) || ((String)val).equals(CostantiForm.NON_SELEZIONATO))
-				lst = new ArrayList<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem>();
+				lst = new ArrayList<org.openspcoop2.generic_project.web.input.SelectItem>();
 			else{
 				List<Dipartimento> lstDipartimenti = ((IDipartimentoService)this.service).getDescrizioneAutoComplete((String)val,nomeEnte);
 
 				if(lstDipartimenti != null && lstDipartimenti.size() > 0){
 					for (Dipartimento dipartimento : lstDipartimenti) {
-						lst.add(new  org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(
+						lst.add(new  org.openspcoop2.generic_project.web.input.SelectItem(
 								dipartimento.getDescrizione(), dipartimento.getDescrizione()));
 					}
 				}
@@ -319,20 +318,20 @@ public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long,
 
 		return lst;
 	}
-	public List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> codiceAutoComplete(Object val,String nomeEnte) {
-		List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> lst = new ArrayList<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem>();
+	public List<org.openspcoop2.generic_project.web.input.SelectItem> codiceAutoComplete(Object val,String nomeEnte) {
+		List<org.openspcoop2.generic_project.web.input.SelectItem> lst = new ArrayList<org.openspcoop2.generic_project.web.input.SelectItem>();
 
-		org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem item0 = new  org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO);
+		org.openspcoop2.generic_project.web.input.SelectItem item0 = new  org.openspcoop2.generic_project.web.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO);
 
 		try{
 			if(val==null || StringUtils.isEmpty((String)val) || ((String)val).equals(CostantiForm.NON_SELEZIONATO))
-				lst = new ArrayList<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem>();
+				lst = new ArrayList<org.openspcoop2.generic_project.web.input.SelectItem>();
 			else{
 				List<Dipartimento> lstDipartimenti = ((IDipartimentoService)this.service).getCodiceAutoComplete((String)val,nomeEnte);
 
 				if(lstDipartimenti != null && lstDipartimenti.size() > 0){
 					for (Dipartimento dipartimento : lstDipartimenti) {
-						lst.add(new  org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(
+						lst.add(new  org.openspcoop2.generic_project.web.input.SelectItem(
 								dipartimento.getCodice(),dipartimento.getCodice()));
 					}
 				}
@@ -359,7 +358,11 @@ public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long,
 		} catch (ServiceException e) {
 			this.log.error("Si e' verificato un errore durante il caricamento delle properties pcc consentite per le unita' organizzative: " + e.getMessage(), e);
 		}
-		this.form.setValues(null);
+		try {
+			this.form.setObject(null);
+		} catch (Exception e) {
+			this.log.error("Si e' verificato un errore durante init form di creazione delle unita' organizzative: " + e.getMessage(), e);
+		}
 		this.form.setListaNomiProperties(this.getListaDipartimentoProperties());
 		((SelectListImpl)this.form.getEnte()).setElencoSelectItems(this.getListaEnti());
 		((SelectListImpl)this.form.getRegistro()).setElencoSelectItems(this.getListaRegistri());
@@ -397,7 +400,7 @@ public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long,
 		List<DipartimentoProperty> lista = new ArrayList<DipartimentoProperty>();
 
 		try{
-			org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem enteSI = this.form.getEnte().getValue();
+			org.openspcoop2.generic_project.web.input.SelectItem enteSI = this.form.getEnte().getValue();
 			String nomeEnte = null;
 			IdEnte idEnte = null;
 			if(enteSI!= null){
@@ -405,9 +408,9 @@ public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long,
 				idEnte = new IdEnte();
 				idEnte.setNome(nomeEnte);
 			}
-						
+
 			lista = ((IDipartimentoService)this.service).getListaPropertiesEnte(idEnte);
-//					org.govmix.proxy.fatturapa.web.console.util.Utils.getIdEnte());
+			//					org.govmix.proxy.fatturapa.web.console.util.Utils.getIdEnte());
 		}catch(Exception e){
 			this.log.error("Si e' verificato un errore durante il caricamento delle properties: " + e.getMessage(), e);
 		}
@@ -415,17 +418,17 @@ public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long,
 
 		return lista;
 	}
-	
+
 	public boolean isEntePCC(String idEnte){
-		
+
 		try {
 			EnteBean ente  = getEnteByNome(idEnte);
-			
+
 			return ente.getIdPccAmministrazione().getValue() != null;
 		} catch (ServiceException e) {
 			this.log.error("Si e' verificato un errore durante la lettura dell'ente: " + e.getMessage(), e);
 		}
-		
+
 		return false;
 	}
 
@@ -436,24 +439,24 @@ public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long,
 		} catch (ServiceException e) {
 			this.log.error("Si e' verificato un errore durante la lettura dell'ente: " + e.getMessage(), e);
 		}
-		
+
 		return ente;
 	}
 
 	public List<SelectItem> getListaRegistri() {
 		List<SelectItem> lista = new ArrayList<SelectItem>();
 
-		SelectItem elem0 = new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO));
+		SelectItem elem0 = new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO));
 
 
 		try {
 			RegistroSearchForm registroForm = new RegistroSearchForm();
-//			registroForm.getEnte().setValue(org.govmix.proxy.fatturapa.web.console.util.Utils.getIdEnte().getNome());
+			//			registroForm.getEnte().setValue(org.govmix.proxy.fatturapa.web.console.util.Utils.getIdEnte().getNome());
 			List<RegistroBean> findAllRegistri = this.registroService.findAll(registroForm);
 
 			if(findAllRegistri != null && findAllRegistri.size() > 0){
 				for (RegistroBean bean : findAllRegistri) {
-					SelectItem item = new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(
+					SelectItem item = new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(
 							bean.getNome().getValue(),bean.getNome().getValue()));
 					lista.add(item);
 				}
@@ -474,7 +477,7 @@ public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long,
 		String deleteMsg = null;
 
 		try{
-			deleteMsg = super._delete();
+			deleteMsg = super.azioneDelete();
 		}catch(DeleteException e){
 			deleteMsg = e.getMessage();
 		}
@@ -496,9 +499,9 @@ public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long,
 	private List<SelectItem> getOpzioniRadioButtonAbilita() {
 		List<SelectItem> lista = new ArrayList<SelectItem>();
 
-		org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem siOption = Utils.getSiOption("commons.label.abilitata");
+		org.openspcoop2.generic_project.web.input.SelectItem siOption = Utils.getSiOption("commons.label.abilitata");
 		SelectItem elem0 = new SelectItem(siOption,siOption.getLabel());
-		org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem noOption = Utils.getNoOption("commons.label.nonAbilitata");
+		org.openspcoop2.generic_project.web.input.SelectItem noOption = Utils.getNoOption("commons.label.nonAbilitata");
 		SelectItem elem1 = new SelectItem(noOption,noOption.getLabel()); 
 
 
@@ -507,21 +510,21 @@ public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long,
 
 		return lista;
 	}
-	
+
 	private List<SelectItem> getListaEnti() {
 		List<SelectItem> lista = new ArrayList<SelectItem>();
 
-		SelectItem elem0 = new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO));
+		SelectItem elem0 = new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO));
 
 
 		try {
-			
+
 			EnteSearchForm enteSearchForm = new EnteSearchForm();
 			List<EnteBean> findAllEnti = this.enteService.findAll(enteSearchForm);
 
 			if(findAllEnti != null && findAllEnti.size() > 0){
 				for (EnteBean bean : findAllEnti) {
-					SelectItem item = new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(
+					SelectItem item = new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(
 							bean.getNome().getValue(),bean.getNome().getValue()));
 					lista.add(item);
 				}
@@ -535,12 +538,12 @@ public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long,
 
 		return lista;
 	}
-	
+
 	public boolean isAbilitaCreazioneDipartimenti(){
 		//[Pintori 2016/06/10] Vincolo rilasciato il DeptAdmin gestisce l'anagrafica di tutti i dipartimenti, 
 		// quindi e' abilitato anche alla creazione/cancellazione.
-//		return Utils.getLoginBean().isAdmin() ;
-		
+		//		return Utils.getLoginBean().isAdmin() ;
+
 		return Utils.getLoginBean().isAdmin() || Utils.getLoginBean().isDeptAdmin();
 	}
 }

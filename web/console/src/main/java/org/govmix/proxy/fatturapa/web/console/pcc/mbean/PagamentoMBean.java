@@ -26,4 +26,17 @@ import org.openspcoop2.generic_project.web.impl.jsf1.mbean.BaseMBean;
 
 public class PagamentoMBean  extends BaseMBean<PagamentoPccBean, Long, PagamentoSearchForm> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Override
+	public void init() throws Exception {
+	}
+
+	@Override
+	public void initNavigationManager() throws Exception {
+	}
+
 }

@@ -53,7 +53,7 @@ import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.SortOrder;
 import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
-import org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem;
+import org.openspcoop2.generic_project.web.input.SelectItem;
 import org.openspcoop2.generic_project.web.input.DateTime;
 import org.openspcoop2.generic_project.web.input.SelectList;
 import org.openspcoop2.generic_project.web.service.BaseService;
@@ -365,7 +365,7 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 		FatturaAttivaFilter filter = this.fatturaAttivaBD.newFilter();
 
 		try{
-			SelectList<SelectItem> dataRicezionePeriodo = search.getDataInvioPeriodo();
+			SelectList dataRicezionePeriodo = search.getDataInvioPeriodo();
 			DateTime dataRicezione = search.getDataInvio();
 
 			Date dataInizio = dataRicezione.getValue();

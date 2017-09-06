@@ -27,14 +27,14 @@ public class ErroreSearchForm extends BaseSearchForm implements SearchForm, Clon
 
 	@Override
 	public void init() throws Exception {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
-		
 	}
 
+	@Override
+	public String valida() throws Exception {
+		return null;
+	}
 }

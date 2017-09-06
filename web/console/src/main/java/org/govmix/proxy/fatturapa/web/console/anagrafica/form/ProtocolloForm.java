@@ -64,14 +64,17 @@ public class ProtocolloForm extends BaseForm implements Form {
 
 	}
 
+	
 	/**
 	 * Inizializza la form con i valori dell'elemento selezionato.
 	 * 
 	 * @param bean
 	 */
-	public void setValues(ProtocolloBean bean){
+	@Override
+	public void setObject(Object arg0) throws Exception {
 		// Aggiornamento
-		if(bean != null){
+		if(arg0 != null){
+			ProtocolloBean bean = (ProtocolloBean) arg0;
 			this.nome.setDefaultValue(bean.getDTO().getNome());
 			this.nome.setDisabled(true);
 			this.descrizione.setDefaultValue(bean.getDTO().getDescrizione());
@@ -114,8 +117,9 @@ public class ProtocolloForm extends BaseForm implements Form {
 		return null;
 	}
 
-
-	public Protocollo getProtocollo(){
+	
+	@Override
+	public Object getObject() throws Exception {
 		Protocollo protocollo = new Protocollo();
 
 		protocollo.setNome(this.nome.getValue());

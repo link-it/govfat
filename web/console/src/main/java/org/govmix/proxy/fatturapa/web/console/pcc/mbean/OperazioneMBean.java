@@ -42,15 +42,20 @@ import org.govmix.proxy.fatturapa.web.console.util.ConsoleProperties;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
-//import org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem;
+//import org.openspcoop2.generic_project.web.input.SelectItem;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.BaseMBean;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.MenuActionException;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.RestoreSearchException;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.MessageUtils;
+import org.openspcoop2.generic_project.web.mbean.exception.MenuActionException;
+import org.openspcoop2.generic_project.web.mbean.exception.RestoreSearchException;
 import org.openspcoop2.generic_project.web.table.PagedDataTable;
 
 public class OperazioneMBean extends BaseMBean<TracciaPccEstesaBean, Long, OperazioneSearchForm>{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L; 
 
 	// Select List Statiche 
 	//Tipi Operazioni
@@ -73,21 +78,19 @@ public class OperazioneMBean extends BaseMBean<TracciaPccEstesaBean, Long, Opera
 
 	private String paginaFrom = null; // menu oppure dettaglioFattura
 
-	private PagedDataTable<List<TracciaPccEstesaBean>, OperazioneForm, OperazioneSearchForm> table;
+	private PagedDataTable<List<TracciaPccEstesaBean>, OperazioneSearchForm, OperazioneForm> table;
 	
 	private PccTracciamentoBD tracciamentoBD = null;
 
 	public OperazioneMBean(){
 		super(LoggerManager.getConsoleLogger());
-		this.initTables();
-		this.setOutcomes();
-
-		this.fatturaService = new FatturaElettronicaService();
-		
 		this.log.debug("Operazioni MBean");
+		
+		this.fatturaService = new FatturaElettronicaService();
 	}
 
-	public void initTables() {
+	@Override
+	public void init() throws Exception {
 		try{
 			this.tracciamentoBD = new PccTracciamentoBD(this.log);
 			
@@ -106,7 +109,8 @@ public class OperazioneMBean extends BaseMBean<TracciaPccEstesaBean, Long, Opera
 		}
 	}
 
-	private void setOutcomes(){
+	@Override
+	public void initNavigationManager() throws Exception {
 		this.getNavigationManager().setAnnullaOutcome(null);
 		this.getNavigationManager().setDeleteOutcome(null);
 		this.getNavigationManager().setDettaglioOutcome(null);
@@ -178,33 +182,33 @@ public class OperazioneMBean extends BaseMBean<TracciaPccEstesaBean, Long, Opera
 		}
 
 	}
-
+	
 	@Override
-	protected String _restoreSearch() throws RestoreSearchException {
-		return super._restoreSearch();
+	public String azioneRestoreSearch() throws RestoreSearchException {
+		return super.azioneRestoreSearch();
 	}
 
 	@Override
-	protected String _menuAction() throws MenuActionException {
+	public String azioneMenuAction() throws MenuActionException {
 		this.search.setRestoreSearch(true);
 		this.paginaFrom = "menu";
-		return super._menuAction();
+		return super.azioneMenuAction();
 	}
 
-	public List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> utenteRichiedenteAutoComplete(Object val) {
-		List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> lst = new ArrayList<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem>();
+	public List<org.openspcoop2.generic_project.web.input.SelectItem> utenteRichiedenteAutoComplete(Object val) {
+		List<org.openspcoop2.generic_project.web.input.SelectItem> lst = new ArrayList<org.openspcoop2.generic_project.web.input.SelectItem>();
 
-		org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem item0 = new  org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO);
+		org.openspcoop2.generic_project.web.input.SelectItem item0 = new  org.openspcoop2.generic_project.web.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO);
 
 		try{
 			if(val==null || StringUtils.isEmpty((String)val) || ((String)val).equals(CostantiForm.NON_SELEZIONATO))
-				lst = new ArrayList<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem>();
+				lst = new ArrayList<org.openspcoop2.generic_project.web.input.SelectItem>();
 			else{
 				List<String> listaMittenti = ((IOperazioneService)this.service).getUtenteRichiedenteAutoComplete((String)val);
 
 				if(listaMittenti != null && listaMittenti.size() > 0){
 					for (String string : listaMittenti) {
-						lst.add(new  org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(string,string));
+						lst.add(new  org.openspcoop2.generic_project.web.input.SelectItem(string,string));
 					}
 				}		
 			}
@@ -217,20 +221,20 @@ public class OperazioneMBean extends BaseMBean<TracciaPccEstesaBean, Long, Opera
 		return lst;
 	}
 
-	public List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> sistemaRichiedenteAutoComplete(Object val) {
-		List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> lst = new ArrayList<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem>();
+	public List<org.openspcoop2.generic_project.web.input.SelectItem> sistemaRichiedenteAutoComplete(Object val) {
+		List<org.openspcoop2.generic_project.web.input.SelectItem> lst = new ArrayList<org.openspcoop2.generic_project.web.input.SelectItem>();
 
-		org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem item0 = new  org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO);
+		org.openspcoop2.generic_project.web.input.SelectItem item0 = new  org.openspcoop2.generic_project.web.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO);
 
 		try{
 			if(val==null || StringUtils.isEmpty((String)val) || ((String)val).equals(CostantiForm.NON_SELEZIONATO))
-				lst = new ArrayList<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem>();
+				lst = new ArrayList<org.openspcoop2.generic_project.web.input.SelectItem>();
 			else{
 				List<String> listaMittenti = ((IOperazioneService)this.service).getSistemaRichiedenteAutoComplete((String)val);
 
 				if(listaMittenti != null && listaMittenti.size() > 0){
 					for (String string : listaMittenti) {
-						lst.add(new  org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(string,string));
+						lst.add(new  org.openspcoop2.generic_project.web.input.SelectItem(string,string));
 					}
 				}
 			}
@@ -244,20 +248,20 @@ public class OperazioneMBean extends BaseMBean<TracciaPccEstesaBean, Long, Opera
 		return lst;
 	}
 
-	public List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> cedentePrestatoreAutoComplete(Object val) {
-		List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> lst = new ArrayList<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem>();
+	public List<org.openspcoop2.generic_project.web.input.SelectItem> cedentePrestatoreAutoComplete(Object val) {
+		List<org.openspcoop2.generic_project.web.input.SelectItem> lst = new ArrayList<org.openspcoop2.generic_project.web.input.SelectItem>();
 
-		org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem item0 = new  org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO);
+		org.openspcoop2.generic_project.web.input.SelectItem item0 = new  org.openspcoop2.generic_project.web.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO);
 
 		try{
 			if(val==null || StringUtils.isEmpty((String)val) || ((String)val).equals(CostantiForm.NON_SELEZIONATO))
-				lst = new ArrayList<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem>();
+				lst = new ArrayList<org.openspcoop2.generic_project.web.input.SelectItem>();
 			else{
 				List<String> listaMittenti = ((IOperazioneService)this.service).getMittenteAutoComplete((String)val);
 
 				if(listaMittenti != null && listaMittenti.size() > 0){
 					for (String string : listaMittenti) {
-						lst.add(new  org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(string,string));
+						lst.add(new  org.openspcoop2.generic_project.web.input.SelectItem(string,string));
 					}
 				}
 			}
@@ -271,20 +275,20 @@ public class OperazioneMBean extends BaseMBean<TracciaPccEstesaBean, Long, Opera
 		return lst;
 	}
 
-	public List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> numeroAutoComplete(Object val) {
-		List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> lst = new ArrayList<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem>();
+	public List<org.openspcoop2.generic_project.web.input.SelectItem> numeroAutoComplete(Object val) {
+		List<org.openspcoop2.generic_project.web.input.SelectItem> lst = new ArrayList<org.openspcoop2.generic_project.web.input.SelectItem>();
 
-		org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem item0 = new  org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO);
+		org.openspcoop2.generic_project.web.input.SelectItem item0 = new  org.openspcoop2.generic_project.web.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO);
 
 		try{
 			if(val==null || StringUtils.isEmpty((String)val) || ((String)val).equals(CostantiForm.NON_SELEZIONATO))
-				lst = new ArrayList<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem>();
+				lst = new ArrayList<org.openspcoop2.generic_project.web.input.SelectItem>();
 			else{
 				List<String> lstDipartimenti = ((IOperazioneService)this.service).getNumeroAutoComplete((String)val);
 
 				if(lstDipartimenti != null && lstDipartimenti.size() > 0){
 					for (String string : lstDipartimenti) {
-						lst.add(new  org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(string,string));
+						lst.add(new  org.openspcoop2.generic_project.web.input.SelectItem(string,string));
 					}
 				}
 			}
@@ -302,24 +306,24 @@ public class OperazioneMBean extends BaseMBean<TracciaPccEstesaBean, Long, Opera
 		if (this.listaTipiOperazioni == null) {
 			this.listaTipiOperazioni = new ArrayList<SelectItem>();
 
-			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi"))));
-			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("PagamentoIVA", ("pccOperazione.nome.PagamentoIVA"))));
-			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("DatiFattura", ("pccOperazione.nome.DatiFattura"))));
-			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("InserimentoFattura", ("pccOperazione.nome.InserimentoFattura"))));
-			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("StatoFattura", ("pccOperazione.nome.StatoFattura"))));
-			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("ElencoMovimentiErarioIVA", ("pccOperazione.nome.ElencoMovimentiErarioIVA"))));
-			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("DownloadDocumento", ("pccOperazione.nome.DownloadDocumento"))));
-			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("ConsultazioneTracce", ("pccOperazione.nome.ConsultazioneTracce"))));
-			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("OperazioneContabile_CP", ("pccOperazione.nome.OperazioneContabile_CP"))));
-			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("OperazioneContabile_SP", ("pccOperazione.nome.OperazioneContabile_SP"))));
-			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("OperazioneContabile_CS", ("pccOperazione.nome.OperazioneContabile_CS"))));
-			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("OperazioneContabile_CCS", ("pccOperazione.nome.OperazioneContabile_CCS"))));
-			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("OperazioneContabile_CSPC", ("pccOperazione.nome.OperazioneContabile_CSPC"))));
-			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("OperazioneContabile_CO", ("pccOperazione.nome.OperazioneContabile_CO"))));
-			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("OperazioneContabile_SC", ("pccOperazione.nome.OperazioneContabile_SC"))));
-			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("OperazioneContabile_CPS", ("pccOperazione.nome.OperazioneContabile_CPS"))));
-			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("OperazioneContabile_RC", ("pccOperazione.nome.OperazioneContabile_RC"))));
-			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("OperazioneContabile_RF", ("pccOperazione.nome.OperazioneContabile_RF"))));
+			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("*", ("commons.label.qualsiasi"))));
+			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("PagamentoIVA", ("pccOperazione.nome.PagamentoIVA"))));
+			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("DatiFattura", ("pccOperazione.nome.DatiFattura"))));
+			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("InserimentoFattura", ("pccOperazione.nome.InserimentoFattura"))));
+			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("StatoFattura", ("pccOperazione.nome.StatoFattura"))));
+			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("ElencoMovimentiErarioIVA", ("pccOperazione.nome.ElencoMovimentiErarioIVA"))));
+			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("DownloadDocumento", ("pccOperazione.nome.DownloadDocumento"))));
+			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("ConsultazioneTracce", ("pccOperazione.nome.ConsultazioneTracce"))));
+			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("OperazioneContabile_CP", ("pccOperazione.nome.OperazioneContabile_CP"))));
+			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("OperazioneContabile_SP", ("pccOperazione.nome.OperazioneContabile_SP"))));
+			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("OperazioneContabile_CS", ("pccOperazione.nome.OperazioneContabile_CS"))));
+			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("OperazioneContabile_CCS", ("pccOperazione.nome.OperazioneContabile_CCS"))));
+			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("OperazioneContabile_CSPC", ("pccOperazione.nome.OperazioneContabile_CSPC"))));
+			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("OperazioneContabile_CO", ("pccOperazione.nome.OperazioneContabile_CO"))));
+			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("OperazioneContabile_SC", ("pccOperazione.nome.OperazioneContabile_SC"))));
+			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("OperazioneContabile_CPS", ("pccOperazione.nome.OperazioneContabile_CPS"))));
+			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("OperazioneContabile_RC", ("pccOperazione.nome.OperazioneContabile_RC"))));
+			this.listaTipiOperazioni.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("OperazioneContabile_RF", ("pccOperazione.nome.OperazioneContabile_RF"))));
 		}
 
 		return this.listaTipiOperazioni;
@@ -334,13 +338,13 @@ public class OperazioneMBean extends BaseMBean<TracciaPccEstesaBean, Long, Opera
 			this.listaPeriodoTemporale = new ArrayList<SelectItem>();
 
 			this.listaPeriodoTemporale.add(new SelectItem(
-					new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(OperazioneSearchForm.DATA_PERIODO_ULTIMA_SETTIMANA, ("operazione.search.data.ultimaSettimana"))));
+					new org.openspcoop2.generic_project.web.input.SelectItem(OperazioneSearchForm.DATA_PERIODO_ULTIMA_SETTIMANA, ("operazione.search.data.ultimaSettimana"))));
 			this.listaPeriodoTemporale.add(new SelectItem(
-					new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(OperazioneSearchForm.DATA_PERIODO_ULTIMO_MESE, ("operazione.search.data.ultimoMese"))));
+					new org.openspcoop2.generic_project.web.input.SelectItem(OperazioneSearchForm.DATA_PERIODO_ULTIMO_MESE, ("operazione.search.data.ultimoMese"))));
 			this.listaPeriodoTemporale.add(new SelectItem(
-					new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(OperazioneSearchForm.DATA_PERIODO_ULTIMI_TRE_MESI, ("operazione.search.data.ultimiTreMesi"))));
+					new org.openspcoop2.generic_project.web.input.SelectItem(OperazioneSearchForm.DATA_PERIODO_ULTIMI_TRE_MESI, ("operazione.search.data.ultimiTreMesi"))));
 			this.listaPeriodoTemporale.add(new SelectItem(
-					new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(OperazioneSearchForm.DATA_PERIODO_PERSONALIZZATO, ("operazione.search.data.personalizzato"))));
+					new org.openspcoop2.generic_project.web.input.SelectItem(OperazioneSearchForm.DATA_PERIODO_PERSONALIZZATO, ("operazione.search.data.personalizzato"))));
 
 		}
 
@@ -355,13 +359,13 @@ public class OperazioneMBean extends BaseMBean<TracciaPccEstesaBean, Long, Opera
 		if (this.listaEsito == null) {
 			this.listaEsito = new ArrayList<SelectItem>(); 
 
-			this.listaEsito.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi"))));
-			this.listaEsito.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoType.AS_OK.getValue(),"pccStato." +StatoType.AS_OK.getValue())));
-			this.listaEsito.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoType.AS_PRESA_IN_CARICO.getValue(),"pccStato." +StatoType.AS_PRESA_IN_CARICO.getValue())));
-			this.listaEsito.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoType.AS_ERRORE.getValue(),"pccStato." +StatoType.AS_ERRORE.getValue())));
-			this.listaEsito.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoType.AS_ERRORE_PRESA_IN_CARICO.getValue(),"pccStato." +StatoType.AS_ERRORE_PRESA_IN_CARICO.getValue())));
-			this.listaEsito.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoType.S_OK.getValue(),"pccStato." +StatoType.S_OK.getValue())));
-			this.listaEsito.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoType.S_ERRORE.getValue(),"pccStato." +StatoType.S_ERRORE.getValue())));
+			this.listaEsito.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("*", ("commons.label.qualsiasi"))));
+			this.listaEsito.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoType.AS_OK.getValue(),"pccStato." +StatoType.AS_OK.getValue())));
+			this.listaEsito.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoType.AS_PRESA_IN_CARICO.getValue(),"pccStato." +StatoType.AS_PRESA_IN_CARICO.getValue())));
+			this.listaEsito.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoType.AS_ERRORE.getValue(),"pccStato." +StatoType.AS_ERRORE.getValue())));
+			this.listaEsito.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoType.AS_ERRORE_PRESA_IN_CARICO.getValue(),"pccStato." +StatoType.AS_ERRORE_PRESA_IN_CARICO.getValue())));
+			this.listaEsito.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoType.S_OK.getValue(),"pccStato." +StatoType.S_OK.getValue())));
+			this.listaEsito.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoType.S_ERRORE.getValue(),"pccStato." +StatoType.S_ERRORE.getValue())));
 
 
 		}
@@ -372,11 +376,11 @@ public class OperazioneMBean extends BaseMBean<TracciaPccEstesaBean, Long, Opera
 		this.listaEsito = listaEsito;
 	}
 
-	public PagedDataTable<List<TracciaPccEstesaBean>, OperazioneForm, OperazioneSearchForm> getTable() {
+	public PagedDataTable<List<TracciaPccEstesaBean>, OperazioneSearchForm, OperazioneForm> getTable() {
 		return this.table;
 	}
 
-	public void setTable(PagedDataTable<List<TracciaPccEstesaBean>, OperazioneForm, OperazioneSearchForm> table) {
+	public void setTable(PagedDataTable<List<TracciaPccEstesaBean>, OperazioneSearchForm, OperazioneForm> table) {
 		this.table = table;
 	}
 
@@ -448,12 +452,12 @@ public class OperazioneMBean extends BaseMBean<TracciaPccEstesaBean, Long, Opera
 		if (this.listaCodiciErrorePCC == null) {
 			this.listaCodiciErrorePCC = new ArrayList<SelectItem>();
 
-			this.listaCodiciErrorePCC.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi"))));
+			this.listaCodiciErrorePCC.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("*", ("commons.label.qualsiasi"))));
 			try {
 				TreeMap<String,String> codiciErrorePCC = ConsoleProperties.getInstance(getLog()).getCodiciErrorePCC();
 				
 				for (String codice : codiciErrorePCC.keySet()) {
-					this.listaCodiciErrorePCC.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(codice, codice)));
+					this.listaCodiciErrorePCC.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(codice, codice)));
 				}
 			} catch (Exception e) {
 				log.error("Errore durante la lettura dei codici di errore PCC: "+ e.getMessage(),e);

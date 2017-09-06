@@ -38,7 +38,7 @@ import org.govmix.proxy.fatturapa.web.console.pcc.mbean.ContabilizzazioneMBean;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.web.impl.jsf1.datamodel.BaseDataModel;
 
-public class ContabilizzazioneDM extends BaseDataModel<Long, ContabilizzazionePccBean, IContabilizzazioneService> {
+public class ContabilizzazioneDM extends BaseDataModel<ContabilizzazionePccBean,Long, IContabilizzazioneService> {
 
 	/**
 	 * 

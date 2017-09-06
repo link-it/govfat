@@ -35,7 +35,7 @@ import org.openspcoop2.generic_project.web.impl.jsf1.datamodel.ParameterizedData
  */
 public class FatturaElettronicaAttivaDM extends
 
-ParameterizedDataModel<Long, FatturaElettronicaAttivaBean, IFatturaElettronicaAttivaService, FatturaElettronica, FatturaElettronicaAttivaSearchForm>{
+ParameterizedDataModel<FatturaElettronica,Long, FatturaElettronicaAttivaBean, IFatturaElettronicaAttivaService,  FatturaElettronicaAttivaSearchForm>{
 	/**
 	 * 
 	 */

@@ -67,10 +67,10 @@ import org.govmix.proxy.fatturapa.web.console.util.ConsoleProperties;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.BaseMBean;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.DeleteException;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.InviaException;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.MessageUtils;
 import org.openspcoop2.generic_project.web.iservice.IBaseService;
+import org.openspcoop2.generic_project.web.mbean.exception.DeleteException;
+import org.openspcoop2.generic_project.web.mbean.exception.InviaException;
 import org.openspcoop2.generic_project.web.output.Button;
 import org.openspcoop2.generic_project.web.output.OutputGroup;
 import org.openspcoop2.generic_project.web.output.Text;
@@ -78,6 +78,10 @@ import org.openspcoop2.generic_project.web.table.PagedDataTable;
 
 public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSearchForm> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private ScadenzaForm form;
 	private String scadenzaAction = "add";
 	private boolean checkScadenza = false;
@@ -86,7 +90,7 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 	private List<ScadenzaPccBean> statoOriginale = null; 
 	private List<ScadenzaPccBean> listaScadenze = null;
 
-	private PagedDataTable<List<ScadenzaPccBean>, OperazioneForm, ScadenzaSearchForm> table;
+	private PagedDataTable<List<ScadenzaPccBean>, ScadenzaSearchForm, OperazioneForm> table;
 
 	private boolean operazioneAsincrona = false;
 
@@ -119,9 +123,6 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 		super(LoggerManager.getConsoleLogger());
 		this.log.debug("Scadenza MBean");
 
-		this.setOutcomes();
-		this.init();
-
 		this.esitoService = new EsitoService();
 		this.fatturaService = new FatturaElettronicaService();
 		this.operazioneService = new OperazioneService();
@@ -144,7 +145,8 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 		}
 	}
 
-	private void setOutcomes(){
+	@Override
+	public void initNavigationManager() throws Exception {
 		this.getNavigationManager().setAnnullaOutcome(null);
 		this.getNavigationManager().setDeleteOutcome(null);
 		//this.getNavigationManager().setDettaglioOutcome("utente");
@@ -157,7 +159,8 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 		//		this.getNavigationManager().setRestoreSearchOutcome("listaUtenti");
 	}
 
-	private void init (){
+	@Override
+	public void init() throws Exception {
 		try{
 			this.properties = ConsoleProperties.getInstance(log);
 
@@ -188,26 +191,35 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 	@Override
 	public void addNewListener(ActionEvent ae) {
 		super.addNewListener(ae);
-		this.setEditMode(true);
-		this.selectedElement = null;
-		this.selectedId = null;
-		this.checkScadenza = false;
-		this.scadenzaAction = "add";
-		this.form.setValues(this.selectedElement);
+		try {
+			this.setEditMode(true);
+			this.selectedElement = null;
+			this.selectedId = null;
+			this.checkScadenza = false;
+			this.scadenzaAction = "add";
+			this.form.setObject(this.selectedElement);
+		} catch (Exception e) {
+			log.error("Si e' verificato un errore durante la init del form di creazione scadenza: " + e.getMessage(), e);
+		}
 	}
 
 
 	@Override
 	public void setSelectedElement(ScadenzaPccBean selectedElement) {
-		super.setSelectedElement(selectedElement);
-		this.setEditMode(true);
-		this.checkScadenza = false;
-		this.scadenzaAction = "edit";
-		this.form.setValues(this.selectedElement);
+		try {
+			super.setSelectedElement(selectedElement);
+			this.setEditMode(true);
+			this.checkScadenza = false;
+			this.scadenzaAction = "edit";
+
+			this.form.setObject(this.selectedElement);
+		} catch (Exception e) {
+			log.error("Si e' verificato un errore durante la set della scadenza selezionata: " + e.getMessage(), e);
+		}
 	}
 
 	@Override
-	protected String _delete() throws DeleteException {
+	public String azioneDelete() throws DeleteException {
 		try{
 			this.setEditMode(true);
 			if(this.scadenzaAction.equals("delete")){
@@ -220,7 +232,7 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 	}
 
 	@Override
-	protected String _invia() throws InviaException {
+	public String azioneInvia() throws InviaException {
 		this.setEditMode(true);
 		String msg = this.form.valida();
 
@@ -230,7 +242,7 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 
 		try{
 			long oldId = -1;
-			PccScadenza nuovaScadenza = this.form.getScadenza();
+			PccScadenza nuovaScadenza = (PccScadenza) this.form.getObject();
 			// Add
 			if(!this.scadenzaAction.equals("edit")){
 			} else {
@@ -346,7 +358,7 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 					MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneInviaScadenzeErroreConnessione"));
 					return null;
 				}
-				
+
 				MessageUtils.addErrorMsg(e.getMessage());	
 				return null;
 			}
@@ -519,17 +531,17 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 		}
 		catch (Exception e) {
 			this.log.error("Si e' verificato un errore durante l'invio della scadenze: " + e.getMessage(), e);
-			
+
 			if(e instanceof javax.xml.ws.soap.SOAPFaultException){
 				if(e.getMessage() != null && e.getMessage().contains("Could not send Message")){
 					MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneCancellazioneScadenzeErroreConnessione"));
 					return null;
 				}
-				
+
 				MessageUtils.addErrorMsg(e.getMessage());	
 				return null;
 			}
-			
+
 			MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneCancellazioneScadenzeErroreGenerico"));
 		} finally {
 			if(!this.isEditMode())
@@ -549,11 +561,11 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 		this.form = form;
 	}
 
-	public PagedDataTable<List<ScadenzaPccBean>, OperazioneForm, ScadenzaSearchForm> getTable() {
+	public PagedDataTable<List<ScadenzaPccBean>, ScadenzaSearchForm, OperazioneForm> getTable() {
 		return this.table;
 	}
 
-	public void setTable(PagedDataTable<List<ScadenzaPccBean>, OperazioneForm, ScadenzaSearchForm> table) {
+	public void setTable(PagedDataTable<List<ScadenzaPccBean>, ScadenzaSearchForm, OperazioneForm> table) {
 		this.table = table;
 	}
 

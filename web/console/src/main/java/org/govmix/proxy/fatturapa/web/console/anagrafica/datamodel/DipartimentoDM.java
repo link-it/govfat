@@ -26,8 +26,8 @@ import org.govmix.proxy.fatturapa.web.console.anagrafica.form.DipartimentoSearch
 import org.govmix.proxy.fatturapa.web.console.anagrafica.iservice.IDipartimentoService;
 import org.openspcoop2.generic_project.web.impl.jsf1.datamodel.ParameterizedDataModel;
 
-public class DipartimentoDM extends ParameterizedDataModel<Long, DipartimentoBean, 
-	IDipartimentoService, Dipartimento, DipartimentoSearchForm>{
+public class DipartimentoDM extends ParameterizedDataModel<Dipartimento,Long, DipartimentoBean, 
+	IDipartimentoService, DipartimentoSearchForm>{
 	
 	/**
 	 * 

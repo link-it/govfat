@@ -41,7 +41,7 @@ import org.openspcoop2.generic_project.web.impl.jsf1.datamodel.ParameterizedData
 
 public class TrasmissioneDM extends
 
-ParameterizedDataModel<Long, TracciaTrasmissionePCCBean, ITrasmissioneService, PccTracciaTrasmissione, TrasmissioneSearchForm>{
+ParameterizedDataModel<PccTracciaTrasmissione, Long, TracciaTrasmissionePCCBean, ITrasmissioneService,  TrasmissioneSearchForm>{
 
 	/**
 	 * 

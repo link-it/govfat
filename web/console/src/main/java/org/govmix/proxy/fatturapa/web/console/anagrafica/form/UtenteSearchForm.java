@@ -135,7 +135,10 @@ public class UtenteSearchForm extends BaseSearchForm implements SearchForm{
 		}
 
 		((SelectListImpl)this.dipartimento).setElencoSelectItems(this.mBean.getListaDipartimentiEnte(value2));
-		
-	}
 
+	}
+	@Override
+	public String valida() throws Exception {
+		return null;
+	}
 }

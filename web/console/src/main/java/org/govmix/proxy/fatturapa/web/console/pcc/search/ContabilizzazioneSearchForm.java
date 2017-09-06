@@ -40,4 +40,9 @@ public class ContabilizzazioneSearchForm  extends BaseSearchForm implements Sear
 		
 	}
 
+	@Override
+	public String valida() throws Exception {
+		return null;
+	}
 }
+

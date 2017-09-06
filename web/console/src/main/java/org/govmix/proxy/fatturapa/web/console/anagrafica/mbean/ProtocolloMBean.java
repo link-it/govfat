@@ -29,11 +29,11 @@ import org.govmix.proxy.fatturapa.web.console.anagrafica.form.ProtocolloForm;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.form.ProtocolloSearchForm;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.BaseListView;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.AnnullaException;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.InviaException;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.MenuActionException;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.ModificaException;
-import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.RestoreSearchException;
+import org.openspcoop2.generic_project.web.mbean.exception.AnnullaException;
+import org.openspcoop2.generic_project.web.mbean.exception.InviaException;
+import org.openspcoop2.generic_project.web.mbean.exception.MenuActionException;
+import org.openspcoop2.generic_project.web.mbean.exception.ModificaException;
+import org.openspcoop2.generic_project.web.mbean.exception.RestoreSearchException;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.MessageUtils;
 import org.openspcoop2.generic_project.web.iservice.IBaseService;
 
@@ -53,18 +53,20 @@ public class ProtocolloMBean extends BaseListView<ProtocolloBean, Long, Protocol
 	public ProtocolloMBean () throws Exception{
 		super(LoggerManager.getConsoleLogger());
 		this.log.debug("Ente MBean");
-
+	}
+	
+	
+	@Override
+	public void init() throws Exception {
 		this.form = new ProtocolloForm();
 		this.form.setRendered(false);
 		this.form.reset();
-
 		this.showForm = false;
 		this.azione = null;
-
-		this.setOutcomes();
 	}
-
-	private void setOutcomes(){
+	
+	@Override
+	public void initNavigationManager() throws Exception {
 		this.getNavigationManager().setAnnullaOutcome(null);
 		this.getNavigationManager().setDeleteOutcome(null);
 		this.getNavigationManager().setDettaglioOutcome(null);
@@ -99,8 +101,9 @@ public class ProtocolloMBean extends BaseListView<ProtocolloBean, Long, Protocol
 		this.azione = null;
 	}
 
+	
 	@Override
-	protected String _menuAction() throws MenuActionException {
+	public String azioneMenuAction() throws MenuActionException {
 		try{
 			this.search.reset();
 			// Protocollo fisso dalle properties
@@ -113,11 +116,11 @@ public class ProtocolloMBean extends BaseListView<ProtocolloBean, Long, Protocol
 		}catch(Exception e){
 			throw new MenuActionException(e);
 		}
-		return super._menuAction();
+		return super.azioneMenuAction();
 	}
-
+	
 	@Override
-	protected String _restoreSearch() throws RestoreSearchException {
+	public String azioneRestoreSearch() throws RestoreSearchException {
 		try{
 			this.search.setRestoreSearch(true); 
 
@@ -134,21 +137,21 @@ public class ProtocolloMBean extends BaseListView<ProtocolloBean, Long, Protocol
 	}
 
 	@Override
-	protected String _modifica() throws ModificaException {
+	public String azioneModifica() throws ModificaException {
 		try{
 			this.showForm = true;
 			this.azione = "update";
 			this.form.setRendered(this.showForm);
-			this.form.setValues(this.selectedElement);
+			this.form.setObject(this.selectedElement);
 			this.form.reset();
 		}catch(Exception e){
 			throw new ModificaException(e);
 		}
-		return super._modifica();
+		return super.azioneModifica();
 	}
 
 	@Override
-	protected String _invia() throws InviaException{
+	public String azioneInvia() throws InviaException {
 		String msg = this.form.valida();
 
 		if(msg!= null){
@@ -158,7 +161,7 @@ public class ProtocolloMBean extends BaseListView<ProtocolloBean, Long, Protocol
 		}
 
 		try{
-			Protocollo protocollo = this.form.getProtocollo();
+			Protocollo protocollo = (Protocollo) this.form.getObject();
 			long oldId = this.selectedElement.getDTO().getId();
 
 			protocollo.setId(oldId);
@@ -185,7 +188,7 @@ public class ProtocolloMBean extends BaseListView<ProtocolloBean, Long, Protocol
 	}
 
 	@Override
-	protected String _annulla() throws AnnullaException {
+	public String azioneAnnulla() throws AnnullaException {
 		this.getNavigationManager().setAnnullaOutcome("listaProtocolli");
 
 		if(this.azione.equals("update")){
@@ -196,7 +199,7 @@ public class ProtocolloMBean extends BaseListView<ProtocolloBean, Long, Protocol
 		this.form.setRendered(this.showForm); 
 		this.form.reset();
 
-		return super._annulla();
+		return super.azioneAnnulla();
 	}
 
 	public String annullaRegistro(){

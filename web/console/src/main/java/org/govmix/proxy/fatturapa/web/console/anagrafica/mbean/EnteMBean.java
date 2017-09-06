@@ -259,4 +259,12 @@ public class EnteMBean extends BaseListView<EnteBean, Long, EnteSearchForm,EnteF
 //		this.registroMBean = registroMBean;
 //	}
 
+	@Override
+	public void init() throws Exception {
+	}
+
+	@Override
+	public void initNavigationManager() throws Exception {
+	}
+
 }
