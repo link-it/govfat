@@ -594,9 +594,9 @@ IFatturaElettronicaAttivaService>{
 				this.salvataggioOk = true;
 				MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura.salvataggioOk"));
 			} else {
-				if(StringUtils.isNotEmpty(salvaFatture.getDettaglio())) {
+				if(StringUtils.isNotEmpty(salvaFatture.getEccezione().getCodice().toString())) {
 				//	MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle(salvaFatture.getDettaglio()));
-					this.checkFormFatturaMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle(salvaFatture.getDettaglio());
+					this.checkFormFatturaMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle(salvaFatture.getEccezione().getCodice().toString());
 				}else { 
 				//	MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura.salvataggioKo"));
 					this.checkFormFatturaMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura.salvataggioKo");
@@ -677,9 +677,9 @@ IFatturaElettronicaAttivaService>{
 				this.checkConservazione = true;
 				MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFatturaSoloConservazione.salvataggioOk"));
 			} else {
-				if(StringUtils.isNotEmpty(salvaFattureSoloConservazione.getDettaglio())) {
+				if(StringUtils.isNotEmpty(salvaFattureSoloConservazione.getEccezione().getCodice().toString())) {
 //					MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle(salvaFattureSoloConservazione.getDettaglio()));
-					this.checkFormConservazioneMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle(salvaFattureSoloConservazione.getDettaglio());
+					this.checkFormConservazioneMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle(salvaFattureSoloConservazione.getEccezione().getCodice().toString());
 				}else { 
 //					MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFatturaSoloConservazione.salvataggioKo"));
 					this.checkFormConservazioneMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFatturaSoloConservazione.salvataggioKo");

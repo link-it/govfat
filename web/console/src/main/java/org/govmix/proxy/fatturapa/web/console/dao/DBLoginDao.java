@@ -219,7 +219,8 @@ public class DBLoginDao implements ILoginDao{
 
 				List<Map<String,Object>> select = this.dipartimentoDAO.select(pagExpr, true,
 						Dipartimento.model().CODICE,Dipartimento.model().DESCRIZIONE,
-						Dipartimento.model().ACCETTAZIONE_AUTOMATICA, Dipartimento.model().MODALITA_PUSH, Dipartimento.model().FATTURAZIONE_ATTIVA,Dipartimento.model().REGISTRO.NOME);
+						Dipartimento.model().ACCETTAZIONE_AUTOMATICA, Dipartimento.model().MODALITA_PUSH, Dipartimento.model().FATTURAZIONE_ATTIVA,
+						Dipartimento.model().FIRMA_AUTOMATICA,Dipartimento.model().REGISTRO.NOME);
 
 				if(select != null && select.size()  >0)
 					for (Map<String,Object> dipMap : select) {

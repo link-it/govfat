@@ -77,6 +77,7 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 		try{
 			this.fatturaAttivaBD = new FatturaAttivaBD(log);
 			this.inserimentoLotti = new InserimentoLotti(log);
+			this.inserimentoLotti.setDipartimenti(Utils.getListaDipartimentiLoggedUtente());
 		}catch(Exception e){
 			FatturaElettronicaAttivaService.log.error("Si e' verificato un errore durante l'inizializzazione del service:" + e.getMessage(), e);
 		}

@@ -5,7 +5,7 @@ public class InserimentoLottoResponse {
 	public enum ESITO {OK, KO}
 	
 	private ESITO esito;
-	private String dettaglio;
+	private InserimentoLottiException eccezione;
 	
 	public ESITO getEsito() {
 		return esito;
@@ -13,10 +13,10 @@ public class InserimentoLottoResponse {
 	public void setEsito(ESITO esito) {
 		this.esito = esito;
 	}
-	public String getDettaglio() {
-		return dettaglio;
+	public InserimentoLottiException getEccezione() {
+		return eccezione;
 	}
-	public void setDettaglio(String dettaglio) {
-		this.dettaglio = dettaglio;
+	public void setEccezione(InserimentoLottiException eccezione) {
+		this.eccezione = eccezione;
 	}
 }

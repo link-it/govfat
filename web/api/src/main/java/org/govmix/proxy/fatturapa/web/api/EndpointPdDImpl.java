@@ -30,36 +30,38 @@ import org.apache.cxf.helpers.IOUtils;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
+import org.govmix.proxy.fatturapa.orm.Metadato;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoInserimentoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
+import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.web.api.utils.WebApiProperties;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
-import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFattura;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters;
-import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters.Soggetto;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaUtils;
 import org.govmix.proxy.fatturapa.web.commons.riceviNotificaDT.RiceviNotifica;
+import org.govmix.proxy.fatturapa.web.commons.ricevicomunicazionesdi.RiceviComunicazioneSdI;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 
 public class EndpointPdDImpl implements EndpointPdD {
 
 	private static final String ID_EGOV = "X-SDI-DirectVM-IDMessaggioRichiesta";
-	private ConsegnaFattura consegnaFattura;
 	private RiceviNotifica riceviNotifica;
 	private LottoBD lottoBD;
+	private static final String HEADER_IDENTIFICATIVO_SDI = "X-SDI-IdentificativoSdI";
+	private RiceviComunicazioneSdI riceviComunicazioneSdi;
 
+	
 	private Logger log;
 
 	public EndpointPdDImpl() throws Exception {
 		this.log = LoggerManager.getEndpointPdDLogger();
 		this.log.info("Inizializzazione endpoint PdD...");
-		this.consegnaFattura = new ConsegnaFattura(this.log, WebApiProperties.getInstance().isValidazioneDAOAbilitata());
 		this.riceviNotifica = new RiceviNotifica(this.log);
 		this.lottoBD = new LottoBD(log);
 		this.lottoBD.setValidate(WebApiProperties.getInstance().isValidazioneDAOAbilitata());
-
 		this.log.info("Inizializzazione endpoint PdD completata");
 	}
 
@@ -205,113 +207,6 @@ public class EndpointPdDImpl implements EndpointPdD {
 	}
 
 	@Override
-	public Response postConsegnaFattura(String formatoFatturaPA, 
-			Integer posizioneFatturaPA,
-			Integer identificativoSdI, 
-			String nomeFile, 
-			String messageId,
-			String codiceDestinatario,
-
-			String cedentePrestatoreDenominazione, 
-			String cedentePrestatoreNome,
-			String cedentePrestatoreCognome,
-			String cedentePrestatoreCodiceFiscale,
-			String cedentePrestatoreIdCodice,
-			String cedentePrestatoreIdPaese,
-
-			String cessionarioCommittenteDenominazione, 
-			String cessionarioCommittenteNome,
-			String cessionarioCommittenteCognome,
-			String cessionarioCommittenteCodiceFiscale,
-			String cessionarioCommittenteIdCodice,
-			String cessionarioCommittenteIdPaese,
-
-			String terzoIntermediarioOSoggettoEmittenteDenominazione, 
-			String terzoIntermediarioOSoggettoEmittenteNome,
-			String terzoIntermediarioOSoggettoEmittenteCognome,
-			String terzoIntermediarioOSoggettoEmittenteCodiceFiscale,
-			String terzoIntermediarioOSoggettoEmittenteIdCodice,
-			String terzoIntermediarioOSoggettoEmittenteIdPaese,
-
-			InputStream fattura) {
-
-		this.log.info("Invoke riceviFattura");
-		ConsegnaFatturaParameters params = new ConsegnaFatturaParameters();
-
-		params.setFormatoFatturaPA(formatoFatturaPA);
-		params.setPosizioneFatturaPA(posizioneFatturaPA);
-
-		params.setIdentificativoSdI(identificativoSdI);
-		params.setNomeFile(nomeFile);
-		params.setMessageId(messageId);
-		params.setCodiceDestinatario(codiceDestinatario);
-
-		Soggetto cedentePrestatore = params.new Soggetto();
-
-		cedentePrestatore.setDenominazione(cedentePrestatoreDenominazione);
-		cedentePrestatore.setNome(cedentePrestatoreNome);
-		cedentePrestatore.setCognome(cedentePrestatoreCognome);
-		cedentePrestatore.setIdCodice(cedentePrestatoreIdCodice);
-		cedentePrestatore.setCodiceFiscale(cedentePrestatoreCodiceFiscale);
-		cedentePrestatore.setIdPaese(cedentePrestatoreIdPaese);
-
-		params.setCedentePrestatore(cedentePrestatore);
-
-
-		Soggetto cessionarioCommittente = params.new Soggetto();
-		cessionarioCommittente.setDenominazione(cessionarioCommittenteDenominazione);
-		cessionarioCommittente.setNome(cessionarioCommittenteNome);
-		cessionarioCommittente.setCognome(cessionarioCommittenteCognome);
-		cessionarioCommittente.setIdCodice(cessionarioCommittenteIdCodice);
-		cessionarioCommittente.setCodiceFiscale(cessionarioCommittenteCodiceFiscale);
-		cessionarioCommittente.setIdPaese(cessionarioCommittenteIdPaese);
-
-		params.setCessionarioCommittente(cessionarioCommittente);
-
-		if(terzoIntermediarioOSoggettoEmittenteIdCodice != null || terzoIntermediarioOSoggettoEmittenteIdPaese != null
-				|| terzoIntermediarioOSoggettoEmittenteNome != null ||
-				terzoIntermediarioOSoggettoEmittenteCognome != null ||
-				terzoIntermediarioOSoggettoEmittenteDenominazione != null || 
-				terzoIntermediarioOSoggettoEmittenteCodiceFiscale != null) {
-			Soggetto terzoIntermediarioOSoggettoEmittente = params.new Soggetto();
-			terzoIntermediarioOSoggettoEmittente.setDenominazione(terzoIntermediarioOSoggettoEmittenteDenominazione);
-			terzoIntermediarioOSoggettoEmittente.setNome(terzoIntermediarioOSoggettoEmittenteNome);
-			terzoIntermediarioOSoggettoEmittente.setCognome(terzoIntermediarioOSoggettoEmittenteCognome);
-			terzoIntermediarioOSoggettoEmittente.setIdCodice(terzoIntermediarioOSoggettoEmittenteIdCodice);
-			terzoIntermediarioOSoggettoEmittente.setCodiceFiscale(terzoIntermediarioOSoggettoEmittenteCodiceFiscale);
-			terzoIntermediarioOSoggettoEmittente.setIdPaese(terzoIntermediarioOSoggettoEmittenteIdPaese);
-
-			params.setTerzoIntermediarioOSoggettoEmittente(terzoIntermediarioOSoggettoEmittente);
-		}
-
-
-		params.setFatturazioneAttiva(false);
-		
-		try {
-			params.setXml(IOUtils.readBytesFromStream(fattura));
-			try {
-				params.validate();
-			} catch(Exception e) {
-				throw new Exception("Parametri ["+params.toString()+"] ricevuti in ingresso non validi:"+e.getMessage());
-			}
-
-			if(fattura == null) {
-				throw new Exception("La fattura ricevuta in ingresso e' null");
-			}
-
-
-
-			this.consegnaFattura.consegnaFattura(params);
-		} catch(Exception e) {
-			this.log.error("riceviFattura completata con errore:"+ e.getMessage(), e);
-			return Response.status(500).build();
-		}
-
-		this.log.info("riceviFattura completata con successo");
-		return Response.ok().build();
-	}
-
-	@Override
 	public Response postConsegnaNotificaDT(InputStream notifica) {
 		this.log.info("Invoke riceviNotificaDT");
 
@@ -329,4 +224,41 @@ public class EndpointPdDImpl implements EndpointPdD {
 		this.log.info("riceviNotificaDT completata con successo");
 		return Response.ok().build();
 	}
+	
+	@Override
+	public Response riceviComunicazioniSdI(String tipo, Integer X_SDI_IdentificativoSDI, Integer X_SDI_IdentificativoSDIFattura, String X_SDI_NomeFile, String contentType, InputStream comunicazioneStream) {
+		this.log.info("Invoke riceviComunicazioniSdi");
+
+		try {
+			if(comunicazioneStream == null) {
+				throw new Exception("La comunicazione ricevuta in ingresso e' null");
+			}
+			
+			TipoComunicazioneType tipoComunicazione = RiceviComunicazioneSdI.getTipoComunicazione(tipo);
+
+			TracciaSDI tracciaSdi = new TracciaSDI();
+			
+			tracciaSdi.setIdentificativoSdi(X_SDI_IdentificativoSDIFattura);
+			tracciaSdi.setTipoComunicazione(tipoComunicazione);
+			tracciaSdi.setData(new Date());
+			tracciaSdi.setContentType(contentType);
+			tracciaSdi.setNomeFile(X_SDI_NomeFile);
+			tracciaSdi.setRawData(IOUtils.readBytesFromStream(comunicazioneStream));
+			tracciaSdi.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
+			//TODO lista di metadati da salvare
+			Metadato metadato = new Metadato();
+			metadato.setNome(HEADER_IDENTIFICATIVO_SDI);
+			metadato.setValore(""+X_SDI_IdentificativoSDI);
+			tracciaSdi.addMetadato(metadato);
+
+			this.riceviComunicazioneSdi.ricevi(tracciaSdi);
+		} catch(Exception e) {
+			this.log.error("riceviComunicazioniSdi completata con errore:"+ e.getMessage(), e);
+			return Response.status(500).build();
+		}
+
+		this.log.info("riceviComunicazioniSdi completata con successo");
+		return Response.ok().build();
+	}
+
 }

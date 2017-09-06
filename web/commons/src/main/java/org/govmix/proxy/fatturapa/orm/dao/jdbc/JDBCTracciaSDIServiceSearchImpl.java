@@ -406,6 +406,7 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithou
 		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().NOME_FILE,true));
 		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().DATA,true));
 		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().ID_EGOV,true));
+		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().CONTENT_TYPE,true));
 		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().RAW_DATA,true));
 		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().STATO_PROTOCOLLAZIONE,true));
 		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().DATA_PROTOCOLLAZIONE,true));

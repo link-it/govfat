@@ -47,6 +47,7 @@ public class TracciaSDIModel extends AbstractModel<TracciaSDI> {
 		this.NOME_FILE = new Field("nomeFile",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.DATA = new Field("data",java.util.Date.class,"TracciaSDI",TracciaSDI.class);
 		this.ID_EGOV = new Field("idEgov",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
+		this.CONTENT_TYPE = new Field("contentType",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.RAW_DATA = new Field("rawData",byte[].class,"TracciaSDI",TracciaSDI.class);
 		this.STATO_PROTOCOLLAZIONE = new Field("statoProtocollazione",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.DATA_PROTOCOLLAZIONE = new Field("dataProtocollazione",java.util.Date.class,"TracciaSDI",TracciaSDI.class);
@@ -66,6 +67,7 @@ public class TracciaSDIModel extends AbstractModel<TracciaSDI> {
 		this.NOME_FILE = new ComplexField(father,"nomeFile",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.DATA = new ComplexField(father,"data",java.util.Date.class,"TracciaSDI",TracciaSDI.class);
 		this.ID_EGOV = new ComplexField(father,"idEgov",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
+		this.CONTENT_TYPE = new ComplexField(father,"contentType",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.RAW_DATA = new ComplexField(father,"rawData",byte[].class,"TracciaSDI",TracciaSDI.class);
 		this.STATO_PROTOCOLLAZIONE = new ComplexField(father,"statoProtocollazione",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.DATA_PROTOCOLLAZIONE = new ComplexField(father,"dataProtocollazione",java.util.Date.class,"TracciaSDI",TracciaSDI.class);
@@ -87,6 +89,8 @@ public class TracciaSDIModel extends AbstractModel<TracciaSDI> {
 	public IField DATA = null;
 	 
 	public IField ID_EGOV = null;
+	 
+	public IField CONTENT_TYPE = null;
 	 
 	public IField RAW_DATA = null;
 	 

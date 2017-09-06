@@ -66,6 +66,8 @@ public class TracciaSDIFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "data", TracciaSDI.model().DATA.getFieldType()));
 				setParameter(object, "setIdEgov", TracciaSDI.model().ID_EGOV.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "id_egov", TracciaSDI.model().ID_EGOV.getFieldType()));
+				setParameter(object, "setContentType", TracciaSDI.model().CONTENT_TYPE.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "content_type", TracciaSDI.model().CONTENT_TYPE.getFieldType()));
 				setParameter(object, "setRawData", TracciaSDI.model().RAW_DATA.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "raw_data", TracciaSDI.model().RAW_DATA.getFieldType()));
 				setParameter(object, "set_value_statoProtocollazione", String.class,
@@ -122,6 +124,8 @@ public class TracciaSDIFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"data"));
 				setParameter(object, "setIdEgov", TracciaSDI.model().ID_EGOV.getFieldType(),
 					this.getObjectFromMap(map,"idEgov"));
+				setParameter(object, "setContentType", TracciaSDI.model().CONTENT_TYPE.getFieldType(),
+					this.getObjectFromMap(map,"contentType"));
 				setParameter(object, "setRawData", TracciaSDI.model().RAW_DATA.getFieldType(),
 					this.getObjectFromMap(map,"rawData"));
 				setParameter(object, "set_value_statoProtocollazione", String.class,
