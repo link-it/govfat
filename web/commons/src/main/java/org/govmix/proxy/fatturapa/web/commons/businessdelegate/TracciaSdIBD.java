@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.dao.IDBTracciaSDIService;
 import org.govmix.proxy.fatturapa.orm.dao.ITracciaSDIService;
@@ -52,6 +51,14 @@ public class TracciaSdIBD extends BaseBD {
 
 	public TracciaSdIBD() throws Exception {
 		this(Logger.getLogger(TracciaSdIBD.class));
+	}
+
+	public void insert(TracciaSDI tracciaSdI) throws ServiceException {
+		try {
+			this.service.create(tracciaSdI);
+		} catch (NotImplementedException e) {
+			throw new ServiceException(e);
+		}		
 	}
 
 	public TracciaSDI getById(long idFisico) throws ServiceException, NotFoundException {

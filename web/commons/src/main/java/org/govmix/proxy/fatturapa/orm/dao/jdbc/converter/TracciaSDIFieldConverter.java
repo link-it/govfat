@@ -103,6 +103,13 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 				return "id_egov";
 			}
 		}
+		if(field.equals(TracciaSDI.model().CONTENT_TYPE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".content_type";
+			}else{
+				return "content_type";
+			}
+		}
 		if(field.equals(TracciaSDI.model().RAW_DATA)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".raw_data";
@@ -192,6 +199,9 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 			return this.toTable(TracciaSDI.model(), returnAlias);
 		}
 		if(field.equals(TracciaSDI.model().ID_EGOV)){
+			return this.toTable(TracciaSDI.model(), returnAlias);
+		}
+		if(field.equals(TracciaSDI.model().CONTENT_TYPE)){
 			return this.toTable(TracciaSDI.model(), returnAlias);
 		}
 		if(field.equals(TracciaSDI.model().RAW_DATA)){

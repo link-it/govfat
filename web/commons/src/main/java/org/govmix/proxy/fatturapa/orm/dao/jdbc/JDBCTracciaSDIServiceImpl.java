@@ -74,6 +74,7 @@ public class JDBCTracciaSDIServiceImpl extends JDBCTracciaSDIServiceSearchImpl
 		sqlQueryObjectInsert.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().NOME_FILE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().DATA,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().ID_EGOV,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().CONTENT_TYPE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().RAW_DATA,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().STATO_PROTOCOLLAZIONE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().DATA_PROTOCOLLAZIONE,false),"?");
@@ -89,6 +90,7 @@ public class JDBCTracciaSDIServiceImpl extends JDBCTracciaSDIServiceSearchImpl
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getNomeFile(),TracciaSDI.model().NOME_FILE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getData(),TracciaSDI.model().DATA.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getIdEgov(),TracciaSDI.model().ID_EGOV.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getContentType(),TracciaSDI.model().CONTENT_TYPE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getRawData(),TracciaSDI.model().RAW_DATA.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getStatoProtocollazione(),TracciaSDI.model().STATO_PROTOCOLLAZIONE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getDataProtocollazione(),TracciaSDI.model().DATA_PROTOCOLLAZIONE.getFieldType()),
@@ -162,6 +164,8 @@ public class JDBCTracciaSDIServiceImpl extends JDBCTracciaSDIServiceSearchImpl
 		lstObjects_tracciaSDI.add(new JDBCObject(tracciaSDI.getData(), TracciaSDI.model().DATA.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().ID_EGOV,false), "?");
 		lstObjects_tracciaSDI.add(new JDBCObject(tracciaSDI.getIdEgov(), TracciaSDI.model().ID_EGOV.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().CONTENT_TYPE,false), "?");
+		lstObjects_tracciaSDI.add(new JDBCObject(tracciaSDI.getContentType(), TracciaSDI.model().CONTENT_TYPE.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().RAW_DATA,false), "?");
 		lstObjects_tracciaSDI.add(new JDBCObject(tracciaSDI.getRawData(), TracciaSDI.model().RAW_DATA.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().STATO_PROTOCOLLAZIONE,false), "?");

@@ -30,6 +30,7 @@ import it.gov.fatturapa.sdi.fatturapa.v1_0.utils.serializer.JaxbDeserializer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -37,6 +38,7 @@ import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoArchivioInvioFatturaType;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters.Soggetto;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
+import org.openspcoop2.generic_project.exception.DeserializerException;
 import org.openspcoop2.protocol.sdi.constants.SDICostanti;
 import org.openspcoop2.protocol.sdi.utils.P7MInfo;
 import org.openspcoop2.protocol.sdi.utils.SDILottoUtils;
@@ -168,6 +170,31 @@ public class ConsegnaFatturaUtils {
 		params.setFatturazioneAttiva(fatturazioneAttiva);
 
 		return params;
+	}
+
+	public static ConsegnaFatturaParameters getParameters(Integer identificativoSDI, String nomeFile,
+			String formatoArchivioInvioFatturaString,
+			String formatoArchivioBase64, String messageId,
+			boolean fatturazioneAttiva,
+			byte[] xml) throws Exception, IOException {
+		List<String> formati = new ArrayList<String>();
+		formati.add("FPA12");
+		formati.add("SDI11");
+		formati.add("SDI10");
+		
+		for(int i =0; i < formati.size(); i++) {
+			try {
+				
+				return ConsegnaFatturaUtils.getParameters(formati.get(i),
+						identificativoSDI, nomeFile,
+						formatoArchivioInvioFatturaString, formatoArchivioBase64,
+						messageId,
+						fatturazioneAttiva,
+						xml);
+			} catch(DeserializerException e) {}			
+		}
+
+		throw new Exception("Formato fattura non riconosciuto");
 	}
 
 	public static ConsegnaFatturaParameters getParameters(String formatoFatturaPA,
@@ -337,6 +364,7 @@ public class ConsegnaFatturaUtils {
 				lotto.getTerzoIntermediarioOSoggettoEmittenteDenominazione(), lotto.getTerzoIntermediarioOSoggettoEmittenteNome(), lotto.getTerzoIntermediarioOSoggettoEmittenteCognome(), 
 				lotto.getTerzoIntermediarioOSoggettoEmittenteCodiceFiscale(), lotto.getTerzoIntermediarioOSoggettoEmittenteCodice(), lotto.getTerzoIntermediarioOSoggettoEmittentePaese(), lotto.getFatturazioneAttiva(), xml);
 		params.setPosizioneFatturaPA(posizione);
+		params.setProtocollo(lotto.getProtocollo());
 		
 		return params;
 	}

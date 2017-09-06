@@ -42,6 +42,7 @@ public class ConsegnaFatturaParameters {
 	private Soggetto terzoIntermediarioOSoggettoEmittente;
 
 	private boolean fatturazioneAttiva;
+	private String protocollo;
 	private Date dataRicezione;
 	
 	public String getFormatoFatturaPA() {
@@ -318,6 +319,14 @@ public class ConsegnaFatturaParameters {
 
 	public void setFatturazioneAttiva(boolean fatturazioneAttiva) {
 		this.fatturazioneAttiva = fatturazioneAttiva;
+	}
+
+	public String getProtocollo() {
+		return protocollo;
+	}
+
+	public void setProtocollo(String protocollo) {
+		this.protocollo = protocollo;
 	}
 
 }

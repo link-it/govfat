@@ -155,7 +155,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 
 			this.registro = inputFieldFactory.createSelectList("registro","dipartimento.form.registro",null,false);
 
-			this._setModalitaPush();
+			
 
 
 			this.indirizziNotifica = inputFieldFactory.createTextArea("indirizziNotifica","dipartimento.pcc.indirizziNotifica",null,true);
@@ -184,6 +184,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 			this.firmaAutomatica = inputFieldFactory.createBooleanCheckBox("firmaAutomatica","dipartimento.form.firmaAutomatica",null,false);
 			this.codiceProcedimento = inputFieldFactory.createText("codiceProcedimento","dipartimento.form.codiceProcedimento",null,false);
 			
+			this._setModalitaPush();
 			this._setFatturazioneAttiva();
 
 			this.setField(this.codice);
@@ -245,6 +246,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		this.codiceProcedimento.reset();
 		
 		this._setFatturazioneAttiva();
+		this._abilitaRegistro();
 		
 		for (FormField<String> prop : this.properties) {
 			prop.reset();
@@ -549,16 +551,16 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		}
 
 		boolean mod = this.modalitaPush.getValue() != null ? (this.getModalitaPush().getValue() ? true : false) : false;
+		boolean fattAttiva = this.fatturazioneAttiva.getValue() != null ? (this.getFatturazioneAttiva().getValue() ? true : false) : false;
 
 		SelectItem registroSI = this.registro.getValue();
 		if(registroSI!= null){
 			String _registro = registroSI.getValue();
 
-			if(_registro.equals(CostantiForm.NON_SELEZIONATO) && mod)
+			// [TODO] attivare
+			if(_registro.equals(CostantiForm.NON_SELEZIONATO) && (mod)) // && (mod || fattAttiva))
 				return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromCommonsResourceBundle(CostantiForm.SELECT_VALORE_NON_VALIDO, this.registro.getLabel());
 		}
-
-
 
 		//
 		if(mod){
@@ -619,7 +621,6 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		
 		// fatturazione attiva
 		
-		boolean fattAttiva = this.fatturazioneAttiva.getValue() != null ? (this.fatturazioneAttiva.getValue() ? true : false) : false;
 		
 		if(fattAttiva)  {
 			
@@ -778,8 +779,10 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 	public SelectList<SelectItem> getRegistro() {
 		this.registro.setRequired(false);
 		boolean mod = this.modalitaPush.getValue() != null ? (this.getModalitaPush().getValue() ? true : false) : false;
+		// [TODO] agganciare
+		boolean fatAt = false;//this.fatturazioneAttiva.getValue() != null ? (this.getFatturazioneAttiva().getValue() ? true : false) : false;
 
-		if(mod)
+		if(mod || fatAt)
 			this.registro.setRequired(true);
 
 		return this.registro;
@@ -815,10 +818,10 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 
 	public void modalitaPushOnChangeListener(ActionEvent ae){
 		this._setModalitaPush();
+		this._abilitaRegistro();
 	}
 
 	private void _setModalitaPush() {
-		this.registro.setRequired(false);
 		this.endpoint.setRendered(false);
 		this.password.setRendered(false);
 		this.username.setRendered(false);
@@ -826,7 +829,6 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		boolean mod = this.modalitaPush.getValue() != null ? (this.getModalitaPush().getValue() ? true : false) : false;
 
 		if(mod){
-			this.registro.setRequired(true);
 			this.endpoint.setRendered(true);
 			this.password.setRendered(true);
 			this.username.setRendered(true);
@@ -836,6 +838,18 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 			}
 		}
 
+	}
+	
+	private void _abilitaRegistro() {
+		this.registro.setRequired(false);
+		
+		boolean mod = this.modalitaPush.getValue() != null ? (this.getModalitaPush().getValue() ? true : false) : false;
+		// [TODO] agganciare
+		boolean fatAt = false; //this.fatturazioneAttiva.getValue() != null ? (this.getFatturazioneAttiva().getValue() ? true : false) : false;
+
+		if(mod || fatAt){
+			this.registro.setRequired(true);
+		}
 	}
 
 	public TextArea getIndirizziNotifica() {
@@ -1061,6 +1075,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 	
 	public void fatturazioneAttivaOnChangeListener(ActionEvent ae){
 		this._setFatturazioneAttiva();
+		this._abilitaRegistro();
 	}
 
 	private void _setFatturazioneAttiva() {

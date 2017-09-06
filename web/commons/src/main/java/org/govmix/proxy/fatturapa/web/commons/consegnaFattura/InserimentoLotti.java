@@ -3,9 +3,12 @@ package org.govmix.proxy.fatturapa.web.commons.consegnaFattura;
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
@@ -13,14 +16,15 @@ import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoInserimentoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException.CODICE;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoResponse.ESITO;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
-import org.openspcoop2.generic_project.exception.DeserializerException;
 
 public class InserimentoLotti {
 
 	private Logger log;
-
+	private Map<String, Dipartimento> dipartimenti;
+	
 	public InserimentoLotti(Logger log) throws Exception {
 		this.log = log;
 	}
@@ -40,13 +44,19 @@ public class InserimentoLotti {
 				String type = null;
 				StatoElaborazioneType stato = null;
 				if(request.getNomeFile().toLowerCase().endsWith("xml")) {
+					if(!this.getDipartimento(request.getDipartimento()).getFirmaAutomatica()){
+						throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO);
+					}
 					type= "XML";
 					stato = StatoElaborazioneType.NON_FIRMATO;
 				} else if(request.getNomeFile().toLowerCase().endsWith("p7m")) {
+					if(this.getDipartimento(request.getDipartimento()).getFirmaAutomatica()){
+						throw new InserimentoLottiException(CODICE.ERRORE_FILE_FIRMATO);
+					}
 					type= "P7M";
 					stato = StatoElaborazioneType.FIRMA_OK;
 				} else {
-					throw new Exception("Impossibile processare il file ["+request.getNomeFile()+"] ");
+					throw new InserimentoLottiException(CODICE.ERRORE_FORMATO_FILE);
 				}
 
 				LottoFatture lotto = getLotto(request, type);
@@ -59,12 +69,18 @@ public class InserimentoLotti {
 			
 			inserimentoLottoResponse.setEsito(ESITO.OK);
 			
+		} catch(InserimentoLottiException e) {
+			if(connection != null) try {connection.rollback();} catch(Exception ex) {}
+			
+			this.log.error("Errore durante il caricamento dei lotti: " + e.getMessage(), e);
+			inserimentoLottoResponse.setEsito(ESITO.KO);
+			inserimentoLottoResponse.setEccezione(e);
 		} catch(Exception e) {
 			if(connection != null) try {connection.rollback();} catch(Exception ex) {}
 			
 			this.log.error("Errore durante il caricamento dei lotti: " + e.getMessage(), e);
 			inserimentoLottoResponse.setEsito(ESITO.KO);
-			inserimentoLottoResponse.setDettaglio(e.getMessage());
+			inserimentoLottoResponse.setEccezione(new InserimentoLottiException(CODICE.ERRORE_GENERICO, e.getMessage()));
 		} finally {
 			if(connection != null) try {connection.close();} catch(Exception ex) {}
 		}
@@ -112,11 +128,11 @@ public class InserimentoLotti {
 			for(InserimentoLottoSoloConservazioneRequest request: requestList) {
 				String type = null;
 				if(request.getNomeFile().toLowerCase().endsWith("xml")) {
-					type= "XML";
+					throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO_CONSERVAZIONE);
 				} else if(request.getNomeFile().toLowerCase().endsWith("p7m")) {
 					type= "P7M";
 				} else {
-					throw new Exception("Impossibile processare il file ["+request.getNomeFile()+"] ");
+					throw new InserimentoLottiException(CODICE.ERRORE_FORMATO_FILE);
 				}
 
 				LottoFatture lotto = getLotto(request, type);
@@ -127,11 +143,18 @@ public class InserimentoLotti {
 			}
 			connection.commit();
 			inserimentoLottoResponse.setEsito(ESITO.OK);
-		} catch(Exception e) {
+		} catch(InserimentoLottiException e) {
 			if(connection != null) try {connection.rollback();} catch(Exception ex) {}
+
 			this.log.error("Errore durante il caricamento dei lotti: " + e.getMessage(), e);
 			inserimentoLottoResponse.setEsito(ESITO.KO);
-			inserimentoLottoResponse.setDettaglio(e.getMessage());
+			inserimentoLottoResponse.setEccezione(e);
+		} catch(Exception e) {
+			if(connection != null) try {connection.rollback();} catch(Exception ex) {}
+			
+			this.log.error("Errore durante il caricamento dei lotti: " + e.getMessage(), e);
+			inserimentoLottoResponse.setEsito(ESITO.KO);
+			inserimentoLottoResponse.setEccezione(new InserimentoLottiException(CODICE.ERRORE_GENERICO, e.getMessage()));
 		} finally {
 			if(connection != null) try {connection.close();} catch(Exception ex) {}
 		}
@@ -147,34 +170,16 @@ public class InserimentoLotti {
 		String messageId = identificativo + "";
 
 		try {
-			params = ConsegnaFatturaUtils.getParameters("FPA12",
-					identificativo, req.getNomeFile(),
-					type, null,
-					messageId,
-					false,
-					req.getXml());
-		} catch(DeserializerException e) {
-			try {
-				params = ConsegnaFatturaUtils.getParameters("SDI11",
-						identificativo, req.getNomeFile(),
-						type, null,
-						messageId,
-						false,
-						req.getXml());
-			} catch(DeserializerException e1) {
-				params = ConsegnaFatturaUtils.getParameters("SDI10",
-						identificativo, req.getNomeFile(),
-						type, null,
-						messageId,
-						false,
-						req.getXml());
-			}
-		}
 
-		try {
+			params = ConsegnaFatturaUtils.getParameters(identificativo, req.getNomeFile(),
+							type, null,
+							messageId,
+							false,
+							req.getXml());
+			
 			params.validate(true);
 		} catch(Exception e) {
-			throw new Exception("Parametri ["+params.toString()+"] ricevuti in ingresso non validi:"+e.getMessage());
+			throw new InserimentoLottiException(CODICE.PARAMETRI_NON_VALIDI);
 		}
 
 		LottoFatture lotto = new LottoFatture();
@@ -226,12 +231,8 @@ public class InserimentoLotti {
 	private static int counter = 0;
 	private static int padding = 3;
 	
-	public static void main(String[] args) {
-		System.out.println(generaIdentificativo());
-	}
-	
 	private static synchronized Integer generaIdentificativo() {
-		SimpleDateFormat sdf = new SimpleDateFormat("ddhhmm");
+		SimpleDateFormat sdf = new SimpleDateFormat("dHHmm");
 		String format = sdf.format(new Date());
 		if(!currentMinute.equals(format)) {
 			counter = 0;
@@ -239,11 +240,29 @@ public class InserimentoLotti {
 		}
 		
 		String paddedCounter = "";
-		int i=(counter + "").length();
-		for(;i<padding;i++)
-			paddedCounter += "0";
-		paddedCounter += counter;
-		return Integer.parseInt("1" + format + "" + paddedCounter);
 		
+		for(int i=(counter + "").length(); i<padding; i++)
+			paddedCounter += "0";
+		
+		paddedCounter += counter;
+		counter++;
+		return Integer.parseInt(format + "" + paddedCounter);
+		
+	}
+
+	private Dipartimento getDipartimento(String codice) {
+		if(this.dipartimenti != null && this.dipartimenti.containsKey(codice)) {
+			return this.dipartimenti.get(codice);
+		}
+		return null;
+	}
+	
+	public void setDipartimenti(List<Dipartimento> dipartimenti) {
+		this.dipartimenti = new HashMap<String, Dipartimento>();
+		if(dipartimenti != null) {
+			for(Dipartimento dipartimento: dipartimenti) {
+				this.dipartimenti.put(dipartimento.getCodice(), dipartimento);
+			}
+		}
 	}
 }

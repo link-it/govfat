@@ -85,6 +85,7 @@ public abstract class AbstractFatturaConverter<T> {
 		fatturaElettronica.setPosizione(this.params.getPosizioneFatturaPA());
 		fatturaElettronica.setNomeFile(this.params.getNomeFile());
 		fatturaElettronica.setMessageId(this.params.getMessageId());
+		fatturaElettronica.setProtocollo(this.params.getProtocollo());
 		fatturaElettronica.setCodiceDestinatario(this.params.getCodiceDestinatario());
 		fatturaElettronica.setImportoTotaleDocumento(this.getImportoTotaleDocumento());
 		fatturaElettronica.setImportoTotaleRiepilogo(this.getImportoTotaleRiepilogo());

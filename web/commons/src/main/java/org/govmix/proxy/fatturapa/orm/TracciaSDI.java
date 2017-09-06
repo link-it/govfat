@@ -45,6 +45,7 @@ import java.util.List;
  * 			&lt;element name="nomeFile" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="data" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="idEgov" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="contentType" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="rawData" type="{http://www.w3.org/2001/XMLSchema}base64Binary" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="statoProtocollazione" type="{http://www.govmix.org/proxy/fatturapa/orm}StatoProtocollazioneType" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="dataProtocollazione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0" maxOccurs="1"/>
@@ -71,6 +72,7 @@ import java.util.List;
   	"nomeFile",
   	"data",
   	"idEgov",
+  	"contentType",
   	"rawData",
   	"statoProtocollazione",
   	"dataProtocollazione",
@@ -157,6 +159,14 @@ public class TracciaSDI extends org.openspcoop2.utils.beans.BaseBean implements 
 
   public void setIdEgov(java.lang.String idEgov) {
     this.idEgov = idEgov;
+  }
+
+  public java.lang.String getContentType() {
+    return this.contentType;
+  }
+
+  public void setContentType(java.lang.String contentType) {
+    this.contentType = contentType;
   }
 
   public byte[] getRawData() {
@@ -288,6 +298,10 @@ public class TracciaSDI extends org.openspcoop2.utils.beans.BaseBean implements 
   @javax.xml.bind.annotation.XmlSchemaType(name="string")
   @XmlElement(name="idEgov",required=true,nillable=false)
   protected java.lang.String idEgov;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @XmlElement(name="contentType",required=true,nillable=false)
+  protected java.lang.String contentType;
 
   @javax.xml.bind.annotation.XmlSchemaType(name="base64Binary")
   @XmlElement(name="rawData",required=false,nillable=false)

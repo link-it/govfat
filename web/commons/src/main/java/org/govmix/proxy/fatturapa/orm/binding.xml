@@ -181,6 +181,7 @@
     <value name="nomeFile" field="nomeFile" usage="required"/>
     <value name="data" field="data" usage="required"/>
     <value name="idEgov" field="idEgov" usage="required"/>
+    <value name="contentType" field="contentType" usage="required"/>
     <value name="rawData" field="rawData" usage="optional"/>
     <value name="statoProtocollazione" field="statoProtocollazione" usage="required" enum-value-method="toString"/>
     <value name="dataProtocollazione" field="dataProtocollazione" usage="optional"/>
