@@ -41,6 +41,7 @@ import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException.CODICE;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoRequest;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoResponse;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoResponse.ESITO;
@@ -594,18 +595,27 @@ IFatturaElettronicaAttivaService>{
 				this.salvataggioOk = true;
 				MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura.salvataggioOk"));
 			} else {
-				if(StringUtils.isNotEmpty(salvaFatture.getEccezione().getCodice().toString())) {
-				//	MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle(salvaFatture.getDettaglio()));
-					this.checkFormFatturaMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle(salvaFatture.getEccezione().getCodice().toString());
-				}else { 
-				//	MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura.salvataggioKo"));
-					this.checkFormFatturaMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura.salvataggioKo");
+				if(salvaFatture.getEccezione() != null) {
+					log.error("Errore durante il salvataggio delle fatture: "+ salvaFatture.getEccezione().getMessage(),salvaFatture.getEccezione());
+					
+					CODICE codEccezione = salvaFatture.getEccezione().getCodice() != null ? salvaFatture.getEccezione().getCodice() : CODICE.ERRORE_GENERICO;
+					String msgCod = "fattura.salvaFattura." + codEccezione.name();
+					Object[] msgParams = salvaFatture.getEccezione().getParams();
+					
+					if(msgParams != null && msgParams.length > 0) {
+						msgCod +=".parametri";
+						this.checkFormFatturaMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle(msgCod, msgParams);
+					} else {
+						this.checkFormFatturaMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle(msgCod);
+					}
+				} else {
+					log.error("Errore durante il salvataggio delle fatture [eccezione non presente nella response]");
+					this.checkFormFatturaMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura."+CODICE.ERRORE_GENERICO.name());
 				}
 			}
 		}catch(Exception e) {
 			log.error("Errore durante il salvataggio delle fatture: "+ e.getMessage(),e);
-			//			MessageUtils.addErrorMsg("errorDsUploadMessages",org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura.erroreGenerico"));
-			this.checkFormFatturaMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura.erroreGenerico");
+			this.checkFormFatturaMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura."+CODICE.ERRORE_GENERICO.name());
 		}
 
 
@@ -677,18 +687,27 @@ IFatturaElettronicaAttivaService>{
 				this.checkConservazione = true;
 				MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFatturaSoloConservazione.salvataggioOk"));
 			} else {
-				if(StringUtils.isNotEmpty(salvaFattureSoloConservazione.getEccezione().getCodice().toString())) {
-//					MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle(salvaFattureSoloConservazione.getDettaglio()));
-					this.checkFormConservazioneMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle(salvaFattureSoloConservazione.getEccezione().getCodice().toString());
-				}else { 
-//					MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFatturaSoloConservazione.salvataggioKo"));
-					this.checkFormConservazioneMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFatturaSoloConservazione.salvataggioKo");
+				if(salvaFattureSoloConservazione.getEccezione() != null) {
+					log.error("Errore durante il salvataggio delle fatture: "+ salvaFattureSoloConservazione.getEccezione().getMessage(),salvaFattureSoloConservazione.getEccezione());
+					
+					CODICE codEccezione = salvaFattureSoloConservazione.getEccezione().getCodice() != null ? salvaFattureSoloConservazione.getEccezione().getCodice() : CODICE.ERRORE_GENERICO;
+					String msgCod = "fattura.salvaFatturaSoloConservazione." + codEccezione.name();
+					Object[] msgParams = salvaFattureSoloConservazione.getEccezione().getParams();
+					
+					if(msgParams != null && msgParams.length > 0) {
+						msgCod +=".parametri";
+						this.checkFormConservazioneMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle(msgCod, msgParams);
+					} else {
+						this.checkFormConservazioneMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle(msgCod);
+					}
+				} else {
+					log.error("Errore durante il salvataggio delle fatture [eccezione non presente nella response]");
+					this.checkFormConservazioneMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFatturaSoloConservazione."+CODICE.ERRORE_GENERICO.name());
 				}
 			}
 		}catch(Exception e) {
 			log.error("Errore durante il salvataggio delle fatture: "+ e.getMessage(),e);
-//			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFatturaSoloConservazione.erroreGenerico"));
-			this.checkFormConservazioneMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFatturaSoloConservazione.erroreGenerico");
+			this.checkFormConservazioneMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFatturaSoloConservazione."+CODICE.ERRORE_GENERICO.name());
 		}
 		return null;
 	}

@@ -341,6 +341,12 @@
 		                            </rich:column>
 		                            <rich:column>
 			                            <f:facet name="header">
+			                                <h:outputText value="#{msg['fattura.form.registro']}" />
+		                                </f:facet>
+		                                 <h:outputText id="input_registro_tab" value="#{item.registro}"/>
+		                            </rich:column>
+		                            <rich:column>
+			                            <f:facet name="header">
 			                                <h:outputText value="#{msg['fattura.form.protocollo.obbligatorio']}" />
 		                                </f:facet>
 		                                <h:inputText id="input_protocollo_tab" value="#{item.protocollo}" style="width: 99%;"/>
@@ -351,15 +357,9 @@
 		                                </f:facet>
 		                                 <h:inputText id="input_anno_tab" value="#{item.anno}" style="width: 99%;"/>
 		                            </rich:column>
-		                            <rich:column>
-			                            <f:facet name="header">
-			                                <h:outputText value="#{msg['fattura.form.registro.obbligatorio']}" />
-		                                </f:facet>
-		                                 <h:inputText id="input_registro_tab" value="#{item.registro}" style="width: 99%;"/>
-		                            </rich:column>
 								 </rich:dataTable>
 				        	</op2web:fieldset>
-				        	<div class="buttonrow" style="margin-left: 290px;">
+				        	<div class="buttonrow" style="margin-left: 310px;">
 				        		<a4j:commandButton styleClass="icon-save positive" style="padding: 4px 6px 4px 5px;"
 									value="#{msg['fattura.button.invia']}" action="#{fatturaElettronicaAttivaMBean.salvaFormCorservazione}"
 									reRender="conservazioneFattureForm_formPnl,outPanelFormConservazioneError"
