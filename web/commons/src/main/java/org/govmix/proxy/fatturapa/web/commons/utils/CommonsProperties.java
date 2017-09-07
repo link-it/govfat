@@ -48,13 +48,13 @@ public class CommonsProperties {
 	/** Copia Statica */
 	private static CommonsProperties commonsProperties = null;
 
-	public static synchronized void initialize(org.apache.log4j.Logger log) throws Exception{
+	public static synchronized void initialize(org.slf4j.Logger log) throws Exception{
 
 		if(CommonsProperties.commonsProperties==null)
 			CommonsProperties.commonsProperties = new CommonsProperties(log);	
 	}
 
-	public static CommonsProperties getInstance(org.apache.log4j.Logger log) throws Exception{
+	public static CommonsProperties getInstance(org.slf4j.Logger log) throws Exception{
 
 		if(CommonsProperties.commonsProperties==null)
 			initialize(log);
@@ -75,7 +75,7 @@ public class CommonsProperties {
 	 *
 	 * 
 	 */
-	public CommonsProperties(org.apache.log4j.Logger log) throws Exception{
+	public CommonsProperties(org.slf4j.Logger log) throws Exception{
 
 		/* ---- Lettura del cammino del file di configurazione ---- */
 

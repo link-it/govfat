@@ -25,7 +25,7 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.dao.IAllegatoFatturaService;
 import org.govmix.proxy.fatturapa.orm.dao.IAllegatoFatturaServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.IDipartimentoPropertyService;

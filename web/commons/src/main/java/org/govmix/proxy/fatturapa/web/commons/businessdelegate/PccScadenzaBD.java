@@ -26,7 +26,7 @@ import java.sql.Connection;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdScadenza;
 import org.govmix.proxy.fatturapa.orm.PccScadenza;
@@ -45,6 +45,7 @@ import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
 import org.openspcoop2.generic_project.expression.IPaginatedExpression;
 import org.openspcoop2.generic_project.expression.SortOrder;
+import org.openspcoop2.utils.LoggerWrapperFactory;
 
 public class PccScadenzaBD  extends BaseBD {
 
@@ -52,7 +53,7 @@ public class PccScadenzaBD  extends BaseBD {
 	private IPccTracciaTrasmissioneEsitoService esitoService;
 
 	public PccScadenzaBD() throws Exception {
-		this(Logger.getLogger(PccScadenzaBD.class));
+		this(LoggerWrapperFactory.getLogger(PccScadenzaBD.class));
 	}
 
 	public PccScadenzaBD(Logger log) throws Exception {

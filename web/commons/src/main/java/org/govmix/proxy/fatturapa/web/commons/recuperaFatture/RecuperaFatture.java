@@ -29,7 +29,7 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdDipartimento;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
@@ -43,6 +43,7 @@ import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.UtenteBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaPassivaFilter;
 import org.govmix.proxy.fatturapa.web.commons.exporter.FatturaSingleFileExporter;
+import org.openspcoop2.utils.LoggerWrapperFactory;
 
 public class RecuperaFatture {
 
@@ -63,7 +64,7 @@ public class RecuperaFatture {
 	}
 	
 	public RecuperaFatture() throws Exception {
-		this(Logger.getLogger(RecuperaFatture.class));
+		this(LoggerWrapperFactory.getLogger(RecuperaFatture.class));
 	}
 	
 	public RecuperaFatture(Logger log) throws Exception {

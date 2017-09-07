@@ -23,7 +23,7 @@ package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 import java.sql.Connection;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCServiceManager;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.openspcoop2.generic_project.beans.CustomField;

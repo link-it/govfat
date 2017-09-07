@@ -23,7 +23,7 @@ package org.govmix.proxy.fatturapa.orm.dao.jdbc;
 import java.sql.Connection;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdUtente;
 import org.govmix.proxy.fatturapa.orm.Utente;
 import org.openspcoop2.generic_project.beans.IDMappingBehaviour;

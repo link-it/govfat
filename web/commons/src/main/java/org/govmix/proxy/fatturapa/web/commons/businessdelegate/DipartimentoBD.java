@@ -22,7 +22,7 @@ package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 
 import java.sql.Connection;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.IdDipartimento;
 import org.govmix.proxy.fatturapa.orm.dao.IDipartimentoService;
@@ -30,6 +30,7 @@ import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
+import org.openspcoop2.utils.LoggerWrapperFactory;
 
 public class DipartimentoBD extends BaseBD {
 
@@ -37,7 +38,7 @@ public class DipartimentoBD extends BaseBD {
 	private IDipartimentoService service;
 
 	public DipartimentoBD() throws Exception {
-		this(Logger.getLogger(DipartimentoBD.class));
+		this(LoggerWrapperFactory.getLogger(DipartimentoBD.class));
 	}
 
 	public DipartimentoBD(Logger log) throws Exception {

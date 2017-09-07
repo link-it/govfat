@@ -24,7 +24,7 @@ import java.sql.Connection;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithId;

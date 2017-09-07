@@ -26,7 +26,7 @@ import java.sql.Connection;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdPagamento;
 import org.govmix.proxy.fatturapa.orm.PccPagamento;
@@ -47,6 +47,7 @@ import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
 import org.openspcoop2.generic_project.expression.IPaginatedExpression;
 import org.openspcoop2.generic_project.expression.SortOrder;
+import org.openspcoop2.utils.LoggerWrapperFactory;
 
 public class PccPagamentoBD  extends BaseBD {
 
@@ -54,7 +55,7 @@ public class PccPagamentoBD  extends BaseBD {
 	private IPccTracciaTrasmissioneEsitoService esitoService;
 
 	public PccPagamentoBD() throws Exception {
-		this(Logger.getLogger(PccPagamentoBD.class));
+		this(LoggerWrapperFactory.getLogger(PccPagamentoBD.class));
 	}
 
 	public PccPagamentoBD(Logger log) throws Exception {

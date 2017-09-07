@@ -23,12 +23,13 @@ package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 import java.sql.Connection;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.PccRispedizione;
 import org.govmix.proxy.fatturapa.orm.dao.IPccRispedizioneServiceSearch;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IPaginatedExpression;
+import org.openspcoop2.utils.LoggerWrapperFactory;
 
 public class PccRispedizioneBD extends BaseBD {
 
@@ -37,7 +38,7 @@ public class PccRispedizioneBD extends BaseBD {
 	private IPccRispedizioneServiceSearch service;
 
 	public PccRispedizioneBD() throws Exception {
-		this(Logger.getLogger(PccRispedizioneBD.class));
+		this(LoggerWrapperFactory.getLogger(PccRispedizioneBD.class));
 	}
 
 	public PccRispedizioneBD(Logger log) throws Exception {

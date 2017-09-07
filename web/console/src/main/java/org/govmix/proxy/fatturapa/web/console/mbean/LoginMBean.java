@@ -34,7 +34,7 @@ import javax.servlet.http.HttpSession;
 import net.sourceforge.spnego.SpnegoAuthenticator;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.Evento;
 import org.govmix.proxy.fatturapa.orm.Protocollo;

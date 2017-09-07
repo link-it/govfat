@@ -25,7 +25,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.PccTraccia;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.PccTracciamentoBD;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;

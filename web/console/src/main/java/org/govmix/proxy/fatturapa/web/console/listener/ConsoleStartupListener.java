@@ -27,7 +27,7 @@ import java.util.Properties;
 
 import javax.servlet.ServletContextEvent;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.openspcoop2.generic_project.web.listener.ApplicationStartupListener;
 

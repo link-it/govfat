@@ -33,7 +33,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.pcc.fatture.ComunicaScadenzaTipo;
 import org.govmix.pcc.fatture.ComunicazioneScadenzaTipo;
 import org.govmix.pcc.fatture.ContabilizzazioneTipo;

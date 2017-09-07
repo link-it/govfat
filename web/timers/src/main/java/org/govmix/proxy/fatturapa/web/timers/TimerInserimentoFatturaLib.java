@@ -28,7 +28,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
@@ -150,7 +150,7 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 			}
 
 		}catch (Throwable e) {
-			log.error(e);
+			log.error(e.getMessage(),e);
 			throw new Exception(e);
 		} finally {
 			if(connection != null) {

@@ -29,7 +29,7 @@ import java.util.Map;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.handler.MessageContext;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.pcc.fatture.ComunicazioneScadenzaTipo;
 import org.govmix.pcc.fatture.ContabilizzazioneTipo;
 import org.govmix.pcc.fatture.PagamentoStornoTipo;

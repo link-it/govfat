@@ -23,11 +23,12 @@ package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 import java.sql.Connection;
 import java.util.Date;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.PccContabilizzazione;
 import org.govmix.proxy.fatturapa.orm.PccPagamento;
 import org.govmix.proxy.fatturapa.orm.PccScadenza;
+import org.openspcoop2.utils.LoggerWrapperFactory;
 
 import it.tesoro.fatture.EsitoOkKoTipo;
 
@@ -38,7 +39,7 @@ public class PccOperazioneContabileBD extends BaseBD {
 	private PccPagamentoBD pagamentoBD = null;
 
 	public PccOperazioneContabileBD() throws Exception {
-		this(Logger.getLogger(PccOperazioneContabileBD.class));
+		this(LoggerWrapperFactory.getLogger(PccOperazioneContabileBD.class));
 	}
 
 	public PccOperazioneContabileBD(Logger log) throws Exception {

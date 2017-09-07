@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.Utente;
@@ -44,6 +44,7 @@ import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IPaginatedExpression;
+import org.openspcoop2.utils.LoggerWrapperFactory;
 
 public class FatturaBD extends BaseBD {
 
@@ -60,7 +61,7 @@ public class FatturaBD extends BaseBD {
 	}
 
 	public FatturaBD() throws Exception {
-		this(Logger.getLogger(FatturaBD.class));
+		this(LoggerWrapperFactory.getLogger(FatturaBD.class));
 	}
 
 	public FatturaElettronica getById(long idFisico) throws ServiceException, NotFoundException {

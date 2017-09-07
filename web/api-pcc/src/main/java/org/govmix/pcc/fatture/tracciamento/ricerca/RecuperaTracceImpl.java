@@ -25,7 +25,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.pcc.gettracce.EsitoTrasmissioneType;
 import org.govmix.pcc.gettracce.RecuperaDettaglioTracciaRichiestaTipo;
 import org.govmix.pcc.gettracce.RecuperaTracceRichiestaTipo;

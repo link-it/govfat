@@ -30,7 +30,7 @@ import java.sql.Connection;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.web.commons.exporter.exception.ExportException;
 import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.openspcoop2.generic_project.exception.NotImplementedException;

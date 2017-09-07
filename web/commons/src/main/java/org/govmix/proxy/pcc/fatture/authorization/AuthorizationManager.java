@@ -20,7 +20,7 @@
  */
 package org.govmix.proxy.pcc.fatture.authorization;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.pcc.fatture.AuthorizationFault;
 import org.govmix.pcc.fatture.WSAuthorizationFault;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;

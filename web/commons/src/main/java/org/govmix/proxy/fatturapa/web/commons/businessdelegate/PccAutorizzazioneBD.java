@@ -23,7 +23,7 @@ package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 import java.sql.Connection;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdDipartimento;
 import org.govmix.proxy.fatturapa.orm.IdOperazione;
 import org.govmix.proxy.fatturapa.orm.IdUtente;
@@ -38,6 +38,7 @@ import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IPaginatedExpression;
+import org.openspcoop2.utils.LoggerWrapperFactory;
 
 public class PccAutorizzazioneBD extends BaseBD {
 
@@ -47,7 +48,7 @@ public class PccAutorizzazioneBD extends BaseBD {
 	private IPccDipartimentoOperazioneServiceSearch dipartimentoOperazioneSearch;
 	
 	public PccAutorizzazioneBD() throws Exception {
-		this(Logger.getLogger(PccAutorizzazioneBD.class));
+		this(LoggerWrapperFactory.getLogger(PccAutorizzazioneBD.class));
 	}
 
 	public PccAutorizzazioneBD(Logger log) throws Exception {

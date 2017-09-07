@@ -29,7 +29,7 @@ import javax.faces.context.FacesContext;
 import org.ajax4jsf.model.DataVisitor;
 import org.ajax4jsf.model.Range;
 import org.ajax4jsf.model.SequenceRange;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito;
 import org.govmix.proxy.fatturapa.orm.PccErroreElaborazione;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;

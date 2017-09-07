@@ -3,7 +3,7 @@ package org.govmix.proxy.fatturapa.web.console.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.TracciaSdIBD;

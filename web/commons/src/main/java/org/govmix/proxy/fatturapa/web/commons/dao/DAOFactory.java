@@ -31,7 +31,7 @@ import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
 import javax.sql.DataSource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCServiceManager;
 import org.govmix.proxy.fatturapa.web.commons.dao.utils.DAOFactoryProperties;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
@@ -59,7 +59,7 @@ public class DAOFactory {
 	/** Copia Statica */
 	private static DAOFactory daoFactory = null;
 
-//	private static synchronized void initialize(org.apache.log4j.Logger log) throws Exception{
+//	private static synchronized void initialize(org.slf4j.Logger log) throws Exception{
 //
 //		if(DAOFactory.daoFactory==null)
 //			DAOFactory.daoFactory = new DAOFactory(log);	
@@ -77,7 +77,7 @@ public class DAOFactory {
 		return DAOFactory.daoFactory;
 	}
 
-	public DAOFactory(org.apache.log4j.Logger log) throws Exception{
+	public DAOFactory(org.slf4j.Logger log) throws Exception{
 		try{
 			this.log = log;
 

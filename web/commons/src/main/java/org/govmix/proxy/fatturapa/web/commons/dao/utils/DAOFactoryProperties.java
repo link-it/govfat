@@ -42,13 +42,13 @@ public class DAOFactoryProperties extends AbstractProperties {
 		/** Copia Statica */
 		private static DAOFactoryProperties daoFactoryProperties = null;
 
-		public static synchronized void initialize(org.apache.log4j.Logger log) throws Exception{
+		public static synchronized void initialize(org.slf4j.Logger log) throws Exception{
 
 			if(DAOFactoryProperties.daoFactoryProperties==null)
 				DAOFactoryProperties.daoFactoryProperties = new DAOFactoryProperties(log, propertiesPath);	
 		}
 
-		public static DAOFactoryProperties getInstance(org.apache.log4j.Logger log) throws Exception{
+		public static DAOFactoryProperties getInstance(org.slf4j.Logger log) throws Exception{
 
 			if(DAOFactoryProperties.daoFactoryProperties==null)
 				initialize(log);
@@ -63,7 +63,7 @@ public class DAOFactoryProperties extends AbstractProperties {
 		 *
 		 * 
 		 */
-		public DAOFactoryProperties(org.apache.log4j.Logger log, String path) throws Exception{
+		public DAOFactoryProperties(org.slf4j.Logger log, String path) throws Exception{
 
 			super(path);
 			

@@ -22,18 +22,19 @@ package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 
 import java.sql.Connection;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.dao.IAllegatoFatturaService;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
+import org.openspcoop2.utils.LoggerWrapperFactory;
 
 public class AllegatoFatturaBD extends BaseBD {
 
 	private IAllegatoFatturaService service;
 
 	public AllegatoFatturaBD() throws Exception {
-		this(Logger.getLogger(AllegatoFatturaBD.class));
+		this(LoggerWrapperFactory.getLogger(AllegatoFatturaBD.class));
 	}
 
 	public AllegatoFatturaBD(Logger log) throws Exception {

@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdTraccia;
 import org.govmix.proxy.fatturapa.orm.IdTrasmissione;
 import org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito;
@@ -59,6 +59,7 @@ import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
 import org.openspcoop2.generic_project.expression.IPaginatedExpression;
 import org.openspcoop2.generic_project.expression.SortOrder;
+import org.openspcoop2.utils.LoggerWrapperFactory;
 import org.openspcoop2.utils.TipiDatabase;
 
 public class PccTracciamentoBD extends BaseBD {
@@ -70,7 +71,7 @@ public class PccTracciamentoBD extends BaseBD {
 	private IFatturaElettronicaService fatturaService;
 
 	public PccTracciamentoBD() throws Exception {
-		this(Logger.getLogger(PccTracciamentoBD.class));
+		this(LoggerWrapperFactory.getLogger(PccTracciamentoBD.class));
 	}
 
 	public PccTracciamentoBD(Logger log) throws Exception {

@@ -24,8 +24,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.openspcoop2.utils.LoggerWrapperFactory;
 
 public class LoggerManager {
 
@@ -69,61 +70,61 @@ public class LoggerManager {
 		} catch(IOException e) {}
 
 		if(consoleLogger == null)
-			consoleLogger = Logger.getLogger("console.gui");
+			consoleLogger = LoggerWrapperFactory.getLogger("console.gui");
 
 		if(batchConsegnaEsitoLogger == null)
-			batchConsegnaEsitoLogger = Logger.getLogger("batch.consegnaEsito");
+			batchConsegnaEsitoLogger = LoggerWrapperFactory.getLogger("batch.consegnaEsito");
 
 		if(batchConsegnaFatturaLogger == null)
-			batchConsegnaFatturaLogger = Logger.getLogger("batch.consegnaFattura");
+			batchConsegnaFatturaLogger = LoggerWrapperFactory.getLogger("batch.consegnaFattura");
 
 		if(batchAccettazioneFatturaLogger == null)
-			batchAccettazioneFatturaLogger = Logger.getLogger("batch.accettazioneFattura");
+			batchAccettazioneFatturaLogger = LoggerWrapperFactory.getLogger("batch.accettazioneFattura");
 
 		if(batchConsegnaComunicazioneUscitaLogger == null)
-			batchConsegnaComunicazioneUscitaLogger = Logger.getLogger("batch.consegnaComunicazioneUscita");
+			batchConsegnaComunicazioneUscitaLogger = LoggerWrapperFactory.getLogger("batch.consegnaComunicazioneUscita");
 
 		if(batchConsegnaLottoLogger == null)
-			batchConsegnaLottoLogger = Logger.getLogger("batch.consegnaLotto");
+			batchConsegnaLottoLogger = LoggerWrapperFactory.getLogger("batch.consegnaLotto");
 
 		if(batchAssociazioneProtocolloLogger == null)
-			batchAssociazioneProtocolloLogger = Logger.getLogger("batch.associazioneProtocollo");
+			batchAssociazioneProtocolloLogger = LoggerWrapperFactory.getLogger("batch.associazioneProtocollo");
 
 		if(batchInserimentoFatturaLogger == null)
-			batchInserimentoFatturaLogger = Logger.getLogger("batch.inserimentoFattura");
+			batchInserimentoFatturaLogger = LoggerWrapperFactory.getLogger("batch.inserimentoFattura");
 
 		if(batchSpedizioneEsitiLogger == null)
-			batchSpedizioneEsitiLogger = Logger.getLogger("batch.spedizioneEsiti");
+			batchSpedizioneEsitiLogger = LoggerWrapperFactory.getLogger("batch.spedizioneEsiti");
 
 		if(batchSpedizioneNotificheLogger == null)
-			batchSpedizioneNotificheLogger = Logger.getLogger("batch.spedizioneNotifiche");
+			batchSpedizioneNotificheLogger = LoggerWrapperFactory.getLogger("batch.spedizioneNotifiche");
 
 		if(batchRispedizioneMessaggiLogger == null)
-			batchRispedizioneMessaggiLogger = Logger.getLogger("batch.rispedizioneMessaggi");
+			batchRispedizioneMessaggiLogger = LoggerWrapperFactory.getLogger("batch.rispedizioneMessaggi");
 
 		if(batchStartupLogger == null)
-			batchStartupLogger = Logger.getLogger("startup");
+			batchStartupLogger = LoggerWrapperFactory.getLogger("startup");
 
 		if(sondaLogger == null)
-			sondaLogger = Logger.getLogger("sonda");
+			sondaLogger = LoggerWrapperFactory.getLogger("sonda");
 
 		if(daoLogger == null)
-			daoLogger = Logger.getLogger("dao");
+			daoLogger = LoggerWrapperFactory.getLogger("dao");
 
 		if(endpointEnteLogger == null)
-			endpointEnteLogger = Logger.getLogger("endpoint.ente");
+			endpointEnteLogger = LoggerWrapperFactory.getLogger("endpoint.ente");
 
 		if(endpointPdDLogger == null)
-			endpointPdDLogger = Logger.getLogger("endpoint.pdd");
+			endpointPdDLogger = LoggerWrapperFactory.getLogger("endpoint.pdd");
 
 		if(endpointTrasmittenteLogger == null)
-			endpointTrasmittenteLogger = Logger.getLogger("endpoint.trasmittente");
+			endpointTrasmittenteLogger = LoggerWrapperFactory.getLogger("endpoint.trasmittente");
 
 		if(endpointGetTracceLogger == null)
-			endpointGetTracceLogger = Logger.getLogger("endpoint.getTracce");
+			endpointGetTracceLogger = LoggerWrapperFactory.getLogger("endpoint.getTracce");
 
 		if(endpointProxyPccLogger == null)
-			endpointProxyPccLogger = Logger.getLogger("endpoint.proxyPcc");
+			endpointProxyPccLogger = LoggerWrapperFactory.getLogger("endpoint.proxyPcc");
 
 		initialized = true;
 	}
@@ -166,7 +167,7 @@ public class LoggerManager {
 
 	public static Logger getLogger(String logger) {
 		init();
-		return Logger.getLogger(logger);
+		return LoggerWrapperFactory.getLogger(logger);
 	}
 
 	public static Logger getBatchAccettazioneFatturaLogger() {

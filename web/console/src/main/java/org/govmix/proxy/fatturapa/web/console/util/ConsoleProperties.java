@@ -58,13 +58,13 @@ public class ConsoleProperties extends AbstractProperties {
 	/** Copia Statica */
 	private static ConsoleProperties consoleProperties;
 
-	public static synchronized void initialize(org.apache.log4j.Logger log) throws Exception{
+	public static synchronized void initialize(org.slf4j.Logger log) throws Exception{
 
 		if(ConsoleProperties.consoleProperties==null)
 			ConsoleProperties.consoleProperties = new ConsoleProperties(log, propertiesPath);	
 	}
 
-	public static ConsoleProperties getInstance(org.apache.log4j.Logger log) throws Exception{
+	public static ConsoleProperties getInstance(org.slf4j.Logger log) throws Exception{
 
 		if(ConsoleProperties.consoleProperties==null)
 			initialize(log);
@@ -79,7 +79,7 @@ public class ConsoleProperties extends AbstractProperties {
 	 *
 	 * 
 	 */
-	public ConsoleProperties(org.apache.log4j.Logger log, String path) throws Exception{
+	public ConsoleProperties(org.slf4j.Logger log, String path) throws Exception{
 
 		super(log, path);
 		

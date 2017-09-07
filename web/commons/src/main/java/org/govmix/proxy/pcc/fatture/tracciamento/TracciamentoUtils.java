@@ -36,7 +36,7 @@ import java.util.List;
 
 import javax.xml.ws.WebServiceException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.pcc.fatture.OrigineTipo;
 import org.govmix.pcc.fatture.TestataAsyncRichiestaTipo;
 import org.govmix.pcc.fatture.TestataBaseRichiestaTipo;

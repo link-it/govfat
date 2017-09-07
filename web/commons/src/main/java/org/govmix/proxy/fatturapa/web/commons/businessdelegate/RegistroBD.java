@@ -22,12 +22,13 @@ package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 
 import java.sql.Connection;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdRegistro;
 import org.govmix.proxy.fatturapa.orm.Registro;
 import org.govmix.proxy.fatturapa.orm.dao.IRegistroService;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
+import org.openspcoop2.utils.LoggerWrapperFactory;
 
 public class RegistroBD extends BaseBD {
 
@@ -35,7 +36,7 @@ public class RegistroBD extends BaseBD {
 	private IRegistroService service;
 
 	public RegistroBD() throws Exception {
-		this(Logger.getLogger(RegistroBD.class));
+		this(LoggerWrapperFactory.getLogger(RegistroBD.class));
 	}
 
 	public RegistroBD(Logger log) throws Exception {

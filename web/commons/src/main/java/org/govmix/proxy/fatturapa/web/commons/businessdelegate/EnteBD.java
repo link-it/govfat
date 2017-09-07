@@ -20,7 +20,7 @@
  */
 package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.Ente;
 import org.govmix.proxy.fatturapa.orm.IdEnte;
 import org.govmix.proxy.fatturapa.orm.dao.IEnteService;
@@ -28,6 +28,7 @@ import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
+import org.openspcoop2.utils.LoggerWrapperFactory;
 
 public class EnteBD extends BaseBD {
 
@@ -35,7 +36,7 @@ public class EnteBD extends BaseBD {
 	private IEnteService service;
 
 	public EnteBD() throws Exception {
-		this(Logger.getLogger(EnteBD.class));
+		this(LoggerWrapperFactory.getLogger(EnteBD.class));
 	}
 
 	public EnteBD(Logger log) throws Exception {

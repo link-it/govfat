@@ -23,7 +23,7 @@ package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 import java.sql.Connection;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdDipartimento;
 import org.govmix.proxy.fatturapa.orm.IdUtente;
 import org.govmix.proxy.fatturapa.orm.Utente;
@@ -35,6 +35,7 @@ import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IPaginatedExpression;
+import org.openspcoop2.utils.LoggerWrapperFactory;
 import org.openspcoop2.utils.crypt.Password;
 
 public class UtenteBD extends BaseBD {
@@ -43,7 +44,7 @@ public class UtenteBD extends BaseBD {
 	private IUtenteService service;
 
 	public UtenteBD() throws Exception {
-		this(Logger.getLogger(UtenteBD.class));
+		this(LoggerWrapperFactory.getLogger(UtenteBD.class));
 	}
 
 	public UtenteBD(Logger log) throws Exception {

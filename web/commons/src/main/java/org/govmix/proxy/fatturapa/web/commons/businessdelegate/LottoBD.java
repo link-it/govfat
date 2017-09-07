@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
@@ -40,13 +40,14 @@ import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
 import org.openspcoop2.generic_project.expression.IPaginatedExpression;
 import org.openspcoop2.generic_project.expression.SortOrder;
+import org.openspcoop2.utils.LoggerWrapperFactory;
 
 public class LottoBD extends BaseBD {
 
 	private ILottoFattureService service;
 
 	public LottoBD() throws Exception {
-		this(Logger.getLogger(LottoBD.class));
+		this(LoggerWrapperFactory.getLogger(LottoBD.class));
 	}
 
 	public LottoBD(Logger log, Connection connection, boolean autocommit) throws Exception {

@@ -27,7 +27,7 @@ import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.PccTraccia;
 import org.govmix.proxy.fatturapa.orm.constants.NomePccOperazioneType;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;

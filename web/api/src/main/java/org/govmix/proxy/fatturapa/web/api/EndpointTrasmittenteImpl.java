@@ -24,7 +24,7 @@ import java.io.InputStream;
 
 import javax.ws.rs.core.Response;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 
 public class EndpointTrasmittenteImpl implements EndpointTrasmittente {

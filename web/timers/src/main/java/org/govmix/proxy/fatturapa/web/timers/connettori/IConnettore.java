@@ -20,7 +20,7 @@
  */
 package org.govmix.proxy.fatturapa.web.timers.connettori;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 

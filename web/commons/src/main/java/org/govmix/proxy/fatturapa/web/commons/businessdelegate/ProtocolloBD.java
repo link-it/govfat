@@ -22,7 +22,7 @@ package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 
 import java.sql.Connection;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdProtocollo;
 import org.govmix.proxy.fatturapa.orm.Protocollo;
 import org.govmix.proxy.fatturapa.orm.dao.IProtocolloService;
@@ -30,6 +30,7 @@ import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
+import org.openspcoop2.utils.LoggerWrapperFactory;
 
 public class ProtocolloBD extends BaseBD {
 
@@ -37,7 +38,7 @@ public class ProtocolloBD extends BaseBD {
 	private IProtocolloService service;
 
 	public ProtocolloBD() throws Exception {
-		this(Logger.getLogger(ProtocolloBD.class));
+		this(LoggerWrapperFactory.getLogger(ProtocolloBD.class));
 	}
 
 	public ProtocolloBD(Logger log) throws Exception {

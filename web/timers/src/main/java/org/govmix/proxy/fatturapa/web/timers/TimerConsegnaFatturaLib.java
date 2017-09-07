@@ -34,7 +34,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.cxf.helpers.IOUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.apache.soap.encoding.soapenc.Base64;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;

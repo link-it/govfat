@@ -39,7 +39,7 @@ import javax.faces.context.FacesContext;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.handler.MessageContext;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.pcc.fatture.FattureWS;
 import org.govmix.pcc.fatture.FattureWS_Service;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;

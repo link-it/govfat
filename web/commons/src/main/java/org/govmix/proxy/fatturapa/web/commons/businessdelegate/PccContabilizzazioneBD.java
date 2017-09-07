@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdContabilizzazione;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.PccContabilizzazione;
@@ -46,6 +46,7 @@ import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
 import org.openspcoop2.generic_project.expression.IPaginatedExpression;
 import org.openspcoop2.generic_project.expression.SortOrder;
+import org.openspcoop2.utils.LoggerWrapperFactory;
 
 public class PccContabilizzazioneBD  extends BaseBD {
 
@@ -53,7 +54,7 @@ public class PccContabilizzazioneBD  extends BaseBD {
 	private IPccTracciaTrasmissioneEsitoService esitoService;
 
 	public PccContabilizzazioneBD() throws Exception {
-		this(Logger.getLogger(PccContabilizzazioneBD.class));
+		this(LoggerWrapperFactory.getLogger(PccContabilizzazioneBD.class));
 	}
 
 	public PccContabilizzazioneBD(Logger log) throws Exception {

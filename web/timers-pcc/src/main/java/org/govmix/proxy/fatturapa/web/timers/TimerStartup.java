@@ -28,7 +28,7 @@ import javax.rmi.PortableRemoteObject;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.commons.utils.timers.BatchProperties;
 import org.govmix.proxy.fatturapa.web.commons.utils.timers.TimerProperties;

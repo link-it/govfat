@@ -20,7 +20,7 @@
  */
 package org.govmix.proxy.fatturapa.web.timers;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.web.commons.utils.timers.TimerProperties;
 
 public class ThreadTimerObject extends TimerObject {

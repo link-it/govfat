@@ -23,7 +23,7 @@ package org.govmix.proxy.fatturapa.web.console.converter;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.openspcoop2.generic_project.web.impl.jsf1.converter.SelectListItemConverter;
 

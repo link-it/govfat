@@ -22,7 +22,7 @@ package org.govmix.proxy.fatturapa.web.commons.ricevicomunicazionesdi;
 
 import java.sql.Connection;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.TracciaSdIBD;

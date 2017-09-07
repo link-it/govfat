@@ -30,7 +30,7 @@ import javax.ejb.TimedObject;
 import javax.ejb.Timer;
 import javax.ejb.TimerService;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.web.commons.utils.timers.BatchProperties;
 import org.govmix.proxy.fatturapa.web.commons.utils.timers.TimerProperties;
 import org.openspcoop2.utils.date.DateManager;

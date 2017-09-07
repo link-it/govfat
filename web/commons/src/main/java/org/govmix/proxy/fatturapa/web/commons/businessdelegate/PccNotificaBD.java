@@ -24,7 +24,7 @@ import java.sql.Connection;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.PccNotifica;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.dao.IPccNotificaService;
@@ -32,6 +32,7 @@ import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
 import org.openspcoop2.generic_project.expression.IPaginatedExpression;
+import org.openspcoop2.utils.LoggerWrapperFactory;
 
 public class PccNotificaBD extends BaseBD {
 
@@ -40,7 +41,7 @@ public class PccNotificaBD extends BaseBD {
 	private IPccNotificaService service;
 
 	public PccNotificaBD() throws Exception {
-		this(Logger.getLogger(PccNotificaBD.class));
+		this(LoggerWrapperFactory.getLogger(PccNotificaBD.class));
 	}
 
 	public PccNotificaBD(Logger log) throws Exception {

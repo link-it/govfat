@@ -22,7 +22,7 @@ package org.govmix.proxy.fatturapa.web.timers;
 
 import java.util.Date;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.web.commons.sonde.Sonda;
 import org.govmix.proxy.fatturapa.web.commons.utils.timers.BatchProperties;
 import org.govmix.proxy.fatturapa.web.commons.utils.timers.TimerProperties;
