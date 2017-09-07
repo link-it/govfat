@@ -163,7 +163,7 @@ public class HttpClientHelper {
 			toReturn = el.getValue();
 
 		} catch (JAXBException e) {
-			 log.error(e, e);
+			 log.error(e.getMessage(), e);
 		}
 
 		return toReturn;

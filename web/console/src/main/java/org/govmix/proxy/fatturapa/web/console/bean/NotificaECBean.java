@@ -45,6 +45,10 @@ import org.openspcoop2.generic_project.web.output.Text;
  */
 public class NotificaECBean extends BaseBean<NotificaEsitoCommittente, Long> implements IViewBean<NotificaEsitoCommittente, Long>{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Text esito =null;
 	private DateTime  dataInvio =null;
 	private DateTime data =null;

@@ -25,13 +25,27 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:rich="http://richfaces.org/rich"
       xmlns:a4j="http://richfaces.org/a4j">
-<f:loadBundle var="msg" basename="messages" />
+	<f:loadBundle var="msg" basename="messages" />
 		<ui:define name="body">
+			<style>
+				.rich-page-body {
+    					margin-left: 0px;
+					}
+					
+				a , a:hover {
+					color: #f0641e;
+				}
+			</style>
+		
+			<a4j:outputPanel id="panelForm" layout="block" styleClass="panelLista">
+				<div class="form-container">	
 			<h:form>
 				<h:outputText value="#{msg['login.form.timeout.pre']} " />
 				<h:commandLink action="login" value="#{msg['login.form.timeout.action']}" />
 				<h:outputText value=" " />
 				<h:outputText value="#{msg['login.form.timeout.post']}" />
 			</h:form>
+				</div>
+			</a4j:outputPanel>
 		</ui:define>
 </ui:composition>

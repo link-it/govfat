@@ -103,8 +103,9 @@
 {
 	background-image: url(../images/icons/mime/pps.png) ! important;
 }
- .application\/octet-stream  
-{
+ .application\/octet-stream
+ ,.application\/properties
+ {
 	background-image: url(../images/icons/mime/binary.png) ! important;
 }
 

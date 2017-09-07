@@ -32,6 +32,10 @@ import org.openspcoop2.generic_project.web.output.Text;
 
 public class ErroreElaborazionePccBean extends BaseBean<PccErroreElaborazione, Long> implements IViewBean<PccErroreElaborazione, Long>{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Text tipoOperazione = null;
 	private OutputNumber progressivoOperazione = null;
 	private Text codiceEsito = null;

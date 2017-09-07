@@ -13,30 +13,41 @@
 
 	<f:facet name="pageHeader">
 		<title>#{msg['appTitle']}</title>
+		<link href="#{facesContext.externalContext.request.contextPath}/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 		<meta http-equiv="Content-Type" content="text/xml; charset=utf-8"/>
+		<!--[if !(IE)]><!-->
 		<link
-			href="#{facesContext.externalContext.request.contextPath}/css/default.css"
+			href="#{facesContext.externalContext.request.contextPath}/css/roboto/roboto-fontface.css"
+			rel="stylesheet" type="text/css" />
+		<!--<![endif]-->
+		<!--[if gt IE 8]>
+     	<link
+			href="#{facesContext.externalContext.request.contextPath}/css/roboto/roboto-fontface.css"
+			rel="stylesheet" type="text/css" />
+    	<![endif]-->
+		<!--[if lte IE 8]>
+     	<link
+			href="#{facesContext.externalContext.request.contextPath}/css/roboto/roboto-fontface-iefix.css"
+			rel="stylesheet" type="text/css" />
+    	<![endif]-->
+		<link
+			href="#{facesContext.externalContext.request.contextPath}/css/linkit-base.css"
 			rel="stylesheet" type="text/css" />
 		<link
-			href="#{facesContext.externalContext.request.contextPath}/css/linkit-main.css"
+			href="#{facesContext.externalContext.request.contextPath}/css/linkit-jsf.css"
 			rel="stylesheet" type="text/css" />
 		<link
-			href="#{facesContext.externalContext.request.contextPath}/css/linkit-custom.css"
+			href="#{facesContext.externalContext.request.contextPath}/css/linkit-crumbs.css"
 			rel="stylesheet" type="text/css" />
 		<link
 			href="#{facesContext.externalContext.request.contextPath}/css/linkit-form.css"
 			rel="stylesheet" type="text/css" />
 		<link
-			href="#{facesContext.externalContext.request.contextPath}/css/crumbs.css"
-			rel="stylesheet" type="text/css" />
-		<link
 			href="#{facesContext.externalContext.request.contextPath}/css/mimetype.css"
 			rel="stylesheet" type="text/css" />
 		<link
-			href="#{facesContext.externalContext.request.contextPath}/css/icons.css"
+			href="#{facesContext.externalContext.request.contextPath}/css/linkit-icons.css"
 			rel="stylesheet" type="text/css" />
-		<script type="text/javascript" src="#{facesContext.externalContext.request.contextPath}/scripts/jquery.collapsible.js"></script>
-		<script type="text/javascript" src="#{facesContext.externalContext.request.contextPath}/scripts/jquery.sticky.js"></script>
 		<script type="text/javascript">
 	       A4J.AJAX.onExpired = function(loc, expiredMsg){
 				return loc;
@@ -114,7 +125,7 @@
 		 			window.location.hash="no-back-button";
 					window.location.hash="Again-No-back-button";//again because google chrome don't insert first hash into history
 					window.onhashchange=function(){window.location.hash="no-back-button";}
-		 		} else if(jQuery.browser.msie){
+		 		} else if(isIE()){
 		 			window.location.hash="no-back-button";
 		 			window.location.hash="Again-No-back-button";//again because google chrome don't insert first hash into history
 		 			window.onhashchange=function(){window.location.hash="no-back-button";}
@@ -131,47 +142,60 @@
 		</script>
 	</f:facet>
 	<f:facet name="header">
-		<h:panelGroup id="headerct" layout="block">
-			<table style="width:100%; padding-top: 5px;">
-				<tbody>
-					<tr>
-						<td align="left">
-						<h:outputLink  value="#{facesContext.externalContext.request.contextPath}/pages/fattura/list/listaFatture.jsf" style="text-decoration: none; color: #000;">
-								<h:outputText value="#{msg['appTitle']}" style="font-size: 197%; font-weight: bold;" />
-						</h:outputLink>
-						</td>
-						<td align="right">
-							<h:panelGrid id="panelGroupOut_headerRight"
-								columnClasses="gridContent verticalAlignTop"
-								columns="#{loginBean.languageForm.rendered == 'true' and loginBean.isLoggedInAsString == 'true' ? 2 : 1}">
-								<a4j:form id="#{loginBean.languageForm.id}" prependId="false" ajaxSingle="true"	ajaxSubmit="true"
-								rendered="#{loginBean.languageForm.rendered == 'true'}">
-										<op2web:formField field="#{loginBean.languageForm.lingua}" />
-								</a4j:form>
-								<c:if test="#{loginBean.isLoggedInAsString == 'true'}">
-									<h:form>
-										<h:outputLabel value=" | "
-											rendered="#{loginBean.languageForm.rendered == 'true'}" />
-										<h:outputLabel value="#{msg['homepage.logged.username']}:  " />
-										<h:outputText id="usernameCtr" value="#{loginBean.username} "
-											style="FONT-WEIGHT: bold;" />
-										<h:outputLabel value=" | " />
-										
-										<h:outputLink value="#{loginBean.urlChangePassword}" rendered="#{not empty loginBean.urlChangePassword}">
-											<h:outputText  value="#{msg['homepage.logged.changePassword']}" />
-										</h:outputLink>&#160;
-										<h:outputLabel value=" | " rendered="#{not empty loginBean.urlChangePassword}" />
-										
-									
-										<h:commandLink action="#{loginBean.logout}"
-											value="#{msg['homepage.logged.logout']}" />&#160;
-									</h:form>
-								</c:if>
-							</h:panelGrid>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+		<h:panelGroup layout="block" id="headerContentParent">
+			<h:panelGroup layout="block" id="headerLogo" styleClass="stileLogo" rendered="#{not empty loginBean.logoHeaderImage}">
+				<table style="width:100%;">
+					<tbody>
+						<tr class="stileLogo"> 
+							<td colspan="2" align="left">
+								<h:outputLink value="#{loginBean.logoHeaderLink}" target="_blank" rendered="#{not empty loginBean.logoHeaderLink}">
+									<h:graphicImage value="#{loginBean.logoHeaderImage}" title="#{loginBean.logoHeaderTitolo}" alt="#{loginBean.logoHeaderTitolo}" rendered="#{not empty loginBean.logoHeaderLink}" />
+								</h:outputLink>
+								
+								<h:graphicImage value="#{loginBean.logoHeaderImage}" title="#{loginBean.logoHeaderTitolo}" alt="#{loginBean.logoHeaderTitolo}" rendered="#{empty loginBean.logoHeaderLink}" />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</h:panelGroup>
+			<h:panelGroup layout="block" id="headerTitolo" styleClass="stileTitolo">
+				<table style="width:100%;">
+					<tbody>
+						<tr>
+							<td>
+								<a href="#{facesContext.externalContext.request.contextPath}/pages/fattura/list/listaFatture.jsf" class="titleStatusIconLinkLeft">
+									<h:outputText value="#{msg['appTitle']}" id="appTitleOutputText"  styleClass="appTitle"/>
+								</a>
+							</td>
+							<td align="right" class="titleRight">
+								<h:panelGroup id="pgTitleDx" >
+									<h:panelGrid columns="#{loginBean.languageForm.rendered == 'true' and loginBean.isLoggedInAsString == 'true' ? 2 : 1}">
+										<a4j:form id="#{loginBean.languageForm.id}" prependId="false" ajaxSingle="true"	ajaxSubmit="true"
+											rendered="#{loginBean.languageForm.rendered == 'true'}">
+											<op2web:formField field="#{loginBean.languageForm.lingua}" />
+										</a4j:form>
+										<c:if test="#{loginBean.isLoggedInAsString == 'true'}">
+											<a4j:form prependId="false">
+												<rich:dropDownMenu id="menuUtente" verticalOffset="15">
+									                <f:facet name="label">
+											   			<h:panelGroup>
+									                        <h:outputText value="#{loginBean.username}" styleClass="nomeUtente"/>
+									                        <h:outputText styleClass="nomeUtenteImg" value=""/>
+									                    </h:panelGroup>
+									                </f:facet> 
+													<rich:menuItem submitMode="ajax" value="#{msg['homepage.logged.changePassword']}" action="#{loginBean.urlChangePassword}" 
+											                  rendered="#{not empty loginBean.urlChangePassword}"/>
+													<rich:menuItem submitMode="ajax" value="#{msg['homepage.logged.logout']}" action="#{loginBean.logout}" />
+									            </rich:dropDownMenu>
+								            </a4j:form>
+										</c:if>
+									</h:panelGrid>
+								</h:panelGroup>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</h:panelGroup>
 		</h:panelGroup>
 	</f:facet>
 	<!-- 
@@ -179,12 +203,12 @@
       	<ui:insert name="pageHeader">Sub Header</ui:insert>
       </f:facet>
        -->
-	<f:facet name="sidebar" style="width:300px;">
+	<f:facet name="sidebar">
 		<ui:include src="/includes/menu.xhtml" />
 	</f:facet>
 	<!-- Body -->
 	<ui:include src="/includes/status.xhtml" />
-	<rich:panel styleClass="noborder">
+	<rich:panel id="bodyWrapper" styleClass="noborder">
 		<rich:jQuery name="activeRow" timing="onJScall"
 			query="hover(function(){jQuery(this).addClass('active')},function(){jQuery(this).removeClass('active')})" />
 		<rich:jQuery name="checkBrowser" timing="onJScall"
@@ -197,7 +221,7 @@
 						jQuery("a[id*='iconLink']").addClass('iconLink');
 				}
 
-				jQuery("[id$='menuct']").sticky({topSpacing:10});
+				//jQuery("[id$='menuct']").sticky({topSpacing:10});
 
 				jQuery("[id$='TextValue']").addClass('whiteSpace');
 			 });
@@ -213,24 +237,27 @@
 						</div>
 					</a4j:form>
 				</rich:layoutPanel>
+				
+				<rich:layoutPanel position="left" width="0">
+					</rich:layoutPanel>
 
 				<rich:layoutPanel id="body" position="center" >
 					<a4j:outputPanel id="errorsPlaceHolder" ajaxRendered="true" layout="block" styleClass="errorsPlaceHolder">
 						<script type="text/javascript">
-							function runEffect(elem) {
-					            jQuery("#errorsPlaceHolder").fadeOut(5000).hide();
-			        		};
+// 							function runEffect(elem) {
+// 					            jQuery("#errorsPlaceHolder").fadeOut(5000).hide();
+// 			        		};
 
-							 jQuery(document).ready(function() {
-								jQuery("#pgErrorsPlaceHolder").click(function() {
-							        runEffect(this);
-							        return false;
-						        });
+// 							 jQuery(document).ready(function() {
+// 								jQuery("#pgErrorsPlaceHolder").click(function() {
+// 							        runEffect(this);
+// 							        return false;
+// 						        });
 
-								window.setTimeout(function() {  
-									jQuery("#errorsPlaceHolder").fadeOut(5000).hide();
-					             }, 5000);  		        
-							 });
+// 								window.setTimeout(function() {  
+// 									jQuery("#errorsPlaceHolder").fadeOut(5000).hide();
+// 					             }, 5000);  		        
+// 							 });
 						</script>
 						<h:panelGroup layout="block" styleClass="#{facesContext.maximumSeverity.ordinal>=2 ? 'errors' : 'info'}" rendered="#{not empty facesContext.maximumSeverity}" id="pgErrorsPlaceHolder">
 							<h:panelGroup rendered="#{facesContext.maximumSeverity.ordinal>=2}">
@@ -239,18 +266,19 @@
 										<h:outputText value="#{msg['homepage.logged.msgError']}" />
 									</em>
 								</p>
+								<div class="errorsSpacer"/>
 							</h:panelGroup>
-							<rich:spacer height="7px" />
+								<div class="errorsSpacer"/>
 							<rich:messages id="errorMessages">
 							</rich:messages>
 						</h:panelGroup>
 					</a4j:outputPanel>
-					<div id="bodyToo" class="noborder">
+					<div>
 						<ui:insert name="body"></ui:insert>
 					</div>
 				</rich:layoutPanel>
 
-				<rich:layoutPanel position="bottom">
+				<rich:layoutPanel position="bottom" width="100%">
 				</rich:layoutPanel>
 			</rich:layout>
 		</h:panelGrid>
@@ -258,8 +286,7 @@
 
 	<f:facet name="footer" align="center">
 		<h:outputLink value="http://www.link.it" target="_blank">
-			<h:graphicImage value="/images/lnk_web_linkhead.png" height="50"
-				title="Link.it" alt="Link.it" />
+			<h:graphicImage value="/images/tema_link/logo_link_footer.png" title="Link.it" alt="Link.it" />
 		</h:outputLink>
 	</f:facet>
 

@@ -414,7 +414,7 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 			// End of the method
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().responseComplete();
-			this.log.error(e, e);
+			this.log.error(e.getMessage(), e);
 
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,

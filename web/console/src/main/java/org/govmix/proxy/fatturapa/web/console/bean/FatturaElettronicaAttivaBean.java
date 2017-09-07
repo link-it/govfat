@@ -58,7 +58,10 @@ import org.openspcoop2.generic_project.web.output.Text;
  */
 public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, Long> implements IViewBean<FatturaElettronica, Long>{
 
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// Field Che visualizzo nella maschera di ricerca
 	private Text cedentePrestatore = null;
 	private Text dipartimento = null;

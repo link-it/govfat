@@ -349,7 +349,7 @@ public class FattureExporter  extends HttpServlet{
 			Utils.copy(bais, response.getOutputStream()); 
 		}
 		catch(Exception e){
-			FattureExporter.log.error(e,e);
+			FattureExporter.log.error(e.getMessage(),e);
 			ByteArrayOutputStream baos=  new ByteArrayOutputStream();
 
 			response.setContentType("text/plain");					

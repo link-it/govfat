@@ -27,6 +27,8 @@
       xmlns:a4j="http://richfaces.org/a4j">
 <f:loadBundle var="msg" basename="messages" />
 		<ui:define name="body">
+		<a4j:outputPanel id="panelForm" layout="block" styleClass="panelLista">
+			<div class="form-container">	
 			<h:form>
 				<h:outputText value="#{msg['logout.form.pre']} " />
 				<h:outputLink  value="#{facesContext.externalContext.request.contextPath}/index.jsp">
@@ -35,5 +37,7 @@
 				<h:outputText value=" " />
 				<h:outputText value="#{msg['logout.form.post']}" />
 			</h:form>
+			</div>
+		</a4j:outputPanel>
 		</ui:define>
 </ui:composition>

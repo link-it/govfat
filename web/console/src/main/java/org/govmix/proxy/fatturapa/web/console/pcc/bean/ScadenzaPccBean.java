@@ -32,6 +32,10 @@ import org.openspcoop2.generic_project.web.output.Text;
 
 public class ScadenzaPccBean  extends BaseBean<PccScadenza, Long> implements IViewBean<PccScadenza, Long>{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private OutputNumber importo = null;
 	private DateTime dataScadenza = null;
 	private EsitoPccBean esito;

@@ -53,6 +53,12 @@ public class ConsoleProperties extends AbstractProperties {
 	
 	private TreeMap<String, String> codiciErrorePCC = null;
 	
+    private String consoleFont = "";
+    private String logoHeaderImage = "";
+    private String logoHeaderTitolo = "";
+    private String logoHeaderLink = "";
+
+	
 	
 	private static final String propertiesPath = "/fatturapa.properties";
 	/** Copia Statica */
@@ -109,6 +115,12 @@ public class ConsoleProperties extends AbstractProperties {
 				}
 			}
 		}
+		
+        this.consoleFont = this.getProperty("org.govmix.proxy.fatturapa.web.console.font", true);
+        this.logoHeaderImage = this.getProperty("org.govmix.proxy.fatturapa.web.console.header.logo.image", false);
+        this.logoHeaderLink = this.getProperty("org.govmix.proxy.fatturapa.web.console.header.logo.link", false);
+        this.logoHeaderTitolo = this.getProperty("org.govmix.proxy.fatturapa.web.console.header.logo.titolo", false);
+
 	}
 
 	/* ********  P R O P E R T I E S  ******** */
@@ -176,4 +188,22 @@ public class ConsoleProperties extends AbstractProperties {
 	public TreeMap<String, String> getCodiciErrorePCC() {
 		return codiciErrorePCC;
 	}
+
+	public String getConsoleFont() {
+		return consoleFont;
+	}
+
+	public String getLogoHeaderImage() {
+		return logoHeaderImage;
+	}
+
+	public String getLogoHeaderTitolo() {
+		return logoHeaderTitolo;
+	}
+
+	public String getLogoHeaderLink() {
+		return logoHeaderLink;
+	}
+	
+	
 }

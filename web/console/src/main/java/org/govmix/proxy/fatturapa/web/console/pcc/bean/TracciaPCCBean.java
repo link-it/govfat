@@ -50,7 +50,10 @@ import org.openspcoop2.generic_project.web.output.Text;
 
 public class TracciaPCCBean extends BaseBean<PccTraccia, Long> implements IViewBean<PccTraccia, Long>{
 
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private DateTime dataCreazione;
 	private DateTime dataUltimaTrasmissione;
 	private Text cfTrasmittente;

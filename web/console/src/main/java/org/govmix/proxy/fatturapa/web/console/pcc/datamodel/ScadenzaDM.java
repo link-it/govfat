@@ -112,7 +112,7 @@ public class ScadenzaDM extends BaseDataModel<ScadenzaPccBean, Long,  IScadenzaS
 				}
 			}
 		}catch (Exception e) {
-			log.error(e,e);
+			log.error(e.getMessage(),e);
 		}
 
 	}

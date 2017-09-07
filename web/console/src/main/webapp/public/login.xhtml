@@ -24,26 +24,29 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:rich="http://richfaces.org/rich"
-	xmlns:a4j="http://richfaces.org/a4j" xmlns:op2web="http://www.openspcoop2.org/web/taglib/jsf">
+	xmlns:a4j="http://richfaces.org/a4j" 
+	xmlns:op2web="http://www.openspcoop2.org/web/taglib/jsf">
 	<f:loadBundle var="msg" basename="messages" />
-	<ui:param value="#{msg['login.header.title']}"
-		name="title" />
-	<ui:define name="body">
-<style type="text/css">
-#breadcrumb-ct {
-display: none;
-}
-</style>
+	<ui:param value="#{msg['login.header.title']}"	name="title" />
+		<ui:define name="body">
+			<style type="text/css">
+		#breadcrumb-ct {
+/* 			display: none; */
+		}
+				.rich-page-body {
+    					margin-left: 0px;
+					}
+			</style>
 		<h:form prependId="false">
 		
 		<op2web:fieldset legend="#{msg['login.form.fieldset']}" rendered="#{true}" collapsible="false" closed="false"> 
 
 			<op2web:prop label="#{msg['login.form.username']}" required="true">
-				<h:inputText id="username"
+				<h:inputText id="username" styleClass="inputLink"
 					value="#{loginBean.username}" />
 			</op2web:prop>
 			<op2web:prop label="#{msg['login.form.password']}" required="true">
-				<h:inputSecret id="password"
+				<h:inputSecret id="password" styleClass="inputLink"
 					value="#{loginBean.password}" />
 			</op2web:prop>
 

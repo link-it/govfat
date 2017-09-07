@@ -35,7 +35,10 @@ import org.openspcoop2.generic_project.web.output.Text;
 
 public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IViewBean<TracciaSDI, Long> {
 
-	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Text identificativoSdi = null;
 	private Text tipoComunicazione = null;
 	private Text nomeFile = null;

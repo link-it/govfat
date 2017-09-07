@@ -31,7 +31,10 @@ import org.openspcoop2.generic_project.web.output.Text;
 
 public class ProtocolloBean extends BaseBean<Protocollo, Long> implements IViewBean<Protocollo, Long> {
 
-	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Text nome = null;
 	private Text descrizione = null;
 	private Text endpoint = null;

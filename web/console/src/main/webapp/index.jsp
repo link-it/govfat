@@ -18,9 +18,29 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
+
 <% 
 
+String scheme = request.getScheme();             // http
+String serverName = request.getServerName();     // hostname.com
+int serverPort = request.getServerPort();        // 80
+String contextPath = request.getContextPath();   // /mywebapp
+
+String destinationUrl = "/fattura/list/listaFatture.jsf";
+
+//if(ConfigProperties.getInstance().isLoginApplication())
+//	destinationUrl = "/public/login.jsf";
+// Reconstruct original requesting URL
+StringBuilder url = new StringBuilder();
+url.append(scheme).append("://").append(serverName);
+
+if (serverPort != 80 && serverPort != 443) {
+    url.append(":").append(serverPort);
+}
+
+url.append(contextPath).append(destinationUrl);
+
 //response.sendRedirect(request.getContextPath()+"/public/login.jsf");
-response.sendRedirect(request.getContextPath()+"/pages/fattura/list/listaFatture.jsf");
+response.sendRedirect(url.toString());
 
 %>

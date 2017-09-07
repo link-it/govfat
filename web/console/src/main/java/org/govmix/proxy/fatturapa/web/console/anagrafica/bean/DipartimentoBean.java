@@ -39,6 +39,10 @@ import org.openspcoop2.generic_project.web.output.Text;
 public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IViewBean<Dipartimento, Long>{ 
 
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Text codice = null;
 	private Text ente = null;
 	private Text descrizione = null;

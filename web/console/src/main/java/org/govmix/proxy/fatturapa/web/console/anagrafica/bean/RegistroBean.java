@@ -33,6 +33,10 @@ import org.openspcoop2.generic_project.web.output.Text;
 
 public class RegistroBean extends BaseBean<Registro, Long> implements IViewBean<Registro, Long> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Text nome = null;
 	private Text username = null;
 	private Text password = null;

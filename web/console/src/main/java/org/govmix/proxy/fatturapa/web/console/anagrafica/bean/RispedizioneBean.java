@@ -31,6 +31,10 @@ import org.openspcoop2.generic_project.web.output.Text;
 
 public class RispedizioneBean extends BaseBean<PccRispedizione, Long> implements IViewBean<PccRispedizione, Long>{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Text codiceErrore = null;
 	private Text descrizioneErrore = null;
 	private Text tipoErrore = null;

@@ -38,6 +38,10 @@ import org.openspcoop2.generic_project.web.output.Text;
 
 public class EsitoPccBean extends BaseBean<PccTracciaTrasmissioneEsito, Long> implements IViewBean<PccTracciaTrasmissioneEsito, Long>{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Text esitoElaborazione = null;
 	private Text descrizioneElaborazione = null;
 	private Text idTrasmissione = null;

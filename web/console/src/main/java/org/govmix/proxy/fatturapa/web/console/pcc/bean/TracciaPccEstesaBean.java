@@ -37,6 +37,10 @@ import org.openspcoop2.generic_project.web.output.Text;
 
 public class TracciaPccEstesaBean extends TracciaPCCBean{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private DateTime dataPrimaTrasmissione;
 	private DateTime dataEsito;
 	private Text operazioneContabile;

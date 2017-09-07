@@ -33,6 +33,10 @@ import org.openspcoop2.generic_project.web.output.Text;
 
 public class PagamentoPccBean extends BaseBean<PccPagamento, Long> implements IViewBean<PccPagamento, Long>{ 
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private OutputNumber importoPagato;
 	private Text  naturaSpesa;
 	private Text capitoliSpesa;

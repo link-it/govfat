@@ -20,23 +20,29 @@
  */
 package org.govmix.proxy.fatturapa.web.console.listener;
 
+import java.awt.Font;
 import java.awt.GraphicsEnvironment;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Properties;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
-import org.slf4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
+import org.apache.commons.lang.StringUtils;
+import org.govmix.proxy.fatturapa.web.console.bean.FatturaElettronicaBean;
+import org.govmix.proxy.fatturapa.web.console.util.ConsoleProperties;
 import org.openspcoop2.generic_project.web.listener.ApplicationStartupListener;
+import org.openspcoop2.utils.LoggerWrapperFactory;
+import org.slf4j.Logger;
 
 public class ConsoleStartupListener extends ApplicationStartupListener {
 	static{
-		 System.setProperty("java.awt.headless", "true");
+		System.setProperty("java.awt.headless", "true");
 	}
 
-	private static Logger log = Logger.getLogger(ConsoleStartupListener.class); 
+	private static Logger log = LoggerWrapperFactory.getLogger(ConsoleStartupListener.class); 
 
 	@Override
 	public void contextInitialized(ServletContextEvent evt) {
@@ -44,8 +50,9 @@ public class ConsoleStartupListener extends ApplicationStartupListener {
 
 		InputStream is = null;
 		try{
+			ServletContext servletContext = evt.getServletContext();
 			ConsoleStartupListener.log.debug("Init FatturaPA WebConsole in corso...");
-			
+
 
 			String logPath = this.getLoggerProperties();
 			if(!logPath.startsWith("/"))
@@ -57,20 +64,57 @@ public class ConsoleStartupListener extends ApplicationStartupListener {
 			prop.load(is);
 
 			// inizializzo il logger
-			PropertyConfigurator.configure(prop);
-
+			LoggerWrapperFactory.setLogConfiguration(prop);
+			ConsoleStartupListener.log = LoggerWrapperFactory.getLogger(ConsoleStartupListener.class);
 
 			ConsoleStartupListener.log.debug("Init FatturaPA WebConsole completato.");
-			
+
 			ConsoleStartupListener.log.debug("Check Graphics Environment: is HeadeLess ["+java.awt.GraphicsEnvironment.isHeadless()+"]");
-			
+
 			ConsoleStartupListener.log.debug("Elenco Nomi Font disponibili: " + Arrays.asList(GraphicsEnvironment
-                    .getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
-			
-			
-//			log.debug("Elenco Font disponibili: " + Arrays.asList(GraphicsEnvironment
-//                    .getLocalGraphicsEnvironment().getAllFonts()));
-			
+					.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
+
+
+			//			log.debug("Elenco Font disponibili: " + Arrays.asList(GraphicsEnvironment
+			//                    .getLocalGraphicsEnvironment().getAllFonts()));
+
+			InputStream isFont = null;
+
+			try{
+				String fontFileName = ConsoleProperties.getInstance(log).getConsoleFont();
+
+				if(StringUtils.isNotEmpty(fontFileName)) {
+					log.debug("Caricato Font dal file: ["+fontFileName+"] in corso... ");
+
+					isFont = servletContext.getResourceAsStream("/fonts/"+ fontFileName);
+
+					GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+					Font fontCaricato = Font.createFont(Font.PLAIN, isFont);
+
+					log.debug("Caricato Font: ["+fontCaricato.getName()+"] FontName: ["+fontCaricato.getFontName()+"] FontFamily: ["+fontCaricato.getFamily()+"] FontStyle: ["+fontCaricato.getStyle()+"]");
+
+					ge.registerFont(fontCaricato);
+
+					log.debug("Check Graphics Environment: is HeadeLess ["+java.awt.GraphicsEnvironment.isHeadless()+"]");
+
+					log.debug("Elenco Nomi Font disponibili: " + Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
+
+					FatturaElettronicaBean richiestaBean = new FatturaElettronicaBean();
+					richiestaBean.getFactory().setFontName(fontCaricato.getFamily());
+					richiestaBean.getFactory().setFontStyle(fontCaricato.getStyle());
+					richiestaBean.getFactory().setFontSize(12);
+
+					log.debug("Caricato Font dal file: ["+fontFileName+"] completato.");
+				}
+			}catch (Exception e) {
+				log.error(e.getMessage(),e);
+			} finally {
+				if(isFont != null){
+					try {   isFont.close(); } catch (IOException e) {       }
+				}
+			}
+
+
 		}catch(Throwable e ){
 			ConsoleStartupListener.log.error(
 					//					throw new ServletException(

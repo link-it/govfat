@@ -37,6 +37,10 @@ import org.openspcoop2.generic_project.web.output.Text;
 
 public class UtenteBean extends BaseBean<Utente, Long> implements IViewBean<Utente, Long>{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Text username = null;
 	private Text password = null;
 	private Text nome = null;

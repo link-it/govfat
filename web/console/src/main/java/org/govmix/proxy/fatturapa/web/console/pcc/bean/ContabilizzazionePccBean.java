@@ -37,6 +37,10 @@ import org.openspcoop2.generic_project.web.output.Text;
 
 public class ContabilizzazionePccBean  extends BaseBean<PccContabilizzazione, Long> implements IViewBean<PccContabilizzazione, Long>{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private OutputNumber importoMovimento;
 	private Text naturaSpesa;
 	private Text capitoliSpesa;

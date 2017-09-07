@@ -42,6 +42,10 @@ import org.openspcoop2.generic_project.web.output.Text;
  */
 public class NotificaDTBean extends BaseBean<NotificaDecorrenzaTermini, Long> implements IViewBean<NotificaDecorrenzaTermini, Long> { 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
   	private Text nomeFile =null;
 	private Text descrizione =null;
 	private Text note =null;
