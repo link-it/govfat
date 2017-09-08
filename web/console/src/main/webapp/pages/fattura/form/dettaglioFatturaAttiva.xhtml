@@ -33,13 +33,15 @@
 	<ui:define name="pageHeader">#{msg['fatturaAttiva.dettaglio.pageTitle']}</ui:define>
 	<ui:define name="navbar">
 		<ul>
-			<li><h:outputText value="/#{msg['menu.group.operazioni']}" /></li>
+			<li><h:outputText value="#{msg['menu.group.operazioni']}" /></li>
+			<li><h:graphicImage value="/images/tema_link/next_white.png" width="16" height="16"/></li>
 			<li><a4j:htmlCommandLink
 					action="#{fatturaElettronicaAttivaMBean.restoreSearch}"
-					value="/#{msg['fatturaAttiva.listaFattureAttive.pageTitle']}">
+					value="#{msg['fatturaAttiva.listaFattureAttive.pageTitle']}">
 				</a4j:htmlCommandLink></li>
-			<li><h:outputText
-					value="/#{msg['fatturaAttiva.dettaglio.pageTitle']} (#{fatturaElettronicaAttivaMBean.selectedElement.cedentePrestatore.value} #{fatturaElettronicaAttivaMBean.selectedElement.numero.value}/#{fatturaElettronicaAttivaMBean.selectedElement.anno.value})" /></li>
+			<li><h:graphicImage value="/images/tema_link/next_white.png" width="16" height="16"/></li>
+			<li><h:outputText styleClass="ultimo-path"
+					value="#{msg['fatturaAttiva.dettaglio.pageTitle']} (#{fatturaElettronicaAttivaMBean.selectedElement.cedentePrestatore.value} #{fatturaElettronicaAttivaMBean.selectedElement.numero.value}/#{fatturaElettronicaAttivaMBean.selectedElement.anno.value})" /></li>
 		</ul>
 	</ui:define>
 	<ui:define name="body">
@@ -51,7 +53,7 @@
 				 });
 		</script>
 
-		<rich:panel id="panelContainer1" style="padding:0"
+		<rich:panel id="panelContainer1" style="padding:0"  bodyClass="nopadding" 
 			headerClass="outpanelHeader" styleClass="noborder">
 			<h:outputText id="outNoDettaglio"
 				value="#{msg['fatturaAttiva.dettaglio.nodata']}"
@@ -70,7 +72,7 @@
 						value="#{fatturaElettronicaAttivaMBean.selectedElement}" />
 				</ui:include>
 
-				<div class="buttonrow" style="padding: 10px;">
+				<div class="buttonrowlista">
 					<h:form>
 						<!-- Visualizza XML -->
 						<c:set var="linkXml"

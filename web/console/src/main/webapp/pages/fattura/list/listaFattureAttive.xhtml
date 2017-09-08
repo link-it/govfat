@@ -33,8 +33,9 @@
 	<ui:define name="pageHeader">#{msg['fatturaAttiva.listaFattureAttive.pageTitle']}</ui:define>
 	<ui:define name="navbar">
 		<ul>
-			<li><h:outputText value="/#{msg['menu.group.operazioni']}" /></li>
-			<li><h:outputText value="/#{msg['fatturaAttiva.listaFattureAttive.pageTitle']}" /></li>
+			<li><h:outputText value="#{msg['menu.group.operazioni']}" /></li>
+			<li><h:graphicImage value="/images/tema_link/next_white.png" width="16" height="16"/></li>
+			<li><h:outputText value="#{msg['fatturaAttiva.listaFattureAttive.pageTitle']}" styleClass="ultimo-path" /></li>
 		</ul>
 	</ui:define>
 	<ui:define name="body">
@@ -180,7 +181,7 @@
 						<h:outputText value="#{msg['commons.button.esporta']}" />
 					</h:commandLink>
 					
-					<a4j:commandButton id="carica-iconLink" styleClass="icon-add" style="padding: 4px 6px 4px 5px;"
+					<a4j:commandButton id="carica-iconLink" styleClass="icon-add"  
 						reRender="fileUploadModalPnl" value="#{msg['fattura.button.carica']}"
 						actionListener="#{fatturaElettronicaAttivaMBean.nuovaFatturaListener}"
 						rendered="#{fatturaElettronicaAttivaMBean.visualizzaTastoCaricaFattura}"

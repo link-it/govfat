@@ -33,54 +33,59 @@
 	<ui:define name="pageHeader">#{msg['esitoPcc.dettaglio.pageTitle']}</ui:define>
 	<ui:define name="navbar">
 		<ul>
-			<li><h:outputText value="/#{msg['menu.group.operazioni']}"/>
-			</li>
+			<li><h:outputText value="#{msg['menu.group.operazioni']}"/></li>
+			<li><h:graphicImage value="/images/tema_link/next_white.png" width="16" height="16"/></li>
 			<li><a4j:htmlCommandLink
 					action="#{operazioneMBean.restoreSearch}"
-					value="/#{msg['operazione.listaOperazioni.pageTitle']}" rendered="#{esitoMBean.paginaFrom == 'menu'}">
+					value="#{msg['operazione.listaOperazioni.pageTitle']}" rendered="#{esitoMBean.paginaFrom == 'menu'}">
 				</a4j:htmlCommandLink>
 				<a4j:htmlCommandLink
 					action="#{fatturaElettronicaMBean.restoreSearch}" rendered="#{esitoMBean.paginaFrom == 'dettaglioFattura'}"
-					value="/#{msg['fattura.listaFatture.pageTitle']}">
+					value="#{msg['fattura.listaFatture.pageTitle']}">
 				</a4j:htmlCommandLink>
 			</li>
+			<li><h:graphicImage value="/images/tema_link/next_white.png" width="16" height="16"/></li>
 			<li>
 				<a4j:htmlCommandLink action="dettaglioOperazione" id="dettaglioOperazione"
-					rendered="#{esitoMBean.paginaFrom == 'menu'}" value="/#{msg['operazione.dettaglio.pageTitle']} (#{esitoMBean.traccia.operazione.value})">
+					rendered="#{esitoMBean.paginaFrom == 'menu'}" value="#{msg['operazione.dettaglio.pageTitle']} (#{esitoMBean.traccia.operazione.value})">
 					<f:setPropertyActionListener value="#{esitoMBean.traccia}" target="#{operazioneMBean.selectedElement}" />
 					<f:setPropertyActionListener value="#{esitoMBean.paginaFrom}" target="#{operazioneMBean.paginaFrom}" />
 				</a4j:htmlCommandLink>
 				<a4j:htmlCommandLink action="dettaglioFattura" id="dettaglioFattura"
 					rendered="#{esitoMBean.paginaFrom == 'dettaglioFattura'}"
-					value="/#{msg['fattura.dettaglio.pageTitle']} (#{esitoMBean.fattura.cedentePrestatore.value} #{esitoMBean.fattura.numero.value}/#{esitoMBean.fattura.anno.value})">
+					value="#{msg['fattura.dettaglio.pageTitle']} (#{esitoMBean.fattura.cedentePrestatore.value} #{esitoMBean.fattura.numero.value}/#{esitoMBean.fattura.anno.value})">
 					<f:setPropertyActionListener value="#{esitoMBean.fattura}" target="#{fatturaElettronicaMBean.selectedElement}" />
 				</a4j:htmlCommandLink>	
 			</li>
+			<li><h:graphicImage value="/images/tema_link/next_white.png" width="16" height="16"/></li>
 			<li>
 				<a4j:htmlCommandLink action="dettaglioOperazione" id="dettaglioOperazione2"
-					rendered="#{esitoMBean.paginaFrom == 'dettaglioFattura'}" value="/#{msg['operazione.dettaglio.pageTitle']} (#{esitoMBean.traccia.operazione.value})">
+					rendered="#{esitoMBean.paginaFrom == 'dettaglioFattura'}" value="#{msg['operazione.dettaglio.pageTitle']} (#{esitoMBean.traccia.operazione.value})">
 					<f:setPropertyActionListener value="#{esitoMBean.traccia}" target="#{operazioneMBean.selectedElement}" />
 					<f:setPropertyActionListener value="#{esitoMBean.fattura}" target="#{operazioneMBean.fattura}" />
 					<f:setPropertyActionListener value="#{esitoMBean.paginaFrom}" target="#{operazioneMBean.paginaFrom}" />
 				</a4j:htmlCommandLink>
 				<a4j:htmlCommandLink action="dettaglioTrasmissione" id="dettaglioTrasmissione2"
-					rendered="#{esitoMBean.paginaFrom == 'menu'}" value="/#{msg['trasmissionePcc.dettaglio.pageTitle']} (#{esitoMBean.trasmissione.tsTrasmissioneFormatted})">
+					rendered="#{esitoMBean.paginaFrom == 'menu'}" value="#{msg['trasmissionePcc.dettaglio.pageTitle']} (#{esitoMBean.trasmissione.tsTrasmissioneFormatted})">
 					<f:setPropertyActionListener value="#{esitoMBean.traccia}" target="#{trasmissioneMBean.traccia}" />
 					<f:setPropertyActionListener value="#{esitoMBean.trasmissione}" target="#{trasmissioneMBean.selectedElement}" />
 					<f:setPropertyActionListener value="#{esitoMBean.paginaFrom}" target="#{trasmissioneMBean.paginaFrom}" />
 				</a4j:htmlCommandLink>
 			</li>
+			<li><h:graphicImage value="/images/tema_link/next_white.png" width="16" height="16"/></li>
 			<li>
 				<a4j:htmlCommandLink action="dettaglioTrasmissione" id="dettaglioTrasmissione3"
-					rendered="#{esitoMBean.paginaFrom == 'dettaglioFattura'}" value="/#{msg['trasmissionePcc.dettaglio.pageTitle']} (#{esitoMBean.trasmissione.tsTrasmissioneFormatted})">
+					rendered="#{esitoMBean.paginaFrom == 'dettaglioFattura'}" value="#{msg['trasmissionePcc.dettaglio.pageTitle']} (#{esitoMBean.trasmissione.tsTrasmissioneFormatted})">
 					<f:setPropertyActionListener value="#{esitoMBean.traccia}" target="#{trasmissioneMBean.traccia}" />
 					<f:setPropertyActionListener value="#{esitoMBean.fattura}" target="#{trasmissioneMBean.fattura}" />
 					<f:setPropertyActionListener value="#{esitoMBean.trasmissione}" target="#{trasmissioneMBean.selectedElement}" />
 					<f:setPropertyActionListener value="#{esitoMBean.paginaFrom}" target="#{trasmissioneMBean.paginaFrom}" />
 				</a4j:htmlCommandLink>
-				<h:outputText value="/#{msg['esitoPcc.dettaglio.pageTitle']} (#{esitoMBean.selectedElement.gdoFormatted})" rendered="#{esitoMBean.paginaFrom == 'menu'}" />
+				<h:outputText value="#{msg['esitoPcc.dettaglio.pageTitle']} (#{esitoMBean.selectedElement.gdoFormatted})" rendered="#{esitoMBean.paginaFrom == 'menu'}" 
+				styleClass="#{esitoMBean.paginaFrom == 'menu' ? 'ultimo-path' : ''}"/>
 			</li>
-			<li><h:outputText value="/#{msg['esitoPcc.dettaglio.pageTitle']} (#{esitoMBean.selectedElement.gdoFormatted})" rendered="#{esitoMBean.paginaFrom == 'dettaglioFattura'}" /></li>
+			<li><h:graphicImage value="/images/tema_link/next_white.png" width="16" height="16" rendered="#{esitoMBean.paginaFrom == 'dettaglioFattura'}"/></li>
+			<li><h:outputText value="#{msg['esitoPcc.dettaglio.pageTitle']} (#{esitoMBean.selectedElement.gdoFormatted})" rendered="#{esitoMBean.paginaFrom == 'dettaglioFattura'}" styleClass="ultimo-path" /></li>
 		</ul>
 	</ui:define>
 	<ui:define name="body">

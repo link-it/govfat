@@ -34,8 +34,9 @@
 	<ui:define name="pageHeader">#{msg['utente.listaUtenti.pageTitle']}</ui:define>
 	<ui:define name="navbar">
 		<ul>
-			<li><h:outputText value="/#{msg['menu.group.anagrafica']}" /></li>
-			<li><h:outputText value="/#{msg['utente.listaUtenti.pageTitle']}" /></li>
+			<li><h:outputText value="#{msg['menu.group.anagrafica']}" /></li>
+			<li><h:graphicImage value="/images/tema_link/next_white.png" width="16" height="16"/></li>
+			<li><h:outputText value="#{msg['utente.listaUtenti.pageTitle']}" styleClass="ultimo-path" /></li>
 		</ul>
 	</ui:define>
 	<ui:define name="body">
@@ -45,14 +46,14 @@
 					_force_get = true;
 				 });
 		</script>
-		<rich:panel styleClass="noborder" id="pagina"> 
+		<a4j:outputPanel id="pagina"  layout="block">
 
 			<op2web:search mBean="#{utenteMBean}" fieldsToUpdateButtonFiltra="utentiListView" fieldsToUpdateButtonReset="utentiListView" >
 					<!-- denominazione,dipartimento -->
 				<op2web:searchFields nomiFields="#{'denominazione,dipartimento'}" />
 			</op2web:search>
 
-			<rich:spacer height="20"/>
+			<div class="spacer"></div>
 			
 			<op2web:managedPagedListView  value="#{utenteDM}" mBean="#{utenteMBean}">
 				
@@ -69,7 +70,7 @@
 				</rich:column>
 					
 			</op2web:managedPagedListView>
-		</rich:panel>
+		</a4j:outputPanel>
 
 	</ui:define>
 </ui:composition>

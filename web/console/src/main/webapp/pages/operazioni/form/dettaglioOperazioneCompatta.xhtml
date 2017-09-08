@@ -33,26 +33,29 @@
 	<ui:define name="pageHeader">#{msg['operazione.dettaglio.pageTitle']}</ui:define>
 	<ui:define name="navbar">
 		<ul>
-			<li><h:outputText value="/#{msg['menu.group.operazioni']}"/>
-			</li>
+			<li><h:outputText value="#{msg['menu.group.operazioni']}"/></li>
+			<li><h:graphicImage value="/images/tema_link/next_white.png" width="16" height="16"/></li>
 			<li><a4j:htmlCommandLink
 					action="#{operazioneMBean.restoreSearch}"
-					value="/#{msg['operazione.listaOperazioni.pageTitle']}" rendered="#{operazioneMBean.paginaFrom == 'menu'}">
+					value="#{msg['operazione.listaOperazioni.pageTitle']}" rendered="#{operazioneMBean.paginaFrom == 'menu'}">
 				</a4j:htmlCommandLink>
 				<a4j:htmlCommandLink
 					action="#{fatturaElettronicaMBean.restoreSearch}" rendered="#{operazioneMBean.paginaFrom == 'dettaglioFattura'}"
-					value="/#{msg['fattura.listaFatture.pageTitle']}">
+					value="#{msg['fattura.listaFatture.pageTitle']}">
 				</a4j:htmlCommandLink>
 			</li>
-			<li><h:outputText value="/#{msg['operazione.dettaglio.pageTitle']} (#{operazioneMBean.selectedElement.operazione.value})" rendered="#{operazioneMBean.paginaFrom == 'menu'}" />
+			<li><h:graphicImage value="/images/tema_link/next_white.png" width="16" height="16"/></li>
+			<li><h:outputText value="#{msg['operazione.dettaglio.pageTitle']} (#{operazioneMBean.selectedElement.operazione.value})" rendered="#{operazioneMBean.paginaFrom == 'menu'}" 
+				styleClass="#{operazioneMBean.paginaFrom == 'menu' ? 'ultimo-path' : ''}"/>
 				<a4j:htmlCommandLink action="dettaglioFattura" id="dettaglioFattura" rendered="#{operazioneMBean.paginaFrom == 'dettaglioFattura'}"
-					value="/#{msg['fattura.dettaglio.pageTitle']} (#{operazioneMBean.fattura.cedentePrestatore.value} #{operazioneMBean.fattura.numero.value}/#{operazioneMBean.fattura.anno.value})">
+					value="#{msg['fattura.dettaglio.pageTitle']} (#{operazioneMBean.fattura.cedentePrestatore.value} #{operazioneMBean.fattura.numero.value}/#{operazioneMBean.fattura.anno.value})">
 					<f:setPropertyActionListener value="tabPCC" target="#{fatturaElettronicaMBean.selectedTab}" />
 					<f:setPropertyActionListener value="#{operazioneMBean.fattura}"
 						target="#{fatturaElettronicaMBean.selectedElement}" />
 				</a4j:htmlCommandLink>	
 			</li>
-			<li><h:outputText value="/#{msg['operazione.dettaglio.pageTitle']} (#{operazioneMBean.selectedElement.operazione.value})" rendered="#{operazioneMBean.paginaFrom == 'dettaglioFattura'}" /></li>
+			<li><h:graphicImage value="/images/tema_link/next_white.png" width="16" height="16" rendered="#{operazioneMBean.paginaFrom == 'dettaglioFattura'}"/></li>
+			<li><h:outputText value="#{msg['operazione.dettaglio.pageTitle']} (#{operazioneMBean.selectedElement.operazione.value})" rendered="#{operazioneMBean.paginaFrom == 'dettaglioFattura'}" styleClass="ultimo-path" /></li>
 		</ul>
 	</ui:define>
 	<ui:define name="body">

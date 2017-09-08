@@ -33,19 +33,21 @@
 	<ui:define name="pageHeader">#{msg['fattura.dettaglio.pageTitle']}</ui:define>
 	<ui:define name="navbar">
 		<ul>
-			<li><h:outputText value="/#{msg['menu.group.operazioni']}" /></li>
+			<li><h:outputText value="#{msg['menu.group.operazioni']}" /></li>
+			<li><h:graphicImage value="/images/tema_link/next_white.png" width="16" height="16"/></li>
 			<li><a4j:htmlCommandLink action="#{fatturaElettronicaMBean.restoreSearch}"
-					value="/#{msg['fattura.listaFatture.pageTitle']}">
+					value="#{msg['fattura.listaFatture.pageTitle']}">
 				</a4j:htmlCommandLink></li>
-			<li><h:outputText
-					value="/#{msg['fattura.dettaglio.pageTitle']} (#{fatturaElettronicaMBean.selectedElement.cedentePrestatore.value} #{fatturaElettronicaMBean.selectedElement.numero.value}/#{fatturaElettronicaMBean.selectedElement.anno.value})" /></li>
+			<li><h:graphicImage value="/images/tema_link/next_white.png" width="16" height="16"/></li>
+			<li><h:outputText styleClass="ultimo-path"
+					value="#{msg['fattura.dettaglio.pageTitle']} (#{fatturaElettronicaMBean.selectedElement.cedentePrestatore.value} #{fatturaElettronicaMBean.selectedElement.numero.value}/#{fatturaElettronicaMBean.selectedElement.anno.value})" /></li>
 		</ul>
 	</ui:define>
 	<ui:define name="body">
 
 		<a4j:keepAlive beanName="fatturaElettronicaMBean" ajaxOnly="true" />
 
-		<rich:panel id="panelContainer1" style="padding:0"
+		<rich:panel id="panelContainer1" style="padding:0" bodyClass="nopadding" 
 			headerClass="outpanelHeader" styleClass="noborder">
 			<h:outputText id="outNoDettaglio"
 				value="#{msg['fattura.dettaglio.nodata']}"
@@ -64,8 +66,7 @@
 					<ui:param name="fatturaSelezionata" value="#{fatturaElettronicaMBean.selectedElement}" />
 				</ui:include>
 
-				<rich:spacer height="20"/>
-				<div class="buttonrow">
+				<div class="buttonrowlista">
 					<h:form>
 						<!-- Visualizza XML -->
 						<c:set var="linkXml" value="#{fatturaElettronicaMBean.selectedElement.xml}" />

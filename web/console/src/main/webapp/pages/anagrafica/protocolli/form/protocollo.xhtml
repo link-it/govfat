@@ -34,16 +34,19 @@
 	<ui:define name="navbar">
 		<ul>
 			<li>
-				<h:outputText value="/#{msg['menu.group.anagrafica']}" />
+				<h:outputText value="#{msg['menu.group.anagrafica']}" />
 			</li>
+			<li><h:graphicImage value="/images/tema_link/next_white.png" width="16" height="16"/></li>
 			<li>
-				<h:outputText rendered="#{protocolloMBean.selectedElement.DTO.id != -1 and protocolloMBean.showForm == false}" value="/#{msg['protocollo.dettaglio.pageTitle']} (#{protocolloMBean.selectedElement.nome.value})" />
-				<a4j:htmlCommandLink rendered="#{protocolloMBean.selectedElement.DTO.id != -1 and protocolloMBean.showForm == true}" action="#{protocolloMBean.restoreSearch}" value="/#{msg['protocollo.dettaglio.pageTitle']} (#{protocolloMBean.selectedElement.nome.value})">
+				<h:outputText rendered="#{protocolloMBean.selectedElement.DTO.id != -1 and protocolloMBean.showForm == false}" 
+					styleClass="#{protocolloMBean.showForm == false ? 'ultimo-path' : ''}" value="#{msg['protocollo.dettaglio.pageTitle']} (#{protocolloMBean.selectedElement.nome.value})" />
+				<a4j:htmlCommandLink rendered="#{protocolloMBean.selectedElement.DTO.id != -1 and protocolloMBean.showForm == true}" action="#{protocolloMBean.restoreSearch}" value="#{msg['protocollo.dettaglio.pageTitle']} (#{protocolloMBean.selectedElement.nome.value})">
 				</a4j:htmlCommandLink>
 			</li>
+			<li><h:graphicImage value="/images/tema_link/next_white.png" width="16" height="16" rendered="#{protocolloMBean.showForm == true}"/></li>
 			<li>
-				<h:outputText rendered="#{protocolloMBean.showForm == true and protocolloMBean.azione == 'update'}" value="/#{msg['commons.button.aggiorna']}" />
-				<h:outputText rendered="#{protocolloMBean.showForm == true and protocolloMBean.azione != 'update'}" value="/#{msg['commons.button.nuovo']}" />
+				<h:outputText rendered="#{protocolloMBean.showForm == true and protocolloMBean.azione == 'update'}" value="#{msg['commons.button.aggiorna']}" styleClass="ultimo-path" />
+				<h:outputText rendered="#{protocolloMBean.showForm == true and protocolloMBean.azione != 'update'}" value="#{msg['commons.button.nuovo']}"  styleClass="ultimo-path" />
 			</li>
 		</ul>
 	</ui:define>
@@ -57,7 +60,7 @@
 				 });
 		</script>
 
-		<rich:panel id="panelContainer1" style="padding:0" headerClass="outpanelHeader" styleClass="noborder">
+		<a4j:outputPanel id="panelContainer1"  layout="block">
 			<h:outputText id="outNoDettaglio" value="#{msg['protocollo.dettaglio.nodata']}" rendered="#{empty protocolloMBean.selectedElement and protocolloMBean.azione == 'update'}" />
 
 			<rich:panel id="panelDettaglioForm1" bodyClass="inpanelBody" rendered="#{not empty protocolloMBean.selectedElement and protocolloMBean.showForm == true}">
@@ -107,9 +110,9 @@
 				</h:panelGrid>
 			</rich:panel>
 
-			<rich:spacer height="20"/>
+			<div class="spacerDettaglio"></div>
 
-			<rich:panel id="panelRegistri1" bodyClass="inpanelBody" rendered="#{not empty protocolloMBean.selectedElement and protocolloMBean.showForm == false}"> 
+			<rich:panel id="panelRegistri1" bodyClass="nopadding" rendered="#{not empty protocolloMBean.selectedElement and protocolloMBean.showForm == false}"> 
 				<f:facet name="header">
 					<h:outputText id="outHeaderRegistri11" value="#{msg['protocollo.label.registri']}" rendered="#{not empty protocolloMBean.selectedElement}" />
 				</f:facet>
@@ -134,7 +137,7 @@
 
 			</rich:panel>
 			
-		</rich:panel>
+		</a4j:outputPanel>
 
 	</ui:define>
 </ui:composition>

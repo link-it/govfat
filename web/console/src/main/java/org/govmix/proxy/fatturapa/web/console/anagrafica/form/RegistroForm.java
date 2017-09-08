@@ -105,6 +105,7 @@ public class RegistroForm extends BaseForm implements Form{
 					proprieta.setLabel(prop.getIdProperty().getNome());
 					proprieta.setName("prop_" + prop.getIdProperty().getNome());
 					proprieta.setDefaultValue(prop.getValore());
+					proprieta.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS);
 
 					this.properties.add(proprieta);
 				}

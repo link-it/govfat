@@ -47,6 +47,7 @@ import org.govmix.proxy.fatturapa.web.console.anagrafica.iservice.IEnteService;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.iservice.IUtenteService;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.service.DipartimentoService;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.service.EnteService;
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.govmix.proxy.fatturapa.web.console.util.input.RadioButtonImpl;
 import org.openspcoop2.generic_project.exception.ServiceException;
@@ -131,6 +132,7 @@ public class UtenteMBean extends DataModelListView<Utente, Long, UtenteBean, Ute
 			this.table.setShowSelectAll(true);
 			this.table.setHeaderText("utente.tabellaRisultati.label");
 			this.table.setDetailLinkText("utente.dettaglioTitle"); 
+			this.table.setTablePanelStyleClass(Costanti.TABLE_DIV_STYLE_CLASS);
 //			this.table.setMBean(this);
 			this.table.setMetadata(this.getMetadata()); 
 

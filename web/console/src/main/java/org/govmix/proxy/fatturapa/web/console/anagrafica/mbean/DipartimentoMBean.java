@@ -46,6 +46,7 @@ import org.govmix.proxy.fatturapa.web.console.anagrafica.iservice.IEnteService;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.iservice.IRegistroService;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.service.EnteService;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.service.RegistroService;
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.govmix.proxy.fatturapa.web.console.util.input.RadioButtonImpl;
 import org.openspcoop2.generic_project.exception.ServiceException;
@@ -118,7 +119,8 @@ public class DipartimentoMBean extends DataModelListView<Dipartimento, Long,  Di
 			this.table.setShowDetailColumn(false);
 			this.table.setShowSelectAll(this.isAbilitaCreazioneDipartimenti());
 			this.table.setHeaderText("dipartimento.tabellaRisultati.label");
-			this.table.setDetailLinkText("dipartimento.dettaglioTitle"); 
+			this.table.setDetailLinkText("dipartimento.dettaglioTitle");
+			this.table.setTablePanelStyleClass(Costanti.TABLE_DIV_STYLE_CLASS);
 			//			this.table.setMBean(this);
 			this.table.setMetadata(this.getMetadata()); 
 

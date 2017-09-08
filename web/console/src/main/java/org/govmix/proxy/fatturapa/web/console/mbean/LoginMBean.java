@@ -85,7 +85,7 @@ public class LoginMBean extends LoginBean{
 			this.setLoginDao(new DBLoginDao());
 		}
 
-		String fieldsToUpdate = this.getLanguageForm().getId() + "_formPnl,headerct,headerct_parent,footerct,mainct,menuct";
+		String fieldsToUpdate = this.getLanguageForm().getId() + "_formPnl,headerContentParent,footerct,bodyWrapper,menuct";
 		// Fix per il form della lingua nella grafica rossa
 		this.getLanguageForm().getLingua().setFieldsToUpdate(fieldsToUpdate );
 	}

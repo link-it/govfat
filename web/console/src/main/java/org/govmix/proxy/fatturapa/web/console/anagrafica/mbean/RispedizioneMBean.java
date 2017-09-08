@@ -34,6 +34,7 @@ import org.govmix.proxy.fatturapa.web.console.anagrafica.datamodel.RispedizioneD
 import org.govmix.proxy.fatturapa.web.console.anagrafica.form.RispedizioneForm;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.form.RispedizioneSearchForm;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.iservice.IRispedizioneService;
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.govmix.proxy.fatturapa.web.console.util.input.RadioButtonImpl;
 import org.openspcoop2.generic_project.exception.ServiceException;
@@ -85,6 +86,7 @@ public class RispedizioneMBean extends DataModelListView<PccRispedizione, Long, 
 			this.table.setShowSelectAll(true);
 			this.table.setHeaderText("rispedizione.tabellaRisultati.label");
 			this.table.setDetailLinkText("rispedizione.dettaglioTitle"); 
+			this.table.setTablePanelStyleClass(Costanti.TABLE_DIV_STYLE_CLASS);
 			//			this.table.setMBean(this);
 			this.table.setMetadata(this.getMetadata()); 
 
