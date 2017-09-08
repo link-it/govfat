@@ -546,8 +546,8 @@ IFatturaElettronicaAttivaService>{
 		Dipartimento dipartimento =  this.getDipartimento(codDip);
 		IdRegistro idRegistro = dipartimento.getRegistro();
 		
-		boolean editRegistro = idRegistro != null;
-		String registro = (idRegistro != null) ? idRegistro.getNome() : "";  
+		boolean valoreValidoRegistro = (idRegistro != null && StringUtils.isNotEmpty(idRegistro.getNome())); 
+		String registro = valoreValidoRegistro ? idRegistro.getNome() : "";  
 
 		for (String string : nomeFile) {
 			ConservazioneBean conservazioneBean = new ConservazioneBean();
@@ -555,7 +555,7 @@ IFatturaElettronicaAttivaService>{
 			conservazioneBean.setAnno("");
 			conservazioneBean.setProtocollo("");
 			conservazioneBean.setRegistro(registro); 
-			conservazioneBean.setEditRegistro(!editRegistro); 
+			conservazioneBean.setEditRegistro(!valoreValidoRegistro); 
 			this.getListaConservazione().add(conservazioneBean );
 		}
 
@@ -717,6 +717,14 @@ IFatturaElettronicaAttivaService>{
 
 	public String validaFormConservazione() {
 		for (ConservazioneBean conservazione : this.listaConservazione) {
+			
+			if(StringUtils.isEmpty(conservazione.getRegistro())){
+				return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.registroVuoto",conservazione.getNomeFile());
+			}
+
+			//formato registro?
+			// registro si puo' modificare?
+			
 			if(StringUtils.isEmpty(conservazione.getProtocollo())){
 				return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.protocolloVuoto",conservazione.getNomeFile());
 			}
@@ -737,12 +745,7 @@ IFatturaElettronicaAttivaService>{
 				return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.annoNonValido",conservazione.getNomeFile());
 			}
 
-			if(StringUtils.isEmpty(conservazione.getRegistro())){
-				return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.registroVuoto",conservazione.getNomeFile());
-			}
 
-			//formato registro?
-			// registro si puo' modificare?
 		}
 		
 		return null;
