@@ -20,12 +20,17 @@
  */
 package org.govmix.proxy.fatturapa.web.console.bean;
 
+import java.util.List;
+
 import javax.faces.context.FacesContext;
 
+import org.govmix.proxy.fatturapa.orm.Metadato;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
+import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
+import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.web.bean.IBean;
 import org.openspcoop2.generic_project.web.factory.FactoryException;
 import org.openspcoop2.generic_project.web.impl.jsf1.bean.BaseBean;
@@ -39,6 +44,14 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IBean<
 	private Text identificativoSdi = null;
 	private Text tipoComunicazione = null;
 	private Text nomeFile = null;
+	private Text idEgov = null;
+	private Text contentType = null;
+	private Text statoProtocollazione = null;
+	private DateTime dataProtocollazione = null;
+	private DateTime dataProssimaProtocollazione = null;
+	private Text tentativiProtocollazione = null;
+	private Text dettaglioProtocollazione = null;
+	private Text metadato = null;
 	private DateTime data = null;
 	private Button xml = null;
 	private Button pdf = null;
@@ -52,16 +65,32 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IBean<
 	}
 	
 	private void init() throws FactoryException{
-		this.identificativoSdi = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("nomeAttachment","allegatoFattura.nomeAttachment");
-		this.tipoComunicazione =   this.getWebGenericProjectFactory().getOutputFieldFactory().createText("algoritmoCompressione","allegatoFattura.algoritmoCompressione");
-		this.nomeFile =  this.getWebGenericProjectFactory().getOutputFieldFactory().createText("formatoAttachment","allegatoFattura.formatoAttachment");
-		this.data = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("data","notificaEsitoCommittente.data","dd/M/yyyy");
-		this.xml = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("xml","notificaEsitoCommittente.label.xml",null,"/images/fatturapa/icons/xml.png","notificaEsitoCommittente.label.xml.iconTitle","notificaEsitoCommittente.label.xml.iconTitle");
-		this.pdf = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("pdf","notificaEsitoCommittente.label.pdf",null,"/images/fatturapa/icons/pdf.png","notificaEsitoCommittente.label.pdf.iconTitle","notificaEsitoCommittente.label.pdf.iconTitle");
+		this.identificativoSdi = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("identificativoSdi","tracciaSDI.identificativoSdi");
+		this.tipoComunicazione =   this.getWebGenericProjectFactory().getOutputFieldFactory().createText("tipoComunicazione","tracciaSDI.tipoComunicazione");
+		this.nomeFile =  this.getWebGenericProjectFactory().getOutputFieldFactory().createText("nomeFile","tracciaSDI.nomeFile");
+		this.idEgov = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("idEgov","tracciaSDI.idEgov");
+		this.contentType = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("contentType","tracciaSDI.contentType");
+		this.statoProtocollazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("statoProtocollazione","tracciaSDI.statoProtocollazione");
+		this.dataProtocollazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataProtocollazione","tracciaSDI.dataProtocollazione","dd/MM/yyyy");
+		this.dataProssimaProtocollazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataProssimaProtocollazione","tracciaSDI.dataProssimaProtocollazione","dd/MM/yyyy");
+		this.tentativiProtocollazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("tentativiProtocollazione","tracciaSDI.tentativiProtocollazione");
+		this.dettaglioProtocollazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("dettaglioProtocollazione","tracciaSDI.dettaglioProtocollazione");
+		this.metadato = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("metadato","tracciaSDI.metadato");
+		this.data = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("data","tracciaSDI.data","dd/MM/yyyy");
+		this.xml = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("xml","tracciaSDI.label.xml",null,"/images/fatturapa/icons/xml.png","tracciaSDI.label.xml.iconTitle","tracciaSDI.label.xml.iconTitle");
+		this.pdf = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("pdf","tracciaSDI.label.pdf",null,"/images/fatturapa/icons/pdf.png","tracciaSDI.label.pdf.iconTitle","tracciaSDI.label.pdf.iconTitle");
 		
 		this.setField(this.identificativoSdi);
 		this.setField(this.tipoComunicazione);
 		this.setField(this.nomeFile);
+		this.setField(this.idEgov);
+		this.setField(this.contentType);
+		this.setField(this.statoProtocollazione);
+		this.setField(this.dataProtocollazione);
+		this.setField(this.dataProssimaProtocollazione);
+		this.setField(this.tentativiProtocollazione);
+		this.setField(this.dettaglioProtocollazione);
+		this.setField(this.metadato);
 		this.setField(this.data);
 		this.setField(this.xml);
 		this.setField(this.pdf);
@@ -75,9 +104,33 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IBean<
 		TipoComunicazioneType tipoComunicazione2 = this.getDTO().getTipoComunicazione();
 		if(tipoComunicazione2 != null){
 			String valueTC = tipoComunicazione2.getValue();
-			this.tipoComunicazione.setValue("comunicazione.tipoComunicazione."+valueTC);
+			this.tipoComunicazione.setValue("fattura.tipoComunicazione."+valueTC);
 		}
 		this.nomeFile.setValue(this.getDTO().getNomeFile());
+		this.idEgov.setValue(this.getDTO().getIdEgov());
+		this.contentType.setValue(this.getDTO().getContentType());
+		StatoProtocollazioneType statoProtocollazione2 = this.getDTO().getStatoProtocollazione();
+		if(statoProtocollazione2 != null)
+		this.statoProtocollazione.setValue("tracciaSDI.statoProtocollazione."+ statoProtocollazione2.getValue());
+		this.dataProtocollazione.setValue(this.getDTO().getDataProtocollazione());
+		this.dataProssimaProtocollazione.setValue(this.getDTO().getDataProssimaProtocollazione());
+		String tentativiProtocollazione2 = this.getDTO().getTentativiProtocollazione() != null ? this.getDTO().getTentativiProtocollazione() + "" : "--";
+		this.tentativiProtocollazione.setValue(tentativiProtocollazione2);
+		this.dettaglioProtocollazione.setValue(this.getDTO().getDettaglioProtocollazione());
+		List<Metadato> metadatoList = this.getDTO().getMetadatoList();
+		StringBuffer sb = new StringBuffer();
+		if(metadatoList != null && metadatoList.size() > 0) {
+			for (Metadato metadato : metadatoList) {
+				if(sb.length() >0)
+					sb.append("\n");
+				
+				String richiesta = Utils.getBooleanAsLabel(metadato.isRichiesta(), "commons.label.si", "commons.label.no");
+				sb.append(metadato.getNome()).append(": ").append(metadato.getValore()).append(", ").append(richiesta);
+			}
+		}
+		
+		this.metadato.setValue(sb.toString());
+		this.data.setValue(this.getDTO().getData());
 		
 		this.prepareUrls();
 	}
@@ -90,12 +143,46 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IBean<
 	
 	private void prepareUrls(){
 		FacesContext context = FacesContext.getCurrentInstance();
+		
+		String actionValue = "com";
+		
+		
+		if(this.getDTO().getTipoComunicazione() != null) {
+			switch (this.getDTO().getTipoComunicazione() ) {
+			case ATTESTAZIONE_TRASMISSIONE_FATTURA:
+				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_ATTESTAZIONE_TRASMISSIONE_FATTURA;
+				break;
+			case AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO:
+				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO;
+				break;
+			case FATTURA_USCITA:
+				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_FATTURA_USCITA;
+				break;
+			case NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE:
+				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE;
+				break;
+			case NOTIFICA_ESITO_COMMITTENTE:
+				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_ESITO_COMMITTENTE;
+				break;
+			case NOTIFICA_MANCATA_CONSEGNA:
+				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_MANCATA_CONSEGNA;
+				break;
+			case NOTIFICA_SCARTO:
+				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_SCARTO;
+				break;
+			case RICEVUTA_CONSEGNA:
+				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_RICEVUTA_CONSEGNA;
+				break;
+			default:
+				break;
+			}
+		}
 
 		String url = context.getExternalContext().getRequestContextPath() 
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
 				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getId()
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
-				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE;
+				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ actionValue;
 
 		this.xml.setHref(this.getDTO().getRawData() != null ?  url : null);
 
@@ -103,7 +190,7 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IBean<
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
 				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getId()
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_PDF
-				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE;
+				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ actionValue;
 
 		this.pdf.setHref( this.getDTO().getRawData() != null ? url : null);
 	}
@@ -154,6 +241,70 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IBean<
 
 	public void setPdf(Button pdf) {
 		this.pdf = pdf;
+	}
+
+	public Text getIdEgov() {
+		return idEgov;
+	}
+
+	public void setIdEgov(Text idEgov) {
+		this.idEgov = idEgov;
+	}
+
+	public Text getContentType() {
+		return contentType;
+	}
+
+	public void setContentType(Text contentType) {
+		this.contentType = contentType;
+	}
+
+	public Text getStatoProtocollazione() {
+		return statoProtocollazione;
+	}
+
+	public void setStatoProtocollazione(Text statoProtocollazione) {
+		this.statoProtocollazione = statoProtocollazione;
+	}
+
+	public DateTime getDataProtocollazione() {
+		return dataProtocollazione;
+	}
+
+	public void setDataProtocollazione(DateTime dataProtocollazione) {
+		this.dataProtocollazione = dataProtocollazione;
+	}
+
+	public DateTime getDataProssimaProtocollazione() {
+		return dataProssimaProtocollazione;
+	}
+
+	public void setDataProssimaProtocollazione(DateTime dataProssimaProtocollazione) {
+		this.dataProssimaProtocollazione = dataProssimaProtocollazione;
+	}
+
+	public Text getTentativiProtocollazione() {
+		return tentativiProtocollazione;
+	}
+
+	public void setTentativiProtocollazione(Text tentativiProtocollazione) {
+		this.tentativiProtocollazione = tentativiProtocollazione;
+	}
+
+	public Text getDettaglioProtocollazione() {
+		return dettaglioProtocollazione;
+	}
+
+	public void setDettaglioProtocollazione(Text dettaglioProtocollazione) {
+		this.dettaglioProtocollazione = dettaglioProtocollazione;
+	}
+
+	public Text getMetadato() {
+		return metadato;
+	}
+
+	public void setMetadato(Text metadato) {
+		this.metadato = metadato;
 	}
 	
 	
