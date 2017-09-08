@@ -19,6 +19,8 @@
 					<op2web:fieldset legend="#{msg['fattura.label.intestazione']}" collapsible="false" closed="false" rendered="#{true}">
 						<op2web:outputGroup group="#{fatturaSelezionata.datiIntestazione}" />
 					</op2web:fieldset>
+					
+					<div class="spacerDettaglio"></div>
 
 					<!-- Dati Trasmissione  -->
 					<op2web:fieldset legend="#{msg['fattura.label.generale']}" collapsible="false" closed="false" rendered="#{true}">
@@ -31,28 +33,28 @@
 					
 							<op2web:output field="#{fatturaElettronicaMBean.selectedElement.identificativoSdi}" insideGroup="true" />
 							<op2web:output field="#{fatturaElettronicaMBean.selectedElement.posizione}" insideGroup="true" />
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							<h:outputText value="&#160;&#160;" />
 							
 							<op2web:output field="#{fatturaElettronicaMBean.selectedElement.nomeFile}" insideGroup="true" />
 							<op2web:output field="#{fatturaElettronicaMBean.selectedElement.formatoTrasmissione}" insideGroup="true" />
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							<h:outputText value="&#160;&#160;" />
 							
 							<op2web:output field="#{fatturaElettronicaMBean.selectedElement.tipoDocumento}" insideGroup="true" />
 							<op2web:output field="#{fatturaElettronicaMBean.selectedElement.messageId}" insideGroup="true" />
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							<h:outputText value="&#160;&#160;" />
 							
 							<op2web:output field="#{fatturaElettronicaMBean.selectedElement.dipartimento}" insideGroup="true" />
 							<op2web:output field="#{fatturaElettronicaMBean.selectedElement.codiceDestinatario}" insideGroup="true" />
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							<h:outputText value="&#160;&#160;" />
 							
 							<op2web:output field="#{fatturaElettronicaMBean.selectedElement.dataRicezione}" insideGroup="true" />
 							<op2web:output field="#{fatturaElettronicaMBean.selectedElement.dataConsegna}" insideGroup="true" />
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							<h:outputText value="&#160;&#160;" />
 							
 							<op2web:output field="#{fatturaElettronicaMBean.selectedElement.dataScadenza}" insideGroup="true" />
 							<op2web:output field="#{fatturaElettronicaMBean.selectedElement.statoConsegna}" insideGroup="true" />
 							<h:panelGroup>
-								<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{fatturaElettronicaMBean.selectedElement.visualizzaLinkRiconsegna == false}"/>
+								<h:outputText value="&#160;&#160;" rendered="#{fatturaElettronicaMBean.selectedElement.visualizzaLinkRiconsegna == false}"/>
 								<h:form id="formRiconsegna" rendered="#{fatturaElettronicaMBean.selectedElement.visualizzaLinkRiconsegna}">
 									<a4j:commandLink id="ritentaRiconsegna-Link"  
 										action="#{fatturaElettronicaMBean.ritentaConsegna}"
@@ -78,11 +80,13 @@
 								rendered="#{not empty fatturaElettronicaMBean.selectedElement.dataProssimaConsegna.value and fatturaElettronicaMBean.selectedElement.dataProssimaConsegna.rendered}">
 									<f:convertDateTime pattern="#{fatturaElettronicaMBean.selectedElement.dataProssimaConsegna.pattern}" defaultTime="00:00" timeZone="Europe/Rome" />
 							</h:outputText>	
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{!fatturaElettronicaMBean.selectedElement.dataProssimaConsegna.rendered}"/>
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{!fatturaElettronicaMBean.selectedElement.dataProssimaConsegna.rendered}"/>
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{fatturaElettronicaMBean.selectedElement.dataProssimaConsegna.rendered}"/>
+							<h:outputText value="&#160;&#160;" rendered="#{!fatturaElettronicaMBean.selectedElement.dataProssimaConsegna.rendered}"/>
+							<h:outputText value="&#160;&#160;" rendered="#{!fatturaElettronicaMBean.selectedElement.dataProssimaConsegna.rendered}"/>
+							<h:outputText value="&#160;&#160;" rendered="#{fatturaElettronicaMBean.selectedElement.dataProssimaConsegna.rendered}"/>
 						</h:panelGrid>
 					</op2web:fieldset>
+					
+					<div class="spacerDettaglio"></div>
 
 					<!-- Contenuto Fattura -->
 					<op2web:fieldset legend="#{msg['fattura.label.contenuto']}" collapsible="false" closed="false" rendered="#{true}">
@@ -90,6 +94,8 @@
 						
 						<op2web:outputGroup group="#{fatturaSelezionata.causaleFattura}" />
 					</op2web:fieldset>
+					
+					<div class="spacerDettaglio"></div>
 
 					<!-- Tabella Allegati -->
 					<op2web:fieldset legend="#{msg['fattura.label.allegati']}" collapsible="false" closed="false"
@@ -106,7 +112,7 @@
 							<op2web:tableColumns nomiColonne="#{'nomeAttachment,descrizioneAttachment,algoritmoCompressione,formatoAttachment'}" />
 							
 							<!-- Visualizza -->
-							<rich:column style="text-align: center;">
+							<rich:column style="text-align: center;" styleClass="columnHeaderLabel">
 								<f:facet name="header">
 									<h:outputText value="#{metadataAllegato.attachment.label}" />
 								</f:facet>
@@ -119,6 +125,8 @@
 							</rich:column>
 						</op2web:simpleListView>
 					</op2web:fieldset>
+					
+					<div class="spacerDettaglio"></div>
 
 					<!-- Notifica di Esito Committente -->
 					<op2web:fieldset legend="#{msg['fattura.label.notificaEC']}" collapsible="false" closed="false" rendered="#{true}">
@@ -138,7 +146,7 @@
 									<op2web:tableColumns nomiColonne="#{'esito,dataInvio,data,dataProssimaConsegnaSdi,statoConsegnaSdi,utente,modalitaBatch,descrizione'}" />
 									
 									<!-- XML (Icona) -->
-									<rich:column style="text-align: center;">
+									<rich:column style="text-align: center;" styleClass="columnHeaderLabel">
 										<f:facet name="header">
 											<h:outputText value="#{metadataNotificaEC.xml.label}" />
 										</f:facet>
@@ -151,7 +159,7 @@
 									</rich:column>
 		
 									<!-- PDF (Icona) -->
-									<rich:column style="text-align: center;">
+									<rich:column style="text-align: center;" styleClass="columnHeaderLabel">
 										<f:facet name="header">
 											<h:outputText value="#{metadataNotificaEC.pdf.label}" />
 										</f:facet>
@@ -186,7 +194,7 @@
 									<op2web:tableColumns nomiColonne="#{'scarto,scartoNote'}" />
 									
 									<!-- Scarto XML (Icona) -->
-									<rich:column style="text-align: center;">
+									<rich:column style="text-align: center;" styleClass="columnHeaderLabel">
 										<f:facet name="header">
 											<h:outputText value="#{metadataNotificaEC.scartoXml.label}" />
 										</f:facet>
@@ -199,7 +207,7 @@
 									</rich:column>
 
 									<!-- SCarto PDF (Icona) -->
-									<rich:column style="text-align: center;">
+									<rich:column style="text-align: center;" styleClass="columnHeaderLabel">
 										<f:facet name="header">
 											<h:outputText value="#{metadataNotificaEC.scartoPdf.label}" />
 										</f:facet>
@@ -214,6 +222,8 @@
 								</op2web:simpleListView>
 							</h:panelGrid>
 					</op2web:fieldset>
+					
+					<div class="spacerDettaglio"></div>
 
 					<!-- Notifica Decorrenza Termini -->
 					<op2web:fieldset legend="#{msg['fattura.label.notificaDT']}" collapsible="false" closed="false" rendered="#{true}">
@@ -229,7 +239,7 @@
 							<op2web:tableColumns nomiColonne="#{'dataRicezione,nomeFile,descrizione,note'}" />
 
 							<!-- XML (Icona) -->
-							<rich:column style="text-align: center;">
+							<rich:column style="text-align: center;" styleClass="columnHeaderLabel">
 								<f:facet name="header">
 									<h:outputText value="#{metadataNotificaDT.xml.label}" />
 								</f:facet>
@@ -242,7 +252,7 @@
 							</rich:column>
 
 							<!-- PDF (Icona) -->
-							<rich:column style="text-align: center;">
+							<rich:column style="text-align: center;" styleClass="columnHeaderLabel">
 								<f:facet name="header">
 									<h:outputText value="#{metadataNotificaDT.pdf.label}" />
 								</f:facet>
@@ -256,11 +266,8 @@
 
 						</op2web:simpleListView>
 					</op2web:fieldset>
-
+					
+					<div class="spacerDettaglio"></div>
 				</h:panelGrid>
- 
- 
- 
- 
  
     </ui:composition>

@@ -133,6 +133,37 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 		this.esitoService = new EsitoService();
 		this.fatturaService = new FatturaElettronicaService();
 		this.operazioneService = new OperazioneService();
+		
+		
+		try {
+			
+			this.properties = ConsoleProperties.getInstance(log);
+			this.form = new ContabilizzazioneForm();
+			this.form.setmBean(this); 
+			((SelectListImpl)this.form.getStato()).setElencoSelectItems(this.getListaStati());
+			org.openspcoop2.generic_project.web.input.SelectItem statoSI = this.form.getStato().getValue();
+
+			String valueStato = null; 
+
+			if(statoSI != null)
+				valueStato = statoSI.getValue();
+			((SelectListImpl)this.form.getCausale()).setElencoSelectItems(this.getListaCausali(valueStato));
+
+			this.sistemaRichiedente = ConsoleProperties.getInstance(log).getSistemaRichiedente();
+
+			this.esitoContabilizzazioni = this.getFactory().getOutputFieldFactory().createText("cont_esito","contabilizzazione.stato");
+			this.linkErroreContabilizzazioni = this.getFactory().getOutputFieldFactory().createButton("cont_link_esito","contabilizzazione.stato.link.iconTitle",null,null,
+					"contabilizzazione.stato.link.iconTitle","contabilizzazione.stato.link.iconTitle");
+
+			this.fieldsContabilizzazioni = this.getFactory().getOutputFieldFactory().createOutputGroup("infoContabilizzazione",3);
+			this.fieldsContabilizzazioni.setStyleClass("datiTrasmissioneTable"); 
+			this.fieldsContabilizzazioni.setColumnClasses("labelAllineataDx,valueAllineataSx,valueAllineataSx");
+
+			this.fieldsContabilizzazioni.addField(this.esitoContabilizzazioni);
+			this.fieldsContabilizzazioni.addField(this.linkErroreContabilizzazioni);
+		}catch (Exception e){
+			this.log.error("Errore durante la init delle contabilizzazioneMBean: " + e.getMessage(),e);
+		}
 	}
 
 	@Override
@@ -167,31 +198,6 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 			//	this.table.setMBean(this);
 			this.getTable().setMetadata(this.getMetadata()); 
 
-
-			this.properties = ConsoleProperties.getInstance(log);
-			this.form = new ContabilizzazioneForm();
-			this.form.setmBean(this); 
-			((SelectListImpl)this.form.getStato()).setElencoSelectItems(this.getListaStati());
-			org.openspcoop2.generic_project.web.input.SelectItem statoSI = this.form.getStato().getValue();
-
-			String valueStato = null; 
-
-			if(statoSI != null)
-				valueStato = statoSI.getValue();
-			((SelectListImpl)this.form.getCausale()).setElencoSelectItems(this.getListaCausali(valueStato));
-
-			this.sistemaRichiedente = ConsoleProperties.getInstance(log).getSistemaRichiedente();
-
-			this.esitoContabilizzazioni = this.getFactory().getOutputFieldFactory().createText("cont_esito","contabilizzazione.stato");
-			this.linkErroreContabilizzazioni = this.getFactory().getOutputFieldFactory().createButton("cont_link_esito","contabilizzazione.stato.link.iconTitle",null,null,
-					"contabilizzazione.stato.link.iconTitle","contabilizzazione.stato.link.iconTitle");
-
-			this.fieldsContabilizzazioni = this.getFactory().getOutputFieldFactory().createOutputGroup("infoContabilizzazione",3);
-			this.fieldsContabilizzazioni.setStyleClass("datiTrasmissioneTable"); 
-			this.fieldsContabilizzazioni.setColumnClasses("labelAllineataDx,valueAllineataSx,valueAllineataSx");
-
-			this.fieldsContabilizzazioni.addField(this.esitoContabilizzazioni);
-			this.fieldsContabilizzazioni.addField(this.linkErroreContabilizzazioni);
 		}catch (Exception e){
 			this.log.error("Errore durante la init delle contabilizzazioneMBean: " + e.getMessage(),e);
 		}

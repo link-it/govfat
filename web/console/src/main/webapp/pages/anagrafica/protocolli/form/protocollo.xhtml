@@ -121,18 +121,21 @@
 				<op2web:pagedListView id="panelRegistri2" value="#{registroDM}" enableDelete="true" headerText="#{msg['registro.tabellaRisultati.label']}" 
 						showAddButton="true" showDetailColumn="false" detailLinkText="#{msg['registro.dettaglioTitle']}" showSelectAll="true" mBean="#{registroMBean}">
 
-					<!-- Colonne nome,username -->
-					<op2web:tableColumns nomiColonne="#{'nome,username'}" />
-					
-					<rich:column style="text-align: center;">
+					<rich:column styleClass="#{itemMetadata.nome.tableColumnStyleClass}">
+						<f:facet name="header">
+							<h:outputText value="#{itemMetadata.nome.label}" rendered="#{not empty itemMetadata.nome.label}" styleClass="#{itemMetadata.nome.tableHeaderLabelStyleClass}" />
+						</f:facet>
 						<h:panelGroup>
 							<a4j:htmlCommandLink id="panelRegistri2_dettaglio_btn_dx" action="#{registroMBean.dettaglio}" ajaxSingle="true">
 								<f:setPropertyActionListener value="#{item.DTO.id}" target="#{registroMBean.selectedId}" />
-								<h:graphicImage value="/images/magnifier.png" width="16" height="16" title="#{msg['registro.dettaglioTitle']}" alt="#{msg['registro.dettaglioTitle']}"/>
+								<h:outputText id="outNome2" value="#{item.nome.value}" />
 							</a4j:htmlCommandLink>
 						</h:panelGroup>
 					</rich:column>
 
+					<!-- Colonne nome,username -->
+					<op2web:tableColumns nomiColonne="#{'username'}" />
+					
 				</op2web:pagedListView>
 
 			</rich:panel>

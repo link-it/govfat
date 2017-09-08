@@ -65,8 +65,9 @@
 				<ui:include src="/includes/form/dettaglioFattura.xhtml" >
 					<ui:param name="fatturaSelezionata" value="#{fatturaElettronicaMBean.selectedElement}" />
 				</ui:include>
-
-				<div class="buttonrowlista">
+				
+				<div class="spacerDettaglio"></div>
+				<div class="buttonrow">
 					<h:form>
 						<!-- Visualizza XML -->
 						<c:set var="linkXml" value="#{fatturaElettronicaMBean.selectedElement.xml}" />

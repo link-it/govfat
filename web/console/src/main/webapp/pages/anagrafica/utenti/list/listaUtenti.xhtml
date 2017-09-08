@@ -56,18 +56,21 @@
 			<div class="spacer"></div>
 			
 			<op2web:managedPagedListView  value="#{utenteDM}" mBean="#{utenteMBean}">
-				
-				<!-- Colonne cognome,nome,username,ruolo -->
-				<op2web:tableColumns nomiColonne="#{'cognome,nome,username,ruolo'}" />
-				
-				 <rich:column style="text-align: center;">
+			
+				<rich:column styleClass="#{itemMetadata.username.tableColumnStyleClass}">
+					<f:facet name="header">
+						<h:outputText value="#{itemMetadata.username.label}" rendered="#{not empty itemMetadata.username.label}" styleClass="#{itemMetadata.username.tableHeaderLabelStyleClass}" />
+					</f:facet>
 					<h:panelGroup>
 						<a4j:htmlCommandLink id="#{utenteMBean.table.id}_dettaglio_btn_dx" action="#{utenteMBean.dettaglio}" ajaxSingle="true">
 							<f:setPropertyActionListener value="#{item.DTO.id}" target="#{utenteMBean.selectedId}" />
-							<h:graphicImage value="/images/magnifier.png" width="16" height="16" title="#{utenteMBean.table.detailLinkText}" alt="#{utenteMBean.table.detailLinkText}"/>
+							<h:outputText id="outCodice2" value="#{item.username.value}" />
 						</a4j:htmlCommandLink>
 					</h:panelGroup>
 				</rich:column>
+				
+				<!-- Colonne cognome,nome,username,ruolo -->
+				<op2web:tableColumns nomiColonne="#{'cognome,nome,ruolo'}" />
 					
 			</op2web:managedPagedListView>
 		</a4j:outputPanel>

@@ -101,27 +101,27 @@
 					
 							<op2web:output field="#{fatturaBean.identificativoSdi}" insideGroup="true" />
 							<op2web:output field="#{fatturaBean.posizione}" insideGroup="true" />
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							<h:outputText value="&#160;&#160;" />
 							
 							<op2web:output field="#{fatturaBean.nomeFile}" insideGroup="true" />
 							<op2web:output field="#{fatturaBean.formatoTrasmissione}" insideGroup="true" />
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							<h:outputText value="&#160;&#160;"/>
 							
 							<op2web:output field="#{fatturaBean.tipoDocumento}" insideGroup="true" />
 							<op2web:output field="#{fatturaBean.messageId}" insideGroup="true" />
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							<h:outputText value="&#160;&#160;"  />
 							
 							<op2web:output field="#{fatturaBean.dipartimento}" insideGroup="true" />
 							<op2web:output field="#{fatturaBean.codiceDestinatario}" insideGroup="true" />
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							<h:outputText value="&#160;&#160;"  />
 							
 							<op2web:output field="#{fatturaBean.dataRicezione}" insideGroup="true" />
 							<op2web:output field="#{fatturaBean.dataConsegna}" insideGroup="true" />
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							<h:outputText value="&#160;&#160;"  />
 							
 							<op2web:output field="#{fatturaBean.dataScadenza}" insideGroup="true" />
 							<op2web:output field="#{fatturaBean.statoConsegna}" insideGroup="true" />
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer"/>
+							<h:outputText value="&#160;&#160;" />
 							
 							<op2web:output field="#{fatturaBean.protocollo}" insideGroup="true" />
 							<h:outputText id="out_#{fatturaBean.dataProssimaConsegna.name}_Label"
@@ -138,11 +138,13 @@
 								rendered="#{not empty fatturaBean.dataProssimaConsegna.value and fatturaBean.dataProssimaConsegna.rendered}">
 									<f:convertDateTime pattern="#{fatturaBean.dataProssimaConsegna.pattern}" defaultTime="00:00" timeZone="Europe/Rome" />
 							</h:outputText>	
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{!fatturaBean.dataProssimaConsegna.rendered}"/>
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{!fatturaBean.dataProssimaConsegna.rendered}"/>
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{fatturaBean.dataProssimaConsegna.rendered}"/>
+							<h:outputText value="&#160;&#160;" rendered="#{!fatturaBean.dataProssimaConsegna.rendered}"/>
+							<h:outputText value="&#160;&#160;" rendered="#{!fatturaBean.dataProssimaConsegna.rendered}"/>
+							<h:outputText value="&#160;&#160;" rendered="#{fatturaBean.dataProssimaConsegna.rendered}"/>
 						</h:panelGrid>
 					</op2web:fieldset>
+					
+					<div class="spacerDettaglio"></div>
 
 					<!-- Contenuto Fattura -->
 					<op2web:fieldset legend="#{msg['fattura.label.contenuto']}"
@@ -151,6 +153,8 @@
 						
 						<op2web:outputGroup group="#{fatturaBean.causaleFattura}" />
 					</op2web:fieldset>
+					
+					<div class="spacerDettaglio"></div>
 
 					<!-- Form Notifica  -->
 					<op2web:form formBean="#{notificaECMBean.form}"

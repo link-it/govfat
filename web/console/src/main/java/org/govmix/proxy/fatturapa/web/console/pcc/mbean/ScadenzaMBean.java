@@ -123,12 +123,36 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 		super(LoggerManager.getConsoleLogger());
 		this.log.debug("Scadenza MBean");
 
-		this.esitoService = new EsitoService();
-		this.fatturaService = new FatturaElettronicaService();
-		this.operazioneService = new OperazioneService();
+		try{
+			this.properties = ConsoleProperties.getInstance(log);
+
+			this.form = new ScadenzaForm();
+			this.esitoService = new EsitoService();
+			this.fatturaService = new FatturaElettronicaService();
+			this.operazioneService = new OperazioneService();
+
+			this.esitoScadenze = this.getFactory().getOutputFieldFactory().createText("scad_esito","scadenza.stato");
+			this.linkErroreScadenze = this.getFactory().getOutputFieldFactory().createButton("scad_link_esito","scadenza.stato.link.iconTitle",null,null,
+					"scadenza.stato.link.iconTitle","scadenza.stato.link.iconTitle");
+
+			this.pianoScadenze = this.getFactory().getOutputFieldFactory().createText("scad_piano","scadenza.piano");
+			this.dataPianoScadenze = this.getFactory().getOutputFieldFactory().createText("scad_piano_data","scadenza.piano.data");
+
+			this.fieldsScadenze = this.getFactory().getOutputFieldFactory().createOutputGroup("infoScadenze",3);
+			this.fieldsScadenze.setStyleClass("datiTrasmissioneTable"); 
+			this.fieldsScadenze.setColumnClasses("labelAllineataDx,valueAllineataSx,valueAllineataSx");
+
+			this.fieldsScadenze.addField(this.esitoScadenze);
+			this.fieldsScadenze.addField(this.linkErroreScadenze);
+
+		}catch (Exception e){
+			this.log.error("Errore durante la init di scadenzaMBean: " + e.getMessage(),e);
+		}
+
 	}
 
-	public void initTables() {
+	@Override
+	public void init() throws Exception {
 		try{
 			this.table = this.factory.getTableFactory().createPagedDataTable();
 			this.getTable().setId("panelScadenze"); 
@@ -141,7 +165,7 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 			this.getTable().setMetadata(this.getMetadata()); 
 
 		}catch (Exception e) {
-
+			this.log.error("Errore durante la init di scadenzaMBean: " + e.getMessage(),e);
 		}
 	}
 
@@ -157,31 +181,6 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 		//		this.getNavigationManager().setNuovoOutcome("utente");
 		//		this.getNavigationManager().setResetOutcome("listaUtenti?faces-redirect=true");
 		//		this.getNavigationManager().setRestoreSearchOutcome("listaUtenti");
-	}
-
-	@Override
-	public void init() throws Exception {
-		try{
-			this.properties = ConsoleProperties.getInstance(log);
-
-			this.form = new ScadenzaForm();
-
-			this.esitoScadenze = this.getFactory().getOutputFieldFactory().createText("scad_esito","scadenza.stato");
-			this.linkErroreScadenze = this.getFactory().getOutputFieldFactory().createButton("scad_link_esito","scadenza.stato.link.iconTitle",null,null,
-					"scadenza.stato.link.iconTitle","scadenza.stato.link.iconTitle");
-
-			this.pianoScadenze = this.getFactory().getOutputFieldFactory().createText("scad_piano","scadenza.piano");
-			this.dataPianoScadenze = this.getFactory().getOutputFieldFactory().createText("scad_piano_data","scadenza.piano.data");
-
-			this.fieldsScadenze = this.getFactory().getOutputFieldFactory().createOutputGroup("infoScadenze",3);
-			this.fieldsScadenze.setStyleClass("datiTrasmissioneTable"); 
-			this.fieldsScadenze.setColumnClasses("labelAllineataDx,valueAllineataSx,valueAllineataSx");
-
-			this.fieldsScadenze.addField(this.esitoScadenze);
-			this.fieldsScadenze.addField(this.linkErroreScadenze);
-		}catch (Exception e){
-			this.log.error("Errore durante la init di scadenzaMBean: " + e.getMessage(),e);
-		}
 	}
 
 	public IBaseService<ScadenzaPccBean, Long, ScadenzaSearchForm> getService(){

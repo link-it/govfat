@@ -186,6 +186,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 			this.fatturazioneAttiva.setForm(this); 
 			this.firmaAutomatica = inputFieldFactory.createBooleanCheckBox("firmaAutomatica","dipartimento.form.firmaAutomatica",null,false);
 			this.codiceProcedimento = inputFieldFactory.createText("codiceProcedimento","dipartimento.form.codiceProcedimento",null,false);
+			this.codiceProcedimento.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS);
 			
 			this._setModalitaPush();
 			this._setFatturazioneAttiva();

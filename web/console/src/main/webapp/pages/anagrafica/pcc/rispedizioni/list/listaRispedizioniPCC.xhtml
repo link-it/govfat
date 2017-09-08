@@ -51,10 +51,22 @@
 
 			<op2web:managedPagedListView value="#{rispedizioneDM}"
 				mBean="#{rispedizioneMBean}">
+				
+				<rich:column styleClass="#{itemMetadata.codiceErrore.tableColumnStyleClass}">
+					<f:facet name="header">
+						<h:outputText value="#{itemMetadata.codiceErrore.label}" rendered="#{not empty itemMetadata.codiceErrore.label}" styleClass="#{itemMetadata.codiceErrore.tableHeaderLabelStyleClass}" />
+					</f:facet>
+					<h:panelGroup>
+						<a4j:htmlCommandLink id="#{rispedizioneMBean.table.id}_dettaglio_btn_dx" action="#{rispedizioneMBean.dettaglio}" ajaxSingle="true">
+							<f:setPropertyActionListener value="#{item.DTO.id}" target="#{rispedizioneMBean.selectedId}" />
+							<h:outputText id="outCodiceErrore2" value="#{item.codiceErrore.value}" />
+						</a4j:htmlCommandLink>
+					</h:panelGroup>
+				</rich:column>
 
 				<!-- Colonne tabella -->
 				<op2web:tableColumns
-					nomiColonne="#{'codiceErrore,descrizioneErrore,tipoErrore,tentativi,intervallo'}" />
+					nomiColonne="#{'descrizioneErrore,tipoErrore,tentativi,intervallo'}" />
 
 				<rich:column id="colRispedizioneAutomatica" style="text-align: center;">
 					<f:facet name="header">
@@ -65,24 +77,15 @@
 						action="#{rispedizioneMBean.toggleRispedizioneAutomatica}"
 						title="#{item.DTO.abilitato ? msg['rispedizione.rispedizioneAutomatica.disabilita'] : msg['rispedizione.rispedizioneAutomatica.abilita']}"
 						>
-						<h:graphicImage value="/images/icons/silk/bullet_green.png"
+						<h:graphicImage value="/images/tema_link/check_green.png"
 							id="imgGreen" rendered="#{item.DTO.abilitato}" />
-						<h:graphicImage value="/images/icons/silk/bullet_red.png"
+						<h:graphicImage value="/images/tema_link/check_red.png"
 							id="imgRed" rendered="#{!item.DTO.abilitato}" />
 						<f:setPropertyActionListener value="#{item}"
 							target="#{rispedizioneMBean.selectedElement}" />
 						<a4j:support event="oncomplete" reRender="rispedizioniListView" />
 					</a4j:commandLink>
 
-				</rich:column>
-
- 				<rich:column style="text-align: center;">
-					<h:panelGroup>
-						<a4j:htmlCommandLink id="#{rispedizioneMBean.table.id}_dettaglio_btn_dx" action="#{rispedizioneMBean.dettaglio}" ajaxSingle="true">
-							<f:setPropertyActionListener value="#{item.DTO.id}" target="#{rispedizioneMBean.selectedId}" />
-							<h:graphicImage value="/images/magnifier.png" width="16" height="16" title="#{rispedizioneMBean.table.detailLinkText}" alt="#{rispedizioneMBean.table.detailLinkText}"/>
-						</a4j:htmlCommandLink>
-					</h:panelGroup>
 				</rich:column>
 
 			</op2web:managedPagedListView>

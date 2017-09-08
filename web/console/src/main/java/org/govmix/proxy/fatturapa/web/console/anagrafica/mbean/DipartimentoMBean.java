@@ -77,6 +77,10 @@ public class DipartimentoMBean extends DataModelListView<Dipartimento, Long,  Di
 
 	public DipartimentoMBean() {
 		super(LoggerManager.getConsoleLogger());
+		this.showForm = false;
+		this.azione = null;
+		this.registroService = new RegistroService();
+		this.enteService = new EnteService();
 		this.log.debug("Dipartimento MBean");
 	}
 
@@ -107,10 +111,7 @@ public class DipartimentoMBean extends DataModelListView<Dipartimento, Long,  Di
 			((RadioButtonImpl)this.form.getRifiutoFattura()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
 
 
-			this.showForm = false;
-			this.azione = null;
-			this.registroService = new RegistroService();
-			this.enteService = new EnteService();
+
 
 			this.table = this.factory.getTableFactory().createPagedDataTable();
 			this.table.setId("dipartimentiListView"); 

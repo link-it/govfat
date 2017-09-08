@@ -172,7 +172,7 @@
 					 
 					<h:panelGroup>
 						<h:graphicImage value="#{item.notificaDT.image}" width="16" alt="#{item.notificaDT.alt}" height="16"	title="#{item.notificaDT.title}" rendered="#{item.notificaDT.rendered == true}" />
-						<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{item.notificaDT.rendered == false}" />
+						<h:outputText value="&#160;&#160;" rendered="#{item.notificaDT.rendered == false}" />
 					</h:panelGroup>
 				</rich:column>
 				

@@ -53,30 +53,38 @@
 				<op2web:fieldset legend="#{msg['operazione.search.ricercaOperazioni']}" rendered="#{true}" collapsible="false" closed="false">
 					<op2web:searchFields nomiFields="#{'oper,sisRic,utRic,dataPeriodo,data,esito,idPaTrans,codiceErrore'}"    />
 					
-					<op2web:fieldset legend="#{msg['operazione.search.riferimentoFattura']}" rendered="#{true}" collapsible="false" closed="false">
-						<op2web:searchFields nomiFields="#{'cedPres,numero,idLotto'}" />
-					</op2web:fieldset>
 				</op2web:fieldset>
+				
+				
+				<op2web:fieldset legend="#{msg['operazione.search.riferimentoFattura']}" rendered="#{true}" collapsible="false" closed="false">
+					<op2web:searchFields nomiFields="#{'cedPres,numero,idLotto'}" />
+				</op2web:fieldset>
+				
 			</op2web:search>
 	
 			<div class="spacer"></div>
 			
 			<op2web:managedPagedListView  value="#{operazioneDM}" mBean="#{operazioneMBean}">
-				
-				<!-- Colonne mittente,destinatario,identificativoSDI, annonumero, data, dataricezione, importo -->
-				<op2web:tableColumns nomiColonne="#{'dataUltimaTrasmissione,rifFattura,operazioneContabile,sistemaRichiedente,utenteRichiedente,stato'}" />
-				
+			
 				<!-- Link dettagli -->
-				<rich:column style="text-align: center;">
+				<rich:column styleClass="columnHeaderLabel">
+					<f:facet name="header">
+						<h:outputText value="#{itemMetadata.dataUltimaTrasmissione.label}"  styleClass="#{itemMetadata.dataUltimaTrasmissione.tableHeaderLabelStyleClass}"/>
+					</f:facet>
 					<h:panelGroup>
-						<a4j:htmlCommandLink id="dettaglio_btn" action="dettaglioOperazione" ajaxSingle="true">
+						<a4j:htmlCommandLink id="dettaglio_btn" action="dettaglioOperazione" ajaxSingle="true" title="#{msg['operazione.label.ricercaOperazioni.dettaglioTitle']}">
 							<f:setPropertyActionListener value="menu" target="#{operazioneMBean.paginaFrom}" />
 							<f:setPropertyActionListener value="#{item.DTO.id}" target="#{operazioneMBean.selectedId}" />
-							<h:graphicImage value="/images/magnifier.png" width="16" alt="#{msg['operazione.label.ricercaOperazioni.dettaglioTitle']}"
-								height="16" title="#{msg['operazione.label.ricercaOperazioni.dettaglioTitle']}" />
+							<h:outputText id="outDataRichLive2" value="#{item.dataUltimaTrasmissione.value}">
+								<f:convertDateTime pattern="#{item.dataUltimaTrasmissione.pattern}" defaultTime="00:00" timeZone="Europe/Rome" />
+                             </h:outputText>
 						</a4j:htmlCommandLink>
 					</h:panelGroup>
 				</rich:column>
+				
+				<!-- Colonne mittente,destinatario,identificativoSDI, annonumero, data, dataricezione, importo -->
+				<op2web:tableColumns nomiColonne="#{'rifFattura,operazioneContabile,sistemaRichiedente,utenteRichiedente,stato'}" />
+
 			</op2web:managedPagedListView>
 		</a4j:outputPanel>
 	</ui:define>

@@ -19,6 +19,8 @@
 					<op2web:fieldset legend="#{msg['fattura.label.intestazione']}" collapsible="false" closed="false" rendered="#{true}">
 						<op2web:outputGroup group="#{fatturaSelezionata.datiIntestazione}" />
 					</op2web:fieldset>
+					
+					<div class="spacerDettaglio"></div>
 
 					<!-- Dati Trasmissione  -->
 					<op2web:fieldset legend="#{msg['fattura.label.generale']}" collapsible="false" closed="false" rendered="#{true}">
@@ -31,30 +33,32 @@
 					
 							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.identificativoSdi}" insideGroup="true" />
 							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.posizione}" insideGroup="true" />
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							<h:outputText value="&#160;&#160;" />
 							
 							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.nomeFile}" insideGroup="true" />
 							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.formatoTrasmissione}" insideGroup="true" />
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							<h:outputText value="&#160;&#160;" />
 							
 							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.tipoDocumento}" insideGroup="true" />
 							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.messageId}" insideGroup="true" />
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							<h:outputText value="&#160;&#160;" />
 							
 							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.dipartimento}" insideGroup="true" />
 							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.codiceDestinatario}" insideGroup="true" />
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							<h:outputText value="&#160;&#160;" />
 							
 							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.dataInvio}" insideGroup="true" />
 							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.protocollo}" insideGroup="true" />
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							<h:outputText value="&#160;&#160;" />
 							
 							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.statoElaborazione}" insideGroup="true" />
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{true}"/>
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{true}"/>
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{true}"/>
+							<h:outputText value="&#160;&#160;" rendered="#{true}"/>
+							<h:outputText value="&#160;&#160;" rendered="#{true}"/>
+							<h:outputText value="&#160;&#160;" rendered="#{true}"/>
 						</h:panelGrid>
 					</op2web:fieldset>
+					
+					<div class="spacerDettaglio"></div>
 
 					<!-- Contenuto Fattura -->
 					<op2web:fieldset legend="#{msg['fattura.label.contenuto']}" collapsible="false" closed="false" rendered="#{true}">
@@ -62,6 +66,8 @@
 						
 						<op2web:outputGroup group="#{fatturaSelezionata.causaleFattura}" />
 					</op2web:fieldset>
+					
+					<div class="spacerDettaglio"></div>
 
 					<!-- Tabella Allegati -->
 					<op2web:fieldset legend="#{msg['fattura.label.allegati']}" collapsible="false" closed="false"
@@ -78,7 +84,7 @@
 							<op2web:tableColumns nomiColonne="#{'nomeAttachment,descrizioneAttachment,algoritmoCompressione,formatoAttachment'}" />
 							
 							<!-- Visualizza -->
-							<rich:column style="text-align: center;">
+							<rich:column style="text-align: center;" styleClass="columnHeaderLabel">
 								<f:facet name="header">
 									<h:outputText value="#{metadataAllegato.attachment.label}" />
 								</f:facet>
@@ -91,6 +97,8 @@
 							</rich:column>
 						</op2web:simpleListView>
 					</op2web:fieldset>
+					
+					<div class="spacerDettaglio"></div>
 
 					<!-- Comunicazioni sdi-->
 					<op2web:fieldset legend="#{msg['fattura.label.comunicazioniSdi']}" collapsible="false" closed="false" rendered="#{true}">
@@ -106,7 +114,7 @@
 							<op2web:tableColumns nomiColonne="#{'tipoComunicazione,data,nomeFile,idEgov,statoProtocollazione'}" />
 
 							<!-- XML (Icona) -->
-							<rich:column style="text-align: center;">
+							<rich:column style="text-align: center;" styleClass="columnHeaderLabel">
 								<f:facet name="header">
 									<h:outputText value="#{metadataComunicazione.xml.label}" />
 								</f:facet>
@@ -119,7 +127,7 @@
 							</rich:column>
 							
 							<!-- PDF (Icona) -->
-							<rich:column style="text-align: center;">
+							<rich:column style="text-align: center;" styleClass="columnHeaderLabel">
 								<f:facet name="header">
 									<h:outputText value="#{metadataComunicazione.pdf.label}" />
 								</f:facet>
@@ -133,11 +141,9 @@
 							
 						</op2web:simpleListView>
 					</op2web:fieldset>
+					
+					<div class="spacerDettaglio"></div>
 
 				</h:panelGrid>
- 
- 
- 
- 
  
     </ui:composition>

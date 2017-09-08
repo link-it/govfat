@@ -89,6 +89,10 @@ public class UtenteMBean extends DataModelListView<Utente, Long, UtenteBean, Ute
 
 	public UtenteMBean () throws Exception{
 		super(LoggerManager.getConsoleLogger());
+		this.showForm = false;
+		this.azione = null;
+		this.enteService = new EnteService();
+		this.dipartimentoService = new DipartimentoService();
 		this.log.debug("Utente MBean");
 	}
 
@@ -117,13 +121,6 @@ public class UtenteMBean extends DataModelListView<Utente, Long, UtenteBean, Ute
 			((RadioButtonImpl)this.form.getRicezioneFattura()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
 			((RadioButtonImpl)this.form.getRifiutoFattura()).setElencoSelectItems(getOpzioniRadioButtonAbilita());
 
-			this.showForm = false;
-			this.azione = null;
-
-
-			this.enteService = new EnteService();
-			this.dipartimentoService = new DipartimentoService();
-			
 			this.table = this.factory.getTableFactory().createPagedDataTable();
 			this.table.setId("utentiListView"); 
 			this.table.setEnableDelete(true);

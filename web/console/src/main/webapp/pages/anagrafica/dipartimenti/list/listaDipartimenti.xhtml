@@ -57,17 +57,20 @@
 			
 			<op2web:managedPagedListView  value="#{dipartimentoDM}" mBean="#{dipartimentoMBean}">
 	
-				<!-- Colonne Descrizione,Codice,modalitaPush -->
-				<op2web:tableColumns nomiColonne="#{'descrizione,codice,ente,modalitaPush'}" />
-				
-				<rich:column style="text-align: center;">
+				<rich:column styleClass="#{itemMetadata.codice.tableColumnStyleClass}">
+					<f:facet name="header">
+						<h:outputText value="#{itemMetadata.codice.label}" rendered="#{not empty itemMetadata.codice.label}" styleClass="#{itemMetadata.codice.tableHeaderLabelStyleClass}" />
+					</f:facet>
 					<h:panelGroup>
 						<a4j:htmlCommandLink id="#{dipartimentoMBean.table.id}_dettaglio_btn_dx" action="#{dipartimentoMBean.dettaglio}" ajaxSingle="true">
 							<f:setPropertyActionListener value="#{item.DTO.id}" target="#{dipartimentoMBean.selectedId}" />
-							<h:graphicImage value="/images/magnifier.png" width="16" height="16" title="#{dipartimentoMBean.table.detailLinkText}" alt="#{dipartimentoMBean.table.detailLinkText}"/>
+							<h:outputText id="outCodice2" value="#{item.codice.value}" />
 						</a4j:htmlCommandLink>
 					</h:panelGroup>
 				</rich:column>
+				
+				<!-- Colonne Descrizione,Codice,modalitaPush -->
+				<op2web:tableColumns nomiColonne="#{'descrizione,ente,modalitaPush,fatturazioneAttiva'}" />
 					
 			</op2web:managedPagedListView>
 		</a4j:outputPanel>

@@ -80,7 +80,7 @@
 					<op2web:formFields nomiFields="#{'nome,cognome,username,password,ruolo,profilo,ente'}" />
 
 				</op2web:fieldset>
-				<rich:spacer height="10" rendered="#{utenteMBean.form.showUOandPCC.value}"/>
+				<rich:spacer height="20" rendered="#{utenteMBean.form.showUOandPCC.value}"/>
 
 				<op2web:fieldset legend="#{msg['utente.form.dipartimento.label']}" 	collapsible="false" closed="false" rendered="#{utenteMBean.form.showUOandPCC.value}">
 
@@ -88,7 +88,7 @@
 
 				</op2web:fieldset>
 				
-				<rich:spacer height="10" rendered="#{utenteMBean.form.showUOandPCC.value}" />
+				<rich:spacer height="20" rendered="#{utenteMBean.form.showUOandPCC.value}" />
 				
 				<ui:include src="/includes/form/operazioniUtentePCC.xhtml">
 							<ui:param name="mBean" value="#{utenteMBean}" />
@@ -133,6 +133,7 @@
 						</op2web:pagedListView>
 					
 					</op2web:fieldset>
+					
 					
 					<!-- Dati PCC  -->
 					<op2web:fieldset legend="#{msg['utente.pcc']}"
