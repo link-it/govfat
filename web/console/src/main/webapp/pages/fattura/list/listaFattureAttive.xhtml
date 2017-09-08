@@ -347,7 +347,8 @@
 			                            <f:facet name="header">
 			                                <h:outputText value="#{msg['fattura.form.registro']}" />
 		                                </f:facet>
-		                                 <h:outputText id="input_registro_tab" value="#{item.registro}"/>
+		                                 <h:outputText id="output_registro_tab" value="#{item.registro}" rendered="#{not item.editRegistro}"/>
+		                                 <h:inputText id="input_registro_tab" value="#{item.registro}" style="width: 99%;" rendered="#{item.editRegistro}"/>
 		                            </rich:column>
 		                            <rich:column>
 			                            <f:facet name="header">

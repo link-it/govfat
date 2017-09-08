@@ -33,6 +33,7 @@ public class ConservazioneBean implements Serializable {
 	private String protocollo;
 	private String anno;
 	private String registro;
+	private boolean editRegistro = false;
 	public String getNomeFile() {
 		return nomeFile;
 	}
@@ -56,6 +57,12 @@ public class ConservazioneBean implements Serializable {
 	}
 	public void setRegistro(String registro) {
 		this.registro = registro;
+	}
+	public boolean isEditRegistro() {
+		return editRegistro;
+	}
+	public void setEditRegistro(boolean editRegistro) {
+		this.editRegistro = editRegistro;
 	}
 	
 }

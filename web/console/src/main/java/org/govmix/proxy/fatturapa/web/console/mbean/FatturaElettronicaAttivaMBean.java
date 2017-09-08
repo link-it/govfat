@@ -552,7 +552,9 @@ IFatturaElettronicaAttivaService>{
 		String codDip = this.form.getDipartimento().getValue().getValue();
 		Dipartimento dipartimento =  this.getDipartimento(codDip);
 		IdRegistro idRegistro = dipartimento.getRegistro();
-		String registro = (idRegistro != null && StringUtils.isNotEmpty(idRegistro.getNome())) ? idRegistro.getNome() : "";  
+		
+		boolean editRegistro = idRegistro != null;
+		String registro = (idRegistro != null) ? idRegistro.getNome() : "";  
 
 		for (String string : nomeFile) {
 			ConservazioneBean conservazioneBean = new ConservazioneBean();
@@ -560,6 +562,7 @@ IFatturaElettronicaAttivaService>{
 			conservazioneBean.setAnno("");
 			conservazioneBean.setProtocollo("");
 			conservazioneBean.setRegistro(registro); 
+			conservazioneBean.setEditRegistro(!editRegistro); 
 			this.getListaConservazione().add(conservazioneBean );
 		}
 
