@@ -27,6 +27,7 @@ import javax.faces.event.ActionEvent;
 
 import org.govmix.proxy.fatturapa.orm.UtenteDipartimento;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.mbean.DipartimentoMBean;
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.openspcoop2.generic_project.web.factory.FactoryException;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.SearchForm;
@@ -64,14 +65,14 @@ public class DipartimentoSearchForm extends BaseSearchForm implements SearchForm
 
 			// Init dei FormField
 			this.descrizione = factory.getInputFieldFactory().createText("descrizione","dipartimento.search.descrizione",null,false);
-
+			this.descrizione.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 			this.descrizione.setAutoComplete(true);
 			this.descrizione.setEnableManualInput(true);
 			this.descrizione.setFieldsToUpdate(this.getId() + "_searchPnl");
 			this.descrizione.setForm(this);
 
 			this.codice = factory.getInputFieldFactory().createText("codice","dipartimento.search.codice",null,false);
-
+			this.codice.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 			this.codice.setAutoComplete(true);
 			this.codice.setEnableManualInput(true);
 			this.codice.setFieldsToUpdate(this.getId() + "_searchPnl");

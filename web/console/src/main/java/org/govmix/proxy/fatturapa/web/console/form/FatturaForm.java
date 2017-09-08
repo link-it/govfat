@@ -24,6 +24,7 @@ import java.util.List;
 
 import javax.faces.event.ActionEvent;
 
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.mbean.FatturaElettronicaAttivaMBean;
 import org.govmix.proxy.fatturapa.web.console.mbean.FileUploadBean;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
@@ -70,7 +71,7 @@ public class FatturaForm extends BaseForm implements Form {
 		this.dipartimento.setFontName("Arial"); //"Arial,Verdana,sans-serif" 
 
 		this.descrittoreFattura = factory.getInputFieldFactory().createText("descrittoreFattura","fattura.form.descrittoreFattura",null,true);
-		
+		this.descrittoreFattura.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 		this.conservazione = factory.getInputFieldFactory().createBooleanCheckBox("conservazione","fattura.form.conservazione",null,false);
 		this.conservazione.setFieldsToUpdate(this.getId() + "_btnPnl"); 
 		this.conservazione.setForm(this);

@@ -57,7 +57,7 @@ public class LoggerManager {
 	private static synchronized void init(){
 		if(initialized) return;
 		try {
-			String logPath = "/fatturaPA.log4j.properties"; 
+			String logPath = "/fatturaPA.log4j2.properties"; 
 
 			InputStream is = LoggerManager.class
 					.getResourceAsStream(logPath);

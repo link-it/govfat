@@ -43,6 +43,7 @@ import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.bean.DipartimentoBean;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.bean.EnteBean;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.mbean.DipartimentoMBean;
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.govmix.proxy.fatturapa.web.console.util.input.FatturaPAFactory;
 import org.govmix.proxy.fatturapa.web.console.util.input.factory.FatturaPAInputFactoryImpl;
@@ -137,14 +138,19 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 			FatturaPAInputFactoryImpl inputFieldFactory = (FatturaPAInputFactoryImpl)factory.getInputFieldFactory();
 
 			this.codice = inputFieldFactory.createText("codice","dipartimento.form.codice",null,true);
+			this.codice.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 			this.descrizione = inputFieldFactory.createText("descrizione","dipartimento.form.descrizione",null,true);
+			this.descrizione.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS);
 			this.modalitaPush = inputFieldFactory.createBooleanCheckBox("modalitaPush","dipartimento.form.modalitaPush",null,false);
 			this.modalitaPush.setFieldsToUpdate(this.getId() + "_formPnl"); 
 			this.modalitaPush.setForm(this); 
 
 			this.endpoint = inputFieldFactory.createText("endpoint","dipartimento.form.endpoint",null,true);
+			this.endpoint.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS);
 			this.password = inputFieldFactory.createInputSecret("password","dipartimento.form.password",null,false);
+			this.password.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS);
 			this.username = inputFieldFactory.createText("username","dipartimento.form.username",null,false);
+			this.username.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS);
 
 			this.notificaAutomatica = inputFieldFactory.createBooleanCheckBox("notificaAutomatica","dipartimento.form.notificaAutomatica",null,false);
 			this.ente = inputFieldFactory.createSelectList("ente","dipartimento.form.ente",null,true);
@@ -154,9 +160,6 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 			this.codicePCC = inputFieldFactory.createBooleanCheckBox("codicePCC","dipartimento.form.codicePCC",null,false);
 
 			this.registro = inputFieldFactory.createSelectList("registro","dipartimento.form.registro",null,false);
-
-			
-
 
 			this.indirizziNotifica = inputFieldFactory.createTextArea("indirizziNotifica","dipartimento.pcc.indirizziNotifica",null,true);
 			this.indirizziNotifica.setNote("dipartimento.pcc.indirizziNotifica.note");

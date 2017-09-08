@@ -31,6 +31,7 @@ import org.govmix.proxy.fatturapa.orm.PccContabilizzazione;
 import org.govmix.proxy.fatturapa.orm.constants.CausaleType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoDebitoType;
 import org.govmix.proxy.fatturapa.web.commons.utils.TransformUtils;
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.pcc.bean.ContabilizzazionePccBean;
 import org.govmix.proxy.fatturapa.web.console.pcc.mbean.ContabilizzazioneMBean;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
@@ -76,6 +77,7 @@ public class ContabilizzazioneForm extends BaseForm implements Form {
 		this.descrizione = factory.getInputFieldFactory().createText("descrizione","contabilizzazione.descrizione",null,false);
 		this.descrizione.setStyle("width: 200px;");
 		this.descrizione.setRequired(false); 
+		this.descrizione.setStyleClass(Costanti.INPUT_STYLE_CLASS); 
 		this.causale = factory.getInputFieldFactory().createSelectList("causale","contabilizzazione.causale",
 				null,false);
 		this.causale.setStyle("width: 200px;");

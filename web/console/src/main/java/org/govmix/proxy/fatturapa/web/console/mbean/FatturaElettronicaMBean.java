@@ -47,6 +47,7 @@ import org.govmix.proxy.fatturapa.web.console.bean.AllegatoFatturaBean;
 import org.govmix.proxy.fatturapa.web.console.bean.FatturaElettronicaBean;
 import org.govmix.proxy.fatturapa.web.console.bean.NotificaDTBean;
 import org.govmix.proxy.fatturapa.web.console.bean.NotificaECBean;
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
 import org.govmix.proxy.fatturapa.web.console.form.FatturaForm;
 import org.govmix.proxy.fatturapa.web.console.iservice.IAllegatiService;
@@ -134,6 +135,8 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 			this.getTable().setShowDetailColumn(false);
 			this.getTable().setShowSelectAll(true);
 			this.getTable().setHeaderText("fattura.label.ricercaFatture.tabellaRisultati");
+			this.getTable().setDetailLinkText("fattura.dettaglioTitle");
+			this.getTable().setTablePanelStyleClass(Costanti.TABLE_DIV_STYLE_CLASS);
 			//	this.table.setMBean(this);
 			this.getTable().setMetadata(this.getMetadata()); 
 

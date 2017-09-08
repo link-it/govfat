@@ -45,7 +45,7 @@
 			}
 		</style>
 		
-		<rich:panel styleClass="noborder" id="pagina" >
+		<a4j:outputPanel id="pagina"  layout="block">
 		
 			<h:form id="formRicaricaListaFattureAttive">
             	<a4j:outputPanel layout="block" ajaxRendered="false">
@@ -69,6 +69,7 @@
 									disabled="#{fatturaElettronicaAttivaMBean.search.dataInvio.disabled}" style="#{fatturaElettronicaAttivaMBean.search.dataInvio.style}" bypassUpdates="true"
 									datePattern="#{fatturaElettronicaAttivaMBean.search.dataInvio.pattern}" defaultTime="00:00" validatorMessage="#{msg['fattura.search.dataInvio.da.formatoNonValido']}"
 									enableManualInput="true" validator="#{fatturaElettronicaAttivaMBean.search.dataInizioValidator}" valueChangeListener="#{fatturaElettronicaAttivaMBean.search.dataInizioChangeListener}"
+									buttonIcon="#{fatturaElettronicaAttivaMBean.search.dataInvio.buttonIcon}"
 									converter="dateConverter" >
 								 </rich:calendar>
 							</op2web:prop>
@@ -80,6 +81,7 @@
 								<rich:calendar id="input2_#{fatturaElettronicaAttivaMBean.search.dataInvio.name}" value="#{fatturaElettronicaAttivaMBean.search.dataInvio.value2}"
 									disabled="#{fatturaElettronicaAttivaMBean.search.dataInvio.disabled}" style="#{fatturaElettronicaAttivaMBean.search.dataInvio.style}"
 									datePattern="#{fatturaElettronicaAttivaMBean.search.dataInvio.pattern}" defaultTime="23:59" converter="dateConverter" 
+									buttonIcon="#{fatturaElettronicaAttivaMBean.search.dataInvio.buttonIcon}"
 									enableManualInput="true" />
 							</op2web:prop>
 						</ui:define>
@@ -93,6 +95,7 @@
 						<rich:calendar id="input_#{fatturaElettronicaAttivaMBean.search.dataEsatta.name}" value="#{fatturaElettronicaAttivaMBean.search.dataEsatta.value}"  disabled="#{fatturaElettronicaAttivaMBean.search.dataEsatta.disabled}"
 		 					style="#{fatturaElettronicaAttivaMBean.search.dataEsatta.style}" datePattern="#{fatturaElettronicaAttivaMBean.search.dataEsatta.pattern}" defaultTime="00:00" 
 		 					validatorMessage="#{msg['fattura.search.dataEsatta.formatoNonValido']}" converter="dateEmptyConverter"
+		 					buttonIcon="#{fatturaElettronicaAttivaMBean.search.dataEsatta.buttonIcon}"
 									enableManualInput="true" validator="#{fatturaElettronicaAttivaMBean.search.dataEsattaValidator}" />
 					</op2web:prop>
 					
@@ -123,7 +126,7 @@
 					
 				</ui:define>
 			</op2web:searchForm>	
-			<rich:spacer height="20"/>
+			<div class="spacer"></div>
 			
 			<op2web:managedPagedListView  value="#{fatturaElettronicaAttivaDM}" mBean="#{fatturaElettronicaAttivaMBean}" >
 				
@@ -153,7 +156,7 @@
 					</f:facet>
 					 <h:panelGroup>
 					 	<h:commandLink id="visualizzaPdfLink" target="_blank" action="#{item.visualizzaPdf}" rendered="#{not empty item.pdf.href}">
-							<h:graphicImage value="#{item.pdf.image}" width="16" height="16"	title="#{item.pdf.title}" alt="#{item.pdf.alt}" />
+							<h:graphicImage value="#{item.pdf.image}" width="16" height="16" title="#{item.pdf.title}" alt="#{item.pdf.alt}" />
 						</h:commandLink>
 					</h:panelGroup>
 				</rich:column>
@@ -173,11 +176,11 @@
 				<ui:define name="buttonsListView">
 					<h:commandLink id="exportFatture-iconLink" target="_blank" 
 						styleClass="icon-compress" action="#{fatturaElettronicaAttivaMBean.exportSelected}"
-						onclick="return checkSelection('fatturaElettronicaTable_dt');" style="color: #dd2c0d;">
+						onclick="return checkSelection('fatturaElettronicaTable_dt');">
 						<h:outputText value="#{msg['commons.button.esporta']}" />
 					</h:commandLink>
 					
-					<a4j:commandButton id="carica-iconLink" styleClass="icon-add" style="color: #dd2c0d; padding: 4px 6px 4px 5px;"
+					<a4j:commandButton id="carica-iconLink" styleClass="icon-add" style="padding: 4px 6px 4px 5px;"
 						reRender="fileUploadModalPnl" value="#{msg['fattura.button.carica']}"
 						actionListener="#{fatturaElettronicaAttivaMBean.nuovaFatturaListener}"
 						rendered="#{fatturaElettronicaAttivaMBean.visualizzaTastoCaricaFattura}"
@@ -185,7 +188,7 @@
 					</a4j:commandButton>
 				</ui:define>
 			</op2web:managedPagedListView>
-		</rich:panel>
+		</a4j:outputPanel>
 		
 		<rich:modalPanel id="fileUploadModalPnl" showWhenRendered="false"
 				autosized="true">

@@ -40,7 +40,7 @@
 	<ui:define name="body">
 		<a4j:keepAlive beanName="fatturaElettronicaMBean" ajaxOnly="true" />
 		
-		<rich:panel styleClass="noborder" id="pagina" >
+		<a4j:outputPanel id="pagina"  layout="block">
 			
 			<op2web:searchForm searchBean="#{fatturaElettronicaMBean.search}">
 		
@@ -57,6 +57,7 @@
 									disabled="#{fatturaElettronicaMBean.search.dataRicezione.disabled}" style="#{fatturaElettronicaMBean.search.dataRicezione.style}" bypassUpdates="true"
 									datePattern="#{fatturaElettronicaMBean.search.dataRicezione.pattern}" defaultTime="00:00" validatorMessage="#{msg['fattura.search.dataRicezione.da.formatoNonValido']}"
 									enableManualInput="true" validator="#{fatturaElettronicaMBean.search.dataInizioValidator}" valueChangeListener="#{fatturaElettronicaMBean.search.dataInizioChangeListener}"
+									buttonIcon="#{fatturaElettronicaMBean.search.dataRicezione.buttonIcon}"
 									converter="dateConverter" >
 								 </rich:calendar>
 							</op2web:prop>
@@ -68,6 +69,7 @@
 								<rich:calendar id="input2_#{fatturaElettronicaMBean.search.dataRicezione.name}" value="#{fatturaElettronicaMBean.search.dataRicezione.value2}"
 									disabled="#{fatturaElettronicaMBean.search.dataRicezione.disabled}" style="#{fatturaElettronicaMBean.search.dataRicezione.style}"
 									datePattern="#{fatturaElettronicaMBean.search.dataRicezione.pattern}" defaultTime="23:59" converter="dateConverter" 
+									buttonIcon="#{fatturaElettronicaMBean.search.dataRicezione.buttonIcon}"
 									enableManualInput="true" />
 							</op2web:prop>
 						</ui:define>
@@ -81,6 +83,7 @@
 						<rich:calendar id="input_#{fatturaElettronicaMBean.search.dataEsatta.name}" value="#{fatturaElettronicaMBean.search.dataEsatta.value}"  disabled="#{fatturaElettronicaMBean.search.dataEsatta.disabled}"
 		 					style="#{fatturaElettronicaMBean.search.dataEsatta.style}" datePattern="#{fatturaElettronicaMBean.search.dataEsatta.pattern}" defaultTime="00:00" 
 		 					validatorMessage="#{msg['fattura.search.dataEsatta.formatoNonValido']}" converter="dateEmptyConverter"
+		 					buttonIcon="#{fatturaElettronicaMBean.search.dataEsatta.buttonIcon}"
 									enableManualInput="true" validator="#{fatturaElettronicaMBean.search.dataEsattaValidator}" />
 					</op2web:prop>
 					
@@ -116,7 +119,7 @@
 					</a4j:commandButton>
 				</ui:define>
 			</op2web:searchForm>	
-			<rich:spacer height="20"/>
+			<div class="spacer"></div>
 			
 			<op2web:managedPagedListView  value="#{fatturaElettronicaDM}" mBean="#{fatturaElettronicaMBean}" >
 				
@@ -212,11 +215,11 @@
 				<ui:define name="buttonsListView">
 					<h:commandLink id="exportFatture-iconLink" target="_blank"
 						styleClass="icon-compress" action="#{fatturaElettronicaMBean.exportSelected}"
-						onclick="return checkSelection('fatturaElettronicaTable_dt');" style="color: #dd2c0d">
+						onclick="return checkSelection('fatturaElettronicaTable_dt');">
 						<h:outputText value="#{msg['commons.button.esporta']}" />
 					</h:commandLink>
 				</ui:define>
 			</op2web:managedPagedListView>
-		</rich:panel>
+		</a4j:outputPanel>
 	</ui:define>
 </ui:composition>

@@ -32,6 +32,7 @@ import org.govmix.proxy.fatturapa.orm.constants.StatoType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.PccTracciamentoBD;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.bean.FatturaElettronicaBean;
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.iservice.IFatturaElettronicaService;
 import org.govmix.proxy.fatturapa.web.console.pcc.bean.TracciaPccEstesaBean;
 import org.govmix.proxy.fatturapa.web.console.pcc.form.OperazioneForm;
@@ -101,6 +102,7 @@ public class OperazioneMBean extends BaseMBean<TracciaPccEstesaBean, Long, Opera
 			this.getTable().setShowDetailColumn(false);
 			this.getTable().setShowSelectAll(false);
 			this.getTable().setHeaderText("operazione.label.ricercaOperazioni.tabellaRisultati");
+			this.getTable().setTablePanelStyleClass(Costanti.TABLE_DIV_STYLE_CLASS);
 			//	this.table.setMBean(this);
 			this.getTable().setMetadata(this.getMetadata()); 
 

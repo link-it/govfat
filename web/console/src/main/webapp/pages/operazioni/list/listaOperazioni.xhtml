@@ -45,7 +45,7 @@
 				 });
 		</script>
 		
-		<rich:panel styleClass="noborder" id="pagina" >
+		<a4j:outputPanel id="pagina"  layout="block">
 			<op2web:search mBean="#{operazioneMBean}" fieldsToUpdateButtonFiltra="panelOperazioni"
 				 fieldsToUpdateButtonReset="panelOperazioni" >
 				
@@ -58,7 +58,7 @@
 				</op2web:fieldset>
 			</op2web:search>
 	
-			<rich:spacer height="20"/>
+			<div class="spacer"></div>
 			
 			<op2web:managedPagedListView  value="#{operazioneDM}" mBean="#{operazioneMBean}">
 				
@@ -77,6 +77,6 @@
 					</h:panelGroup>
 				</rich:column>
 			</op2web:managedPagedListView>
-		</rich:panel>
+		</a4j:outputPanel>
 	</ui:define>
 </ui:composition>

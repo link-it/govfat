@@ -29,6 +29,7 @@ import org.govmix.proxy.fatturapa.orm.Registro;
 import org.govmix.proxy.fatturapa.orm.RegistroProperty;
 import org.govmix.proxy.fatturapa.orm.RegistroPropertyValue;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.bean.RegistroBean;
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
 import org.openspcoop2.generic_project.web.form.Form;
@@ -58,9 +59,12 @@ public class RegistroForm extends BaseForm implements Form{
 		WebGenericProjectFactory factory = this.getFactory();
 
 		this.nome = factory.getInputFieldFactory().createText("nome","registro.form.nome",null,true);
+		this.nome.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 		this.password = factory.getInputFieldFactory().createInputSecret("password","registro.form.password",null,true);
 		this.password.setRedisplay(true); 
+		this.password.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 		this.username = factory.getInputFieldFactory().createText("username","registro.form.username",null,true);
+		this.username.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 
 		this.setField(this.nome);
 		this.setField(this.password);

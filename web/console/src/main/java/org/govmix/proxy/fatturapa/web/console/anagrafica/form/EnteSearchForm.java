@@ -20,6 +20,7 @@
  */
 package org.govmix.proxy.fatturapa.web.console.anagrafica.form;
 
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.SearchForm;
 import org.openspcoop2.generic_project.web.impl.jsf1.form.BaseSearchForm;
@@ -40,6 +41,7 @@ public class EnteSearchForm extends BaseSearchForm implements SearchForm {
 		WebGenericProjectFactory factory = this.getFactory();
 		
 		this.nome = factory.getInputFieldFactory().createText("nome","ente.search.nome",null,false);
+		this.nome.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 		
 		this.setField(this.nome); 
 	}

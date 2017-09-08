@@ -28,6 +28,7 @@ import org.govmix.proxy.fatturapa.orm.PccRispedizione;
 import org.govmix.proxy.fatturapa.orm.constants.TipoErroreType;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.bean.RispedizioneBean;
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.govmix.proxy.fatturapa.web.console.util.input.FatturaPAFactory;
 import org.govmix.proxy.fatturapa.web.console.util.input.factory.FatturaPAInputFactoryImpl;
@@ -72,10 +73,14 @@ public class RispedizioneForm extends BaseForm implements Form{
 
 		FatturaPAInputFactoryImpl inputFieldFactory = (FatturaPAInputFactoryImpl)factory.getInputFieldFactory();
 		this.codiceErrore = inputFieldFactory.createText("codiceErrore", "rispedizione.form.codiceErrore", null, true);
+		this.codiceErrore.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 		this.descrizioneErrore = inputFieldFactory.createText("descrizioneErrore", "rispedizione.form.descrizioneErrore", null, true);
+		this.descrizioneErrore.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 		this.numeroTentativi = inputFieldFactory.createText("numeroTentativi", "rispedizione.form.numeroTentativi", null, true);
+		this.numeroTentativi.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 //		this.numeroTentativi.setConverterType(Costanti.CONVERT_TYPE_NUMBER);
 		this.intervalloRispedizione = inputFieldFactory.createText("intervalloRispedizione", "rispedizione.form.intervalloRispedizione", null, true);
+		this.intervalloRispedizione.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 //		this.intervalloRispedizione.setConverterType(Costanti.CONVERT_TYPE_NUMBER);
 		this.tipoErrore = inputFieldFactory.createSelectList("tipoErrore","rispedizione.form.tipoErrore",null,true);
 		this.rispedizioneAutomatica =  inputFieldFactory.createRadioButtonFatturaPA("rispedizioneAutomatica","rispedizione.form.rispedizioneAutomatica", null, false);

@@ -29,6 +29,7 @@ import javax.faces.event.ActionEvent;
 
 import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.mbean.FatturaElettronicaMBean;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.SearchForm;
@@ -87,7 +88,7 @@ public class FatturaElettronicaSearchForm extends BaseSearchForm implements Sear
 
 		// Init dei FormField
 		this.cedentePrestatore = factory.getInputFieldFactory().createText("cedentePrestatore","fattura.search.cedentePrestatoreDenominazione",null,false);
-		
+		this.cedentePrestatore.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 		this.cedentePrestatore.setAutoComplete(true);
 		this.cedentePrestatore.setEnableManualInput(true);
 		this.cedentePrestatore.setFieldsToUpdate(this.getId () + "_searchPnl");
@@ -115,17 +116,17 @@ public class FatturaElettronicaSearchForm extends BaseSearchForm implements Sear
 		this.notificaEsitoCommittente = factory.getInputFieldFactory().createSelectList("notificaEsitoCommittente","fattura.search.notificaEC",null,false);
 		this.notificaDecorrenzaTermini = factory.getInputFieldFactory().createSelectList( "notificaDecorrenzaTermini","fattura.search.notificaDT",null,false);
 		this.numero = factory.getInputFieldFactory().createText("numero","fattura.search.numero",null,false);
-		
+		this.numero.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 		this.numero.setAutoComplete(true);
 		this.numero.setEnableManualInput(true);
 		this.numero.setFieldsToUpdate(this.getId () + "_searchPnl");
 		this.numero.setForm(this);
 		
 		this.identificativoLotto = factory.getInputFieldFactory().createText("identificativoLotto","fattura.search.identificativoLotto",null,false);
-
+		this.identificativoLotto.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 		this.identificativoProtocollo = factory.getInputFieldFactory().createText("identificativoProtocollo",
 				"fattura.search.identificativoProtocollo",null,false);
-
+		this.identificativoProtocollo.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 		this.statoConsegna = factory.getInputFieldFactory().createSelectList("statoConsegna","fattura.search.statoConsegna",null,false);
 		
 		this.setField(this.cedentePrestatore);

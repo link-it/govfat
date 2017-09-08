@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.govmix.proxy.fatturapa.orm.PccScadenza;
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.pcc.bean.ScadenzaPccBean;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
@@ -63,6 +64,7 @@ public class ScadenzaForm extends BaseForm implements Form {
 		this.importo = factory.getInputFieldFactory()
 				.createText("importo","scadenza.importo",null,false);
 		this.importo.setStyle("width: 200px;");
+		this.importo.setStyleClass(Costanti.INPUT_STYLE_CLASS);
 		//		this.importo.setRequired(true);
 		//this.importo.setConverterType(Costanti.CONVERT_TYPE_NUMBER);
 

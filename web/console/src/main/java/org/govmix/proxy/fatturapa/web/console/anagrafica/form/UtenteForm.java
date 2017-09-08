@@ -41,6 +41,7 @@ import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.bean.DipartimentoBean;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.bean.UtenteBean;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.mbean.UtenteMBean;
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.govmix.proxy.fatturapa.web.console.util.input.FatturaPAFactory;
 import org.govmix.proxy.fatturapa.web.console.util.input.factory.FatturaPAInputFactoryImpl;
@@ -113,6 +114,7 @@ public class UtenteForm extends BaseForm implements Form, Serializable{
 		this.password.setLabel2(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("utente.form.password.confirm")); 
 		this.password.setConfirm(true); 
 		this.password.setRedisplay(true); 
+		this.password.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 
 		if(Utils.getLoginBean().isNoPasswordLogin()){
 			this.password.setRendered(false);
@@ -120,8 +122,11 @@ public class UtenteForm extends BaseForm implements Form, Serializable{
 			this.password.setRendered(true);
 
 		this.username = inputFieldFactory.createText("username","utente.form.username",null,true);
+		this.username.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 		this.nome = inputFieldFactory.createText("nome","utente.form.nome",null,false);
+		this.nome.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 		this.cognome = inputFieldFactory.createText("cognome","utente.form.cognome",null,false);
+		this.cognome.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 
 		this.dipartimento = inputFieldFactory.createPickList("dipartimento","utente.form.dipartimento",null,true);
 		this.dipartimento.setNote(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("utente.form.dipartimento.note"));
@@ -147,6 +152,7 @@ public class UtenteForm extends BaseForm implements Form, Serializable{
 		this.utenteEsterno.setFieldsToUpdate(nomeForm +"_formPnl"); 
 		this.utenteEsterno.setForm(this); 
 		this.sistemaEsterno = inputFieldFactory.createText("sistemaEsterno","utente.pcc.sistemaEsterno",null,false);
+		this.sistemaEsterno.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 
 
 

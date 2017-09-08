@@ -65,7 +65,7 @@
 	
 	          <context-param>
 			<param-name>loggerProperties</param-name>
-			<param-value>fatturapa.log4j.properties</param-value>
+			<param-value>fatturapa.log4j2.properties</param-value>
 		</context-param>
 
 

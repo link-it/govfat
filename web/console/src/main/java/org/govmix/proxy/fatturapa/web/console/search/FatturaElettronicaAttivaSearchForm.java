@@ -29,6 +29,7 @@ import javax.faces.event.ActionEvent;
 
 import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.mbean.FatturaElettronicaAttivaMBean;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.SearchForm;
@@ -87,6 +88,7 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		this.cessionarioCommittente.setEnableManualInput(true);
 		this.cessionarioCommittente.setFieldsToUpdate(this.getId () + "_searchPnl");
 		this.cessionarioCommittente.setForm(this);
+		this.cessionarioCommittente.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 
 		this.dipartimento = factory.getInputFieldFactory().createSelectList("dipartimento","fattura.search.dipartimento",null,false);
 		((SelectListImpl)this.dipartimento).setCheckItemWidth(true); 
@@ -108,6 +110,7 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 
 		this.tipoDocumento = factory.getInputFieldFactory().createSelectList("tipoDocumento","fattura.search.tipoDocumento",null,false);
 		this.numero = factory.getInputFieldFactory().createText("numero","fattura.search.numero",null,false);
+		this.numero.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 		
 		this.numero.setAutoComplete(true);
 		this.numero.setEnableManualInput(true);
@@ -115,9 +118,10 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		this.numero.setForm(this);
 		
 		this.identificativoLotto = factory.getInputFieldFactory().createText("identificativoLotto","fattura.search.identificativoLotto",null,false);
-
+		this.identificativoLotto.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 		this.identificativoProtocollo = factory.getInputFieldFactory().createText("identificativoProtocollo",
 				"fattura.search.identificativoProtocollo",null,false);
+		this.identificativoProtocollo.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 
 		this.statoElaborazione = factory.getInputFieldFactory().createSelectList("statoElaborazione","fattura.search.statoElaborazione",null,false);
 		

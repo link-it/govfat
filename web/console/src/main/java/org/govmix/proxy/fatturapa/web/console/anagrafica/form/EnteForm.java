@@ -23,6 +23,7 @@ package org.govmix.proxy.fatturapa.web.console.anagrafica.form;
 import org.apache.commons.lang.StringUtils;
 import org.govmix.proxy.fatturapa.orm.Ente;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.bean.EnteBean;
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
 import org.openspcoop2.generic_project.web.form.Form;
@@ -46,8 +47,11 @@ public class EnteForm extends BaseForm implements Form {
 		WebGenericProjectFactory factory = this.getFactory();
 		
 		this.nome = factory.getInputFieldFactory().createText("nome","ente.form.nome",null,false);
+		this.nome.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 		this.descrizione = factory.getInputFieldFactory().createText("descrizione","ente.form.descrizione",null,false);
+		this.descrizione.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 		this.idPccAmministrazione = factory.getInputFieldFactory().createText("idPccAmministrazione","ente.form.idPccAmministrazione",null,false);
+		this.idPccAmministrazione.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 		
 		this.setField(this.nome);
 		this.setField(this.descrizione);

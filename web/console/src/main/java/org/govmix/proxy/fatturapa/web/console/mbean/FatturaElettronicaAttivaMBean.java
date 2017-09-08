@@ -52,6 +52,7 @@ import org.govmix.proxy.fatturapa.web.console.bean.AllegatoFatturaBean;
 import org.govmix.proxy.fatturapa.web.console.bean.ConservazioneBean;
 import org.govmix.proxy.fatturapa.web.console.bean.FatturaElettronicaAttivaBean;
 import org.govmix.proxy.fatturapa.web.console.bean.TracciaSDIBean;
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.datamodel.FatturaElettronicaAttivaDM;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
 import org.govmix.proxy.fatturapa.web.console.form.FatturaForm;
@@ -144,6 +145,8 @@ IFatturaElettronicaAttivaService>{
 			this.table.setShowDetailColumn(false);
 			this.table.setShowSelectAll(true);
 			this.table.setHeaderText("fatturaAttiva.label.ricercaFattureAttive.tabellaRisultati");
+			this.table.setDetailLinkText("fatturaAttiva.dettaglioTitle");
+			this.table.setTablePanelStyleClass(Costanti.TABLE_DIV_STYLE_CLASS);
 			//			this.table.setMBean(this);
 			this.table.setMetadata(this.getMetadata()); 
 

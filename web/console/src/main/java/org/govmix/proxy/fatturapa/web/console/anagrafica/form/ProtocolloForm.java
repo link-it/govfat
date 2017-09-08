@@ -25,6 +25,7 @@ import java.net.URI;
 import org.apache.commons.lang.StringUtils;
 import org.govmix.proxy.fatturapa.orm.Protocollo;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.bean.ProtocolloBean;
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
 import org.openspcoop2.generic_project.web.form.Form;
@@ -48,8 +49,11 @@ public class ProtocolloForm extends BaseForm implements Form {
 		WebGenericProjectFactory factory = this.getFactory();
 		
 		this.nome = factory.getInputFieldFactory().createText("nome","protocollo.form.nome",null,true);
+		this.nome.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 		this.descrizione = factory.getInputFieldFactory().createText("descrizione","protocollo.form.descrizione",null,false);
+		this.descrizione.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 		this.endpoint = factory.getInputFieldFactory().createText("endpoint","protocollo.form.endpoint",null,true);
+		this.endpoint.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 		
 		this.setField(this.nome);
 		this.setField(this.descrizione);

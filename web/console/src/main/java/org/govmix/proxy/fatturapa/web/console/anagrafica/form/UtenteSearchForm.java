@@ -25,6 +25,7 @@ import java.util.List;
 import javax.faces.event.ActionEvent;
 
 import org.govmix.proxy.fatturapa.web.console.anagrafica.mbean.UtenteMBean;
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.SearchForm;
 import org.openspcoop2.generic_project.web.impl.jsf1.form.BaseSearchForm;
@@ -64,6 +65,7 @@ public class UtenteSearchForm extends BaseSearchForm implements SearchForm{
 		this.denominazione.setEnableManualInput(true);
 		this.denominazione.setFieldsToUpdate(this.getId() + "_searchPnl");
 		this.denominazione.setForm(this);
+		this.denominazione.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 
 		this.dipartimento = factory.getInputFieldFactory().createSelectList("dipartimento","utente.search.dipartimento",null,false);
 		((SelectListImpl)this.dipartimento).setCheckItemWidth(true); 

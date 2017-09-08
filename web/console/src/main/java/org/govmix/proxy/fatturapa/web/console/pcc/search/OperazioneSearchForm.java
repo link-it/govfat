@@ -27,6 +27,7 @@ import java.util.List;
 
 import javax.faces.event.ActionEvent;
 
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.pcc.mbean.OperazioneMBean;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.SearchForm;
@@ -84,10 +85,11 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 		this.cedentePrestatore.setEnableManualInput(true);
 		this.cedentePrestatore.setFieldsToUpdate(this.getId () + "_searchPnl");
 		this.cedentePrestatore.setForm(this);
+		this.cedentePrestatore.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS);
 
 		this.utenteRichiedente = factory.getInputFieldFactory()
 				.createText("utRic","operazione.search.utenteRichiedente",null,false);
-
+		this.utenteRichiedente.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS);
 		this.utenteRichiedente.setAutoComplete(true);
 		this.utenteRichiedente.setEnableManualInput(true);
 		this.utenteRichiedente.setFieldsToUpdate(this.getId () + "_searchPnl");
@@ -104,6 +106,7 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 		this.sistemaRichiedente.setEnableManualInput(true);
 		this.sistemaRichiedente.setFieldsToUpdate(this.getId () + "_searchPnl");
 		this.sistemaRichiedente.setForm(this);
+		this.sistemaRichiedente.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS);
 
 		this.dataPeriodo = factory.getInputFieldFactory().createSelectList("dataPeriodo","tracciaPcc.dataCreazione",new SelectItem(OperazioneSearchForm.DATA_PERIODO_ULTIMO_MESE,"operazione.search.data.ultimoMese"),false);
 
@@ -118,16 +121,16 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 		this.esito = factory.getInputFieldFactory().createSelectList( "esito","tracciaPcc.stato",null,false);
 		this.esito.setDefaultValue(new org.openspcoop2.generic_project.web.input.SelectItem("*", ("commons.label.qualsiasi")));
 		this.numero = factory.getInputFieldFactory().createText("numero","operazione.search.numero",null,false);
-
+		this.numero.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS);
 		this.numero.setAutoComplete(true);
 		this.numero.setEnableManualInput(true);
 		this.numero.setFieldsToUpdate(this.getId () + "_searchPnl");
 		this.numero.setForm(this);
 
 		this.identificativoLotto = factory.getInputFieldFactory().createText("idLotto","operazione.search.identificativoLotto",null,false);
-
+		this.identificativoLotto.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS);
 		this.idPaTransazione = factory.getInputFieldFactory().createText("idPaTrans","operazione.search.idPaTransazione",null,false);
-		
+		this.idPaTransazione.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS);
 		this.codiceErrore = factory.getInputFieldFactory().createSelectList("codiceErrore","operazione.search.codiceErrore",null,false);
 		this.codiceErrore.setDefaultValue(new org.openspcoop2.generic_project.web.input.SelectItem("*", ("commons.label.qualsiasi")));
 
