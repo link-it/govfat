@@ -84,10 +84,10 @@ public class LoggerManager {
 			batchAccettazioneFatturaLogger = LoggerWrapperFactory.getLogger("batch.accettazioneFattura");
 
 		if(batchWorkFlowFatturaLogger == null)
-			batchWorkFlowFatturaLogger = Logger.getLogger("batch.workFlowFattura");
+			batchWorkFlowFatturaLogger = LoggerWrapperFactory.getLogger("batch.workFlowFattura");
 
 		if(batchSpedizioneFatturaAttivaLogger == null)
-			batchSpedizioneFatturaAttivaLogger = Logger.getLogger("batch.spedizioneFatturaAttiva");
+			batchSpedizioneFatturaAttivaLogger = LoggerWrapperFactory.getLogger("batch.spedizioneFatturaAttiva");
 
 		if(batchConsegnaComunicazioneUscitaLogger == null)
 			batchConsegnaComunicazioneUscitaLogger = LoggerWrapperFactory.getLogger("batch.consegnaComunicazioneUscita");
