@@ -42,7 +42,6 @@ import java.io.Serializable;
  * &lt;complexType name="FatturaElettronica">
  * 		&lt;sequence>
  * 			&lt;element name="formatoTrasmissione" type="{http://www.govmix.org/proxy/fatturapa/orm}FormatoTrasmissioneType" minOccurs="1" maxOccurs="1"/>
- * 			&lt;element name="fatturazioneAttiva" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="identificativoSdi" type="{http://www.govmix.org/proxy/fatturapa/orm}integer" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="dataRicezione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="nomeFile" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
@@ -98,7 +97,6 @@ import java.io.Serializable;
 @XmlType(name = "FatturaElettronica", 
   propOrder = {
   	"formatoTrasmissione",
-  	"fatturazioneAttiva",
   	"_decimalWrapper_identificativoSdi",
   	"dataRicezione",
   	"nomeFile",
@@ -180,18 +178,6 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
 
   public void setFormatoTrasmissione(org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType formatoTrasmissione) {
     this.formatoTrasmissione = formatoTrasmissione;
-  }
-
-  public boolean isFatturazioneAttiva() {
-    return this.fatturazioneAttiva;
-  }
-
-  public boolean getFatturazioneAttiva() {
-    return this.fatturazioneAttiva;
-  }
-
-  public void setFatturazioneAttiva(boolean fatturazioneAttiva) {
-    this.fatturazioneAttiva = fatturazioneAttiva;
   }
 
   public java.lang.Integer getIdentificativoSdi() {
@@ -608,10 +594,6 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
 
   @XmlElement(name="formatoTrasmissione",required=true,nillable=false)
   protected FormatoTrasmissioneType formatoTrasmissione;
-
-  @javax.xml.bind.annotation.XmlSchemaType(name="boolean")
-  @XmlElement(name="fatturazioneAttiva",required=true,nillable=false)
-  protected boolean fatturazioneAttiva;
 
   @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.Decimal2String.class)
   @javax.xml.bind.annotation.XmlSchemaType(name="integer")

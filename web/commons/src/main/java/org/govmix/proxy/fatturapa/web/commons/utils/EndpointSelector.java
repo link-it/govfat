@@ -56,6 +56,7 @@ public class EndpointSelector {
 		this.dipartimentoBD = new DipartimentoBD(log, connection, autoCommit);
 		this.registroBD = new RegistroBD(log, connection, autoCommit);
 		this.log = log;
+		this.endpoints = new HashMap<String, Endpoint>();
 	}
 	public Endpoint findEndpoint(FatturaElettronica fattura) throws Exception {
 		this.log.debug("Cerco endpoint per fattura Id-SdI["+fattura.getIdentificativoSdi()+"] posizione["+fattura.getPosizione()+"] con destinatario ["+fattura.getCodiceDestinatario()+"]");

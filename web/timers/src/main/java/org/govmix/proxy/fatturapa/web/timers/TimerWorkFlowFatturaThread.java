@@ -18,29 +18,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.govmix.proxy.fatturapa.web.timers.connettori.impl;
+package org.govmix.proxy.fatturapa.web.timers;
 
-import org.slf4j.Logger;
-import org.govmix.proxy.fatturapa.orm.TracciaSDI;
-import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
-import org.govmix.proxy.fatturapa.web.timers.connettori.IConnettore;
+import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 
-public class ConnettoreNOP implements IConnettore {
+/**
+ * Thread per la gestione della Consegna Fattura
+ * 
+ *  
+ * @author Giovanni Bussu (bussu@link.it)
+ * @author $Author: gbussu $
+ * @version $Rev: 9747 $, $Date: 2014-03-10 11:47:43 +0100 (Mon, 10 Mar 2014) $
+ */
+public class TimerWorkFlowFatturaThread  extends AbstractTimerThread {
 
 	@Override
-	public void process(TracciaSDI comunicazione, Logger log)
-			throws Exception {
-		log.info("NOP eseguita");
+	public String getIdModulo() {
+		return TimerWorkFlowFattura.ID_MODULO;
 	}
 
 	@Override
-	public StatoConsegnaType getStatoConsegna() {
-		return StatoConsegnaType.CONSEGNATA;
+	public AbstractTimerLib getTimerLib() throws Exception {
+		return new TimerWorkFlowFatturaLib(this.limit,LoggerManager.getBatchWorkFlowFatturaLogger(),this.logQuery);
 	}
-
-	@Override
-	public String getDettaglio() {
-		return null;
-	}
-
 }

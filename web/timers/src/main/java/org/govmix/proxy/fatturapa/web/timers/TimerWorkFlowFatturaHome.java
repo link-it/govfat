@@ -18,15 +18,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.govmix.proxy.fatturapa.web.timers.connettori;
+package org.govmix.proxy.fatturapa.web.timers;
 
-import org.slf4j.Logger;
-import org.govmix.proxy.fatturapa.orm.TracciaSDI;
-import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
+import java.rmi.RemoteException;
 
-public interface IConnettore {
+import javax.ejb.CreateException;
+import javax.ejb.EJBHome;
 
-	public void process(TracciaSDI comunicazione, Logger log) throws Exception;
-	public StatoConsegnaType getStatoConsegna();
-	public String getDettaglio();
+/**
+ * Classe Home di {@link TimerAccettazioneFattura}
+ *
+ * @author Giovanni Bussu
+ * @author $Author: gbussu $
+ */
+
+public interface TimerWorkFlowFatturaHome extends EJBHome {	
+    
+    /**
+     * Crea un EJBean di tipo {@link TimerAccettazioneFattura}.
+     *
+     * @return un EJBean di tipo {@link TimerAccettazioneFattura}.
+     * 
+     */
+    public TimerWorkFlowFattura create() throws CreateException, RemoteException;
+
 }

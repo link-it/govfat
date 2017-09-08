@@ -28,8 +28,7 @@ import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.AllegatoFatturaBD;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.AbstractFatturaConverter;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FPA12Converter;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FatturaV10Converter;
@@ -37,8 +36,7 @@ import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FatturaV11Conver
 
 public class ConsegnaFattura {
 
-	private FatturaPassivaBD fatturaPassivaBD;
-	private FatturaAttivaBD fatturaAttivaBD;
+	private FatturaBD fatturaBD;
 	private AllegatoFatturaBD allegatoBD;
 	private boolean validazioneDAOAbilitata;
 	private Logger log;
@@ -46,16 +44,14 @@ public class ConsegnaFattura {
 	public ConsegnaFattura(Logger log, boolean validazioneDaoAbilitata) throws Exception {
 		this.log = log;
 		this.validazioneDAOAbilitata = validazioneDaoAbilitata;
-		this.fatturaPassivaBD = new FatturaPassivaBD(this.log);
-		this.fatturaAttivaBD = new FatturaAttivaBD(this.log);
+		this.fatturaBD = new FatturaBD(this.log);
 		this.allegatoBD = new AllegatoFatturaBD(this.log);
 	}
 
 	public ConsegnaFattura(Logger log, boolean validazioneDaoAbilitata, Connection conn, boolean autocommit) throws Exception {
 		this.log = log;
 		this.validazioneDAOAbilitata = validazioneDaoAbilitata;
-		this.fatturaPassivaBD = new FatturaPassivaBD(this.log, conn, autocommit);
-		this.fatturaAttivaBD = new FatturaAttivaBD(this.log, conn, autocommit);
+		this.fatturaBD = new FatturaBD(this.log, conn, autocommit);
 		this.allegatoBD = new AllegatoFatturaBD(this.log, conn, autocommit);
 	}
 
@@ -79,10 +75,10 @@ public class ConsegnaFattura {
 		FatturaElettronica fatturaElettronica = converter.getFatturaElettronica();
 		List<AllegatoFattura> allegatiLst = converter.getAllegati();
 
-		IdFattura idFattura = this.fatturaPassivaBD.convertToId(fatturaElettronica);
+		IdFattura idFattura = this.fatturaBD.convertToId(fatturaElettronica);
 
 		if(this.validazioneDAOAbilitata) {
-			this.fatturaPassivaBD.validate(fatturaElettronica);
+			this.fatturaBD.validate(fatturaElettronica);
 			if(allegatiLst != null) {
 				for(AllegatoFattura allegato: allegatiLst) {
 					allegato.setIdFattura(idFattura);
@@ -91,11 +87,7 @@ public class ConsegnaFattura {
 			}	
 		}
 		
-		if(params.isFatturazioneAttiva()) {
-			this.fatturaAttivaBD.createFatturaAttiva(fatturaElettronica);
-		} else {
-			this.fatturaPassivaBD.createFatturaPassiva(fatturaElettronica);
-		}
+		this.fatturaBD.create(fatturaElettronica);
 
 		if(allegatiLst != null) {
 			for(AllegatoFattura allegato: allegatiLst) {

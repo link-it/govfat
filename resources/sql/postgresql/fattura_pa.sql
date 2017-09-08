@@ -29,6 +29,7 @@ CREATE TABLE lotti
 	xml BYTEA NOT NULL,
 	fatturazione_attiva BOOLEAN NOT NULL,
 	stato_elaborazione_in_uscita VARCHAR(255),
+	data_ultima_elaborazione TIMESTAMP,
 	data_ricezione DATE NOT NULL,
 	stato_inserimento VARCHAR(255) NOT NULL,
 	stato_consegna VARCHAR(255) NOT NULL,
@@ -46,7 +47,7 @@ CREATE TABLE lotti
 	CONSTRAINT chk_lotti_3 CHECK (stato_inserimento IN ('NON_INSERITO','ERRORE_INSERIMENTO','INSERITO')),
 	CONSTRAINT chk_lotti_4 CHECK (stato_consegna IN ('NON_CONSEGNATA','IN_RICONSEGNA','ERRORE_CONSEGNA','CONSEGNATA')),
 	CONSTRAINT chk_lotti_5 CHECK (stato_protocollazione IN ('NON_PROTOCOLLATA','PROTOCOLLATA_IN_ELABORAZIONE','ERRORE_PROTOCOLLAZIONE','PROTOCOLLATA')),
-	CONSTRAINT chk_lotti_6 CHECK (stato_elaborazione_in_uscita IN ('NON_FIRMATO','ERRORE_FIRMA','FIRMA_OK','ERRORE_PROTOCOLLAZIONE','PROTOCOLLAZIONE_OK','ERRORE_SPEDIZIONE','SPEDIZIONE_OK','SPEDIZIONE_NON_ATTIVA')),	-- unique constraints
+	CONSTRAINT chk_lotti_6 CHECK (stato_elaborazione_in_uscita IN ('NON_FIRMATO','FIRMA_IN_PROGRESS','ERRORE_FIRMA','FIRMA_OK','PROTOCOLLAZIONE_IN_PROGRESS','ERRORE_PROTOCOLLAZIONE','PROTOCOLLAZIONE_OK','ERRORE_SPEDIZIONE','SPEDIZIONE_OK','SPEDIZIONE_NON_ATTIVA')),
 	-- unique constraints
 	CONSTRAINT unique_lotti_1 UNIQUE (identificativo_sdi),
 	-- fk/pk keys constraints
@@ -196,6 +197,7 @@ CREATE SEQUENCE seq_fatture start 1 increment 1 maxvalue 9223372036854775807 min
 CREATE TABLE fatture
 (
 	formato_trasmissione VARCHAR(255) NOT NULL,
+	fatturazione_attiva BOOLEAN NOT NULL,
 	identificativo_sdi INT NOT NULL,
 	data_ricezione TIMESTAMP NOT NULL,
 	nome_file VARCHAR(50) NOT NULL,
@@ -285,6 +287,7 @@ CREATE TABLE tracce_sdi
 	nome_file VARCHAR(50) NOT NULL,
 	data TIMESTAMP NOT NULL,
 	id_egov VARCHAR(255) NOT NULL,
+	content_type VARCHAR(255) NOT NULL,
 	raw_data BYTEA,
 	stato_protocollazione VARCHAR(255) NOT NULL,
 	data_protocollazione TIMESTAMP,

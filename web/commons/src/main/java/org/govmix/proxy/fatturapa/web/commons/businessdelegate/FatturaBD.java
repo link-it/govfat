@@ -64,6 +64,27 @@ public class FatturaBD extends BaseBD {
 		this(LoggerWrapperFactory.getLogger(FatturaBD.class));
 	}
 
+	public void create(FatturaElettronica fattura) throws ServiceException {
+		try {
+			this.service.create(fattura);
+		} catch (NotImplementedException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public void validate(FatturaElettronica fattura) throws Exception {
+		try {
+
+			this.service.validate(fattura);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la validate: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la validate: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
 	public FatturaElettronica getById(long idFisico) throws ServiceException, NotFoundException {
 		try {
 			return ((IDBFatturaElettronicaService)this.service).get(idFisico);

@@ -58,28 +58,6 @@ public class FatturaPassivaBD extends FatturaBD {
 		this(LoggerWrapperFactory.getLogger(FatturaPassivaBD.class));
 	}
 
-	public void createFatturaPassiva(FatturaElettronica fattura) throws ServiceException {
-		try {
-			fattura.setFatturazioneAttiva(false);
-			this.service.create(fattura);
-		} catch (NotImplementedException e) {
-			throw new ServiceException(e);
-		}
-	}
-	
-	public void validate(FatturaElettronica fattura) throws Exception {
-		try {
-
-			this.service.validate(fattura);
-		} catch (ServiceException e) {
-			this.log.error("Errore durante la validate: " + e.getMessage(), e);
-			throw new Exception(e);
-		} catch (NotImplementedException e) {
-			this.log.error("Errore durante la validate: " + e.getMessage(), e);
-			throw new Exception(e);
-		}
-	}
-
 	public FatturaPassivaFilter newFilter() {
 		return new FatturaPassivaFilter(this.service);
 	}
@@ -131,7 +109,7 @@ public class FatturaPassivaBD extends FatturaBD {
 		FatturaPassivaFilter filter = this.newFilter();
 		filter.setModalitaPush(true);
 		filter.setConsegnaContestuale(contestuale);
-		filter.setDataRicezioneMin(date);
+		filter.setDataRicezioneMax(date);
 		List<StatoConsegnaType> statiConsegna = new ArrayList<StatoConsegnaType>();
 		statiConsegna.add(StatoConsegnaType.NON_CONSEGNATA);
 		statiConsegna.add(StatoConsegnaType.IN_RICONSEGNA);
@@ -163,7 +141,7 @@ public class FatturaPassivaBD extends FatturaBD {
 
 	private FatturaPassivaFilter getFattureDaAccettareFilter(Date date) {
 		FatturaPassivaFilter filter = this.newFilter();
-		filter.setDataRicezioneMin(date);
+		filter.setDataRicezioneMax(date);
 		filter.setDaAccettareAutomaticamente(true);
 		return filter;
 	}

@@ -106,6 +106,7 @@ public class LottoBD extends BaseBD {
 		IExpression expression = this.service.newExpression();
 		expression.lessEquals(LottoFatture.model().DATA_RICEZIONE, dataRicezione);
 		expression.equals(LottoFatture.model().STATO_INSERIMENTO, StatoInserimentoType.NON_INSERITO);
+		expression.equals(LottoFatture.model().FATTURAZIONE_ATTIVA, false);
 		return expression;
 	}
 

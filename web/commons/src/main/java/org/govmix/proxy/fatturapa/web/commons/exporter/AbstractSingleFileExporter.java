@@ -61,7 +61,14 @@ public abstract class AbstractSingleFileExporter<T, K> {
 	public static final String PARAMETRO_ACTION_NOTIFICA_DT = "dt";
 	public static final String PARAMETRO_ACTION_SCARTO = "sc";
     public static final String PARAMETRO_ACTION_PCC_RIALLINEAMENTO = "pccDf";
-    public static final String PARAMETRO_ACTION_COMUNICAZIONE = "com";
+    public static final String PARAMETRO_ACTION_COMUNICAZIONE_FATTURA_USCITA = "com_fu";
+    public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_SCARTO = "com_ns";
+    public static final String PARAMETRO_ACTION_COMUNICAZIONE_RICEVUTA_CONSEGNA = "com_rc";
+    public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_MANCATA_CONSEGNA = "com_nmc";
+    public static final String PARAMETRO_ACTION_COMUNICAZIONE_ATTESTAZIONE_TRASMISSIONE_FATTURA = "com_atf";
+    public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_ESITO_COMMITTENTE = "com_nec";
+    public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE = "com_ndtt";
+    public static final String PARAMETRO_ACTION_COMUNICAZIONE_AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO = "com_atir";
 
 	protected Logger log;
 	private IUtenteServiceSearch utenteSearchDAO;

@@ -40,10 +40,14 @@ public enum StatoElaborazioneType implements IEnumeration , Serializable , Clone
 
 	@javax.xml.bind.annotation.XmlEnumValue("NON_FIRMATO")
 	NON_FIRMATO ("NON_FIRMATO"),
+	@javax.xml.bind.annotation.XmlEnumValue("FIRMA_IN_PROGRESS")
+	FIRMA_IN_PROGRESS ("FIRMA_IN_PROGRESS"),
 	@javax.xml.bind.annotation.XmlEnumValue("ERRORE_FIRMA")
 	ERRORE_FIRMA ("ERRORE_FIRMA"),
 	@javax.xml.bind.annotation.XmlEnumValue("FIRMA_OK")
 	FIRMA_OK ("FIRMA_OK"),
+	@javax.xml.bind.annotation.XmlEnumValue("PROTOCOLLAZIONE_IN_PROGRESS")
+	PROTOCOLLAZIONE_IN_PROGRESS ("PROTOCOLLAZIONE_IN_PROGRESS"),
 	@javax.xml.bind.annotation.XmlEnumValue("ERRORE_PROTOCOLLAZIONE")
 	ERRORE_PROTOCOLLAZIONE ("ERRORE_PROTOCOLLAZIONE"),
 	@javax.xml.bind.annotation.XmlEnumValue("PROTOCOLLAZIONE_OK")

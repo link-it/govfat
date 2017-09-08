@@ -121,7 +121,6 @@ public class JDBCFatturaElettronicaServiceImpl extends JDBCFatturaElettronicaSer
 		// Object fatturaElettronica
 		sqlQueryObjectInsert.addInsertTable(this.getFatturaElettronicaFieldConverter().toTable(FatturaElettronica.model()));
 		sqlQueryObjectInsert.addInsertField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().FORMATO_TRASMISSIONE,false),"?");
-		sqlQueryObjectInsert.addInsertField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().FATTURAZIONE_ATTIVA,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().IDENTIFICATIVO_SDI,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DATA_RICEZIONE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().NOME_FILE,false),"?");
@@ -165,7 +164,6 @@ public class JDBCFatturaElettronicaServiceImpl extends JDBCFatturaElettronicaSer
 		org.openspcoop2.utils.jdbc.IKeyGeneratorObject keyGenerator = this.getFatturaElettronicaFetch().getKeyGeneratorObject(FatturaElettronica.model());
 		long id = jdbcUtilities.insertAndReturnGeneratedKey(sqlQueryObjectInsert, keyGenerator, jdbcProperties.isShowSql(),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(fatturaElettronica.getFormatoTrasmissione(),FatturaElettronica.model().FORMATO_TRASMISSIONE.getFieldType()),
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(fatturaElettronica.getFatturazioneAttiva(),FatturaElettronica.model().FATTURAZIONE_ATTIVA.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(fatturaElettronica.getIdentificativoSdi(),FatturaElettronica.model().IDENTIFICATIVO_SDI.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(fatturaElettronica.getDataRicezione(),FatturaElettronica.model().DATA_RICEZIONE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(fatturaElettronica.getNomeFile(),FatturaElettronica.model().NOME_FILE.getFieldType()),
@@ -305,8 +303,6 @@ public class JDBCFatturaElettronicaServiceImpl extends JDBCFatturaElettronicaSer
 		java.util.List<JDBCObject> lstObjects_fatturaElettronica = new java.util.ArrayList<JDBCObject>();
 		sqlQueryObjectUpdate.addUpdateField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().FORMATO_TRASMISSIONE,false), "?");
 		lstObjects_fatturaElettronica.add(new JDBCObject(fatturaElettronica.getFormatoTrasmissione(), FatturaElettronica.model().FORMATO_TRASMISSIONE.getFieldType()));
-		sqlQueryObjectUpdate.addUpdateField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().FATTURAZIONE_ATTIVA,false), "?");
-		lstObjects_fatturaElettronica.add(new JDBCObject(fatturaElettronica.getFatturazioneAttiva(), FatturaElettronica.model().FATTURAZIONE_ATTIVA.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().IDENTIFICATIVO_SDI,false), "?");
 		lstObjects_fatturaElettronica.add(new JDBCObject(fatturaElettronica.getIdentificativoSdi(), FatturaElettronica.model().IDENTIFICATIVO_SDI.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DATA_RICEZIONE,false), "?");
