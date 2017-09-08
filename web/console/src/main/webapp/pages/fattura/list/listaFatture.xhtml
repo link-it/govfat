@@ -131,7 +131,7 @@
 				<!-- Data scadenza -->
 				<rich:column styleClass="#{itemMetadata.dataScadenza.tableColumnStyleClass}">
 					<f:facet name="header">
-						<h:outputText value="#{itemMetadata.dataScadenza.label}" rendered="#{not empty itemMetadata.dataScadenza.label}" styleClass="#{itemMetadata.dataScadenza.labelStyleClass}" />
+						<h:outputText value="#{itemMetadata.dataScadenza.label}" rendered="#{not empty itemMetadata.dataScadenza.label}" styleClass="#{itemMetadata.dataScadenza.tableHeaderLabelStyleClass}" />
 					</f:facet>
 
 					<h:outputText id="#{itemMetadata.dataScadenza.name}NoValue" value="#{item.dataScadenzaAssente.value}" styleClass="#{itemMetadata.dataScadenza.valueStyleClass}"
@@ -149,7 +149,7 @@
 				<!-- Notifica EC (Icona) -->
 				<rich:column style="text-align: center;">
 					<f:facet name="header">
-						<h:outputText value="#{itemMetadata.notificaEC.label}" />
+						<h:outputText value="#{itemMetadata.notificaEC.label}"  styleClass="columnHeaderLabel"/>
 					</f:facet>
 					 
 					<h:panelGroup>
@@ -167,7 +167,7 @@
 					<!-- Notifica DT (Icona) -->
 				<rich:column style="text-align: center;">
 					<f:facet name="header">
-						<h:outputText value="#{itemMetadata.notificaDT.label}" />
+						<h:outputText value="#{itemMetadata.notificaDT.label}" styleClass="columnHeaderLabel" />
 					</f:facet>
 					 
 					<h:panelGroup>
@@ -179,7 +179,7 @@
 				<!-- XML (Icona) -->
 				<rich:column style="text-align: center;">
 					<f:facet name="header">
-						<h:outputText value="#{itemMetadata.xml.label}" />
+						<h:outputText value="#{itemMetadata.xml.label}" styleClass="columnHeaderLabel" />
 					</f:facet>
 					 
 					<h:panelGroup>
@@ -192,7 +192,7 @@
 				<!-- PDF (Icona) -->
 				<rich:column style="text-align: center;">
 					<f:facet name="header">
-						<h:outputText value="#{itemMetadata.pdf.label}" />
+						<h:outputText value="#{itemMetadata.pdf.label}"  styleClass="columnHeaderLabel"/>
 					</f:facet>
 					 <h:panelGroup>
 					 	<h:commandLink id="visualizzaPdfLink" target="_blank" action="#{item.visualizzaPdf}" rendered="#{not empty item.pdf.href}">
