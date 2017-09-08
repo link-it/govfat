@@ -69,6 +69,7 @@ import java.io.Serializable;
  * 			&lt;element name="xml" type="{http://www.w3.org/2001/XMLSchema}base64Binary" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="fatturazioneAttiva" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="statoElaborazioneInUscita" type="{http://www.govmix.org/proxy/fatturapa/orm}StatoElaborazioneType" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="dataUltimaElaborazione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="dataRicezione" type="{http://www.govmix.org/proxy/fatturapa/orm}date" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="statoInserimento" type="{http://www.govmix.org/proxy/fatturapa/orm}StatoInserimentoType" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="statoConsegna" type="{http://www.govmix.org/proxy/fatturapa/orm}StatoConsegnaType" minOccurs="1" maxOccurs="1"/>
@@ -120,6 +121,7 @@ import java.io.Serializable;
   	"xml",
   	"fatturazioneAttiva",
   	"statoElaborazioneInUscita",
+  	"dataUltimaElaborazione",
   	"dataRicezione",
   	"statoInserimento",
   	"statoConsegna",
@@ -415,6 +417,14 @@ public class LottoFatture extends org.openspcoop2.utils.beans.BaseBean implement
     this.statoElaborazioneInUscita = statoElaborazioneInUscita;
   }
 
+  public java.util.Date getDataUltimaElaborazione() {
+    return this.dataUltimaElaborazione;
+  }
+
+  public void setDataUltimaElaborazione(java.util.Date dataUltimaElaborazione) {
+    this.dataUltimaElaborazione = dataUltimaElaborazione;
+  }
+
   public java.util.Date getDataRicezione() {
     return this.dataRicezione;
   }
@@ -679,6 +689,11 @@ public class LottoFatture extends org.openspcoop2.utils.beans.BaseBean implement
 
   @XmlElement(name="statoElaborazioneInUscita",required=false,nillable=false)
   protected StatoElaborazioneType statoElaborazioneInUscita;
+
+  @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.DateTime2String.class)
+  @javax.xml.bind.annotation.XmlSchemaType(name="dateTime")
+  @XmlElement(name="dataUltimaElaborazione",required=false,nillable=false,type=java.lang.String.class)
+  protected java.util.Date dataUltimaElaborazione;
 
   @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.Date2String.class)
   @javax.xml.bind.annotation.XmlSchemaType(name="date")

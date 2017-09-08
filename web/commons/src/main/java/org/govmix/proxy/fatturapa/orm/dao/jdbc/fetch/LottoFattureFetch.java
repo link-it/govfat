@@ -109,6 +109,8 @@ public class LottoFattureFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "fatturazione_attiva", LottoFatture.model().FATTURAZIONE_ATTIVA.getFieldType()));
 				setParameter(object, "set_value_statoElaborazioneInUscita", String.class,
 					jdbcParameterUtilities.readParameter(rs, "stato_elaborazione_in_uscita", LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA.getFieldType())+"");
+				setParameter(object, "setDataUltimaElaborazione", LottoFatture.model().DATA_ULTIMA_ELABORAZIONE.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "data_ultima_elaborazione", LottoFatture.model().DATA_ULTIMA_ELABORAZIONE.getFieldType()));
 				setParameter(object, "setDataRicezione", LottoFatture.model().DATA_RICEZIONE.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "data_ricezione", LottoFatture.model().DATA_RICEZIONE.getFieldType()));
 				setParameter(object, "set_value_statoInserimento", String.class,
@@ -203,6 +205,8 @@ public class LottoFattureFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"fatturazioneAttiva"));
 				setParameter(object, "set_value_statoElaborazioneInUscita", String.class,
 					this.getObjectFromMap(map,"statoElaborazioneInUscita"));
+				setParameter(object, "setDataUltimaElaborazione", LottoFatture.model().DATA_ULTIMA_ELABORAZIONE.getFieldType(),
+					this.getObjectFromMap(map,"dataUltimaElaborazione"));
 				setParameter(object, "setDataRicezione", LottoFatture.model().DATA_RICEZIONE.getFieldType(),
 					this.getObjectFromMap(map,"dataRicezione"));
 				setParameter(object, "set_value_statoInserimento", String.class,

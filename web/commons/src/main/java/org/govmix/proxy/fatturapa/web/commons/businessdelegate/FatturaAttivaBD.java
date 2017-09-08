@@ -21,10 +21,14 @@
 package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 
 import java.sql.Connection;
+import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
+import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaAttivaFilter;
+import org.openspcoop2.generic_project.beans.UpdateField;
+import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 
@@ -43,16 +47,18 @@ public class FatturaAttivaBD extends FatturaBD {
 		this(Logger.getLogger(FatturaAttivaBD.class));
 	}
 
-	public void createFatturaAttiva(FatturaElettronica fattura) throws ServiceException {
+	public FatturaAttivaFilter newFilter() {
+		return new FatturaAttivaFilter(this.service);
+	}
+
+	public void updateStatoElaborazioneInUscita(FatturaElettronica fattura, StatoElaborazioneType stato) throws ServiceException, NotFoundException {
 		try {
-			fattura.setFatturazioneAttiva(true);
-			this.service.create(fattura);
+			this.service.updateFields(this.convertToId(fattura),
+					new UpdateField(FatturaElettronica.model().LOTTO_FATTURE.STATO_ELABORAZIONE_IN_USCITA, stato),
+					new UpdateField(FatturaElettronica.model().LOTTO_FATTURE.DATA_ULTIMA_ELABORAZIONE, new Date()));
 		} catch (NotImplementedException e) {
 			throw new ServiceException(e);
 		}
-	}
-
-	public FatturaAttivaFilter newFilter() {
-		return new FatturaAttivaFilter(this.service);
+		
 	}
 }

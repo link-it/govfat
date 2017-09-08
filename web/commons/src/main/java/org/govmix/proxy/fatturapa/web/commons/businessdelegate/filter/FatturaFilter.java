@@ -83,7 +83,7 @@ public class FatturaFilter extends AbstractFilter {
 			}
 
 			if(this.fatturazioneAttiva != null) {
-				expression.equals(FatturaElettronica.model().FATTURAZIONE_ATTIVA, this.fatturazioneAttiva);
+				expression.equals(FatturaElettronica.model().LOTTO_FATTURE.FATTURAZIONE_ATTIVA, this.fatturazioneAttiva);
 			}
 			
 			if(this.dataRicezioneMin != null) {

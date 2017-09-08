@@ -418,8 +418,10 @@
 	<xsd:simpleType name="StatoElaborazioneType">
 		<xsd:restriction base="xsd:string">
 			<xsd:enumeration value="NON_FIRMATO" />
+			<xsd:enumeration value="FIRMA_IN_PROGRESS" />
 			<xsd:enumeration value="ERRORE_FIRMA" />
 			<xsd:enumeration value="FIRMA_OK" />
+			<xsd:enumeration value="PROTOCOLLAZIONE_IN_PROGRESS" />
 			<xsd:enumeration value="ERRORE_PROTOCOLLAZIONE" />
 			<xsd:enumeration value="PROTOCOLLAZIONE_OK" />
 			<xsd:enumeration value="ERRORE_SPEDIZIONE" />
@@ -589,183 +591,7 @@
 			<xsd:element name="idTrasmissioneEsito" type="xsd:long" />
 		</xsd:sequence>
 	</xsd:complexType>
-	
-	
-	<!--xsd:complexType name="ComunicazioneSdi">
-		<xsd:annotation>
-			<xsd:appinfo>
-				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
-					<linkit:interface crud="true" id="id-comunicazione" />
-					<linkit:sql-table-mapping generate-sql="true"
-						name="comunicazioni_sdi" on-delete-cascade="false">
-						<linkit:sql-table-unique create-index="true">
-							<linkit:sql-table-unique-field name="identificativoSdi" />
-							<linkit:sql-table-unique-field name="tipoComunicazione" />
-							<linkit:sql-table-unique-field name="progressivo" />
-						</linkit:sql-table-unique>
-					</linkit:sql-table-mapping>
-				</linkit:generator>
-			</xsd:appinfo>
-		</xsd:annotation>
-		<xsd:sequence>
-			<xsd:element name="identificativoSdi" type="IdentificativoSdIType"/>
-			<xsd:element name="tipoComunicazione" type="TipoComunicazioneType"/>
-			<xsd:element name="progressivo" type="xsd:positiveInteger"/>
-			<xsd:element name="dataRicezione" type="DataFatturaType"/>
-			<xsd:element name="nomeFile" type="NomeFileType"/>
-			<xsd:element name="messageId" type="MessageIdType" />
-			<xsd:element maxOccurs="unbounded" minOccurs="0" ref="Metadato"/>
-		</xsd:sequence>
-	</xsd:complexType>
-	
-	<xsd:complexType name="Documento">
-		<xsd:annotation>
-			<xsd:appinfo>
-				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
-					<linkit:interface crud="true" id="id-documento" />
-					<linkit:sql-table-mapping generate-sql="true"
-						name="documenti" on-delete-cascade="false">
-					</linkit:sql-table-mapping>
-				</linkit:generator>
-			</xsd:appinfo>
-		</xsd:annotation>
-		<xsd:sequence>
-			<xsd:element name="contentType" type="xsd:string"/>
-			<xsd:element name="rawData" type="xsd:base64Binary"/>
-			<xsd:element name="statoConsegna" type="StatoConsegnaType"/>
-			<xsd:element minOccurs="0" name="dataConsegna" type="xsd:dateTime"/>
-			<xsd:element minOccurs="0" name="dettaglioConsegna" type="xsd:string"/>
-			<xsd:element name="idComunicazioneSdI" type="id-comunicazione" minOccurs="0">
-				<xsd:annotation>
-					<xsd:appinfo>
-						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
-							<linkit:sql-id-mapping object-name="ComunicazioneSdi"
-								object-type="ComunicazioneSdi" relationship="reversed" />
-						</linkit:generator>
-					</xsd:appinfo>
-				</xsd:annotation>
-			</xsd:element>
-		</xsd:sequence>
-	</xsd:complexType>
-	
-	<xsd:complexType name="LottoFattureAttive">
-		<xsd:annotation>
-			<xsd:appinfo>
-				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
-					<linkit:interface crud="true" id="id-lotto" />
-					<linkit:sql-table-mapping generate-sql="true"
-						name="lotti_fatture_attive" on-delete-cascade="false">
-						<linkit:sql-table-unique create-index="true">
-							<linkit:sql-table-unique-column name="id_comunicazione_sdi" />
-						</linkit:sql-table-unique>
-					</linkit:sql-table-mapping>
-				</linkit:generator>
-			</xsd:appinfo>
-		</xsd:annotation>
-		<xsd:sequence>
-			<xsd:element name="identificativoSdi" type="IdentificativoSdIType" minOccurs="0"/>
-			<xsd:element name="idComunicazioneSdI" type="id-comunicazione" minOccurs="0">
-				<xsd:annotation>
-					<xsd:appinfo>
-						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
-							<linkit:sql-id-mapping object-name="ComunicazioneSdi"
-								object-type="ComunicazioneSdi" relationship="reversed" />
-						</linkit:generator>
-					</xsd:appinfo>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="cedentePrestatoreDenominazione" type="String80LatinType">
-				<xsd:annotation>
-					<xsd:appinfo>
-						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
-							<linkit:sql-column-mapping name="cp_denominazione" />
-						</linkit:generator>
-					</xsd:appinfo>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="cedentePrestatorePaese" type="NazioneType">
-				<xsd:annotation>
-					<xsd:appinfo>
-						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
-							<linkit:sql-column-mapping name="cp_nazione" />
-						</linkit:generator>
-					</xsd:appinfo>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="cedentePrestatoreCodiceFiscale" type="CodiceType">
-				<xsd:annotation>
-					<xsd:appinfo>
-						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
-							<linkit:sql-column-mapping name="cp_codicefiscale" />
-						</linkit:generator>
-					</xsd:appinfo>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="cessionarioCommittenteDenominazione"
-				type="String80LatinType">
-				<xsd:annotation>
-					<xsd:appinfo>
-						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
-							<linkit:sql-column-mapping name="cc_denominazione" />
-						</linkit:generator>
-					</xsd:appinfo>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="cessionarioCommittentePaese" type="NazioneType"
-				minOccurs="0">
-				<xsd:annotation>
-					<xsd:appinfo>
-						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
-							<linkit:sql-column-mapping name="cc_nazione" />
-						</linkit:generator>
-					</xsd:appinfo>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="cessionarioCommittenteCodiceFiscale"
-				type="CodiceType" minOccurs="0">
-				<xsd:annotation>
-					<xsd:appinfo>
-						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
-							<linkit:sql-column-mapping name="cc_codicefiscale" />
-						</linkit:generator>
-					</xsd:appinfo>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="terzoIntermediarioOSoggettoEmittenteDenominazione"
-				type="String80LatinType" minOccurs="0">
-				<xsd:annotation>
-					<xsd:appinfo>
-						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
-							<linkit:sql-column-mapping name="se_denominazione" />
-						</linkit:generator>
-					</xsd:appinfo>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="terzoIntermediarioOSoggettoEmittentePaese"
-				type="NazioneType" minOccurs="0">
-				<xsd:annotation>
-					<xsd:appinfo>
-						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
-							<linkit:sql-column-mapping name="se_nazione" />
-						</linkit:generator>
-					</xsd:appinfo>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="terzoIntermediarioOSoggettoEmittenteCodiceFiscale"
-				type="CodiceType" minOccurs="0">
-				<xsd:annotation>
-					<xsd:appinfo>
-						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
-							<linkit:sql-column-mapping name="se_codicefiscale" />
-						</linkit:generator>
-					</xsd:appinfo>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="codiceDestinatario" type="CodiceDestinatarioType" />
-			<xsd:element name="statoElaborazione" type="StatoElaborazioneType" />
-		</xsd:sequence>
-	</xsd:complexType-->
-	
+		
 	<xsd:complexType name="Metadato">
 		<xsd:annotation>
 			<xsd:appinfo>
@@ -992,6 +818,7 @@
 			<xsd:element name="xml" type="xsd:base64Binary" />
 			<xsd:element name="fatturazioneAttiva" type="xsd:boolean" />
 			<xsd:element name="statoElaborazioneInUscita" type="StatoElaborazioneType" minOccurs="0"/>
+			<xsd:element name="dataUltimaElaborazione" type="xsd:dateTime" minOccurs="0" />
 			<xsd:element name="dataRicezione" type="DataFatturaType" />
 			<xsd:element name="statoInserimento" type="StatoInserimentoType" />
 			<xsd:element name="statoConsegna" type="StatoConsegnaType" />
@@ -1077,7 +904,6 @@
 		</xsd:annotation>
 		<xsd:sequence>
 			<xsd:element name="formatoTrasmissione" type="FormatoTrasmissioneType" />
-			<xsd:element name="fatturazioneAttiva" type="xsd:boolean" />
 			<xsd:element name="identificativoSdi" type="IdentificativoSdIType" />
 			<xsd:element name="dataRicezione" type="xsd:dateTime" />
 			<xsd:element name="nomeFile" type="NomeFileType" />

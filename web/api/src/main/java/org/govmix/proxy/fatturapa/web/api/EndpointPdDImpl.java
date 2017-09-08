@@ -62,6 +62,7 @@ public class EndpointPdDImpl implements EndpointPdD {
 		this.riceviNotifica = new RiceviNotifica(this.log);
 		this.lottoBD = new LottoBD(log);
 		this.lottoBD.setValidate(WebApiProperties.getInstance().isValidazioneDAOAbilitata());
+		this.riceviComunicazioneSdi = new RiceviComunicazioneSdI(this.log);
 		this.log.info("Inizializzazione endpoint PdD completata");
 	}
 
@@ -124,16 +125,7 @@ public class EndpointPdDImpl implements EndpointPdD {
 				this.log.warn("Lotto con identificativo SdI ["+identificativoSDI+"] esiste gia', inserimento non avvenuto");
 			} else {
 				
-				String idEgov = null;
-				if(!headers.getRequestHeaders().keySet().isEmpty()) {
-					this.log.debug("Headers: ");
-					for(String header : headers.getRequestHeaders().keySet()){
-						this.log.debug(header + ": " + headers.getRequestHeaders().getFirst(header));
-						if(header.equalsIgnoreCase(ID_EGOV)) {
-							idEgov = headers.getRequestHeaders().getFirst(header);
-						}
-					}
-				}
+				String idEgov = getIdEgov(headers);
 
 				ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(formatoFatturaPA,
 						identificativoSDI, nomeFile,
@@ -206,6 +198,20 @@ public class EndpointPdDImpl implements EndpointPdD {
 		return Response.ok().build();
 	}
 
+	private String getIdEgov(HttpHeaders headers) {
+		String idEgov = null;
+		if(!headers.getRequestHeaders().keySet().isEmpty()) {
+			this.log.debug("Headers: ");
+			for(String header : headers.getRequestHeaders().keySet()){
+				this.log.debug(header + ": " + headers.getRequestHeaders().getFirst(header));
+				if(header.equalsIgnoreCase(ID_EGOV)) {
+					idEgov = headers.getRequestHeaders().getFirst(header);
+				}
+			}
+		}
+		return idEgov;
+	}
+
 	@Override
 	public Response postConsegnaNotificaDT(InputStream notifica) {
 		this.log.info("Invoke riceviNotificaDT");
@@ -226,7 +232,7 @@ public class EndpointPdDImpl implements EndpointPdD {
 	}
 	
 	@Override
-	public Response riceviComunicazioniSdI(String tipo, Integer X_SDI_IdentificativoSDI, Integer X_SDI_IdentificativoSDIFattura, String X_SDI_NomeFile, String contentType, InputStream comunicazioneStream) {
+	public Response riceviComunicazioniSdI(String tipo, Integer X_SDI_IdentificativoSDI, Integer X_SDI_IdentificativoSDIFattura, String X_SDI_NomeFile, String contentType, HttpHeaders headers, InputStream comunicazioneStream) {
 		this.log.info("Invoke riceviComunicazioniSdi");
 
 		try {
@@ -244,7 +250,11 @@ public class EndpointPdDImpl implements EndpointPdD {
 			tracciaSdi.setContentType(contentType);
 			tracciaSdi.setNomeFile(X_SDI_NomeFile);
 			tracciaSdi.setRawData(IOUtils.readBytesFromStream(comunicazioneStream));
+			
 			tracciaSdi.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
+			tracciaSdi.setTentativiProtocollazione(0);
+			
+			tracciaSdi.setIdEgov(getIdEgov(headers));
 			//TODO lista di metadati da salvare
 			Metadato metadato = new Metadato();
 			metadato.setNome(HEADER_IDENTIFICATIVO_SDI);

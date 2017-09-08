@@ -35,7 +35,6 @@ import javax.ws.rs.core.Response;
 public interface EndpointPdD {
 
 	@POST
-//	@Consumes("text/xml")
 	@Path("riceviLotto")
 	Response postRiceviLotto(@HeaderParam("X-SDI-FormatoFatturaPA") String X_SDI_FormatoFatturaPA, 
 			@HeaderParam("X-SDI-IdentificativoSdI") String X_SDI_IdentificativoSDIString, 
@@ -77,6 +76,7 @@ public interface EndpointPdD {
 			@HeaderParam("X-SDI-IdentificativoSdIFattura") Integer X_SDI_IdentificativoSDIFattura,
 			@HeaderParam("X-SDI-NomeFile") String X_SDI_NomeFile,
 			@HeaderParam("Content-Type") String contentType,
+			@Context HttpHeaders headers,
 			InputStream comunicazioneStream);
 
 

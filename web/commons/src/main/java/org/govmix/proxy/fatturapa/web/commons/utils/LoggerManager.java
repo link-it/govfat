@@ -43,6 +43,8 @@ public class LoggerManager {
 	private static Logger batchConsegnaEsitoLogger  = null;
 	private static Logger batchInserimentoFatturaLogger = null;
 	private static Logger batchAccettazioneFatturaLogger = null;
+	private static Logger batchWorkFlowFatturaLogger = null;
+	private static Logger batchSpedizioneFatturaAttivaLogger = null;
 	private static Logger batchSpedizioneEsitiLogger = null;
 	private static Logger batchSpedizioneNotificheLogger = null;
 	private static Logger batchRispedizioneMessaggiLogger = null;
@@ -79,6 +81,12 @@ public class LoggerManager {
 
 		if(batchAccettazioneFatturaLogger == null)
 			batchAccettazioneFatturaLogger = Logger.getLogger("batch.accettazioneFattura");
+
+		if(batchWorkFlowFatturaLogger == null)
+			batchWorkFlowFatturaLogger = Logger.getLogger("batch.workFlowFattura");
+
+		if(batchSpedizioneFatturaAttivaLogger == null)
+			batchSpedizioneFatturaAttivaLogger = Logger.getLogger("batch.spedizioneFatturaAttiva");
 
 		if(batchConsegnaComunicazioneUscitaLogger == null)
 			batchConsegnaComunicazioneUscitaLogger = Logger.getLogger("batch.consegnaComunicazioneUscita");
@@ -221,6 +229,14 @@ public class LoggerManager {
 	public static Logger getDaoLogger() {
 		init();
 		return daoLogger;
+	}
+
+	public static Logger getBatchWorkFlowFatturaLogger() {
+		return batchWorkFlowFatturaLogger;
+	}
+
+	public static Logger getBatchSpedizioneFatturaAttivaLogger() {
+		return batchSpedizioneFatturaAttivaLogger;
 	}
 
 

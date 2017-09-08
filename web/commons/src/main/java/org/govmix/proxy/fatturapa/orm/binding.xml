@@ -163,6 +163,7 @@
     <value name="xml" field="xml" usage="required"/>
     <value name="fatturazioneAttiva" field="fatturazioneAttiva" usage="required"/>
     <value name="statoElaborazioneInUscita" field="statoElaborazioneInUscita" usage="optional" enum-value-method="toString"/>
+    <value name="dataUltimaElaborazione" field="dataUltimaElaborazione" usage="optional"/>
     <value name="dataRicezione" field="dataRicezione" usage="required"/>
     <value name="statoInserimento" field="statoInserimento" usage="required" enum-value-method="toString"/>
     <value name="statoConsegna" field="statoConsegna" usage="required" enum-value-method="toString"/>
@@ -195,7 +196,6 @@
   <mapping name="FatturaElettronica" class="org.govmix.proxy.fatturapa.orm.FatturaElettronica">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
     <value name="formatoTrasmissione" field="formatoTrasmissione" usage="required" enum-value-method="toString"/>
-    <value name="fatturazioneAttiva" field="fatturazioneAttiva" usage="required"/>
     <value name="identificativoSdi" field="identificativoSdi" usage="required"/>
     <value name="dataRicezione" field="dataRicezione" usage="required"/>
     <value name="nomeFile" field="nomeFile" usage="required"/>
