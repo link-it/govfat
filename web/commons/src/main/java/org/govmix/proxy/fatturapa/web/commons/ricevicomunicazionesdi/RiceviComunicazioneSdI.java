@@ -26,14 +26,22 @@ import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.TracciaSdIBD;
-import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 
 public class RiceviComunicazioneSdI {
 
 	private Logger log;
+	private TracciaSdIBD tracciaBD;
 
 	public RiceviComunicazioneSdI(Logger log) throws Exception {
 		this.log = log;
+		this.tracciaBD = new TracciaSdIBD(this.log);
+
+	}
+
+	public RiceviComunicazioneSdI(Logger log, Connection connection, boolean autocommit) throws Exception {
+		this.log = log;
+		this.tracciaBD = new TracciaSdIBD(this.log, connection, false);
+
 	}
 
 	public static TipoComunicazioneType getTipoComunicazione(String tipo) throws Exception {
@@ -56,27 +64,6 @@ public class RiceviComunicazioneSdI {
 	}
 
 	public void ricevi(TracciaSDI tracciaSdI) throws Exception {
-	
-		
-		Connection connection = null;
-		try {
-			connection = DAOFactory.getInstance().getConnection();
-			connection.setAutoCommit(false);
-
-			TracciaSdIBD tracciaBD = new TracciaSdIBD(this.log, connection, false);
-
-			tracciaBD.insert(tracciaSdI);
-			
-			connection.commit();
-		} catch(Exception e) {
-			connection.rollback();
-			throw e;
-		} finally {
-			if(connection != null) {
-				try {
-					connection.close();
-				} catch(Exception e) {}
-			}
-		}
+		this.tracciaBD.insert(tracciaSdI);
 	}
 }

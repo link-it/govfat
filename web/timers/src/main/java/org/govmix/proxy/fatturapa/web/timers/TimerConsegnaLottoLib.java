@@ -37,7 +37,7 @@ import org.apache.soap.encoding.soapenc.Base64;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoArchivioInvioFatturaType;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFatturePassiveBD;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.sonde.Sonda;
 import org.govmix.proxy.fatturapa.web.commons.utils.CostantiProtocollazione;
@@ -74,7 +74,7 @@ public class TimerConsegnaLottoLib extends AbstractTimerLib {
 		Connection connection = null;
 		try {
 			connection = DAOFactory.getInstance().getConnection();
-			LottoBD lottoBD = new LottoBD(log, connection, false);
+			LottoFatturePassiveBD lottoBD = new LottoFatturePassiveBD(log, connection, false);
 
 			Date limitDate = new Date();
 			this.log.info("Cerco lotti di fatture da consegnare");

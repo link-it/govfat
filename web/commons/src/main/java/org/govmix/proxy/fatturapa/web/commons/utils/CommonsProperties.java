@@ -20,6 +20,7 @@
  */
 package org.govmix.proxy.fatturapa.web.commons.utils;
 
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -34,6 +35,7 @@ import java.util.Properties;
  */
 public class CommonsProperties {
 
+	/** XSL **/
 	private String xslFatturaSDI10;
 	private String xslFatturaSDI11;
 	private String xslFatturaV12;
@@ -42,7 +44,12 @@ public class CommonsProperties {
 	private String xslScartoEC;
 	private String xslPccRiallineamento;
 	private String xslBaseDir;
+	
+	private URL invioFatturaURL;
+	private String invioFatturaUsername;
+	private String invioFatturaPassword;
 
+	private String idEgovHeader;
 
 	private static final String propertiesPath = "/webCommons.properties";
 	/** Copia Statica */
@@ -108,6 +115,12 @@ public class CommonsProperties {
 		this.xslScartoEC = getProperty("xsl.scartoEC", true);
 		this.xslPccRiallineamento = getProperty("xsl.PccRiallineamento", true);
 		this.xslBaseDir = getProperty("xsl.baseDir", true);
+		
+		this.invioFatturaURL = new URL(this.getProperty("invioFattura.url", true));
+		this.invioFatturaUsername = this.getProperty("invioFattura.username", false);
+		this.invioFatturaPassword = this.getProperty("invioFattura.password", false);
+
+		this.idEgovHeader = this.getProperty("header.idegov", true);
 
 	}
 
@@ -206,6 +219,20 @@ public class CommonsProperties {
 
 	public void setXslFatturaV12(String xslFatturaV12) {
 		this.xslFatturaV12 = xslFatturaV12;
+	}
+
+	public URL getInvioFatturaURL() {
+		return invioFatturaURL;
+	}
+	public String getInvioFatturaUsername() {
+		return invioFatturaUsername;
+	}
+	public String getInvioFatturaPassword() {
+		return invioFatturaPassword;
+	}
+
+	public String getIdEgovHeader() {
+		return idEgovHeader;
 	}
 
 

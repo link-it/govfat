@@ -18,7 +18,16 @@ public class FatturaAttivaFilter extends FatturaFilter {
 	private List<StatoElaborazioneType> statoElaborazioneList;
 	private Date dataUltimaElaborazioneMin;
 	private Date dataUltimaElaborazioneMax;
+	private String protocollo;
 	
+	public String getProtocollo() {
+		return protocollo;
+	}
+
+	public void setProtocollo(String protocollo) {
+		this.protocollo = protocollo;
+	}
+
 	public FatturaAttivaFilter(IExpressionConstructor expressionConstructor) {
 		super(expressionConstructor, true);
 	}
@@ -30,6 +39,10 @@ public class FatturaAttivaFilter extends FatturaFilter {
 			
 			if(this.statoElaborazioneList != null) {
 				expression.in(FatturaElettronica.model().LOTTO_FATTURE.STATO_ELABORAZIONE_IN_USCITA, this.statoElaborazioneList);
+			}
+			
+			if(this.protocollo != null) {
+				expression.equals(FatturaElettronica.model().PROTOCOLLO, this.protocollo);
 			}
 			
 			if(this.dataUltimaElaborazioneMin != null) {

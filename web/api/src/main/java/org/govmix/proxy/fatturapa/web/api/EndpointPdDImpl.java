@@ -43,11 +43,11 @@ import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaPar
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaUtils;
 import org.govmix.proxy.fatturapa.web.commons.riceviNotificaDT.RiceviNotifica;
 import org.govmix.proxy.fatturapa.web.commons.ricevicomunicazionesdi.RiceviComunicazioneSdI;
+import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 
 public class EndpointPdDImpl implements EndpointPdD {
 
-	private static final String ID_EGOV = "X-SDI-DirectVM-IDMessaggioRichiesta";
 	private RiceviNotifica riceviNotifica;
 	private LottoBD lottoBD;
 	private static final String HEADER_IDENTIFICATIVO_SDI = "X-SDI-IdentificativoSdI";
@@ -198,13 +198,13 @@ public class EndpointPdDImpl implements EndpointPdD {
 		return Response.ok().build();
 	}
 
-	private String getIdEgov(HttpHeaders headers) {
+	private String getIdEgov(HttpHeaders headers) throws Exception {
 		String idEgov = null;
 		if(!headers.getRequestHeaders().keySet().isEmpty()) {
 			this.log.debug("Headers: ");
 			for(String header : headers.getRequestHeaders().keySet()){
 				this.log.debug(header + ": " + headers.getRequestHeaders().getFirst(header));
-				if(header.equalsIgnoreCase(ID_EGOV)) {
+				if(header.equalsIgnoreCase(CommonsProperties.getInstance(log).getIdEgovHeader())) {
 					idEgov = headers.getRequestHeaders().getFirst(header);
 				}
 			}
@@ -232,7 +232,7 @@ public class EndpointPdDImpl implements EndpointPdD {
 	}
 	
 	@Override
-	public Response riceviComunicazioniSdI(String tipo, Integer X_SDI_IdentificativoSDI, Integer X_SDI_IdentificativoSDIFattura, String X_SDI_NomeFile, String contentType, HttpHeaders headers, InputStream comunicazioneStream) {
+	public Response riceviComunicazioniSdI(Integer X_SDI_IdentificativoSDI, String azione, String X_SDI_NomeFile, String contentType, HttpHeaders headers, InputStream comunicazioneStream) {
 		this.log.info("Invoke riceviComunicazioniSdi");
 
 		try {
@@ -240,11 +240,11 @@ public class EndpointPdDImpl implements EndpointPdD {
 				throw new Exception("La comunicazione ricevuta in ingresso e' null");
 			}
 			
-			TipoComunicazioneType tipoComunicazione = RiceviComunicazioneSdI.getTipoComunicazione(tipo);
+			TipoComunicazioneType tipoComunicazione = RiceviComunicazioneSdI.getTipoComunicazione(azione);
 
 			TracciaSDI tracciaSdi = new TracciaSDI();
 			
-			tracciaSdi.setIdentificativoSdi(X_SDI_IdentificativoSDIFattura);
+			tracciaSdi.setIdentificativoSdi(X_SDI_IdentificativoSDI);
 			tracciaSdi.setTipoComunicazione(tipoComunicazione);
 			tracciaSdi.setData(new Date());
 			tracciaSdi.setContentType(contentType);

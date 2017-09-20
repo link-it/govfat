@@ -20,8 +20,6 @@
  */
 package org.govmix.proxy.fatturapa.web.api.utils;
 
-import java.net.URL;
-
 import org.govmix.proxy.pcc.fatture.utils.AbstractProperties;
 
 public class WebApiProperties extends AbstractProperties{
@@ -40,19 +38,6 @@ public class WebApiProperties extends AbstractProperties{
 	private boolean validazioneDAOAbilitata;
 	private Integer limitGetIdFatture;
 
-	private URL invioFatturaURL;
-	private String invioFatturaUsername;
-	private String invioFatturaPassword;
-	private String invioFatturaIdCodice;
-	private String invioFatturaIdPaese;
-
-
-	public String getInvioFatturaIdCodice() {
-		return invioFatturaIdCodice;
-	}
-	public String getInvioFatturaIdPaese() {
-		return invioFatturaIdPaese;
-	}
 	private WebApiProperties(String path) throws Exception {
 		super(path);
 		initWebApiProperties(path);
@@ -73,12 +58,6 @@ public class WebApiProperties extends AbstractProperties{
 		} else {
 			this.validazioneDAOAbilitata = true;
 		}
-		this.invioFatturaURL = this.getURLProperty("org.govmix.proxy.fatturapa.web.api.trasmittente.invioFattura.url", false);
-		this.invioFatturaUsername = this.getProperty("org.govmix.proxy.fatturapa.web.api.trasmittente.invioFattura.username", false);
-		this.invioFatturaPassword = this.getProperty("org.govmix.proxy.fatturapa.web.api.trasmittente.invioFattura.password", false);
-		this.invioFatturaIdCodice = this.getProperty("org.govmix.proxy.fatturapa.web.api.trasmittente.invioFattura.idCodice", false);
-		this.invioFatturaIdPaese = this.getProperty("org.govmix.proxy.fatturapa.web.api.trasmittente.invioFattura.idPaese", false);
-
 	}
 	public Integer getLimitGetIdFatture() {
 		return this.limitGetIdFatture;
@@ -86,15 +65,6 @@ public class WebApiProperties extends AbstractProperties{
 
 	public boolean isValidazioneDAOAbilitata() {
 		return this.validazioneDAOAbilitata;
-	}
-	public URL getInvioFatturaURL() {
-		return invioFatturaURL;
-	}
-	public String getInvioFatturaUsername() {
-		return invioFatturaUsername;
-	}
-	public String getInvioFatturaPassword() {
-		return invioFatturaPassword;
 	}
 	
 }

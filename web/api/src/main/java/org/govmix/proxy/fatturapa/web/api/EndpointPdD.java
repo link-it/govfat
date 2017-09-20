@@ -26,7 +26,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
@@ -70,10 +69,9 @@ public interface EndpointPdD {
 	Response postConsegnaNotificaDT(InputStream notificaStream);
 	
 	@POST
-	@Path("riceviComunicazione/{tipo}")
-	Response riceviComunicazioniSdI(@PathParam("tipo") String tipo,
-			@HeaderParam("X-SDI-IdentificativoSdI") Integer X_SDI_IdentificativoSDI,
-			@HeaderParam("X-SDI-IdentificativoSdIFattura") Integer X_SDI_IdentificativoSDIFattura,
+	@Path("riceviComunicazione")
+	Response riceviComunicazioniSdI(@HeaderParam("X-SDI-IdentificativoSdI") Integer X_SDI_IdentificativoSDI,
+			@HeaderParam("X-OpenSPCoop2-Azione") String azione,
 			@HeaderParam("X-SDI-NomeFile") String X_SDI_NomeFile,
 			@HeaderParam("Content-Type") String contentType,
 			@Context HttpHeaders headers,

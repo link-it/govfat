@@ -20,17 +20,32 @@
  */
 package org.govmix.proxy.fatturapa.web.timers;
 
+import java.io.ByteArrayOutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.cxf.helpers.IOUtils;
 import org.apache.log4j.Logger;
+import org.apache.soap.encoding.soapenc.Base64;
+import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
+import org.govmix.proxy.fatturapa.orm.constants.FormatoArchivioInvioFatturaType;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFatturePassiveBD;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.sonde.Sonda;
+import org.govmix.proxy.fatturapa.web.commons.utils.CostantiProtocollazione;
+import org.govmix.proxy.fatturapa.web.commons.utils.Endpoint;
+import org.govmix.proxy.fatturapa.web.commons.utils.EndpointSelector;
 
 /**
- * Implementazione dell'interfaccia {@link TimerConsegnaFattura}.
+ * Implementazione dell'interfaccia {@link TimerConsegnaLotto}.
  * 
  * 
  *  
@@ -39,15 +54,15 @@ import org.govmix.proxy.fatturapa.web.commons.sonde.Sonda;
  * @version $Rev: 9747 $, $Date: 2014-03-10 11:47:43 +0100 (Mon, 10 Mar 2014) $
  */
 
-public class TimerSpedizioneFatturaAttivaLib extends AbstractTimerLib {
+public class TimerProtocollazioneRicevutaLib extends AbstractTimerLib {
 
-	public TimerSpedizioneFatturaAttivaLib(int limit, Logger log, boolean logQuery) throws Exception{
+	public TimerProtocollazioneRicevutaLib(int limit, Logger log, boolean logQuery) throws Exception{
 		super(limit, log, logQuery);
+
 	}
 
 	@Override
 	public void execute() throws Exception {
-
 		Connection connection = null;
 		try {
 			connection = DAOFactory.getInstance().getConnection();

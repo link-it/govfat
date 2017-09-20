@@ -32,6 +32,7 @@ import org.govmix.proxy.fatturapa.orm.IdTraccia;
 import org.govmix.proxy.fatturapa.orm.PccTraccia;
 import org.govmix.proxy.fatturapa.orm.dao.IPccTracciaServiceSearch;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
+import org.govmix.proxy.fatturapa.web.commons.exporter.PDFCreator.TipoXSL;
 import org.govmix.proxy.fatturapa.web.commons.exporter.exception.ExportException;
 import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.openspcoop2.generic_project.exception.MultipleResultException;
@@ -58,6 +59,11 @@ public class PccTracciaResponseSingleFileExporter extends AbstractSingleFileXMLE
 	protected String getNomeRisorsaXLST(PccTraccia object)
 			throws Exception {
 		return CommonsProperties.getInstance(this.log).getXslPccRiallineamento();
+	}
+
+	@Override
+	protected TipoXSL getTipoXsl(PccTraccia object) {
+		return TipoXSL.PCC_RIALLINEAMENTO;
 	}
 
 	@Override
@@ -123,6 +129,5 @@ public class PccTracciaResponseSingleFileExporter extends AbstractSingleFileXMLE
 		idTraccia.setIdTraccia(Long.parseLong(id));
 		return convertToObject(idTraccia);
 	}
-
 
 }

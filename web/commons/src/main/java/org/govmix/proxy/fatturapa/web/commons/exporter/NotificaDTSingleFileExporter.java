@@ -32,6 +32,7 @@ import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.dao.INotificaDecorrenzaTerminiServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCNotificaDecorrenzaTerminiServiceSearch;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
+import org.govmix.proxy.fatturapa.web.commons.exporter.PDFCreator.TipoXSL;
 import org.govmix.proxy.fatturapa.web.commons.exporter.exception.ExportException;
 import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.openspcoop2.generic_project.exception.ExpressionException;
@@ -64,6 +65,13 @@ public class NotificaDTSingleFileExporter extends AbstractSingleFileXMLExporter<
 			throws Exception {
 		return CommonsProperties.getInstance(this.log).getXslNotificaDT();
 	}
+	
+
+	@Override
+	protected TipoXSL getTipoXsl(NotificaDecorrenzaTermini object) {
+		return TipoXSL.NOTIFICA_DT;
+	}
+
 
 	@Override
 	public NotificaDecorrenzaTermini convertToObject(Long id) throws ExportException {
@@ -146,6 +154,5 @@ public class NotificaDTSingleFileExporter extends AbstractSingleFileXMLExporter<
 			throws ExportException {
 		return convertToObject(Long.valueOf(id));
 	}
-
 
 }

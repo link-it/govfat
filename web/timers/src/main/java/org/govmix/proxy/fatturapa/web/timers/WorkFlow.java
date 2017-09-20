@@ -1,66 +1,136 @@
 package org.govmix.proxy.fatturapa.web.timers;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.cxf.helpers.IOUtils;
 import org.apache.log4j.Logger;
-import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
+import org.apache.soap.encoding.soapenc.Base64;
+import org.govmix.proxy.fatturapa.orm.IdLotto;
+import org.govmix.proxy.fatturapa.orm.LottoFatture;
+import org.govmix.proxy.fatturapa.orm.constants.FormatoArchivioInvioFatturaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaAttivaFilter;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
+import org.govmix.proxy.fatturapa.web.commons.utils.CostantiProtocollazione;
+import org.govmix.proxy.fatturapa.web.commons.utils.Endpoint;
+import org.govmix.proxy.fatturapa.web.commons.utils.EndpointSelector;
 
-public class WorkFlow implements IWorkFlow {
+public class WorkFlow implements IWorkFlow<LottoFatture> {
 
 	private Logger log;
 	private int limit;
-	private FatturaAttivaBD fatturaAttivaBD;
+	private LottoBD lottoBD;
 	private Date limitDate;
-//	private EndpointSelector endpointSelector;
-	
+	private EndpointSelector endpointSelector;
+
 	@Override
 	public void init(Logger log, Connection connection, int limit) throws Exception {
 		this.log = log;
 		this.limit = limit;
 		this.limitDate = new Date();
-		this.fatturaAttivaBD = new FatturaAttivaBD(log, connection, false);
-//		this.endpointSelector = new EndpointSelector(log, connection, true);
+		this.lottoBD = new LottoBD(log, connection, false);
+		this.endpointSelector = new EndpointSelector(log, connection, false);
 	}
 
 	@Override
 	public long count() throws Exception {
-		FatturaAttivaFilter filter = this.getFilter();
-		return this.fatturaAttivaBD.count(filter);
+		List<StatoElaborazioneType> lst = new ArrayList<StatoElaborazioneType>();
+		lst.add(StatoElaborazioneType.NON_FIRMATO);
+		lst.add(StatoElaborazioneType.FIRMA_OK);
+		return this.lottoBD.countByStatiElaborazioneInUscita(lst);
 	}
 
 	@Override
-	public List<FatturaElettronica> getNextListaFatture() throws Exception {
-		FatturaAttivaFilter filter = this.getFilter();
-		filter.setOffset(0);
-		filter.setLimit(this.limit);
-		return this.fatturaAttivaBD.findAll(filter);
-	}
-
-	private FatturaAttivaFilter getFilter() {
-		FatturaAttivaFilter filter = this.fatturaAttivaBD.newFilter();
-		filter.getStatoElaborazioneList().add(StatoElaborazioneType.NON_FIRMATO);
-		filter.getStatoElaborazioneList().add(StatoElaborazioneType.FIRMA_OK);
-		filter.setDataUltimaElaborazioneMax(this.limitDate);
-		return filter;
+	public List<LottoFatture> getNextLista() throws Exception {
+		List<StatoElaborazioneType> lst = new ArrayList<StatoElaborazioneType>();
+		lst.add(StatoElaborazioneType.NON_FIRMATO);
+		lst.add(StatoElaborazioneType.FIRMA_OK);
+		return this.lottoBD.findAllByStatiElaborazioneInUscita(lst, 0, this.limit);
 	}
 
 	@Override
-	public void process(FatturaElettronica fattura) throws Exception {
-		StatoElaborazioneType statoElaborazioneInUscita = fattura.getLottoFatture().getStatoElaborazioneInUscita();
+	public void process(LottoFatture lotto) throws Exception {
+		StatoElaborazioneType statoElaborazioneInUscita = lotto.getStatoElaborazioneInUscita();
 
-		this.log.debug("Elaboro la fattura ["+this.fatturaAttivaBD.convertToId(fattura).toJson()+"]");
+		this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"]");
+		
+		StatoElaborazioneType nextStatoOK = null;
+		StatoElaborazioneType nextStatoKO = null;
 		if(StatoElaborazioneType.NON_FIRMATO.equals(statoElaborazioneInUscita)) {
-			this.fatturaAttivaBD.updateStatoElaborazioneInUscita(fattura, StatoElaborazioneType.FIRMA_IN_PROGRESS);
-			this.log.debug("Elaboro la fattura ["+this.fatturaAttivaBD.convertToId(fattura).toJson()+"], stato ["+statoElaborazioneInUscita+"] -> ["+StatoElaborazioneType.FIRMA_IN_PROGRESS+"]");
+			nextStatoOK = StatoElaborazioneType.FIRMA_IN_PROGRESS;
+			nextStatoKO = StatoElaborazioneType.ERRORE_FIRMA;
+//			this.fatturaAttivaBD.updateStatoElaborazioneInUscita(fattura, StatoElaborazioneType.FIRMA_IN_PROGRESS);
 		} else if(StatoElaborazioneType.FIRMA_OK.equals(statoElaborazioneInUscita)) {
-			this.fatturaAttivaBD.updateStatoElaborazioneInUscita(fattura, StatoElaborazioneType.PROTOCOLLAZIONE_IN_PROGRESS);
-			this.log.debug("Elaboro la fattura ["+this.fatturaAttivaBD.convertToId(fattura).toJson()+"], stato ["+statoElaborazioneInUscita+"] -> ["+StatoElaborazioneType.PROTOCOLLAZIONE_IN_PROGRESS+"]");
+			nextStatoOK = StatoElaborazioneType.PROTOCOLLAZIONE_IN_PROGRESS;
+			nextStatoKO = StatoElaborazioneType.ERRORE_PROTOCOLLAZIONE;
+//			this.fatturaAttivaBD.updateStatoElaborazioneInUscita(fattura, StatoElaborazioneType.PROTOCOLLAZIONE_IN_PROGRESS);
 		}
+		
+		if(nextStatoOK!= null) {
+			
+			Endpoint endpoint = endpointSelector.findEndpoint(lotto);
+			
+			URL urlOriginale = endpoint.getEndpoint().toURL();
+			
+			IdLotto idLotto = this.lottoBD.convertToId(lotto);
+			
+			this.log.debug("Spedisco il lotto di fatture ["+idLotto.toJson()+"] all'endpoint ["+urlOriginale.toString()+"]");
+			
+			URL url = new URL(urlOriginale.toString() + "/protocollazioneLottoFattureAttive");
+
+			URLConnection conn = url.openConnection();
+			HttpURLConnection httpConn = (HttpURLConnection) conn;
+			String errore = null;
+			boolean esitoPositivo = false;
+			String response = null;
+			try{
+				httpConn.setRequestProperty(CostantiProtocollazione.IDENTIFICATIVO_SDI_HEADER_PARAM, ""+lotto.getIdentificativoSdi());
+				httpConn.setRequestProperty(CostantiProtocollazione.NOME_FILE_HEADER_PARAM, ""+lotto.getNomeFile());
+				httpConn.setRequestProperty(CostantiProtocollazione.DESTINATARIO_HEADER_PARAM, lotto.getCodiceDestinatario());
+				if(lotto.getDettaglioConsegna() != null)
+					httpConn.setRequestProperty(CostantiProtocollazione.DETTAGLIO_CONSEGNA_HEADER_PARAM, lotto.getDettaglioConsegna());
+				
+				String ct = FormatoArchivioInvioFatturaType.XML.equals(lotto.getFormatoArchivioInvioFattura()) ? "text/xml" : "application/pkcs7-mime";  
+				httpConn.setRequestProperty("Content-Type", ct);
+
+				if(endpoint.getUsername() != null && endpoint.getPassword()!= null) {
+					String auth = endpoint.getUsername() + ":" + endpoint.getPassword(); 
+					String authentication = "Basic " + Base64.encode(auth.getBytes());
+
+					httpConn.setRequestProperty("Authorization", authentication);
+				}
+
+				httpConn.setDoOutput(true);
+				httpConn.setDoInput(true);
+				
+				httpConn.setRequestMethod("POST");								
+
+				httpConn.getOutputStream().write(lotto.getXml());
+				httpConn.getOutputStream().flush();
+				httpConn.getOutputStream().close();
+				
+				esitoPositivo = httpConn.getResponseCode() < 299;
+				
+				response = IOUtils.readStringFromStream(httpConn.getInputStream());
+				
+				if(esitoPositivo) {
+					this.lottoBD.updateStatoElaborazioneInUscita(idLotto, nextStatoOK);
+					this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+statoElaborazioneInUscita+"] -> ["+nextStatoOK+"]");
+				} else {
+					this.lottoBD.updateStatoElaborazioneInUscita(idLotto, nextStatoKO);
+					this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+statoElaborazioneInUscita+"] -> ["+nextStatoKO+"]");
+				}
+			} catch(Exception e) {
+				this.lottoBD.updateStatoElaborazioneInUscita(idLotto, nextStatoKO);
+				this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+statoElaborazioneInUscita+"] -> ["+nextStatoKO+"]");
+			}
+		}
+
 	}
 
 }

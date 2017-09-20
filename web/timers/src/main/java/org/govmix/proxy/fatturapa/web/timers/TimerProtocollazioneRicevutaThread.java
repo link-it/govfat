@@ -18,25 +18,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.govmix.proxy.fatturapa.orm.dao;
+package org.govmix.proxy.fatturapa.web.timers;
 
-import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
-import org.openspcoop2.generic_project.dao.IServiceSearchWithId;
-import org.openspcoop2.generic_project.exception.NotFoundException;
-import org.openspcoop2.generic_project.exception.NotImplementedException;
-import org.openspcoop2.generic_project.exception.ServiceException;
-import org.govmix.proxy.fatturapa.orm.IdFattura;
+import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 
-
-/** 
-* Service can be used for research objects on the backend of type org.govmix.proxy.fatturapa.orm.FatturaElettronica  
- *
- * @author Giuseppe Papandrea (papandrea@link.it)
+/**
+ * Thread per la gestione della Consegna Lotto
+ * 
+ *  
  * @author Giovanni Bussu (bussu@link.it)
- * @author $Author$
- * @version $Rev$, $Date$
+ * @author $Author: gbussu $
+ * @version $Rev: 9747 $, $Date: 2014-03-10 11:47:43 +0100 (Mon, 10 Mar 2014) $
  */
+public class TimerProtocollazioneRicevutaThread  extends AbstractTimerThread {
 
-public interface IFatturaElettronicaServiceSearch extends IServiceSearchWithId<FatturaElettronica, IdFattura> {
-	public int nativeUpdate(String sql,Object ... param) throws ServiceException,NotFoundException,NotImplementedException;
+	@Override
+	public String getIdModulo() {
+		return TimerProtocollazioneRicevuta.ID_MODULO;
+	}
+
+	@Override
+	public AbstractTimerLib getTimerLib() throws Exception {
+		return new TimerProtocollazioneRicevutaLib(this.limit,LoggerManager.getBatchProtocollazioneRicevutaLogger(),this.logQuery);
+	}
 }

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.converter;
+package org.govmix.proxy.fatturapa.web.commons.converter.notificaesitocommittente;
 
 import java.io.InputStream;
 import java.util.Date;
