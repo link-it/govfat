@@ -236,8 +236,9 @@ public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long,
 				boolean exists = this.service.exists(bean);
 
 				if(exists){
+					String mess = Utils.getInstance().getMessageWithParamsFromResourceBundle("dipartimento.form.dipartimentoEsistente",this.form.getCodice().getValue());
 					throw new InviaException(Utils.getInstance().getMessageFromResourceBundle("dipartimento.form.erroreValidazione") +
-							": " +Utils.getInstance().getMessageWithParamsFromResourceBundle("dipartimento.form.dipartimentoEsistente",this.form.getCodice().getValue()));
+							": " + mess);
 				}
 			} else {
 				oldId = this.selectedElement.getDTO().getId();

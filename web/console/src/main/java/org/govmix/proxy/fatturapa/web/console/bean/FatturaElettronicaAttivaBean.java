@@ -34,6 +34,7 @@ import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
+import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
@@ -93,6 +94,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 	private Text anno = null;
 	private Text causale = null;
 	private Text statoElaborazione = null;
+	private Text statoElaborazioneDettaglio = null;
 	private Text protocollo = null;
 	private DateTime dataConsegna = null;
 	private Text formatoTrasmissione = null;
@@ -120,7 +122,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 
 	//Gruppo informazioni Contenuto Fattura
 	private OutputGroup causaleFattura = null;
-
+	
 	public FatturaElettronicaAttivaBean(){
 		try{
 			this.init();
@@ -176,6 +178,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.causale.setValueStyleClass("whiteSpaceNewLine");
 		this.protocollo = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("protocollo","fattura.protocollo","fattura.protocollo.assente");
 		this.statoElaborazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("statoElaborazione","fattura.statoElaborazione");
+		this.statoElaborazioneDettaglio = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("statoElaborazioneDettaglio","fattura.statoElaborazione");
 		this.formatoTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("formatoTrasmissione","fattura.formatoTrasmissione");
 
 		this.dataProssimaConsegna = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataProssimaConsegna","fattura.dataProssimaConsegna","dd/MM/yyyy HH:mm");
@@ -215,6 +218,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.setField(this.causale);
 		this.setField(this.protocollo);
 		this.setField(this.statoElaborazione);
+		this.setField(this.statoElaborazioneDettaglio);
 		this.setField(this.formatoTrasmissione);
 		this.setField(this.dataProssimaConsegna);
 		//this.setField(this.dataScadenza);
@@ -255,6 +259,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.datiTrasmissione1.addField(this.dataConsegna);
 		this.datiTrasmissione1.addField(this.dataProssimaConsegna);
 		this.datiTrasmissione1.addField(this.statoElaborazione);
+		this.datiTrasmissione1.addField(this.statoElaborazioneDettaglio);
 		this.datiTrasmissione1.addField(this.protocollo);
 
 		this.contenutoFattura = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("contenutoFattura",4);
@@ -395,8 +400,6 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 
 		this.prepareUrls();
 
-		this.posizione.setValue(this.getDTO().getPosizione() + "");
-		this.identificativoSdi.setValue(this.getDTO().getIdentificativoSdi() + "");
 		this.cedentePrestatoreCF.setValue(this.getDTO().getCedentePrestatoreCodiceFiscale());
 		this.cedentePrestatorePaese.setValue(this.getDTO().getCedentePrestatorePaese());
 		this.cessionarioCommittente.setValue(this.getDTO().getCessionarioCommittenteDenominazione());
@@ -432,7 +435,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.anno.setValue(this.getDTO().getAnno() + "");
 		this.causale.setValue(this.getDTO().getCausale());
 
-		this.protocollo.setValue(this.getDTO().getProtocollo());
+		
 		this.dataConsegna.setValue(this.getDTO().getDataConsegna());
 		this.dataProssimaConsegna.setValue(this.getDTO().getDataProssimaConsegna());   
 		this.dataProssimaConsegna.setRendered(false);
@@ -455,25 +458,56 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 
 		StatoElaborazioneType _statoElaborazione = this.getDTO().getLottoFatture() != null ? this.getDTO().getLottoFatture().getStatoElaborazioneInUscita() : null; 
 
+		
 		//		if(this.getDTO().getProtocollo() != null) {
 		//			this.statoConsegna.setValue("fattura.statoConsegna.protocollata");
 		//		} else {
 		if(_statoElaborazione != null) {
 			switch (_statoElaborazione) {
-			case ERRORE_FIRMA:
-			case ERRORE_PROTOCOLLAZIONE:
-			case ERRORE_SPEDIZIONE:
-			case FIRMA_OK:
-			case NON_FIRMATO:
 			case PROTOCOLLAZIONE_OK:
+			case ERRORE_SPEDIZIONE:
 			case SPEDIZIONE_NON_ATTIVA:
 			case SPEDIZIONE_OK:
+			case ERRORE_FIRMA:
+			case ERRORE_PROTOCOLLAZIONE:
+			case FIRMA_OK:
+			case NON_FIRMATO:
 			default:
 				this.statoElaborazione.setValue("fattura.statoElaborazione."+_statoElaborazione.getValue());
 				break;
 			}
 		}
 
+		String valoreProtocollo = null;
+		String valoreIdentificavoSDI = null;
+		String valorePosizione = null;
+		if(_statoElaborazione != null) {
+			switch (_statoElaborazione) {
+			case SPEDIZIONE_OK:
+				valoreProtocollo = this.getDTO().getProtocollo();
+				valoreIdentificavoSDI = this.getDTO().getIdentificativoSdi() + "";
+				valorePosizione = this.getDTO().getPosizione() + "";
+				this.statoElaborazioneDettaglio.setValue("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				break;
+			case PROTOCOLLAZIONE_OK:
+			case ERRORE_SPEDIZIONE:
+			case SPEDIZIONE_NON_ATTIVA:
+				valoreProtocollo = this.getDTO().getProtocollo();
+				this.statoElaborazioneDettaglio.setValue("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				break;
+			case ERRORE_FIRMA:
+			case ERRORE_PROTOCOLLAZIONE:
+			case FIRMA_OK:
+			case NON_FIRMATO:
+			default:
+				this.statoElaborazioneDettaglio.setValue("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				break;
+			}
+		}
+
+		this.posizione.setValue(valorePosizione);
+		this.identificativoSdi.setValue(valoreIdentificavoSDI);
+		this.protocollo.setValue(valoreProtocollo);
 		//		}
 	}
 
@@ -721,7 +755,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 			Text terzoIntermediarioOSoggettoEmittentePaese) {
 		this.terzoIntermediarioOSoggettoEmittentePaese = terzoIntermediarioOSoggettoEmittentePaese;
 	}
-	
+
 
 	public Text getStatoElaborazione() {
 		return statoElaborazione;
@@ -953,8 +987,51 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 
 	public void setListaComunicazioni(List<TracciaSDIBean> listaComunicazioni) {
 		this.listaComunicazioni = listaComunicazioni;
+
+		StatoElaborazioneType _statoElaborazione = this.getDTO().getLottoFatture() != null ? this.getDTO().getLottoFatture().getStatoElaborazioneInUscita() : null;
+		// se sono in stato spedizione_ok e ho comunicazioni
+		if(_statoElaborazione != null && _statoElaborazione.equals(StatoElaborazioneType.SPEDIZIONE_OK) && this.listaComunicazioni != null && this.listaComunicazioni.size() > 0) {
+			boolean found = false;
+			String label = "fattura.statoElaborazione.dettaglio.SPEDIZIONE_OK"; 
+			for (TracciaSDIBean tracciaSDIBean : this.listaComunicazioni) {
+				// ricerca tipo comunicazione lista 1: EC NE DT SE [TODO]
+				if(tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.NOTIFICA_ESITO_COMMITTENTE) 
+						//						||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.NOTIFICA_ESITO_PRESTATORE)
+						||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE)
+						//						||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.NOTIFICA_SCARTO_ESITO_COMMITTENTE)
+						) {
+					label = "fattura.statoElaborazione.dettaglio.SPEDIZIONE_OK." + tracciaSDIBean.getDTO().getTipoComunicazione();
+					found = true;
+					break;
+				}
+			}
+
+			if(!found) {
+				for (TracciaSDIBean tracciaSDIBean : this.listaComunicazioni) {
+					// ricerca tipo comunicazione lista 2: RC NS MC AT
+					if(tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.RICEVUTA_CONSEGNA) 
+							||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.NOTIFICA_SCARTO)
+							||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.NOTIFICA_MANCATA_CONSEGNA)
+							||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO)
+							) {
+						label = "fattura.statoElaborazione.dettaglio.SPEDIZIONE_OK." + tracciaSDIBean.getDTO().getTipoComunicazione();
+						found = true;
+						break;
+					}					
+				}
+			}
+			
+			this.statoElaborazioneDettaglio.setValue(label);
+		}
 	}
 
+	public Text getStatoElaborazioneDettaglio() {
+		return statoElaborazioneDettaglio;
+	}
+
+	public void setStatoElaborazioneDettaglio(Text statoElaborazioneDettaglio) {
+		this.statoElaborazioneDettaglio = statoElaborazioneDettaglio;
+	}
 	
 	
 }
