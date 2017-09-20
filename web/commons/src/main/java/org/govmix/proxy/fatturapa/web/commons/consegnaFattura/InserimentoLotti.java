@@ -45,13 +45,13 @@ public class InserimentoLotti {
 				StatoElaborazioneType stato = null;
 				if(request.getNomeFile().toLowerCase().endsWith("xml")) {
 					if(!this.getDipartimento(request.getDipartimento()).getFirmaAutomatica()){
-						throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO);
+						throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getDipartimento());
 					}
 					type= "XML";
 					stato = StatoElaborazioneType.NON_FIRMATO;
 				} else if(request.getNomeFile().toLowerCase().endsWith("p7m")) {
 					if(this.getDipartimento(request.getDipartimento()).getFirmaAutomatica()){
-						throw new InserimentoLottiException(CODICE.ERRORE_FILE_FIRMATO);
+						throw new InserimentoLottiException(CODICE.ERRORE_FILE_FIRMATO, request.getDipartimento());
 					}
 					type= "P7M";
 					stato = StatoElaborazioneType.FIRMA_OK;

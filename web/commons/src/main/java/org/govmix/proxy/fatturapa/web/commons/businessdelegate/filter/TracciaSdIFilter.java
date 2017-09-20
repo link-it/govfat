@@ -34,6 +34,10 @@ public class TracciaSdIFilter extends AbstractFilter {
 			if(this.id != null) {
 				expression.equals(new CustomField("id", Long.class, "id", this.getRootTable()), this.id);
 			}
+
+			if(this.identificativoSdi != null) {
+				expression.equals(TracciaSDI.model().IDENTIFICATIVO_SDI, this.identificativoSdi);
+			}
 			
 			if(this.tipoComunicazione != null) {
 				expression.equals(TracciaSDI.model().TIPO_COMUNICAZIONE, this.tipoComunicazione);
