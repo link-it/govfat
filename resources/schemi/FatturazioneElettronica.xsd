@@ -527,16 +527,18 @@
 	
 	<xsd:simpleType name="TipoComunicazioneType">
 		<xsd:restriction base="xsd:string">
-<!--		<xsd:enumeration value="FATTURA_INGRESSO" /> -->
-			<xsd:enumeration value="FATTURA_USCITA"/>
-			<xsd:enumeration value="NOTIFICA_SCARTO"/>
-			<xsd:enumeration value="RICEVUTA_CONSEGNA"/>
-			<xsd:enumeration value="NOTIFICA_MANCATA_CONSEGNA"/>
-			<xsd:enumeration value="ATTESTAZIONE_TRASMISSIONE_FATTURA"/>
-			<xsd:enumeration value="NOTIFICA_ESITO_COMMITTENTE"/>
-			<xsd:enumeration value="NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE"/>
-<!--		<xsd:enumeration value="NOTIFICA_DECORRENZA_TERMINI_DESTINATARIO" /> -->
-			<xsd:enumeration value="AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO"/>
+			<!--		<xsd:enumeration value="FATTURA_INGRESSO" /> -->
+			<xsd:enumeration value="FAT_OUT"/>
+			<xsd:enumeration value="FAT_IN"/>
+			<xsd:enumeration value="RC"/>
+			<xsd:enumeration value="NS"/>
+			<xsd:enumeration value="MC"/>
+			<xsd:enumeration value="NE"/>
+			<xsd:enumeration value="MT"/>
+			<xsd:enumeration value="EC"/>
+			<xsd:enumeration value="SE"/>
+			<xsd:enumeration value="DT"/>
+			<xsd:enumeration value="AT"/>
 		</xsd:restriction>
 	</xsd:simpleType>
 	
@@ -877,7 +879,6 @@
 			<xsd:element name="dataProssimaProtocollazione" type="xsd:dateTime" minOccurs="0" />
 			<xsd:element name="tentativiProtocollazione" type="xsd:nonNegativeInteger" />
 			<xsd:element name="dettaglioProtocollazione" type="xsd:string" minOccurs="0" />
-			<xsd:element name="protocollo" type="xsd:string" minOccurs="0" />
 			<xsd:element ref="Metadato" minOccurs="0" maxOccurs="unbounded" />
 		</xsd:sequence>
 	</xsd:complexType>

@@ -47,17 +47,17 @@ public class RiceviComunicazioneSdI {
 	public static TipoComunicazioneType getTipoComunicazione(String tipo) throws Exception {
 		
 		if("RicevutaConsegna".equals(tipo)) {
-			return TipoComunicazioneType.RICEVUTA_CONSEGNA;
+			return TipoComunicazioneType.RC;
 		} else if("NotificaMancataConsegna".equals(tipo)) {
-			return TipoComunicazioneType.NOTIFICA_MANCATA_CONSEGNA;
+			return TipoComunicazioneType.MC;
 		} else if("NotificaScarto".equals(tipo)) {
-			return TipoComunicazioneType.NOTIFICA_SCARTO;
+			return TipoComunicazioneType.NS;
 		} else if("NotificaEsito".equals(tipo)) {
-			return TipoComunicazioneType.NOTIFICA_ESITO_COMMITTENTE;
+			return TipoComunicazioneType.NE;
 		} else if("NotificaDecorrenzaTermini".equals(tipo)) {
-			return TipoComunicazioneType.NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE;
+			return TipoComunicazioneType.DT;
 		} else if("AttestazioneTrasmissioneFattura".equals(tipo)) {
-			return TipoComunicazioneType.ATTESTAZIONE_TRASMISSIONE_FATTURA;
+			return TipoComunicazioneType.AT;
 		} 
 
 		throw new Exception("Tipo ["+tipo+"] non e' un tipo valido per il tipo di comunicazione");

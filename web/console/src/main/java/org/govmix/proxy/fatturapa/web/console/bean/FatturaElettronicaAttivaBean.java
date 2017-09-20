@@ -478,7 +478,11 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 			}
 		}
 
-		String valoreProtocollo = null;
+		
+		// [TODO] Ripristinare dopo test
+		//String valoreProtocollo = null;
+		
+		String valoreProtocollo = this.getDTO().getProtocollo();
 		String valoreIdentificavoSDI = null;
 		String valorePosizione = null;
 		if(_statoElaborazione != null) {
@@ -995,10 +999,10 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 			String label = "fattura.statoElaborazione.dettaglio.SPEDIZIONE_OK"; 
 			for (TracciaSDIBean tracciaSDIBean : this.listaComunicazioni) {
 				// ricerca tipo comunicazione lista 1: EC NE DT SE [TODO]
-				if(tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.NOTIFICA_ESITO_COMMITTENTE) 
-						//						||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.NOTIFICA_ESITO_PRESTATORE)
-						||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE)
-						//						||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.NOTIFICA_SCARTO_ESITO_COMMITTENTE)
+				if(tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.NE) 
+												||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.EC)
+						||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.DT)
+												||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.SE)
 						) {
 					label = "fattura.statoElaborazione.dettaglio.SPEDIZIONE_OK." + tracciaSDIBean.getDTO().getTipoComunicazione();
 					found = true;
@@ -1009,10 +1013,10 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 			if(!found) {
 				for (TracciaSDIBean tracciaSDIBean : this.listaComunicazioni) {
 					// ricerca tipo comunicazione lista 2: RC NS MC AT
-					if(tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.RICEVUTA_CONSEGNA) 
-							||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.NOTIFICA_SCARTO)
-							||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.NOTIFICA_MANCATA_CONSEGNA)
-							||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO)
+					if(tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.RC) 
+							||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.NS)
+							||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.MC)
+							||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.AT)
 							) {
 						label = "fattura.statoElaborazione.dettaglio.SPEDIZIONE_OK." + tracciaSDIBean.getDTO().getTipoComunicazione();
 						found = true;

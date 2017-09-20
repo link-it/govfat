@@ -32,6 +32,9 @@ public class CostantiProtocollazione {
 	public static final String VALUTA_HEADER_PARAM = "X-ProxyFatturaPA-Valuta";
 	public static final String IMPORTO_HEADER_PARAM= "X-ProxyFatturaPA-Importo";
 	public static final String ID_PROTOCOLLO_HEADER_PARAM= "X-ProxyFatturaPA-Id-Protocollo";
+	public static final String NUMERO_PROTOCOLLO_HEADER_PARAM= "X-ProxyFatturaPA-Numero-Protocollo";
+	public static final String ANNO_PROTOCOLLO_HEADER_PARAM= "X-ProxyFatturaPA-Anno-Protocollo";
+	public static final String REGISTRO_PROTOCOLLO_HEADER_PARAM= "X-ProxyFatturaPA-Registro-Protocollo";
 	public static final String MITTENTE_CF_HEADER_PARAM = "X-ProxyFatturaPA-Mittente-CF";
 	public static final String ID_EGOV_HEADER_PARAM = "X-ProxyFatturaPA-ID-EGov";
 	public static final String MITTENTE_RAGIONESOCIALE_HEADER_PARAM = "X-ProxyFatturaPA-Mittente-RagioneSociale";

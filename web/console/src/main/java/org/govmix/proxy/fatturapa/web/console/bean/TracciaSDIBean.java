@@ -148,34 +148,7 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IBean<
 		
 		
 		if(this.getDTO().getTipoComunicazione() != null) {
-			switch (this.getDTO().getTipoComunicazione() ) {
-			case ATTESTAZIONE_TRASMISSIONE_FATTURA:
-				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_ATTESTAZIONE_TRASMISSIONE_FATTURA;
-				break;
-			case AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO:
-				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO;
-				break;
-			case FATTURA_USCITA:
-				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_FATTURA_USCITA;
-				break;
-			case NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE:
-				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE;
-				break;
-			case NOTIFICA_ESITO_COMMITTENTE:
-				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_ESITO_COMMITTENTE;
-				break;
-			case NOTIFICA_MANCATA_CONSEGNA:
-				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_MANCATA_CONSEGNA;
-				break;
-			case NOTIFICA_SCARTO:
-				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_SCARTO;
-				break;
-			case RICEVUTA_CONSEGNA:
-				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_RICEVUTA_CONSEGNA;
-				break;
-			default:
-				break;
-			}
+			actionValue = "com_" + this.getDTO().getTipoComunicazione().toString();
 		}
 
 		String url = context.getExternalContext().getRequestContextPath() 
