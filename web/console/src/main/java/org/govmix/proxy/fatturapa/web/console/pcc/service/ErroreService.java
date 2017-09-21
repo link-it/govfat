@@ -47,9 +47,9 @@ public class ErroreService extends BaseService<ErroreSearchForm> implements IErr
 
 	public ErroreService() {
 		try {
-			this.tracciamentoBD = new PccTracciamentoBD(log);
+			this.tracciamentoBD = new PccTracciamentoBD(ErroreService.log);
 		} catch (Exception e) {
-			log.error("Errore durante la init di ErroreService: " + e.getMessage(),e); 
+			ErroreService.log.error("Errore durante la init di ErroreService: " + e.getMessage(),e); 
 		}
 	}
 
@@ -71,7 +71,7 @@ public class ErroreService extends BaseService<ErroreSearchForm> implements IErr
 
 			return 0;
 		} catch (Exception e) {
-			log.error("Errore durante la _findAll: " + e.getMessage(),e); 
+			ErroreService.log.error("Errore durante la _findAll: " + e.getMessage(),e); 
 			throw new ServiceException(e);
 		}
 	}
@@ -98,9 +98,9 @@ public class ErroreService extends BaseService<ErroreSearchForm> implements IErr
 			
 			return bean;
 		} catch(NotFoundException e){
-			log.debug("Nessuna esito con ID ["+key+"] trovata.");
+			ErroreService.log.debug("Nessuna esito con ID ["+key+"] trovata.");
 		}catch (Exception e) {
-			log.error("Errore durante la findById: " + e.getMessage(),e); 
+			ErroreService.log.error("Errore durante la findById: " + e.getMessage(),e); 
 			throw new ServiceException(e);
 		}
 		
@@ -152,15 +152,17 @@ public class ErroreService extends BaseService<ErroreSearchForm> implements IErr
 
 			return lst;
 		} catch (Exception e) {
-			log.error("Errore durante la _findAll: " + e.getMessage(),e); 
+			ErroreService.log.error("Errore durante la _findAll: " + e.getMessage(),e); 
 			throw new ServiceException(e);
 		}
 	}
 
+	@Override
 	public IdTrasmissioneEsito getIdEsito() {
 		return idEsito;
 	}
 
+	@Override
 	public void setIdEsito(IdTrasmissioneEsito idEsito) {
 		this.idEsito = idEsito;
 	}

@@ -29,7 +29,6 @@ import org.govmix.proxy.fatturapa.orm.PccTracciaTrasmissione;
 import org.govmix.proxy.fatturapa.orm.PccTracciaTrasmissioneEsito;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoTrasmissioneType;
 import org.govmix.proxy.fatturapa.web.console.bean.FatturaElettronicaBean;
-import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.web.factory.FactoryException;
 import org.openspcoop2.generic_project.web.output.DateTime;
 import org.openspcoop2.generic_project.web.output.OutputGroup;
@@ -70,8 +69,8 @@ public class TracciaPccEstesaBean extends TracciaPCCBean{
 	}
 	
 	private void init2() throws FactoryException{
-		this.dataPrimaTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataPrimaTrasmissione","tracciaPcc.dataPrimaTrasmissione","dd/M/yyyy HH:mm:ss");
-		this.dataEsito = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataEsito","tracciaPcc.dataEsito","dd/M/yyyy HH:mm:ss");
+		this.dataPrimaTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataPrimaTrasmissione","tracciaPcc.dataPrimaTrasmissione",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS);
+		this.dataEsito = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataEsito","tracciaPcc.dataEsito",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS);
 		
 		this.operazioneContabile = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("operazioneContabile","tracciaPcc.operazione");
 		this.idEgovTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("idEgovTrasmissione","tracciaPcc.idEgovTrasmissione");
@@ -119,7 +118,7 @@ public class TracciaPccEstesaBean extends TracciaPCCBean{
 
 		
 		// combinare per una stringa migliore
-		String operazione = Utils.getInstance().getMessageFromResourceBundle("pccOperazione.nome." + dto.getOperazione());
+		String operazione = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("pccOperazione.nome." + dto.getOperazione());
 		this.operazioneContabile.setValue(operazione); 
 		
 		// integrazione dei dati

@@ -80,7 +80,7 @@ ParameterizedDataModel<Long, TracciaTrasmissionePCCBean, ITrasmissioneService, P
 					limit = ((SequenceRange)range).getRows();
 				}
 
-				log.debug("Richiesti Record S["+start+"] L["+limit+"]"); 
+				TrasmissioneDM.log.debug("Richiesti Record S["+start+"] L["+limit+"]"); 
 
 				this.getDataProvider().getForm().setStart(start);
 				this.getDataProvider().getForm().setLimit(limit); 
@@ -98,7 +98,7 @@ ParameterizedDataModel<Long, TracciaTrasmissionePCCBean, ITrasmissioneService, P
 				}
 			}
 		}catch (Exception e) {
-			log.error(e,e);
+			TrasmissioneDM.log.error(e,e);
 		}
 
 	}

@@ -371,7 +371,7 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 			Date dataInizio = dataRicezione.getValue();
 			Date dataFine = dataRicezione.getValue2();
 
-			String periodo = dataRicezionePeriodo.getValue() != null ? dataRicezionePeriodo.getValue().getValue() : FatturaElettronicaAttivaSearchForm.DATA_INVIO_PERIODO_ULTIMA_SETTIMANA;
+			String periodo = dataRicezionePeriodo.getValue() != null ? dataRicezionePeriodo.getValue().getValue() : org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_PERIODO_ULTIMA_SETTIMANA;
 
 			Calendar today = Calendar.getInstance();
 			today.set(Calendar.HOUR_OF_DAY, 23);
@@ -380,7 +380,7 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 			today.clear(Calendar.MILLISECOND);
 
 			//ultima settimana
-			if ( FatturaElettronicaAttivaSearchForm.DATA_INVIO_PERIODO_ULTIMA_SETTIMANA.equals(periodo)) {
+			if ( org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_PERIODO_ULTIMA_SETTIMANA.equals(periodo)) {
 				Calendar lastWeek = (Calendar) today.clone();
 				Calendar c = Calendar.getInstance();
 				dataFine = c.getTime();
@@ -389,7 +389,7 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 				lastWeek.add(Calendar.DATE, -7);
 				dataInizio = lastWeek.getTime();
 
-			} else if ( FatturaElettronicaAttivaSearchForm.DATA_INVIO_PERIODO_ULTIMO_MESE.equals( periodo)) {
+			} else if ( org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_PERIODO_ULTIMO_MESE.equals( periodo)) {
 				Calendar lastMonth = (Calendar) today.clone();
 
 				// prendo la data corrente
@@ -401,7 +401,7 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 				lastMonth.add(Calendar.DATE, -30);
 				dataInizio = lastMonth.getTime();
 
-			} else if ( FatturaElettronicaAttivaSearchForm.DATA_INVIO_PERIODO_ULTIMI_TRE_MESI.equals( periodo)) {
+			} else if ( org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_PERIODO_ULTIMI_TRE_MESI.equals( periodo)) {
 				Calendar lastyear = (Calendar) today.clone();
 
 				dataFine = Calendar.getInstance().getTime();

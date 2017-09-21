@@ -112,7 +112,7 @@ public class ScadenzaDM extends BaseDataModel<Long, ScadenzaPccBean, IScadenzaSe
 				}
 			}
 		}catch (Exception e) {
-			log.error(e,e);
+			ScadenzaDM.log.error(e,e);
 		}
 
 	}
@@ -146,10 +146,10 @@ public class ScadenzaDM extends BaseDataModel<Long, ScadenzaPccBean, IScadenzaSe
 	@Override
 	public void setDataProvider(IScadenzaService dataProvider) {
 		try{
-			log.debug("set data provider ["+dataProvider+"]");
+			ScadenzaDM.log.debug("set data provider ["+dataProvider+"]");
 			this.initDataProvider(dataProvider);
 		}catch(Exception e){
-			log.error("Errore durante la init del data providere: "+ e.getMessage(),e);
+			ScadenzaDM.log.error("Errore durante la init del data providere: "+ e.getMessage(),e);
 		}
 	}
 

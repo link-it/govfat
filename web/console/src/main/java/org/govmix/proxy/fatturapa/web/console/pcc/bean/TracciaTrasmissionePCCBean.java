@@ -65,15 +65,15 @@ public class TracciaTrasmissionePCCBean extends BaseBean<PccTracciaTrasmissione,
 	private void init() throws FactoryException{
 		this.listaEsiti = new ArrayList<EsitoPccBean>();
 
-		this.tsTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("tsTrasmissione","trasmissionePcc.tsTrasmissione","dd/M/yyyy HH:mm:ss");
+		this.tsTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("tsTrasmissione","trasmissionePcc.tsTrasmissione",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS);
 		this.sdf = new SimpleDateFormat(this.tsTrasmissione.getPattern());
 		this.idPccTransazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("idPccTransazione","trasmissionePcc.idPccTransazione");
 		this.esitoTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("esitoTrasmissione","trasmissionePcc.esitoTrasmissione");
 		this.statoEsito = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("statoEsito","trasmissionePcc.statoEsito");
-		this.gdo = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("gdo","trasmissionePcc.gdo","dd/M/yyyy HH:mm:ss"); 
-		this.dataFineElaborazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataFineElaborazione","trasmissionePcc.dataFineElaborazione","dd/M/yyyy HH:mm:ss");
+		this.gdo = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("gdo","trasmissionePcc.gdo",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS); 
+		this.dataFineElaborazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataFineElaborazione","trasmissionePcc.dataFineElaborazione",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS);
 		this.dettaglioErroreTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("dettaglioErroreTrasmissione","trasmissionePcc.dettaglioErroreTrasmissione");
-		this.dettaglioErroreTrasmissione.setValueStyleClass("whiteSpaceNewLine");
+		this.dettaglioErroreTrasmissione.setValueStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_WHITE_SPACE_NEW_LINE);
 		this.idEgovRichiesta = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("idEgovRichiesta","trasmissionePcc.idEgovRichiesta");
 
 
@@ -98,8 +98,8 @@ public class TracciaTrasmissionePCCBean extends BaseBean<PccTracciaTrasmissione,
 		this.fieldsDatiGenerali.addField(this.dettaglioErroreTrasmissione);
 		this.fieldsDatiGenerali.addField(this.idEgovRichiesta);
 
-		this.fieldsDatiGenerali.setStyleClass("datiTrasmissioneTable"); 
-		this.fieldsDatiGenerali.setColumnClasses("labelAllineataDx,valueAllineataSx"); 
+		this.fieldsDatiGenerali.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.fieldsDatiGenerali.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE); 
 	}
 
 	@Override

@@ -62,20 +62,20 @@ public class PagamentoPccBean extends BaseBean<PccPagamento, Long> implements IB
 		this.importoPagato = this.getWebGenericProjectFactory().getOutputFieldFactory().createNumber("importoPagato","pagamentoPcc.importoPagato");
 		this.importoPagato.setConverterType(Costanti.CONVERT_TYPE_CURRENCY);
 		this.importoPagato.setCurrencySymbol(Costanti.CURRENCY_SYMBOL_EURO);
-		this.importoPagato.setTableColumnStyleClass("allinatoDX");
+		this.importoPagato.setTableColumnStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_ALLINATO_DX);
 		
 		this.naturaSpesa = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("naturaSpesa","pagamentoPcc.naturaSpesa");
 		this.capitoliSpesa = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("capitoliSpesa","pagamentoPcc.capitoliSpesa");
 		this.estremiImpegno = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("estremiImpegno","pagamentoPcc.estremiImpegno");
 		this.numeroMandato = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("numeroMandato","pagamentoPcc.numeroMandato");
-		this.dataMandato = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataMandato","pagamentoPcc.dataMandato","dd/M/yyyy HH:mm:ss");
+		this.dataMandato = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataMandato","pagamentoPcc.dataMandato",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS);
 		this.idFiscaleIvaBeneficiario = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("idFiscaleIvaBeneficiario","pagamentoPcc.idFiscaleIvaBeneficiario");
 		this.codiceCig = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("codiceCig","pagamentoPcc.codiceCig"); 
 		this.codiceCup = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("codiceCup","pagamentoPcc.codiceCup");
 		this.descrizione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("descrizione","pagamentoPcc.descrizione");
 //		this.stato = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("stato","pagamentoPcc.stato");
-		this.dataRichiesta = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataRichiesta","pagamentoPcc.dataRichiesta","dd/M/yyyy HH:mm:ss");
-		this.dataQuery = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataQuery","pagamentoPcc.dataQuery","dd/M/yyyy HH:mm:ss"); 
+		this.dataRichiesta = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataRichiesta","pagamentoPcc.dataRichiesta",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS);
+		this.dataQuery = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataQuery","pagamentoPcc.dataQuery",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS); 
 
 		this.setField(this.importoPagato);
 		this.setField(this.naturaSpesa);
@@ -106,8 +106,8 @@ public class PagamentoPccBean extends BaseBean<PccPagamento, Long> implements IB
 		this.fieldsDatiGenerali.addField(this.dataRichiesta);
 		this.fieldsDatiGenerali.addField(this.dataQuery);
 
-		this.fieldsDatiGenerali.setStyleClass("datiTrasmissioneTable"); 
-		this.fieldsDatiGenerali.setColumnClasses("labelAllineataDx,valueAllineataSx");
+		this.fieldsDatiGenerali.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.fieldsDatiGenerali.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE);
 	}
 
 	@Override

@@ -55,7 +55,7 @@ public class ErroreElaborazionePccBean extends BaseBean<PccErroreElaborazione, L
 		this.progressivoOperazione.setConverterType(Costanti.CONVERT_TYPE_NUMBER); 
 		this.codiceEsito = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("codiceEsito","erroreElaborazione.codiceEsito");
 		this.descrizioneEsito = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("descrizioneEsito","erroreElaborazione.descrizioneEsito");
-		this.descrizioneEsito.setValueStyleClass("whiteSpaceNewLine");
+		this.descrizioneEsito.setValueStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_WHITE_SPACE_NEW_LINE);
 		this.tipoErrore = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("tipoErrore","erroreElaborazione.tipoErrore");
 		
 		
@@ -73,8 +73,8 @@ public class ErroreElaborazionePccBean extends BaseBean<PccErroreElaborazione, L
 		this.fieldsDatiGenerali.addField(this.descrizioneEsito);
 		this.fieldsDatiGenerali.addField(this.tipoErrore);
 
-		this.fieldsDatiGenerali.setStyleClass("datiTrasmissioneTable"); 
-		this.fieldsDatiGenerali.setColumnClasses("labelAllineataDx,valueAllineataSx");
+		this.fieldsDatiGenerali.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.fieldsDatiGenerali.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE);
 	}
 
 	@Override

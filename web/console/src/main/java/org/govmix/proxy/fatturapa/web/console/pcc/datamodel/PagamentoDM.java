@@ -110,7 +110,7 @@ public class PagamentoDM extends BaseDataModel<Long, PagamentoPccBean, IPagament
 				}
 			}
 		}catch (Exception e) {
-			log.error(e,e);
+			PagamentoDM.log.error(e,e);
 		}
 
 	}

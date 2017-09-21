@@ -112,7 +112,7 @@ public class ContabilizzazioneDM extends BaseDataModel<Long, ContabilizzazionePc
 				}
 			}
 		}catch (Exception e) {
-			log.error(e,e);
+			ContabilizzazioneDM.log.error(e,e);
 		}
 
 	}

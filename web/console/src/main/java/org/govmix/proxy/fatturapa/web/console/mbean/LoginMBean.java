@@ -107,11 +107,11 @@ public class LoginMBean extends LoginBean{
 					//			session.setAttribute("logged", true);
 					this.setIsLoggedIn(true);
 					this.loggedUtente = ((ILoginDao)this.getLoginDao()).getLoggedUtente(this.getUsername(),this.getPassword()); 
-					this.protocollo = ((ILoginDao)this.getLoginDao()).getProtocollo(ConsoleProperties.getInstance(log).getProtocollo());
+					this.protocollo = ((ILoginDao)this.getLoginDao()).getProtocollo(ConsoleProperties.getInstance(LoginMBean.log).getProtocollo());
 					this.listDipartimenti = ((ILoginDao)this.getLoginDao()).getListaDipartimentiUtente(this.loggedUtente);
 					LoginMBean.log.info("Utente ["+this.getUsername()+"] autenticato con successo");
 
-					if(ConsoleProperties.getInstance(log).isUtilizzaProfiloUtente()){
+					if(ConsoleProperties.getInstance(LoginMBean.log).isUtilizzaProfiloUtente()){
 						if(this.loggedUtente.getTipo() != null && this.loggedUtente.getTipo().equals(UserType.ESTERNO)){
 							Evento eventoLogin = getEventoLogin();
 							((ILoginDao)this.getLoginDao()).registraEvento(eventoLogin);
@@ -130,7 +130,7 @@ public class LoginMBean extends LoginBean{
 						new FacesMessage(FacesMessage.SEVERITY_ERROR,
 								Utils.getInstance().getMessageWithParamsFromResourceBundle("login.form.genericError",this.getUsername()),null));
 			}catch(Exception e){
-				log.error("Si e' verificato un errore durante il login: "+ e.getMessage(), e);
+				LoginMBean.log.error("Si e' verificato un errore durante il login: "+ e.getMessage(), e);
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR,
 								Utils.getInstance().getMessageWithParamsFromResourceBundle("login.form.genericError",this.getUsername()),null));
@@ -142,11 +142,11 @@ public class LoginMBean extends LoginBean{
 				this.loggedUtente = ((ILoginDao)this.getLoginDao()).getLoggedUtente(this.getUsername()); 
 				if(this.loggedUtente != null){
 					this.setIsLoggedIn(true);
-					this.protocollo = ((ILoginDao)this.getLoginDao()).getProtocollo(ConsoleProperties.getInstance(log).getProtocollo());
+					this.protocollo = ((ILoginDao)this.getLoginDao()).getProtocollo(ConsoleProperties.getInstance(LoginMBean.log).getProtocollo());
 					this.listDipartimenti = ((ILoginDao)this.getLoginDao()).getListaDipartimentiUtente(this.loggedUtente);
 					LoginMBean.log.info("Utente ["+this.getUsername()+"] autenticato con successo");
 
-					if(ConsoleProperties.getInstance(log).isUtilizzaProfiloUtente()){
+					if(ConsoleProperties.getInstance(LoginMBean.log).isUtilizzaProfiloUtente()){
 						if(this.loggedUtente.getTipo() != null && this.loggedUtente.getTipo().equals(UserType.ESTERNO)){
 							Evento eventoLogin = getEventoLogin();
 							((ILoginDao)this.getLoginDao()).registraEvento(eventoLogin);
@@ -167,7 +167,7 @@ public class LoginMBean extends LoginBean{
 
 	@Override
 	public String logout(){
-		log.info("Logout utente ["+this.getUsername()+"] in corso...");
+		LoginMBean.log.info("Logout utente ["+this.getUsername()+"] in corso...");
 		SpnegoAuthenticator authenticator = null;
 		try{
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -179,24 +179,24 @@ public class LoginMBean extends LoginBean{
 					// Logout Spnego
 					if(this.isNoPasswordLogin()){
 						try{
-							log.info("Logout Spnego in corso...");
-							Object obj =  session.getAttribute(S_AUTHENTICATOR_KEY);
+							LoginMBean.log.info("Logout Spnego in corso...");
+							Object obj =  session.getAttribute(LoginMBean.S_AUTHENTICATOR_KEY);
 							if(obj!=null){
 								authenticator = (SpnegoAuthenticator) obj;
-								log.info("Authenticator Spnego trovato.");
+								LoginMBean.log.info("Authenticator Spnego trovato.");
 								authenticator.dispose();
 							}
-							log.info("Logout Spnego completato.");
+							LoginMBean.log.info("Logout Spnego completato.");
 						}catch(Exception e){
-							log.error("Errore durante l'esecuzione del metodo dispose di SPNEGO: "+e.getMessage(), e); 
+							LoginMBean.log.error("Errore durante l'esecuzione del metodo dispose di SPNEGO: "+e.getMessage(), e); 
 						}
 					}
 
 					externalContext.getSessionMap().put("loginBean", null);
 					session.setAttribute("loginBean", null); 
 					session.invalidate();
-					log.info("Logout utente ["+this.getUsername()+"] Invalidata Sessione.");
-					if(ConsoleProperties.getInstance(log).isUtilizzaProfiloUtente()){
+					LoginMBean.log.info("Logout utente ["+this.getUsername()+"] Invalidata Sessione.");
+					if(ConsoleProperties.getInstance(LoginMBean.log).isUtilizzaProfiloUtente()){
 						if(this.loggedUtente.getTipo() != null && this.loggedUtente.getTipo().equals(UserType.ESTERNO)){
 							Evento eventoLogin = getEventoLogout();
 							((ILoginDao)this.getLoginDao()).registraEvento(eventoLogin);
@@ -205,9 +205,9 @@ public class LoginMBean extends LoginBean{
 
 				}
 			}
-			log.info("Logout utente ["+this.getUsername()+"] completato.");
+			LoginMBean.log.info("Logout utente ["+this.getUsername()+"] completato.");
 		}catch(Exception e){
-			log.error("Errore durante il logout: "+e.getMessage(), e); 
+			LoginMBean.log.error("Errore durante il logout: "+e.getMessage(), e); 
 		}
 
 		if(!this.isNoPasswordLogin())
@@ -263,7 +263,7 @@ public class LoginMBean extends LoginBean{
 
 	public void updateProtocollo() throws Exception{
 		try{
-			this.protocollo = ((ILoginDao)this.getLoginDao()).getProtocollo(ConsoleProperties.getInstance(log).getProtocollo());
+			this.protocollo = ((ILoginDao)this.getLoginDao()).getProtocollo(ConsoleProperties.getInstance(LoginMBean.log).getProtocollo());
 		}catch(Exception e){
 			LoginMBean.log.error("Si e' verificato un errore durante la lettura del protocollo: "+ e.getMessage(), e);
 			throw e;
@@ -329,11 +329,11 @@ public class LoginMBean extends LoginBean{
 	public String getUrlChangePassword(){
 		if(isEsterno()){
 			try{
-				String url = ConsoleProperties.getInstance(log).getUrlModificaPassword();
+				String url = ConsoleProperties.getInstance(LoginMBean.log).getUrlModificaPassword();
 
-				if(StringUtils.isNotEmpty(url) && ConsoleProperties.getInstance(log).isVisualizzaUrlModificaPassword())
+				if(StringUtils.isNotEmpty(url) && ConsoleProperties.getInstance(LoginMBean.log).isVisualizzaUrlModificaPassword())
 					return url;
-			}catch(Exception e){ log.error("Errore durante la lettura della url di modifica password: "+e.getMessage(),e);}
+			}catch(Exception e){ LoginMBean.log.error("Errore durante la lettura della url di modifica password: "+e.getMessage(),e);}
 
 			return null;
 		}

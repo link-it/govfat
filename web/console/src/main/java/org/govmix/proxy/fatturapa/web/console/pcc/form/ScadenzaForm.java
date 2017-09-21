@@ -49,7 +49,7 @@ public class ScadenzaForm extends BaseForm implements Form {
 
 	@Override
 	public void init() throws Exception {
-		this.euroPattern = Pattern.compile(TWO_DIGITS_PATTERN);
+		this.euroPattern = Pattern.compile(ScadenzaForm.TWO_DIGITS_PATTERN);
 		WebGenericProjectFactory factory = this.getWebGenericProjectFactory();
 
 		this.setClosable(false);
@@ -57,7 +57,7 @@ public class ScadenzaForm extends BaseForm implements Form {
 		this.setNomeForm(null); 
 
 		this.data =  factory.getInputFieldFactory()
-				.createDateTime("data","scadenza.data","dd/MM/yyyy",null,false);
+				.createDateTime("data","scadenza.data",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_MM_YYYY,null,false);
 		//		this.data.setRequired(true);
 
 		this.importo = factory.getInputFieldFactory()

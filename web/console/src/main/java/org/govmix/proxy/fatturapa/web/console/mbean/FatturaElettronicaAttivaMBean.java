@@ -252,10 +252,10 @@ IFatturaElettronicaAttivaService>{
 		if (this.listaPeriodoTemporale == null) {
 			this.listaPeriodoTemporale = new ArrayList<SelectItem>();
 
-			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(FatturaElettronicaAttivaSearchForm.DATA_INVIO_PERIODO_ULTIMA_SETTIMANA, ("fattura.search.dataRicezione.ultimaSettimana"))));
-			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(FatturaElettronicaAttivaSearchForm.DATA_INVIO_PERIODO_ULTIMO_MESE, ("fattura.search.dataRicezione.ultimoMese"))));
-			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(FatturaElettronicaAttivaSearchForm.DATA_INVIO_PERIODO_ULTIMI_TRE_MESI, ("fattura.search.dataRicezione.ultimiTreMesi"))));
-			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(FatturaElettronicaAttivaSearchForm.DATA_INVIO_PERIODO_PERSONALIZZATO, ("fattura.search.dataRicezione.personalizzato"))));
+			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_PERIODO_ULTIMA_SETTIMANA, ("fattura.search.dataRicezione.ultimaSettimana"))));
+			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_PERIODO_ULTIMO_MESE, ("fattura.search.dataRicezione.ultimoMese"))));
+			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_PERIODO_ULTIMI_TRE_MESI, ("fattura.search.dataRicezione.ultimiTreMesi"))));
+			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_PERIODO_PERSONALIZZATO, ("fattura.search.dataRicezione.personalizzato"))));
 
 		}
 
@@ -549,7 +549,13 @@ IFatturaElettronicaAttivaService>{
 		IdRegistro idRegistro = dipartimento.getRegistro();
 		
 		boolean valoreValidoRegistro = (idRegistro != null && StringUtils.isNotEmpty(idRegistro.getNome())); 
-		String registro = valoreValidoRegistro ? idRegistro.getNome() : "";  
+		String registro = valoreValidoRegistro ? idRegistro.getNome() : "";
+		
+		this.labelColonnaRegistro = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.form.registro");
+		
+		// [BUSSU] Per ora il registro e' opzionale, per far apparire l'asterisco del campo obbligatorio abilitare le seguenti tre righe.
+//		this.labelColonnaRegistro = valoreValidoRegistro ? org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.form.registro")
+//				: org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.form.registro.obbligatorio");
 
 		for (String string : nomeFile) {
 			ConservazioneBean conservazioneBean = new ConservazioneBean();
@@ -719,13 +725,11 @@ IFatturaElettronicaAttivaService>{
 
 	public String validaFormConservazione() {
 		for (ConservazioneBean conservazione : this.listaConservazione) {
-			
-			if(StringUtils.isEmpty(conservazione.getRegistro())){
-				return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.registroVuoto",conservazione.getNomeFile());
-			}
 
-			//formato registro?
-			// registro si puo' modificare?
+			// [BUSSU] Per ora il registro e' opzionale, per renderlo obbligatorio abilitare le seguenti tre righe.
+//			if(StringUtils.isEmpty(conservazione.getRegistro())){
+//				return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.registroVuoto",conservazione.getNomeFile());
+//			}
 			
 			if(StringUtils.isEmpty(conservazione.getProtocollo())){
 				return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.protocolloVuoto",conservazione.getNomeFile());
@@ -827,5 +831,15 @@ IFatturaElettronicaAttivaService>{
 		this.checkFormConservazioneMessage = checkFormConservazioneMessage;
 	}
 
+	public String getLabelColonnaRegistro() {
+		return labelColonnaRegistro;
+	}
+
+	public void setLabelColonnaRegistro(String labelColonnaRegistro) {
+		this.labelColonnaRegistro = labelColonnaRegistro;
+	}
+
 	private boolean visualizzaTastoCaricaFattura = false;
+	private String labelColonnaRegistro = null;
+	
 }

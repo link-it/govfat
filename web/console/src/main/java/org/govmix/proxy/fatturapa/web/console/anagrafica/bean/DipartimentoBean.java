@@ -168,17 +168,17 @@ public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IB
 		this.fieldsDatiGenerali.addField(this.firmaAutomatica);
 		this.fieldsDatiGenerali.addField(this.codiceProcedimento);
 		
-		this.fieldsDatiGenerali.setStyleClass("datiTrasmissioneTable"); 
-		this.fieldsDatiGenerali.setColumnClasses("labelAllineataDx,valueAllineataSx");
+		this.fieldsDatiGenerali.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.fieldsDatiGenerali.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE);
 
 		this.fieldsProperties = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("dipartimentoProperties",2);
-		this.fieldsProperties.setStyleClass("datiTrasmissioneTable"); 
-		this.fieldsProperties.setColumnClasses("labelAllineataDx,valueAllineataSx");
+		this.fieldsProperties.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.fieldsProperties.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE);
 		
 		
 		this.fieldsDatiPCC = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiPCC",2);
-		this.fieldsDatiPCC.setStyleClass("datiTrasmissioneTable"); 
-		this.fieldsDatiPCC.setColumnClasses("labelAllineataDx,valueAllineataSx");
+		this.fieldsDatiPCC.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.fieldsDatiPCC.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE);
 		
 		this.fieldsDatiPCC.addField(this.indirizziNotifica);
 		this.fieldsDatiPCC.addField(this.pagamentoIVA);

@@ -71,14 +71,14 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IBean<
 		this.idEgov = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("idEgov","tracciaSDI.idEgov");
 		this.contentType = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("contentType","tracciaSDI.contentType");
 		this.statoProtocollazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("statoProtocollazione","tracciaSDI.statoProtocollazione");
-		this.dataProtocollazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataProtocollazione","tracciaSDI.dataProtocollazione","dd/MM/yyyy");
-		this.dataProssimaProtocollazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataProssimaProtocollazione","tracciaSDI.dataProssimaProtocollazione","dd/MM/yyyy");
+		this.dataProtocollazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataProtocollazione","tracciaSDI.dataProtocollazione",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_MM_YYYY);
+		this.dataProssimaProtocollazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataProssimaProtocollazione","tracciaSDI.dataProssimaProtocollazione",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_MM_YYYY);
 		this.tentativiProtocollazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("tentativiProtocollazione","tracciaSDI.tentativiProtocollazione");
 		this.dettaglioProtocollazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("dettaglioProtocollazione","tracciaSDI.dettaglioProtocollazione");
 		this.metadato = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("metadato","tracciaSDI.metadato");
-		this.data = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("data","tracciaSDI.data","dd/MM/yyyy");
-		this.xml = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("xml","tracciaSDI.label.xml",null,"/images/fatturapa/icons/xml.png","tracciaSDI.label.xml.iconTitle","tracciaSDI.label.xml.iconTitle");
-		this.pdf = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("pdf","tracciaSDI.label.pdf",null,"/images/fatturapa/icons/pdf.png","tracciaSDI.label.pdf.iconTitle","tracciaSDI.label.pdf.iconTitle");
+		this.data = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("data","tracciaSDI.data",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_MM_YYYY);
+		this.xml = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("xml","tracciaSDI.label.xml",null,org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_XML,"tracciaSDI.label.xml.iconTitle","tracciaSDI.label.xml.iconTitle");
+		this.pdf = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("pdf","tracciaSDI.label.pdf",null,org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_PDF,"tracciaSDI.label.pdf.iconTitle","tracciaSDI.label.pdf.iconTitle");
 		
 		this.setField(this.identificativoSdi);
 		this.setField(this.tipoComunicazione);
