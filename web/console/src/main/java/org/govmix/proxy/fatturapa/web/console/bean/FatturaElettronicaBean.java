@@ -268,7 +268,7 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 
 		this.contenutoFattura = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("contenutoFattura",4);
 		this.contenutoFattura.setRendered(true);
-		this.contenutoFattura.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.contenutoFattura.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE_CONTENUTO_FATTURA); 
 		this.contenutoFattura.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_QUATTRO_COLONNE);
 
 		this.contenutoFattura.addField(this.divisa);

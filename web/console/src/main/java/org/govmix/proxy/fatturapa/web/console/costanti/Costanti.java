@@ -35,6 +35,7 @@ public class Costanti {
 	public static final String CSS_CLASS_DIAG_ERROR = "diag_error";
 	public static final String CSS_CLASS_ALLINATO_DX = "allinatoDX";
 	public static final String CSS_CLASS_DATI_TRASMISSIONE_TABLE = "datiTrasmissioneTable";
+	public static final String CSS_CLASS_DATI_TRASMISSIONE_TABLE_CONTENUTO_FATTURA = "datiTrasmissioneTablePadding";
 	public static final String CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE_TOP = "labelAllineataDx align-top,valueAllineataSx";
 	public static final String CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE = "labelAllineataDx,valueAllineataSx";
 	public static final String CSS_CLASS_DATI_DETTAGLIO_TRE_COLONNE = "labelAllineataDx,valueAllineataSx,valueAllineataSx";

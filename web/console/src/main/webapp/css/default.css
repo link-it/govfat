@@ -123,8 +123,10 @@ a.iconLinkie{
 	border-spacing: 3px;
 }
 
-
-
+.datiTrasmissioneTablePadding{
+	border-spacing: 3px;
+	padding-left: 9px;
+}
 
 /* LABEL SELEZIONE TABELLA*/
 .selectionInfoCtr{
