@@ -145,7 +145,7 @@ IFatturaElettronicaAttivaService>{
 			this.table.setEnableDelete(false);
 			this.table.setShowAddButton(false);
 			this.table.setShowDetailColumn(false);
-			this.table.setShowSelectAll(true);
+			this.table.setShowSelectAll(false);
 			this.table.setHeaderText("fatturaAttiva.label.ricercaFattureAttive.tabellaRisultati");
 			this.table.setMBean(this);
 			this.table.setMetadata(this.getMetadata()); 
@@ -287,8 +287,10 @@ IFatturaElettronicaAttivaService>{
 			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.SPEDIZIONE_OK.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.SPEDIZIONE_OK.getValue()))));
 			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.SPEDIZIONE_NON_ATTIVA.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.SPEDIZIONE_NON_ATTIVA.getValue()))));
 			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.PROTOCOLLAZIONE_OK.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.PROTOCOLLAZIONE_OK.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.PROTOCOLLAZIONE_IN_PROGRESS.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.PROTOCOLLAZIONE_IN_PROGRESS.getValue()))));
 			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.NON_FIRMATO.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.NON_FIRMATO.getValue()))));
 			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.FIRMA_OK.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.FIRMA_OK.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.FIRMA_IN_PROGRESS.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.FIRMA_IN_PROGRESS.getValue()))));
 			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.ERRORE_SPEDIZIONE.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.ERRORE_SPEDIZIONE.getValue()))));
 			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.ERRORE_PROTOCOLLAZIONE.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.ERRORE_PROTOCOLLAZIONE.getValue()))));
 			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.ERRORE_FIRMA.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.ERRORE_FIRMA.getValue()))));

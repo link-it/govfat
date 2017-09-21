@@ -28,6 +28,8 @@ public class FileUploadBean implements Serializable{
 	private String acceptedTypes = "";
 	private int numeroFile = 1;
 	
+	private FatturaElettronicaAttivaMBean mBean =null; 
+	
 	public FileUploadBean() {
 		this.nomeFile = new ArrayList<String>();
 		this.contenuto = new ArrayList<byte[]>();
@@ -61,6 +63,7 @@ public class FileUploadBean implements Serializable{
 	
 	public void fileUploadListener(UploadEvent event) {
 		this.fileUploadErrorMessage = null;
+		this.mBean.setCheckFormFatturaMessage(null); 
 		UploadItem item = event.getUploadItem();
 
 		if(item!= null && item.getData() != null){
@@ -96,6 +99,7 @@ public class FileUploadBean implements Serializable{
 		this.dimensioneFile = new ArrayList<Integer>();
 //		this.caricato = false;
 		this.fileUploadErrorMessage = null;
+		this.mBean.setCheckFormFatturaMessage(null); 
 	}
 	
 	/***
@@ -148,7 +152,12 @@ public class FileUploadBean implements Serializable{
 	public void setDimensioneFile(List<Integer> dimensioneFile) {
 		this.dimensioneFile = dimensioneFile;
 	}
-	
-	
-	
+
+	public FatturaElettronicaAttivaMBean getmBean() {
+		return mBean;
+	}
+
+	public void setmBean(FatturaElettronicaAttivaMBean mBean) {
+		this.mBean = mBean;
+	}
 }

@@ -174,5 +174,14 @@
 .icon-back{
 	background-image: url(../images/icons/silk/back1.png) ! important;
 }
+
+.icon-carica-fattura{
+	background-image: url(../images/icons/silk/add.png) ! important;
+}
+
+.icon-carica-fattura:disabled{
+	background-image: url(../images/icons/silk/add.png) ! important;
+}
+
 /*eor*/
 

@@ -65,6 +65,8 @@ public class FatturaForm extends BaseForm implements Form {
 		this.dipartimento = factory.getInputFieldFactory().createSelectList("cf_dipartimento","fattura.form.dipartimento",null,true);
 		((SelectListImpl)this.dipartimento).setCheckItemWidth(true); 
 		this.dipartimento.setFontName("Arial"); //"Arial,Verdana,sans-serif" 
+		this.dipartimento.setFieldsToUpdate("dsFileUploadErrorsCtr"); 
+		this.dipartimento.setForm(this);
 
 		this.descrittoreFattura = factory.getInputFieldFactory().createText("descrittoreFattura","fattura.form.descrittoreFattura",null,true);
 		
@@ -125,6 +127,7 @@ public class FatturaForm extends BaseForm implements Form {
 	}
 	public void setmBean(FatturaElettronicaAttivaMBean mBean) {
 		this.mBean = mBean;
+		this.fatturaFile.setmBean(mBean); 
 	}
 	
 	private void _setMostraConservazione() {
@@ -149,5 +152,9 @@ public class FatturaForm extends BaseForm implements Form {
 
 	public void setMostraFormCorservazione(boolean mostraFormCorservazione) {
 		this.mostraFormCorservazione = mostraFormCorservazione;
+	}
+	
+	public void cf_dipartimentoSelectListener(ActionEvent ae){
+		this.mBean.setCheckFormFatturaMessage(null);
 	}
 }
