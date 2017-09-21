@@ -59,7 +59,6 @@
 			rel="stylesheet" type="text/css" />
 		
 		<script type="text/javascript" src="#{facesContext.externalContext.request.contextPath}/scripts/jquery.collapsible.js"></script>
-		<script type="text/javascript" src="#{facesContext.externalContext.request.contextPath}/scripts/jquery.sticky.js"></script>
 		<script type="text/javascript">
 	       A4J.AJAX.onExpired = function(loc, expiredMsg){
 				return loc;
@@ -220,8 +219,6 @@
 						jQuery("a[id*='iconLink']").addClass('iconLink');
 				}
 
-				jQuery("[id$='menuct']").sticky({topSpacing:10});
-
 				jQuery("[id$='TextValue']").addClass('whiteSpace');
 			 });
 		</script>
@@ -239,22 +236,6 @@
 
 				<rich:layoutPanel id="body" position="center" width="100%">
 					<a4j:outputPanel id="errorsPlaceHolder" ajaxRendered="true" layout="block" styleClass="errorsPlaceHolder">
-						<script type="text/javascript">
-							function runEffect(elem) {
-					            jQuery("#errorsPlaceHolder").fadeOut(5000).hide();
-			        		};
-
-							 jQuery(document).ready(function() {
-								jQuery("#pgErrorsPlaceHolder").click(function() {
-							        runEffect(this);
-							        return false;
-						        });
-
-								window.setTimeout(function() {  
-									jQuery("#errorsPlaceHolder").fadeOut(5000).hide();
-					             }, 5000);  		        
-							 });
-						</script>
 						<h:panelGroup layout="block" styleClass="#{facesContext.maximumSeverity.ordinal>=2 ? 'errors' : 'info'}" rendered="#{not empty facesContext.maximumSeverity}" id="pgErrorsPlaceHolder">
 							<h:panelGroup rendered="#{facesContext.maximumSeverity.ordinal>=2}">
 								<p>

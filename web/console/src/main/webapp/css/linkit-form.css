@@ -316,8 +316,8 @@ textarea[type="textarea"][disabled], input[type="text"][disabled], input[type="p
 }
 
 .errorsPlaceHolder {
-	position: fixed;
-	z-index: 1000; 
-	right: 10px; 
-	top: 10px;
+/* 	position: fixed; */
+/* 	z-index: 1000;  */
+/* 	right: 10px;  */
+/* 	top: 10px; */
 }
