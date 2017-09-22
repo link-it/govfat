@@ -39,8 +39,10 @@ import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdRegistro;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
+import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException.CODICE;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoRequest;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoResponse;
@@ -350,14 +352,15 @@ IFatturaElettronicaAttivaService>{
 			this.listaTipoComunicazione = new ArrayList<SelectItem>();
 
 			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi"))));
-			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("FATTURA_USCITA",  ("fattura.tipoComunicazione.FATTURA_USCITA"))));
-			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("NOTIFICA_SCARTO",  ("fattura.tipoComunicazione.NOTIFICA_SCARTO"))));
-			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("RICEVUTA_CONSEGNA",  ("fattura.tipoComunicazione.RICEVUTA_CONSEGNA"))));
-			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("NOTIFICA_MANCATA_CONSEGNA",  ("fattura.tipoComunicazione.NOTIFICA_MANCATA_CONSEGNA"))));
-			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("ATTESTAZIONE_TRASMISSIONE_FATTURA",  ("fattura.tipoComunicazione.ATTESTAZIONE_TRASMISSIONE_FATTURA"))));
-			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("NOTIFICA_ESITO_COMMITTENTE",  ("fattura.tipoComunicazione.NOTIFICA_ESITO_COMMITTENTE"))));
-			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE",  ("fattura.tipoComunicazione.NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE"))));
-			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO",  ("fattura.tipoComunicazione.AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO"))));
+			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoComunicazioneType.FAT_OUT.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.FAT_OUT.toString()))));
+			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoComunicazioneType.EC.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.EC.toString()))));
+			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoComunicazioneType.NE.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.NE.toString()))));
+			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoComunicazioneType.DT.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.DT.toString()))));
+			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoComunicazioneType.SE.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.SE.toString()))));
+			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoComunicazioneType.RC.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.RC.toString()))));
+			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoComunicazioneType.NS.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.NS.toString()))));
+			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoComunicazioneType.MC.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.MC.toString()))));
+			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoComunicazioneType.AT.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.AT.toString()))));
 		}
 
 		return this.listaTipoComunicazione;
@@ -541,6 +544,38 @@ IFatturaElettronicaAttivaService>{
 		this.checkFormFattura = true;
 
 		this.form.getFatturaFile().checkCaricamenti();
+		
+		try {
+			List<InserimentoLottoSoloConservazioneRequest> requestList = new ArrayList<InserimentoLottoSoloConservazioneRequest>();
+			
+			List<String> nomeFiles = this.form.getFatturaFile().getNomeFile();
+			for (int i = 0; i < nomeFiles.size(); i++) {
+				String nomeFattura = nomeFiles.get(i);
+				InserimentoLottoSoloConservazioneRequest dto = new InserimentoLottoSoloConservazioneRequest();
+				dto.setNomeFile(nomeFattura); 
+				requestList.add(dto);
+			}
+			
+			((IFatturaElettronicaAttivaService)this.service).checkLottoSoloConservazione(requestList);
+			
+		}catch(InserimentoLottiException e) {
+			this.checkFormFattura = false;
+			CODICE codEccezione = e.getCodice() != null ? e.getCodice() : CODICE.ERRORE_GENERICO;
+			String msgCod = "fattura.salvaFattura." + codEccezione.name();
+			Object[] msgParams = e.getParams();
+			
+			if(msgParams != null && msgParams.length > 0) {
+				msgCod +=".parametri";
+				this.checkFormFatturaMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle(msgCod, msgParams);
+			} else {
+				this.checkFormFatturaMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle(msgCod);
+			}
+			return null;
+		} catch(Exception e) {
+			this.checkFormFattura = false;
+			this.checkFormFatturaMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura."+CODICE.ERRORE_GENERICO.name());
+			return null;
+		}
 
 		this.listaConservazione = null;
 		List<String> nomeFile = this.form.getFatturaFile().getNomeFile();

@@ -463,6 +463,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		//		} else {
 		if(_statoElaborazione != null) {
 			switch (_statoElaborazione) {
+			case PROTOCOLLAZIONE_IN_PROGRESS:
 			case PROTOCOLLAZIONE_OK:
 			case ERRORE_SPEDIZIONE:
 			case SPEDIZIONE_NON_ATTIVA:
@@ -470,6 +471,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 			case ERRORE_FIRMA:
 			case ERRORE_PROTOCOLLAZIONE:
 			case FIRMA_OK:
+			case FIRMA_IN_PROGRESS:
 			case NON_FIRMATO:
 			default:
 				this.statoElaborazione.setValue("fattura.statoElaborazione."+_statoElaborazione.getValue());
@@ -501,6 +503,8 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 			case ERRORE_FIRMA:
 			case ERRORE_PROTOCOLLAZIONE:
 			case FIRMA_OK:
+			case FIRMA_IN_PROGRESS:
+			case PROTOCOLLAZIONE_IN_PROGRESS:
 			case NON_FIRMATO:
 			default:
 				this.statoElaborazioneDettaglio.setValue("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());

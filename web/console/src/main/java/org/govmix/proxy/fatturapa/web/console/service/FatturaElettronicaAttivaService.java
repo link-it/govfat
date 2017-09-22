@@ -36,6 +36,7 @@ import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaAtt
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FilterSortWrapper;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLotti;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoRequest;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoResponse;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoSoloConservazioneRequest;
@@ -277,7 +278,30 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 		
 		return inserimentoLottoResponse;
 	}
+	
+	@Override
+	public void checkLotto(List<InserimentoLottoRequest> requestList) throws InserimentoLottiException {
+		String methodName = "checkLotto";
+		
+		FatturaElettronicaAttivaService.log.debug("Esecuzione ["+methodName+"] in corso...");
+		
+		this.inserimentoLotti.checkLotto(requestList);
+		
+		FatturaElettronicaAttivaService.log.debug("Esecuzione ["+methodName+"] completato.");
+	}
 
+	@Override
+	public void checkLottoSoloConservazione(List<InserimentoLottoSoloConservazioneRequest> requestList)
+			throws InserimentoLottiException {
+		String methodName = "checkLottoSoloConservazione";
+		
+		FatturaElettronicaAttivaService.log.debug("Esecuzione ["+methodName+"] in corso...");
+		
+		this.inserimentoLotti.checkLottoSoloConservazione(requestList);
+		
+		FatturaElettronicaAttivaService.log.debug("Esecuzione ["+methodName+"] completato.");
+	}
+	
 	public FatturaFilter getFilterFromSearch(FatturaBD fatturaBD, FatturaElettronicaAttivaSearchForm search) throws Exception{
 		FatturaAttivaFilter filter = (FatturaAttivaFilter) this.getFilterDateFromSearch(fatturaBD, search);
 
