@@ -21,6 +21,7 @@
 package org.govmix.proxy.fatturapa.web.api;
 
 import java.io.InputStream;
+import java.sql.Connection;
 import java.util.Date;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -30,7 +31,6 @@ import org.apache.cxf.helpers.IOUtils;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
-import org.govmix.proxy.fatturapa.orm.Metadato;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
@@ -41,6 +41,7 @@ import org.govmix.proxy.fatturapa.web.api.utils.WebApiProperties;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaUtils;
+import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.riceviNotificaDT.RiceviNotifica;
 import org.govmix.proxy.fatturapa.web.commons.ricevicomunicazionesdi.RiceviComunicazioneSdI;
 import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
@@ -51,7 +52,7 @@ public class EndpointPdDImpl implements EndpointPdD {
 	private RiceviNotifica riceviNotifica;
 	private LottoBD lottoBD;
 	private static final String HEADER_IDENTIFICATIVO_SDI = "X-SDI-IdentificativoSdI";
-	private RiceviComunicazioneSdI riceviComunicazioneSdi;
+//	private RiceviComunicazioneSdI riceviComunicazioneSdi;
 
 	
 	private Logger log;
@@ -62,7 +63,6 @@ public class EndpointPdDImpl implements EndpointPdD {
 		this.riceviNotifica = new RiceviNotifica(this.log);
 		this.lottoBD = new LottoBD(log);
 		this.lottoBD.setValidate(WebApiProperties.getInstance().isValidazioneDAOAbilitata());
-		this.riceviComunicazioneSdi = new RiceviComunicazioneSdI(this.log);
 		this.log.info("Inizializzazione endpoint PdD completata");
 	}
 
@@ -235,7 +235,13 @@ public class EndpointPdDImpl implements EndpointPdD {
 	public Response riceviComunicazioniSdI(Integer X_SDI_IdentificativoSDI, String azione, String X_SDI_NomeFile, String contentType, HttpHeaders headers, InputStream comunicazioneStream) {
 		this.log.info("Invoke riceviComunicazioniSdi");
 
+		Connection connection = null;
 		try {
+
+			connection = DAOFactory.getInstance().getConnection();
+			connection.setAutoCommit(false);
+			RiceviComunicazioneSdI riceviComunicazioneSdi = new RiceviComunicazioneSdI(this.log, connection, false);
+
 			if(comunicazioneStream == null) {
 				throw new Exception("La comunicazione ricevuta in ingresso e' null");
 			}
@@ -255,20 +261,21 @@ public class EndpointPdDImpl implements EndpointPdD {
 			tracciaSdi.setTentativiProtocollazione(0);
 			
 			tracciaSdi.setIdEgov(getIdEgov(headers));
-			//TODO lista di metadati da salvare
-			Metadato metadato = new Metadato();
-			metadato.setNome(HEADER_IDENTIFICATIVO_SDI);
-			metadato.setValore(""+X_SDI_IdentificativoSDI);
-			tracciaSdi.addMetadato(metadato);
 
-			this.riceviComunicazioneSdi.ricevi(tracciaSdi);
+			riceviComunicazioneSdi.ricevi(tracciaSdi);
+			
+			connection.commit();
+
+			this.log.info("riceviComunicazioniSdi completata con successo");
+			return Response.ok().build();
+
 		} catch(Exception e) {
+			if(connection != null) try {connection.rollback();} catch(Exception ex) {}
 			this.log.error("riceviComunicazioniSdi completata con errore:"+ e.getMessage(), e);
 			return Response.status(500).build();
+		} finally {
+			if(connection != null) try {connection.close();} catch(Exception ex) {}
 		}
-
-		this.log.info("riceviComunicazioniSdi completata con successo");
-		return Response.ok().build();
 	}
 
 }

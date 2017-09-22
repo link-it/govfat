@@ -21,6 +21,7 @@
 package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 
 import java.sql.Connection;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -30,6 +31,8 @@ import org.govmix.proxy.fatturapa.orm.constants.FormatoArchivioInvioFatturaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.dao.ILottoFattureService;
 import org.openspcoop2.generic_project.beans.UpdateField;
+import org.openspcoop2.generic_project.exception.ExpressionException;
+import org.openspcoop2.generic_project.exception.ExpressionNotImplementedException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
@@ -97,10 +100,9 @@ public class LottoBD extends BaseBD {
 		}
 	}
 
-	public long countByStatiElaborazioneInUscita(List<StatoElaborazioneType> stati)throws Exception {
+	public long countByStatiElaborazioneInUscita(List<StatoElaborazioneType> stati, Date date)throws Exception {
 		try {
-			IExpression exp = this.service.newExpression();
-			exp.in(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA, stati);
+			IExpression exp = getExpByStatiElaborazioneInUscita(stati, date);
 			return this.service.count(exp).longValue();
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la exists: " + e.getMessage(), e);
@@ -111,10 +113,17 @@ public class LottoBD extends BaseBD {
 		}
 	}
 
-	public List<LottoFatture> findAllByStatiElaborazioneInUscita(List<StatoElaborazioneType> stati, int offset, int limit)throws Exception {
+	private IExpression getExpByStatiElaborazioneInUscita(List<StatoElaborazioneType> stati, Date date)
+			throws ServiceException, NotImplementedException, ExpressionNotImplementedException, ExpressionException {
+		IExpression exp = this.service.newExpression();
+		exp.in(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA, stati);
+		exp.lessEquals(LottoFatture.model().DATA_ULTIMA_ELABORAZIONE, date);
+		return exp;
+	}
+
+	public List<LottoFatture> findAllByStatiElaborazioneInUscita(List<StatoElaborazioneType> stati, Date date, int offset, int limit)throws Exception {
 		try {
-			IPaginatedExpression exp = this.service.newPaginatedExpression();
-			exp.in(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA, stati);
+			IPaginatedExpression exp = this.service.toPaginatedExpression(getExpByStatiElaborazioneInUscita(stati, date));
 			exp.offset(offset);
 			exp.limit(limit);
 			exp.addOrder(LottoFatture.model().DATA_RICEZIONE, SortOrder.ASC);
@@ -130,7 +139,7 @@ public class LottoBD extends BaseBD {
 	
 	public void updateStatoElaborazioneInUscita(IdLotto lotto, StatoElaborazioneType stato) throws Exception {
 		try {
-			this.service.updateFields(lotto, new UpdateField(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA, stato));
+			this.service.updateFields(lotto, new UpdateField(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA, stato), new UpdateField(LottoFatture.model().DATA_ULTIMA_ELABORAZIONE, new Date()));
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la exists: " + e.getMessage(), e);
 			throw new Exception(e);

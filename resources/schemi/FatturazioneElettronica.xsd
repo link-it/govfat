@@ -417,16 +417,21 @@
 	
 	<xsd:simpleType name="StatoElaborazioneType">
 		<xsd:restriction base="xsd:string">
-			<xsd:enumeration value="NON_FIRMATO" />
-			<xsd:enumeration value="FIRMA_IN_PROGRESS" />
-			<xsd:enumeration value="ERRORE_FIRMA" />
-			<xsd:enumeration value="FIRMA_OK" />
-			<xsd:enumeration value="PROTOCOLLAZIONE_IN_PROGRESS" />
-			<xsd:enumeration value="ERRORE_PROTOCOLLAZIONE" />
-			<xsd:enumeration value="PROTOCOLLAZIONE_OK" />
-			<xsd:enumeration value="ERRORE_SPEDIZIONE" />
-			<xsd:enumeration value="SPEDIZIONE_OK" />
-			<xsd:enumeration value="SPEDIZIONE_NON_ATTIVA" />
+			<xsd:enumeration value="PRESA_IN_CARICO" />
+			<xsd:enumeration value="IN_CORSO_DI_PROTOCOLLAZIONE" />
+			<xsd:enumeration value="IN_CORSO_DI_FIRMA" />
+			<xsd:enumeration value="PROTOCOLLATA" />
+			<xsd:enumeration value="ERRORE_DI_FIRMA" />
+			<xsd:enumeration value="ERRORE_DI_PROTOCOLLO" />
+			<xsd:enumeration value="ERRORE_DI_SPEDIZIONE" />
+			<xsd:enumeration value="RICEVUTA_DALLO_SDI" />
+			<xsd:enumeration value="RICEVUTO_SCARTO_SDI" />
+			<xsd:enumeration value="RICEVUTA_DAL_DESTINATARIO" />
+			<xsd:enumeration value="MANCATA_CONSEGNA" />
+			<xsd:enumeration value="IMPOSSIBILITA_DI_RECAPITO" />
+			<xsd:enumeration value="RICEVUTO_ESITO_CEDENTE_PRESTATORE" />
+			<xsd:enumeration value="RICEVUTA_DECORRENZA_TERMINI" />
+			<xsd:enumeration value="SOLO_CONSERVAZIONE" />
 		</xsd:restriction>
 	</xsd:simpleType>
 

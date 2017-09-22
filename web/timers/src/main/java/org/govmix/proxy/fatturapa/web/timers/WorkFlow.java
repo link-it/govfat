@@ -40,35 +40,29 @@ public class WorkFlow implements IWorkFlow<LottoFatture> {
 	@Override
 	public long count() throws Exception {
 		List<StatoElaborazioneType> lst = new ArrayList<StatoElaborazioneType>();
-		lst.add(StatoElaborazioneType.NON_FIRMATO);
-		lst.add(StatoElaborazioneType.FIRMA_OK);
-		return this.lottoBD.countByStatiElaborazioneInUscita(lst);
+		lst.add(StatoElaborazioneType.PRESA_IN_CARICO);
+		return this.lottoBD.countByStatiElaborazioneInUscita(lst, limitDate);
 	}
 
 	@Override
 	public List<LottoFatture> getNextLista() throws Exception {
 		List<StatoElaborazioneType> lst = new ArrayList<StatoElaborazioneType>();
-		lst.add(StatoElaborazioneType.NON_FIRMATO);
-		lst.add(StatoElaborazioneType.FIRMA_OK);
-		return this.lottoBD.findAllByStatiElaborazioneInUscita(lst, 0, this.limit);
+		lst.add(StatoElaborazioneType.PRESA_IN_CARICO);
+		return this.lottoBD.findAllByStatiElaborazioneInUscita(lst, limitDate, 0, this.limit);
 	}
 
 	@Override
 	public void process(LottoFatture lotto) throws Exception {
-		StatoElaborazioneType statoElaborazioneInUscita = lotto.getStatoElaborazioneInUscita();
-
 		this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"]");
 		
 		StatoElaborazioneType nextStatoOK = null;
 		StatoElaborazioneType nextStatoKO = null;
-		if(StatoElaborazioneType.NON_FIRMATO.equals(statoElaborazioneInUscita)) {
-			nextStatoOK = StatoElaborazioneType.FIRMA_IN_PROGRESS;
-			nextStatoKO = StatoElaborazioneType.ERRORE_FIRMA;
-//			this.fatturaAttivaBD.updateStatoElaborazioneInUscita(fattura, StatoElaborazioneType.FIRMA_IN_PROGRESS);
-		} else if(StatoElaborazioneType.FIRMA_OK.equals(statoElaborazioneInUscita)) {
-			nextStatoOK = StatoElaborazioneType.PROTOCOLLAZIONE_IN_PROGRESS;
-			nextStatoKO = StatoElaborazioneType.ERRORE_PROTOCOLLAZIONE;
-//			this.fatturaAttivaBD.updateStatoElaborazioneInUscita(fattura, StatoElaborazioneType.PROTOCOLLAZIONE_IN_PROGRESS);
+		if(FormatoArchivioInvioFatturaType.XML.equals(lotto.getFormatoArchivioInvioFattura())) {
+			nextStatoOK = StatoElaborazioneType.IN_CORSO_DI_FIRMA;
+			nextStatoKO = StatoElaborazioneType.ERRORE_DI_FIRMA;
+		} else if(FormatoArchivioInvioFatturaType.P7M.equals(lotto.getFormatoArchivioInvioFattura())) {
+			nextStatoOK = StatoElaborazioneType.IN_CORSO_DI_PROTOCOLLAZIONE;
+			nextStatoKO = StatoElaborazioneType.ERRORE_DI_PROTOCOLLO;
 		}
 		
 		if(nextStatoOK!= null) {
@@ -120,14 +114,14 @@ public class WorkFlow implements IWorkFlow<LottoFatture> {
 				
 				if(esitoPositivo) {
 					this.lottoBD.updateStatoElaborazioneInUscita(idLotto, nextStatoOK);
-					this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+statoElaborazioneInUscita+"] -> ["+nextStatoOK+"]");
+					this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+lotto.getStatoElaborazioneInUscita()+"] -> ["+nextStatoOK+"]");
 				} else {
 					this.lottoBD.updateStatoElaborazioneInUscita(idLotto, nextStatoKO);
-					this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+statoElaborazioneInUscita+"] -> ["+nextStatoKO+"]");
+					this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+lotto.getStatoElaborazioneInUscita()+"] -> ["+nextStatoKO+"]");
 				}
 			} catch(Exception e) {
 				this.lottoBD.updateStatoElaborazioneInUscita(idLotto, nextStatoKO);
-				this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+statoElaborazioneInUscita+"] -> ["+nextStatoKO+"]");
+				this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+lotto.getStatoElaborazioneInUscita()+"] -> ["+nextStatoKO+"]");
 			}
 		}
 

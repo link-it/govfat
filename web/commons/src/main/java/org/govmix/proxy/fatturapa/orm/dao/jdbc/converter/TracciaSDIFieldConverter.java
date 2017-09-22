@@ -75,6 +75,13 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 				return "identificativo_sdi";
 			}
 		}
+		if(field.equals(TracciaSDI.model().NUMERO_FATTURA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".numero_fattura";
+			}else{
+				return "numero_fattura";
+			}
+		}
 		if(field.equals(TracciaSDI.model().TIPO_COMUNICAZIONE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".tipo_comunicazione";
@@ -187,6 +194,9 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 		// the full definition of the table containing the alias
 		
 		if(field.equals(TracciaSDI.model().IDENTIFICATIVO_SDI)){
+			return this.toTable(TracciaSDI.model(), returnAlias);
+		}
+		if(field.equals(TracciaSDI.model().NUMERO_FATTURA)){
 			return this.toTable(TracciaSDI.model(), returnAlias);
 		}
 		if(field.equals(TracciaSDI.model().TIPO_COMUNICAZIONE)){

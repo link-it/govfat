@@ -462,21 +462,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		//			this.statoConsegna.setValue("fattura.statoConsegna.protocollata");
 		//		} else {
 		if(_statoElaborazione != null) {
-			switch (_statoElaborazione) {
-			case PROTOCOLLAZIONE_IN_PROGRESS:
-			case PROTOCOLLAZIONE_OK:
-			case ERRORE_SPEDIZIONE:
-			case SPEDIZIONE_NON_ATTIVA:
-			case SPEDIZIONE_OK:
-			case ERRORE_FIRMA:
-			case ERRORE_PROTOCOLLAZIONE:
-			case FIRMA_OK:
-			case FIRMA_IN_PROGRESS:
-			case NON_FIRMATO:
-			default:
-				this.statoElaborazione.setValue("fattura.statoElaborazione."+_statoElaborazione.getValue());
-				break;
-			}
+			this.statoElaborazione.setValue("fattura.statoElaborazione."+_statoElaborazione.getValue());
 		}
 
 		
@@ -488,24 +474,24 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		String valorePosizione = null;
 		if(_statoElaborazione != null) {
 			switch (_statoElaborazione) {
-			case SPEDIZIONE_OK:
+			case RICEVUTA_DALLO_SDI:
+			case RICEVUTA_DAL_DESTINATARIO:
+			case IMPOSSIBILITA_DI_RECAPITO:
+			case MANCATA_CONSEGNA:
+			case RICEVUTO_ESITO_CEDENTE_PRESTATORE:
+			case RICEVUTO_SCARTO_SDI:
+			case RICEVUTA_DECORRENZA_TERMINI:
 				valoreProtocollo = this.getDTO().getProtocollo();
 				valoreIdentificavoSDI = this.getDTO().getIdentificativoSdi() + "";
 				valorePosizione = this.getDTO().getPosizione() + "";
 				this.statoElaborazioneDettaglio.setValue("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
 				break;
-			case PROTOCOLLAZIONE_OK:
-			case ERRORE_SPEDIZIONE:
-			case SPEDIZIONE_NON_ATTIVA:
+			case PROTOCOLLATA:
+			case ERRORE_DI_SPEDIZIONE:
+			case SOLO_CONSERVAZIONE:
 				valoreProtocollo = this.getDTO().getProtocollo();
 				this.statoElaborazioneDettaglio.setValue("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
 				break;
-			case ERRORE_FIRMA:
-			case ERRORE_PROTOCOLLAZIONE:
-			case FIRMA_OK:
-			case FIRMA_IN_PROGRESS:
-			case PROTOCOLLAZIONE_IN_PROGRESS:
-			case NON_FIRMATO:
 			default:
 				this.statoElaborazioneDettaglio.setValue("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
 				break;
@@ -994,42 +980,6 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 
 	public void setListaComunicazioni(List<TracciaSDIBean> listaComunicazioni) {
 		this.listaComunicazioni = listaComunicazioni;
-
-		StatoElaborazioneType _statoElaborazione = this.getDTO().getLottoFatture() != null ? this.getDTO().getLottoFatture().getStatoElaborazioneInUscita() : null;
-		// se sono in stato spedizione_ok e ho comunicazioni
-		if(_statoElaborazione != null && _statoElaborazione.equals(StatoElaborazioneType.SPEDIZIONE_OK) && this.listaComunicazioni != null && this.listaComunicazioni.size() > 0) {
-			boolean found = false;
-			String label = "fattura.statoElaborazione.dettaglio.SPEDIZIONE_OK"; 
-			for (TracciaSDIBean tracciaSDIBean : this.listaComunicazioni) {
-				// ricerca tipo comunicazione lista 1: EC NE DT SE [TODO]
-				if(tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.NE) 
-												||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.EC)
-						||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.DT)
-												||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.SE)
-						) {
-					label = "fattura.statoElaborazione.dettaglio.SPEDIZIONE_OK." + tracciaSDIBean.getDTO().getTipoComunicazione();
-					found = true;
-					break;
-				}
-			}
-
-			if(!found) {
-				for (TracciaSDIBean tracciaSDIBean : this.listaComunicazioni) {
-					// ricerca tipo comunicazione lista 2: RC NS MC AT
-					if(tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.RC) 
-							||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.NS)
-							||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.MC)
-							||tracciaSDIBean.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.AT)
-							) {
-						label = "fattura.statoElaborazione.dettaglio.SPEDIZIONE_OK." + tracciaSDIBean.getDTO().getTipoComunicazione();
-						found = true;
-						break;
-					}					
-				}
-			}
-			
-			this.statoElaborazioneDettaglio.setValue(label);
-		}
 	}
 
 	public Text getStatoElaborazioneDettaglio() {

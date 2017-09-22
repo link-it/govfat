@@ -43,6 +43,7 @@ public class TracciaSDIModel extends AbstractModel<TracciaSDI> {
 		super();
 	
 		this.IDENTIFICATIVO_SDI = new Field("identificativoSdi",java.lang.Integer.class,"TracciaSDI",TracciaSDI.class);
+		this.NUMERO_FATTURA = new Field("numeroFattura",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.TIPO_COMUNICAZIONE = new Field("tipoComunicazione",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.NOME_FILE = new Field("nomeFile",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.DATA = new Field("data",java.util.Date.class,"TracciaSDI",TracciaSDI.class);
@@ -63,6 +64,7 @@ public class TracciaSDIModel extends AbstractModel<TracciaSDI> {
 		super(father);
 	
 		this.IDENTIFICATIVO_SDI = new ComplexField(father,"identificativoSdi",java.lang.Integer.class,"TracciaSDI",TracciaSDI.class);
+		this.NUMERO_FATTURA = new ComplexField(father,"numeroFattura",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.TIPO_COMUNICAZIONE = new ComplexField(father,"tipoComunicazione",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.NOME_FILE = new ComplexField(father,"nomeFile",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.DATA = new ComplexField(father,"data",java.util.Date.class,"TracciaSDI",TracciaSDI.class);
@@ -81,6 +83,8 @@ public class TracciaSDIModel extends AbstractModel<TracciaSDI> {
 	
 
 	public IField IDENTIFICATIVO_SDI = null;
+	 
+	public IField NUMERO_FATTURA = null;
 	 
 	public IField TIPO_COMUNICAZIONE = null;
 	 

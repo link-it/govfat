@@ -178,6 +178,7 @@
   <mapping name="TracciaSDI" class="org.govmix.proxy.fatturapa.orm.TracciaSDI">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
     <value name="identificativoSdi" field="identificativoSdi" usage="required"/>
+    <value name="numeroFattura" field="numeroFattura" usage="optional"/>
     <value name="tipoComunicazione" field="tipoComunicazione" usage="required" enum-value-method="toString"/>
     <value name="nomeFile" field="nomeFile" usage="required"/>
     <value name="data" field="data" usage="required"/>

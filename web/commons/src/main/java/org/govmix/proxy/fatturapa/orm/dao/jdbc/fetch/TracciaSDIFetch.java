@@ -58,6 +58,8 @@ public class TracciaSDIFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "id", Long.class));
 				setParameter(object, "setIdentificativoSdi", TracciaSDI.model().IDENTIFICATIVO_SDI.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "identificativo_sdi", TracciaSDI.model().IDENTIFICATIVO_SDI.getFieldType()));
+				setParameter(object, "setNumeroFattura", TracciaSDI.model().NUMERO_FATTURA.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "numero_fattura", TracciaSDI.model().NUMERO_FATTURA.getFieldType()));
 				setParameter(object, "set_value_tipoComunicazione", String.class,
 					jdbcParameterUtilities.readParameter(rs, "tipo_comunicazione", TracciaSDI.model().TIPO_COMUNICAZIONE.getFieldType())+"");
 				setParameter(object, "setNomeFile", TracciaSDI.model().NOME_FILE.getFieldType(),
@@ -116,6 +118,8 @@ public class TracciaSDIFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"id"));
 				setParameter(object, "setIdentificativoSdi", TracciaSDI.model().IDENTIFICATIVO_SDI.getFieldType(),
 					this.getObjectFromMap(map,"identificativoSdi"));
+				setParameter(object, "setNumeroFattura", TracciaSDI.model().NUMERO_FATTURA.getFieldType(),
+					this.getObjectFromMap(map,"numeroFattura"));
 				setParameter(object, "set_value_tipoComunicazione", String.class,
 					this.getObjectFromMap(map,"tipoComunicazione"));
 				setParameter(object, "setNomeFile", TracciaSDI.model().NOME_FILE.getFieldType(),

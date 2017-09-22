@@ -50,13 +50,13 @@ public class InserimentoLotti {
 						throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
 					}
 					type= "XML";
-					stato = StatoElaborazioneType.NON_FIRMATO;
+					stato = StatoElaborazioneType.PRESA_IN_CARICO;
 				} else if(request.getNomeFile().toLowerCase().endsWith("p7m")) {
 					if(this.getDipartimento(request.getDipartimento()).getFirmaAutomatica()){
 						throw new InserimentoLottiException(CODICE.ERRORE_FILE_FIRMATO, request.getNomeFile(), request.getDipartimento());
 					}
 					type= "P7M";
-					stato = StatoElaborazioneType.FIRMA_OK;
+					stato = StatoElaborazioneType.PRESA_IN_CARICO;
 				} else {
 					throw new InserimentoLottiException(CODICE.ERRORE_FORMATO_FILE, request.getNomeFile());
 				}
@@ -166,7 +166,7 @@ public class InserimentoLotti {
 				}
 
 				LottoFatture lotto = getLotto(request, lottoBD, type);
-				lotto.setStatoElaborazioneInUscita(StatoElaborazioneType.SPEDIZIONE_NON_ATTIVA);
+				lotto.setStatoElaborazioneInUscita(StatoElaborazioneType.SOLO_CONSERVAZIONE);
 				lotto.setProtocollo(request.getNumeroProtocollo() + "/" + request.getAnnoProtocollo() + "/" + request.getRegistroProtocollo());
 				
 				insertLotto(lotto, lottoBD, consegnaFattura);
@@ -254,6 +254,7 @@ public class InserimentoLotti {
 		lotto.setStatoConsegna(StatoConsegnaType.NON_CONSEGNATA);
 		lotto.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
 		lotto.setStatoInserimento(StatoInserimentoType.NON_INSERITO);
+		lotto.setDataUltimaElaborazione(new Date());
 
 		return lotto;
 	}

@@ -55,10 +55,10 @@ public class SpedizioneFattureAttive implements IWorkFlow<LottoFatture> {
 		this.log.debug("Elaboro il lotto ["+this.lottoFattureAttiveBD.convertToId(lottoFatture).toJson()+"]");
 		
 		EsitoInvioFattura esitoInvioFattura = this.invioFattura.invia(lottoFatture);
-		StatoElaborazioneType stato = (esitoInvioFattura.getEsito().equals(ESITO.OK)) ? StatoElaborazioneType.SPEDIZIONE_OK : StatoElaborazioneType.ERRORE_SPEDIZIONE;
+		StatoElaborazioneType stato = (esitoInvioFattura.getEsito().equals(ESITO.OK)) ? StatoElaborazioneType.RICEVUTA_DALLO_SDI: StatoElaborazioneType.ERRORE_DI_SPEDIZIONE;
 		this.lottoFattureAttiveBD.updateStatoElaborazioneInUscita(lottoFatture, stato);
 		
-		if(StatoElaborazioneType.SPEDIZIONE_OK.equals(stato)) {
+		if(StatoElaborazioneType.RICEVUTA_DALLO_SDI.equals(stato)) {
 			TracciaSDI tracciaSdi = new TracciaSDI();
 			
 			tracciaSdi.setIdentificativoSdi(Integer.parseInt(esitoInvioFattura.getMetadato("X-SDI-IdentificativoSDI")));

@@ -61,7 +61,7 @@ public class LottoFattureAttiveBD extends LottoBD {
 			throws ServiceException, NotImplementedException, ExpressionNotImplementedException, ExpressionException {
 		IExpression expression = this.service.newExpression();
 		expression.lessEquals(LottoFatture.model().DATA_RICEZIONE, dataRicezione);
-		expression.equals(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA, StatoElaborazioneType.PROTOCOLLAZIONE_OK);
+		expression.equals(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA, StatoElaborazioneType.PROTOCOLLATA);
 		expression.equals(LottoFatture.model().FATTURAZIONE_ATTIVA, true);
 		return expression;
 	}
