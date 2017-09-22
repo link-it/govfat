@@ -36,6 +36,7 @@ import org.apache.log4j.Logger;
 import org.apache.soap.encoding.soapenc.Base64;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoArchivioInvioFatturaType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFatturePassiveBD;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
@@ -70,7 +71,7 @@ public class TimerProtocollazioneRicevutaLib extends AbstractTimerLib {
 
 			this.log.info("Cerco fatture");
 			
-			SpedizioneFattureAttive workflow = new SpedizioneFattureAttive();
+			ProtocollazioneNotifiche workflow = new ProtocollazioneNotifiche();
 			
 			workflow.init(this.log, connection, this.limit);
 			long countFatture = workflow.count();
@@ -79,12 +80,12 @@ public class TimerProtocollazioneRicevutaLib extends AbstractTimerLib {
 
 			if(countFatture > 0) {
 				this.log.info("Gestisco ["+countFatture+"] fatture, ["+this.limit+"] alla volta");
-				List<LottoFatture> lst = workflow.getNextLista();
+				List<TracciaSDI> lst = workflow.getNextLista();
 
 				while(lst != null && !lst.isEmpty()) {
 					try {
-						for(LottoFatture fattura : lst) {
-							workflow.process(fattura);
+						for(TracciaSDI traccia : lst) {
+							workflow.process(traccia);
 							countFattureElaborate++;
 						}
 						this.log.info("Gestite ["+countFattureElaborate+"\\"+countFatture+"] fatture");

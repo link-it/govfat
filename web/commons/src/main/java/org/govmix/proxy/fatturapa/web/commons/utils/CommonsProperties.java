@@ -24,6 +24,9 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.Properties;
 
+import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
+import org.govmix.proxy.fatturapa.web.commons.exporter.PDFCreator.TipoXSL;
+
 
 /***
  * 
@@ -45,6 +48,7 @@ public class CommonsProperties {
 	private String xslPccRiallineamento;
 	private String xslBaseDir;
 	
+	private Properties xslTraccia;
 	private URL invioFatturaURL;
 	private String invioFatturaUsername;
 	private String invioFatturaPassword;
@@ -114,6 +118,18 @@ public class CommonsProperties {
 		this.xslNotificaEC = getProperty("xsl.notificaEC", true);
 		this.xslScartoEC = getProperty("xsl.scartoEC", true);
 		this.xslPccRiallineamento = getProperty("xsl.PccRiallineamento", true);
+		
+
+        String entiListString = getProperty("xsl.traccia.list", true);
+
+		this.xslTraccia = new Properties();
+        if(entiListString != null && !entiListString.isEmpty()) {
+                String[] entiList = entiListString.split(",");
+                for(String ente: entiList) {
+                	this.xslTraccia.put(ente, getProperty("xsl.traccia."+ente, true));
+                }
+        }
+
 		this.xslBaseDir = getProperty("xsl.baseDir", true);
 		
 		this.invioFatturaURL = new URL(this.getProperty("invioFattura.url", true));
@@ -233,6 +249,33 @@ public class CommonsProperties {
 
 	public String getIdEgovHeader() {
 		return idEgovHeader;
+	}
+
+	public String getXslTraccia(TipoComunicazioneType tipoComunicazione) {
+		if(this.xslTraccia.containsKey(tipoComunicazione.toString())) {
+			return this.xslTraccia.getProperty(tipoComunicazione.toString());
+		}
+		return null;
+	}
+
+	public String getXslTraccia(TipoXSL tipoXSL) {
+		switch(tipoXSL) {
+		case FATTURA_V10: return this.getXslFatturaSDI10();
+		case FATTURA_V11: return this.getXslFatturaSDI11();
+		case FATTURA_V12: return this.getXslFatturaV12();
+		case NOTIFICA_DT: return this.getXslNotificaDT();
+		case NOTIFICA_EC: return this.getXslNotificaEC();
+		case PCC_RIALLINEAMENTO: return this.getXslPccRiallineamento();
+		case SCARTO_EC: return this.getXslScartoEC();
+		case TRACCIA_AT:return this.getXslTraccia(TipoComunicazioneType.AT);
+		case TRACCIA_MC:return this.getXslTraccia(TipoComunicazioneType.MC);
+		case TRACCIA_MT:return this.getXslTraccia(TipoComunicazioneType.MT);
+		case TRACCIA_NE:return this.getXslTraccia(TipoComunicazioneType.NE);
+		case TRACCIA_NS:return this.getXslTraccia(TipoComunicazioneType.NS);
+		case TRACCIA_RC:return this.getXslTraccia(TipoComunicazioneType.RC);
+		default: return null;
+		}
+
 	}
 
 

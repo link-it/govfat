@@ -51,7 +51,21 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
  */
 public class PDFCreator {
 
-	public enum TipoXSL {FATTURA_V10, FATTURA_V11, FATTURA_V12, NOTIFICA_EC, SCARTO_EC, NOTIFICA_DT, PCC_RIALLINEAMENTO}
+	public enum TipoXSL {
+		FATTURA_V10,
+		FATTURA_V11, 
+		FATTURA_V12, 
+		NOTIFICA_EC, 
+		SCARTO_EC, 
+		NOTIFICA_DT, 
+		PCC_RIALLINEAMENTO,
+		TRACCIA_AT, 
+		TRACCIA_MC, 
+		TRACCIA_MT, 
+		TRACCIA_NE, 
+		TRACCIA_NS, 
+		TRACCIA_RC
+		}
 	
 //	private static TransformerFactory factory = null;
 	private Logger log = null;
@@ -138,26 +152,7 @@ public class PDFCreator {
 				String baseDir = StringUtils.isEmpty(CommonsProperties.getInstance(log).getXslBaseDir()) ? "" :
 					File.separatorChar + CommonsProperties.getInstance(log).getXslBaseDir();
 	
-				String xslFileName = null;
-				switch(tipoXSL) {
-				case FATTURA_V10: xslFileName = CommonsProperties.getInstance(log).getXslFatturaSDI10();
-					break;
-				case FATTURA_V11: xslFileName = CommonsProperties.getInstance(log).getXslFatturaSDI11();
-					break;
-				case FATTURA_V12: xslFileName = CommonsProperties.getInstance(log).getXslFatturaV12();
-					break;
-				case NOTIFICA_DT: xslFileName = CommonsProperties.getInstance(log).getXslNotificaDT();
-					break;
-				case NOTIFICA_EC: xslFileName = CommonsProperties.getInstance(log).getXslNotificaEC();
-					break;
-				case PCC_RIALLINEAMENTO: xslFileName = CommonsProperties.getInstance(log).getXslPccRiallineamento();
-					break;
-				case SCARTO_EC: xslFileName = CommonsProperties.getInstance(log).getXslScartoEC();
-					break;
-				default:
-					break;
-				
-				}
+				String xslFileName = CommonsProperties.getInstance(log).getXslTraccia(tipoXSL);
 				Transformer transformer = transformerFactory.newTransformer(new StreamSource(getTransformerInputStream(baseDir, xslFileName, log)));
 				tMap.put(tipoXSL, transformer);
 			}catch(Exception e){

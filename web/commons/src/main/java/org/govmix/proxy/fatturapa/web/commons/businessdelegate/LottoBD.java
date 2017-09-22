@@ -26,6 +26,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
+import org.govmix.proxy.fatturapa.orm.constants.FormatoArchivioInvioFatturaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.dao.ILottoFattureService;
 import org.openspcoop2.generic_project.beans.UpdateField;
@@ -130,6 +131,18 @@ public class LottoBD extends BaseBD {
 	public void updateStatoElaborazioneInUscita(IdLotto lotto, StatoElaborazioneType stato) throws Exception {
 		try {
 			this.service.updateFields(lotto, new UpdateField(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA, stato));
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la exists: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la exists: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public void updateDocumentoFirmato(IdLotto lotto, byte[] docFirmato) throws Exception {
+		try {
+			this.service.updateFields(lotto, new UpdateField(LottoFatture.model().XML, docFirmato), new UpdateField(LottoFatture.model().FORMATO_ARCHIVIO_INVIO_FATTURA, FormatoArchivioInvioFatturaType.P7M));
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la exists: " + e.getMessage(), e);
 			throw new Exception(e);

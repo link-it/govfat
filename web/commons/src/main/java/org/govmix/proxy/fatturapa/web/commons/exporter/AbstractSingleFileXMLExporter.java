@@ -54,7 +54,7 @@ public abstract class AbstractSingleFileXMLExporter<T,K> extends AbstractSingleF
 	}
 	
 	protected abstract String getNomeRisorsaXLST(T object) throws Exception;
-	protected abstract TipoXSL getTipoXsl(T object);
+	protected abstract TipoXSL getTipoXsl(T object) throws Exception;
 
 	protected InputStream getXsltFileStream(T object) throws ExportException {
 		InputStream xsltfile = null;

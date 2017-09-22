@@ -868,6 +868,7 @@
 		</xsd:annotation>
 		<xsd:sequence>
 			<xsd:element name="identificativoSdi" type="IdentificativoSdIType" />
+			<xsd:element name="numeroFattura" type="xsd:string" minOccurs="0" />
 			<xsd:element name="tipoComunicazione" type="TipoComunicazioneType" />
 			<xsd:element name="nomeFile" type="NomeFileType" />
 			<xsd:element name="data" type="xsd:dateTime" />

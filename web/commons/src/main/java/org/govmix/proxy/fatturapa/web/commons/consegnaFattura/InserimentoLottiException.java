@@ -13,12 +13,7 @@ public class InserimentoLottiException extends Exception {
 	private Object[] params;
 	
 	public InserimentoLottiException(CODICE codice, Object ... params) {
-		this.codice = codice;
-		this.setParams(params);
-	}
-	
-	public InserimentoLottiException(CODICE codice, String messaggio, Object ... params) {
-		super(messaggio);
+		super(codice.toString());
 		this.codice = codice;
 		this.setParams(params);
 	}

@@ -249,7 +249,7 @@ public abstract class AbstractSingleFileExporter<T, K> {
 			try {
 				idFatturaRichiesti = findIdFattura(ids, isAll);
 			}catch(NotFoundException e){
-				log.debug("Impossibile trovare la risorsa richiesta.");
+				log.debug("Impossibile trovare la risorsa richiesta:"+ e.getMessage(), e);
 				throw new ExportException("Impossibile trovare la risorsa richiesta.");
 			}
 
