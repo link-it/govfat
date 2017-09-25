@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.faces.event.ActionEvent;
 
+import org.apache.log4j.Logger;
+import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.MessageUtils;
 import org.richfaces.event.UploadEvent;
 import org.richfaces.model.UploadItem;
@@ -16,7 +18,7 @@ public class FileUploadBean implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-//	private static Logger log = LoggerManager.getConsoleLogger();
+	private static Logger log = LoggerManager.getConsoleLogger();
 	
 	private List<String> nomeFile;
 	private List<byte[]> contenuto;
@@ -61,11 +63,24 @@ public class FileUploadBean implements Serializable{
 		this.numeroFile = numeroFile;
 	}
 	
-	public void fileUploadListener(UploadEvent event) {
+	public synchronized void fileUploadListener(UploadEvent event) {
+		log.debug("Event upload!: "+ event.getSource());
+		log.debug("Event upload upItem: "+ event.getUploadItem());
+		log.debug("Event upload upItems: "+ event.getUploadItems());
+		
 		this.fileUploadErrorMessage = null;
 		this.mBean.setCheckFormFatturaMessage(null); 
 		UploadItem item = event.getUploadItem();
+		
+		log.debug("Event upload item CT: "+ item.getContentType());
+		log.debug("Event upload item Filename: "+ item.getFileName());
+		log.debug("Event upload item FileSize: "+ item.getFileSize());
+		log.debug("Event upload item File: "+ item.getFile());
+		log.debug("Event upload item isTempfile: "+ item.isTempFile());
 
+		if(item != null  && item.getFile() != null) {
+			log.debug("Nome File ricevuto: "+ item.getFile().getAbsolutePath()); 
+		}
 		if(item!= null && item.getData() != null){
 			this.filesCache.add(item);
 //			this.contenuto.add(item.getData());
@@ -77,6 +92,8 @@ public class FileUploadBean implements Serializable{
 			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fileUpload.uploadError"));
 			this.fileUploadErrorMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fileUpload.uploadError");
 		}
+		
+		log.debug("Event upload completato!");
 	}
 	
 	public final List<UploadItem> getFiles() {
