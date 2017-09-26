@@ -349,8 +349,8 @@ public class FattureExporter  extends HttpServlet{
 							if(!formato.equals(AbstractSingleFileExporter.FORMATO_PDF) && !formato.equals(AbstractSingleFileExporter.FORMATO_XML))
 								throw new ExportException("Si e' verificato un errore durante l'export: Il formato richiesto non e' disponibile per la Comunicazione di tipo Fattura Uscita.");
 
-							TracciaSdISingleFileExporter dtsfe = (TracciaSdISingleFileExporter) sfe;
-							TracciaSDI dt = dtsfe.convertToObject(ids[0]);
+							FatturaSingleFileExporter dtsfe = (FatturaSingleFileExporter) sfe;
+							FatturaElettronica dt = dtsfe.convertToObject(ids[0]);
 
 							// Visualizzazione Notifica DT formato PDF
 							if(formato.equals(AbstractSingleFileExporter.FORMATO_PDF)){
@@ -372,8 +372,8 @@ public class FattureExporter  extends HttpServlet{
 							if(!formato.equals(AbstractSingleFileExporter.FORMATO_PDF) && !formato.equals(AbstractSingleFileExporter.FORMATO_XML))
 								throw new ExportException("Si e' verificato un errore durante l'export: Il formato richiesto non e' disponibile per la Comunicazione di tipo Notifica DT Trasmittente.");
 
-							NotificaDTSingleFileExporter dtsfe = (NotificaDTSingleFileExporter) sfe;
-							NotificaDecorrenzaTermini dt = dtsfe.convertToObject(ids[0]);
+							TracciaSdISingleFileExporter dtsfe = (TracciaSdISingleFileExporter) sfe;
+							TracciaSDI dt = dtsfe.convertToObject(ids[0]);
 
 							// Visualizzazione Notifica DT formato PDF
 							if(formato.equals(AbstractSingleFileExporter.FORMATO_PDF)){
@@ -590,7 +590,7 @@ public class FattureExporter  extends HttpServlet{
 		}  else if(action.equals(PARAMETRO_ACTION_COMUNICAZIONE_FATTURA_USCITA)) {
 			return new FatturaSingleFileExporter(log);
 		}  else if(action.equals(PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE)) {
-			return new NotificaDTSingleFileExporter(log);
+			return new TracciaSdISingleFileExporter(log);
 		}  else if(action.equals(PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_ESITO_COMMITTENTE)) {
 			return new TracciaSdISingleFileExporter(log);
 		}  else if(action.equals(PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_MANCATA_CONSEGNA)) {

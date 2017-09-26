@@ -54,6 +54,7 @@ import java.util.List;
  * 			&lt;element name="tentativiProtocollazione" type="{http://www.w3.org/2001/XMLSchema}nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="dettaglioProtocollazione" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="Metadato" type="{http://www.govmix.org/proxy/fatturapa/orm}Metadato" minOccurs="0" maxOccurs="unbounded"/>
+ * 			&lt;element name="LottoFatture" type="{http://www.govmix.org/proxy/fatturapa/orm}LottoFatture" minOccurs="0" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -81,7 +82,8 @@ import java.util.List;
   	"dataProssimaProtocollazione",
   	"tentativiProtocollazione",
   	"dettaglioProtocollazione",
-  	"metadato"
+  	"metadato",
+  	"lottoFatture"
   }
 )
 
@@ -263,6 +265,14 @@ public class TracciaSDI extends org.openspcoop2.utils.beans.BaseBean implements 
     return this.metadato.size();
   }
 
+  public LottoFatture getLottoFatture() {
+    return this.lottoFatture;
+  }
+
+  public void setLottoFatture(LottoFatture lottoFatture) {
+    this.lottoFatture = lottoFatture;
+  }
+
   private static final long serialVersionUID = 1L;
 
   @XmlTransient
@@ -374,5 +384,8 @@ public class TracciaSDI extends org.openspcoop2.utils.beans.BaseBean implements 
   public int sizeMetadato() {
   	return this.metadato.size();
   }
+
+  @XmlElement(name="LottoFatture",required=false,nillable=false)
+  protected LottoFatture lottoFatture;
 
 }

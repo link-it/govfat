@@ -24,6 +24,7 @@ import java.util.List;
 
 import javax.faces.context.FacesContext;
 
+import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.Metadato;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
@@ -55,6 +56,8 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IBean<
 	private DateTime data = null;
 	private Button xml = null;
 	private Button pdf = null;
+	
+	private IdFattura idFattura = null;
 	
 	public TracciaSDIBean() {
 		try{
@@ -132,7 +135,7 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IBean<
 		this.metadato.setValue(sb.toString());
 		this.data.setValue(this.getDTO().getData());
 		
-		this.prepareUrls();
+		
 	}
 	
 	
@@ -146,14 +149,22 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IBean<
 		
 		String actionValue = "com";
 		
+		Long idLongComunicazione = this.getDTO().getId();
 		
 		if(this.getDTO().getTipoComunicazione() != null) {
 			actionValue = "com_" + this.getDTO().getTipoComunicazione().toString();
+			
+			if(this.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.FAT_OUT) && this.idFattura != null){
+				idLongComunicazione = this.idFattura.getId();
+				actionValue = FattureExporter.PARAMETRO_ACTION_FATTURA;
+			}
 		}
 
+		
+		
 		String url = context.getExternalContext().getRequestContextPath() 
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
-				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getId()
+				+FattureExporter.PARAMETRO_IDS+"=" + idLongComunicazione
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ actionValue;
 
@@ -161,7 +172,7 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IBean<
 
 		url = context.getExternalContext().getRequestContextPath() 
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
-				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getId()
+				+FattureExporter.PARAMETRO_IDS+"=" + idLongComunicazione
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_PDF
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ actionValue;
 
@@ -278,6 +289,15 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IBean<
 
 	public void setMetadato(Text metadato) {
 		this.metadato = metadato;
+	}
+
+	public IdFattura getIdFattura() {
+		return idFattura;
+	}
+
+	public void setIdFattura(IdFattura idFattura) {
+		this.idFattura = idFattura;
+		this.prepareUrls();
 	}
 	
 	

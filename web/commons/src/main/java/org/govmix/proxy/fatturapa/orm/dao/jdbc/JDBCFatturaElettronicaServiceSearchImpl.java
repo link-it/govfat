@@ -20,44 +20,40 @@
  */
 package org.govmix.proxy.fatturapa.orm.dao.jdbc;
 
-import java.util.List;
+import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import java.sql.Connection;
-
 import org.apache.log4j.Logger;
-
-import org.openspcoop2.utils.sql.ISQLQueryObject;
-
-import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
-import org.openspcoop2.generic_project.dao.jdbc.utils.IJDBCFetch;
-import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject;
-import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithId;
+import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
-import org.openspcoop2.generic_project.utils.UtilsTemplate;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.FatturaElettronicaFieldConverter;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.FatturaElettronicaFetch;
+import org.openspcoop2.generic_project.beans.AliasField;
 import org.openspcoop2.generic_project.beans.CustomField;
-import org.openspcoop2.generic_project.beans.InUse;
-import org.openspcoop2.generic_project.beans.IField;
-import org.openspcoop2.generic_project.beans.NonNegativeNumber;
-import org.openspcoop2.generic_project.beans.UnionExpression;
-import org.openspcoop2.generic_project.beans.Union;
 import org.openspcoop2.generic_project.beans.FunctionField;
+import org.openspcoop2.generic_project.beans.IField;
+import org.openspcoop2.generic_project.beans.InUse;
+import org.openspcoop2.generic_project.beans.NonNegativeNumber;
+import org.openspcoop2.generic_project.beans.Union;
+import org.openspcoop2.generic_project.beans.UnionExpression;
+import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithId;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCPaginatedExpression;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
+import org.openspcoop2.generic_project.dao.jdbc.utils.IJDBCFetch;
+import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject;
+import org.openspcoop2.generic_project.exception.ExpressionException;
 import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
-import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
-import org.openspcoop2.generic_project.dao.jdbc.JDBCPaginatedExpression;
-
-import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.FatturaElettronicaFieldConverter;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.FatturaElettronicaFetch;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCServiceManager;
-
-import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
+import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
+import org.openspcoop2.generic_project.utils.UtilsTemplate;
+import org.openspcoop2.utils.sql.ISQLQueryObject;
 
 /**     
  * JDBCFatturaElettronicaServiceSearchImpl
@@ -168,6 +164,7 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 			fields.add(new CustomField(id, Long.class, id, this.getFatturaElettronicaFieldConverter().toTable(FatturaElettronica.model())));
 			fields.add(FatturaElettronica.model().FORMATO_TRASMISSIONE);
 			fields.add(FatturaElettronica.model().IDENTIFICATIVO_SDI);
+			fields.add(FatturaElettronica.model().POSIZIONE);
 			fields.add(FatturaElettronica.model().DATA_RICEZIONE);
 			fields.add(FatturaElettronica.model().NOME_FILE);
 			fields.add(FatturaElettronica.model().MESSAGE_ID);
@@ -180,7 +177,6 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 			fields.add(FatturaElettronica.model().TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_DENOMINAZIONE);
 			fields.add(FatturaElettronica.model().TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_PAESE);
 			fields.add(FatturaElettronica.model().TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE_FISCALE);
-			fields.add(FatturaElettronica.model().POSIZIONE);
 			fields.add(FatturaElettronica.model().CODICE_DESTINATARIO);
 			fields.add(FatturaElettronica.model().TIPO_DOCUMENTO);
 			fields.add(FatturaElettronica.model().DIVISA);
@@ -210,45 +206,46 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 			fields.add(new CustomField(idEsitoScadenzaField, Long.class, idEsitoScadenzaField, this.getFatturaElettronicaFieldConverter().toTable(FatturaElettronica.model())));
 			
 			
-			String lottoId = "LottoFatture.id";
-			fields.add(new CustomField(lottoId, Long.class, "id", this.getFatturaElettronicaFieldConverter().toTable(FatturaElettronica.model().LOTTO_FATTURE)));
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.FORMATO_TRASMISSIONE);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.IDENTIFICATIVO_SDI);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.NOME_FILE);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.FORMATO_ARCHIVIO_INVIO_FATTURA);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.MESSAGE_ID);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_DENOMINAZIONE);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_NOME);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_COGNOME);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_CODICE);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_PAESE);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_CODICE_FISCALE);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_DENOMINAZIONE);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_NOME);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_COGNOME);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_CODICE);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_PAESE);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_CODICE_FISCALE);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_DENOMINAZIONE);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_NOME);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_COGNOME);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_PAESE);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE_FISCALE);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.CODICE_DESTINATARIO);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.XML);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.FATTURAZIONE_ATTIVA);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.STATO_ELABORAZIONE_IN_USCITA);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.DATA_RICEZIONE);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.DATA_ULTIMA_ELABORAZIONE);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.STATO_INSERIMENTO);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.STATO_CONSEGNA);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.DATA_CONSEGNA);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.DETTAGLIO_CONSEGNA);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.STATO_PROTOCOLLAZIONE);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.DATA_PROTOCOLLAZIONE);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.PROTOCOLLO);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.ID_EGOV);
+			String lottoTable = "LottoFatture";
+			String lottoId = lottoTable + ".id";
+			fields.add(new AliasField(new CustomField(lottoId, Long.class, "id", this.getFatturaElettronicaFieldConverter().toTable(FatturaElettronica.model().LOTTO_FATTURE)), "l_id"));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.FORMATO_TRASMISSIONE, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.IDENTIFICATIVO_SDI, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.NOME_FILE, lottoTable));
+//			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.FORMATO_ARCHIVIO_INVIO_FATTURA, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.MESSAGE_ID, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_DENOMINAZIONE, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_NOME, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_COGNOME, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_CODICE, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_PAESE, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_CODICE_FISCALE, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_DENOMINAZIONE, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_NOME, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_COGNOME, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_CODICE, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_PAESE, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_CODICE_FISCALE, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_DENOMINAZIONE, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_NOME, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_COGNOME, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_PAESE, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE_FISCALE, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.CODICE_DESTINATARIO, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.XML, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.FATTURAZIONE_ATTIVA, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.STATO_ELABORAZIONE_IN_USCITA, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.DATA_RICEZIONE, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.DATA_ULTIMA_ELABORAZIONE, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.STATO_INSERIMENTO, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.STATO_CONSEGNA, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.DATA_CONSEGNA, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.DETTAGLIO_CONSEGNA, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.STATO_PROTOCOLLAZIONE, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.DATA_PROTOCOLLAZIONE, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.PROTOCOLLO, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.ID_EGOV, lottoTable));
 
 
 			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));
@@ -326,6 +323,14 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 		
 	}
 	
+	private IField getCustomField(IField field, String table) throws ExpressionException {
+		
+		String columnName = this.getFatturaElettronicaFieldConverter().toColumn(field, false);
+		String aliasTableName = table.substring(0,  1);
+		String aliasColumnName = aliasTableName + columnName;
+		
+		return new AliasField(field, aliasColumnName);
+	}
 	@Override
 	public FatturaElettronica find(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, JDBCExpression expression, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) 
 		throws NotFoundException, MultipleResultException, NotImplementedException, ServiceException,Exception {

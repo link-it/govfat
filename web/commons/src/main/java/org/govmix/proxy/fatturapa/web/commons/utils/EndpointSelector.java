@@ -31,6 +31,7 @@ import org.govmix.proxy.fatturapa.orm.IdDipartimento;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.Protocollo;
 import org.govmix.proxy.fatturapa.orm.Registro;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.DipartimentoBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.ProtocolloBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.RegistroBD;
@@ -61,6 +62,11 @@ public class EndpointSelector {
 	public Endpoint findEndpoint(FatturaElettronica fattura) throws Exception {
 		this.log.debug("Cerco endpoint per fattura Id-SdI["+fattura.getIdentificativoSdi()+"] posizione["+fattura.getPosizione()+"] con destinatario ["+fattura.getCodiceDestinatario()+"]");
 		return findEndpoint(fattura.getCodiceDestinatario());
+	}
+	
+	public Endpoint findEndpoint(TracciaSDI traccia) throws Exception {
+		this.log.debug("Cerco endpoint per fattura Id-SdI["+traccia.getIdentificativoSdi()+"] con destinatario ["+traccia.getLottoFatture().getCodiceDestinatario()+"]");
+		return findEndpoint(traccia.getLottoFatture().getCodiceDestinatario());
 	}
 	
 	public Endpoint findEndpoint(LottoFatture lotto) throws Exception {

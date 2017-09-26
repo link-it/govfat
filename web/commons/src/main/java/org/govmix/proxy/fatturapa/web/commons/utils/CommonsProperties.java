@@ -26,6 +26,7 @@ import java.util.Properties;
 
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.web.commons.exporter.PDFCreator.TipoXSL;
+import org.govmix.proxy.pcc.fatture.utils.AbstractProperties;
 
 
 /***
@@ -36,7 +37,7 @@ import org.govmix.proxy.fatturapa.web.commons.exporter.PDFCreator.TipoXSL;
  * @author pintori
  *
  */
-public class CommonsProperties {
+public class CommonsProperties extends AbstractProperties {
 
 	/** XSL **/
 	private String xslFatturaSDI10;
@@ -62,7 +63,7 @@ public class CommonsProperties {
 	public static synchronized void initialize(org.apache.log4j.Logger log) throws Exception{
 
 		if(CommonsProperties.commonsProperties==null)
-			CommonsProperties.commonsProperties = new CommonsProperties(log);	
+			CommonsProperties.commonsProperties = new CommonsProperties(log, propertiesPath);	
 	}
 
 	public static CommonsProperties getInstance(org.apache.log4j.Logger log) throws Exception{
@@ -86,21 +87,22 @@ public class CommonsProperties {
 	 *
 	 * 
 	 */
-	public CommonsProperties(org.apache.log4j.Logger log) throws Exception{
+	public CommonsProperties(org.apache.log4j.Logger log, String path) throws Exception{
 
+		super(path);
 		/* ---- Lettura del cammino del file di configurazione ---- */
 
 		Properties propertiesReader = new Properties();
 		java.io.InputStream properties = null;
 		try{  
-			properties = CommonsProperties.class.getResourceAsStream(propertiesPath);
+			properties = CommonsProperties.class.getResourceAsStream(path);
 			if(properties==null){
-				throw new Exception("Properties "+propertiesPath+" not found");
+				throw new Exception("Properties "+path+" not found");
 			}
 			propertiesReader.load(properties);
 			properties.close();
 		}catch(java.io.IOException e) {
-			log.error("Riscontrato errore durante la lettura del file '"+propertiesPath+"': "+e.getMessage(),e);
+			log.error("Riscontrato errore durante la lettura del file '"+path+"': "+e.getMessage(),e);
 			try{
 				if(properties!=null)
 					properties.close();
@@ -146,32 +148,31 @@ public class CommonsProperties {
 		return this.reader.propertyNames();
 	}
 
-	public String getProperty(String name,boolean required) throws Exception{
-		String tmp = null;
-
-		tmp = this.reader.getProperty(name);
-
-		if(tmp==null){
-			if(required){
-				throw new Exception("Property ["+name+"] not found");
-			}
-		}
-		if(tmp!=null){
-			return tmp.trim();
-		}else{
-			return null;
-		}
-	}
-
-	public Boolean getBooleanProperty(String name,boolean required) throws Exception{
-		String propAsString = getProperty(name, required);
-
-		if(propAsString != null){
-			Boolean b = new Boolean(propAsString.equalsIgnoreCase("true"));
-			return b;
-		}
-		return null;
-	}
+//	public String getProperty(String name,boolean required) throws Exception{
+//		String tmp = null;
+//
+//		tmp = this.reader.getProperty(name);
+//
+//		if(tmp==null){
+//			if(required){
+//				throw new Exception("Property ["+name+"] not found");
+//			}
+//		}
+//		if(tmp!=null){
+//			return tmp.trim();
+//		}else{
+//			return null;
+//		}
+//	}
+//	public Boolean getBooleanProperty(String name,boolean required) throws Exception{
+//		String propAsString = getProperty(name, required);
+//
+//		if(propAsString != null){
+//			Boolean b = new Boolean(propAsString.equalsIgnoreCase("true"));
+//			return b;
+//		}
+//		return null;
+//	}
 
 	public String getXslNotificaEC() {
 		return xslNotificaEC;

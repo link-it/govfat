@@ -134,7 +134,49 @@
     <value name="nome" field="nome" usage="required"/>
     <value name="valore" field="valore" usage="required"/>
   </mapping>
-  <mapping name="LottoFatture" class="org.govmix.proxy.fatturapa.orm.LottoFatture">
+  <mapping name="LottoFatture" class="org.govmix.proxy.fatturapa.orm.LottoFatture" abstract="false">
+    <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
+    <value name="formatoTrasmissione" field="formatoTrasmissione" usage="required" enum-value-method="toString"/>
+    <value name="identificativoSdi" field="identificativoSdi" usage="required"/>
+    <value name="nomeFile" field="nomeFile" usage="required"/>
+    <value name="formatoArchivioInvioFattura" field="formatoArchivioInvioFattura" usage="required" enum-value-method="toString"/>
+    <value name="messageId" field="messageId" usage="required"/>
+    <value name="cedentePrestatoreDenominazione" field="cedentePrestatoreDenominazione" usage="optional"/>
+    <value name="cedentePrestatoreNome" field="cedentePrestatoreNome" usage="optional"/>
+    <value name="cedentePrestatoreCognome" field="cedentePrestatoreCognome" usage="optional"/>
+    <value name="cedentePrestatoreCodice" field="cedentePrestatoreCodice" usage="optional"/>
+    <value name="cedentePrestatorePaese" field="cedentePrestatorePaese" usage="optional"/>
+    <value name="cedentePrestatoreCodiceFiscale" field="cedentePrestatoreCodiceFiscale" usage="optional"/>
+    <value name="cessionarioCommittenteDenominazione" field="cessionarioCommittenteDenominazione" usage="optional"/>
+    <value name="cessionarioCommittenteNome" field="cessionarioCommittenteNome" usage="optional"/>
+    <value name="cessionarioCommittenteCognome" field="cessionarioCommittenteCognome" usage="optional"/>
+    <value name="cessionarioCommittenteCodice" field="cessionarioCommittenteCodice" usage="optional"/>
+    <value name="cessionarioCommittentePaese" field="cessionarioCommittentePaese" usage="optional"/>
+    <value name="cessionarioCommittenteCodiceFiscale" field="cessionarioCommittenteCodiceFiscale" usage="optional"/>
+    <value name="terzoIntermediarioOSoggettoEmittenteDenominazione" field="terzoIntermediarioOSoggettoEmittenteDenominazione" usage="optional"/>
+    <value name="terzoIntermediarioOSoggettoEmittenteNome" field="terzoIntermediarioOSoggettoEmittenteNome" usage="optional"/>
+    <value name="terzoIntermediarioOSoggettoEmittenteCognome" field="terzoIntermediarioOSoggettoEmittenteCognome" usage="optional"/>
+    <value name="terzoIntermediarioOSoggettoEmittenteCodice" field="terzoIntermediarioOSoggettoEmittenteCodice" usage="optional"/>
+    <value name="terzoIntermediarioOSoggettoEmittentePaese" field="terzoIntermediarioOSoggettoEmittentePaese" usage="optional"/>
+    <value name="terzoIntermediarioOSoggettoEmittenteCodiceFiscale" field="terzoIntermediarioOSoggettoEmittenteCodiceFiscale" usage="optional"/>
+    <value name="codiceDestinatario" field="codiceDestinatario" usage="required"/>
+    <value name="xml" field="xml" usage="required"/>
+    <value name="fatturazioneAttiva" field="fatturazioneAttiva" usage="required"/>
+    <value name="statoElaborazioneInUscita" field="statoElaborazioneInUscita" usage="optional" enum-value-method="toString"/>
+    <value name="dataUltimaElaborazione" field="dataUltimaElaborazione" usage="optional"/>
+    <value name="dataRicezione" field="dataRicezione" usage="required"/>
+    <value name="statoInserimento" field="statoInserimento" usage="required" enum-value-method="toString"/>
+    <value name="statoConsegna" field="statoConsegna" usage="required" enum-value-method="toString"/>
+    <value name="dataConsegna" field="dataConsegna" usage="optional"/>
+    <value name="dettaglioConsegna" field="dettaglioConsegna" usage="optional"/>
+    <value name="statoProtocollazione" field="statoProtocollazione" usage="required" enum-value-method="toString"/>
+    <value name="dataProtocollazione" field="dataProtocollazione" usage="optional"/>
+    <value name="protocollo" field="protocollo" usage="optional"/>
+    <value name="id-egov" field="idEgov" usage="optional"/>
+    <structure name="Dipartimento" field="dipartimento" usage="optional" map-as="_Dipartimento_Type"/>
+  </mapping>
+
+  <mapping type-name="_LottoFatture_Type" class="org.govmix.proxy.fatturapa.orm.LottoFatture" abstract="true">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
     <value name="formatoTrasmissione" field="formatoTrasmissione" usage="required" enum-value-method="toString"/>
     <value name="identificativoSdi" field="identificativoSdi" usage="required"/>
@@ -193,6 +235,7 @@
     <collection field="metadato" create-type="java.util.ArrayList">
       <structure map-as="org.govmix.proxy.fatturapa.orm.Metadato"/>
     </collection>
+    <structure name="LottoFatture" field="lottoFatture" usage="optional" map-as="_LottoFatture_Type"/>
   </mapping>
   <mapping name="FatturaElettronica" class="org.govmix.proxy.fatturapa.orm.FatturaElettronica">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
@@ -236,7 +279,7 @@
     <structure name="idEsitoContabilizzazione" field="idEsitoContabilizzazione" usage="optional" map-as="_IdTrasmissioneEsito_Type"/>
     <structure name="idEsitoScadenza" field="idEsitoScadenza" usage="optional" map-as="_IdTrasmissioneEsito_Type"/>
     <structure name="Dipartimento" field="dipartimento" usage="optional" map-as="_Dipartimento_Type"/>
-    <structure field="lottoFatture" usage="optional" map-as="org.govmix.proxy.fatturapa.orm.LottoFatture"/>
+    <structure name="LottoFatture" field="lottoFatture" usage="optional" map-as="_LottoFatture_Type"/>
   </mapping>
   <mapping name="NotificaEsitoCommittente" class="org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>

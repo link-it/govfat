@@ -20,7 +20,8 @@ public class TracciaSdIFilter extends AbstractFilter {
 	private Integer identificativoSdi;
 	private String tipoComunicazione;
 	private StatoProtocollazioneType statoProtocollazione;
-	private Date dataProssimaProtocollazioneMin;
+	private Date dataProssimaProtocollazioneMax;
+	private Boolean daProtocollare;
 	
 	public TracciaSdIFilter(IExpressionConstructor expressionConstructor) {
 		super(expressionConstructor);
@@ -47,8 +48,12 @@ public class TracciaSdIFilter extends AbstractFilter {
 				expression.equals(TracciaSDI.model().STATO_PROTOCOLLAZIONE, this.statoProtocollazione);
 			}
 			
-			if(this.dataProssimaProtocollazioneMin != null) {
-				expression.greaterEquals(TracciaSDI.model().DATA_PROSSIMA_PROTOCOLLAZIONE, this.dataProssimaProtocollazioneMin);
+			if(this.dataProssimaProtocollazioneMax != null) {
+				expression.lessEquals(TracciaSDI.model().DATA_PROSSIMA_PROTOCOLLAZIONE, this.dataProssimaProtocollazioneMax);
+			}
+			
+			if(this.daProtocollare != null) {
+				expression.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.MODALITA_PUSH, this.daProtocollare);
 			}
 
 			
@@ -94,12 +99,20 @@ public class TracciaSdIFilter extends AbstractFilter {
 		this.statoProtocollazione = statoProtocollazione;
 	}
 
-	public Date getDataProssimaProtocollazioneMin() {
-		return dataProssimaProtocollazioneMin;
+	public Date getDataProssimaProtocollazioneMax() {
+		return dataProssimaProtocollazioneMax;
 	}
 
-	public void setDataProssimaProtocollazioneMin(Date dataProssimaProtocollazioneMin) {
-		this.dataProssimaProtocollazioneMin = dataProssimaProtocollazioneMin;
+	public void setDataProssimaProtocollazioneMax(Date dataProssimaProtocollazioneMax) {
+		this.dataProssimaProtocollazioneMax = dataProssimaProtocollazioneMax;
+	}
+
+	public Boolean getDaProtocollare() {
+		return daProtocollare;
+	}
+
+	public void setDaProtocollare(Boolean daProtocollare) {
+		this.daProtocollare = daProtocollare;
 	}
 
 }

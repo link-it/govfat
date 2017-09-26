@@ -886,6 +886,19 @@
 			<xsd:element name="tentativiProtocollazione" type="xsd:nonNegativeInteger" />
 			<xsd:element name="dettaglioProtocollazione" type="xsd:string" minOccurs="0" />
 			<xsd:element ref="Metadato" minOccurs="0" maxOccurs="unbounded" />
+			
+			<!-- elementi per agevolare la ricerca, non mappato sul db -->
+			<xsd:element name="LottoFatture" type="LottoFatture" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-id-mapping object-name="LottoFatture"
+								object-type="LottoFatture" relationship="none" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+			
 		</xsd:sequence>
 	</xsd:complexType>
 	

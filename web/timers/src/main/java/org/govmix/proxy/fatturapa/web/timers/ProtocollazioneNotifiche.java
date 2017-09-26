@@ -1,24 +1,22 @@
 package org.govmix.proxy.fatturapa.web.timers;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Connection;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.cxf.helpers.IOUtils;
 import org.apache.log4j.Logger;
-import org.govmix.proxy.fatturapa.orm.LottoFatture;
+import org.apache.soap.encoding.soapenc.Base64;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
-import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
-import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFattureAttiveBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.TracciaSdIBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.TracciaSdIFilter;
-import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.EsitoInvioFattura;
-import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.EsitoInvioFattura.ESITO;
-import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.InvioFattura;
-import org.govmix.proxy.fatturapa.web.commons.ricevicomunicazionesdi.RiceviComunicazioneSdI;
-import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
+import org.govmix.proxy.fatturapa.web.commons.utils.CostantiProtocollazione;
+import org.govmix.proxy.fatturapa.web.commons.utils.Endpoint;
+import org.govmix.proxy.fatturapa.web.commons.utils.EndpointSelector;
 
 public class ProtocollazioneNotifiche implements IWorkFlow<TracciaSDI> {
 
@@ -26,6 +24,7 @@ public class ProtocollazioneNotifiche implements IWorkFlow<TracciaSDI> {
 	private int limit;
 	private TracciaSdIBD tracciaSdiBD;
 	private Date limitDate;
+	private EndpointSelector endpointSelector;
 
 	@Override
 	public void init(Logger log, Connection connection, int limit) throws Exception {
@@ -33,6 +32,7 @@ public class ProtocollazioneNotifiche implements IWorkFlow<TracciaSDI> {
 		this.limit = limit;
 		this.limitDate = new Date();
 		this.tracciaSdiBD = new TracciaSdIBD(log, connection, false);
+		this.endpointSelector = new EndpointSelector(log, connection, false);
 	}
 
 	@Override
@@ -42,8 +42,9 @@ public class ProtocollazioneNotifiche implements IWorkFlow<TracciaSDI> {
 
 	private TracciaSdIFilter newFilter() {
 		TracciaSdIFilter filter = this.tracciaSdiBD.newFilter();
-		filter.setDataProssimaProtocollazioneMin(this.limitDate);
+		filter.setDataProssimaProtocollazioneMax(this.limitDate);
 		filter.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
+		filter.setDaProtocollare(true);
 		filter.setOffset(0);
 		filter.setLimit(this.limit);
 		return filter;
@@ -56,38 +57,67 @@ public class ProtocollazioneNotifiche implements IWorkFlow<TracciaSDI> {
 
 	@Override
 	public void process(TracciaSDI tracciaSDI) throws Exception {
+		StatoProtocollazioneType nextStatoOK = StatoProtocollazioneType.PROTOCOLLATA;
+		StatoProtocollazioneType nextStatoKO = StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE;
 		this.log.debug("Elaboro la traccia con id ["+tracciaSDI.getId()+"]");
 		
-//		EsitoInvioFattura esitoInvioFattura = this.invioFattura.invia(tracciaSDI);
-//		StatoElaborazioneType stato = (esitoInvioFattura.getEsito().equals(ESITO.OK)) ? StatoElaborazioneType.SPEDIZIONE_OK : StatoElaborazioneType.ERRORE_SPEDIZIONE;
-//		this.lottoFattureAttiveBD.updateStatoElaborazioneInUscita(tracciaSDI, stato);
-//		
-//		if(StatoElaborazioneType.SPEDIZIONE_OK.equals(stato)) {
-//			TracciaSDI tracciaSdi = new TracciaSDI();
-//			
-//			tracciaSdi.setIdentificativoSdi(Integer.parseInt(esitoInvioFattura.getMetadato("X-SDI-IdentificativoSDI")));
-//			tracciaSdi.setTipoComunicazione(TipoComunicazioneType.FATTURA_USCITA);
-//			tracciaSdi.setData(new Date());
-//			tracciaSdi.setContentType(InvioFattura.getContentType(tracciaSDI));
-//			String nomeFile = esitoInvioFattura.getMetadato("X-SDI-NomeFile");
-//			if(nomeFile == null)
-//				nomeFile = tracciaSDI.getNomeFile();
-//			
-//			tracciaSdi.setNomeFile(nomeFile);
-//			tracciaSdi.setRawData(tracciaSDI.getXml());
-//			
-//			tracciaSdi.setStatoProtocollazione(StatoProtocollazioneType.PROTOCOLLATA);
-//			tracciaSdi.setTentativiProtocollazione(0);
-//			
-//			tracciaSdi.setIdEgov(esitoInvioFattura.getMetadato(CommonsProperties.getInstance(log).getIdEgovHeader()));
-//	
-//			this.riceviComunicazioneSdi.ricevi(tracciaSdi);
-//			this.lottoFattureAttiveBD.updateIdentificativoSdI(tracciaSDI, tracciaSdi.getIdentificativoSdi());
-//			this.tracciaSdiBD.assegnaIdentificativoSDIAInteroLotto(this.lottoFattureAttiveBD.convertToId(tracciaSDI), tracciaSdi.getIdentificativoSdi());
-//		}
+		Endpoint endpoint = endpointSelector.findEndpoint(tracciaSDI);
 		
+		URL urlOriginale = endpoint.getEndpoint().toURL();
 		
-//		this.log.debug("Elaboro la traccia con id ["+tracciaSDI.getId()+"]: stato protocollazione ["+tracciaSDI.getStatoProtocollazione()+"] -> ["+stato+"]");
+		this.log.debug("Spedisco la traccia ["+tracciaSDI.getId()+"] all'endpoint ["+urlOriginale.toString()+"]");
+		
+		URL url = new URL(urlOriginale.toString() + "/protocollazioneRicevute");
+
+		URLConnection conn = url.openConnection();
+		HttpURLConnection httpConn = (HttpURLConnection) conn;
+		String errore = null;
+		boolean esitoPositivo = false;
+		String response = null;
+		try{
+			httpConn.setRequestProperty(CostantiProtocollazione.IDENTIFICATIVO_SDI_HEADER_PARAM, ""+tracciaSDI.getIdentificativoSdi());
+			
+			if(tracciaSDI.getNumeroFattura() != null)
+				httpConn.setRequestProperty(CostantiProtocollazione.NUMERO_HEADER_PARAM, tracciaSDI.getNumeroFattura());
+
+			httpConn.setRequestProperty(CostantiProtocollazione.NOME_FILE_HEADER_PARAM, ""+tracciaSDI.getNomeFile());
+			httpConn.setRequestProperty(CostantiProtocollazione.DESTINATARIO_HEADER_PARAM, tracciaSDI.getLottoFatture().getCodiceDestinatario());
+			
+			httpConn.setRequestProperty("Content-Type", tracciaSDI.getContentType());
+			
+
+			if(endpoint.getUsername() != null && endpoint.getPassword()!= null) {
+				String auth = endpoint.getUsername() + ":" + endpoint.getPassword(); 
+				String authentication = "Basic " + Base64.encode(auth.getBytes());
+
+				httpConn.setRequestProperty("Authorization", authentication);
+			}
+
+			httpConn.setDoOutput(true);
+			httpConn.setDoInput(true);
+			
+			httpConn.setRequestMethod("POST");								
+
+			httpConn.getOutputStream().write(tracciaSDI.getRawData());
+			httpConn.getOutputStream().flush();
+			httpConn.getOutputStream().close();
+			
+			esitoPositivo = httpConn.getResponseCode() < 299;
+			
+			response = IOUtils.readStringFromStream(httpConn.getInputStream());
+			
+			if(esitoPositivo) {
+				this.tracciaSdiBD.updateStatoProtocollazione(tracciaSDI, nextStatoOK);
+				this.log.debug("Elaboro la traccia ["+tracciaSDI.getId()+"], stato ["+tracciaSDI.getStatoProtocollazione()+"] -> ["+nextStatoOK+"]");
+			} else {
+				this.tracciaSdiBD.updateStatoProtocollazione(tracciaSDI, nextStatoKO);
+				this.log.debug("Elaboro la traccia ["+tracciaSDI.getId()+"], stato ["+tracciaSDI.getStatoProtocollazione()+"] -> ["+nextStatoKO+"]");
+			}
+		} catch(Exception e) {
+			this.log.error("Errore durante la protocollazione della traccia: " + e.getMessage(), e);
+			this.tracciaSdiBD.updateStatoProtocollazione(tracciaSDI, nextStatoKO);
+			this.log.debug("Elaboro la traccia ["+tracciaSDI.getId()+"], stato ["+tracciaSDI.getStatoProtocollazione()+"] -> ["+nextStatoKO+"]");
+		}
 	}
 
 }

@@ -51,9 +51,8 @@ public class EndpointPdDImpl implements EndpointPdD {
 
 	private RiceviNotifica riceviNotifica;
 	private LottoBD lottoBD;
-	private static final String HEADER_IDENTIFICATIVO_SDI = "X-SDI-IdentificativoSdI";
+//	private static final String HEADER_IDENTIFICATIVO_SDI = "X-SDI-IdentificativoSdI";
 //	private RiceviComunicazioneSdI riceviComunicazioneSdi;
-
 	
 	private Logger log;
 
@@ -259,7 +258,7 @@ public class EndpointPdDImpl implements EndpointPdD {
 			
 			tracciaSdi.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
 			tracciaSdi.setTentativiProtocollazione(0);
-			
+			tracciaSdi.setDataProssimaProtocollazione(new Date());
 			tracciaSdi.setIdEgov(getIdEgov(headers));
 
 			riceviComunicazioneSdi.ricevi(tracciaSdi);

@@ -32,10 +32,10 @@ import org.govmix.proxy.fatturapa.orm.Evento;
 import org.govmix.proxy.fatturapa.orm.IdDipartimento;
 import org.govmix.proxy.fatturapa.orm.IdRegistro;
 import org.govmix.proxy.fatturapa.orm.Protocollo;
+import org.govmix.proxy.fatturapa.orm.Registro;
 import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.UtenteDipartimento;
 import org.govmix.proxy.fatturapa.orm.constants.UserRole;
-import org.govmix.proxy.fatturapa.orm.dao.IDBRegistroServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.IDipartimentoServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.IEnteServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.IEventoService;
@@ -43,6 +43,7 @@ import org.govmix.proxy.fatturapa.orm.dao.IProtocolloServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.IRegistroServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.IUtenteServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.DipartimentoFieldConverter;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.RegistroFieldConverter;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.DipartimentoFetch;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
@@ -209,6 +210,28 @@ public class DBLoginDao implements ILoginDao{
 		}
 	}
 
+	
+	private Map<Long, IdRegistro> getRegistriMap() throws Exception {
+		Map<Long, IdRegistro> registrimap = new HashMap<Long, IdRegistro>();
+		TipiDatabase databaseType = DAOFactory.getInstance().getServiceManagerProperties().getDatabase();
+
+		CustomField cf = new CustomField("id", Long.class, "id", new RegistroFieldConverter(databaseType).toTable(Registro.model()));
+
+		List<Map<String,Object>> select = this.registroDAO.select(this.registroDAO.newPaginatedExpression(), Registro.model().NOME, cf);
+		if(select != null && select.size()  >0) {
+			for(Map<String,Object> record: select) {
+				Long idRegistro = (Long) record.get("id");
+				String name = (String) record.get(Registro.model().NOME.getFieldName());
+				
+				IdRegistro idRegistroObj = new IdRegistro();
+				idRegistroObj.setNome(name);
+				registrimap.put(idRegistro, idRegistroObj);
+
+			}
+		}
+		return registrimap;
+	}
+	
 	@Override
 	public List<Dipartimento> getListaDipartimentiUtente(Utente utente) {
 		if(utente ==null){
@@ -234,7 +257,7 @@ public class DBLoginDao implements ILoginDao{
 						Dipartimento.model().ACCETTAZIONE_AUTOMATICA, Dipartimento.model().MODALITA_PUSH, Dipartimento.model().FATTURAZIONE_ATTIVA,
 						Dipartimento.model().FIRMA_AUTOMATICA, cf);
 
-				Map<Long, IdRegistro> registrimap = new HashMap<Long, IdRegistro>();
+				Map<Long, IdRegistro> registrimap = getRegistriMap();
 				if(select != null && select.size()  >0)
 					for (Map<String,Object> dipMap : select) {
 						DipartimentoFetch dipFetch = new DipartimentoFetch();
@@ -243,7 +266,7 @@ public class DBLoginDao implements ILoginDao{
 						if(idRegistroObject instanceof Long) {
 							Long idRegistro = (Long)idRegistroObject;
 							if(!registrimap.containsKey(idRegistro)) {
-								registrimap.put(idRegistro, this.registroDAO.convertToId(((IDBRegistroServiceSearch)this.registroDAO).get(idRegistro)));
+								throw new ServiceException("Registro con id ["+idRegistro+"] riferito dal dipartimento ["+dipartimento.getCodice()+"] non esiste");
 							}
 							
 							dipartimento.setRegistro(registrimap.get(idRegistro));

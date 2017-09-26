@@ -78,7 +78,7 @@ public class InvioFattura {
 
 		EsitoInvioFattura esito = new EsitoInvioFattura();
 		
-		this.log.info("Invio della fattura ["+lotto.getIdentificativoSdi()+"] completato con responseCode ["+responseCode+"]");
+		this.log.info("Invio della fattura ["+lotto.getIdentificativoSdi()+"] verso la url ["+url+"]completato con responseCode ["+responseCode+"]");
 		if(responseCode < 299) {
 			esito.setEsito(ESITO.OK);
 		} else {

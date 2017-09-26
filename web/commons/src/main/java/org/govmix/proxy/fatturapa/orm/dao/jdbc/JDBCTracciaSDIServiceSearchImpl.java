@@ -20,43 +20,38 @@
  */
 package org.govmix.proxy.fatturapa.orm.dao.jdbc;
 
-import java.util.List;
+import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import java.sql.Connection;
-
 import org.apache.log4j.Logger;
-
-import org.openspcoop2.utils.sql.ISQLQueryObject;
-
-import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
+import org.govmix.proxy.fatturapa.orm.LottoFatture;
+import org.govmix.proxy.fatturapa.orm.Metadato;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.TracciaSDIFieldConverter;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.TracciaSDIFetch;
+import org.openspcoop2.generic_project.beans.CustomField;
+import org.openspcoop2.generic_project.beans.FunctionField;
+import org.openspcoop2.generic_project.beans.IField;
+import org.openspcoop2.generic_project.beans.InUse;
+import org.openspcoop2.generic_project.beans.NonNegativeNumber;
+import org.openspcoop2.generic_project.beans.Union;
+import org.openspcoop2.generic_project.beans.UnionExpression;
+import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithoutId;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCPaginatedExpression;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
 import org.openspcoop2.generic_project.dao.jdbc.utils.IJDBCFetch;
 import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject;
-import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithoutId;
-import org.openspcoop2.generic_project.utils.UtilsTemplate;
-import org.openspcoop2.generic_project.beans.CustomField;
-import org.openspcoop2.generic_project.beans.InUse;
-import org.openspcoop2.generic_project.beans.IField;
-import org.openspcoop2.generic_project.beans.NonNegativeNumber;
-import org.openspcoop2.generic_project.beans.UnionExpression;
-import org.openspcoop2.generic_project.beans.Union;
-import org.openspcoop2.generic_project.beans.FunctionField;
 import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
-import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
-import org.openspcoop2.generic_project.dao.jdbc.JDBCPaginatedExpression;
-
-import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.TracciaSDIFieldConverter;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.TracciaSDIFetch;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCServiceManager;
-
-import org.govmix.proxy.fatturapa.orm.Metadato;
-import org.govmix.proxy.fatturapa.orm.TracciaSDI;
+import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
+import org.openspcoop2.generic_project.utils.UtilsTemplate;
+import org.openspcoop2.utils.sql.ISQLQueryObject;
 
 /**     
  * JDBCTracciaSDIServiceSearchImpl
@@ -79,7 +74,7 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithou
 	public ISQLFieldConverter getFieldConverter() {
 		return this.getTracciaSDIFieldConverter();
 	}
-	
+
 	private TracciaSDIFetch tracciaSDIFetch = new TracciaSDIFetch();
 	public TracciaSDIFetch getTracciaSDIFetch() {
 		return this.tracciaSDIFetch;
@@ -88,109 +83,196 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithou
 	public IJDBCFetch getFetch() {
 		return getTracciaSDIFetch();
 	}
-	
-	
+
+
 	private JDBCServiceManager jdbcServiceManager = null;
 
 	@Override
 	public void setServiceManager(JDBCServiceManager serviceManager) throws ServiceException{
 		this.jdbcServiceManager = serviceManager;
 	}
-	
+
 	@Override
 	public JDBCServiceManager getServiceManager() throws ServiceException{
 		return this.jdbcServiceManager;
 	}
-	
 
-	
-	
-	
-	
+
+
+
+
+
 	@Override
 	public List<TracciaSDI> findAll(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, JDBCPaginatedExpression expression, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotImplementedException, ServiceException,Exception {
 
-        List<TracciaSDI> list = new ArrayList<TracciaSDI>();
-        
-        // TODO: implementazione non efficente. 
-		// Per ottenere una implementazione efficente:
-		// 1. Usare metodo select di questa classe indirizzando esattamente i field necessari
-		// 2. Usare metodo getTracciaSDIFetch() sul risultato della select per ottenere un oggetto TracciaSDI
-		//	  La fetch con la map inserirà nell'oggetto solo i valori estratti 
+		List<TracciaSDI> list = new ArrayList<TracciaSDI>();
 
-        List<Long> ids = this.findAllTableIds(jdbcProperties, log, connection, sqlQueryObject, expression);
-        
-        for(Long id: ids) {
-        	list.add(this.get(jdbcProperties, log, connection, sqlQueryObject, id, idMappingResolutionBehaviour));
-        }
+		try {
+			List<IField> fields = new ArrayList<IField>();
 
-        return list;      
-		
+			String id = "id";
+			fields.add(new CustomField(id, Long.class, id, this.getFieldConverter().toTable(TracciaSDI.model())));
+			fields.add(TracciaSDI.model().IDENTIFICATIVO_SDI);
+			fields.add(TracciaSDI.model().NUMERO_FATTURA);
+			fields.add(TracciaSDI.model().TIPO_COMUNICAZIONE);
+			fields.add(TracciaSDI.model().NOME_FILE);
+			fields.add(TracciaSDI.model().DATA);
+			fields.add(TracciaSDI.model().ID_EGOV);
+			fields.add(TracciaSDI.model().CONTENT_TYPE);
+			fields.add(TracciaSDI.model().RAW_DATA);
+			fields.add(TracciaSDI.model().STATO_PROTOCOLLAZIONE);
+			fields.add(TracciaSDI.model().DATA_PROTOCOLLAZIONE);
+			fields.add(TracciaSDI.model().DATA_PROSSIMA_PROTOCOLLAZIONE);
+			fields.add(TracciaSDI.model().TENTATIVI_PROTOCOLLAZIONE);
+			fields.add(TracciaSDI.model().DETTAGLIO_PROTOCOLLAZIONE);
+
+			String lottoId = "LottoFatture.id";
+			fields.add(new CustomField(lottoId, Long.class, "id", this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model().LOTTO_FATTURE)));
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.FORMATO_TRASMISSIONE);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.IDENTIFICATIVO_SDI);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.NOME_FILE);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.FORMATO_ARCHIVIO_INVIO_FATTURA);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.MESSAGE_ID);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_DENOMINAZIONE);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_NOME);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_COGNOME);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_CODICE);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_PAESE);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_CODICE_FISCALE);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_DENOMINAZIONE);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_NOME);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_COGNOME);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_CODICE);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_PAESE);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_CODICE_FISCALE);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_DENOMINAZIONE);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_NOME);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_COGNOME);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_PAESE);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE_FISCALE);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.CODICE_DESTINATARIO);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.XML);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.FATTURAZIONE_ATTIVA);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.STATO_ELABORAZIONE_IN_USCITA);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.DATA_RICEZIONE);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.DATA_ULTIMA_ELABORAZIONE);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.STATO_INSERIMENTO);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.STATO_CONSEGNA);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.DATA_CONSEGNA);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.DETTAGLIO_CONSEGNA);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.STATO_PROTOCOLLAZIONE);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.DATA_PROTOCOLLAZIONE);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.PROTOCOLLO);
+			fields.add(TracciaSDI.model().LOTTO_FATTURE.ID_EGOV);
+
+
+			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));
+
+			org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 
+					new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
+
+			for(Map<String, Object> map: returnMap) {
+				TracciaSDI tracciaSdI = (TracciaSDI)this.getTracciaSDIFetch().fetch(jdbcProperties.getDatabase(), TracciaSDI.model(), map);
+				LottoFatture lottoFatture = (LottoFatture)this.getTracciaSDIFetch().fetch(jdbcProperties.getDatabase(), TracciaSDI.model().LOTTO_FATTURE, map);
+				tracciaSdI.setLottoFatture(lottoFatture);
+				
+
+				// Object tracciaSDI_metadato
+				ISQLQueryObject sqlQueryObjectGet_tracciaSDI_metadato = sqlQueryObject.newSQLQueryObject();
+				sqlQueryObjectGet_tracciaSDI_metadato.setANDLogicOperator(true);
+				sqlQueryObjectGet_tracciaSDI_metadato.addFromTable(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model().METADATO));
+				sqlQueryObjectGet_tracciaSDI_metadato.addSelectField("id");
+				sqlQueryObjectGet_tracciaSDI_metadato.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().METADATO.RICHIESTA,true));
+				sqlQueryObjectGet_tracciaSDI_metadato.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().METADATO.NOME,true));
+				sqlQueryObjectGet_tracciaSDI_metadato.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().METADATO.VALORE,true));
+				sqlQueryObjectGet_tracciaSDI_metadato.addWhereCondition("id_traccia_sdi=?");
+
+				// Get tracciaSDI_metadato
+				java.util.List<Object> tracciaSDI_metadato_list = (java.util.List<Object>) jdbcUtilities.executeQuery(sqlQueryObjectGet_tracciaSDI_metadato.createSQLQuery(), jdbcProperties.isShowSql(), TracciaSDI.model().METADATO, this.getTracciaSDIFetch(),
+						new JDBCObject(tracciaSdI.getId(),Long.class));
+
+				if(tracciaSDI_metadato_list != null) {
+					for (Object tracciaSDI_metadato_object: tracciaSDI_metadato_list) {
+						Metadato tracciaSDI_metadato = (Metadato) tracciaSDI_metadato_object;
+
+
+						tracciaSdI.addMetadato(tracciaSDI_metadato);
+					}
+				}
+
+				
+				list.add(tracciaSdI);
+			}
+
+		} catch(NotFoundException e) {}
+		return list;      
+
 	}
-	
+
 	@Override
 	public TracciaSDI find(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, JDBCExpression expression, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) 
-		throws NotFoundException, MultipleResultException, NotImplementedException, ServiceException,Exception {
+			throws NotFoundException, MultipleResultException, NotImplementedException, ServiceException,Exception {
 
-        long id = this.findTableId(jdbcProperties, log, connection, sqlQueryObject, expression);
-        if(id>0){
-        	return this.get(jdbcProperties, log, connection, sqlQueryObject, id, idMappingResolutionBehaviour);
-        }else{
-        	throw new NotFoundException("Entry with id["+id+"] not found");
-        }
-		
+		long id = this.findTableId(jdbcProperties, log, connection, sqlQueryObject, expression);
+		if(id>0){
+			return this.get(jdbcProperties, log, connection, sqlQueryObject, id, idMappingResolutionBehaviour);
+		}else{
+			throw new NotFoundException("Entry with id["+id+"] not found");
+		}
+
 	}
-	
+
 	@Override
 	public NonNegativeNumber count(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, JDBCExpression expression) throws NotImplementedException, ServiceException,Exception {
-		
+
 		List<Object> listaQuery = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareCount(jdbcProperties, log, connection, sqlQueryObject, expression,
-												this.getTracciaSDIFieldConverter(), TracciaSDI.model());
-		
+				this.getTracciaSDIFieldConverter(), TracciaSDI.model());
+
 		sqlQueryObject.addSelectCountField(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model())+".id","tot",true);
-		
+
 		_join(expression,sqlQueryObject);
-		
+
 		return org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.count(jdbcProperties, log, connection, sqlQueryObject, expression,
-																			this.getTracciaSDIFieldConverter(), TracciaSDI.model(),listaQuery);
+				this.getTracciaSDIFieldConverter(), TracciaSDI.model(),listaQuery);
 	}
 
 
 	@Override
 	public List<Object> select(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-													JDBCPaginatedExpression paginatedExpression, IField field) throws ServiceException,NotFoundException,NotImplementedException,Exception {
+			JDBCPaginatedExpression paginatedExpression, IField field) throws ServiceException,NotFoundException,NotImplementedException,Exception {
 		return this.select(jdbcProperties, log, connection, sqlQueryObject,
-								paginatedExpression, false, field);
+				paginatedExpression, false, field);
 	}
-	
+
 	@Override
 	public List<Object> select(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-													JDBCPaginatedExpression paginatedExpression, boolean distinct, IField field) throws ServiceException,NotFoundException,NotImplementedException,Exception {
+			JDBCPaginatedExpression paginatedExpression, boolean distinct, IField field) throws ServiceException,NotFoundException,NotImplementedException,Exception {
 		List<Map<String,Object>> map = 
-			this.select(jdbcProperties, log, connection, sqlQueryObject, paginatedExpression, distinct, new IField[]{field});
+				this.select(jdbcProperties, log, connection, sqlQueryObject, paginatedExpression, distinct, new IField[]{field});
 		return org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.selectSingleObject(map);
 	}
-	
+
 	@Override
 	public List<Map<String,Object>> select(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-													JDBCPaginatedExpression paginatedExpression, IField ... field) throws ServiceException,NotFoundException,NotImplementedException,Exception {
+			JDBCPaginatedExpression paginatedExpression, IField ... field) throws ServiceException,NotFoundException,NotImplementedException,Exception {
 		return this.select(jdbcProperties, log, connection, sqlQueryObject,
-								paginatedExpression, false, field);
+				paginatedExpression, false, field);
 	}
-	
+
 	@Override
 	public List<Map<String,Object>> select(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-													JDBCPaginatedExpression paginatedExpression, boolean distinct, IField ... field) throws ServiceException,NotFoundException,NotImplementedException,Exception {
-		
+			JDBCPaginatedExpression paginatedExpression, boolean distinct, IField ... field) throws ServiceException,NotFoundException,NotImplementedException,Exception {
+
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.setFields(sqlQueryObject,paginatedExpression,field);
 		try{
-		
+
 			ISQLQueryObject sqlQueryObjectDistinct = 
-						org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareSqlQueryObjectForSelectDistinct(distinct,sqlQueryObject, paginatedExpression, log,
-												this.getTracciaSDIFieldConverter(), field);
+					org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareSqlQueryObjectForSelectDistinct(distinct,sqlQueryObject, paginatedExpression, log,
+							this.getTracciaSDIFieldConverter(), field);
 
 			return _select(jdbcProperties, log, connection, sqlQueryObject, paginatedExpression, sqlQueryObjectDistinct);
-			
+
 		}finally{
 			org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.removeFields(sqlQueryObject,paginatedExpression,field);
 		}
@@ -198,16 +280,16 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithou
 
 	@Override
 	public Object aggregate(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-													JDBCExpression expression, FunctionField functionField) throws ServiceException,NotFoundException,NotImplementedException,Exception {
+			JDBCExpression expression, FunctionField functionField) throws ServiceException,NotFoundException,NotImplementedException,Exception {
 		Map<String,Object> map = 
-			this.aggregate(jdbcProperties, log, connection, sqlQueryObject, expression, new FunctionField[]{functionField});
+				this.aggregate(jdbcProperties, log, connection, sqlQueryObject, expression, new FunctionField[]{functionField});
 		return org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.selectAggregateObject(map,functionField);
 	}
-	
+
 	@Override
 	public Map<String,Object> aggregate(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-													JDBCExpression expression, FunctionField ... functionField) throws ServiceException,NotFoundException,NotImplementedException,Exception {													
-		
+			JDBCExpression expression, FunctionField ... functionField) throws ServiceException,NotFoundException,NotImplementedException,Exception {													
+
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.setFields(sqlQueryObject,expression,functionField);
 		try{
 			List<Map<String,Object>> list = _select(jdbcProperties, log, connection, sqlQueryObject, expression);
@@ -219,12 +301,12 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithou
 
 	@Override
 	public List<Map<String,Object>> groupBy(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-													JDBCExpression expression, FunctionField ... functionField) throws ServiceException,NotFoundException,NotImplementedException,Exception {
-		
+			JDBCExpression expression, FunctionField ... functionField) throws ServiceException,NotFoundException,NotImplementedException,Exception {
+
 		if(expression.getGroupByFields().size()<=0){
 			throw new ServiceException("GroupBy conditions not found in expression");
 		}
-		
+
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.setFields(sqlQueryObject,expression,functionField);
 		try{
 			return _select(jdbcProperties, log, connection, sqlQueryObject, expression);
@@ -232,16 +314,16 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithou
 			org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.removeFields(sqlQueryObject,expression,functionField);
 		}
 	}
-	
+
 
 	@Override
 	public List<Map<String,Object>> groupBy(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-													JDBCPaginatedExpression paginatedExpression, FunctionField ... functionField) throws ServiceException,NotFoundException,NotImplementedException,Exception {
-		
+			JDBCPaginatedExpression paginatedExpression, FunctionField ... functionField) throws ServiceException,NotFoundException,NotImplementedException,Exception {
+
 		if(paginatedExpression.getGroupByFields().size()<=0){
 			throw new ServiceException("GroupBy conditions not found in expression");
 		}
-		
+
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.setFields(sqlQueryObject,paginatedExpression,functionField);
 		try{
 			return _select(jdbcProperties, log, connection, sqlQueryObject, paginatedExpression);
@@ -249,26 +331,26 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithou
 			org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.removeFields(sqlQueryObject,paginatedExpression,functionField);
 		}
 	}
-	
+
 	protected List<Map<String,Object>> _select(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-												IExpression expression) throws ServiceException,NotFoundException,NotImplementedException,Exception {
+			IExpression expression) throws ServiceException,NotFoundException,NotImplementedException,Exception {
 		return _select(jdbcProperties, log, connection, sqlQueryObject, expression, null);
 	}
 	protected List<Map<String,Object>> _select(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-												IExpression expression, ISQLQueryObject sqlQueryObjectDistinct) throws ServiceException,NotFoundException,NotImplementedException,Exception {
-		
+			IExpression expression, ISQLQueryObject sqlQueryObjectDistinct) throws ServiceException,NotFoundException,NotImplementedException,Exception {
+
 		List<Object> listaQuery = new ArrayList<Object>();
 		List<JDBCObject> listaParams = new ArrayList<JDBCObject>();
 		List<Object> returnField = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareSelect(jdbcProperties, log, connection, sqlQueryObject, 
-        						expression, this.getTracciaSDIFieldConverter(), TracciaSDI.model(), 
-        						listaQuery,listaParams);
-		
+				expression, this.getTracciaSDIFieldConverter(), TracciaSDI.model(), 
+				listaQuery,listaParams);
+
 		_join(expression,sqlQueryObject);
-        
-        List<Map<String,Object>> list = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.select(jdbcProperties, log, connection,
-        								org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareSqlQueryObjectForSelectDistinct(sqlQueryObject,sqlQueryObjectDistinct), 
-        								expression, this.getTracciaSDIFieldConverter(), TracciaSDI.model(),
-        								listaQuery,listaParams,returnField);
+
+		List<Map<String,Object>> list = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.select(jdbcProperties, log, connection,
+				org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareSqlQueryObjectForSelectDistinct(sqlQueryObject,sqlQueryObjectDistinct), 
+				expression, this.getTracciaSDIFieldConverter(), TracciaSDI.model(),
+				listaQuery,listaParams,returnField);
 		if(list!=null && list.size()>0){
 			return list;
 		}
@@ -276,17 +358,17 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithou
 			throw new NotFoundException("Not Found");
 		}
 	}
-	
+
 	@Override
 	public List<Map<String,Object>> union(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-												Union union, UnionExpression ... unionExpression) throws ServiceException,NotFoundException,NotImplementedException,Exception {		
-		
+			Union union, UnionExpression ... unionExpression) throws ServiceException,NotFoundException,NotImplementedException,Exception {		
+
 		List<ISQLQueryObject> sqlQueryObjectInnerList = new ArrayList<ISQLQueryObject>();
 		List<JDBCObject> jdbcObjects = new ArrayList<JDBCObject>();
 		List<Class<?>> returnClassTypes = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareUnion(jdbcProperties, log, connection, sqlQueryObject, 
-        						this.getTracciaSDIFieldConverter(), TracciaSDI.model(), 
-        						sqlQueryObjectInnerList, jdbcObjects, union, unionExpression);
-		
+				this.getTracciaSDIFieldConverter(), TracciaSDI.model(), 
+				sqlQueryObjectInnerList, jdbcObjects, union, unionExpression);
+
 		if(unionExpression!=null){
 			for (int i = 0; i < unionExpression.length; i++) {
 				UnionExpression ue = unionExpression[i];
@@ -294,28 +376,28 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithou
 				_join(expression,sqlQueryObjectInnerList.get(i));
 			}
 		}
-        
-        List<Map<String,Object>> list = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.union(jdbcProperties, log, connection, sqlQueryObject, 
-        								this.getTracciaSDIFieldConverter(), TracciaSDI.model(), 
-        								sqlQueryObjectInnerList, jdbcObjects, returnClassTypes, union, unionExpression);
-        if(list!=null && list.size()>0){
+
+		List<Map<String,Object>> list = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.union(jdbcProperties, log, connection, sqlQueryObject, 
+				this.getTracciaSDIFieldConverter(), TracciaSDI.model(), 
+				sqlQueryObjectInnerList, jdbcObjects, returnClassTypes, union, unionExpression);
+		if(list!=null && list.size()>0){
 			return list;
 		}
 		else{
 			throw new NotFoundException("Not Found");
 		}								
 	}
-	
+
 	@Override
 	public NonNegativeNumber unionCount(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-												Union union, UnionExpression ... unionExpression) throws ServiceException,NotFoundException,NotImplementedException,Exception {		
-		
+			Union union, UnionExpression ... unionExpression) throws ServiceException,NotFoundException,NotImplementedException,Exception {		
+
 		List<ISQLQueryObject> sqlQueryObjectInnerList = new ArrayList<ISQLQueryObject>();
 		List<JDBCObject> jdbcObjects = new ArrayList<JDBCObject>();
 		List<Class<?>> returnClassTypes = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareUnionCount(jdbcProperties, log, connection, sqlQueryObject, 
-        						this.getTracciaSDIFieldConverter(), TracciaSDI.model(), 
-        						sqlQueryObjectInnerList, jdbcObjects, union, unionExpression);
-		
+				this.getTracciaSDIFieldConverter(), TracciaSDI.model(), 
+				sqlQueryObjectInnerList, jdbcObjects, union, unionExpression);
+
 		if(unionExpression!=null){
 			for (int i = 0; i < unionExpression.length; i++) {
 				UnionExpression ue = unionExpression[i];
@@ -323,11 +405,11 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithou
 				_join(expression,sqlQueryObjectInnerList.get(i));
 			}
 		}
-        
-        NonNegativeNumber number = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.unionCount(jdbcProperties, log, connection, sqlQueryObject, 
-        								this.getTracciaSDIFieldConverter(), TracciaSDI.model(), 
-        								sqlQueryObjectInnerList, jdbcObjects, returnClassTypes, union, unionExpression);
-        if(number!=null && number.longValue()>=0){
+
+		NonNegativeNumber number = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.unionCount(jdbcProperties, log, connection, sqlQueryObject, 
+				this.getTracciaSDIFieldConverter(), TracciaSDI.model(), 
+				sqlQueryObjectInnerList, jdbcObjects, returnClassTypes, union, unionExpression);
+		if(number!=null && number.longValue()>=0){
 			return number;
 		}
 		else{
@@ -357,7 +439,7 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithou
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public JDBCExpression toExpression(JDBCPaginatedExpression paginatedExpression, Logger log) throws NotImplementedException, ServiceException {
 		try{
@@ -375,91 +457,48 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithou
 			throw new ServiceException(e);
 		}
 	}
-	
-	
-	
+
+
+
 	// -- DB
 
-	
+
 	@Override
 	public TracciaSDI get(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, long tableId, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotFoundException, MultipleResultException, NotImplementedException, ServiceException, Exception {
 		return this._get(jdbcProperties, log, connection, sqlQueryObject, Long.valueOf(tableId), idMappingResolutionBehaviour);
 	}
-	
+
 	private TracciaSDI _get(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, Long tableId, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotFoundException, MultipleResultException, NotImplementedException, ServiceException, Exception {
-	
-		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 
-					new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
+
+		JDBCPaginatedExpression expression = this.newPaginatedExpression(log);
+		CustomField idField = new CustomField("id", Long.class, "id", this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model()));
+		expression.equals(idField, tableId);
+		expression.offset(0);
+		expression.limit(2);
 		
-		ISQLQueryObject sqlQueryObjectGet = sqlQueryObject.newSQLQueryObject();
-				
-		TracciaSDI tracciaSDI = new TracciaSDI();
+		expression.addOrder(idField, org.openspcoop2.generic_project.expression.SortOrder.ASC);
+		List<TracciaSDI> lst = this.findAll(jdbcProperties, log, connection, sqlQueryObject, expression, idMappingResolutionBehaviour);
 		
-
-		// Object tracciaSDI
-		ISQLQueryObject sqlQueryObjectGet_tracciaSDI = sqlQueryObjectGet.newSQLQueryObject();
-		sqlQueryObjectGet_tracciaSDI.setANDLogicOperator(true);
-		sqlQueryObjectGet_tracciaSDI.addFromTable(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model()));
-		sqlQueryObjectGet_tracciaSDI.addSelectField("id");
-		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().IDENTIFICATIVO_SDI,true));
-		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().NUMERO_FATTURA,true));
-		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().TIPO_COMUNICAZIONE,true));
-		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().NOME_FILE,true));
-		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().DATA,true));
-		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().ID_EGOV,true));
-		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().CONTENT_TYPE,true));
-		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().RAW_DATA,true));
-		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().STATO_PROTOCOLLAZIONE,true));
-		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().DATA_PROTOCOLLAZIONE,true));
-		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().DATA_PROSSIMA_PROTOCOLLAZIONE,true));
-		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().TENTATIVI_PROTOCOLLAZIONE,true));
-		sqlQueryObjectGet_tracciaSDI.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().DETTAGLIO_PROTOCOLLAZIONE,true));
-		sqlQueryObjectGet_tracciaSDI.addWhereCondition("id=?");
-
-		// Get tracciaSDI
-		tracciaSDI = (TracciaSDI) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_tracciaSDI.createSQLQuery(), jdbcProperties.isShowSql(), TracciaSDI.model(), this.getTracciaSDIFetch(),
-			new JDBCObject(tableId,Long.class));
-
-
-
-		// Object tracciaSDI_metadato
-		ISQLQueryObject sqlQueryObjectGet_tracciaSDI_metadato = sqlQueryObjectGet.newSQLQueryObject();
-		sqlQueryObjectGet_tracciaSDI_metadato.setANDLogicOperator(true);
-		sqlQueryObjectGet_tracciaSDI_metadato.addFromTable(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model().METADATO));
-		sqlQueryObjectGet_tracciaSDI_metadato.addSelectField("id");
-		sqlQueryObjectGet_tracciaSDI_metadato.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().METADATO.RICHIESTA,true));
-		sqlQueryObjectGet_tracciaSDI_metadato.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().METADATO.NOME,true));
-		sqlQueryObjectGet_tracciaSDI_metadato.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().METADATO.VALORE,true));
-		sqlQueryObjectGet_tracciaSDI_metadato.addWhereCondition("id_traccia_sdi=?");
-
-		// Get tracciaSDI_metadato
-		java.util.List<Object> tracciaSDI_metadato_list = (java.util.List<Object>) jdbcUtilities.executeQuery(sqlQueryObjectGet_tracciaSDI_metadato.createSQLQuery(), jdbcProperties.isShowSql(), TracciaSDI.model().METADATO, this.getTracciaSDIFetch(),
-			new JDBCObject(tracciaSDI.getId(),Long.class));
-
-		if(tracciaSDI_metadato_list != null) {
-			for (Object tracciaSDI_metadato_object: tracciaSDI_metadato_list) {
-				Metadato tracciaSDI_metadato = (Metadato) tracciaSDI_metadato_object;
-
-
-				tracciaSDI.addMetadato(tracciaSDI_metadato);
-			}
+		if(lst == null || lst.size() == 0) {
+			throw new NotFoundException();
+		} else if(lst.size() > 1) {
+			throw new MultipleResultException();
+		} else {
+			return lst.get(0);
 		}
 
-		
-        return tracciaSDI;  
-	
 	} 
-	
+
 	@Override
 	public boolean exists(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, long tableId) throws MultipleResultException, NotImplementedException, ServiceException, Exception {
 		return this._exists(jdbcProperties, log, connection, sqlQueryObject, Long.valueOf(tableId));
 	}
-	
+
 	private boolean _exists(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, Long tableId) throws MultipleResultException, NotImplementedException, ServiceException, Exception {
-	
+
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 
-					new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
-				
+				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
+
 		boolean existsTracciaSDI = false;
 
 		sqlQueryObject = sqlQueryObject.newSQLQueryObject();
@@ -472,100 +511,121 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithou
 
 		// Exists tracciaSDI
 		existsTracciaSDI = jdbcUtilities.exists(sqlQueryObject.createSQLQuery(), jdbcProperties.isShowSql(),
-			new JDBCObject(tableId,Long.class));
+				new JDBCObject(tableId,Long.class));
 
-		
-        return existsTracciaSDI;
-	
+
+		return existsTracciaSDI;
+
 	}
-	
+
 	private void _join(IExpression expression, ISQLQueryObject sqlQueryObject) throws NotImplementedException, ServiceException, Exception{
-	
+
 		if(expression.inUseModel(TracciaSDI.model().METADATO,false)){
 			String tableName1 = this.getTracciaSDIFieldConverter().toAliasTable(TracciaSDI.model());
 			String tableName2 = this.getTracciaSDIFieldConverter().toAliasTable(TracciaSDI.model().METADATO);
 			sqlQueryObject.addWhereCondition(tableName1+".id="+tableName2+".id_traccia_sdi");
 		}
-        
+
+		if(expression.inUseModel(TracciaSDI.model().LOTTO_FATTURE,false)){
+			String tableName1 = this.getTracciaSDIFieldConverter().toAliasTable(TracciaSDI.model());
+			String tableName2 = this.getTracciaSDIFieldConverter().toAliasTable(TracciaSDI.model().LOTTO_FATTURE);
+			sqlQueryObject.addWhereCondition(tableName1+".identificativo_sdi="+tableName2+".identificativo_sdi");
+		}
+
+		if(expression.inUseModel(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO,false)){
+
+			if(!expression.inUseModel(TracciaSDI.model().LOTTO_FATTURE,false)){
+				String tableName1 = this.getTracciaSDIFieldConverter().toAliasTable(TracciaSDI.model());
+				String tableName2 = this.getTracciaSDIFieldConverter().toAliasTable(TracciaSDI.model().LOTTO_FATTURE);
+				sqlQueryObject.addWhereCondition(tableName1+".identificativo_sdi="+tableName2+".identificativo_sdi");
+				sqlQueryObject.addFromTable(tableName2);
+			}
+
+			String tableName1 = this.getTracciaSDIFieldConverter().toAliasTable(TracciaSDI.model().LOTTO_FATTURE);
+			String tableName2 = this.getTracciaSDIFieldConverter().toAliasTable(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO);
+			sqlQueryObject.addWhereCondition(tableName1+".codice_destinatario="+tableName2+".codice");
+		}
+
+
 	}
-	
+
 	protected java.util.List<Object> _getRootTablePrimaryKeyValues(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, TracciaSDI tracciaSDI) throws NotFoundException, ServiceException, NotImplementedException, Exception{
-	    // Identificativi
-        java.util.List<Object> rootTableIdValues = new java.util.ArrayList<Object>();
+		// Identificativi
+		java.util.List<Object> rootTableIdValues = new java.util.ArrayList<Object>();
 		rootTableIdValues.add(tracciaSDI.getId());
-        
-        return rootTableIdValues;
+
+		return rootTableIdValues;
 	}
-	
+
 	protected Map<String, List<IField>> _getMapTableToPKColumn() throws NotImplementedException, Exception{
-	
+
 		TracciaSDIFieldConverter converter = this.getTracciaSDIFieldConverter();
 		Map<String, List<IField>> mapTableToPKColumn = new java.util.Hashtable<String, List<IField>>();
 		UtilsTemplate<IField> utilities = new UtilsTemplate<IField>();
 
 		// TracciaSDI.model()
 		mapTableToPKColumn.put(converter.toTable(TracciaSDI.model()),
-			utilities.newList(
-				new CustomField("id", Long.class, "id", converter.toTable(TracciaSDI.model()))
-			));
+				utilities.newList(
+						new CustomField("id", Long.class, "id", converter.toTable(TracciaSDI.model()))
+						));
 
 		// TracciaSDI.model().METADATO
 		mapTableToPKColumn.put(converter.toTable(TracciaSDI.model().METADATO),
-			utilities.newList(
-				new CustomField("id", Long.class, "id", converter.toTable(TracciaSDI.model().METADATO))
-			));
+				utilities.newList(
+						new CustomField("id", Long.class, "id", converter.toTable(TracciaSDI.model().METADATO))
+						));
 
 
-        return mapTableToPKColumn;		
+		return mapTableToPKColumn;		
 	}
-	
+
 	@Override
 	public List<Long> findAllTableIds(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, JDBCPaginatedExpression paginatedExpression) throws ServiceException, NotImplementedException, Exception {
-		
+
 		List<Long> list = new ArrayList<Long>();
 
 		sqlQueryObject.setSelectDistinct(true);
 		sqlQueryObject.setANDLogicOperator(true);
 		sqlQueryObject.addSelectField(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model())+".id");
 		Class<?> objectIdClass = Long.class;
-		
+
 		List<Object> listaQuery = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareFindAll(jdbcProperties, log, connection, sqlQueryObject, paginatedExpression,
-												this.getTracciaSDIFieldConverter(), TracciaSDI.model());
-		
+				this.getTracciaSDIFieldConverter(), TracciaSDI.model());
+
 		_join(paginatedExpression,sqlQueryObject);
-		
+
 		List<Object> listObjects = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.findAll(jdbcProperties, log, connection, sqlQueryObject, paginatedExpression,
-																			this.getTracciaSDIFieldConverter(), TracciaSDI.model(), objectIdClass, listaQuery);
+				this.getTracciaSDIFieldConverter(), TracciaSDI.model(), objectIdClass, listaQuery);
 		for(Object object: listObjects) {
 			list.add((Long)object);
 		}
 
-        return list;
-		
+		return list;
+
 	}
-	
+
 	@Override
 	public long findTableId(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, JDBCExpression expression) throws ServiceException, NotFoundException, MultipleResultException, NotImplementedException, Exception {
-	
+
 		sqlQueryObject.setSelectDistinct(true);
 		sqlQueryObject.setANDLogicOperator(true);
 		sqlQueryObject.addSelectField(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model())+".id");
 		Class<?> objectIdClass = Long.class;
-		
+
 		List<Object> listaQuery = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareFind(jdbcProperties, log, connection, sqlQueryObject, expression,
-												this.getTracciaSDIFieldConverter(), TracciaSDI.model());
-		
+				this.getTracciaSDIFieldConverter(), TracciaSDI.model());
+
 		_join(expression,sqlQueryObject);
 
 		Object res = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.find(jdbcProperties, log, connection, sqlQueryObject, expression,
-														this.getTracciaSDIFieldConverter(), TracciaSDI.model(), objectIdClass, listaQuery);
+				this.getTracciaSDIFieldConverter(), TracciaSDI.model(), objectIdClass, listaQuery);
 		if(res!=null && (((Long) res).longValue()>0) ){
 			return ((Long) res).longValue();
 		}
 		else{
 			throw new NotFoundException("Not Found");
 		}
-		
+
 	}
 
 	@Override
@@ -577,31 +637,31 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithou
 
 		InUse inUse = new InUse();
 		inUse.setInUse(false);
-		
+
 		/* 
 		 * TODO: implement code that checks whether the object identified by the id parameter is used by other objects
-		*/
-		
+		 */
+
 		// Delete this line when you have implemented the method
 		int throwNotImplemented = 1;
 		if(throwNotImplemented==1){
-		        throw new NotImplementedException("NotImplemented");
+			throw new NotImplementedException("NotImplemented");
 		}
 		// Delete this line when you have implemented the method
 
-        return inUse;
+		return inUse;
 
 	}
-	
 
-	
+
+
 	@Override
 	public List<List<Object>> nativeQuery(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-											String sql,List<Class<?>> returnClassTypes,Object ... param) throws ServiceException,NotFoundException,NotImplementedException,Exception{
-		
+			String sql,List<Class<?>> returnClassTypes,Object ... param) throws ServiceException,NotFoundException,NotImplementedException,Exception{
+
 		return org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.nativeQuery(jdbcProperties, log, connection, sqlQueryObject,
-																							sql,returnClassTypes,param);
-														
+				sql,returnClassTypes,param);
+
 	}
-	
+
 }
