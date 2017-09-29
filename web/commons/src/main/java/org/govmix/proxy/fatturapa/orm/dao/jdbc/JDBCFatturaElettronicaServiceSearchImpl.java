@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.FatturaElettronicaFieldConverter;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.FatturaElettronicaFetch;
 import org.openspcoop2.generic_project.beans.AliasField;
@@ -212,7 +213,7 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.FORMATO_TRASMISSIONE, lottoTable));
 			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.IDENTIFICATIVO_SDI, lottoTable));
 			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.NOME_FILE, lottoTable));
-//			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.FORMATO_ARCHIVIO_INVIO_FATTURA, lottoTable));
+			fields.add(new AliasField(FatturaElettronica.model().LOTTO_FATTURE.FORMATO_ARCHIVIO_INVIO_FATTURA, "l_formatoArchivio"));
 			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.MESSAGE_ID, lottoTable));
 			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_DENOMINAZIONE, lottoTable));
 			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_NOME, lottoTable));

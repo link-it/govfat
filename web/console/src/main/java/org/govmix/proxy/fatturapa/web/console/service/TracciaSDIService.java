@@ -145,6 +145,8 @@ public class TracciaSDIService implements ITracciaSDIService{
 		TracciaSdIFilter filter = this.tracciaSdiBD.newFilter();
 
 		filter.setIdentificativoSdi(this.idFattura.getIdentificativoSdi());
+		filter.setPosizione(this.idFattura.getPosizione());
+		filter.setConsentiPosizioneNull(true);
 
 		return filter;
 	}

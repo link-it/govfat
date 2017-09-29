@@ -77,8 +77,8 @@ public class ProtocollazioneNotifiche implements IWorkFlow<TracciaSDI> {
 		try{
 			httpConn.setRequestProperty(CostantiProtocollazione.IDENTIFICATIVO_SDI_HEADER_PARAM, ""+tracciaSDI.getIdentificativoSdi());
 			
-			if(tracciaSDI.getNumeroFattura() != null)
-				httpConn.setRequestProperty(CostantiProtocollazione.NUMERO_HEADER_PARAM, tracciaSDI.getNumeroFattura());
+			if(tracciaSDI.getPosizione() != null)
+				httpConn.setRequestProperty(CostantiProtocollazione.POSIZIONE_HEADER_PARAM, ""+ tracciaSDI.getPosizione());
 
 			httpConn.setRequestProperty(CostantiProtocollazione.NOME_FILE_HEADER_PARAM, ""+tracciaSDI.getNomeFile());
 			httpConn.setRequestProperty(CostantiProtocollazione.DESTINATARIO_HEADER_PARAM, tracciaSDI.getLottoFatture().getCodiceDestinatario());

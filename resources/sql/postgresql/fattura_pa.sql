@@ -282,7 +282,7 @@ CREATE SEQUENCE seq_tracce_sdi start 1 increment 1 maxvalue 9223372036854775807 
 CREATE TABLE tracce_sdi
 (
 	identificativo_sdi INT NOT NULL,
-	numero_fattura VARCHAR(255),
+	posizione INT,
 	tipo_comunicazione VARCHAR(255) NOT NULL,
 	nome_file VARCHAR(50) NOT NULL,
 	data TIMESTAMP NOT NULL,

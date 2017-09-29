@@ -31,7 +31,7 @@ public class ThreadTimerObject extends TimerObject {
 		super(properties);
 		this.timer = timer;
 	}
-	
+
 	@Override
 	protected void start(Logger log) {
 		if(this.properties.isTimerAbilitato()) {
@@ -49,6 +49,7 @@ public class ThreadTimerObject extends TimerObject {
 		if(this.properties.isTimerAbilitato()){
 			try{
 				this.timer.setStop(true);
+				this.timer.join(10000);
 			} catch (Exception e) {
 				log.error("Stop timer (thread) '"+this.properties.getTimerName()+"'", e);
 			}

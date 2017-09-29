@@ -41,7 +41,7 @@ import java.util.List;
  * &lt;complexType name="TracciaSDI">
  * 		&lt;sequence>
  * 			&lt;element name="identificativoSdi" type="{http://www.govmix.org/proxy/fatturapa/orm}integer" minOccurs="1" maxOccurs="1"/>
- * 			&lt;element name="numeroFattura" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="posizione" type="{http://www.w3.org/2001/XMLSchema}positiveInteger" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="tipoComunicazione" type="{http://www.govmix.org/proxy/fatturapa/orm}TipoComunicazioneType" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="nomeFile" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="data" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="1" maxOccurs="1"/>
@@ -70,7 +70,7 @@ import java.util.List;
 @XmlType(name = "TracciaSDI", 
   propOrder = {
   	"_decimalWrapper_identificativoSdi",
-  	"numeroFattura",
+  	"posizione",
   	"tipoComunicazione",
   	"nomeFile",
   	"data",
@@ -121,12 +121,12 @@ public class TracciaSDI extends org.openspcoop2.utils.beans.BaseBean implements 
 	}
   }
 
-  public java.lang.String getNumeroFattura() {
-    return this.numeroFattura;
+  public java.lang.Integer getPosizione() {
+    return this.posizione;
   }
 
-  public void setNumeroFattura(java.lang.String numeroFattura) {
-    this.numeroFattura = numeroFattura;
+  public void setPosizione(java.lang.Integer posizione) {
+    this.posizione = posizione;
   }
 
   public void set_value_tipoComunicazione(String value) {
@@ -300,9 +300,9 @@ public class TracciaSDI extends org.openspcoop2.utils.beans.BaseBean implements 
   @XmlTransient
   protected java.lang.Integer identificativoSdi;
 
-  @javax.xml.bind.annotation.XmlSchemaType(name="string")
-  @XmlElement(name="numeroFattura",required=false,nillable=false)
-  protected java.lang.String numeroFattura;
+  @javax.xml.bind.annotation.XmlSchemaType(name="positiveInteger")
+  @XmlElement(name="posizione",required=false,nillable=false)
+  protected java.lang.Integer posizione;
 
   @XmlTransient
   protected java.lang.String _value_tipoComunicazione;

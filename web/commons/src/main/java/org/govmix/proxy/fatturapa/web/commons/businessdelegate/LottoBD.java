@@ -29,6 +29,7 @@ import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoArchivioInvioFatturaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
+import org.govmix.proxy.fatturapa.orm.dao.IDBLottoFattureServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.ILottoFattureService;
 import org.openspcoop2.generic_project.beans.UpdateField;
 import org.openspcoop2.generic_project.exception.ExpressionException;
@@ -71,6 +72,16 @@ public class LottoBD extends BaseBD {
 	public LottoFatture get(IdLotto idLotto) throws Exception {
 		try {
 			return this.service.get(idLotto);
+		} catch (ServiceException e) {
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			throw new Exception(e);
+		}
+	}
+
+	public LottoFatture getById(Long idLotto) throws Exception {
+		try {
+			return ((IDBLottoFattureServiceSearch)this.service).get(idLotto);
 		} catch (ServiceException e) {
 			throw new Exception(e);
 		} catch (NotImplementedException e) {
@@ -141,10 +152,10 @@ public class LottoBD extends BaseBD {
 		try {
 			this.service.updateFields(lotto, new UpdateField(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA, stato), new UpdateField(LottoFatture.model().DATA_ULTIMA_ELABORAZIONE, new Date()));
 		} catch (ServiceException e) {
-			this.log.error("Errore durante la exists: " + e.getMessage(), e);
+			this.log.error("Errore durante la updateStatoElaborazioneInUscita: " + e.getMessage(), e);
 			throw new Exception(e);
 		} catch (NotImplementedException e) {
-			this.log.error("Errore durante la exists: " + e.getMessage(), e);
+			this.log.error("Errore durante la updateStatoElaborazioneInUscita: " + e.getMessage(), e);
 			throw new Exception(e);
 		}
 	}
@@ -153,10 +164,10 @@ public class LottoBD extends BaseBD {
 		try {
 			this.service.updateFields(lotto, new UpdateField(LottoFatture.model().XML, docFirmato), new UpdateField(LottoFatture.model().FORMATO_ARCHIVIO_INVIO_FATTURA, FormatoArchivioInvioFatturaType.P7M));
 		} catch (ServiceException e) {
-			this.log.error("Errore durante la exists: " + e.getMessage(), e);
+			this.log.error("Errore durante la updateDocumentoFirmato: " + e.getMessage(), e);
 			throw new Exception(e);
 		} catch (NotImplementedException e) {
-			this.log.error("Errore durante la exists: " + e.getMessage(), e);
+			this.log.error("Errore durante la updateDocumentoFirmato: " + e.getMessage(), e);
 			throw new Exception(e);
 		}
 	}

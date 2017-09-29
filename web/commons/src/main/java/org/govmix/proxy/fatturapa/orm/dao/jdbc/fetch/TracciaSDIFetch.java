@@ -20,20 +20,18 @@
  */
 package org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch;
 
+import java.sql.ResultSet;
+import java.util.Map;
+
+import org.govmix.proxy.fatturapa.orm.LottoFatture;
+import org.govmix.proxy.fatturapa.orm.Metadato;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.openspcoop2.generic_project.beans.IModel;
 import org.openspcoop2.generic_project.dao.jdbc.utils.AbstractJDBCFetch;
 import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCParameterUtilities;
 import org.openspcoop2.generic_project.exception.ServiceException;
-
-import java.sql.ResultSet;
-import java.util.Map;
-
 import org.openspcoop2.utils.TipiDatabase;
 import org.openspcoop2.utils.jdbc.IKeyGeneratorObject;
-import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
-import org.govmix.proxy.fatturapa.orm.LottoFatture;
-import org.govmix.proxy.fatturapa.orm.Metadato;
-import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 
 
 /**     
@@ -59,8 +57,8 @@ public class TracciaSDIFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "id", Long.class));
 				setParameter(object, "setIdentificativoSdi", TracciaSDI.model().IDENTIFICATIVO_SDI.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "identificativo_sdi", TracciaSDI.model().IDENTIFICATIVO_SDI.getFieldType()));
-				setParameter(object, "setNumeroFattura", TracciaSDI.model().NUMERO_FATTURA.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "numero_fattura", TracciaSDI.model().NUMERO_FATTURA.getFieldType()));
+				setParameter(object, "setPosizione", TracciaSDI.model().POSIZIONE.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "posizione", TracciaSDI.model().POSIZIONE.getFieldType(), org.openspcoop2.generic_project.dao.jdbc.utils.JDBCDefaultForXSDType.FORCE_ZERO_AS_NULL));
 				setParameter(object, "set_value_tipoComunicazione", String.class,
 					jdbcParameterUtilities.readParameter(rs, "tipo_comunicazione", TracciaSDI.model().TIPO_COMUNICAZIONE.getFieldType())+"");
 				setParameter(object, "setNomeFile", TracciaSDI.model().NOME_FILE.getFieldType(),
@@ -97,87 +95,86 @@ public class TracciaSDIFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "valore", TracciaSDI.model().METADATO.VALORE.getFieldType()));
 				return object;
 			}
-			
 			if(model.equals(TracciaSDI.model().LOTTO_FATTURE)){
-				LottoFatture object = new LottoFatture();
-				setParameter(object, "setId", Long.class,
-					jdbcParameterUtilities.readParameter(rs, "lotto.id", Long.class));
-				setParameter(object, "set_value_formatoTrasmissione", String.class,
-					jdbcParameterUtilities.readParameter(rs, "formato_trasmissione", TracciaSDI.model().LOTTO_FATTURE.FORMATO_TRASMISSIONE.getFieldType())+"");
-				setParameter(object, "setIdentificativoSdi", TracciaSDI.model().LOTTO_FATTURE.IDENTIFICATIVO_SDI.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "identificativo_sdi", TracciaSDI.model().LOTTO_FATTURE.IDENTIFICATIVO_SDI.getFieldType()));
-				setParameter(object, "setNomeFile", TracciaSDI.model().LOTTO_FATTURE.NOME_FILE.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "nome_file", TracciaSDI.model().LOTTO_FATTURE.NOME_FILE.getFieldType()));
-				setParameter(object, "set_value_formatoArchivioInvioFattura", String.class,
-					jdbcParameterUtilities.readParameter(rs, "formato_archivio_invio_fattura", TracciaSDI.model().LOTTO_FATTURE.FORMATO_ARCHIVIO_INVIO_FATTURA.getFieldType())+"");
-				setParameter(object, "setMessageId", TracciaSDI.model().LOTTO_FATTURE.MESSAGE_ID.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "message_id", TracciaSDI.model().LOTTO_FATTURE.MESSAGE_ID.getFieldType()));
-				setParameter(object, "setCedentePrestatoreDenominazione", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_DENOMINAZIONE.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "cp_denominazione", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_DENOMINAZIONE.getFieldType()));
-				setParameter(object, "setCedentePrestatoreNome", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_NOME.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "cp_nome", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_NOME.getFieldType()));
-				setParameter(object, "setCedentePrestatoreCognome", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_COGNOME.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "cp_cognome", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_COGNOME.getFieldType()));
-				setParameter(object, "setCedentePrestatoreCodice", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_CODICE.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "cp_idcodice", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_CODICE.getFieldType()));
-				setParameter(object, "setCedentePrestatorePaese", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_PAESE.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "cp_nazione", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_PAESE.getFieldType()));
-				setParameter(object, "setCedentePrestatoreCodiceFiscale", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_CODICE_FISCALE.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "cp_codicefiscale", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_CODICE_FISCALE.getFieldType()));
-				setParameter(object, "setCessionarioCommittenteDenominazione", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_DENOMINAZIONE.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "cc_denominazione", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_DENOMINAZIONE.getFieldType()));
-				setParameter(object, "setCessionarioCommittenteNome", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_NOME.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "cc_nome", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_NOME.getFieldType()));
-				setParameter(object, "setCessionarioCommittenteCognome", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_COGNOME.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "cc_cognome", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_COGNOME.getFieldType()));
-				setParameter(object, "setCessionarioCommittenteCodice", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_CODICE.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "cc_idcodice", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_CODICE.getFieldType()));
-				setParameter(object, "setCessionarioCommittentePaese", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_PAESE.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "cc_nazione", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_PAESE.getFieldType()));
-				setParameter(object, "setCessionarioCommittenteCodiceFiscale", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_CODICE_FISCALE.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "cc_codicefiscale", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_CODICE_FISCALE.getFieldType()));
-				setParameter(object, "setTerzoIntermediarioOSoggettoEmittenteDenominazione", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_DENOMINAZIONE.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "se_denominazione", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_DENOMINAZIONE.getFieldType()));
-				setParameter(object, "setTerzoIntermediarioOSoggettoEmittenteNome", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_NOME.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "se_nome", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_NOME.getFieldType()));
-				setParameter(object, "setTerzoIntermediarioOSoggettoEmittenteCognome", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_COGNOME.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "se_cognome", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_COGNOME.getFieldType()));
-				setParameter(object, "setTerzoIntermediarioOSoggettoEmittenteCodice", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "se_idcodice", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE.getFieldType()));
-				setParameter(object, "setTerzoIntermediarioOSoggettoEmittentePaese", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_PAESE.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "se_nazione", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_PAESE.getFieldType()));
-				setParameter(object, "setTerzoIntermediarioOSoggettoEmittenteCodiceFiscale", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE_FISCALE.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "se_codicefiscale", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE_FISCALE.getFieldType()));
-				setParameter(object, "setCodiceDestinatario", TracciaSDI.model().LOTTO_FATTURE.CODICE_DESTINATARIO.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "codice_destinatario", TracciaSDI.model().LOTTO_FATTURE.CODICE_DESTINATARIO.getFieldType()));
-				setParameter(object, "setXml", TracciaSDI.model().LOTTO_FATTURE.XML.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "xml", TracciaSDI.model().LOTTO_FATTURE.XML.getFieldType()));
-				setParameter(object, "setFatturazioneAttiva", TracciaSDI.model().LOTTO_FATTURE.FATTURAZIONE_ATTIVA.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "fatturazione_attiva", TracciaSDI.model().LOTTO_FATTURE.FATTURAZIONE_ATTIVA.getFieldType()));
-				setParameter(object, "set_value_statoElaborazioneInUscita", String.class,
-					jdbcParameterUtilities.readParameter(rs, "stato_elaborazione_in_uscita", TracciaSDI.model().LOTTO_FATTURE.STATO_ELABORAZIONE_IN_USCITA.getFieldType())+"");
-				setParameter(object, "setDataUltimaElaborazione", TracciaSDI.model().LOTTO_FATTURE.DATA_ULTIMA_ELABORAZIONE.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "data_ultima_elaborazione", TracciaSDI.model().LOTTO_FATTURE.DATA_ULTIMA_ELABORAZIONE.getFieldType()));
-				setParameter(object, "setDataRicezione", TracciaSDI.model().LOTTO_FATTURE.DATA_RICEZIONE.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "data_ricezione", TracciaSDI.model().LOTTO_FATTURE.DATA_RICEZIONE.getFieldType()));
-				setParameter(object, "set_value_statoInserimento", String.class,
-					jdbcParameterUtilities.readParameter(rs, "stato_inserimento", TracciaSDI.model().LOTTO_FATTURE.STATO_INSERIMENTO.getFieldType())+"");
-				setParameter(object, "set_value_statoConsegna", String.class,
-					jdbcParameterUtilities.readParameter(rs, "stato_consegna", TracciaSDI.model().LOTTO_FATTURE.STATO_CONSEGNA.getFieldType())+"");
-				setParameter(object, "setDataConsegna", TracciaSDI.model().LOTTO_FATTURE.DATA_CONSEGNA.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "data_consegna", TracciaSDI.model().LOTTO_FATTURE.DATA_CONSEGNA.getFieldType()));
-				setParameter(object, "setDettaglioConsegna", TracciaSDI.model().LOTTO_FATTURE.DETTAGLIO_CONSEGNA.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "dettaglio_consegna", TracciaSDI.model().LOTTO_FATTURE.DETTAGLIO_CONSEGNA.getFieldType()));
-				setParameter(object, "set_value_statoProtocollazione", String.class,
-					jdbcParameterUtilities.readParameter(rs, "stato_protocollazione", TracciaSDI.model().LOTTO_FATTURE.STATO_PROTOCOLLAZIONE.getFieldType())+"");
-				setParameter(object, "setDataProtocollazione", TracciaSDI.model().LOTTO_FATTURE.DATA_PROTOCOLLAZIONE.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "data_protocollazione", TracciaSDI.model().LOTTO_FATTURE.DATA_PROTOCOLLAZIONE.getFieldType()));
-				setParameter(object, "setProtocollo", TracciaSDI.model().LOTTO_FATTURE.PROTOCOLLO.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "protocollo", TracciaSDI.model().LOTTO_FATTURE.PROTOCOLLO.getFieldType()));
-				setParameter(object, "setIdEgov", TracciaSDI.model().LOTTO_FATTURE.ID_EGOV.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "id_egov", TracciaSDI.model().LOTTO_FATTURE.ID_EGOV.getFieldType()));
-				return object;
-			}
+		        LottoFatture object = new LottoFatture();
+		        setParameter(object, "setId", Long.class,
+		                jdbcParameterUtilities.readParameter(rs, "lotto.id", Long.class));
+		        setParameter(object, "set_value_formatoTrasmissione", String.class,
+		                jdbcParameterUtilities.readParameter(rs, "formato_trasmissione", TracciaSDI.model().LOTTO_FATTURE.FORMATO_TRASMISSIONE.getFieldType())+"");
+		        setParameter(object, "setIdentificativoSdi", TracciaSDI.model().LOTTO_FATTURE.IDENTIFICATIVO_SDI.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "identificativo_sdi", TracciaSDI.model().LOTTO_FATTURE.IDENTIFICATIVO_SDI.getFieldType()));
+		        setParameter(object, "setNomeFile", TracciaSDI.model().LOTTO_FATTURE.NOME_FILE.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "nome_file", TracciaSDI.model().LOTTO_FATTURE.NOME_FILE.getFieldType()));
+		        setParameter(object, "set_value_formatoArchivioInvioFattura", String.class,
+		                jdbcParameterUtilities.readParameter(rs, "formato_archivio_invio_fattura", TracciaSDI.model().LOTTO_FATTURE.FORMATO_ARCHIVIO_INVIO_FATTURA.getFieldType())+"");
+		        setParameter(object, "setMessageId", TracciaSDI.model().LOTTO_FATTURE.MESSAGE_ID.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "message_id", TracciaSDI.model().LOTTO_FATTURE.MESSAGE_ID.getFieldType()));
+		        setParameter(object, "setCedentePrestatoreDenominazione", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_DENOMINAZIONE.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "cp_denominazione", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_DENOMINAZIONE.getFieldType()));
+		        setParameter(object, "setCedentePrestatoreNome", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_NOME.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "cp_nome", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_NOME.getFieldType()));
+		        setParameter(object, "setCedentePrestatoreCognome", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_COGNOME.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "cp_cognome", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_COGNOME.getFieldType()));
+		        setParameter(object, "setCedentePrestatoreCodice", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_CODICE.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "cp_idcodice", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_CODICE.getFieldType()));
+		        setParameter(object, "setCedentePrestatorePaese", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_PAESE.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "cp_nazione", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_PAESE.getFieldType()));
+		        setParameter(object, "setCedentePrestatoreCodiceFiscale", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_CODICE_FISCALE.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "cp_codicefiscale", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_CODICE_FISCALE.getFieldType()));
+		        setParameter(object, "setCessionarioCommittenteDenominazione", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_DENOMINAZIONE.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "cc_denominazione", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_DENOMINAZIONE.getFieldType()));
+		        setParameter(object, "setCessionarioCommittenteNome", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_NOME.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "cc_nome", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_NOME.getFieldType()));
+		        setParameter(object, "setCessionarioCommittenteCognome", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_COGNOME.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "cc_cognome", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_COGNOME.getFieldType()));
+		        setParameter(object, "setCessionarioCommittenteCodice", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_CODICE.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "cc_idcodice", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_CODICE.getFieldType()));
+		        setParameter(object, "setCessionarioCommittentePaese", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_PAESE.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "cc_nazione", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_PAESE.getFieldType()));
+		        setParameter(object, "setCessionarioCommittenteCodiceFiscale", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_CODICE_FISCALE.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "cc_codicefiscale", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_CODICE_FISCALE.getFieldType()));
+		        setParameter(object, "setTerzoIntermediarioOSoggettoEmittenteDenominazione", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_DENOMINAZIONE.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "se_denominazione", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_DENOMINAZIONE.getFieldType()));
+		        setParameter(object, "setTerzoIntermediarioOSoggettoEmittenteNome", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_NOME.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "se_nome", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_NOME.getFieldType()));
+		        setParameter(object, "setTerzoIntermediarioOSoggettoEmittenteCognome", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_COGNOME.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "se_cognome", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_COGNOME.getFieldType()));
+		        setParameter(object, "setTerzoIntermediarioOSoggettoEmittenteCodice", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "se_idcodice", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE.getFieldType()));
+		        setParameter(object, "setTerzoIntermediarioOSoggettoEmittentePaese", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_PAESE.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "se_nazione", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_PAESE.getFieldType()));
+		        setParameter(object, "setTerzoIntermediarioOSoggettoEmittenteCodiceFiscale", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE_FISCALE.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "se_codicefiscale", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE_FISCALE.getFieldType()));
+		        setParameter(object, "setCodiceDestinatario", TracciaSDI.model().LOTTO_FATTURE.CODICE_DESTINATARIO.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "codice_destinatario", TracciaSDI.model().LOTTO_FATTURE.CODICE_DESTINATARIO.getFieldType()));
+		        setParameter(object, "setXml", TracciaSDI.model().LOTTO_FATTURE.XML.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "xml", TracciaSDI.model().LOTTO_FATTURE.XML.getFieldType()));
+		        setParameter(object, "setFatturazioneAttiva", TracciaSDI.model().LOTTO_FATTURE.FATTURAZIONE_ATTIVA.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "fatturazione_attiva", TracciaSDI.model().LOTTO_FATTURE.FATTURAZIONE_ATTIVA.getFieldType()));
+		        setParameter(object, "set_value_statoElaborazioneInUscita", String.class,
+		                jdbcParameterUtilities.readParameter(rs, "stato_elaborazione_in_uscita", TracciaSDI.model().LOTTO_FATTURE.STATO_ELABORAZIONE_IN_USCITA.getFieldType())+"");
+		        setParameter(object, "setDataUltimaElaborazione", TracciaSDI.model().LOTTO_FATTURE.DATA_ULTIMA_ELABORAZIONE.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "data_ultima_elaborazione", TracciaSDI.model().LOTTO_FATTURE.DATA_ULTIMA_ELABORAZIONE.getFieldType()));
+		        setParameter(object, "setDataRicezione", TracciaSDI.model().LOTTO_FATTURE.DATA_RICEZIONE.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "data_ricezione", TracciaSDI.model().LOTTO_FATTURE.DATA_RICEZIONE.getFieldType()));
+		        setParameter(object, "set_value_statoInserimento", String.class,
+		                jdbcParameterUtilities.readParameter(rs, "stato_inserimento", TracciaSDI.model().LOTTO_FATTURE.STATO_INSERIMENTO.getFieldType())+"");
+		        setParameter(object, "set_value_statoConsegna", String.class,
+		                jdbcParameterUtilities.readParameter(rs, "stato_consegna", TracciaSDI.model().LOTTO_FATTURE.STATO_CONSEGNA.getFieldType())+"");
+		        setParameter(object, "setDataConsegna", TracciaSDI.model().LOTTO_FATTURE.DATA_CONSEGNA.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "data_consegna", TracciaSDI.model().LOTTO_FATTURE.DATA_CONSEGNA.getFieldType()));
+		        setParameter(object, "setDettaglioConsegna", TracciaSDI.model().LOTTO_FATTURE.DETTAGLIO_CONSEGNA.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "dettaglio_consegna", TracciaSDI.model().LOTTO_FATTURE.DETTAGLIO_CONSEGNA.getFieldType()));
+		        setParameter(object, "set_value_statoProtocollazione", String.class,
+		                jdbcParameterUtilities.readParameter(rs, "stato_protocollazione", TracciaSDI.model().LOTTO_FATTURE.STATO_PROTOCOLLAZIONE.getFieldType())+"");
+		        setParameter(object, "setDataProtocollazione", TracciaSDI.model().LOTTO_FATTURE.DATA_PROTOCOLLAZIONE.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "data_protocollazione", TracciaSDI.model().LOTTO_FATTURE.DATA_PROTOCOLLAZIONE.getFieldType()));
+		        setParameter(object, "setProtocollo", TracciaSDI.model().LOTTO_FATTURE.PROTOCOLLO.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "protocollo", TracciaSDI.model().LOTTO_FATTURE.PROTOCOLLO.getFieldType()));
+		        setParameter(object, "setIdEgov", TracciaSDI.model().LOTTO_FATTURE.ID_EGOV.getFieldType(),
+		                jdbcParameterUtilities.readParameter(rs, "id_egov", TracciaSDI.model().LOTTO_FATTURE.ID_EGOV.getFieldType()));
+		        return object;
+		}
 
 			else{
 				throw new ServiceException("Model ["+model.toString()+"] not supported by fetch: "+this.getClass().getName());
@@ -200,8 +197,8 @@ public class TracciaSDIFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"id"));
 				setParameter(object, "setIdentificativoSdi", TracciaSDI.model().IDENTIFICATIVO_SDI.getFieldType(),
 					this.getObjectFromMap(map,"identificativoSdi"));
-				setParameter(object, "setNumeroFattura", TracciaSDI.model().NUMERO_FATTURA.getFieldType(),
-					this.getObjectFromMap(map,"numeroFattura"));
+				setParameter(object, "setPosizione", TracciaSDI.model().POSIZIONE.getFieldType(),
+					this.getObjectFromMap(map,"posizione"));
 				setParameter(object, "set_value_tipoComunicazione", String.class,
 					this.getObjectFromMap(map,"tipoComunicazione"));
 				setParameter(object, "setNomeFile", TracciaSDI.model().NOME_FILE.getFieldType(),
@@ -238,84 +235,84 @@ public class TracciaSDIFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"Metadato.valore"));
 				return object;
 			}
-			if(model.equals(TracciaSDI.model().LOTTO_FATTURE)){
-				LottoFatture object = new LottoFatture();
-				setParameter(object, "setId", Long.class,
-					this.getObjectFromMap(map,"LottoFatture.id"));
-				setParameter(object, "set_value_formatoTrasmissione", String.class,
-					this.getObjectFromMap(map,"LottoFatture.formatoTrasmissione"));
-				setParameter(object, "setIdentificativoSdi", TracciaSDI.model().LOTTO_FATTURE.IDENTIFICATIVO_SDI.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.identificativoSdi"));
-				setParameter(object, "setNomeFile", TracciaSDI.model().LOTTO_FATTURE.NOME_FILE.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.nomeFile"));
-				setParameter(object, "set_value_formatoArchivioInvioFattura", String.class,
-					this.getObjectFromMap(map,"LottoFatture.formatoArchivioInvioFattura"));
-				setParameter(object, "setMessageId", TracciaSDI.model().LOTTO_FATTURE.MESSAGE_ID.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.messageId"));
-				setParameter(object, "setCedentePrestatoreDenominazione", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_DENOMINAZIONE.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.cedentePrestatoreDenominazione"));
-				setParameter(object, "setCedentePrestatoreNome", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_NOME.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.cedentePrestatoreNome"));
-				setParameter(object, "setCedentePrestatoreCognome", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_COGNOME.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.cedentePrestatoreCognome"));
-				setParameter(object, "setCedentePrestatoreCodice", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_CODICE.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.cedentePrestatoreCodice"));
-				setParameter(object, "setCedentePrestatorePaese", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_PAESE.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.cedentePrestatorePaese"));
-				setParameter(object, "setCedentePrestatoreCodiceFiscale", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_CODICE_FISCALE.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.cedentePrestatoreCodiceFiscale"));
-				setParameter(object, "setCessionarioCommittenteDenominazione", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_DENOMINAZIONE.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.cessionarioCommittenteDenominazione"));
-				setParameter(object, "setCessionarioCommittenteNome", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_NOME.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.cessionarioCommittenteNome"));
-				setParameter(object, "setCessionarioCommittenteCognome", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_COGNOME.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.cessionarioCommittenteCognome"));
-				setParameter(object, "setCessionarioCommittenteCodice", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_CODICE.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.cessionarioCommittenteCodice"));
-				setParameter(object, "setCessionarioCommittentePaese", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_PAESE.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.cessionarioCommittentePaese"));
-				setParameter(object, "setCessionarioCommittenteCodiceFiscale", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_CODICE_FISCALE.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.cessionarioCommittenteCodiceFiscale"));
-				setParameter(object, "setTerzoIntermediarioOSoggettoEmittenteDenominazione", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_DENOMINAZIONE.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.terzoIntermediarioOSoggettoEmittenteDenominazione"));
-				setParameter(object, "setTerzoIntermediarioOSoggettoEmittenteNome", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_NOME.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.terzoIntermediarioOSoggettoEmittenteNome"));
-				setParameter(object, "setTerzoIntermediarioOSoggettoEmittenteCognome", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_COGNOME.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.terzoIntermediarioOSoggettoEmittenteCognome"));
-				setParameter(object, "setTerzoIntermediarioOSoggettoEmittenteCodice", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.terzoIntermediarioOSoggettoEmittenteCodice"));
-				setParameter(object, "setTerzoIntermediarioOSoggettoEmittentePaese", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_PAESE.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.terzoIntermediarioOSoggettoEmittentePaese"));
-				setParameter(object, "setTerzoIntermediarioOSoggettoEmittenteCodiceFiscale", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE_FISCALE.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.terzoIntermediarioOSoggettoEmittenteCodiceFiscale"));
-				setParameter(object, "setCodiceDestinatario", TracciaSDI.model().LOTTO_FATTURE.CODICE_DESTINATARIO.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.codiceDestinatario"));
-				setParameter(object, "setXml", TracciaSDI.model().LOTTO_FATTURE.XML.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.xml"));
-				setParameter(object, "setFatturazioneAttiva", TracciaSDI.model().LOTTO_FATTURE.FATTURAZIONE_ATTIVA.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.fatturazioneAttiva"));
-				setParameter(object, "set_value_statoElaborazioneInUscita", String.class,
-					this.getObjectFromMap(map,"LottoFatture.statoElaborazioneInUscita"));
-				setParameter(object, "setDataRicezione", TracciaSDI.model().LOTTO_FATTURE.DATA_RICEZIONE.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.dataRicezione"));
-				setParameter(object, "set_value_statoInserimento", String.class,
-					this.getObjectFromMap(map,"LottoFatture.statoInserimento"));
-				setParameter(object, "set_value_statoConsegna", String.class,
-					this.getObjectFromMap(map,"LottoFatture.statoConsegna"));
-				setParameter(object, "setDataConsegna", TracciaSDI.model().LOTTO_FATTURE.DATA_CONSEGNA.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.dataConsegna"));
-				setParameter(object, "setDettaglioConsegna", TracciaSDI.model().LOTTO_FATTURE.DETTAGLIO_CONSEGNA.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.dettaglioConsegna"));
-				setParameter(object, "set_value_statoProtocollazione", String.class,
-					this.getObjectFromMap(map,"LottoFatture.statoProtocollazione"));
-				setParameter(object, "setDataProtocollazione", TracciaSDI.model().LOTTO_FATTURE.DATA_PROTOCOLLAZIONE.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.dataProtocollazione"));
-				setParameter(object, "setProtocollo", TracciaSDI.model().LOTTO_FATTURE.PROTOCOLLO.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.protocollo"));
-				setParameter(object, "setIdEgov", TracciaSDI.model().LOTTO_FATTURE.ID_EGOV.getFieldType(),
-					this.getObjectFromMap(map,"LottoFatture.id-egov"));
-				return object;
-			}
+			  if(model.equals(TracciaSDI.model().LOTTO_FATTURE)){
+		          LottoFatture object = new LottoFatture();
+		          setParameter(object, "setId", Long.class,
+		                  this.getObjectFromMap(map,"LottoFatture.id"));
+		          setParameter(object, "set_value_formatoTrasmissione", String.class,
+		                  this.getObjectFromMap(map,"LottoFatture.formatoTrasmissione"));
+		          setParameter(object, "setIdentificativoSdi", TracciaSDI.model().LOTTO_FATTURE.IDENTIFICATIVO_SDI.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.identificativoSdi"));
+		          setParameter(object, "setNomeFile", TracciaSDI.model().LOTTO_FATTURE.NOME_FILE.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.nomeFile"));
+		          setParameter(object, "set_value_formatoArchivioInvioFattura", String.class,
+		                  this.getObjectFromMap(map,"LottoFatture.formatoArchivioInvioFattura"));
+		          setParameter(object, "setMessageId", TracciaSDI.model().LOTTO_FATTURE.MESSAGE_ID.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.messageId"));
+		          setParameter(object, "setCedentePrestatoreDenominazione", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_DENOMINAZIONE.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.cedentePrestatoreDenominazione"));
+		          setParameter(object, "setCedentePrestatoreNome", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_NOME.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.cedentePrestatoreNome"));
+		          setParameter(object, "setCedentePrestatoreCognome", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_COGNOME.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.cedentePrestatoreCognome"));
+		          setParameter(object, "setCedentePrestatoreCodice", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_CODICE.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.cedentePrestatoreCodice"));
+		          setParameter(object, "setCedentePrestatorePaese", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_PAESE.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.cedentePrestatorePaese"));
+		          setParameter(object, "setCedentePrestatoreCodiceFiscale", TracciaSDI.model().LOTTO_FATTURE.CEDENTE_PRESTATORE_CODICE_FISCALE.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.cedentePrestatoreCodiceFiscale"));
+		          setParameter(object, "setCessionarioCommittenteDenominazione", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_DENOMINAZIONE.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.cessionarioCommittenteDenominazione"));
+		          setParameter(object, "setCessionarioCommittenteNome", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_NOME.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.cessionarioCommittenteNome"));
+		          setParameter(object, "setCessionarioCommittenteCognome", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_COGNOME.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.cessionarioCommittenteCognome"));
+		          setParameter(object, "setCessionarioCommittenteCodice", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_CODICE.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.cessionarioCommittenteCodice"));
+		          setParameter(object, "setCessionarioCommittentePaese", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_PAESE.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.cessionarioCommittentePaese"));
+		          setParameter(object, "setCessionarioCommittenteCodiceFiscale", TracciaSDI.model().LOTTO_FATTURE.CESSIONARIO_COMMITTENTE_CODICE_FISCALE.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.cessionarioCommittenteCodiceFiscale"));
+		          setParameter(object, "setTerzoIntermediarioOSoggettoEmittenteDenominazione", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_DENOMINAZIONE.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.terzoIntermediarioOSoggettoEmittenteDenominazione"));
+		          setParameter(object, "setTerzoIntermediarioOSoggettoEmittenteNome", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_NOME.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.terzoIntermediarioOSoggettoEmittenteNome"));
+		          setParameter(object, "setTerzoIntermediarioOSoggettoEmittenteCognome", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_COGNOME.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.terzoIntermediarioOSoggettoEmittenteCognome"));
+		          setParameter(object, "setTerzoIntermediarioOSoggettoEmittenteCodice", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.terzoIntermediarioOSoggettoEmittenteCodice"));
+		          setParameter(object, "setTerzoIntermediarioOSoggettoEmittentePaese", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_PAESE.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.terzoIntermediarioOSoggettoEmittentePaese"));
+		          setParameter(object, "setTerzoIntermediarioOSoggettoEmittenteCodiceFiscale", TracciaSDI.model().LOTTO_FATTURE.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE_FISCALE.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.terzoIntermediarioOSoggettoEmittenteCodiceFiscale"));
+		          setParameter(object, "setCodiceDestinatario", TracciaSDI.model().LOTTO_FATTURE.CODICE_DESTINATARIO.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.codiceDestinatario"));
+		          setParameter(object, "setXml", TracciaSDI.model().LOTTO_FATTURE.XML.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.xml"));
+		          setParameter(object, "setFatturazioneAttiva", TracciaSDI.model().LOTTO_FATTURE.FATTURAZIONE_ATTIVA.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.fatturazioneAttiva"));
+		          setParameter(object, "set_value_statoElaborazioneInUscita", String.class,
+		                  this.getObjectFromMap(map,"LottoFatture.statoElaborazioneInUscita"));
+		          setParameter(object, "setDataRicezione", TracciaSDI.model().LOTTO_FATTURE.DATA_RICEZIONE.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.dataRicezione"));
+		          setParameter(object, "set_value_statoInserimento", String.class,
+		                  this.getObjectFromMap(map,"LottoFatture.statoInserimento"));
+		          setParameter(object, "set_value_statoConsegna", String.class,
+		                  this.getObjectFromMap(map,"LottoFatture.statoConsegna"));
+		          setParameter(object, "setDataConsegna", TracciaSDI.model().LOTTO_FATTURE.DATA_CONSEGNA.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.dataConsegna"));
+		          setParameter(object, "setDettaglioConsegna", TracciaSDI.model().LOTTO_FATTURE.DETTAGLIO_CONSEGNA.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.dettaglioConsegna"));
+		          setParameter(object, "set_value_statoProtocollazione", String.class,
+		                  this.getObjectFromMap(map,"LottoFatture.statoProtocollazione"));
+		          setParameter(object, "setDataProtocollazione", TracciaSDI.model().LOTTO_FATTURE.DATA_PROTOCOLLAZIONE.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.dataProtocollazione"));
+		          setParameter(object, "setProtocollo", TracciaSDI.model().LOTTO_FATTURE.PROTOCOLLO.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.protocollo"));
+		          setParameter(object, "setIdEgov", TracciaSDI.model().LOTTO_FATTURE.ID_EGOV.getFieldType(),
+		                  this.getObjectFromMap(map,"LottoFatture.id-egov"));
+		          return object;
+		  }
 
 			else{
 				throw new ServiceException("Model ["+model.toString()+"] not supported by fetch: "+this.getClass().getName());

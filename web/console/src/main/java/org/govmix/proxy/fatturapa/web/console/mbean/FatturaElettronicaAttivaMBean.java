@@ -21,8 +21,10 @@
 package org.govmix.proxy.fatturapa.web.console.mbean;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,6 +35,7 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.bouncycastle.util.Arrays;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
@@ -69,6 +72,7 @@ import org.openspcoop2.generic_project.web.impl.jsf1.mbean.DataModelListView;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.FiltraException;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.MenuActionException;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.MessageUtils;
+import org.richfaces.event.UploadEvent;
 import org.richfaces.model.UploadItem;
 
 /**
@@ -552,13 +556,41 @@ IFatturaElettronicaAttivaService>{
 		try {
 			List<InserimentoLottoSoloConservazioneRequest> requestList = new ArrayList<InserimentoLottoSoloConservazioneRequest>();
 			
-			List<String> nomeFiles = this.form.getFatturaFile().getNomeFile();
-			for (int i = 0; i < nomeFiles.size(); i++) {
-				String nomeFattura = nomeFiles.get(i);
-				InserimentoLottoSoloConservazioneRequest dto = new InserimentoLottoSoloConservazioneRequest();
-				dto.setNomeFile(nomeFattura); 
-				requestList.add(dto);
+			Map<String, byte[]> filesMap = new HashMap<String, byte[]>();
+
+			List<UploadItem> files = this.form.getFatturaFile().getFiles();
+			for (int i = 0; i < files.size(); i++) {
+				String nomeFattura = files.get(i).getFileName();
+				byte[] xml = files.get(i).getData();
+				
+				if(filesMap.containsKey(nomeFattura) && Arrays.areEqual(filesMap.get(nomeFattura), xml)) {
+					// NON INSERISCO
+					
+					this.log.info("Non inserisco il file ["+nomeFattura+"] in quanto duplicato");
+				} else {
+					filesMap.put(nomeFattura, xml);
+					this.log.info("Inserisco il file ["+nomeFattura+"]");
+					InserimentoLottoSoloConservazioneRequest dto = new InserimentoLottoSoloConservazioneRequest();
+					dto.setNomeFile(nomeFattura); 
+					requestList.add(dto);
+				}
 			}
+//			List<String> nomeFiles = this.form.getFatturaFile().getNomeFile();
+//			for (int i = 0; i < nomeFiles.size(); i++) {
+//				String nomeFattura = nomeFiles.get(i);
+//				
+//				if(filesMap.containsKey(nomeFattura) && Arrays.areEqual(filesMap.get(nomeFattura), xml)) {
+//					// NON INSERISCO
+//					
+//					this.log.info("Non inserisco il file ["+nomeFattura+"] in quanto duplicato");
+//				} else {
+//					filesMap.put(nomeFattura, xml);
+//					this.log.info("Inserisco il file ["+nomeFattura+"]");
+//					InserimentoLottoSoloConservazioneRequest dto = new InserimentoLottoSoloConservazioneRequest();
+//					dto.setNomeFile(nomeFattura); 
+//					requestList.add(dto);
+//				}
+//			}
 			
 			((IFatturaElettronicaAttivaService)this.service).checkLottoSoloConservazione(requestList);
 			
@@ -609,6 +641,7 @@ IFatturaElettronicaAttivaService>{
 		return null;
 	}
 	public String salvaFatture(){
+		this.form.disableButton();
 		this.salvataggioOk = false;
 		this.checkFormFatturaMessage = null;
 		this.checkFormFattura = false;
@@ -628,15 +661,29 @@ IFatturaElettronicaAttivaService>{
 			List<UploadItem> files = this.form.getFatturaFile().getFilesCache();
 
 			List<InserimentoLottoRequest> toSave = new ArrayList<InserimentoLottoRequest>();
+			
+			//** Mappa per duplicati **//
+			
+			Map<String, byte[]> filesMap = new HashMap<String, byte[]>();
+			
 			// scorro la lista dei files e creo le fatture
 			for (int i = 0; i < files.size(); i++) {
 				String nomeFattura = this.form.getFatturaFile().getNomeFile().get(i);
 				byte[] xml = this.form.getFatturaFile().getContenuto().get(i);
-				InserimentoLottoRequest dto = new InserimentoLottoRequest();
-				dto.setNomeFile(nomeFattura);
-				dto.setXml(xml);
-				dto.setDipartimento(this.form.getDipartimento().getValue().getValue());
-				toSave.add(dto);
+				
+				if(filesMap.containsKey(nomeFattura) && Arrays.areEqual(filesMap.get(nomeFattura), xml)) {
+					// NON INSERISCO
+					
+					this.log.info("Non inserisco il file ["+nomeFattura+"] in quanto duplicato");
+				} else {
+					filesMap.put(nomeFattura, xml);
+					this.log.info("Inserisco il file ["+nomeFattura+"]");
+					InserimentoLottoRequest dto = new InserimentoLottoRequest();
+					dto.setNomeFile(nomeFattura);
+					dto.setXml(xml);
+					dto.setDipartimento(this.form.getDipartimento().getValue().getValue());
+					toSave.add(dto);
+				}
 			}
 
 			InserimentoLottoResponse salvaFatture = ((IFatturaElettronicaAttivaService)this.service).salvaFatture(toSave);
@@ -668,7 +715,7 @@ IFatturaElettronicaAttivaService>{
 			this.checkFormFatturaMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura."+CODICE.ERRORE_GENERICO.name());
 		}
 
-
+		this.form.enableButton();
 		return null;
 	}
 

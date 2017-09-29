@@ -2,6 +2,7 @@ package org.govmix.proxy.fatturapa.web.commons.consegnaFattura;
 
 import java.math.BigInteger;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException.CODICE;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoResponse.ESITO;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
+import org.openspcoop2.generic_project.exception.NotFoundException;
 
 public class InserimentoLotti {
 
@@ -41,7 +43,8 @@ public class InserimentoLotti {
 			connection.setAutoCommit(false);
 			LottoBD lottoBD = new LottoBD(log, connection, false);
 			ConsegnaFattura consegnaFattura = new ConsegnaFattura(log, false, connection, false);
-
+			List<IdLotto> lstIdentificativoEfatt = new ArrayList<IdLotto>();
+			
 			for(InserimentoLottoRequest request: requestList) {
 				String type = null;
 				StatoElaborazioneType stato = null;
@@ -65,11 +68,15 @@ public class InserimentoLotti {
 				lotto.setStatoElaborazioneInUscita(stato);
 				
 				insertLotto(lotto, lottoBD, consegnaFattura);
+				IdLotto idLotto = new IdLotto();
+				idLotto.setIdentificativoSdi(lotto.getIdentificativoSdi());
+				lstIdentificativoEfatt.add(idLotto);
 			}
 			
 			connection.commit();
 			
 			inserimentoLottoResponse.setEsito(ESITO.OK);
+			inserimentoLottoResponse.setLstIdentificativoEfatt(lstIdentificativoEfatt);
 			
 		} catch(InserimentoLottiException e) {
 			if(connection != null) try {connection.rollback();} catch(Exception ex) {}
@@ -117,12 +124,24 @@ public class InserimentoLotti {
 
 	public void checkLotto(List<InserimentoLottoRequest> requestList) throws InserimentoLottiException {
 		for(InserimentoLottoRequest request: requestList) {
+			Dipartimento dipartimento = null;
+			
+			try {
+				dipartimento = this.getDipartimento(request.getDipartimento());
+			} catch (NotFoundException e) {
+				throw new InserimentoLottiException(CODICE.ERRORE_GENERICO);
+			}
+			
+			if(!dipartimento.getFatturazioneAttiva()) {
+				throw new InserimentoLottiException(CODICE.ERRORE_DIPARTIMENTO_NON_ABILITATO);
+			}
+			
 			if(request.getNomeFile().toLowerCase().endsWith("xml")) {
-				if(!this.getDipartimento(request.getDipartimento()).getFirmaAutomatica()){
+				if(!dipartimento.getFirmaAutomatica()){
 					throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
 				}
 			} else if(request.getNomeFile().toLowerCase().endsWith("p7m")) {
-				if(this.getDipartimento(request.getDipartimento()).getFirmaAutomatica()){
+				if(dipartimento.getFirmaAutomatica()){
 					throw new InserimentoLottiException(CODICE.ERRORE_FILE_FIRMATO, request.getNomeFile(), request.getDipartimento());
 				}
 			} else {
@@ -154,6 +173,7 @@ public class InserimentoLotti {
 
 			LottoBD lottoBD = new LottoBD(log, connection, false);
 			ConsegnaFattura consegnaFattura = new ConsegnaFattura(log, false, connection, false);
+			List<IdLotto> lstIdentificativoEfatt = new ArrayList<IdLotto>();
 
 			for(InserimentoLottoSoloConservazioneRequest request: requestList) {
 				String type = null;
@@ -170,9 +190,14 @@ public class InserimentoLotti {
 				lotto.setProtocollo(request.getNumeroProtocollo() + "/" + request.getAnnoProtocollo() + "/" + request.getRegistroProtocollo());
 				
 				insertLotto(lotto, lottoBD, consegnaFattura);
+				IdLotto idLotto = new IdLotto();
+				idLotto.setIdentificativoSdi(lotto.getIdentificativoSdi());
+				lstIdentificativoEfatt.add(idLotto);
 			}
 			connection.commit();
 			inserimentoLottoResponse.setEsito(ESITO.OK);
+			inserimentoLottoResponse.setLstIdentificativoEfatt(lstIdentificativoEfatt);
+
 		} catch(InserimentoLottiException e) {
 			if(connection != null) try {connection.rollback();} catch(Exception ex) {}
 
@@ -273,11 +298,11 @@ public class InserimentoLotti {
 
 	}
 	
-	private Dipartimento getDipartimento(String codice) {
+	private Dipartimento getDipartimento(String codice) throws NotFoundException {
 		if(this.dipartimenti != null && this.dipartimenti.containsKey(codice)) {
 			return this.dipartimenti.get(codice);
 		}
-		return null;
+		throw new NotFoundException("Dipartimento non trovato");
 	}
 	
 	public void setDipartimenti(List<Dipartimento> dipartimenti) {

@@ -39,9 +39,13 @@ public class BatchProperties extends org.govmix.proxy.fatturapa.web.commons.util
 	
 	private static BatchProperties props;
 	
+	public static void initInstance() throws Exception {
+		props = new BatchProperties("/batch.properties");
+	}
+	
 	public static BatchProperties getInstance() throws Exception {
 		if(props == null) {
-			props = new BatchProperties("/batch.properties");
+			initInstance();
 		}
 		
 		return props;

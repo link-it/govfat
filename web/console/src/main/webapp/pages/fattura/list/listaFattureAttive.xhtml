@@ -363,8 +363,15 @@
 									<f:facet name="label">
 										<h:outputText value="{_MB}MB from {MB}MB uploaded --- {mm}:{ss}" />
 									</f:facet>
+
+									<a4j:support event="onadd"
+										reRender="formCaricaFattura_btnPnl" action="#{fatturaElettronicaAttivaMBean.form.disableButton}"/>
 									<a4j:support event="onuploadcomplete"
-										reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr" />
+										reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" action="#{fatturaElettronicaAttivaMBean.form.enableButton}"/>
+									<a4j:support event="onuploadcanceled"
+										reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" action="#{fatturaElettronicaAttivaMBean.form.enableButton}"/>
+									<a4j:support event="onerror"
+										reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" action="#{fatturaElettronicaAttivaMBean.form.enableButton}"/>
 									<a4j:support event="onclear"
 										actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.clear}"
 										reRender="conservazioneFattureForm_formPnl,dSFormUploadPnl,dsFileUploadErrorsCtr" />
@@ -391,13 +398,17 @@
 						<a4j:outputPanel layout="block" id="formCaricaFattura_btnPnl" ajaxRendered="false">
 							<div class="buttonrow" style="margin-left: 290px; margin-top:20px;">
 								<a4j:commandButton styleClass="icon-save positive" style="padding: 4px 6px 4px 5px;"
+									disabled="#{!fatturaElettronicaAttivaMBean.form.buttonEnabled}"
 									value="#{msg['fattura.button.salva']}" action="#{fatturaElettronicaAttivaMBean.preparaFormConservazione}"
 									reRender="dsFileUploadErrorsCtr,conservazioneFattureForm_formPnl" rendered="#{fatturaElettronicaAttivaMBean.form.mostraFormCorservazione}"
-									oncomplete="if (#{fatturaElettronicaAttivaMBean.checkFormFattura == 'true'}) { #{rich:component('pannelloConservazioneFatture')}.show(); }" />
+									onclick="this.disabled=true"
+									oncomplete="this.disabled=false; if (#{fatturaElettronicaAttivaMBean.checkFormFattura == 'true'}) { #{rich:component('pannelloConservazioneFatture')}.show(); }" />
 								<a4j:commandButton styleClass="icon-save positive" style="padding: 4px 6px 4px 5px;"
+									disabled="#{!fatturaElettronicaAttivaMBean.form.buttonEnabled}"
 									value="#{msg['fattura.button.salva']}" action="#{fatturaElettronicaAttivaMBean.salvaFatture}"
 									reRender="dsFileUploadErrorsCtr" rendered="#{not fatturaElettronicaAttivaMBean.form.mostraFormCorservazione}"
-									oncomplete="if (#{fatturaElettronicaAttivaMBean.salvataggioOk == 'true'}) { #{rich:component('fileUploadModalPnl')}.hide(); ricaricaListaFattureAttive(); }" />
+									onclick="this.disabled=true"
+									oncomplete="this.disabled=false; if (#{fatturaElettronicaAttivaMBean.salvataggioOk == 'true'}) { #{rich:component('fileUploadModalPnl')}.hide(); ricaricaListaFattureAttive(); }" />
 							</div>
 						</a4j:outputPanel>		
 					</h:form>	

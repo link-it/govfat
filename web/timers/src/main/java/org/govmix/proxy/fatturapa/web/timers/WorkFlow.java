@@ -41,14 +41,14 @@ public class WorkFlow implements IWorkFlow<LottoFatture> {
 	public long count() throws Exception {
 		List<StatoElaborazioneType> lst = new ArrayList<StatoElaborazioneType>();
 		lst.add(StatoElaborazioneType.PRESA_IN_CARICO);
-		return this.lottoBD.countByStatiElaborazioneInUscita(lst, limitDate);
+		return this.lottoBD.countByStatiElaborazioneInUscita(lst, this.limitDate);
 	}
 
 	@Override
 	public List<LottoFatture> getNextLista() throws Exception {
 		List<StatoElaborazioneType> lst = new ArrayList<StatoElaborazioneType>();
 		lst.add(StatoElaborazioneType.PRESA_IN_CARICO);
-		return this.lottoBD.findAllByStatiElaborazioneInUscita(lst, limitDate, 0, this.limit);
+		return this.lottoBD.findAllByStatiElaborazioneInUscita(lst, this.limitDate, 0, this.limit);
 	}
 
 	@Override
@@ -66,23 +66,23 @@ public class WorkFlow implements IWorkFlow<LottoFatture> {
 		}
 		
 		if(nextStatoOK!= null) {
-			
-			Endpoint endpoint = endpointSelector.findEndpoint(lotto);
-			
-			URL urlOriginale = endpoint.getEndpoint().toURL();
-			
 			IdLotto idLotto = this.lottoBD.convertToId(lotto);
-			
-			this.log.debug("Spedisco il lotto di fatture ["+idLotto.toJson()+"] all'endpoint ["+urlOriginale.toString()+"]");
-			
-			URL url = new URL(urlOriginale.toString() + "/protocollazioneLottoFattureAttive");
 
-			URLConnection conn = url.openConnection();
-			HttpURLConnection httpConn = (HttpURLConnection) conn;
-			String errore = null;
-			boolean esitoPositivo = false;
-			String response = null;
 			try{
+				Endpoint endpoint = endpointSelector.findEndpoint(lotto);
+				
+				URL urlOriginale = endpoint.getEndpoint().toURL();
+				
+				this.log.debug("Spedisco il lotto di fatture ["+idLotto.toJson()+"] all'endpoint ["+urlOriginale.toString()+"]");
+				
+				URL url = new URL(urlOriginale.toString() + "/protocollazioneLottoFattureAttive");
+	
+				URLConnection conn = url.openConnection();
+				HttpURLConnection httpConn = (HttpURLConnection) conn;
+				String errore = null;
+				boolean esitoPositivo = false;
+				String response = null;
+
 				httpConn.setRequestProperty(CostantiProtocollazione.IDENTIFICATIVO_SDI_HEADER_PARAM, ""+lotto.getIdentificativoSdi());
 				httpConn.setRequestProperty(CostantiProtocollazione.NOME_FILE_HEADER_PARAM, ""+lotto.getNomeFile());
 				httpConn.setRequestProperty(CostantiProtocollazione.DESTINATARIO_HEADER_PARAM, lotto.getCodiceDestinatario());

@@ -75,11 +75,11 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 				return "identificativo_sdi";
 			}
 		}
-		if(field.equals(TracciaSDI.model().NUMERO_FATTURA)){
+		if(field.equals(TracciaSDI.model().POSIZIONE)){
 			if(appendTablePrefix){
-				return this.toAliasTable(field)+".numero_fattura";
+				return this.toAliasTable(field)+".posizione";
 			}else{
-				return "numero_fattura";
+				return "posizione";
 			}
 		}
 		if(field.equals(TracciaSDI.model().TIPO_COMUNICAZIONE)){
@@ -546,7 +546,7 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 		if(field.equals(TracciaSDI.model().IDENTIFICATIVO_SDI)){
 			return this.toTable(TracciaSDI.model(), returnAlias);
 		}
-		if(field.equals(TracciaSDI.model().NUMERO_FATTURA)){
+		if(field.equals(TracciaSDI.model().POSIZIONE)){
 			return this.toTable(TracciaSDI.model(), returnAlias);
 		}
 		if(field.equals(TracciaSDI.model().TIPO_COMUNICAZIONE)){
@@ -779,7 +779,7 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 			return "dipartimenti_props";
 		}
 		if(model.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE)){
-			return "enti";
+			return "id_ente";
 		}
 
 

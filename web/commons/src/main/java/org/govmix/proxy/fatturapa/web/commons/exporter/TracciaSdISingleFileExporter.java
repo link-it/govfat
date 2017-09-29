@@ -43,7 +43,7 @@ public class TracciaSdISingleFileExporter extends AbstractSingleFileXMLExporter<
 	protected TipoXSL getTipoXsl(TracciaSDI object) throws Exception {
 		switch(object.getTipoComunicazione()){
 		case AT: return TipoXSL.TRACCIA_AT;
-		case DT: throw new Exception("Usare classe: " + NotificaDTSingleFileExporter.class.getName());
+		case DT: return TipoXSL.NOTIFICA_DT;
 		case EC: throw new Exception("Usare classe: " + NotificaECSingleFileExporter.class.getName());
 		case FAT_IN: throw new Exception("Usare classe: " + FatturaSingleFileExporter.class.getName());
 		case FAT_OUT: throw new Exception("Usare classe: " + FatturaSingleFileExporter.class.getName());

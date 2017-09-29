@@ -79,6 +79,21 @@ public class TimerStartup {
 		this.initialize();
 	}
 
+
+	public void reInit() {
+		this.destroy();
+		
+		try {
+			org.govmix.proxy.fatturapa.web.timers.utils.BatchProperties.initInstance(); //Rilegge le properties da file
+		} catch(Exception e) {
+			TimerStartup.log.error("Errore durante la lettura delle BatchProperties", e);
+			return;
+		}
+		
+		this.initialize();
+	}
+
+	
 	private void initialize() {
 
 		this.startDate = System.currentTimeMillis();
@@ -139,15 +154,19 @@ public class TimerStartup {
 				for(Object timerNameObject : properties.getJndiTimerEJBName().keySet()) {
 					String timerName = (String)timerNameObject;
 
+					log.debug("Init timer ejb ["+timerName+"]...");
 					if(this.lookupTimer(timerName, properties, jndi)) {
 						lst.add(createEJBTimer(timerName, properties));
 					}
+					log.debug("Init timer ejb ["+timerName+"] OK");
 				}
 			} else {
 				for(Object timerNameObject : properties.getJndiTimerEJBName().keySet()) {
 					String timerName = (String)timerNameObject;
 
+					log.debug("Init timer thread ["+timerName+"]...");
 					lst.add(createThreadTimer(timerName, properties));
+					log.debug("Init timer thread ["+timerName+"] OK");
 				}
 			}
 
@@ -209,7 +228,12 @@ public class TimerStartup {
 				return null;
 			}
 
-			return new ThreadTimerObject(timer, properties.getTimers().get(timerName));
+			TimerProperties timerProperties = properties.getTimers().get(timerName);
+			
+			
+			
+			log.debug("Timer ["+timerName+"] enable ["+timerProperties.isTimerAbilitato()+"] timer timeout ["+timerProperties.getTimerTimeout()+"]");
+			return new ThreadTimerObject(timer, timerProperties);
 
 		}
 

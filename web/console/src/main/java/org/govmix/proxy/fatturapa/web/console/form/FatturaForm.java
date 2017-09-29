@@ -42,6 +42,7 @@ public class FatturaForm extends BaseForm implements Form {
 	private FileUploadBean fatturaFile= null;
 	private BooleanCheckBox conservazione = null;
 	private boolean mostraFormCorservazione = false;
+	private boolean buttonEnabled = true;
 
 	private FatturaElettronicaAttivaMBean mBean =null; 
 
@@ -156,5 +157,21 @@ public class FatturaForm extends BaseForm implements Form {
 	
 	public void cf_dipartimentoSelectListener(ActionEvent ae){
 		this.mBean.setCheckFormFatturaMessage(null);
+	}
+
+	public void enableButton() {
+		this.buttonEnabled = true;
+	}
+
+	public void disableButton() {
+		this.buttonEnabled = false;
+	}
+
+	public boolean isButtonEnabled() {
+		return buttonEnabled;
+	}
+
+	public void setButtonEnabled(boolean buttonEnabled) {
+		this.buttonEnabled = buttonEnabled;
 	}
 }

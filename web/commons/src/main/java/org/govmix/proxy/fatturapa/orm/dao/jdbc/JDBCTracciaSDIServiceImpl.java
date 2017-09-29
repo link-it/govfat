@@ -70,7 +70,7 @@ public class JDBCTracciaSDIServiceImpl extends JDBCTracciaSDIServiceSearchImpl
 		// Object tracciaSDI
 		sqlQueryObjectInsert.addInsertTable(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model()));
 		sqlQueryObjectInsert.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().IDENTIFICATIVO_SDI,false),"?");
-		sqlQueryObjectInsert.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().NUMERO_FATTURA,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().POSIZIONE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().TIPO_COMUNICAZIONE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().NOME_FILE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().DATA,false),"?");
@@ -87,7 +87,7 @@ public class JDBCTracciaSDIServiceImpl extends JDBCTracciaSDIServiceSearchImpl
 		org.openspcoop2.utils.jdbc.IKeyGeneratorObject keyGenerator = this.getTracciaSDIFetch().getKeyGeneratorObject(TracciaSDI.model());
 		long id = jdbcUtilities.insertAndReturnGeneratedKey(sqlQueryObjectInsert, keyGenerator, jdbcProperties.isShowSql(),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getIdentificativoSdi(),TracciaSDI.model().IDENTIFICATIVO_SDI.getFieldType()),
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getNumeroFattura(),TracciaSDI.model().NUMERO_FATTURA.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getPosizione(),TracciaSDI.model().POSIZIONE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getTipoComunicazione(),TracciaSDI.model().TIPO_COMUNICAZIONE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getNomeFile(),TracciaSDI.model().NOME_FILE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getData(),TracciaSDI.model().DATA.getFieldType()),
@@ -158,8 +158,8 @@ public class JDBCTracciaSDIServiceImpl extends JDBCTracciaSDIServiceSearchImpl
 		java.util.List<JDBCObject> lstObjects_tracciaSDI = new java.util.ArrayList<JDBCObject>();
 		sqlQueryObjectUpdate.addUpdateField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().IDENTIFICATIVO_SDI,false), "?");
 		lstObjects_tracciaSDI.add(new JDBCObject(tracciaSDI.getIdentificativoSdi(), TracciaSDI.model().IDENTIFICATIVO_SDI.getFieldType()));
-		sqlQueryObjectUpdate.addUpdateField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().NUMERO_FATTURA,false), "?");
-		lstObjects_tracciaSDI.add(new JDBCObject(tracciaSDI.getNumeroFattura(), TracciaSDI.model().NUMERO_FATTURA.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().POSIZIONE,false), "?");
+		lstObjects_tracciaSDI.add(new JDBCObject(tracciaSDI.getPosizione(), TracciaSDI.model().POSIZIONE.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().TIPO_COMUNICAZIONE,false), "?");
 		lstObjects_tracciaSDI.add(new JDBCObject(tracciaSDI.getTipoComunicazione(), TracciaSDI.model().TIPO_COMUNICAZIONE.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().NOME_FILE,false), "?");

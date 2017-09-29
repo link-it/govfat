@@ -96,7 +96,6 @@ public abstract class AbstractTimerThread extends Thread implements ITimer{
 	 */
 	@Override
 	public void run(){
-		
 		while(this.stop == false){
 			int tempoBatch = 0;
 			try{
@@ -132,6 +131,7 @@ public abstract class AbstractTimerThread extends Thread implements ITimer{
 					i++;
 				}
 			}
+			
 		} 
 	}
 }

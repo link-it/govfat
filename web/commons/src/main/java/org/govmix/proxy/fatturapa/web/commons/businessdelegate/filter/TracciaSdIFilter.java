@@ -18,6 +18,8 @@ public class TracciaSdIFilter extends AbstractFilter {
 	private Long id;
 
 	private Integer identificativoSdi;
+	private Integer posizione;
+	private Boolean consentiPosizioneNull;
 	private String tipoComunicazione;
 	private StatoProtocollazioneType statoProtocollazione;
 	private Date dataProssimaProtocollazioneMax;
@@ -38,6 +40,16 @@ public class TracciaSdIFilter extends AbstractFilter {
 
 			if(this.identificativoSdi != null) {
 				expression.equals(TracciaSDI.model().IDENTIFICATIVO_SDI, this.identificativoSdi);
+			}
+			
+			if(this.posizione != null) {
+				if(this.consentiPosizioneNull !=null && this.consentiPosizioneNull) {
+					IExpression expression2 = this.newExpression();
+					expression2.equals(TracciaSDI.model().POSIZIONE, this.posizione).or().isNull(TracciaSDI.model().POSIZIONE);
+					expression.and(expression2);
+				} else {
+					expression.equals(TracciaSDI.model().POSIZIONE, this.posizione);
+				}
 			}
 			
 			if(this.tipoComunicazione != null) {
@@ -113,6 +125,22 @@ public class TracciaSdIFilter extends AbstractFilter {
 
 	public void setDaProtocollare(Boolean daProtocollare) {
 		this.daProtocollare = daProtocollare;
+	}
+
+	public Integer getPosizione() {
+		return posizione;
+	}
+
+	public void setPosizione(Integer posizione) {
+		this.posizione = posizione;
+	}
+
+	public boolean isConsentiPosizioneNull() {
+		return consentiPosizioneNull;
+	}
+
+	public void setConsentiPosizioneNull(boolean consentiPosizioneNull) {
+		this.consentiPosizioneNull = consentiPosizioneNull;
 	}
 
 }
