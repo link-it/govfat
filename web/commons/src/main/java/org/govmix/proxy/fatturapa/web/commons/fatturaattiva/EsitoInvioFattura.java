@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente;
+package org.govmix.proxy.fatturapa.web.commons.fatturaattiva;
 
 import java.util.HashMap;
 import java.util.List;

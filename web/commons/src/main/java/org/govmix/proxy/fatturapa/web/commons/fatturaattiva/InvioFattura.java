@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente;
+package org.govmix.proxy.fatturapa.web.commons.fatturaattiva;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -28,9 +28,7 @@ import java.net.URLConnection;
 import org.apache.log4j.Logger;
 import org.apache.soap.encoding.soapenc.Base64;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
-import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.EsitoInvioFattura.ESITO;
-import org.openspcoop2.generic_project.exception.DeserializerException;
-import org.openspcoop2.generic_project.exception.SerializerException;
+import org.govmix.proxy.fatturapa.web.commons.fatturaattiva.EsitoInvioFattura.ESITO;
 
 public class InvioFattura {
 
@@ -47,7 +45,7 @@ public class InvioFattura {
 	}
 	
 	
-	public EsitoInvioFattura invia(LottoFatture lotto) throws IOException, SerializerException, DeserializerException {
+	public EsitoInvioFattura invia(LottoFatture lotto) throws IOException {
 
 		URL url = new URL(this.url.toString() + "?TipoFile="+lotto.getFormatoArchivioInvioFattura()+"&Versione="+lotto.getFormatoTrasmissione()+"&IdPaese="+lotto.getCedentePrestatorePaese()+"&IdCodice="+lotto.getCedentePrestatoreCodice());
 		URLConnection conn = url.openConnection();

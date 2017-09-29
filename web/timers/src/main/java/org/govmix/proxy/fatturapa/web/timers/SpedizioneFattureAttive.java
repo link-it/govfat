@@ -12,9 +12,9 @@ import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFattureAttiveBD;
-import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.EsitoInvioFattura;
-import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.EsitoInvioFattura.ESITO;
-import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.InvioFattura;
+import org.govmix.proxy.fatturapa.web.commons.fatturaattiva.EsitoInvioFattura;
+import org.govmix.proxy.fatturapa.web.commons.fatturaattiva.InvioFattura;
+import org.govmix.proxy.fatturapa.web.commons.fatturaattiva.EsitoInvioFattura.ESITO;
 import org.govmix.proxy.fatturapa.web.commons.ricevicomunicazionesdi.RiceviComunicazioneSdI;
 import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 
