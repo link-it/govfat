@@ -119,6 +119,7 @@ public class FileUploadBean implements Serializable{
 //		this.caricato = false;
 		this.fileUploadErrorMessage = null;
 		this.mBean.setCheckFormFatturaMessage(null); 
+		this.form.enableButton();
 	}
 	
 	/***

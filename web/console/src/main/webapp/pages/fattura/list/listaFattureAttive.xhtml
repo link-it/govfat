@@ -49,7 +49,29 @@
 			}
 		</style>
 		<script type="text/javascript">
-		
+			function loggaEventoAddOnSubmit(evt){
+				console.log('ADD ON SUBMIT: ');
+				console.log(evt);
+				return true;
+			}
+			
+			function loggaEventoAddOnComplete(evt){
+				console.log('ADD ON COMPLETE: ');
+				console.log(evt);
+				return true;
+			}
+			
+			function loggaEventoErrorOnSubmit(evt){
+				console.log('ERROR ON SUBMIT: ');
+				console.log(evt);
+				return true;
+			}
+			
+			function loggaEventoErrorOnComplete(evt){
+				console.log('ERROR ON COMPLETE: ');
+				console.log(evt);
+				return true;
+			}
 		</script>
 		<rich:panel styleClass="noborder" id="pagina">
 		
@@ -364,12 +386,14 @@
 										<h:outputText value="{_MB}MB from {MB}MB uploaded --- {mm}:{ss}" />
 									</f:facet>
 
-									<a4j:support event="onadd" reRender="formCaricaFattura_btnPnl" actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.addListener}"/>
+									<a4j:support event="onadd" reRender="formCaricaFattura_btnPnl" actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.addListener}"
+										onsubmit="loggaEventoAddOnSubmit(event);" oncomplete="loggaEventoAddOnComplete(event);" />
 									<a4j:support event="onuploadcomplete" 
 										reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.uploadCompleteListener}"/>
 									<a4j:support event="onuploadcanceled" 
 										reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.uploadCanceledListener}"/>
-									<a4j:support event="onerror" 
+									<a4j:support event="onerror"  onsubmit="loggaEventoErrorOnSubmit(event);"  
+										oncomplete="loggaEventoErrorOnComplete(event);"
 										reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.uploadErrorListener}"/>
 									<a4j:support event="onclear"
 										actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.clear}"
