@@ -72,8 +72,18 @@
 					#{msg['commons.label.campiObbligatori']}
 				</p>
 				<op2web:fieldset legend="#{msg['registro.form.label']}" collapsible="false" closed="false" rendered="#{true}">
-
-					<op2web:formFields nomiFields="#{'nome,username,password'}" />
+					<op2web:prop label="#{registroMBean.form.nome.label}" required="#{registroMBean.form.nome.required}" 
+							rendered="#{registroMBean.form.nome.rendered}">
+						<div>
+							<div class="keepMargin">
+								<h:inputText id="input_#{registroMBean.form.nome.name}" value="#{registroMBean.form.nome.value}" 
+								style="#{registroMBean.form.nome.style}" disabled="#{registroMBean.form.nome.disabled}" />	
+							</div>
+						</div>
+					
+				 	</op2web:prop>
+				 	
+					<op2web:formFields nomiFields="#{'username,password'}" />
 					
 				</op2web:fieldset>
 				<rich:spacer height="10"/>

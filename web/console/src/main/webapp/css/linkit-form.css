@@ -353,5 +353,9 @@ textarea[type="textarea"][disabled], input[type="text"][disabled], input[type="p
 /* 	top: 10px; */
 }
 
-
+@media screen and (max-width: 989px) {
+    .keepMargin {
+       margin-left: 190px;
+    }
+}
 

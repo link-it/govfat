@@ -69,8 +69,19 @@
 					#{msg['commons.label.campiObbligatori']}
 				</p>
 				<op2web:fieldset legend="#{msg['dipartimento.form.label']}" collapsible="false" closed="false" rendered="#{true}">
+					
+					<op2web:prop label="#{dipartimentoMBean.form.codice.label}" required="#{dipartimentoMBean.form.codice.required}" 
+							rendered="#{dipartimentoMBean.form.codice.rendered}">
+						<div>
+							<div class="keepMargin">
+								<h:inputText id="input_#{dipartimentoMBean.form.codice.name}" value="#{dipartimentoMBean.form.codice.value}" 
+								style="#{dipartimentoMBean.form.codice.style}" disabled="#{dipartimentoMBean.form.codice.disabled}" />	
+							</div>
+						</div>
+						
+					 </op2web:prop>
 
-					<op2web:formFields nomiFields="#{'codice,descrizione,ente,registro,modalitaPush,notificaAutomatica'}"/>
+					<op2web:formFields nomiFields="#{'descrizione,ente,registro,modalitaPush,notificaAutomatica'}"/>
 
 				</op2web:fieldset>
 				<rich:spacer height="10"/>

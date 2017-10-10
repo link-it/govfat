@@ -15,8 +15,8 @@
         <name>FatturaPA console</name>
 
         <properties>
-                <rel-to-parent>..</rel-to-parent>
-		<openspcoop2.version>2.2.1</openspcoop2.version>
+        	<rel-to-parent>..</rel-to-parent>
+			<openspcoop2.version>2.2.1</openspcoop2.version>
         </properties>
 
 	<dependencies>

@@ -48,8 +48,18 @@
 		<rich:panel styleClass="noborder" id="pagina"> 
 
 			<op2web:search mBean="#{utenteMBean}" fieldsToUpdateButtonFiltra="utentiListView" fieldsToUpdateButtonReset="utentiListView" >
-					<!-- denominazione,dipartimento -->
-				<op2web:searchFields nomiFields="#{'denominazione,dipartimento'}" />
+				<op2web:prop label="#{utenteMBean.search.denominazione.label}" required="#{utenteMBean.search.denominazione.required}" 
+						rendered="#{utenteMBean.search.denominazione.rendered}">
+					<div>
+						<div class="keepMargin">
+							<h:inputText id="input_#{utenteMBean.search.denominazione.name}" value="#{utenteMBean.search.denominazione.value}" 
+							style="#{utenteMBean.search.denominazione.style}" disabled="#{utenteMBean.search.denominazione.disabled}" />	
+						</div>
+					</div>
+				
+			 	</op2web:prop>	
+					
+				<op2web:searchFields nomiFields="#{'dipartimento'}" />
 			</op2web:search>
 
 			<rich:spacer height="20"/>

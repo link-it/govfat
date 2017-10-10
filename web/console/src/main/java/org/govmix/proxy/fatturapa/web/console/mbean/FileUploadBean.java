@@ -197,7 +197,7 @@ public class FileUploadBean implements Serializable{
 	}
 	
 	public final void uploadCanceledListener(final ActionEvent e) {
-		this.form.enableButton();
+		//this.form.enableButton();
 	}
 	
 	public final void uploadErrorListener(final ActionEvent e) {
