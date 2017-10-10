@@ -364,14 +364,13 @@
 										<h:outputText value="{_MB}MB from {MB}MB uploaded --- {mm}:{ss}" />
 									</f:facet>
 
-									<a4j:support event="onadd"
-										reRender="formCaricaFattura_btnPnl" action="#{fatturaElettronicaAttivaMBean.form.disableButton}"/>
-									<a4j:support event="onuploadcomplete"
-										reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" action="#{fatturaElettronicaAttivaMBean.form.enableButton}"/>
-									<a4j:support event="onuploadcanceled"
-										reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" action="#{fatturaElettronicaAttivaMBean.form.enableButton}"/>
-									<a4j:support event="onerror"
-										reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" action="#{fatturaElettronicaAttivaMBean.form.enableButton}"/>
+									<a4j:support event="onadd" reRender="formCaricaFattura_btnPnl" actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.addListener}"/>
+									<a4j:support event="onuploadcomplete" 
+										reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.uploadCompleteListener}"/>
+									<a4j:support event="onuploadcanceled" 
+										reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.uploadCanceledListener}"/>
+									<a4j:support event="onerror" 
+										reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.uploadErrorListener}"/>
 									<a4j:support event="onclear"
 										actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.clear}"
 										reRender="conservazioneFattureForm_formPnl,dSFormUploadPnl,dsFileUploadErrorsCtr" />

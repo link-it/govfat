@@ -8,6 +8,7 @@ import javax.faces.event.ActionEvent;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
+import org.govmix.proxy.fatturapa.web.console.form.FatturaForm;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.MessageUtils;
 import org.richfaces.event.UploadEvent;
 import org.richfaces.model.UploadItem;
@@ -31,6 +32,7 @@ public class FileUploadBean implements Serializable{
 	private int numeroFile = 1;
 	
 	private FatturaElettronicaAttivaMBean mBean =null; 
+	private FatturaForm form = null;
 	
 	public FileUploadBean() {
 		this.nomeFile = new ArrayList<String>();
@@ -176,5 +178,29 @@ public class FileUploadBean implements Serializable{
 
 	public void setmBean(FatturaElettronicaAttivaMBean mBean) {
 		this.mBean = mBean;
+	}
+	
+	public FatturaForm getForm() {
+		return form;
+	}
+
+	public void setForm(FatturaForm form) {
+		this.form = form;
+	}
+
+	public final void addListener(final ActionEvent e) {
+		this.form.disableButton();
+	}
+	
+	public final void uploadCompleteListener(final ActionEvent e) {
+		this.form.enableButton();
+	}
+	
+	public final void uploadCanceledListener(final ActionEvent e) {
+		this.form.enableButton();
+	}
+	
+	public final void uploadErrorListener(final ActionEvent e) {
+		this.form.enableButton();
 	}
 }

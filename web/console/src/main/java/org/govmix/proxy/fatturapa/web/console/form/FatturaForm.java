@@ -85,8 +85,9 @@ public class FatturaForm extends BaseForm implements Form {
 		this._setMostraConservazione();
 		
 		this.fatturaFile = new FileUploadBean();
+		this.fatturaFile.setForm(this);
 		this.fatturaFile.setNumeroFile(ConsoleProperties.getInstance(LoggerManager.getConsoleLogger()).getFatturaAttivaCaricamentoMaxNumeroFile());
-		this.fatturaFile.setAcceptedTypes("xml,p7m"); 
+		this.fatturaFile.setAcceptedTypes(ConsoleProperties.getInstance(LoggerManager.getConsoleLogger()).getFatturaAttivaCaricamentoTipologieFileAccettati()); 
 		
 		this.reset();
 	}
