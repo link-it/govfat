@@ -17,6 +17,9 @@ import org.govmix.proxy.fatturapa.web.commons.fatturaattiva.InvioFattura;
 import org.govmix.proxy.fatturapa.web.commons.fatturaattiva.EsitoInvioFattura.ESITO;
 import org.govmix.proxy.fatturapa.web.commons.ricevicomunicazionesdi.RiceviComunicazioneSdI;
 import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
+import org.govmix.proxy.fatturapa.web.timers.policies.IPolicyRispedizione;
+import org.govmix.proxy.fatturapa.web.timers.policies.PolicyRispedizioneFactory;
+import org.govmix.proxy.fatturapa.web.timers.policies.PolicyRispedizioneParameters;
 
 public class SpedizioneFattureAttive implements IWorkFlow<LottoFatture> {
 
@@ -51,26 +54,26 @@ public class SpedizioneFattureAttive implements IWorkFlow<LottoFatture> {
 	}
 
 	@Override
-	public void process(LottoFatture lottoFatture) throws Exception {
-		this.log.debug("Elaboro il lotto ["+this.lottoFattureAttiveBD.convertToId(lottoFatture).toJson()+"]");
+	public void process(LottoFatture lotto) throws Exception {
+		this.log.debug("Elaboro il lotto ["+this.lottoFattureAttiveBD.convertToId(lotto).toJson()+"]");
 		
-		EsitoInvioFattura esitoInvioFattura = this.invioFattura.invia(lottoFatture);
-		StatoElaborazioneType stato = (esitoInvioFattura.getEsito().equals(ESITO.OK)) ? StatoElaborazioneType.RICEVUTA_DALLO_SDI: StatoElaborazioneType.ERRORE_DI_SPEDIZIONE;
-		this.lottoFattureAttiveBD.updateStatoElaborazioneInUscita(lottoFatture, stato);
+		EsitoInvioFattura esitoInvioFattura = this.invioFattura.invia(lotto);
 		
-		if(StatoElaborazioneType.RICEVUTA_DALLO_SDI.equals(stato)) {
+		if(esitoInvioFattura.getEsito().equals(ESITO.OK)) {
+			this.lottoFattureAttiveBD.updateStatoElaborazioneInUscitaOK(this.lottoFattureAttiveBD.convertToId(lotto), StatoElaborazioneType.RICEVUTA_DALLO_SDI);
+			
 			TracciaSDI tracciaSdi = new TracciaSDI();
 			
 			tracciaSdi.setIdentificativoSdi(Integer.parseInt(esitoInvioFattura.getMetadato("X-SDI-IdentificativoSDI")));
 			tracciaSdi.setTipoComunicazione(TipoComunicazioneType.FAT_OUT);
 			tracciaSdi.setData(new Date());
-			tracciaSdi.setContentType(InvioFattura.getContentType(lottoFatture));
+			tracciaSdi.setContentType(InvioFattura.getContentType(lotto));
 			String nomeFile = esitoInvioFattura.getMetadato("X-SDI-NomeFile");
 			if(nomeFile == null)
-				nomeFile = lottoFatture.getNomeFile();
+				nomeFile = lotto.getNomeFile();
 			
 			tracciaSdi.setNomeFile(nomeFile);
-			tracciaSdi.setRawData(lottoFatture.getXml());
+			tracciaSdi.setRawData(lotto.getXml());
 			
 			tracciaSdi.setStatoProtocollazione(StatoProtocollazioneType.PROTOCOLLATA);
 			tracciaSdi.setTentativiProtocollazione(0);
@@ -78,12 +81,27 @@ public class SpedizioneFattureAttive implements IWorkFlow<LottoFatture> {
 			tracciaSdi.setIdEgov(esitoInvioFattura.getMetadato(CommonsProperties.getInstance(log).getIdEgovHeader()));
 	
 			this.riceviComunicazioneSdi.ricevi(tracciaSdi);
-			this.lottoFattureAttiveBD.updateIdentificativoSdI(lottoFatture, tracciaSdi.getIdentificativoSdi());
-			this.fatturaAttivaBD.assegnaIdentificativoSDIAInteroLotto(this.lottoFattureAttiveBD.convertToId(lottoFatture), tracciaSdi.getIdentificativoSdi());
+			this.lottoFattureAttiveBD.updateIdentificativoSdI(lotto, tracciaSdi.getIdentificativoSdi());
+			this.fatturaAttivaBD.assegnaIdentificativoSDIAInteroLotto(this.lottoFattureAttiveBD.convertToId(lotto), tracciaSdi.getIdentificativoSdi());
+
+			this.log.debug("Elaboro il lotto ["+this.lottoFattureAttiveBD.convertToId(lotto).toJson()+"]: stato ["+lotto.getStatoElaborazioneInUscita()+"] -> ["+StatoElaborazioneType.RICEVUTA_DALLO_SDI+"]");
+		} else {
+			IPolicyRispedizione policy = PolicyRispedizioneFactory.getPolicyRispedizioneWFM(lotto);
+
+			long now = new Date().getTime();
+			
+			PolicyRispedizioneParameters params = new PolicyRispedizioneParameters();
+			params.setTentativi(lotto.getTentativiConsegna() + 1);
+			
+			long offset = policy.getOffsetRispedizione(params);
+
+			StatoElaborazioneType nextStato = policy.isRispedizioneAbilitata(params) ? StatoElaborazioneType.PROTOCOLLATA : StatoElaborazioneType.ERRORE_DI_SPEDIZIONE;
+
+			this.lottoFattureAttiveBD.updateStatoElaborazioneInUscitaKO(this.lottoFattureAttiveBD.convertToId(lotto), nextStato, new Date(now+offset), null, lotto.getTentativiConsegna() + 1);
+			
+			this.log.debug("Elaboro il lotto ["+this.lottoFattureAttiveBD.convertToId(lotto).toJson()+"]: stato ["+lotto.getStatoElaborazioneInUscita()+"] -> ["+nextStato+"]");
 		}
 		
-		
-		this.log.debug("Elaboro il lotto ["+this.lottoFattureAttiveBD.convertToId(lottoFatture).toJson()+"]: stato ["+lottoFatture.getStatoElaborazioneInUscita()+"] -> ["+stato+"]");
 	}
 
 }

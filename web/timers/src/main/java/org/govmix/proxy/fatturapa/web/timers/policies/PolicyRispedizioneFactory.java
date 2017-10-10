@@ -21,6 +21,7 @@
 package org.govmix.proxy.fatturapa.web.timers.policies;
 
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
+import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.web.timers.utils.BatchProperties;
@@ -31,6 +32,22 @@ public class PolicyRispedizioneFactory {
 		PolicyRispedizioneRetry policy = new PolicyRispedizioneRetry();
 		policy.setFattore(BatchProperties.getInstance().getFattoreRispedizione());
 		policy.setMaxTentativiRispedizione(BatchProperties.getInstance().getMaxTentativiRispedizione());
+		return policy;
+
+	}
+
+	public static IPolicyRispedizione getPolicyRispedizioneWFM(LottoFatture lotto) throws Exception {
+		PolicyRispedizioneRetry policy = new PolicyRispedizioneRetry();
+		policy.setFattore(BatchProperties.getInstance().getFattoreRispedizioneWFM());
+		policy.setMaxTentativiRispedizione(BatchProperties.getInstance().getMaxTentativiRispedizioneWFM());
+		return policy;
+
+	}
+
+	public static IPolicyRispedizione getPolicyRispedizioneSdI(LottoFatture lotto) throws Exception {
+		PolicyRispedizioneRetry policy = new PolicyRispedizioneRetry();
+		policy.setFattore(BatchProperties.getInstance().getFattoreRispedizioneSdI());
+		policy.setMaxTentativiRispedizione(BatchProperties.getInstance().getMaxTentativiRispedizioneSdI());
 		return policy;
 
 	}

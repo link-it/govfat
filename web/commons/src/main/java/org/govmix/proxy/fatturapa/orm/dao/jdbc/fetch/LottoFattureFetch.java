@@ -111,6 +111,12 @@ public class LottoFattureFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "stato_elaborazione_in_uscita", LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA.getFieldType())+"");
 				setParameter(object, "setDataUltimaElaborazione", LottoFatture.model().DATA_ULTIMA_ELABORAZIONE.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "data_ultima_elaborazione", LottoFatture.model().DATA_ULTIMA_ELABORAZIONE.getFieldType()));
+				setParameter(object, "setDettaglioElaborazione", LottoFatture.model().DETTAGLIO_ELABORAZIONE.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "dettaglio_elaborazione", LottoFatture.model().DETTAGLIO_ELABORAZIONE.getFieldType()));
+				setParameter(object, "setDataProssimaElaborazione", LottoFatture.model().DATA_PROSSIMA_ELABORAZIONE.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "data_prossima_elaborazione", LottoFatture.model().DATA_PROSSIMA_ELABORAZIONE.getFieldType()));
+				setParameter(object, "setTentativiConsegna", LottoFatture.model().TENTATIVI_CONSEGNA.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "tentativi_consegna", LottoFatture.model().TENTATIVI_CONSEGNA.getFieldType()));
 				setParameter(object, "setDataRicezione", LottoFatture.model().DATA_RICEZIONE.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "data_ricezione", LottoFatture.model().DATA_RICEZIONE.getFieldType()));
 				setParameter(object, "set_value_statoInserimento", String.class,
@@ -207,6 +213,12 @@ public class LottoFattureFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"statoElaborazioneInUscita"));
 				setParameter(object, "setDataUltimaElaborazione", LottoFatture.model().DATA_ULTIMA_ELABORAZIONE.getFieldType(),
 					this.getObjectFromMap(map,"dataUltimaElaborazione"));
+				setParameter(object, "setDettaglioElaborazione", LottoFatture.model().DETTAGLIO_ELABORAZIONE.getFieldType(),
+					this.getObjectFromMap(map,"dettaglioElaborazione"));
+				setParameter(object, "setDataProssimaElaborazione", LottoFatture.model().DATA_PROSSIMA_ELABORAZIONE.getFieldType(),
+					this.getObjectFromMap(map,"dataProssimaElaborazione"));
+				setParameter(object, "setTentativiConsegna", LottoFatture.model().TENTATIVI_CONSEGNA.getFieldType(),
+					this.getObjectFromMap(map,"tentativiConsegna"));
 				setParameter(object, "setDataRicezione", LottoFatture.model().DATA_RICEZIONE.getFieldType(),
 					this.getObjectFromMap(map,"dataRicezione"));
 				setParameter(object, "set_value_statoInserimento", String.class,

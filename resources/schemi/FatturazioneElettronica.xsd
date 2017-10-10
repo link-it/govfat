@@ -826,6 +826,9 @@
 			<xsd:element name="fatturazioneAttiva" type="xsd:boolean" />
 			<xsd:element name="statoElaborazioneInUscita" type="StatoElaborazioneType" minOccurs="0"/>
 			<xsd:element name="dataUltimaElaborazione" type="xsd:dateTime" minOccurs="0" />
+			<xsd:element name="dettaglioElaborazione" type="xsd:string" minOccurs="0" />
+			<xsd:element name="dataProssimaElaborazione" type="xsd:dateTime" minOccurs="0" />
+			<xsd:element name="tentativiConsegna" type="xsd:nonNegativeInteger" />
 			<xsd:element name="dataRicezione" type="DataFatturaType" />
 			<xsd:element name="statoInserimento" type="StatoInserimentoType" />
 			<xsd:element name="statoConsegna" type="StatoConsegnaType" />

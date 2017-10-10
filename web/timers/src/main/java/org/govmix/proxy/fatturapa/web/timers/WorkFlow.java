@@ -19,6 +19,9 @@ import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
 import org.govmix.proxy.fatturapa.web.commons.utils.CostantiProtocollazione;
 import org.govmix.proxy.fatturapa.web.commons.utils.Endpoint;
 import org.govmix.proxy.fatturapa.web.commons.utils.EndpointSelector;
+import org.govmix.proxy.fatturapa.web.timers.policies.IPolicyRispedizione;
+import org.govmix.proxy.fatturapa.web.timers.policies.PolicyRispedizioneFactory;
+import org.govmix.proxy.fatturapa.web.timers.policies.PolicyRispedizioneParameters;
 
 public class WorkFlow implements IWorkFlow<LottoFatture> {
 
@@ -79,48 +82,64 @@ public class WorkFlow implements IWorkFlow<LottoFatture> {
 	
 				URLConnection conn = url.openConnection();
 				HttpURLConnection httpConn = (HttpURLConnection) conn;
-				String errore = null;
 				boolean esitoPositivo = false;
+
 				String response = null;
 
-				httpConn.setRequestProperty(CostantiProtocollazione.IDENTIFICATIVO_SDI_HEADER_PARAM, ""+lotto.getIdentificativoSdi());
-				httpConn.setRequestProperty(CostantiProtocollazione.NOME_FILE_HEADER_PARAM, ""+lotto.getNomeFile());
-				httpConn.setRequestProperty(CostantiProtocollazione.DESTINATARIO_HEADER_PARAM, lotto.getCodiceDestinatario());
-				if(lotto.getDettaglioConsegna() != null)
-					httpConn.setRequestProperty(CostantiProtocollazione.DETTAGLIO_CONSEGNA_HEADER_PARAM, lotto.getDettaglioConsegna());
+				try {
 				
-				String ct = FormatoArchivioInvioFatturaType.XML.equals(lotto.getFormatoArchivioInvioFattura()) ? "text/xml" : "application/pkcs7-mime";  
-				httpConn.setRequestProperty("Content-Type", ct);
-
-				if(endpoint.getUsername() != null && endpoint.getPassword()!= null) {
-					String auth = endpoint.getUsername() + ":" + endpoint.getPassword(); 
-					String authentication = "Basic " + Base64.encode(auth.getBytes());
-
-					httpConn.setRequestProperty("Authorization", authentication);
+					httpConn.setRequestProperty(CostantiProtocollazione.IDENTIFICATIVO_SDI_HEADER_PARAM, ""+lotto.getIdentificativoSdi());
+					httpConn.setRequestProperty(CostantiProtocollazione.NOME_FILE_HEADER_PARAM, ""+lotto.getNomeFile());
+					httpConn.setRequestProperty(CostantiProtocollazione.DESTINATARIO_HEADER_PARAM, lotto.getCodiceDestinatario());
+					if(lotto.getDettaglioConsegna() != null)
+						httpConn.setRequestProperty(CostantiProtocollazione.DETTAGLIO_CONSEGNA_HEADER_PARAM, lotto.getDettaglioConsegna());
+					
+					String ct = FormatoArchivioInvioFatturaType.XML.equals(lotto.getFormatoArchivioInvioFattura()) ? "text/xml" : "application/pkcs7-mime";  
+					httpConn.setRequestProperty("Content-Type", ct);
+	
+					if(endpoint.getUsername() != null && endpoint.getPassword()!= null) {
+						String auth = endpoint.getUsername() + ":" + endpoint.getPassword(); 
+						String authentication = "Basic " + Base64.encode(auth.getBytes());
+	
+						httpConn.setRequestProperty("Authorization", authentication);
+					}
+	
+					httpConn.setDoOutput(true);
+					httpConn.setDoInput(true);
+					
+					httpConn.setRequestMethod("POST");								
+	
+					httpConn.getOutputStream().write(lotto.getXml());
+					httpConn.getOutputStream().flush();
+					httpConn.getOutputStream().close();
+					
+					esitoPositivo = httpConn.getResponseCode() < 299;
+					
+					response = IOUtils.readStringFromStream(httpConn.getInputStream());
+				} catch(Exception e) {
+					this.log.error("Errore durante l'avvio del workflow per il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"]");
 				}
-
-				httpConn.setDoOutput(true);
-				httpConn.setDoInput(true);
-				
-				httpConn.setRequestMethod("POST");								
-
-				httpConn.getOutputStream().write(lotto.getXml());
-				httpConn.getOutputStream().flush();
-				httpConn.getOutputStream().close();
-				
-				esitoPositivo = httpConn.getResponseCode() < 299;
-				
-				response = IOUtils.readStringFromStream(httpConn.getInputStream());
 				
 				if(esitoPositivo) {
-					this.lottoBD.updateStatoElaborazioneInUscita(idLotto, nextStatoOK);
+					this.lottoBD.updateStatoElaborazioneInUscitaOK(idLotto, nextStatoOK);
 					this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+lotto.getStatoElaborazioneInUscita()+"] -> ["+nextStatoOK+"]");
 				} else {
-					this.lottoBD.updateStatoElaborazioneInUscita(idLotto, nextStatoKO);
+					IPolicyRispedizione policy = PolicyRispedizioneFactory.getPolicyRispedizioneWFM(lotto);
+
+					long now = new Date().getTime();
+					
+					PolicyRispedizioneParameters params = new PolicyRispedizioneParameters();
+					params.setTentativi(lotto.getTentativiConsegna() + 1);
+					
+					long offset = policy.getOffsetRispedizione(params);
+
+					StatoElaborazioneType nextStato = policy.isRispedizioneAbilitata(params) ? StatoElaborazioneType.PRESA_IN_CARICO : nextStatoKO;
+
+					this.lottoBD.updateStatoElaborazioneInUscitaKO(idLotto, nextStato, new Date(now+offset), response, lotto.getTentativiConsegna() + 1);
 					this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+lotto.getStatoElaborazioneInUscita()+"] -> ["+nextStatoKO+"]");
 				}
 			} catch(Exception e) {
-				this.lottoBD.updateStatoElaborazioneInUscita(idLotto, nextStatoKO);
+				this.lottoBD.updateStatoElaborazioneInUscitaKO(idLotto, nextStatoKO, new Date(), lotto.getDettaglioElaborazione(), lotto.getTentativiConsegna() + 1);
 				this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+lotto.getStatoElaborazioneInUscita()+"] -> ["+nextStatoKO+"]");
 			}
 		}

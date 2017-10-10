@@ -22,8 +22,10 @@ package org.govmix.proxy.fatturapa.web.console.form;
 
 import javax.faces.event.ActionEvent;
 
+import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.mbean.FatturaElettronicaAttivaMBean;
 import org.govmix.proxy.fatturapa.web.console.mbean.FileUploadBean;
+import org.govmix.proxy.fatturapa.web.console.util.ConsoleProperties;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.Form;
 import org.openspcoop2.generic_project.web.impl.jsf1.form.BaseForm;
@@ -83,7 +85,7 @@ public class FatturaForm extends BaseForm implements Form {
 		this._setMostraConservazione();
 		
 		this.fatturaFile = new FileUploadBean();
-		this.fatturaFile.setNumeroFile(10);
+		this.fatturaFile.setNumeroFile(ConsoleProperties.getInstance(LoggerManager.getConsoleLogger()).getFatturaAttivaCaricamentoMaxNumeroFile());
 		this.fatturaFile.setAcceptedTypes("xml,p7m"); 
 		
 		this.reset();

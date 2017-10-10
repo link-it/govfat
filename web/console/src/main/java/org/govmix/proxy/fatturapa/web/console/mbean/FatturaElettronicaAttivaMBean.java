@@ -39,12 +39,12 @@ import org.bouncycastle.util.Arrays;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
+import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.IdRegistro;
-import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException.CODICE;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoRequest;
@@ -72,7 +72,6 @@ import org.openspcoop2.generic_project.web.impl.jsf1.mbean.DataModelListView;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.FiltraException;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.MenuActionException;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.MessageUtils;
-import org.richfaces.event.UploadEvent;
 import org.richfaces.model.UploadItem;
 
 /**
@@ -480,13 +479,14 @@ IFatturaElettronicaAttivaService>{
 	public String ritentaConsegna(){
 		try{
 
-			FatturaAttivaBD fatturaBD = new FatturaAttivaBD(log);
+			LottoBD fatturaBD = new LottoBD(log);
 			FatturaElettronica current = this.selectedElement.getDTO();
-			// [TODO]
-			//			fatturaBD.forzaRispedizioneFattura(current);
+			IdLotto idLotto = new IdLotto();
+			idLotto.setIdentificativoSdi(current.getIdentificativoSdi());
+			StatoElaborazioneType nuovoStato = fatturaBD.ritentaConsegna(idLotto);
 			MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegna.cambioStatoOK"));
 
-			current.setStatoConsegna(StatoConsegnaType.IN_RICONSEGNA);
+			current.getLottoFatture().setStatoElaborazioneInUscita(nuovoStato);
 
 			this.selectedElement.setDTO(current); 
 
@@ -552,7 +552,8 @@ IFatturaElettronicaAttivaService>{
 		this.checkFormFattura = true;
 
 		this.form.getFatturaFile().checkCaricamenti();
-		
+		String codDip = this.form.getDipartimento().getValue().getValue();
+
 		try {
 			List<InserimentoLottoSoloConservazioneRequest> requestList = new ArrayList<InserimentoLottoSoloConservazioneRequest>();
 			
@@ -571,7 +572,8 @@ IFatturaElettronicaAttivaService>{
 					filesMap.put(nomeFattura, xml);
 					this.log.info("Inserisco il file ["+nomeFattura+"]");
 					InserimentoLottoSoloConservazioneRequest dto = new InserimentoLottoSoloConservazioneRequest();
-					dto.setNomeFile(nomeFattura); 
+					dto.setNomeFile(nomeFattura);
+					dto.setDipartimento(codDip);
 					requestList.add(dto);
 				}
 			}
@@ -615,7 +617,6 @@ IFatturaElettronicaAttivaService>{
 
 		this.listaConservazione = null;
 		List<String> nomeFile = this.form.getFatturaFile().getNomeFile();
-		String codDip = this.form.getDipartimento().getValue().getValue();
 		Dipartimento dipartimento =  this.getDipartimento(codDip);
 		IdRegistro idRegistro = dipartimento.getRegistro();
 		

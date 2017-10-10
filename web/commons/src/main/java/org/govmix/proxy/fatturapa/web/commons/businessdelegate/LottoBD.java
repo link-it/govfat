@@ -21,6 +21,7 @@
 package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -89,6 +90,18 @@ public class LottoBD extends BaseBD {
 		}
 	}
 
+	public LottoFatture getByMessageId(String msgid) throws Exception {
+		try {
+			IExpression exp = this.service.newExpression();
+			exp.equals(LottoFatture.model().MESSAGE_ID, msgid);
+			return this.service.find(exp);
+		} catch (ServiceException e) {
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			throw new Exception(e);
+		}
+	}
+
 	public IdLotto convertToId(LottoFatture lotto) throws Exception {
 		try {
 			return this.service.convertToId(lotto);
@@ -128,7 +141,7 @@ public class LottoBD extends BaseBD {
 			throws ServiceException, NotImplementedException, ExpressionNotImplementedException, ExpressionException {
 		IExpression exp = this.service.newExpression();
 		exp.in(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA, stati);
-		exp.lessEquals(LottoFatture.model().DATA_ULTIMA_ELABORAZIONE, date);
+		exp.lessEquals(LottoFatture.model().DATA_PROSSIMA_ELABORAZIONE, date);
 		return exp;
 	}
 
@@ -148,9 +161,36 @@ public class LottoBD extends BaseBD {
 		}
 	}
 	
-	public void updateStatoElaborazioneInUscita(IdLotto lotto, StatoElaborazioneType stato) throws Exception {
+	public void updateStatoElaborazioneInUscitaOK(IdLotto lotto, StatoElaborazioneType stato) throws Exception {
 		try {
-			this.service.updateFields(lotto, new UpdateField(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA, stato), new UpdateField(LottoFatture.model().DATA_ULTIMA_ELABORAZIONE, new Date()));
+			List<UpdateField> list = new ArrayList<UpdateField>();
+			list.add(new UpdateField(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA, stato));
+			list.add(new UpdateField(LottoFatture.model().DATA_ULTIMA_ELABORAZIONE, new Date()));
+			list.add(new UpdateField(LottoFatture.model().DATA_PROSSIMA_ELABORAZIONE, new Date()));
+			list.add(new UpdateField(LottoFatture.model().TENTATIVI_CONSEGNA, 0));
+			
+			this.service.updateFields(lotto, list.toArray(new UpdateField[]{}));
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la updateStatoElaborazioneInUscita: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la updateStatoElaborazioneInUscita: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+	
+	public void updateStatoElaborazioneInUscitaKO(IdLotto lotto, StatoElaborazioneType stato, Date dataProssimaElaborazione, String dettaglioElaborazione, Integer tentativiConsegna) throws Exception {
+		try {
+			List<UpdateField> list = new ArrayList<UpdateField>();
+			list.add(new UpdateField(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA, stato));
+			list.add(new UpdateField(LottoFatture.model().DATA_ULTIMA_ELABORAZIONE, new Date()));
+			list.add(new UpdateField(LottoFatture.model().DATA_PROSSIMA_ELABORAZIONE, dataProssimaElaborazione));
+			list.add(new UpdateField(LottoFatture.model().TENTATIVI_CONSEGNA, tentativiConsegna));
+			
+			if(dettaglioElaborazione != null)
+				list.add(new UpdateField(LottoFatture.model().DETTAGLIO_ELABORAZIONE, dettaglioElaborazione));
+			
+			this.service.updateFields(lotto, list.toArray(new UpdateField[]{}));
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la updateStatoElaborazioneInUscita: " + e.getMessage(), e);
 			throw new Exception(e);
@@ -171,5 +211,37 @@ public class LottoBD extends BaseBD {
 			throw new Exception(e);
 		}
 	}
+
+	public StatoElaborazioneType ritentaConsegna(IdLotto lotto) throws Exception {
+		try {
+			
+			LottoFatture lottoDaDB = this.get(lotto);
+			
+			StatoElaborazioneType nuovoStato = null;
+			switch(lottoDaDB.getStatoElaborazioneInUscita()) {
+			case ERRORE_DI_FIRMA: nuovoStato = StatoElaborazioneType.PRESA_IN_CARICO;
+				break;
+			case ERRORE_DI_PROTOCOLLO:  nuovoStato = StatoElaborazioneType.PRESA_IN_CARICO;
+				break;
+			case ERRORE_DI_SPEDIZIONE: nuovoStato = StatoElaborazioneType.PROTOCOLLATA;
+				break;
+			default: throw new Exception("Lo stato elaborazione ["+lottoDaDB.getStatoElaborazioneInUscita()+"] non prevede una rispedizione");
+			
+			}
+			
+			this.updateStatoElaborazioneInUscitaOK(lotto, nuovoStato);
+			
+			return nuovoStato;
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la updateStatoElaborazioneInUscita: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la updateStatoElaborazioneInUscita: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+
+	
 
 }

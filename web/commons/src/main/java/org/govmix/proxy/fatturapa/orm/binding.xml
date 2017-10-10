@@ -164,6 +164,9 @@
     <value name="fatturazioneAttiva" field="fatturazioneAttiva" usage="required"/>
     <value name="statoElaborazioneInUscita" field="statoElaborazioneInUscita" usage="optional" enum-value-method="toString"/>
     <value name="dataUltimaElaborazione" field="dataUltimaElaborazione" usage="optional"/>
+    <value name="dettaglioElaborazione" field="dettaglioElaborazione" usage="optional"/>
+    <value name="dataProssimaElaborazione" field="dataProssimaElaborazione" usage="optional"/>
+    <value name="tentativiConsegna" field="tentativiConsegna" usage="required"/>
     <value name="dataRicezione" field="dataRicezione" usage="required"/>
     <value name="statoInserimento" field="statoInserimento" usage="required" enum-value-method="toString"/>
     <value name="statoConsegna" field="statoConsegna" usage="required" enum-value-method="toString"/>
@@ -206,6 +209,9 @@
     <value name="fatturazioneAttiva" field="fatturazioneAttiva" usage="required"/>
     <value name="statoElaborazioneInUscita" field="statoElaborazioneInUscita" usage="optional" enum-value-method="toString"/>
     <value name="dataUltimaElaborazione" field="dataUltimaElaborazione" usage="optional"/>
+    <value name="dettaglioElaborazione" field="dettaglioElaborazione" usage="optional"/>
+    <value name="dataProssimaElaborazione" field="dataProssimaElaborazione" usage="optional"/>
+    <value name="tentativiConsegna" field="tentativiConsegna" usage="required"/>
     <value name="dataRicezione" field="dataRicezione" usage="required"/>
     <value name="statoInserimento" field="statoInserimento" usage="required" enum-value-method="toString"/>
     <value name="statoConsegna" field="statoConsegna" usage="required" enum-value-method="toString"/>

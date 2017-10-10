@@ -31,6 +31,10 @@ public class BatchProperties extends org.govmix.proxy.fatturapa.web.commons.util
 	private String ricezioneEsitoUsername;
 	private int maxTentativiRispedizione;
 	private int fattoreRispedizione;
+	private int maxTentativiRispedizioneWFM;
+	private int fattoreRispedizioneWFM;
+	private int maxTentativiRispedizioneSdI;
+	private int fattoreRispedizioneSdI;
 	private boolean consegnaFatturaContestuale;
 	private boolean validazioneDAOAbilitata;
 	private boolean rifiutoAutomaticoAbilitato;
@@ -62,6 +66,10 @@ public class BatchProperties extends org.govmix.proxy.fatturapa.web.commons.util
 			
 			this.maxTentativiRispedizione = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.maxTentativiRispedizione", true));
 			this.fattoreRispedizione = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.fattoreRispedizione", true));
+			this.maxTentativiRispedizioneWFM = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.maxTentativiRispedizioneWFM", true));
+			this.fattoreRispedizioneWFM = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.fattoreRispedizioneWFM", true));
+			this.maxTentativiRispedizioneSdI = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.maxTentativiRispedizioneSdI", true));
+			this.fattoreRispedizioneSdI = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.fattoreRispedizioneSdI", true));
 			String consegnaFatturaContestualeString = this.getProperty("org.govmix.proxy.fatturapa.web.api.consegnaFatturaAssociata", true);
 			this.consegnaFatturaContestuale = Boolean.parseBoolean(consegnaFatturaContestualeString);
 
@@ -125,6 +133,38 @@ public class BatchProperties extends org.govmix.proxy.fatturapa.web.commons.util
 	}
 	public int getFattoreRispedizione() {
 		return fattoreRispedizione;
+	}
+
+	public int getMaxTentativiRispedizioneSdI() {
+		return maxTentativiRispedizioneSdI;
+	}
+
+	public void setMaxTentativiRispedizioneSdI(int maxTentativiRispedizioneSdI) {
+		this.maxTentativiRispedizioneSdI = maxTentativiRispedizioneSdI;
+	}
+
+	public int getFattoreRispedizioneSdI() {
+		return fattoreRispedizioneSdI;
+	}
+
+	public void setFattoreRispedizioneSdI(int fattoreRispedizioneSdI) {
+		this.fattoreRispedizioneSdI = fattoreRispedizioneSdI;
+	}
+
+	public int getMaxTentativiRispedizioneWFM() {
+		return maxTentativiRispedizioneWFM;
+	}
+
+	public void setMaxTentativiRispedizioneWFM(int maxTentativiRispedizioneWFM) {
+		this.maxTentativiRispedizioneWFM = maxTentativiRispedizioneWFM;
+	}
+
+	public int getFattoreRispedizioneWFM() {
+		return fattoreRispedizioneWFM;
+	}
+
+	public void setFattoreRispedizioneWFM(int fattoreRispedizioneWFM) {
+		this.fattoreRispedizioneWFM = fattoreRispedizioneWFM;
 	}
 
 }

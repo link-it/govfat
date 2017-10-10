@@ -117,6 +117,8 @@ public class NotificaECSingleFileExporter extends AbstractSingleFileXMLExporter<
 			pagExpr.equals(NotificaEsitoCommittente.model().ID_FATTURA.IDENTIFICATIVO_SDI, id.getIdentificativoSdi());
 			pagExpr.and();
 			pagExpr.equals(NotificaEsitoCommittente.model().ID_FATTURA.POSIZIONE, id.getPosizione());
+			pagExpr.and();
+			pagExpr.isNotNull(NotificaEsitoCommittente.model().DATA_INVIO_SDI);
 
 			List<NotificaEsitoCommittente> necLst = this.notificaECSearchDAO.findAll(pagExpr);
 			

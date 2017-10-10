@@ -101,7 +101,7 @@ public class RiceviComunicazioneSdI {
 		if(nuovoStatoLotto != null) {
 			IdLotto idLotto = new IdLotto();
 			idLotto.setIdentificativoSdi(tracciaSdI.getIdentificativoSdi());
-			this.lottoBD.updateStatoElaborazioneInUscita(idLotto, nuovoStatoLotto);
+			this.lottoBD.updateStatoElaborazioneInUscitaOK(idLotto, nuovoStatoLotto);
 		}
 	}
 }

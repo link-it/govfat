@@ -60,21 +60,10 @@ public class LottoFattureAttiveBD extends LottoBD {
 	private IExpression getExpressionLottiDaSpedire(Date dataRicezione)
 			throws ServiceException, NotImplementedException, ExpressionNotImplementedException, ExpressionException {
 		IExpression expression = this.service.newExpression();
-		expression.lessEquals(LottoFatture.model().DATA_RICEZIONE, dataRicezione);
+		expression.lessEquals(LottoFatture.model().DATA_PROSSIMA_ELABORAZIONE, dataRicezione);
 		expression.equals(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA, StatoElaborazioneType.PROTOCOLLATA);
 		expression.equals(LottoFatture.model().FATTURAZIONE_ATTIVA, true);
 		return expression;
-	}
-	
-	public void updateStatoElaborazioneInUscita(LottoFatture lotto, StatoElaborazioneType stato) throws ServiceException, NotFoundException {
-		try {
-			this.service.updateFields(this.service.convertToId(lotto),
-					new UpdateField(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA, stato),
-					new UpdateField(LottoFatture.model().DATA_ULTIMA_ELABORAZIONE, new Date()));
-		} catch (NotImplementedException e) {
-			throw new ServiceException(e);
-		}
-		
 	}
 	
 	public void updateIdentificativoSdI(LottoFatture lotto, Integer identificativoSdI) throws ServiceException, NotFoundException {

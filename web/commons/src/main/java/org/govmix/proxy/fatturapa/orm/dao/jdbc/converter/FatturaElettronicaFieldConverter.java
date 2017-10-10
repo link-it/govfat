@@ -628,6 +628,27 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 				return "data_ultima_elaborazione";
 			}
 		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DETTAGLIO_ELABORAZIONE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".dettaglio_elaborazione";
+			}else{
+				return "dettaglio_elaborazione";
+			}
+		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DATA_PROSSIMA_ELABORAZIONE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".data_prossima_elaborazione";
+			}else{
+				return "data_prossima_elaborazione";
+			}
+		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.TENTATIVI_CONSEGNA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".tentativi_consegna";
+			}else{
+				return "tentativi_consegna";
+			}
+		}
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DATA_RICEZIONE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".data_ricezione";
@@ -1033,6 +1054,15 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE, returnAlias);
 		}
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DATA_ULTIMA_ELABORAZIONE)){
+			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE, returnAlias);
+		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DETTAGLIO_ELABORAZIONE)){
+			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE, returnAlias);
+		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DATA_PROSSIMA_ELABORAZIONE)){
+			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE, returnAlias);
+		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.TENTATIVI_CONSEGNA)){
 			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE, returnAlias);
 		}
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DATA_RICEZIONE)){

@@ -32,9 +32,7 @@ import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
-import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
-import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
@@ -948,10 +946,11 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 	public boolean isVisualizzaLinkRiconsegna(){
 		if(this.getDTO().getStatoConsegna() != null){
 			boolean isAdmin = Utils.getLoginBean().isAdmin();
-			StatoConsegnaType statoConsegnaType =  this.getDTO().getStatoConsegna();
 
-			if((statoConsegnaType.equals(StatoConsegnaType.IN_RICONSEGNA) || 
-					statoConsegnaType.equals(StatoConsegnaType.ERRORE_CONSEGNA)) && isAdmin)
+			StatoElaborazioneType statoElaborazione = this.getDTO().getLottoFatture().getStatoElaborazioneInUscita();
+			if((statoElaborazione.equals(StatoElaborazioneType.ERRORE_DI_FIRMA) || 
+					statoElaborazione.equals(StatoElaborazioneType.ERRORE_DI_PROTOCOLLO) ||
+					statoElaborazione.equals(StatoElaborazioneType.ERRORE_DI_SPEDIZIONE)) && isAdmin)
 				return true;
 		}
 

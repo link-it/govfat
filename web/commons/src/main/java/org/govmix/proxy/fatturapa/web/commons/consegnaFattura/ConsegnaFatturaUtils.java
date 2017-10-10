@@ -42,6 +42,7 @@ import org.openspcoop2.generic_project.exception.DeserializerException;
 import org.openspcoop2.protocol.sdi.constants.SDICostanti;
 import org.openspcoop2.protocol.sdi.utils.P7MInfo;
 import org.openspcoop2.protocol.sdi.utils.SDILottoUtils;
+import org.openspcoop2.utils.Utilities;
 
 public class ConsegnaFatturaUtils {
 
@@ -170,6 +171,15 @@ public class ConsegnaFatturaUtils {
 		params.setFatturazioneAttiva(fatturazioneAttiva);
 
 		return params;
+	}
+
+	public static ConsegnaFatturaParameters getParameters(Integer identificativoSDI, String nomeFile,
+			String formatoArchivioInvioFatturaString,
+			String formatoArchivioBase64, String messageId,
+			boolean fatturazioneAttiva,
+			InputStream is) throws Exception, IOException {
+		return getParameters(identificativoSDI, nomeFile, formatoArchivioInvioFatturaString, formatoArchivioBase64, messageId, fatturazioneAttiva, Utilities.getAsByteArray(is));
+				
 	}
 
 	public static ConsegnaFatturaParameters getParameters(Integer identificativoSDI, String nomeFile,

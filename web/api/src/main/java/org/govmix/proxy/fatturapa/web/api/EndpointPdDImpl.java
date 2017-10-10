@@ -137,13 +137,11 @@ public class EndpointPdDImpl implements EndpointPdD {
 				
 				String idEgov = getIdEgov(headers);
 
-				ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(formatoFatturaPA,
-						identificativoSDI, nomeFile,
+				ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(identificativoSDI, nomeFile,
 						formatoArchivioInvioFatturaString, formatoArchivioBase64,
 						messageId,
 						false,
 						fatturaStream);
-
 
 				try {
 					params.validate(true);
