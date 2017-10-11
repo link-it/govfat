@@ -34,11 +34,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 
 public class NoCacheFilter implements Filter {
 
 
 	private List<String> excludedPages = null;
+	private Logger log = LoggerManager.getConsoleLogger();
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -74,6 +77,20 @@ public class NoCacheFilter implements Filter {
 			response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
 			response.setDateHeader("Expires", 0); // Proxies.
 		}
+		
+		if(controlRequired) {
+			this.log.debug("Richiesta risorsa protetta ["+requestPath+"]");
+			String uri = request.getScheme() + "://" +
+					request.getServerName() + 
+		             ("http".equals(request.getScheme()) && request.getServerPort() == 80 ||
+		             	"https".equals(request.getScheme()) && request.getServerPort() == 443 ? "" : ":" + request.getServerPort() ) +
+		             request.getRequestURI() +
+		            (request.getQueryString() != null ? "?" + request.getQueryString() : "");
+			this.log.debug("Richiesta Url Esatta Invocata ["+uri+"]");
+			this.log.debug("Content-Type Richiesta: ["+request.getContentType()+"]");
+			this.log.debug("Content-Length Richiesta: ["+request.getContentLength()+"]");
+		}
+		
 		chain.doFilter(request, response);
 	}
 
