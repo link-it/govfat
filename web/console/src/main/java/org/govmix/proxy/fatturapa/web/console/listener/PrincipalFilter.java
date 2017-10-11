@@ -116,6 +116,13 @@ public class PrincipalFilter implements Filter {
 			sessionControlRequiredForThisResource = isSessionControlRequiredForThisResource(httpServletRequest);
 			if(sessionControlRequiredForThisResource) {
 				this.log.debug("Richiesta risorsa protetta ["+requestPath+"]");
+				String uri = httpServletRequest.getScheme() + "://" +
+						httpServletRequest.getServerName() + 
+			             ("http".equals(httpServletRequest.getScheme()) && httpServletRequest.getServerPort() == 80 ||
+			             	"https".equals(request.getScheme()) && httpServletRequest.getServerPort() == 443 ? "" : ":" + httpServletRequest.getServerPort() ) +
+			             httpServletRequest.getRequestURI() +
+			            (httpServletRequest.getQueryString() != null ? "?" + httpServletRequest.getQueryString() : "");
+				this.log.debug("Richiesta Url Esatta Invocata ["+uri+"]");
 				this.log.debug("Content-Type Richiesta: ["+httpServletRequest.getContentType()+"]");
 				this.log.debug("Content-Length Richiesta: ["+httpServletRequest.getContentLength()+"]");
 			}
