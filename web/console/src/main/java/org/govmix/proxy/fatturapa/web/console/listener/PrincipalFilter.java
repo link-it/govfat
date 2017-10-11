@@ -114,8 +114,11 @@ public class PrincipalFilter implements Filter {
 			
 			// Autenticazione gestita dall'applicazione 
 			sessionControlRequiredForThisResource = isSessionControlRequiredForThisResource(httpServletRequest);
-			if(sessionControlRequiredForThisResource)
-				this.log.debug("Richiesta risorsa ["+requestPath+"], protetta ["+sessionControlRequiredForThisResource+"]");
+			if(sessionControlRequiredForThisResource) {
+				this.log.debug("Richiesta risorsa protetta ["+requestPath+"]");
+				this.log.debug("Content-Type Richiesta: ["+httpServletRequest.getContentType()+"]");
+				this.log.debug("Content-Length Richiesta: ["+httpServletRequest.getContentLength()+"]");
+			}
 			
 			if(!this.usePrincipal){
 				// is session expire control required for this request?
