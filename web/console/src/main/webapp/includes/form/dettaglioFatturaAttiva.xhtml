@@ -46,9 +46,6 @@
 							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
 							
 							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.dataInvio}" insideGroup="true" />
-							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.protocollo}" insideGroup="true" />
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
-							
 							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.statoElaborazioneDettaglio}" insideGroup="true" />
 							<h:panelGroup>
 								<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{fatturaElettronicaAttivaMBean.selectedElement.visualizzaLinkRiconsegna == false}"/>
@@ -61,9 +58,11 @@
 									</a4j:commandLink>
 								</h:form>
 							</h:panelGroup>
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{true}"/>
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{true}"/>
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{true}"/>
+							
+							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.protocollo}" insideGroup="true" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{true}" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{true}" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{true}" />
 						</h:panelGrid>
 					</op2web:fieldset>
 
