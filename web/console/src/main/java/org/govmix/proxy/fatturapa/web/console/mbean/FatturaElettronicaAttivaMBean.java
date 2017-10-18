@@ -201,6 +201,16 @@ IFatturaElettronicaAttivaService>{
 		this.selectedIdFattura = null;
 
 		if(this.selectedElement != null){
+			try{
+				// forzo il ricaricamento della fattura perche' potrebbe essere passato il batch e averne cambiato lo stato
+				this.selectedElement = ((IFatturaElettronicaAttivaService)this.service).findById(this.selectedElement.getId());
+			}catch(Exception e){
+				this.log.debug("Si e' verificato un errore durante il caricamento della fattura: "+ e.getMessage(), e);
+	
+			}
+		}
+		
+		if(this.selectedElement != null){
 
 			this.selectedIdFattura = new IdFattura();
 			this.selectedIdFattura.setPosizione(this.selectedElement.getDTO().getPosizione());
