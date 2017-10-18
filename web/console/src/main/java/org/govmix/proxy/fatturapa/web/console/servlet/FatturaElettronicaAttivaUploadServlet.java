@@ -28,7 +28,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 public class FatturaElettronicaAttivaUploadServlet extends HttpServlet {
 
 	public static final String FATTURA_ELETTRONICA_ATTIVA_UPLOAD_SERVLET_PATH= "/fatturaAttivaUpload";
-
+	public static final String ID_TO_DELETE_PARAM_NAME= "id";
 	/**
 	 * 
 	 */
@@ -59,7 +59,7 @@ public class FatturaElettronicaAttivaUploadServlet extends HttpServlet {
 		Map<String, UploadItem> mapElementiRicevuti = fileUploadBean.getMapElementiRicevuti();
 		Map<String, String> mapChiaviElementi = fileUploadBean.getMapChiaviElementi();
 
-		String deleteURL = req.getContextPath();
+		String baseDeleteURL = req.getContextPath() + FATTURA_ELETTRONICA_ATTIVA_UPLOAD_SERVLET_PATH;
 
 		try {
 			List<FileItem> multiparts = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(req);
@@ -82,25 +82,30 @@ public class FatturaElettronicaAttivaUploadServlet extends HttpServlet {
 
 						// controllo duplicati?
 						if(!mapElementiRicevuti.containsKey(fileName)) {
-							String idFileRicevuto = UUID.randomUUID().toString().replaceAll("-", ""); 
+							String idFileRicevuto = UUID.randomUUID().toString().replaceAll("-", "");
+							String deleteUrl = baseDeleteURL + "?"+ID_TO_DELETE_PARAM_NAME+"="+idFileRicevuto;
 							mapChiaviElementi.put(idFileRicevuto, fileName); 
 							mapElementiRicevuti.put(fileName, uploadItem);
 
-							respBodyItem =  getOkResponseItem(fileName,dimensione,deleteURL);
+							FatturaElettronicaAttivaUploadServlet.log.debug("File ["+fileName+"] non presente, aggiunto alla lista.");
+							respBodyItem =  getUploadOkResponseItem(fileName,dimensione,idFileRicevuto,deleteUrl);
 						} else {
 							// duplicato
-							respBodyItem = getKoResponseItem(fileName, dimensione, "File duplicato");
+							FatturaElettronicaAttivaUploadServlet.log.debug("File ["+fileName+"] gia' presente, segnalo duplicato.");
+							respBodyItem = getUploadKoResponseItem(fileName, dimensione, "File duplicato");
 						}
 					}catch(Exception e) {
 						FatturaElettronicaAttivaUploadServlet.log.error("Errore durante l'elaborazione del file ["+fileName+"]: " +e.getMessage(), e);
-						respBodyItem = getKoResponseItem(fileName, dimensione, "ERRORE");
+						respBodyItem = getUploadKoResponseItem(fileName, dimensione, "ERRORE");
 					}
 
 					itemResp.add(respBodyItem);
 				}
 			}
 
-			ByteArrayInputStream bais = new ByteArrayInputStream(getResponse(itemResp).getBytes());
+			String responseBody = getResponse(itemResp);
+			FatturaElettronicaAttivaUploadServlet.log.debug("Response ["+responseBody+"].");
+			ByteArrayInputStream bais = new ByteArrayInputStream(responseBody.getBytes());
 			Utils.copy(bais, resp.getOutputStream());
 			resp.setContentType(ContentType.APPLICATION_JSON.toString());
 			resp.setStatus(200);	
@@ -113,31 +118,39 @@ public class FatturaElettronicaAttivaUploadServlet extends HttpServlet {
 	}
 
 
-	/* risposta delete
-	 * {"files": [
-  {
-    "picture1.jpg": true
-  },
-  {
-    "picture2.jpg": true
-  }
-]}
-	 * 
-	 */
-
 	@Override
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		FatturaElettronicaAttivaUploadServlet.log.debug("DoDelete!");
 		resp.setHeader("Access-Control-Allow-Origin", "*");
-
+		List<String> itemResp = new ArrayList<String>();
 		try {
 			ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
 			FileUploadBean fileUploadBean = (FileUploadBean)context.getBean("fileUploadBean");
 			Map<String, UploadItem> mapElementiRicevuti = fileUploadBean.getMapElementiRicevuti();
 			Map<String, String> mapChiaviElementi = fileUploadBean.getMapChiaviElementi();
 
+			String idToDelete = req.getParameter(ID_TO_DELETE_PARAM_NAME);
+			FatturaElettronicaAttivaUploadServlet.log.debug("Richiesta cancellazione del file id ["+idToDelete+"].");
 
+			boolean statoDelete = true;
+			String fileName = "";
+			try {
+				// rimozione elementi
+				fileName = mapChiaviElementi.remove(idToDelete);
+				mapElementiRicevuti.remove(fileName); 
 
+			}catch(Throwable e) {
+				FatturaElettronicaAttivaUploadServlet.log.error("Errore durante la cancellazione del file id ["+idToDelete+"]: " +e.getMessage(), e);
+			}
+
+			String respBodyItem = getDeleteOkResponseItem(fileName, statoDelete);
+			itemResp.add(respBodyItem);
+
+			String responseBody = getResponse(itemResp);
+			FatturaElettronicaAttivaUploadServlet.log.debug("Response ["+responseBody+"].");
+			ByteArrayInputStream bais = new ByteArrayInputStream(responseBody.getBytes());
+			Utils.copy(bais, resp.getOutputStream());
+			resp.setContentType(ContentType.APPLICATION_JSON.toString());
 			resp.setStatus(200);	
 		}catch(Exception e) {
 			FatturaElettronicaAttivaUploadServlet.log.error(e.getMessage(), e);
@@ -178,17 +191,19 @@ public class FatturaElettronicaAttivaUploadServlet extends HttpServlet {
 	  }
 	]}
 	 */
-	public static String getOkResponseItem(String itemName, int dimensione, String deleteURL) {
+	public static String getUploadOkResponseItem(String itemName, int dimensione, String idFileRicevuto, String deleteURL) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("{ 'name' : '");
+		sb.append("{ \"name\" : \"");
 		sb.append(itemName);
-		sb.append("' , 'size' : ");
+		sb.append("\" , \"size\" : ");
 		sb.append(dimensione);
-		sb.append(", 'url' : ''");
-		sb.append(", 'thumbnailUrl' : ''");
-		sb.append(", 'deleteUrl' : '");
+		sb.append(", \"url\" : \"\"");
+		sb.append(", \"thumbnailUrl\" : \"\"");
+		sb.append(", \"id\" : \"");
+		sb.append(idFileRicevuto);
+		sb.append("\" , \"deleteUrl\" : \"");
 		sb.append(deleteURL);
-		sb.append("' , 'deleteType' : 'DELETE'");
+		sb.append("\" , \"deleteType\" : \"DELETE\"");
 		sb.append("}");
 
 		return sb.toString();
@@ -209,15 +224,37 @@ Response Error
   }
 ]}
 	 */
-	public static String getKoResponseItem(String itemName, int dimensione, String errorString) {
+	public static String getUploadKoResponseItem(String itemName, int dimensione, String errorString) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("{ 'name' : '");
+		sb.append("{ \"name\" : \"");
 		sb.append(itemName);
-		sb.append("' , 'size' : ");
+		sb.append("\" , \"size\" : ");
 		sb.append(dimensione);
-		sb.append(", 'error' : '");
+		sb.append(", \"error\" : \"");
 		sb.append(errorString);
-		sb.append("' }");
+		sb.append("\" }");
+
+		return sb.toString();
+	}
+
+	/* risposta delete
+	 * {"files": [
+  {
+    "picture1.jpg": true
+  },
+  {
+    "picture2.jpg": true
+  }
+]}
+	 * 
+	 */
+	public static String getDeleteOkResponseItem(String itemName, boolean stato) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("{ \"");
+		sb.append(itemName);
+		sb.append("\" :  ");
+		sb.append(stato);
+		sb.append(" }");
 
 		return sb.toString();
 	}
@@ -225,7 +262,7 @@ Response Error
 
 	public static String getResponse(List<String> itemResp) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("{'files' : ["); 
+		sb.append("{\"files\" : ["); 
 		boolean addComma = false; 
 		for (String item : itemResp) {
 			if(addComma)

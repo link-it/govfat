@@ -143,8 +143,7 @@
 .icon-details{
 	background-image: url(../images/icons/silk/zoom.png) ! important;
 }
-.icon-edit
-{
+.icon-edit{
 	background-image: url(../images/icons/silk/pencil.png) ! important;
 }
 .icon-delete{
@@ -181,6 +180,14 @@
 
 .icon-carica-fattura:disabled{
 	background-image: url(../images/icons/silk/add.png) ! important;
+}
+
+.icon-start-upload{
+	background-image: url(../images/icons/silk/control_next_blue.png) ! important;
+}
+
+.icon-cancel{
+	background-image: url(../images/trash.png) ! important;
 }
 
 /*eor*/

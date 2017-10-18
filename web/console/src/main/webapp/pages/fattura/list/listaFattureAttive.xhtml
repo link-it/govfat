@@ -49,28 +49,27 @@
 			}
 		</style>
 		<script type="text/javascript">
-			function loggaEventoAddOnSubmit(evt){
-				console.log('ADD ON SUBMIT: ');
-				console.log(evt);
-				return true;
+			function aggiungiFile(file){
+				//console.log(file);
+				if(!file.error){
+					var ids = jQuery("[id$='idFilesValidi']").val();
+					
+					if(ids.length > 0)
+						ids += ',';
+					
+					ids += file.id;
+					jQuery("[id$='idFilesValidi']").val(ids);
+				}
 			}
 			
-			function loggaEventoAddOnComplete(evt){
-				console.log('ADD ON COMPLETE: ');
-				console.log(evt);
-				return true;
+			function abilitaCarica(){
+				jQuery("[id$='caricaFattureConservazioneButton']").attr('disabled',false);
+				jQuery("[id$='caricaFattureButton']").attr('disabled',false);
 			}
 			
-			function loggaEventoErrorOnSubmit(evt){
-				console.log('ERROR ON SUBMIT: ');
-				console.log(evt);
-				return true;
-			}
-			
-			function loggaEventoErrorOnComplete(evt){
-				console.log('ERROR ON COMPLETE: ');
-				console.log(evt);
-				return true;
+			function disabilitaCarica(){
+				jQuery("[id$='caricaFattureConservazioneButton']").attr('disabled',true);
+				jQuery("[id$='caricaFattureButton']").attr('disabled',true);
 			}
 		</script>
 		<rich:panel styleClass="noborder" id="pagina">
@@ -361,7 +360,9 @@
 							visibility: hidden;
 						}
 						.rich-fileupload-list-decor { 
-							width: 410px !important; margin-left: 190px;
+							    border: 1px solid;
+							    border-color: #C0C0C0;
+							    background-color: #FFF;
 						}
 						</style>
 						<p class="legend">
@@ -375,11 +376,15 @@
 								note="#{msg['fattura.form.descrittoreFattura.note']}">
 								<div id="wrapUploadFattureFrame"> 
 							        <div class="rich-combobox">	 
-							            <iframe id="uploadFattureFrame" name="uploadFattureFrame" frameborder="0" scrolling="no" src="../../../includes/form/uploadForm.jsp" width="500px" height="400px">
+							            <iframe id="uploadFattureFrame" name="uploadFattureFrame" class="rich-fileupload-list-decor"
+							            	frameborder="0" scrolling="no" 
+							            	src="../../../includes/form/uploadForm.jsp" width="500px" height="400px">
 							              <p>Your browser does not support iframes.</p>
 							            </iframe>
 						            </div>
 					            </div>
+					            
+					            <h:inputHidden value="#{fatturaElettronicaAttivaMBean.form.idFiles}" id="idFilesValidi" /> 
 							</op2web:prop>
 							<op2web:formField field="#{fatturaElettronicaAttivaMBean.form.dipartimento}" />
 					    	<div class="prop">
@@ -400,14 +405,14 @@
 							</div>
 						</op2web:fieldset>
 						<a4j:outputPanel layout="block" id="formCaricaFattura_btnPnl" ajaxRendered="false">
-							<div class="buttonrow" style="margin-left: 290px; margin-top:20px;">
-								<a4j:commandButton styleClass="icon-save positive" style="padding: 4px 6px 4px 5px;"
+							<div class="buttonrow" style="margin-left: 320px; margin-top:20px;">
+								<a4j:commandButton styleClass="icon-save positive" style="padding: 4px 6px 4px 5px;" id="caricaFattureConservazioneButton"
 									disabled="#{!fatturaElettronicaAttivaMBean.form.buttonEnabled}"
 									value="#{msg['fattura.button.salva']}" action="#{fatturaElettronicaAttivaMBean.preparaFormConservazione}"
 									reRender="dsFileUploadErrorsCtr,conservazioneFattureForm_formPnl" rendered="#{fatturaElettronicaAttivaMBean.form.mostraFormCorservazione}"
 									onclick="this.disabled=true"
 									oncomplete="this.disabled=false; if (#{fatturaElettronicaAttivaMBean.checkFormFattura == 'true'}) { #{rich:component('pannelloConservazioneFatture')}.show(); }" />
-								<a4j:commandButton styleClass="icon-save positive" style="padding: 4px 6px 4px 5px;"
+								<a4j:commandButton styleClass="icon-save positive" style="padding: 4px 6px 4px 5px;" id="caricaFattureButton"
 									disabled="#{!fatturaElettronicaAttivaMBean.form.buttonEnabled}"
 									value="#{msg['fattura.button.salva']}" action="#{fatturaElettronicaAttivaMBean.salvaFatture}"
 									reRender="dsFileUploadErrorsCtr" rendered="#{not fatturaElettronicaAttivaMBean.form.mostraFormCorservazione}"

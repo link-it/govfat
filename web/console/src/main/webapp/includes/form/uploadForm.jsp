@@ -1,3 +1,4 @@
+<%@page import="org.govmix.proxy.fatturapa.web.console.util.Utils"%>
 <%@page import="org.govmix.proxy.fatturapa.web.console.servlet.FatturaElettronicaAttivaUploadServlet"%>
 <%@page import="org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager"%>
 <%@page import="org.apache.log4j.Logger"%>
@@ -18,13 +19,21 @@
 <link rel="stylesheet" href="../../fileupload/css/style.css">
 <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
 <link rel="stylesheet" href="../../fileupload/css/jquery.fileupload.css">
-
+<!-- Icone applicazione -->
+<link rel="stylesheet" href="../../css/icons.css">
 <%
 Logger log = LoggerManager.getConsoleLogger();
 String tipiAccettati = ConsoleProperties.getInstance(log).getFatturaAttivaCaricamentoTipologieFileAccettati();
-
+int numeroMassimoFileAccettati = ConsoleProperties.getInstance(log).getFatturaAttivaCaricamentoMaxNumeroFile();
 String servletUrl = request.getContextPath() + FatturaElettronicaAttivaUploadServlet.FATTURA_ELETTRONICA_ATTIVA_UPLOAD_SERVLET_PATH;
 
+String addLabel = Utils.getInstance().getMessageFromResourceBundle("fileUpload.addControlLabel");
+String uploadLabel = Utils.getInstance().getMessageFromResourceBundle("fileUpload.uploadControlLabel");
+String cancelLabel = Utils.getInstance().getMessageFromResourceBundle("fileUpload.cancelEntryControlLabel");
+String deleteAllLabel = Utils.getInstance().getMessageFromResourceBundle("fileUpload.clearAllControlLabel");
+String deleteLabel = Utils.getInstance().getMessageFromResourceBundle("fileUpload.clearControlLabel");
+String erroreLabel = Utils.getInstance().getMessageFromResourceBundle("fileUpload.errorLabel");
+String processingLabel = Utils.getInstance().getMessageFromResourceBundle("fileUpload.processingLabel");
 %>
 
 </head>
@@ -35,27 +44,27 @@ String servletUrl = request.getContextPath() + FatturaElettronicaAttivaUploadSer
         <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
         <div class="row fileupload-buttonbar">
             <div class="col-lg-7">
-                <!-- The fileinput-button span is used to style the file input field as button -->
-                <span class="btn btn-success fileinput-button">
-                    <i class="glyphicon glyphicon-plus"></i>
-                    <span>Add files...</span>
-                    <input type="file" name="files[]" multiple>
-                </span>
-                <button type="submit" class="btn btn-primary start">
-                    <i class="glyphicon glyphicon-upload"></i>
-                    <span>Start upload</span>
-                </button>
-                <button type="reset" class="btn btn-warning cancel">
-                    <i class="glyphicon glyphicon-ban-circle"></i>
-                    <span>Cancel upload</span>
-                </button>
-                <button type="button" class="btn btn-danger delete">
-                    <i class="glyphicon glyphicon-trash"></i>
-                    <span>Delete</span>
-                </button>
-                <input type="checkbox" class="toggle">
-                <!-- The global file processing state -->
-                <span class="fileupload-process"></span>
+            	<div class="rich-fileupload-toolbar-decor">
+	                <!-- The fileinput-button span is used to style the file input field as button -->
+	                <span class="btn icon-add fileinput-button">
+	                    <span><%=addLabel %></span>
+	                    <input type="file" name="files[]" multiple/>
+	                </span>
+	                <button type="submit" class="btn icon-start-upload start">
+	                    <span><%=uploadLabel %></span>
+	                </button>
+	                <button type="reset" class="btn icon-cancel cancel">
+	                    <span><%=cancelLabel %></span>
+	                </button>
+	                <button type="button" class="btn icon-delete delete">
+	                    <span><%=deleteAllLabel %></span>
+	                </button>
+	                <span>
+	                	<input type="checkbox" class="toggle">
+	                </span>
+	                <!-- The global file processing state -->
+	                <span class="fileupload-process"></span>
+                </div>
             </div>
             <!-- The global progress state -->
             <div class="col-lg-5 fileupload-progress fade">
@@ -64,39 +73,38 @@ String servletUrl = request.getContextPath() + FatturaElettronicaAttivaUploadSer
                     <div class="progress-bar progress-bar-success" style="width:0%;"></div>
                 </div>
                 <!-- The extended global progress state -->
-                <div class="progress-extended">&nbsp;</div>
+                <div class="progress-extended"></div>
             </div>
         </div>
-        <!-- The table listing the files available for upload/download -->
-        <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+        <div class="listaFile rich-fileupload-list-overflow">
+        	<!-- The table listing the files available for upload/download -->
+        	<table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+        </div>
     </form>
 
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-upload fade">
-        <td>
-            <span class="preview"></span>
-        </td>
-        <td>
+        <td >
             <p class="name">{%=file.name%}</p>
-            <strong class="error text-danger"></strong>
+			<p class="size"><%=processingLabel %></p>
         </td>
-        <td>
-            <p class="size">Processing...</p>
+		 <td style="width: 25%">
+			<strong class="error text-danger"></strong>
             <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
         </td>
-        <td>
+        <td style="width: 26%">
             {% if (!i && !o.options.autoUpload) { %}
-                <button class="btn btn-primary start" disabled>
-                    <i class="glyphicon glyphicon-upload"></i>
-                    <span>Start</span>
+				<div style="display: none;">
+                <button class="btn icon-start-upload start" disabled>
+                    <span><%=uploadLabel %></span>
                 </button>
+				</div>
             {% } %}
             {% if (!i) { %}
-                <button class="btn btn-warning cancel">
-                    <i class="glyphicon glyphicon-ban-circle"></i>
-                    <span>Cancel</span>
+                <button class="btn icon-cancel cancel">
+                    <span><%=cancelLabel %></span>
                 </button>
             {% } %}
         </td>
@@ -107,39 +115,31 @@ String servletUrl = request.getContextPath() + FatturaElettronicaAttivaUploadSer
 <script id="template-download" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-download fade">
-        <td>
-            <span class="preview">
-                {% if (file.thumbnailUrl) { %}
-                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
-                {% } %}
-            </span>
-        </td>
-        <td>
+        <td >
             <p class="name">
-                {% if (file.url) { %}
-                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
-                {% } else { %}
-                    <span>{%=file.name%}</span>
-                {% } %}
+                <span>{%=file.name%}</span>
+				{% if (!file.error) { %}
+					<span class="iconCaricamentoOk icon-ok"></span>
+				{% } %}
             </p>
+			<span class="size">{%=o.formatFileSize(file.size)%}</span>
+        </td>
+        <td style="width: 25%">
             {% if (file.error) { %}
-                <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+                <div><span class="label label-danger"><%=erroreLabel %></span> {%=file.error%}</div>
             {% } %}
         </td>
-        <td>
-            <span class="size">{%=o.formatFileSize(file.size)%}</span>
-        </td>
-        <td>
+        <td style="width: 26%">
             {% if (file.deleteUrl) { %}
-                <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
-                    <i class="glyphicon glyphicon-trash"></i>
-                    <span>Delete</span>
-                </button>
-                <input type="checkbox" name="delete" value="1" class="toggle">
+				<div>
+                	<button class="btn icon-delete delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                    	<span><%=deleteLabel %></span>
+                	</button>
+                	<input type="checkbox" name="delete" value="1" class="toggle">
+				</div>
             {% } else { %}
-                <button class="btn btn-warning cancel">
-                    <i class="glyphicon glyphicon-ban-circle"></i>
-                    <span>Cancel</span>
+                <button class="btn icon-cancel cancel">
+                    <span><%=cancelLabel %></span>
                 </button>
             {% } %}
         </td>
@@ -191,7 +191,6 @@ String servletUrl = request.getContextPath() + FatturaElettronicaAttivaUploadSer
  */
 
 /* global $, window */
-// url: '<%=servletUrl %>',
 jQuery(function () {
     'use strict';
 
@@ -199,10 +198,30 @@ jQuery(function () {
     jQuery('#fileupload').fileupload({
         // Uncomment the following to send cross-domain cookies:
         //xhrFields: {withCredentials: true},
-      
+      	maxNumberOfFiles : <%=numeroMassimoFileAccettati %>,
         disableImageResize: true,
         maxFileSize: 999000,
         acceptFileTypes: /(\.|\/)(<%=tipiAccettati %>)$/i
+    });
+    
+    // evento upload start
+    jQuery('#fileupload').bind('fileuploadsend', function (e, data) {
+        console.log('start upload');
+        parent.window.disabilitaCarica();
+    });
+    
+    // evento upload ok
+    jQuery('#fileupload').bind('fileuploaddone', function (e, data) {
+    	var file = data.jqXHR.responseJSON.files[0];
+    	console.log('upload done');
+    	parent.window.aggiungiFile(file);
+    	parent.window.abilitaCarica();
+    });
+    
+    // evento upload fail
+    jQuery('#fileupload').bind('fileuploadfail', function (e, data) {
+        console.log('upload fail');
+        parent.window.abilitaCarica();
     });
 
  // Upload server status check for browsers with CORS support:
