@@ -84,10 +84,8 @@ public class FatturaForm extends BaseForm implements Form {
 		
 		this._setMostraConservazione();
 		
-		this.fatturaFile = new FileUploadBean();
-		this.fatturaFile.setForm(this);
-		this.fatturaFile.setNumeroFile(ConsoleProperties.getInstance(LoggerManager.getConsoleLogger()).getFatturaAttivaCaricamentoMaxNumeroFile());
-		this.fatturaFile.setAcceptedTypes(ConsoleProperties.getInstance(LoggerManager.getConsoleLogger()).getFatturaAttivaCaricamentoTipologieFileAccettati()); 
+//		this.fatturaFile = new FileUploadBean();
+//		this.fatturaFile.setForm(this);
 		
 		this.reset();
 	}
@@ -125,13 +123,18 @@ public class FatturaForm extends BaseForm implements Form {
 	}
 	public void setFatturaFile(FileUploadBean fatturaFile) {
 		this.fatturaFile = fatturaFile;
+		if(this.fatturaFile != null) {
+			this.fatturaFile.setForm(this);
+		}
 	}
 	public FatturaElettronicaAttivaMBean getmBean() {
 		return mBean;
 	}
 	public void setmBean(FatturaElettronicaAttivaMBean mBean) {
 		this.mBean = mBean;
-		this.fatturaFile.setmBean(mBean); 
+		if(this.fatturaFile != null) {
+			this.fatturaFile.setmBean(mBean);
+		}
 	}
 	
 	private void _setMostraConservazione() {

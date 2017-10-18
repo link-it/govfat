@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
+import org.govmix.proxy.fatturapa.web.console.servlet.FatturaElettronicaAttivaUploadServlet;
 
 public class NoCacheFilter implements Filter {
 
@@ -51,6 +52,8 @@ public class NoCacheFilter implements Filter {
 		this.excludedPages.add("images");
 		this.excludedPages.add("css");
 		this.excludedPages.add("scripts");
+		this.excludedPages.add("fileupload");
+		this.excludedPages.add(FatturaElettronicaAttivaUploadServlet.FATTURA_ELETTRONICA_ATTIVA_UPLOAD_SERVLET_PATH);
 	}
 
 	@Override
@@ -92,6 +95,8 @@ public class NoCacheFilter implements Filter {
 		}
 		
 		chain.doFilter(request, response);
+		
+			this.log.debug("Exit");
 	}
 
 

@@ -2,13 +2,16 @@ package org.govmix.proxy.fatturapa.web.console.mbean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.event.ActionEvent;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.form.FatturaForm;
+import org.govmix.proxy.fatturapa.web.console.util.ConsoleProperties;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.MessageUtils;
 import org.richfaces.event.UploadEvent;
 import org.richfaces.model.UploadItem;
@@ -20,6 +23,9 @@ public class FileUploadBean implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	private static Logger log = LoggerManager.getConsoleLogger();
+	
+	private Map<String, UploadItem> mapElementiRicevuti = null;
+	private Map<String, String> mapChiaviElementi = null;
 	
 	private List<String> nomeFile;
 	private List<byte[]> contenuto;
@@ -34,10 +40,15 @@ public class FileUploadBean implements Serializable{
 	private FatturaElettronicaAttivaMBean mBean =null; 
 	private FatturaForm form = null;
 	
-	public FileUploadBean() {
+	public FileUploadBean() throws Exception {
+		this.setNumeroFile(ConsoleProperties.getInstance(LoggerManager.getConsoleLogger()).getFatturaAttivaCaricamentoMaxNumeroFile());
+		this.setAcceptedTypes(ConsoleProperties.getInstance(LoggerManager.getConsoleLogger()).getFatturaAttivaCaricamentoTipologieFileAccettati()); 
 		this.nomeFile = new ArrayList<String>();
 		this.contenuto = new ArrayList<byte[]>();
 		this.dimensioneFile = new ArrayList<Integer>();
+		
+		this.mapChiaviElementi = new HashMap<String, String>();
+		this.mapElementiRicevuti = new HashMap<String, UploadItem>();
 	}
 
 	public void setDto(boolean isAdd, byte[] contenuto, String fileName){
@@ -106,9 +117,9 @@ public class FileUploadBean implements Serializable{
 		this.files = files;
 	}
 
-	public final List<UploadItem> getFilesCache() {
-		return this.filesCache;
-	}
+//	public final List<UploadItem> getFilesCache() {
+//		return this.filesCache;
+//	}
 	
 	public final void clear(final ActionEvent e) {
 		this.files = new ArrayList<UploadItem>();
@@ -119,6 +130,10 @@ public class FileUploadBean implements Serializable{
 //		this.caricato = false;
 		this.fileUploadErrorMessage = null;
 		this.mBean.setCheckFormFatturaMessage(null); 
+		
+		this.mapChiaviElementi.clear();
+		this.mapElementiRicevuti.clear();
+		
 		this.form.enableButton();
 	}
 	
@@ -133,12 +148,23 @@ public class FileUploadBean implements Serializable{
 		this.contenuto = new ArrayList<byte[]>();
 		this.dimensioneFile = new ArrayList<Integer>();
 		
-		for (int i = 0; i < filesCache.size(); i++) {
-			UploadItem item = this.filesCache.get(i);
+		// prendo i file ricevuti  dalla mappa 
+		//[TODO] aggiungere check identificativi
+		
+		for (String itemName : this.mapElementiRicevuti.keySet()) {
+			UploadItem item = this.mapElementiRicevuti.get(itemName);
 			this.contenuto.add(item.getData());
 			this.nomeFile.add(item.getFileName());
 			this.dimensioneFile.add(item.getFileSize());
 		}
+		
+		
+//		for (int i = 0; i < filesCache.size(); i++) {
+//			UploadItem item = this.filesCache.get(i);
+//			this.contenuto.add(item.getData());
+//			this.nomeFile.add(item.getFileName());
+//			this.dimensioneFile.add(item.getFileSize());
+//		}
 	}
 
 	public int getNumeroFile(){
@@ -204,4 +230,22 @@ public class FileUploadBean implements Serializable{
 	public final void uploadErrorListener(final ActionEvent e) {
 		//this.form.enableButton();
 	}
+
+	public Map<String, UploadItem> getMapElementiRicevuti() {
+		return mapElementiRicevuti;
+	}
+
+	public void setMapElementiRicevuti(Map<String, UploadItem> mapElementiRicevuti) {
+		this.mapElementiRicevuti = mapElementiRicevuti;
+	}
+
+	public Map<String, String> getMapChiaviElementi() {
+		return mapChiaviElementi;
+	}
+
+	public void setMapChiaviElementi(Map<String, String> mapChiaviElementi) {
+		this.mapChiaviElementi = mapChiaviElementi;
+	}
+	
+	
 }

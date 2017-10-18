@@ -148,8 +148,8 @@
 		<filter-name>richfaces</filter-name>
 		<servlet-name>Faces Servlet</servlet-name>
 		 <dispatcher>REQUEST</dispatcher>
-  <dispatcher>FORWARD</dispatcher>
-  <dispatcher>INCLUDE</dispatcher>
+  		<dispatcher>FORWARD</dispatcher>
+  		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 	
 	<!-- Login without Container -->
@@ -189,6 +189,11 @@
 		<servlet-name>Sonda</servlet-name>
 		<servlet-class>org.govmix.proxy.fatturapa.web.console.util.ServletSondaEsterna</servlet-class>
 	</servlet>
+	
+	<servlet>
+		<servlet-name>FatturaAttivaUpload</servlet-name>
+		<servlet-class>org.govmix.proxy.fatturapa.web.console.servlet.FatturaElettronicaAttivaUploadServlet</servlet-class>
+	</servlet>
 
 
 	<servlet-mapping>
@@ -204,6 +209,11 @@
 	<servlet-mapping>
 		<servlet-name>Sonda</servlet-name>
 		<url-pattern>/public/sonda</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>FatturaAttivaUpload</servlet-name>
+		<url-pattern>/fatturaAttivaUpload</url-pattern>
 	</servlet-mapping>
 
 

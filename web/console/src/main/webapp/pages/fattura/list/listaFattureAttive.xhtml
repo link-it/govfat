@@ -373,32 +373,13 @@
 							
 							<op2web:prop label="#{fatturaElettronicaAttivaMBean.form.descrittoreFattura.label}" required="#{true}"
 								note="#{msg['fattura.form.descrittoreFattura.note']}">
-								<rich:fileUpload allowFlash="true" acceptedTypes="xml,p7m"
-									fileUploadListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.fileUploadListener}"
-									maxFilesQuantity="#{fatturaElettronicaAttivaMBean.form.fatturaFile.numeroFile}"
-									addControlLabel="#{msg['fileUpload.addControlLabel']}" uploadControlLabel="#{msg['fileUpload.uploadControlLabel']}"
-									cancelEntryControlLabel="#{msg['fileUpload.cancelEntryControlLabel']}" clearControlLabel="#{msg['fileUpload.clearControlLabel']}"
-									uploadData="#{fatturaElettronicaAttivaMBean.form.fatturaFile.files}" immediateUpload="true"
-									doneLabel="#{msg['fileUpload.doneLabel']}" clearAllControlLabel="#{msg['fileUpload.clearAllControlLabel']}"
-									 
-									>
-									<f:facet name="label">
-										<h:outputText value="{_MB}MB from {MB}MB uploaded --- {mm}:{ss}" />
-									</f:facet>
-
-									<a4j:support event="onadd" reRender="formCaricaFattura_btnPnl" actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.addListener}"
-										onsubmit="loggaEventoAddOnSubmit(event);" oncomplete="loggaEventoAddOnComplete(event);" />
-									<a4j:support event="onuploadcomplete" 
-										reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.uploadCompleteListener}"/>
-									<a4j:support event="onuploadcanceled" 
-										reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.uploadCanceledListener}"/>
-									<a4j:support event="onerror"  onsubmit="loggaEventoErrorOnSubmit(event);"  
-										oncomplete="loggaEventoErrorOnComplete(event);"
-										reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.uploadErrorListener}"/>
-									<a4j:support event="onclear"
-										actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.clear}"
-										reRender="conservazioneFattureForm_formPnl,dSFormUploadPnl,dsFileUploadErrorsCtr" />
-								</rich:fileUpload>
+								<div id="wrapUploadFattureFrame"> 
+							        <div class="rich-combobox">	 
+							            <iframe id="uploadFattureFrame" name="uploadFattureFrame" frameborder="0" scrolling="no" src="../../../includes/form/uploadForm.jsp" width="500px" height="400px">
+							              <p>Your browser does not support iframes.</p>
+							            </iframe>
+						            </div>
+					            </div>
 							</op2web:prop>
 							<op2web:formField field="#{fatturaElettronicaAttivaMBean.form.dipartimento}" />
 					    	<div class="prop">

@@ -94,6 +94,7 @@ public class PrincipalFilter implements Filter {
 			this.excludedPages.add("images");
 			this.excludedPages.add("css");
 			this.excludedPages.add("scripts");
+			this.excludedPages.add("fileupload");
 		//}
 		
 	}

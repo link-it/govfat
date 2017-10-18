@@ -126,11 +126,8 @@ IFatturaElettronicaAttivaService>{
 		this.initTables();
 		this.setOutcomes();
 
-		this.form = new FatturaForm();
-		this.form.setmBean(this); 
-		this.form.setRendered(true);
-		((SelectListImpl)this.form.getDipartimento()).setElencoSelectItems(this._getDipartimenti(false,true));
-		this.form.reset();
+//		this.form = new FatturaForm();
+		
 
 		this.protocolloPattern = Pattern.compile(FatturaElettronicaAttivaMBean.PROTOCOLLO_PATTERN);
 		this.annoPattern = Pattern.compile(FatturaElettronicaAttivaMBean.ANNO_PATTERN);
@@ -194,6 +191,17 @@ IFatturaElettronicaAttivaService>{
 		this.search.setmBean(this);
 	}
 
+	
+	@Override
+	public void setForm(FatturaForm form) {
+		super.setForm(form);
+		if(this.form != null) {
+			this.form.setmBean(this); 
+			this.form.setRendered(true);
+			((SelectListImpl)this.form.getDipartimento()).setElencoSelectItems(this._getDipartimenti(false,true));
+			this.form.reset();
+		}
+	}
 
 	@Override
 	public void setSelectedElement(FatturaElettronicaAttivaBean selectedElement) {
@@ -659,7 +667,7 @@ IFatturaElettronicaAttivaService>{
 
 			this.form.getFatturaFile().checkCaricamenti();
 
-			List<UploadItem> files = this.form.getFatturaFile().getFilesCache();
+			List<String> nomiFileRicevuti = this.form.getFatturaFile().getNomeFile();
 
 			List<InserimentoLottoRequest> toSave = new ArrayList<InserimentoLottoRequest>();
 			
@@ -668,8 +676,8 @@ IFatturaElettronicaAttivaService>{
 			Map<String, byte[]> filesMap = new HashMap<String, byte[]>();
 			
 			// scorro la lista dei files e creo le fatture
-			for (int i = 0; i < files.size(); i++) {
-				String nomeFattura = this.form.getFatturaFile().getNomeFile().get(i);
+			for (int i = 0; i < nomiFileRicevuti.size(); i++) {
+				String nomeFattura = nomiFileRicevuti.get(i);
 				byte[] xml = this.form.getFatturaFile().getContenuto().get(i);
 				
 				if(filesMap.containsKey(nomeFattura) && Arrays.areEqual(filesMap.get(nomeFattura), xml)) {
@@ -723,9 +731,9 @@ IFatturaElettronicaAttivaService>{
 	public String validaFormFatture() {
 		String toRet = null;
 
-		List<UploadItem> files = this.form.getFatturaFile().getFilesCache();
+		int numeroFileRicevuti = this.form.getFatturaFile().getMapChiaviElementi().size();
 
-		if(files == null || (files != null && files.size() == 0)) {
+		if(numeroFileRicevuti < 1) {
 			return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura.nessunFileSelezionato");
 		}		
 
@@ -757,12 +765,12 @@ IFatturaElettronicaAttivaService>{
 
 			// collezionare le informazioni della conservazione e chiamare il salvataggio
 
-			List<UploadItem> files = this.form.getFatturaFile().getFilesCache();
+			List<String> nomiFileRicevuti = this.form.getFatturaFile().getNomeFile();
 
 			List<InserimentoLottoSoloConservazioneRequest> toSave = new ArrayList<InserimentoLottoSoloConservazioneRequest>();
 			// scorro la lista dei files e creo le fatture
-			for (int i = 0; i < files.size(); i++) {
-				String nomeFattura = this.form.getFatturaFile().getNomeFile().get(i);
+			for (int i = 0; i < nomiFileRicevuti.size(); i++) {
+				String nomeFattura = nomiFileRicevuti.get(i);
 				byte[] xml = this.form.getFatturaFile().getContenuto().get(i);
 
 				InserimentoLottoSoloConservazioneRequest dto = new InserimentoLottoSoloConservazioneRequest();
