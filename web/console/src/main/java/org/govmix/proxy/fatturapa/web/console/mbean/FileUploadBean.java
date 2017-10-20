@@ -12,8 +12,6 @@ import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.form.FatturaForm;
 import org.govmix.proxy.fatturapa.web.console.util.ConsoleProperties;
-import org.openspcoop2.generic_project.web.impl.jsf1.utils.MessageUtils;
-import org.richfaces.event.UploadEvent;
 import org.richfaces.model.UploadItem;
 
 public class FileUploadBean implements Serializable{
@@ -32,8 +30,8 @@ public class FileUploadBean implements Serializable{
 	private List<Integer> dimensioneFile;
 	private String fileUploadErrorMessage;
 	
-	private List<UploadItem> files = new ArrayList<UploadItem>();
-	private List<UploadItem> filesCache = new ArrayList<UploadItem>();
+//	private List<UploadItem> files = new ArrayList<UploadItem>();
+//	private List<UploadItem> filesCache = new ArrayList<UploadItem>();
 	private String acceptedTypes = "";
 	private int numeroFile = 1;
 	
@@ -76,54 +74,54 @@ public class FileUploadBean implements Serializable{
 		this.numeroFile = numeroFile;
 	}
 	
-	public synchronized void fileUploadListener(UploadEvent event) {
-		log.debug("Event upload!: "+ event.getSource());
-		log.debug("Event upload upItem: "+ event.getUploadItem());
-		log.debug("Event upload upItems: "+ event.getUploadItems());
-		
-		this.fileUploadErrorMessage = null;
-		this.mBean.setCheckFormFatturaMessage(null); 
-		UploadItem item = event.getUploadItem();
-		
-		log.debug("Event upload item CT: "+ item.getContentType());
-		log.debug("Event upload item Filename: "+ item.getFileName());
-		log.debug("Event upload item FileSize: "+ item.getFileSize());
-		log.debug("Event upload item File: "+ item.getFile());
-		log.debug("Event upload item isTempfile: "+ item.isTempFile());
-
-		if(item != null  && item.getFile() != null) {
-			log.debug("Nome File ricevuto: "+ item.getFile().getAbsolutePath()); 
-		}
-		if(item!= null && item.getData() != null){
-			this.filesCache.add(item);
-//			this.contenuto.add(item.getData());
-//			this.nomeFile.add(item.getFileName());
-//			this.dimensioneFile.add(item.getFileSize());
-//			this.caricato = true; uploadData="#{fatturaElettronicaAttivaMBean.form.fatturaFile.files}"
-		}
-		else {
-			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fileUpload.uploadError"));
-			this.fileUploadErrorMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fileUpload.uploadError");
-		}
-		
-		log.debug("Event upload completato!");
-	}
+//	public synchronized void fileUploadListener(UploadEvent event) {
+//		log.debug("Event upload!: "+ event.getSource());
+//		log.debug("Event upload upItem: "+ event.getUploadItem());
+//		log.debug("Event upload upItems: "+ event.getUploadItems());
+//		
+//		this.fileUploadErrorMessage = null;
+//		this.mBean.setCheckFormFatturaMessage(null); 
+//		UploadItem item = event.getUploadItem();
+//		
+//		log.debug("Event upload item CT: "+ item.getContentType());
+//		log.debug("Event upload item Filename: "+ item.getFileName());
+//		log.debug("Event upload item FileSize: "+ item.getFileSize());
+//		log.debug("Event upload item File: "+ item.getFile());
+//		log.debug("Event upload item isTempfile: "+ item.isTempFile());
+//
+//		if(item != null  && item.getFile() != null) {
+//			log.debug("Nome File ricevuto: "+ item.getFile().getAbsolutePath()); 
+//		}
+//		if(item!= null && item.getData() != null){
+//			this.filesCache.add(item);
+////			this.contenuto.add(item.getData());
+////			this.nomeFile.add(item.getFileName());
+////			this.dimensioneFile.add(item.getFileSize());
+////			this.caricato = true; uploadData="#{fatturaElettronicaAttivaMBean.form.fatturaFile.files}"
+//		}
+//		else {
+//			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fileUpload.uploadError"));
+//			this.fileUploadErrorMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fileUpload.uploadError");
+//		}
+//		
+//		log.debug("Event upload completato!");
+//	}
 	
-	public final List<UploadItem> getFiles() {
-		return this.files;
-	}
-	
-	public void setFiles(List<UploadItem> files) {
-		this.files = files;
-	}
+//	public final List<UploadItem> getFiles() {
+//		return this.files;
+//	}
+//	
+//	public void setFiles(List<UploadItem> files) {
+//		this.files = files;
+//	}
 
 //	public final List<UploadItem> getFilesCache() {
 //		return this.filesCache;
 //	}
 	
 	public final void clear(final ActionEvent e) {
-		this.files = new ArrayList<UploadItem>();
-		this.filesCache = new ArrayList<UploadItem>();
+//		this.files = new ArrayList<UploadItem>();
+//		this.filesCache = new ArrayList<UploadItem>();
 		this.nomeFile = new ArrayList<String>();
 		this.contenuto = new ArrayList<byte[]>();
 		this.dimensioneFile = new ArrayList<Integer>();
@@ -168,7 +166,8 @@ public class FileUploadBean implements Serializable{
 	}
 
 	public int getNumeroFile(){
-		return this.numeroFile - this.files.size();
+//		return this.numeroFile - this.files.size();
+		return this.numeroFile - this.mapElementiRicevuti.size();
 	}
 	
 	public String getAcceptedTypes() {
@@ -221,14 +220,24 @@ public class FileUploadBean implements Serializable{
 	
 	public final void uploadCompleteListener(final ActionEvent e) {
 		this.form.enableButton();
+		this.fileUploadErrorMessage = null;
+		this.mBean.setCheckFormFatturaMessage(null); 
 	}
 	
 	public final void uploadCanceledListener(final ActionEvent e) {
-		//this.form.enableButton();
+		this.form.enableButton();
+		this.fileUploadErrorMessage = null;
+		this.mBean.setCheckFormFatturaMessage(null); 
 	}
 	
 	public final void uploadErrorListener(final ActionEvent e) {
 		//this.form.enableButton();
+	}
+	
+	public final void deleteCompleteListener(final ActionEvent e) {
+		this.form.enableButton();
+		this.fileUploadErrorMessage = null;
+		this.mBean.setCheckFormFatturaMessage(null); 
 	}
 
 	public Map<String, UploadItem> getMapElementiRicevuti() {

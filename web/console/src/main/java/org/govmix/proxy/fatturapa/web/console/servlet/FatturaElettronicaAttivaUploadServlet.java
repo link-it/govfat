@@ -143,7 +143,7 @@ public class FatturaElettronicaAttivaUploadServlet extends HttpServlet {
 				FatturaElettronicaAttivaUploadServlet.log.error("Errore durante la cancellazione del file id ["+idToDelete+"]: " +e.getMessage(), e);
 			}
 
-			String respBodyItem = getDeleteOkResponseItem(fileName, statoDelete);
+			String respBodyItem = getDeleteOkResponseItem(fileName, idToDelete, statoDelete);
 			itemResp.add(respBodyItem);
 
 			String responseBody = getResponse(itemResp);
@@ -248,12 +248,15 @@ Response Error
 ]}
 	 * 
 	 */
-	public static String getDeleteOkResponseItem(String itemName, boolean stato) {
+	public static String getDeleteOkResponseItem(String itemName, String idFileRicevuto, boolean stato) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("{ \"");
 		sb.append(itemName);
 		sb.append("\" :  ");
 		sb.append(stato);
+		sb.append(", \"id\" : \"");
+		sb.append(idFileRicevuto);
+		sb.append("\"");
 		sb.append(" }");
 
 		return sb.toString();

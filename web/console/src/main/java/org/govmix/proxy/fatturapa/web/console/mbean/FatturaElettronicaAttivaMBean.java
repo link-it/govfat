@@ -72,7 +72,6 @@ import org.openspcoop2.generic_project.web.impl.jsf1.mbean.DataModelListView;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.FiltraException;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.MenuActionException;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.MessageUtils;
-import org.richfaces.model.UploadItem;
 
 /**
  * FatturaElettronicaMBean ManagedBean per le schermate di visualizzazione delle fatture.
@@ -577,10 +576,10 @@ IFatturaElettronicaAttivaService>{
 			
 			Map<String, byte[]> filesMap = new HashMap<String, byte[]>();
 
-			List<UploadItem> files = this.form.getFatturaFile().getFiles();
-			for (int i = 0; i < files.size(); i++) {
-				String nomeFattura = files.get(i).getFileName();
-				byte[] xml = files.get(i).getData();
+			List<String> nomeFiles = this.form.getFatturaFile().getNomeFile();
+			for (int i = 0; i < nomeFiles.size(); i++) {
+				String nomeFattura = nomeFiles.get(i);
+				byte[] xml = this.form.getFatturaFile().getContenuto().get(i);
 				
 				if(filesMap.containsKey(nomeFattura) && Arrays.areEqual(filesMap.get(nomeFattura), xml)) {
 					// NON INSERISCO
@@ -595,22 +594,6 @@ IFatturaElettronicaAttivaService>{
 					requestList.add(dto);
 				}
 			}
-//			List<String> nomeFiles = this.form.getFatturaFile().getNomeFile();
-//			for (int i = 0; i < nomeFiles.size(); i++) {
-//				String nomeFattura = nomeFiles.get(i);
-//				
-//				if(filesMap.containsKey(nomeFattura) && Arrays.areEqual(filesMap.get(nomeFattura), xml)) {
-//					// NON INSERISCO
-//					
-//					this.log.info("Non inserisco il file ["+nomeFattura+"] in quanto duplicato");
-//				} else {
-//					filesMap.put(nomeFattura, xml);
-//					this.log.info("Inserisco il file ["+nomeFattura+"]");
-//					InserimentoLottoSoloConservazioneRequest dto = new InserimentoLottoSoloConservazioneRequest();
-//					dto.setNomeFile(nomeFattura); 
-//					requestList.add(dto);
-//				}
-//			}
 			
 			((IFatturaElettronicaAttivaService)this.service).checkLottoSoloConservazione(requestList);
 			
@@ -670,6 +653,7 @@ IFatturaElettronicaAttivaService>{
 
 			if(this.checkFormFatturaMessage != null) {
 				this.checkFormFattura = false;
+				this.form.enableButton();
 				return null;
 			}
 
@@ -746,7 +730,10 @@ IFatturaElettronicaAttivaService>{
 		if(numeroFileRicevuti < 1) {
 			return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura.nessunFileSelezionato");
 		}		
-
+		
+		// controllo identificativi
+		if(this.form.checkIdentificativi() !=null)
+			return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura."+CODICE.ERRORE_GENERICO.name());
 
 		// Dipartimento
 		org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem _dipartimento = this.form.getDipartimento().getValue();

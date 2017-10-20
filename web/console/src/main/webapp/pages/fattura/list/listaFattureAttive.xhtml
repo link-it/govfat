@@ -49,6 +49,7 @@
 			}
 		</style>
 		<script type="text/javascript">
+		//<![CDATA[
 			function aggiungiFile(file){
 				//console.log(file);
 				if(!file.error){
@@ -62,15 +63,53 @@
 				}
 			}
 			
-			function abilitaCarica(){
-				jQuery("[id$='caricaFattureConservazioneButton']").attr('disabled',false);
-				jQuery("[id$='caricaFattureButton']").attr('disabled',false);
+			function cancellaFile(data){
+				console.log(data);
+				if(data.url){
+					var idx = data.url.indexOf('=');
+					if(idx > -1) {
+						var id = data.url.substring(idx + 1);
+						var ids = jQuery("[id$='idFilesValidi']").val().split(',');
+						
+						var f;
+						for(var t= 0 ; t < ids.length; t++){
+							if(ids[t] == id) {
+								f = t;
+								break;
+							}
+						}
+						
+						var newIds = '';
+						for(var t= 0 ; t < ids.length; t++){
+							if(t != f) {
+								if(newIds.length > 0)
+									newIds += ',';
+								
+								newIds += ids[t];
+							}
+						}
+						
+						jQuery("[id$='idFilesValidi']").val(newIds);
+					}
+				}
 			}
 			
-			function disabilitaCarica(){
-				jQuery("[id$='caricaFattureConservazioneButton']").attr('disabled',true);
-				jQuery("[id$='caricaFattureButton']").attr('disabled',true);
+			function startUpload(){
+				propagaStartUpload();
 			}
+			
+			function endUploadOk(){
+				propagaEndUploadOk();
+			}
+			
+			function endUploadFail(){
+				propagaEndUploadFail();
+			}
+			
+			function endDeleteOk(){
+				propagaEndDeleteOk();
+			}
+			 //]]>
 		</script>
 		<rich:panel styleClass="noborder" id="pagina">
 		
@@ -352,6 +391,22 @@
 					</h:panelGroup>
 				</a4j:outputPanel>
 				<div class="form-container noborder">
+					<h:form id="formControlloUpload">
+		            	<a4j:outputPanel layout="block" ajaxRendered="false">
+							<a4j:jsFunction name="propagaStartUpload" reRender="formCaricaFattura_btnPnl" actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.addListener}" limitToList="true">
+							</a4j:jsFunction>
+							<a4j:jsFunction name="propagaEndUploadOk" reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" 
+									actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.uploadCompleteListener}" limitToList="true">
+							</a4j:jsFunction>
+							<a4j:jsFunction name="propagaEndUploadFail" reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" 
+									actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.uploadCanceledListener}" limitToList="true">
+							</a4j:jsFunction>
+							<a4j:jsFunction name="propagaEndDeleteOk" reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" 
+									actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.deleteCompleteListener}" limitToList="true">
+							</a4j:jsFunction>
+		           		</a4j:outputPanel>
+		       		</h:form>
+				
 					<a4j:outputPanel layout="block" id="formCaricaFattura_formPnl" ajaxRendered="false">
 					<h:form id="dSFormUploadPnl" prependId="false">
 					<h:inputHidden value = "#{fatturaElettronicaAttivaMBean.checkFormFattura}" id = "checkFormFatturaHidden" /> 

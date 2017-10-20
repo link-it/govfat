@@ -46,7 +46,7 @@ String processingLabel = Utils.getInstance().getMessageFromResourceBundle("fileU
             <div class="col-lg-7">
             	<div class="rich-fileupload-toolbar-decor">
 	                <!-- The fileinput-button span is used to style the file input field as button -->
-	                <span class="btn icon-add fileinput-button">
+	                <span class="btn icon-add fileinput-button" id="fiBtn">
 	                    <span><%=addLabel %></span>
 	                    <input type="file" name="files[]" multiple/>
 	                </span>
@@ -198,6 +198,7 @@ jQuery(function () {
     jQuery('#fileupload').fileupload({
         // Uncomment the following to send cross-domain cookies:
         //xhrFields: {withCredentials: true},
+        //autoUpload : true,
       	maxNumberOfFiles : <%=numeroMassimoFileAccettati %>,
         disableImageResize: true,
         maxFileSize: 999000,
@@ -207,7 +208,7 @@ jQuery(function () {
     // evento upload start
     jQuery('#fileupload').bind('fileuploadsend', function (e, data) {
         console.log('start upload');
-        parent.window.disabilitaCarica();
+        parent.window.startUpload();
     });
     
     // evento upload ok
@@ -215,13 +216,20 @@ jQuery(function () {
     	var file = data.jqXHR.responseJSON.files[0];
     	console.log('upload done');
     	parent.window.aggiungiFile(file);
-    	parent.window.abilitaCarica();
+    	parent.window.endUploadOk();
     });
     
     // evento upload fail
     jQuery('#fileupload').bind('fileuploadfail', function (e, data) {
         console.log('upload fail');
-        parent.window.abilitaCarica();
+        parent.window.endUploadFail();
+    });
+    
+ // evento cancellazione
+    jQuery('#fileupload').bind('fileuploaddestroyed', function (e, data) {
+    	console.log('cancellazione file');
+    	parent.window.cancellaFile(data);
+    	parent.window.endDeleteOk();
     });
 
  // Upload server status check for browsers with CORS support:

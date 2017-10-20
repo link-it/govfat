@@ -22,6 +22,8 @@ package org.govmix.proxy.fatturapa.web.console.form;
 
 import javax.faces.event.ActionEvent;
 
+import org.apache.commons.lang.StringUtils;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException.CODICE;
 import org.govmix.proxy.fatturapa.web.console.mbean.FatturaElettronicaAttivaMBean;
 import org.govmix.proxy.fatturapa.web.console.mbean.FileUploadBean;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
@@ -189,4 +191,24 @@ public class FatturaForm extends BaseForm implements Form {
 		this.idFiles = idFiles;
 	}
 	
+	public String checkIdentificativi() {
+		if(StringUtils.isNotEmpty(this.idFiles)) {
+			String[] ids = this.idFiles.split(",");
+			
+			if(ids!= null && ids.length > 0) {
+				if(ids.length != this.fatturaFile.getMapChiaviElementi().size())
+					return CODICE.ERRORE_GENERICO.name();
+				
+				for (String id : ids) {
+					if(!this.fatturaFile.getMapChiaviElementi().containsKey(id)) {
+						return CODICE.ERRORE_GENERICO.name();
+					}
+				}
+				//ok
+				return null;
+			}
+		}
+		
+		return CODICE.ERRORE_GENERICO.name();
+	}
 }

@@ -36,7 +36,7 @@ p {
 	background-position: left;
 }
 
-button.btn:hover{
+button.btn:hover, #fiBtn:hover{
     background-color:#dff4ff;
     border:1px solid #c2e1ef;
     color:#336699;
