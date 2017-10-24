@@ -19,6 +19,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.http.entity.ContentType;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.mbean.FileUploadBean;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.richfaces.model.UploadItem;
@@ -43,7 +44,8 @@ public class FatturaElettronicaAttivaUploadServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		FatturaElettronicaAttivaUploadServlet.log.debug("DoGet!");
+		String idRichiesta = (String) req.getAttribute(Costanti.UUID_INFO_PARAMETER_NAME);
+		FatturaElettronicaAttivaUploadServlet.log.debug("["+idRichiesta+"] DoGet!");
 		resp.setHeader("Access-Control-Allow-Origin", "*");
 		resp.setStatus(200); 
 		resp.flushBuffer();
@@ -51,7 +53,8 @@ public class FatturaElettronicaAttivaUploadServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		FatturaElettronicaAttivaUploadServlet.log.debug("DoPost!");
+		String idRichiesta = (String) req.getAttribute(Costanti.UUID_INFO_PARAMETER_NAME);
+		FatturaElettronicaAttivaUploadServlet.log.debug("["+idRichiesta+"] DoPost!");
 		resp.setHeader("Access-Control-Allow-Origin", "*");
 
 		ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
@@ -62,6 +65,8 @@ public class FatturaElettronicaAttivaUploadServlet extends HttpServlet {
 		String baseDeleteURL = req.getContextPath() + FATTURA_ELETTRONICA_ATTIVA_UPLOAD_SERVLET_PATH;
 
 		try {
+			String[] browserInfo = (String[]) req.getAttribute(Costanti.BROWSER_INFO_PARAMETER_NAME);
+
 			List<FileItem> multiparts = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(req);
 			String fileName = "";
 			Iterator<FileItem> iter = multiparts.iterator();
@@ -77,7 +82,7 @@ public class FatturaElettronicaAttivaUploadServlet extends HttpServlet {
 						byte[] contenuto = item.get();
 						dimensione = contenuto != null ? contenuto.length : 0;
 						String contentType = item.getContentType();
-						FatturaElettronicaAttivaUploadServlet.log.debug("Ricevuto File ["+fileName+"], content-type ["+contentType+"], dimensione ["+dimensione+"]");
+						FatturaElettronicaAttivaUploadServlet.log.debug("["+idRichiesta+"] Ricevuto File ["+fileName+"], content-type ["+contentType+"], dimensione ["+dimensione+"]");
 						UploadItem uploadItem = new UploadItem(fileName, dimensione, contentType, contenuto);
 
 						// controllo duplicati?
@@ -87,15 +92,15 @@ public class FatturaElettronicaAttivaUploadServlet extends HttpServlet {
 							mapChiaviElementi.put(idFileRicevuto, fileName); 
 							mapElementiRicevuti.put(fileName, uploadItem);
 
-							FatturaElettronicaAttivaUploadServlet.log.debug("File ["+fileName+"] non presente, aggiunto alla lista.");
+							FatturaElettronicaAttivaUploadServlet.log.debug("["+idRichiesta+"] File ["+fileName+"] non presente, aggiunto alla lista.");
 							respBodyItem =  getUploadOkResponseItem(fileName,dimensione,idFileRicevuto,deleteUrl);
 						} else {
 							// duplicato
-							FatturaElettronicaAttivaUploadServlet.log.debug("File ["+fileName+"] gia' presente, segnalo duplicato.");
+							FatturaElettronicaAttivaUploadServlet.log.debug("["+idRichiesta+"] File ["+fileName+"] gia' presente, segnalo duplicato.");
 							respBodyItem = getUploadKoResponseItem(fileName, dimensione, "File duplicato");
 						}
 					}catch(Exception e) {
-						FatturaElettronicaAttivaUploadServlet.log.error("Errore durante l'elaborazione del file ["+fileName+"]: " +e.getMessage(), e);
+						FatturaElettronicaAttivaUploadServlet.log.error("["+idRichiesta+"] Errore durante l'elaborazione del file ["+fileName+"]: " +e.getMessage(), e);
 						respBodyItem = getUploadKoResponseItem(fileName, dimensione, "ERRORE");
 					}
 
@@ -104,13 +109,35 @@ public class FatturaElettronicaAttivaUploadServlet extends HttpServlet {
 			}
 
 			String responseBody = getResponse(itemResp);
-			FatturaElettronicaAttivaUploadServlet.log.debug("Response ["+responseBody+"].");
+			FatturaElettronicaAttivaUploadServlet.log.debug("["+idRichiesta+"] Response ["+responseBody+"].");
 			ByteArrayInputStream bais = new ByteArrayInputStream(responseBody.getBytes());
 			Utils.copy(bais, resp.getOutputStream());
 			resp.setContentType(ContentType.APPLICATION_JSON.toString());
+
+			if(browserInfo != null && browserInfo.length == 2) {
+				String browsername = browserInfo[0];
+				String browserversion = browserInfo[1];
+				if(browsername.equalsIgnoreCase("MSIE") || browsername.equalsIgnoreCase("rv")|| browsername.equalsIgnoreCase("Trident")){
+					if(browserversion != null) {
+						double versione = -1d;
+						try{
+							versione = Double.parseDouble(browserversion);
+						}catch(NumberFormatException e){
+							// versione non riconosciuta
+							versione = -1d;
+						}
+
+						if((int) versione == 8) {
+							resp.setContentType(ContentType.TEXT_HTML.toString());
+						}
+					}
+				}
+			}
+
+
 			resp.setStatus(200);	
 		}catch(Exception e) {
-			FatturaElettronicaAttivaUploadServlet.log.error(e.getMessage(), e);
+			FatturaElettronicaAttivaUploadServlet.log.error("["+idRichiesta+"] Errore: " + e.getMessage(), e);
 			resp.setStatus(500);
 		} finally {
 			resp.flushBuffer();	
@@ -120,7 +147,8 @@ public class FatturaElettronicaAttivaUploadServlet extends HttpServlet {
 
 	@Override
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		FatturaElettronicaAttivaUploadServlet.log.debug("DoDelete!");
+		String idRichiesta = (String) req.getAttribute(Costanti.UUID_INFO_PARAMETER_NAME);
+		FatturaElettronicaAttivaUploadServlet.log.debug("["+idRichiesta+"] DoDelete!");
 		resp.setHeader("Access-Control-Allow-Origin", "*");
 		List<String> itemResp = new ArrayList<String>();
 		try {
@@ -130,7 +158,7 @@ public class FatturaElettronicaAttivaUploadServlet extends HttpServlet {
 			Map<String, String> mapChiaviElementi = fileUploadBean.getMapChiaviElementi();
 
 			String idToDelete = req.getParameter(ID_TO_DELETE_PARAM_NAME);
-			FatturaElettronicaAttivaUploadServlet.log.debug("Richiesta cancellazione del file id ["+idToDelete+"].");
+			FatturaElettronicaAttivaUploadServlet.log.debug("["+idRichiesta+"] Richiesta cancellazione del file id ["+idToDelete+"].");
 
 			boolean statoDelete = true;
 			String fileName = "";
@@ -140,20 +168,20 @@ public class FatturaElettronicaAttivaUploadServlet extends HttpServlet {
 				mapElementiRicevuti.remove(fileName); 
 
 			}catch(Throwable e) {
-				FatturaElettronicaAttivaUploadServlet.log.error("Errore durante la cancellazione del file id ["+idToDelete+"]: " +e.getMessage(), e);
+				FatturaElettronicaAttivaUploadServlet.log.error("["+idRichiesta+"] Errore durante la cancellazione del file id ["+idToDelete+"]: " +e.getMessage(), e);
 			}
 
 			String respBodyItem = getDeleteOkResponseItem(fileName, idToDelete, statoDelete);
 			itemResp.add(respBodyItem);
 
 			String responseBody = getResponse(itemResp);
-			FatturaElettronicaAttivaUploadServlet.log.debug("Response ["+responseBody+"].");
+			FatturaElettronicaAttivaUploadServlet.log.debug("["+idRichiesta+"] Response ["+responseBody+"].");
 			ByteArrayInputStream bais = new ByteArrayInputStream(responseBody.getBytes());
 			Utils.copy(bais, resp.getOutputStream());
 			resp.setContentType(ContentType.APPLICATION_JSON.toString());
 			resp.setStatus(200);	
 		}catch(Exception e) {
-			FatturaElettronicaAttivaUploadServlet.log.error(e.getMessage(), e);
+			FatturaElettronicaAttivaUploadServlet.log.error("["+idRichiesta+"] Errore: " + e.getMessage(), e);
 			resp.setStatus(500);
 		} finally {
 			resp.flushBuffer();	
@@ -162,6 +190,8 @@ public class FatturaElettronicaAttivaUploadServlet extends HttpServlet {
 
 	@Override
 	protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String idRichiesta = (String) req.getAttribute(Costanti.UUID_INFO_PARAMETER_NAME);
+		FatturaElettronicaAttivaUploadServlet.log.debug("["+idRichiesta+"] DoOptions!");
 		resp.setHeader("Access-Control-Allow-Origin", "*");
 		resp.setHeader("Access-Control-Allow-Headers", "Content-Type, Content-Range, Content-Disposition, Content-Description, origin, accept, authorization");
 		resp.setHeader("Access-Control-Allow-Credentials", "true");

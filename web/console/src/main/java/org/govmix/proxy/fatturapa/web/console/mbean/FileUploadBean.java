@@ -214,11 +214,13 @@ public class FileUploadBean implements Serializable{
 		this.form = form;
 	}
 
-	public final void addListener(final ActionEvent e) {
+	public final void startUploadsListener(final ActionEvent e) {
 		this.form.disableButton();
+		this.fileUploadErrorMessage = null;
+		this.mBean.setCheckFormFatturaMessage(null); 
 	}
 	
-	public final void uploadCompleteListener(final ActionEvent e) {
+	public final void stopUploadsListener(final ActionEvent e) {
 		this.form.enableButton();
 		this.fileUploadErrorMessage = null;
 		this.mBean.setCheckFormFatturaMessage(null); 

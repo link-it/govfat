@@ -40,7 +40,7 @@ String processingLabel = Utils.getInstance().getMessageFromResourceBundle("fileU
 <body>
 
 	<!-- The file upload form used as target for the file upload widget -->
-    <form id="fileupload" action="<%=servletUrl %>" method="POST" enctype="multipart/form-data">
+    <form id="fileupload" method="POST" enctype="multipart/form-data">
         <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
         <div class="row fileupload-buttonbar">
             <div class="col-lg-7">
@@ -81,7 +81,6 @@ String processingLabel = Utils.getInstance().getMessageFromResourceBundle("fileU
         	<table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
         </div>
     </form>
-
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
@@ -146,16 +145,18 @@ String processingLabel = Utils.getInstance().getMessageFromResourceBundle("fileU
     </tr>
 {% } %}
 </script>
-<!-- blueimp Gallery script -->
-<!-- <script src="//blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script> -->
-
 <script src="../../fileupload/js/jquery.min.js"></script>
 <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
 <script src="../../fileupload/js/vendor/jquery.ui.widget.js"></script>
 <!-- The Templates plugin is included to render the upload/download listings -->
 <script src="../../fileupload/js/tmpl.min.js"></script>
 <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-<script src="../../fileupload/js/load-image.all.min.js"></script>
+<script src="../../fileupload/js/load-image.js"></script>
+<script src="../../fileupload/js/load-image-scale.js"></script>
+<script src="../../fileupload/js/load-image-meta.js"></script>
+<script src="../../fileupload/js/load-image-exif.js"></script>
+<script src="../../fileupload/js/load-image-exif-map.js"></script>
+<script src="../../fileupload/js/load-image-orientation.js"></script>
 <!-- The Canvas to Blob plugin is included for image resizing functionality -->
 <script src="../../fileupload/js/canvas-to-blob.min.js"></script>
 <!-- Bootstrap JS is not required, but included for the responsive demo navigation -->
@@ -191,60 +192,84 @@ String processingLabel = Utils.getInstance().getMessageFromResourceBundle("fileU
  */
 
 /* global $, window */
-jQuery(function () {
+$(function () {
     'use strict';
 
     // Initialize the jQuery File Upload widget:
-    jQuery('#fileupload').fileupload({
+    $('#fileupload').fileupload({
         // Uncomment the following to send cross-domain cookies:
         //xhrFields: {withCredentials: true},
-        //autoUpload : true,
+        autoUpload : true,
+        sequentialUploads: true,
+        progressInterval: 200,
+        url: '<%=servletUrl %>',
+        disableImageLoad : true,
+        disableImagePreview : true,
       	maxNumberOfFiles : <%=numeroMassimoFileAccettati %>,
         disableImageResize: true,
         maxFileSize: 999000,
         acceptFileTypes: /(\.|\/)(<%=tipiAccettati %>)$/i
     });
     
-    // evento upload start
-    jQuery('#fileupload').bind('fileuploadsend', function (e, data) {
-        console.log('start upload');
-        parent.window.startUpload();
+    // evento scelta file
+    $('#fileupload').bind('fileuploadadd', function (e, data) {
+        console.log('add File scelto');
     });
     
     // evento upload ok
-    jQuery('#fileupload').bind('fileuploaddone', function (e, data) {
+    $('#fileupload').bind('fileuploaddone', function (e, data) {
     	var file = data.jqXHR.responseJSON.files[0];
     	console.log('upload done');
     	parent.window.aggiungiFile(file);
-    	parent.window.endUploadOk();
     });
     
     // evento upload fail
-    jQuery('#fileupload').bind('fileuploadfail', function (e, data) {
+    $('#fileupload').bind('fileuploadfail', function (e, data) {
         console.log('upload fail');
         parent.window.endUploadFail();
     });
     
  // evento cancellazione
-    jQuery('#fileupload').bind('fileuploaddestroyed', function (e, data) {
+    $('#fileupload').bind('fileuploaddestroyed', function (e, data) {
     	console.log('cancellazione file');
     	parent.window.cancellaFile(data);
     	parent.window.endDeleteOk();
     });
-
+ 
+    // evento upload start
+    $('#fileupload').bind('fileuploadstop', function (e, data) {
+        console.log('stop uploads');
+        parent.window.stopUploads();
+        
+        setTimeout(fixVistaChrome, 200);
+    });
+    
+	function fixVistaChrome(){
+        if($('.template-upload.fade').length > 0){
+        	$('.template-upload.fade').addClass('in');
+        }		
+	}
+    
+    // evento upload start
+    $('#fileupload').bind('fileuploadstart', function (e, data) {
+        console.log('start uploads');
+        parent.window.startUploads();
+    });
+    
  // Upload server status check for browsers with CORS support:
-    if (jQuery.support.cors) {
-    	jQuery.ajax({
+    if ($.support.cors) {
+    	$.ajax({
             url: '<%=servletUrl %>',
             type: 'OPTIONS'
         }).fail(function () {
-        	jQuery('<div class="alert alert-danger"/>')
+        	$('<div class="alert alert-danger"/>')
                 .text('Upload server currently unavailable - ' +
                         new Date())
                 .appendTo('#fileupload');
         });
     }
 
+ 
 });
 </script>
 <!-- The XDomainRequest Transport is included for cross-domain file deletion for IE 8 and IE 9 -->

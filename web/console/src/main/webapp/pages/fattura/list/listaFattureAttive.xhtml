@@ -94,12 +94,12 @@
 				}
 			}
 			
-			function startUpload(){
-				propagaStartUpload();
+			function startUploads(){
+				propagaStartUploads();
 			}
 			
-			function endUploadOk(){
-				propagaEndUploadOk();
+			function stopUploads(){
+				propagaStopUploads();
 			}
 			
 			function endUploadFail(){
@@ -107,7 +107,7 @@
 			}
 			
 			function endDeleteOk(){
-				propagaEndDeleteOk();
+				//propagaEndDeleteOk();
 			}
 			 //]]>
 		</script>
@@ -115,7 +115,7 @@
 		
 			<h:form id="formRicaricaListaFattureAttive">
             	<a4j:outputPanel layout="block" ajaxRendered="false">
-					<a4j:jsFunction name="ricaricaListaFattureAttive" reRender="fatturaElettronicaTable" limitToList="true">
+					<a4j:jsFunction name="ricaricaListaFattureAttive" reRender="fatturaElettronicaTable" limitToList="true" status="mainStatus">
             		</a4j:jsFunction>
            		</a4j:outputPanel>
        		</h:form>
@@ -393,10 +393,11 @@
 				<div class="form-container noborder">
 					<h:form id="formControlloUpload">
 		            	<a4j:outputPanel layout="block" ajaxRendered="false">
-							<a4j:jsFunction name="propagaStartUpload" reRender="formCaricaFattura_btnPnl" actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.addListener}" limitToList="true">
+							<a4j:jsFunction name="propagaStartUploads" reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" 
+									actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.startUploadsListener}" limitToList="true">
 							</a4j:jsFunction>
-							<a4j:jsFunction name="propagaEndUploadOk" reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" 
-									actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.uploadCompleteListener}" limitToList="true">
+							<a4j:jsFunction name="propagaStopUploads" reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" 
+									actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.stopUploadsListener}" limitToList="true">
 							</a4j:jsFunction>
 							<a4j:jsFunction name="propagaEndUploadFail" reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" 
 									actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.uploadCanceledListener}" limitToList="true">

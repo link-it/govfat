@@ -54,6 +54,7 @@ button.btn:hover, #fiBtn:hover{
     padding: 8px;
     background-repeat: no-repeat;
     background-position: center;
+    margin-left: 4px;
 }
 
 

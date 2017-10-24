@@ -70,4 +70,9 @@ public class Costanti {
 	public static final String PATH_ICONA_PDF = "/images/fatturapa/icons/pdf.png";
 	public static final String PATH_ICONA_XML = "/images/fatturapa/icons/xml.png";
 	public static final String PATH_ICONA_DOCUMENT = "/images/fatturapa/icons/document.png";
+	
+	/** Nome attributo browser */
+	
+	public static final String BROWSER_INFO_PARAMETER_NAME = "browser_info_efatt";
+	public static final String UUID_INFO_PARAMETER_NAME = "uuid_info";
 }
