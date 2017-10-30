@@ -50,18 +50,22 @@ String processingLabel = Utils.getInstance().getMessageFromResourceBundle("fileU
 	                    <span><%=addLabel %></span>
 	                    <input type="file" name="files[]" multiple/>
 	                </span>
-	                <button type="submit" class="btn icon-start-upload start">
-	                    <span><%=uploadLabel %></span>
-	                </button>
-	                <button type="reset" class="btn icon-cancel cancel">
-	                    <span><%=cancelLabel %></span>
-	                </button>
-	                <button type="button" class="btn icon-delete delete">
-	                    <span><%=deleteAllLabel %></span>
-	                </button>
-	                <span>
-	                	<input type="checkbox" class="toggle">
-	                </span>
+	                <div style="display: none;">
+		                <button type="submit" class="btn icon-start-upload start">
+		                    <span><%=uploadLabel %></span>
+		                </button>
+		                <button type="reset" class="btn icon-cancel cancel">
+		                    <span><%=cancelLabel %></span>
+		                </button>
+	                 </div>
+	                <div style="float: right; padding-right: 13px;">
+		                <button type="button" class="btn icon-delete delete">
+		                    <span><%=deleteAllLabel %></span>
+		                </button>
+		                <span>
+		                	<input type="checkbox" class="toggle">
+		                </span>
+	                </div>
 	                <!-- The global file processing state -->
 	                <span class="fileupload-process"></span>
                 </div>
