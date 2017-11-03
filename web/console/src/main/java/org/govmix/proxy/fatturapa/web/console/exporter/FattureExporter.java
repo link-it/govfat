@@ -39,6 +39,7 @@ import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.PccTraccia;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FilterSortWrapper;
@@ -51,6 +52,7 @@ import org.govmix.proxy.fatturapa.web.commons.exporter.NotificaDTSingleFileExpor
 import org.govmix.proxy.fatturapa.web.commons.exporter.NotificaECSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.exporter.PccTracciaResponseSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.exporter.ScartoECSingleFileExporter;
+import org.govmix.proxy.fatturapa.web.commons.exporter.TracciaSdISingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.exporter.exception.ExportException;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.mbean.LoginMBean;
@@ -91,7 +93,6 @@ public class FattureExporter  extends HttpServlet{
     public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_SCARTO = AbstractSingleFileExporter.PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_SCARTO;
     public static final String PARAMETRO_ACTION_COMUNICAZIONE_RICEVUTA_CONSEGNA = AbstractSingleFileExporter.PARAMETRO_ACTION_COMUNICAZIONE_RICEVUTA_CONSEGNA;
     public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_MANCATA_CONSEGNA = AbstractSingleFileExporter.PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_MANCATA_CONSEGNA;
-    public static final String PARAMETRO_ACTION_COMUNICAZIONE_ATTESTAZIONE_TRASMISSIONE_FATTURA = AbstractSingleFileExporter.PARAMETRO_ACTION_COMUNICAZIONE_ATTESTAZIONE_TRASMISSIONE_FATTURA;
     public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_ESITO_COMMITTENTE = AbstractSingleFileExporter.PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_ESITO_COMMITTENTE;
     public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE = AbstractSingleFileExporter.PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE;
     public static final String PARAMETRO_ACTION_COMUNICAZIONE_AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO = AbstractSingleFileExporter.PARAMETRO_ACTION_COMUNICAZIONE_AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO;
@@ -321,37 +322,12 @@ public class FattureExporter  extends HttpServlet{
 							
 							response.setHeader("Content-Disposition", "attachment; filename="+fileName);
 							// committing status and headers
-						} else if(action.equals(PARAMETRO_ACTION_COMUNICAZIONE_ATTESTAZIONE_TRASMISSIONE_FATTURA)){
-							if(!formato.equals(AbstractSingleFileExporter.FORMATO_PDF) && !formato.equals(AbstractSingleFileExporter.FORMATO_XML))
-								throw new ExportException("Si e' verificato un errore durante l'export: Il formato richiesto non e' disponibile per la Comunicazione di tipo Attestazione Trasmissione Fattura.");
-
-							// [TODO] Bussu
-							NotificaDTSingleFileExporter dtsfe = (NotificaDTSingleFileExporter) sfe;
-							NotificaDecorrenzaTermini dt = dtsfe.convertToObject(ids[0]);
-
-							// Visualizzazione Notifica DT formato PDF
-							if(formato.equals(AbstractSingleFileExporter.FORMATO_PDF)){
-								response.setContentType("application/pdf");
-								fileName = dtsfe.exportAsPdf(dt, baos);
-							}
-
-							// Visualizzazione NotificaDT formato XML
-							if(formato.equals(AbstractSingleFileExporter.FORMATO_XML)){
-								response.setContentType("text/xml");
-								fileName = dtsfe.exportAsRaw(dt, baos);
-							}
-
-							response.setHeader("Content-Disposition", "attachment; filename="+fileName);
-							// committing status and headers
-							//							response.flushBuffer();
-
-						}  else if(action.equals(PARAMETRO_ACTION_COMUNICAZIONE_AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO)){
+						} else if(action.equals(PARAMETRO_ACTION_COMUNICAZIONE_AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO)){
 							if(!formato.equals(AbstractSingleFileExporter.FORMATO_PDF) && !formato.equals(AbstractSingleFileExporter.FORMATO_XML))
 								throw new ExportException("Si e' verificato un errore durante l'export: Il formato richiesto non e' disponibile per la Comunicazione di tipo Avvenuta Trasmissione Impossibilita Recapito.");
 
-							// [TODO] Bussu
-							NotificaDTSingleFileExporter dtsfe = (NotificaDTSingleFileExporter) sfe;
-							NotificaDecorrenzaTermini dt = dtsfe.convertToObject(ids[0]);
+							TracciaSdISingleFileExporter dtsfe = (TracciaSdISingleFileExporter) sfe;
+							TracciaSDI dt = dtsfe.convertToObject(ids[0]);
 
 							// Visualizzazione Notifica DT formato PDF
 							if(formato.equals(AbstractSingleFileExporter.FORMATO_PDF)){
@@ -373,9 +349,8 @@ public class FattureExporter  extends HttpServlet{
 							if(!formato.equals(AbstractSingleFileExporter.FORMATO_PDF) && !formato.equals(AbstractSingleFileExporter.FORMATO_XML))
 								throw new ExportException("Si e' verificato un errore durante l'export: Il formato richiesto non e' disponibile per la Comunicazione di tipo Fattura Uscita.");
 
-							// [TODO] Bussu
-							NotificaDTSingleFileExporter dtsfe = (NotificaDTSingleFileExporter) sfe;
-							NotificaDecorrenzaTermini dt = dtsfe.convertToObject(ids[0]);
+							FatturaSingleFileExporter dtsfe = (FatturaSingleFileExporter) sfe;
+							FatturaElettronica dt = dtsfe.convertToObject(ids[0]);
 
 							// Visualizzazione Notifica DT formato PDF
 							if(formato.equals(AbstractSingleFileExporter.FORMATO_PDF)){
@@ -397,9 +372,8 @@ public class FattureExporter  extends HttpServlet{
 							if(!formato.equals(AbstractSingleFileExporter.FORMATO_PDF) && !formato.equals(AbstractSingleFileExporter.FORMATO_XML))
 								throw new ExportException("Si e' verificato un errore durante l'export: Il formato richiesto non e' disponibile per la Comunicazione di tipo Notifica DT Trasmittente.");
 
-							// [TODO] Bussu
-							NotificaDTSingleFileExporter dtsfe = (NotificaDTSingleFileExporter) sfe;
-							NotificaDecorrenzaTermini dt = dtsfe.convertToObject(ids[0]);
+							TracciaSdISingleFileExporter dtsfe = (TracciaSdISingleFileExporter) sfe;
+							TracciaSDI dt = dtsfe.convertToObject(ids[0]);
 
 							// Visualizzazione Notifica DT formato PDF
 							if(formato.equals(AbstractSingleFileExporter.FORMATO_PDF)){
@@ -421,9 +395,8 @@ public class FattureExporter  extends HttpServlet{
 							if(!formato.equals(AbstractSingleFileExporter.FORMATO_PDF) && !formato.equals(AbstractSingleFileExporter.FORMATO_XML))
 								throw new ExportException("Si e' verificato un errore durante l'export: Il formato richiesto non e' disponibile per la Comunicazione di tipo Notifica EC.");
 
-							// [TODO] Bussu
-							NotificaDTSingleFileExporter dtsfe = (NotificaDTSingleFileExporter) sfe;
-							NotificaDecorrenzaTermini dt = dtsfe.convertToObject(ids[0]);
+							TracciaSdISingleFileExporter dtsfe = (TracciaSdISingleFileExporter) sfe;
+							TracciaSDI dt = dtsfe.convertToObject(ids[0]);
 
 							// Visualizzazione Notifica DT formato PDF
 							if(formato.equals(AbstractSingleFileExporter.FORMATO_PDF)){
@@ -445,9 +418,8 @@ public class FattureExporter  extends HttpServlet{
 							if(!formato.equals(AbstractSingleFileExporter.FORMATO_PDF) && !formato.equals(AbstractSingleFileExporter.FORMATO_XML))
 								throw new ExportException("Si e' verificato un errore durante l'export: Il formato richiesto non e' disponibile per la Comunicazione di tipo Notifica Mancata Consegna.");
 
-							// [TODO] Bussu
-							NotificaDTSingleFileExporter dtsfe = (NotificaDTSingleFileExporter) sfe;
-							NotificaDecorrenzaTermini dt = dtsfe.convertToObject(ids[0]);
+							TracciaSdISingleFileExporter dtsfe = (TracciaSdISingleFileExporter) sfe;
+							TracciaSDI dt = dtsfe.convertToObject(ids[0]);
 
 							// Visualizzazione Notifica DT formato PDF
 							if(formato.equals(AbstractSingleFileExporter.FORMATO_PDF)){
@@ -469,9 +441,8 @@ public class FattureExporter  extends HttpServlet{
 							if(!formato.equals(AbstractSingleFileExporter.FORMATO_PDF) && !formato.equals(AbstractSingleFileExporter.FORMATO_XML))
 								throw new ExportException("Si e' verificato un errore durante l'export: Il formato richiesto non e' disponibile per la Comunicazione di tipo Notifica Scarto.");
 
-							// [TODO] Bussu
-							NotificaDTSingleFileExporter dtsfe = (NotificaDTSingleFileExporter) sfe;
-							NotificaDecorrenzaTermini dt = dtsfe.convertToObject(ids[0]);
+							TracciaSdISingleFileExporter dtsfe = (TracciaSdISingleFileExporter) sfe;
+							TracciaSDI dt = dtsfe.convertToObject(ids[0]);
 
 							// Visualizzazione Notifica DT formato PDF
 							if(formato.equals(AbstractSingleFileExporter.FORMATO_PDF)){
@@ -493,9 +464,8 @@ public class FattureExporter  extends HttpServlet{
 							if(!formato.equals(AbstractSingleFileExporter.FORMATO_PDF) && !formato.equals(AbstractSingleFileExporter.FORMATO_XML))
 								throw new ExportException("Si e' verificato un errore durante l'export: Il formato richiesto non e' disponibile per la Comunicazione di tipo Ricevuta Consegna.");
 
-							// [TODO] Bussu
-							NotificaDTSingleFileExporter dtsfe = (NotificaDTSingleFileExporter) sfe;
-							NotificaDecorrenzaTermini dt = dtsfe.convertToObject(ids[0]);
+							TracciaSdISingleFileExporter dtsfe = (TracciaSdISingleFileExporter) sfe;
+							TracciaSDI dt = dtsfe.convertToObject(ids[0]);
 
 							// Visualizzazione Notifica DT formato PDF
 							if(formato.equals(AbstractSingleFileExporter.FORMATO_PDF)){
@@ -615,30 +585,20 @@ public class FattureExporter  extends HttpServlet{
 			return new ScartoECSingleFileExporter(log);
 		} else if(action.equals(PARAMETRO_ACTION_NOTIFICA_DT)) {
 			return new NotificaDTSingleFileExporter(log);
-		} else if(action.equals(PARAMETRO_ACTION_COMUNICAZIONE_ATTESTAZIONE_TRASMISSIONE_FATTURA)) {
-			// [TODO] Bussu
-			throw new ExportException("Non disponibile");
-		}  else if(action.equals(PARAMETRO_ACTION_COMUNICAZIONE_AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO)) {
-			// [TODO] Bussu
-			throw new ExportException("Non disponibile");
+		} else if(action.equals(PARAMETRO_ACTION_COMUNICAZIONE_AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO)) {
+			return new TracciaSdISingleFileExporter(log);
 		}  else if(action.equals(PARAMETRO_ACTION_COMUNICAZIONE_FATTURA_USCITA)) {
-			// [TODO] Bussu
-			throw new ExportException("Non disponibile");
+			return new FatturaSingleFileExporter(log);
 		}  else if(action.equals(PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE)) {
-			// [TODO] Bussu
-			throw new ExportException("Non disponibile");
+			return new TracciaSdISingleFileExporter(log);
 		}  else if(action.equals(PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_ESITO_COMMITTENTE)) {
-			// [TODO] Bussu
-			throw new ExportException("Non disponibile");
+			return new TracciaSdISingleFileExporter(log);
 		}  else if(action.equals(PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_MANCATA_CONSEGNA)) {
-			// [TODO] Bussu
-			throw new ExportException("Non disponibile");
+			return new TracciaSdISingleFileExporter(log);
 		}  else if(action.equals(PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_SCARTO)) {
-			// [TODO] Bussu
-			throw new ExportException("Non disponibile");
+			return new TracciaSdISingleFileExporter(log);
 		}  else if(action.equals(PARAMETRO_ACTION_COMUNICAZIONE_RICEVUTA_CONSEGNA)) {
-			// [TODO] Bussu
-			throw new ExportException("Non disponibile");
+			return new TracciaSdISingleFileExporter(log);
 		} else {
 			throw new ExportException("Si e' verificato un errore durante l'export: Tipo di risorsa richiesta ["+action+"] non disponibile.");
 		}

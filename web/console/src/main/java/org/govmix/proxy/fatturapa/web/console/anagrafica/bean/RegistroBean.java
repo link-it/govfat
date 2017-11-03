@@ -68,8 +68,8 @@ public class RegistroBean extends BaseBean<Registro, Long> implements IViewBean<
 		this.setField(this.password);
 
 		this.fieldsDatiGenerali = this.getFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
-		this.fieldsDatiGenerali.setStyleClass("datiTrasmissioneTable"); 
-		this.fieldsDatiGenerali.setColumnClasses("labelAllineataDx,valueAllineataSx");
+		this.fieldsDatiGenerali.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.fieldsDatiGenerali.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE);
 
 		this.fieldsDatiGenerali.addField(this.nome);
 		this.fieldsDatiGenerali.addField(this.username);
@@ -77,8 +77,8 @@ public class RegistroBean extends BaseBean<Registro, Long> implements IViewBean<
 
 		this.fieldsProperties = this.getFactory().getOutputFieldFactory().createOutputGroup("registroProperties",2);
 		this.fieldsProperties.setRendered(true);
-		this.fieldsProperties.setStyleClass("datiTrasmissioneTable"); 
-		this.fieldsProperties.setColumnClasses("labelAllineataDx,valueAllineataSx");
+		this.fieldsProperties.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.fieldsProperties.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE);
 	}
 
 	@Override

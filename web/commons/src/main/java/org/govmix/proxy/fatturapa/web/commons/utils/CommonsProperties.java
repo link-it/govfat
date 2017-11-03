@@ -20,8 +20,13 @@
  */
 package org.govmix.proxy.fatturapa.web.commons.utils;
 
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.Properties;
+
+import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
+import org.govmix.proxy.fatturapa.web.commons.exporter.PDFCreator.TipoXSL;
+import org.govmix.proxy.pcc.fatture.utils.AbstractProperties;
 
 
 /***
@@ -32,8 +37,9 @@ import java.util.Properties;
  * @author pintori
  *
  */
-public class CommonsProperties {
+public class CommonsProperties extends AbstractProperties {
 
+	/** XSL **/
 	private String xslFatturaSDI10;
 	private String xslFatturaSDI11;
 	private String xslFatturaV12;
@@ -42,7 +48,13 @@ public class CommonsProperties {
 	private String xslScartoEC;
 	private String xslPccRiallineamento;
 	private String xslBaseDir;
+	
+	private Properties xslTraccia;
+	private URL invioFatturaURL;
+	private String invioFatturaUsername;
+	private String invioFatturaPassword;
 
+	private String idEgovHeader;
 
 	private static final String propertiesPath = "/webCommons.properties";
 	/** Copia Statica */
@@ -51,7 +63,7 @@ public class CommonsProperties {
 	public static synchronized void initialize(org.slf4j.Logger log) throws Exception{
 
 		if(CommonsProperties.commonsProperties==null)
-			CommonsProperties.commonsProperties = new CommonsProperties(log);	
+			CommonsProperties.commonsProperties = new CommonsProperties(log, propertiesPath);	
 	}
 
 	public static CommonsProperties getInstance(org.slf4j.Logger log) throws Exception{
@@ -75,21 +87,22 @@ public class CommonsProperties {
 	 *
 	 * 
 	 */
-	public CommonsProperties(org.slf4j.Logger log) throws Exception{
+	public CommonsProperties(org.slf4j.Logger log, String path) throws Exception{
 
+		super(path);
 		/* ---- Lettura del cammino del file di configurazione ---- */
 
 		Properties propertiesReader = new Properties();
 		java.io.InputStream properties = null;
 		try{  
-			properties = CommonsProperties.class.getResourceAsStream(propertiesPath);
+			properties = CommonsProperties.class.getResourceAsStream(path);
 			if(properties==null){
-				throw new Exception("Properties "+propertiesPath+" not found");
+				throw new Exception("Properties "+path+" not found");
 			}
 			propertiesReader.load(properties);
 			properties.close();
 		}catch(java.io.IOException e) {
-			log.error("Riscontrato errore durante la lettura del file '"+propertiesPath+"': "+e.getMessage(),e);
+			log.error("Riscontrato errore durante la lettura del file '"+path+"': "+e.getMessage(),e);
 			try{
 				if(properties!=null)
 					properties.close();
@@ -107,7 +120,25 @@ public class CommonsProperties {
 		this.xslNotificaEC = getProperty("xsl.notificaEC", true);
 		this.xslScartoEC = getProperty("xsl.scartoEC", true);
 		this.xslPccRiallineamento = getProperty("xsl.PccRiallineamento", true);
+		
+
+        String entiListString = getProperty("xsl.traccia.list", true);
+
+		this.xslTraccia = new Properties();
+        if(entiListString != null && !entiListString.isEmpty()) {
+                String[] entiList = entiListString.split(",");
+                for(String ente: entiList) {
+                	this.xslTraccia.put(ente, getProperty("xsl.traccia."+ente, true));
+                }
+        }
+
 		this.xslBaseDir = getProperty("xsl.baseDir", true);
+		
+		this.invioFatturaURL = new URL(this.getProperty("invioFattura.url", true));
+		this.invioFatturaUsername = this.getProperty("invioFattura.username", false);
+		this.invioFatturaPassword = this.getProperty("invioFattura.password", false);
+
+		this.idEgovHeader = this.getProperty("header.idegov", true);
 
 	}
 
@@ -117,32 +148,31 @@ public class CommonsProperties {
 		return this.reader.propertyNames();
 	}
 
-	public String getProperty(String name,boolean required) throws Exception{
-		String tmp = null;
-
-		tmp = this.reader.getProperty(name);
-
-		if(tmp==null){
-			if(required){
-				throw new Exception("Property ["+name+"] not found");
-			}
-		}
-		if(tmp!=null){
-			return tmp.trim();
-		}else{
-			return null;
-		}
-	}
-
-	public Boolean getBooleanProperty(String name,boolean required) throws Exception{
-		String propAsString = getProperty(name, required);
-
-		if(propAsString != null){
-			Boolean b = new Boolean(propAsString.equalsIgnoreCase("true"));
-			return b;
-		}
-		return null;
-	}
+//	public String getProperty(String name,boolean required) throws Exception{
+//		String tmp = null;
+//
+//		tmp = this.reader.getProperty(name);
+//
+//		if(tmp==null){
+//			if(required){
+//				throw new Exception("Property ["+name+"] not found");
+//			}
+//		}
+//		if(tmp!=null){
+//			return tmp.trim();
+//		}else{
+//			return null;
+//		}
+//	}
+//	public Boolean getBooleanProperty(String name,boolean required) throws Exception{
+//		String propAsString = getProperty(name, required);
+//
+//		if(propAsString != null){
+//			Boolean b = new Boolean(propAsString.equalsIgnoreCase("true"));
+//			return b;
+//		}
+//		return null;
+//	}
 
 	public String getXslNotificaEC() {
 		return xslNotificaEC;
@@ -206,6 +236,47 @@ public class CommonsProperties {
 
 	public void setXslFatturaV12(String xslFatturaV12) {
 		this.xslFatturaV12 = xslFatturaV12;
+	}
+
+	public URL getInvioFatturaURL() {
+		return invioFatturaURL;
+	}
+	public String getInvioFatturaUsername() {
+		return invioFatturaUsername;
+	}
+	public String getInvioFatturaPassword() {
+		return invioFatturaPassword;
+	}
+
+	public String getIdEgovHeader() {
+		return idEgovHeader;
+	}
+
+	public String getXslTraccia(TipoComunicazioneType tipoComunicazione) {
+		if(this.xslTraccia.containsKey(tipoComunicazione.toString())) {
+			return this.xslTraccia.getProperty(tipoComunicazione.toString());
+		}
+		return null;
+	}
+
+	public String getXslTraccia(TipoXSL tipoXSL) {
+		switch(tipoXSL) {
+		case FATTURA_V10: return this.getXslFatturaSDI10();
+		case FATTURA_V11: return this.getXslFatturaSDI11();
+		case FATTURA_V12: return this.getXslFatturaV12();
+		case NOTIFICA_DT: return this.getXslNotificaDT();
+		case NOTIFICA_EC: return this.getXslNotificaEC();
+		case PCC_RIALLINEAMENTO: return this.getXslPccRiallineamento();
+		case SCARTO_EC: return this.getXslScartoEC();
+		case TRACCIA_AT:return this.getXslTraccia(TipoComunicazioneType.AT);
+		case TRACCIA_MC:return this.getXslTraccia(TipoComunicazioneType.MC);
+		case TRACCIA_MT:return this.getXslTraccia(TipoComunicazioneType.MT);
+		case TRACCIA_NE:return this.getXslTraccia(TipoComunicazioneType.NE);
+		case TRACCIA_NS:return this.getXslTraccia(TipoComunicazioneType.NS);
+		case TRACCIA_RC:return this.getXslTraccia(TipoComunicazioneType.RC);
+		default: return null;
+		}
+
 	}
 
 

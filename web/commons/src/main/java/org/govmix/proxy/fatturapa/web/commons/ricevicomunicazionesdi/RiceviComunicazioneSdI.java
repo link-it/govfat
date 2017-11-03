@@ -23,60 +23,85 @@ package org.govmix.proxy.fatturapa.web.commons.ricevicomunicazionesdi;
 import java.sql.Connection;
 
 import org.slf4j.Logger;
+import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
+import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.TracciaSdIBD;
-import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 
 public class RiceviComunicazioneSdI {
 
 	private Logger log;
+	private TracciaSdIBD tracciaBD;
+	private LottoBD lottoBD;
 
 	public RiceviComunicazioneSdI(Logger log) throws Exception {
 		this.log = log;
+		this.tracciaBD = new TracciaSdIBD(this.log);
+		this.lottoBD = new LottoBD(this.log);
+
+	}
+
+	public RiceviComunicazioneSdI(Logger log, Connection connection, boolean autocommit) throws Exception {
+		this.log = log;
+		this.tracciaBD = new TracciaSdIBD(this.log, connection, false);
+		this.lottoBD = new LottoBD(this.log, connection, false);
 	}
 
 	public static TipoComunicazioneType getTipoComunicazione(String tipo) throws Exception {
 		
 		if("RicevutaConsegna".equals(tipo)) {
-			return TipoComunicazioneType.RICEVUTA_CONSEGNA;
+			return TipoComunicazioneType.RC;
 		} else if("NotificaMancataConsegna".equals(tipo)) {
-			return TipoComunicazioneType.NOTIFICA_MANCATA_CONSEGNA;
+			return TipoComunicazioneType.MC;
 		} else if("NotificaScarto".equals(tipo)) {
-			return TipoComunicazioneType.NOTIFICA_SCARTO;
+			return TipoComunicazioneType.NS;
 		} else if("NotificaEsito".equals(tipo)) {
-			return TipoComunicazioneType.NOTIFICA_ESITO_COMMITTENTE;
+			return TipoComunicazioneType.NE;
 		} else if("NotificaDecorrenzaTermini".equals(tipo)) {
-			return TipoComunicazioneType.NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE;
+			return TipoComunicazioneType.DT;
 		} else if("AttestazioneTrasmissioneFattura".equals(tipo)) {
-			return TipoComunicazioneType.ATTESTAZIONE_TRASMISSIONE_FATTURA;
+			return TipoComunicazioneType.AT;
 		} 
 
 		throw new Exception("Tipo ["+tipo+"] non e' un tipo valido per il tipo di comunicazione");
 	}
 
 	public void ricevi(TracciaSDI tracciaSdI) throws Exception {
-	
+		this.tracciaBD.insert(tracciaSdI);
+		StatoElaborazioneType nuovoStatoLotto = null;
+		switch(tracciaSdI.getTipoComunicazione()) {
+			case AT: nuovoStatoLotto = StatoElaborazioneType.IMPOSSIBILITA_DI_RECAPITO; 
+				break;
+			case DT: nuovoStatoLotto = StatoElaborazioneType.RICEVUTA_DECORRENZA_TERMINI;
+				break;
+			case EC: // solo fatturazione passiva, non gestita
+				break;
+			case FAT_IN: // solo fatturazione passiva, non gestita
+				break;
+			case FAT_OUT: // solo fatturazione passiva, non gestita
+				break;
+			case MC: nuovoStatoLotto = StatoElaborazioneType.MANCATA_CONSEGNA;
+				break;
+			case MT:  // non gestita
+				break;
+			case NE: nuovoStatoLotto = StatoElaborazioneType.RICEVUTO_ESITO_CEDENTE_PRESTATORE;
+				break;
+			case NS: nuovoStatoLotto = StatoElaborazioneType.RICEVUTO_SCARTO_SDI;
+				break;
+			case RC: nuovoStatoLotto = StatoElaborazioneType.RICEVUTA_DAL_DESTINATARIO;
+				break;
+			case SE:  // solo fatturazione passiva, non gestita
+				break;
+			default:
+				break;
+		}
 		
-		Connection connection = null;
-		try {
-			connection = DAOFactory.getInstance().getConnection();
-			connection.setAutoCommit(false);
-
-			TracciaSdIBD tracciaBD = new TracciaSdIBD(this.log, connection, false);
-
-			tracciaBD.insert(tracciaSdI);
-			
-			connection.commit();
-		} catch(Exception e) {
-			connection.rollback();
-			throw e;
-		} finally {
-			if(connection != null) {
-				try {
-					connection.close();
-				} catch(Exception e) {}
-			}
+		if(nuovoStatoLotto != null) {
+			IdLotto idLotto = new IdLotto();
+			idLotto.setIdentificativoSdi(tracciaSdI.getIdentificativoSdi());
+			this.lottoBD.updateStatoElaborazioneInUscitaOK(idLotto, nuovoStatoLotto);
 		}
 	}
 }

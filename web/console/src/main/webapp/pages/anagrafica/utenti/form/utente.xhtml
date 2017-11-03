@@ -76,8 +76,19 @@
 					#{msg['commons.label.campiObbligatori']}
 				</p>
 				<op2web:fieldset legend="#{msg['utente.form.label']}" collapsible="false" closed="false" rendered="#{true}">
+				
+					<op2web:prop label="#{utenteMBean.form.nome.label}" required="#{utenteMBean.form.nome.required}" 
+							rendered="#{utenteMBean.form.nome.rendered}">
+						<div>
+							<div class="keepMargin">
+								<h:inputText id="input_#{utenteMBean.form.nome.name}" value="#{utenteMBean.form.nome.value}" 
+								style="#{utenteMBean.form.nome.style}" disabled="#{utenteMBean.form.nome.disabled}" />	
+							</div>
+						</div>
+					
+				 	</op2web:prop>
 
-					<op2web:formFields nomiFields="#{'nome,cognome,username,password,ruolo,profilo,ente'}" />
+					<op2web:formFields nomiFields="#{'cognome,username,password,ruolo,profilo,ente'}" />
 
 				</op2web:fieldset>
 				<rich:spacer height="20" rendered="#{utenteMBean.form.showUOandPCC.value}"/>

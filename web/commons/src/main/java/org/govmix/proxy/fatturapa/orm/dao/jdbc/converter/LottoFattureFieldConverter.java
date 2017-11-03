@@ -264,6 +264,27 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 				return "data_ultima_elaborazione";
 			}
 		}
+		if(field.equals(LottoFatture.model().DETTAGLIO_ELABORAZIONE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".dettaglio_elaborazione";
+			}else{
+				return "dettaglio_elaborazione";
+			}
+		}
+		if(field.equals(LottoFatture.model().DATA_PROSSIMA_ELABORAZIONE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".data_prossima_elaborazione";
+			}else{
+				return "data_prossima_elaborazione";
+			}
+		}
+		if(field.equals(LottoFatture.model().TENTATIVI_CONSEGNA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".tentativi_consegna";
+			}else{
+				return "tentativi_consegna";
+			}
+		}
 		if(field.equals(LottoFatture.model().DATA_RICEZIONE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".data_ricezione";
@@ -515,6 +536,15 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 		if(field.equals(LottoFatture.model().DATA_ULTIMA_ELABORAZIONE)){
 			return this.toTable(LottoFatture.model(), returnAlias);
 		}
+		if(field.equals(LottoFatture.model().DETTAGLIO_ELABORAZIONE)){
+			return this.toTable(LottoFatture.model(), returnAlias);
+		}
+		if(field.equals(LottoFatture.model().DATA_PROSSIMA_ELABORAZIONE)){
+			return this.toTable(LottoFatture.model(), returnAlias);
+		}
+		if(field.equals(LottoFatture.model().TENTATIVI_CONSEGNA)){
+			return this.toTable(LottoFatture.model(), returnAlias);
+		}
 		if(field.equals(LottoFatture.model().DATA_RICEZIONE)){
 			return this.toTable(LottoFatture.model(), returnAlias);
 		}
@@ -613,7 +643,7 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 			return "dipartimenti_props";
 		}
 		if(model.equals(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE)){
-			return "enti";
+			return "id_ente";
 		}
 
 

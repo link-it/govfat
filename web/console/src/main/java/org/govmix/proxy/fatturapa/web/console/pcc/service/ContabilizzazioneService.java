@@ -48,9 +48,9 @@ public class ContabilizzazioneService extends BaseService<ContabilizzazioneSearc
 
 	public ContabilizzazioneService() {
 		try{
-			this.bd = new PccContabilizzazioneBD(log);
+			this.bd = new PccContabilizzazioneBD(ContabilizzazioneService.log);
 		}catch(Exception e){
-			log.error("Errore durante la init di ContabilizzazioneService: "+ e.getMessage(), e); 
+			ContabilizzazioneService.log.error("Errore durante la init di ContabilizzazioneService: "+ e.getMessage(), e); 
 		}
 	}
 
@@ -182,7 +182,7 @@ public class ContabilizzazioneService extends BaseService<ContabilizzazioneSearc
 				bean = new ContabilizzazionePccBean();
 				bean.setDTO(dto);
 			} catch (NotFoundException e) {
-				log.debug("Elemento non trovato");
+				ContabilizzazioneService.log.debug("Elemento non trovato");
 			}
 		}
 		return bean;
@@ -221,7 +221,7 @@ public class ContabilizzazioneService extends BaseService<ContabilizzazioneSearc
 			}
 
 		} catch (Exception e) {
-			log.error("Errore durante l'esecuzione del metodo ["+methodName+"] : "+ e.getMessage() , e);
+			ContabilizzazioneService.log.error("Errore durante l'esecuzione del metodo ["+methodName+"] : "+ e.getMessage() , e);
 		}
 
 		return lst;
@@ -233,10 +233,12 @@ public class ContabilizzazioneService extends BaseService<ContabilizzazioneSearc
 		return this.bd.exists(contabilizzazione);
 	}
 
+	@Override
 	public IdFattura getIdFattura() {
 		return idFattura;
 	}
 
+	@Override
 	public void setIdFattura(IdFattura idFattura) {
 		this.idFattura = idFattura;
 	}
@@ -250,6 +252,7 @@ public class ContabilizzazioneService extends BaseService<ContabilizzazioneSearc
 		return cacheDati;
 	}
 
+	@Override
 	public void setCacheDati(List<ContabilizzazionePccBean> cacheDati) {
 		this.cacheDati = cacheDati;
 	}

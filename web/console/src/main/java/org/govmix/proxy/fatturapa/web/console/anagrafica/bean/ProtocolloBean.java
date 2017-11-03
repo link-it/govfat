@@ -61,8 +61,8 @@ public class ProtocolloBean extends BaseBean<Protocollo, Long> implements IViewB
 		this.setField(this.endpoint);
 
 		this.fieldsDatiGenerali = this.getFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
-		this.fieldsDatiGenerali.setStyleClass("datiTrasmissioneTable"); 
-		this.fieldsDatiGenerali.setColumnClasses("labelAllineataDx,valueAllineataSx");
+		this.fieldsDatiGenerali.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.fieldsDatiGenerali.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE);
 
 		this.fieldsDatiGenerali.addField(this.nome);
 		this.fieldsDatiGenerali.addField(this.descrizione);

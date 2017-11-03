@@ -34,6 +34,7 @@ import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.UtenteDipartimento;
 import org.govmix.proxy.fatturapa.orm.dao.IDBFatturaElettronicaService;
 import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaService;
+import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaServiceSearch;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaPassivaFilter;
 import org.openspcoop2.generic_project.beans.CustomField;
@@ -49,6 +50,7 @@ import org.openspcoop2.utils.LoggerWrapperFactory;
 public class FatturaBD extends BaseBD {
 
 	protected IFatturaElettronicaService service;
+	protected IFatturaElettronicaServiceSearch serviceSearch;
 
 	public FatturaBD(Logger log) throws Exception {
 		super(log);
@@ -58,6 +60,7 @@ public class FatturaBD extends BaseBD {
 	public FatturaBD(Logger log, Connection connection, boolean autocommit) throws Exception {
 		super(log, connection, autocommit);
 		this.service = this.serviceManager.getFatturaElettronicaService();
+		this.serviceSearch = this.serviceManager.getFatturaElettronicaServiceSearch();
 	}
 
 	public FatturaBD() throws Exception {

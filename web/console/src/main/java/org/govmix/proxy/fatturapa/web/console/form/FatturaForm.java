@@ -20,10 +20,10 @@
  */
 package org.govmix.proxy.fatturapa.web.console.form;
 
-import java.util.List;
-
 import javax.faces.event.ActionEvent;
 
+import org.apache.commons.lang.StringUtils;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException.CODICE;
 import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.mbean.FatturaElettronicaAttivaMBean;
 import org.govmix.proxy.fatturapa.web.console.mbean.FileUploadBean;
@@ -35,7 +35,6 @@ import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
 import org.openspcoop2.generic_project.web.input.BooleanCheckBox;
 import org.openspcoop2.generic_project.web.input.SelectList;
 import org.openspcoop2.generic_project.web.input.Text;
-import org.richfaces.model.UploadItem;
 
 public class FatturaForm extends BaseForm implements Form {
 
@@ -46,8 +45,10 @@ public class FatturaForm extends BaseForm implements Form {
 	private FileUploadBean fatturaFile= null;
 	private BooleanCheckBox conservazione = null;
 	private boolean mostraFormCorservazione = false;
+	private boolean buttonEnabled = true;
 
 	private FatturaElettronicaAttivaMBean mBean =null; 
+	private String idFiles= null;
 
 	public FatturaForm() {
 		try{
@@ -69,6 +70,8 @@ public class FatturaForm extends BaseForm implements Form {
 		this.dipartimento = factory.getInputFieldFactory().createSelectList("cf_dipartimento","fattura.form.dipartimento",null,true);
 		((SelectListImpl)this.dipartimento).setCheckItemWidth(true); 
 		this.dipartimento.setFontName("Arial"); //"Arial,Verdana,sans-serif" 
+		this.dipartimento.setFieldsToUpdate("dsFileUploadErrorsCtr"); 
+		this.dipartimento.setForm(this);
 
 		this.descrittoreFattura = factory.getInputFieldFactory().createText("descrittoreFattura","fattura.form.descrittoreFattura",null,true);
 		this.descrittoreFattura.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
@@ -83,9 +86,8 @@ public class FatturaForm extends BaseForm implements Form {
 		
 		this._setMostraConservazione();
 		
-		this.fatturaFile = new FileUploadBean();
-		this.fatturaFile.setNumeroFile(10);
-		this.fatturaFile.setAcceptedTypes("xml,p7m"); 
+//		this.fatturaFile = new FileUploadBean();
+//		this.fatturaFile.setForm(this);
 		
 		this.reset();
 	}
@@ -98,6 +100,7 @@ public class FatturaForm extends BaseForm implements Form {
 		this.mostraFormCorservazione= false;
 		
 		this._setMostraConservazione();
+		this.idFiles = null;
 	}
 	
 	@Override
@@ -129,12 +132,18 @@ public class FatturaForm extends BaseForm implements Form {
 	}
 	public void setFatturaFile(FileUploadBean fatturaFile) {
 		this.fatturaFile = fatturaFile;
+		if(this.fatturaFile != null) {
+			this.fatturaFile.setForm(this);
+		}
 	}
 	public FatturaElettronicaAttivaMBean getmBean() {
 		return mBean;
 	}
 	public void setmBean(FatturaElettronicaAttivaMBean mBean) {
 		this.mBean = mBean;
+		if(this.fatturaFile != null) {
+			this.fatturaFile.setmBean(mBean);
+		}
 	}
 	
 	private void _setMostraConservazione() {
@@ -165,12 +174,15 @@ public class FatturaForm extends BaseForm implements Form {
 	public String valida() throws Exception {
 		String toRet = null;
 
-		List<UploadItem> files = this.getFatturaFile().getFilesCache();
+		int numeroFileRicevuti = this.getFatturaFile().getMapChiaviElementi().size();
 
-		if(files == null || (files != null && files.size() == 0)) {
+		if(numeroFileRicevuti < 1) {
 			return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura.nessunFileSelezionato");
 		}		
 
+		// controllo identificativi
+		if(this.checkIdentificativi() !=null)
+			return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura."+CODICE.ERRORE_GENERICO.name());
 
 		// Dipartimento
 		org.openspcoop2.generic_project.web.input.SelectItem _dipartimento = this.getDipartimento().getValue();
@@ -185,5 +197,55 @@ public class FatturaForm extends BaseForm implements Form {
 
 
 		return toRet;
+		
+	}
+	
+	public void cf_dipartimentoSelectListener(ActionEvent ae){
+		this.mBean.setCheckFormFatturaMessage(null);
+	}
+
+	public void enableButton() {
+		this.buttonEnabled = true;
+	}
+
+	public void disableButton() {
+		this.buttonEnabled = false;
+	}
+
+	public boolean isButtonEnabled() {
+		return buttonEnabled;
+	}
+
+	public void setButtonEnabled(boolean buttonEnabled) {
+		this.buttonEnabled = buttonEnabled;
+	}
+
+	public String getIdFiles() {
+		return idFiles;
+	}
+
+	public void setIdFiles(String idFiles) {
+		this.idFiles = idFiles;
+	}
+	
+	public String checkIdentificativi() {
+		if(StringUtils.isNotEmpty(this.idFiles)) {
+			String[] ids = this.idFiles.split(",");
+			
+			if(ids!= null && ids.length > 0) {
+				if(ids.length != this.fatturaFile.getMapChiaviElementi().size())
+					return CODICE.ERRORE_GENERICO.name();
+				
+				for (String id : ids) {
+					if(!this.fatturaFile.getMapChiaviElementi().containsKey(id)) {
+						return CODICE.ERRORE_GENERICO.name();
+					}
+				}
+				//ok
+				return null;
+			}
+		}
+		
+		return CODICE.ERRORE_GENERICO.name();
 	}
 }

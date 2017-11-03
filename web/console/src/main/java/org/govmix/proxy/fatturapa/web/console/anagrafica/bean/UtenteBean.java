@@ -147,8 +147,8 @@ public class UtenteBean extends BaseBean<Utente, Long> implements IViewBean<Uten
 		this.setField(this.rifiutoFattura);
 
 		this.fieldsDatiGenerali = this.getFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
-		this.fieldsDatiGenerali.setStyleClass("datiTrasmissioneTable"); 
-		this.fieldsDatiGenerali.setColumnClasses("labelAllineataDx,valueAllineataSx");
+		this.fieldsDatiGenerali.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.fieldsDatiGenerali.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE);
 
 		this.fieldsDatiGenerali.addField(this.cognome);
 		this.fieldsDatiGenerali.addField(this.nome);
@@ -158,8 +158,8 @@ public class UtenteBean extends BaseBean<Utente, Long> implements IViewBean<Uten
 //		this.fieldsDatiGenerali.addField(this.ente);
 
 		this.fieldsDatiPCC = this.getFactory().getOutputFieldFactory().createOutputGroup("datiPCC",2);
-		this.fieldsDatiPCC.setStyleClass("datiTrasmissioneTable"); 
-		this.fieldsDatiPCC.setColumnClasses("labelAllineataDx,valueAllineataSx");
+		this.fieldsDatiPCC.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.fieldsDatiPCC.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE);
 
 		this.fieldsDatiPCC.addField(this.utenteEsterno);
 		this.fieldsDatiPCC.addField(this.sistemaEsterno);

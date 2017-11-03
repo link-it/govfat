@@ -76,7 +76,7 @@ public class ContabilizzazionePccBean  extends BaseBean<PccContabilizzazione, Lo
 		this.importoMovimento = this.getFactory().getOutputFieldFactory().createNumber("importoMovimento","contabilizzazione.importoMovimento");
 		this.importoMovimento.setConverterType(Costanti.CONVERT_TYPE_CURRENCY);
 		this.importoMovimento.setCurrencySymbol(Costanti.CURRENCY_SYMBOL_EURO);
-		this.importoMovimento.setTableColumnStyleClass("allinatoDX");
+		this.importoMovimento.setTableColumnStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_ALLINATO_DX);
 		this.naturaSpesa = this.getFactory().getOutputFieldFactory().createText("naturaSpesa","contabilizzazione.naturaSpesa");
 		this.capitoliSpesa = this.getFactory().getOutputFieldFactory().createText("capitoliSpesa","contabilizzazione.capitoliSpesa");
 		this.statoDebito = this.getFactory().getOutputFieldFactory().createText("statoDebito","contabilizzazione.statoDebito");
@@ -87,8 +87,8 @@ public class ContabilizzazionePccBean  extends BaseBean<PccContabilizzazione, Lo
 		this.codiceCup = this.getFactory().getOutputFieldFactory().createText("codiceCup","contabilizzazione.codiceCup");
 		this.idImporto = this.getFactory().getOutputFieldFactory().createText("idImporto","contabilizzazione.idImporto");
 //		this.stato = this.getFactory().getOutputFieldFactory().createText("stato","contabilizzazione.stato");
-		this.dataRichiesta = this.getFactory().getOutputFieldFactory().createDateTime("dataRichiesta","contabilizzazione.dataRichiesta","dd/M/yyyy HH:mm:ss");
-		this.dataQuery = this.getFactory().getOutputFieldFactory().createDateTime("dataQuery","contabilizzazione.dataQuery","dd/M/yyyy HH:mm:ss"); 
+		this.dataRichiesta = this.getFactory().getOutputFieldFactory().createDateTime("dataRichiesta","contabilizzazione.dataRichiesta",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS);
+		this.dataQuery = this.getFactory().getOutputFieldFactory().createDateTime("dataQuery","contabilizzazione.dataQuery",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS); 
 		this.sistemaRichiedente = this.getFactory().getOutputFieldFactory().createText("sistemaRichiedente","contabilizzazione.sistemaRichiedente");
 		this.utenteRichiedente = this.getFactory().getOutputFieldFactory().createText("utenteRichiedente","contabilizzazione.utenteRichiedente");
 	
@@ -126,8 +126,8 @@ public class ContabilizzazionePccBean  extends BaseBean<PccContabilizzazione, Lo
 		this.fieldsDatiGenerali.addField(this.sistemaRichiedente);
 		this.fieldsDatiGenerali.addField(this.utenteRichiedente);
 
-		this.fieldsDatiGenerali.setStyleClass("datiTrasmissioneTable"); 
-		this.fieldsDatiGenerali.setColumnClasses("labelAllineataDx,valueAllineataSx"); 
+		this.fieldsDatiGenerali.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.fieldsDatiGenerali.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE); 
 	}
 
 	@Override

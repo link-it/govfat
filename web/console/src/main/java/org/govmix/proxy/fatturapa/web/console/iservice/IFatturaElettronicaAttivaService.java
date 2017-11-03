@@ -22,6 +22,7 @@ package org.govmix.proxy.fatturapa.web.console.iservice;
 
 import java.util.List;
 
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoRequest;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoResponse;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoSoloConservazioneRequest;
@@ -48,5 +49,8 @@ public interface IFatturaElettronicaAttivaService extends IBaseService<FatturaEl
 	
 	public InserimentoLottoResponse salvaFattureSoloConservazione(List<InserimentoLottoSoloConservazioneRequest> listaFatture) throws ServiceException;
 
+	public void checkLotto(List<InserimentoLottoRequest> requestList) throws InserimentoLottiException;
+	
+	public void checkLottoSoloConservazione(List<InserimentoLottoSoloConservazioneRequest> requestList) throws InserimentoLottiException;
 //	public Date getDataUltimaOperazioneByIdFattura(IdFattura idFattura) throws ServiceException;
 }

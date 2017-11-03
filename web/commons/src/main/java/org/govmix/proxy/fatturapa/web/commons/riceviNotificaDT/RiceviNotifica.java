@@ -30,8 +30,8 @@ import org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.NotificaDecorrenzaTerminiBD;
+import org.govmix.proxy.fatturapa.web.commons.converter.notificadecorrenzatermini.NotificaDecorrenzaTerminiConverter;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
-import org.govmix.proxy.fatturapa.web.commons.notificadecorrenzatermini.NotificaDecorrenzaTerminiConverter;
 
 public class RiceviNotifica {
 

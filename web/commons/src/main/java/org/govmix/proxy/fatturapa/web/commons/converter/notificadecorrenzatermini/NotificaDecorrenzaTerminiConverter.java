@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.govmix.proxy.fatturapa.web.commons.notificadecorrenzatermini;
+package org.govmix.proxy.fatturapa.web.commons.converter.notificadecorrenzatermini;
 
 import it.gov.fatturapa.sdi.messaggi.v1_0.NotificaDecorrenzaTerminiType;
 import it.gov.fatturapa.sdi.messaggi.v1_0.utils.serializer.JaxbDeserializer;

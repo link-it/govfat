@@ -62,7 +62,7 @@ public class AllegatoFatturaBean extends BaseBean<AllegatoFattura, Long> impleme
 		this.algoritmoCompressione =   this.getFactory().getOutputFieldFactory().createText("algoritmoCompressione","allegatoFattura.algoritmoCompressione");
 		this.formatoAttachment =  this.getFactory().getOutputFieldFactory().createText("formatoAttachment","allegatoFattura.formatoAttachment");
 		this.descrizioneAttachment =  this.getFactory().getOutputFieldFactory().createText("descrizioneAttachment","allegatoFattura.descrizioneAttachment");
-		this.attachment =  this.getFactory().getOutputFieldFactory().createButton("attachment","allegatoFattura.attachment.visualizza",null,"/images/fatturapa/icons/document.png","allegatoFattura.attachment.visualizza.iconTitle","allegatoFattura.attachment.visualizza.iconTitle");
+		this.attachment =  this.getFactory().getOutputFieldFactory().createButton("attachment","allegatoFattura.attachment.visualizza",null,org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_DOCUMENT,"allegatoFattura.attachment.visualizza.iconTitle","allegatoFattura.attachment.visualizza.iconTitle");
 		
 		this.setField(this.nomeAttachment);
 		this.setField(this.algoritmoCompressione);

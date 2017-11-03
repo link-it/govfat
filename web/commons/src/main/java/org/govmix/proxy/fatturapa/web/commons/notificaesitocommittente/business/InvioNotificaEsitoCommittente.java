@@ -37,9 +37,9 @@ import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.NotificaEsitoCommittenteBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.UtenteBD;
+import org.govmix.proxy.fatturapa.web.commons.converter.notificaesitocommittente.NotificaEsitoCommittenteConverter;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.business.exception.NotificaGiaInviataException;
-import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.converter.NotificaEsitoCommittenteConverter;
 
 public class InvioNotificaEsitoCommittente {
 

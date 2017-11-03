@@ -35,6 +35,7 @@ import java.util.zip.ZipOutputStream;
 import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.Utente;
+import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.UserRole;
 import org.govmix.proxy.fatturapa.orm.dao.IUtenteServiceSearch;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
@@ -61,14 +62,13 @@ public abstract class AbstractSingleFileExporter<T, K> {
 	public static final String PARAMETRO_ACTION_NOTIFICA_DT = "dt";
 	public static final String PARAMETRO_ACTION_SCARTO = "sc";
     public static final String PARAMETRO_ACTION_PCC_RIALLINEAMENTO = "pccDf";
-    public static final String PARAMETRO_ACTION_COMUNICAZIONE_FATTURA_USCITA = "com_fu";
-    public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_SCARTO = "com_ns";
-    public static final String PARAMETRO_ACTION_COMUNICAZIONE_RICEVUTA_CONSEGNA = "com_rc";
-    public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_MANCATA_CONSEGNA = "com_nmc";
-    public static final String PARAMETRO_ACTION_COMUNICAZIONE_ATTESTAZIONE_TRASMISSIONE_FATTURA = "com_atf";
-    public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_ESITO_COMMITTENTE = "com_nec";
-    public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE = "com_ndtt";
-    public static final String PARAMETRO_ACTION_COMUNICAZIONE_AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO = "com_atir";
+    public static final String PARAMETRO_ACTION_COMUNICAZIONE_FATTURA_USCITA = "com_"+ TipoComunicazioneType.FAT_OUT.toString();
+    public static final String PARAMETRO_ACTION_COMUNICAZIONE_RICEVUTA_CONSEGNA = "com_"+ TipoComunicazioneType.RC.toString();
+    public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_SCARTO = "com_"+ TipoComunicazioneType.NS.toString();
+    public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_MANCATA_CONSEGNA = "com_"+ TipoComunicazioneType.MC.toString();
+    public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_ESITO_COMMITTENTE = "com_"+ TipoComunicazioneType.NE.toString();
+    public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE = "com_"+ TipoComunicazioneType.DT.toString();
+    public static final String PARAMETRO_ACTION_COMUNICAZIONE_AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO = "com_"+ TipoComunicazioneType.AT.toString();
 
 	protected Logger log;
 	private IUtenteServiceSearch utenteSearchDAO;
@@ -249,7 +249,7 @@ public abstract class AbstractSingleFileExporter<T, K> {
 			try {
 				idFatturaRichiesti = findIdFattura(ids, isAll);
 			}catch(NotFoundException e){
-				log.debug("Impossibile trovare la risorsa richiesta.");
+				log.debug("Impossibile trovare la risorsa richiesta:"+ e.getMessage(), e);
 				throw new ExportException("Impossibile trovare la risorsa richiesta.");
 			}
 

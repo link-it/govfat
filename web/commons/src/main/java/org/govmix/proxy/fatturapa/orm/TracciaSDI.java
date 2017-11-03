@@ -41,6 +41,7 @@ import java.util.List;
  * &lt;complexType name="TracciaSDI">
  * 		&lt;sequence>
  * 			&lt;element name="identificativoSdi" type="{http://www.govmix.org/proxy/fatturapa/orm}integer" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="posizione" type="{http://www.w3.org/2001/XMLSchema}positiveInteger" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="tipoComunicazione" type="{http://www.govmix.org/proxy/fatturapa/orm}TipoComunicazioneType" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="nomeFile" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="data" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="1" maxOccurs="1"/>
@@ -53,6 +54,7 @@ import java.util.List;
  * 			&lt;element name="tentativiProtocollazione" type="{http://www.w3.org/2001/XMLSchema}nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="dettaglioProtocollazione" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="Metadato" type="{http://www.govmix.org/proxy/fatturapa/orm}Metadato" minOccurs="0" maxOccurs="unbounded"/>
+ * 			&lt;element name="LottoFatture" type="{http://www.govmix.org/proxy/fatturapa/orm}LottoFatture" minOccurs="0" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -68,6 +70,7 @@ import java.util.List;
 @XmlType(name = "TracciaSDI", 
   propOrder = {
   	"_decimalWrapper_identificativoSdi",
+  	"posizione",
   	"tipoComunicazione",
   	"nomeFile",
   	"data",
@@ -79,7 +82,8 @@ import java.util.List;
   	"dataProssimaProtocollazione",
   	"tentativiProtocollazione",
   	"dettaglioProtocollazione",
-  	"metadato"
+  	"metadato",
+  	"lottoFatture"
   }
 )
 
@@ -115,6 +119,14 @@ public class TracciaSDI extends org.openspcoop2.utils.beans.BaseBean implements 
     if(identificativoSdi!=null){
 		this._decimalWrapper_identificativoSdi = new org.openspcoop2.utils.jaxb.DecimalWrapper(1,12,identificativoSdi);
 	}
+  }
+
+  public java.lang.Integer getPosizione() {
+    return this.posizione;
+  }
+
+  public void setPosizione(java.lang.Integer posizione) {
+    this.posizione = posizione;
   }
 
   public void set_value_tipoComunicazione(String value) {
@@ -253,6 +265,14 @@ public class TracciaSDI extends org.openspcoop2.utils.beans.BaseBean implements 
     return this.metadato.size();
   }
 
+  public LottoFatture getLottoFatture() {
+    return this.lottoFatture;
+  }
+
+  public void setLottoFatture(LottoFatture lottoFatture) {
+    this.lottoFatture = lottoFatture;
+  }
+
   private static final long serialVersionUID = 1L;
 
   @XmlTransient
@@ -279,6 +299,10 @@ public class TracciaSDI extends org.openspcoop2.utils.beans.BaseBean implements 
 
   @XmlTransient
   protected java.lang.Integer identificativoSdi;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="positiveInteger")
+  @XmlElement(name="posizione",required=false,nillable=false)
+  protected java.lang.Integer posizione;
 
   @XmlTransient
   protected java.lang.String _value_tipoComunicazione;
@@ -360,5 +384,8 @@ public class TracciaSDI extends org.openspcoop2.utils.beans.BaseBean implements 
   public int sizeMetadato() {
   	return this.metadato.size();
   }
+
+  @XmlElement(name="LottoFatture",required=false,nillable=false)
+  protected LottoFatture lottoFatture;
 
 }

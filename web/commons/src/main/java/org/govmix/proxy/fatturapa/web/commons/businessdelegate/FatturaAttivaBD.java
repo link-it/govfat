@@ -21,14 +21,16 @@
 package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 
 import java.sql.Connection;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
-import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
+import org.govmix.proxy.fatturapa.orm.IdFattura;
+import org.govmix.proxy.fatturapa.orm.IdLotto;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.FatturaElettronicaFieldConverter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaAttivaFilter;
 import org.openspcoop2.generic_project.beans.UpdateField;
-import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.utils.LoggerWrapperFactory;
@@ -52,14 +54,46 @@ public class FatturaAttivaBD extends FatturaBD {
 		return new FatturaAttivaFilter(this.service);
 	}
 
-	public void updateStatoElaborazioneInUscita(FatturaElettronica fattura, StatoElaborazioneType stato) throws ServiceException, NotFoundException {
+	public void assegnaIdentificativoSDIAInteroLotto(IdLotto idLotto, Integer identificativoSDI) throws Exception {
 		try {
-			this.service.updateFields(this.convertToId(fattura),
-					new UpdateField(FatturaElettronica.model().LOTTO_FATTURE.STATO_ELABORAZIONE_IN_USCITA, stato),
-					new UpdateField(FatturaElettronica.model().LOTTO_FATTURE.DATA_ULTIMA_ELABORAZIONE, new Date()));
+
+			StringBuffer update = new StringBuffer();
+
+			List<Object> listObjects = new ArrayList<Object>();
+
+			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase());
+			
+			update.append("update "+converter.toTable(FatturaElettronica.model())+" set ");
+			update.append(converter.toColumn(FatturaElettronica.model().IDENTIFICATIVO_SDI, false)).append(" = ? ");
+			listObjects.add(identificativoSDI);
+			
+			update.append(" where ").append(converter.toColumn(FatturaElettronica.model().IDENTIFICATIVO_SDI, false)).append(" = ? ");
+			listObjects.add(idLotto.getIdentificativoSdi());
+			
+			
+			List<Class<?>> listReturnTypes = new ArrayList<>();
+			this.serviceSearch.nativeUpdate(update.toString(), listReturnTypes  , listObjects.toArray(new Object[]{}));
+			
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la assegnaIdentificativoSDIAInteroLotto: " + e.getMessage(), e);
+			throw new Exception(e);
 		} catch (NotImplementedException e) {
-			throw new ServiceException(e);
+			this.log.error("Errore durante la assegnaIdentificativoSDIAInteroLotto: " + e.getMessage(), e);
+			throw new Exception(e);
 		}
-		
 	}
+
+	public void aggiornaProtocollo(IdFattura idFattura, String protocollo) throws Exception {
+		try {
+			this.service.updateFields(idFattura, new UpdateField(FatturaElettronica.model().PROTOCOLLO, protocollo));
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la aggiornaProtocollo: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la aggiornaProtocollo: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+
 }

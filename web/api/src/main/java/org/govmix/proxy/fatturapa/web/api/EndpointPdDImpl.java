@@ -20,17 +20,23 @@
  */
 package org.govmix.proxy.fatturapa.web.api;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Connection;
 import java.util.Date;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 import org.apache.cxf.helpers.IOUtils;
 import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
-import org.govmix.proxy.fatturapa.orm.Metadato;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
@@ -38,22 +44,28 @@ import org.govmix.proxy.fatturapa.orm.constants.StatoInserimentoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.web.api.utils.WebApiProperties;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaUtils;
+import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.riceviNotificaDT.RiceviNotifica;
 import org.govmix.proxy.fatturapa.web.commons.ricevicomunicazionesdi.RiceviComunicazioneSdI;
+import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
+
+import it.gov.fatturapa.sdi.messaggi.v1_0.NotificaEsitoCommittenteType;
+import it.gov.fatturapa.sdi.messaggi.v1_0.NotificaEsitoType;
 
 public class EndpointPdDImpl implements EndpointPdD {
 
-	private static final String ID_EGOV = "X-SDI-DirectVM-IDMessaggioRichiesta";
 	private RiceviNotifica riceviNotifica;
 	private LottoBD lottoBD;
-	private static final String HEADER_IDENTIFICATIVO_SDI = "X-SDI-IdentificativoSdI";
-	private RiceviComunicazioneSdI riceviComunicazioneSdi;
+//	private static final String HEADER_IDENTIFICATIVO_SDI = "X-SDI-IdentificativoSdI";
+//	private RiceviComunicazioneSdI riceviComunicazioneSdi;
+	private Unmarshaller unmarshaller;
 
-	
 	private Logger log;
 
 	public EndpointPdDImpl() throws Exception {
@@ -62,7 +74,12 @@ public class EndpointPdDImpl implements EndpointPdD {
 		this.riceviNotifica = new RiceviNotifica(this.log);
 		this.lottoBD = new LottoBD(log);
 		this.lottoBD.setValidate(WebApiProperties.getInstance().isValidazioneDAOAbilitata());
-		this.riceviComunicazioneSdi = new RiceviComunicazioneSdI(this.log);
+		
+		this.log.info("Inizializzazione unmarshaller...");
+		JAXBContext jaxbContext = JAXBContext.newInstance(NotificaEsitoCommittenteType.class.getPackage().getName());
+		this.unmarshaller = jaxbContext.createUnmarshaller();
+		this.log.info("Inizializzazione unmarshaller completata");
+		
 		this.log.info("Inizializzazione endpoint PdD completata");
 	}
 
@@ -98,13 +115,6 @@ public class EndpointPdDImpl implements EndpointPdD {
 		this.log.info("Invoke riceviLotto");
 		
 		
-		if(!headers.getRequestHeaders().keySet().isEmpty()) {
-			this.log.debug("Headers: ");
-			for(String header : headers.getRequestHeaders().keySet()){
-				this.log.debug(header + ": " + headers.getRequestHeaders().getFirst(header));
-			}
-		}
-
 		if(identificativoSDIString == null) {
 			this.log.error("Impossibile inserire il lotto, identificativo SdI nullo.");
 			return Response.status(500).build();
@@ -127,13 +137,11 @@ public class EndpointPdDImpl implements EndpointPdD {
 				
 				String idEgov = getIdEgov(headers);
 
-				ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(formatoFatturaPA,
-						identificativoSDI, nomeFile,
+				ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(identificativoSDI, nomeFile,
 						formatoArchivioInvioFatturaString, formatoArchivioBase64,
 						messageId,
 						false,
 						fatturaStream);
-
 
 				try {
 					params.validate(true);
@@ -198,13 +206,13 @@ public class EndpointPdDImpl implements EndpointPdD {
 		return Response.ok().build();
 	}
 
-	private String getIdEgov(HttpHeaders headers) {
+	private String getIdEgov(HttpHeaders headers) throws Exception {
 		String idEgov = null;
 		if(!headers.getRequestHeaders().keySet().isEmpty()) {
 			this.log.debug("Headers: ");
 			for(String header : headers.getRequestHeaders().keySet()){
 				this.log.debug(header + ": " + headers.getRequestHeaders().getFirst(header));
-				if(header.equalsIgnoreCase(ID_EGOV)) {
+				if(header.equalsIgnoreCase(CommonsProperties.getInstance(log).getIdEgovHeader())) {
 					idEgov = headers.getRequestHeaders().getFirst(header);
 				}
 			}
@@ -231,44 +239,86 @@ public class EndpointPdDImpl implements EndpointPdD {
 		return Response.ok().build();
 	}
 	
+	
+	private NotificaEsitoType toNotificaEsitoCommittenteType(byte[] input) throws JAXBException, IOException {
+		ByteArrayInputStream bais = null;
+		try {
+			bais = new ByteArrayInputStream(input);
+			JAXBElement<NotificaEsitoType> unmarshal = (JAXBElement<NotificaEsitoType>) this.unmarshaller.unmarshal(bais);
+			return unmarshal.getValue();
+		} finally {
+			if(bais != null) {
+				bais.close();
+			}
+		}
+	}
+	
 	@Override
-	public Response riceviComunicazioniSdI(String tipo, Integer X_SDI_IdentificativoSDI, Integer X_SDI_IdentificativoSDIFattura, String X_SDI_NomeFile, String contentType, HttpHeaders headers, InputStream comunicazioneStream) {
+	public Response riceviComunicazioniSdI(Integer X_SDI_IdentificativoSDI, String azione, String X_SDI_NomeFile, String contentType, HttpHeaders headers, InputStream comunicazioneStream) {
 		this.log.info("Invoke riceviComunicazioniSdi");
 
+		Connection connection = null;
 		try {
+
+			connection = DAOFactory.getInstance().getConnection();
+			RiceviComunicazioneSdI riceviComunicazioneSdi = new RiceviComunicazioneSdI(this.log, connection, false);
+			FatturaAttivaBD fatturaBD = new FatturaAttivaBD(this.log, connection, false);
+			connection.setAutoCommit(false);
+
 			if(comunicazioneStream == null) {
 				throw new Exception("La comunicazione ricevuta in ingresso e' null");
 			}
 			
-			TipoComunicazioneType tipoComunicazione = RiceviComunicazioneSdI.getTipoComunicazione(tipo);
+			TipoComunicazioneType tipoComunicazione = RiceviComunicazioneSdI.getTipoComunicazione(azione);
 
+			byte[] rawData = IOUtils.readBytesFromStream(comunicazioneStream);
+			
+			// la posizione e' irrilevante, tranne per le notifiche di esito, che possono essere mandate per fattura e non necessariamente per lotto
+			Integer posizione = null;
+			if(TipoComunicazioneType.NE.equals(tipoComunicazione)) {
+				
+				NotificaEsitoType nec = this.toNotificaEsitoCommittenteType(rawData);
+				
+				if(nec != null && nec.getEsitoCommittente() != null && nec.getEsitoCommittente().getRiferimentoFattura() != null && nec.getEsitoCommittente().getRiferimentoFattura().getPosizioneFattura()!= null)
+					posizione = nec.getEsitoCommittente().getRiferimentoFattura().getPosizioneFattura();
+			}
+			
+			FatturaFilter filter = fatturaBD.newFilter();
+			filter.setIdentificativoSdi(X_SDI_IdentificativoSDI);
+			filter.setPosizione(posizione);
+			if(fatturaBD.count(filter) <=0 ) {
+				throw new Exception("Comunicazione relativa a una fattura attiva (Identificativo SdI["+X_SDI_IdentificativoSDI+"]"+((posizione != null) ? " Posizione ["+posizione+"]" : "") +") non presente nel sistema");
+			}
 			TracciaSDI tracciaSdi = new TracciaSDI();
 			
-			tracciaSdi.setIdentificativoSdi(X_SDI_IdentificativoSDIFattura);
+			tracciaSdi.setIdentificativoSdi(X_SDI_IdentificativoSDI);
+			tracciaSdi.setPosizione(posizione);
+			
 			tracciaSdi.setTipoComunicazione(tipoComunicazione);
 			tracciaSdi.setData(new Date());
 			tracciaSdi.setContentType(contentType);
 			tracciaSdi.setNomeFile(X_SDI_NomeFile);
-			tracciaSdi.setRawData(IOUtils.readBytesFromStream(comunicazioneStream));
+			tracciaSdi.setRawData(rawData);
 			
 			tracciaSdi.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
 			tracciaSdi.setTentativiProtocollazione(0);
-			
+			tracciaSdi.setDataProssimaProtocollazione(new Date());
 			tracciaSdi.setIdEgov(getIdEgov(headers));
-			//TODO lista di metadati da salvare
-			Metadato metadato = new Metadato();
-			metadato.setNome(HEADER_IDENTIFICATIVO_SDI);
-			metadato.setValore(""+X_SDI_IdentificativoSDI);
-			tracciaSdi.addMetadato(metadato);
 
-			this.riceviComunicazioneSdi.ricevi(tracciaSdi);
+			riceviComunicazioneSdi.ricevi(tracciaSdi);
+			
+			connection.commit();
+
+			this.log.info("riceviComunicazioniSdi completata con successo");
+			return Response.ok().build();
+
 		} catch(Exception e) {
+			if(connection != null) try {connection.rollback();} catch(Exception ex) {}
 			this.log.error("riceviComunicazioniSdi completata con errore:"+ e.getMessage(), e);
 			return Response.status(500).build();
+		} finally {
+			if(connection != null) try {connection.close();} catch(Exception ex) {}
 		}
-
-		this.log.info("riceviComunicazioniSdi completata con successo");
-		return Response.ok().build();
 	}
 
 }

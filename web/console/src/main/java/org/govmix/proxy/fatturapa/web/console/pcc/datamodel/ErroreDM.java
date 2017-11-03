@@ -80,7 +80,7 @@ ParameterizedDataModel<PccErroreElaborazione, Long, ErroreElaborazionePccBean, I
 					limit = ((SequenceRange)range).getRows();
 				}
 
-				log.debug("Richiesti Record S["+start+"] L["+limit+"]"); 
+				ErroreDM.log.debug("Richiesti Record S["+start+"] L["+limit+"]"); 
 
 				this.getDataProvider().getForm().setStart(start);
 				this.getDataProvider().getForm().setLimit(limit); 

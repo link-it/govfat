@@ -53,6 +53,7 @@ public class TracciaSDIService implements ITracciaSDIService{
 					for (TracciaSDI dto : list) {
 						TracciaSDIBean bean = new TracciaSDIBean();
 						bean.setDTO(dto);
+						bean.setIdFattura(this.idFattura);
 
 						lstRet.add(bean);
 					}
@@ -116,6 +117,7 @@ public class TracciaSDIService implements ITracciaSDIService{
 					for (TracciaSDI dto : list) {
 						TracciaSDIBean bean = new TracciaSDIBean();
 						bean.setDTO(dto);
+						bean.setIdFattura(this.idFattura);
 
 						lstRet.add(bean);
 					}
@@ -143,6 +145,8 @@ public class TracciaSDIService implements ITracciaSDIService{
 		TracciaSdIFilter filter = this.tracciaSdiBD.newFilter();
 
 		filter.setIdentificativoSdi(this.idFattura.getIdentificativoSdi());
+		filter.setPosizione(this.idFattura.getPosizione());
+		filter.setConsentiPosizioneNull(true);
 
 		return filter;
 	}

@@ -40,7 +40,6 @@ import org.govmix.proxy.fatturapa.web.console.pcc.iservice.IOperazioneService;
 import org.govmix.proxy.fatturapa.web.console.pcc.search.OperazioneSearchForm;
 import org.govmix.proxy.fatturapa.web.console.service.FatturaElettronicaService;
 import org.govmix.proxy.fatturapa.web.console.util.ConsoleProperties;
-import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
 //import org.openspcoop2.generic_project.web.input.SelectItem;
@@ -340,13 +339,13 @@ public class OperazioneMBean extends BaseMBean<TracciaPccEstesaBean, Long, Opera
 			this.listaPeriodoTemporale = new ArrayList<SelectItem>();
 
 			this.listaPeriodoTemporale.add(new SelectItem(
-					new org.openspcoop2.generic_project.web.input.SelectItem(OperazioneSearchForm.DATA_PERIODO_ULTIMA_SETTIMANA, ("operazione.search.data.ultimaSettimana"))));
+					new org.openspcoop2.generic_project.web.input.SelectItem(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_PERIODO_ULTIMA_SETTIMANA, ("operazione.search.data.ultimaSettimana"))));
 			this.listaPeriodoTemporale.add(new SelectItem(
-					new org.openspcoop2.generic_project.web.input.SelectItem(OperazioneSearchForm.DATA_PERIODO_ULTIMO_MESE, ("operazione.search.data.ultimoMese"))));
+					new org.openspcoop2.generic_project.web.input.SelectItem(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_PERIODO_ULTIMO_MESE, ("operazione.search.data.ultimoMese"))));
 			this.listaPeriodoTemporale.add(new SelectItem(
-					new org.openspcoop2.generic_project.web.input.SelectItem(OperazioneSearchForm.DATA_PERIODO_ULTIMI_TRE_MESI, ("operazione.search.data.ultimiTreMesi"))));
+					new org.openspcoop2.generic_project.web.input.SelectItem(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_PERIODO_ULTIMI_TRE_MESI, ("operazione.search.data.ultimiTreMesi"))));
 			this.listaPeriodoTemporale.add(new SelectItem(
-					new org.openspcoop2.generic_project.web.input.SelectItem(OperazioneSearchForm.DATA_PERIODO_PERSONALIZZATO, ("operazione.search.data.personalizzato"))));
+					new org.openspcoop2.generic_project.web.input.SelectItem(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_PERIODO_PERSONALIZZATO, ("operazione.search.data.personalizzato"))));
 
 		}
 
@@ -416,12 +415,12 @@ public class OperazioneMBean extends BaseMBean<TracciaPccEstesaBean, Long, Opera
 			this.tracciamentoBD.forzaRispedizione(this.getSelectedIdTraccia()); 
 			
 			this.setSelectedId(this.getSelectedIdTraccia().getIdTraccia());
-			MessageUtils.addInfoMsg(Utils.getInstance().getMessageFromResourceBundle("tracciaPcc.inviaRispedizione.cambioStatoOK"));
+			MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("tracciaPcc.inviaRispedizione.cambioStatoOK"));
 
 
 		}catch(Exception e){
 			log.error("Errore durante l'invio della rispedizione: "+ e.getMessage(),e);
-			MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("tracciaPcc.inviaRispedizione.erroreGenerico"));
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("tracciaPcc.inviaRispedizione.erroreGenerico"));
 		}
 		return null;
 	}

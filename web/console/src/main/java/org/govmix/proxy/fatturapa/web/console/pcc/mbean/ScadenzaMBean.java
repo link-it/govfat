@@ -112,7 +112,7 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 
 	private ConsoleProperties properties = null;
 
-	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	private SimpleDateFormat sdf = new SimpleDateFormat(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_MM_YYYY);
 
 	private ContabilizzazioneMBean contabilizzazioneMBean = null;
 
@@ -270,7 +270,7 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 	public String inviaAggiornamentoScadenze (){
 		// non si puo' invocare il servizio se la lista scadenze e' vuota
 		if(this.listaScadenze.size() == 0){
-			MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneInviaScadenze.listaVuota"));
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneInviaScadenze.listaVuota"));
 			return null;
 		}
 
@@ -284,7 +284,7 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 			if(dataUltimaOperazioneAttuale != null && this.dataUltimaOperazione != null){
 				if(dataUltimaOperazioneAttuale.getTime() > this.dataUltimaOperazione.getTime()){
 					// c'e' stata una modifica segnalo all'utente.
-					MessageUtils.addWarnMsg(Utils.getInstance().getMessageWithParamsFromResourceBundle("scadenza.form.operazioneInviaScadenze.fatturaAggiornata"));
+					MessageUtils.addWarnMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("scadenza.form.operazioneInviaScadenze.fatturaAggiornata"));
 					return null;
 				}
 			}
@@ -329,24 +329,24 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 				if(this.contabilizzazioneMBean != null)
 					this.contabilizzazioneMBean.setDataUltimaOperazione(this.dataUltimaOperazione);
 
-				MessageUtils.addInfoMsg(Utils.getInstance().getMessageWithParamsFromResourceBundle("scadenza.form.operazioneInviaScadenzePresaInCaricoOK.parametri",origine.toString()));
+				MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("scadenza.form.operazioneInviaScadenzePresaInCaricoOK.parametri",origine.toString()));
 			}			else {
-				MessageUtils.addErrorMsg(Utils.getInstance().getMessageWithParamsFromResourceBundle("scadenza.form.operazioneInviaScadenzePresaInCaricoKO.parametri",origine.toString()));
+				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("scadenza.form.operazioneInviaScadenzePresaInCaricoKO.parametri",origine.toString()));
 			}
 
 
 		} catch (WSGenericFault e) {
 			this.log.error("Si e' verificato un errore durante l'invio della scadenze: " + e.getMessage(), e);
-			MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneInviaScadenzeKO"));
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneInviaScadenzeKO"));
 		} catch (WSAuthorizationFault e) {
 			this.log.error("Si e' verificato un errore durante l'invio della scadenze: " + e.getMessage(), e);
 			String authDetail = e.getFaultInfo().getDetail();
 
 			// Utente non autorizzato all'operazione
 			if(authDetail.startsWith("Utente")) 
-				MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneInviaScadenzeKO.utenteNonAutorizzato"));
+				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneInviaScadenzeKO.utenteNonAutorizzato"));
 			else{ // Dipartimento non autorizzata 
-				MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneInviaScadenzeKO.dipartimentoNonAutorizzato"));
+				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneInviaScadenzeKO.dipartimentoNonAutorizzato"));
 			}
 		}
 		catch (Exception e) {
@@ -354,7 +354,7 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 
 			if(e instanceof javax.xml.ws.soap.SOAPFaultException){
 				if(e.getMessage() != null && e.getMessage().contains("Could not send Message")){
-					MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneInviaScadenzeErroreConnessione"));
+					MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneInviaScadenzeErroreConnessione"));
 					return null;
 				}
 
@@ -362,7 +362,7 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 				return null;
 			}
 
-			MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneInviaScadenzeErroreGenerico"));
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneInviaScadenzeErroreGenerico"));
 		}finally {
 			if(!this.isEditMode())
 				this.abilitaOperazioni();
@@ -436,7 +436,7 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 			MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("scadenza.form.annullaModificheScadenzeOk"));
 		} catch (Exception e) {
 			this.log.error("Si e' verificato un errore durante il salvataggio della scadenza: " + e.getMessage(), e);
-			MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("scadenza.form.erroreGenerico"));
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("scadenza.form.erroreGenerico"));
 		} finally {
 			this.abilitaOperazioni();
 		}
@@ -463,7 +463,7 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 			if(dataUltimaOperazioneAttuale != null && this.dataUltimaOperazione != null){
 				if(dataUltimaOperazioneAttuale.getTime() > this.dataUltimaOperazione.getTime()){
 					// c'e' stata una modifica segnalo all'utente.
-					MessageUtils.addWarnMsg(Utils.getInstance().getMessageWithParamsFromResourceBundle("scadenza.form.operazioneCancellazioneScadenze.fatturaAggiornata"));
+					MessageUtils.addWarnMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("scadenza.form.operazioneCancellazioneScadenze.fatturaAggiornata"));
 					return null;
 				}
 			}
@@ -508,24 +508,24 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 				if(this.contabilizzazioneMBean != null)
 					this.contabilizzazioneMBean.setDataUltimaOperazione(this.dataUltimaOperazione); 
 
-				MessageUtils.addInfoMsg(Utils.getInstance().getMessageWithParamsFromResourceBundle("scadenza.form.operazioneCancellazioneScadenzePresaInCaricoOK.parametri",origine.toString()));
+				MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("scadenza.form.operazioneCancellazioneScadenzePresaInCaricoOK.parametri",origine.toString()));
 			}else {
-				MessageUtils.addErrorMsg(Utils.getInstance().getMessageWithParamsFromResourceBundle("scadenza.form.operazioneCancellazioneScadenzePresaInCaricoKO.parametri",origine.toString()));
+				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("scadenza.form.operazioneCancellazioneScadenzePresaInCaricoKO.parametri",origine.toString()));
 			}
 
 
 		} catch (WSGenericFault e) {
 			this.log.error("Si e' verificato un errore durante l'invio della scadenze: " + e.getMessage(), e);
-			MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneCancellazioneScadenzeKO"));
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneCancellazioneScadenzeKO"));
 		} catch (WSAuthorizationFault e) {
 			this.log.error("Si e' verificato un errore durante l'invio della scadenze: " + e.getMessage(), e);
 			String authDetail = e.getFaultInfo().getDetail();
 
 			// Utente non autorizzato all'operazione
 			if(authDetail.startsWith("Utente")) 
-				MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneCancellazioneScadenzeKO.utenteNonAutorizzato"));
+				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneCancellazioneScadenzeKO.utenteNonAutorizzato"));
 			else{ // Dipartimento non autorizzata 
-				MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneCancellazioneScadenzeKO.dipartimentoNonAutorizzato"));
+				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneCancellazioneScadenzeKO.dipartimentoNonAutorizzato"));
 			}
 		}
 		catch (Exception e) {
@@ -533,7 +533,7 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 
 			if(e instanceof javax.xml.ws.soap.SOAPFaultException){
 				if(e.getMessage() != null && e.getMessage().contains("Could not send Message")){
-					MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneCancellazioneScadenzeErroreConnessione"));
+					MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneCancellazioneScadenzeErroreConnessione"));
 					return null;
 				}
 
@@ -542,6 +542,7 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 			}
 
 			MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneCancellazioneScadenzeErroreGenerico"));
+//			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneCancellazioneScadenzeErroreGenerico"));
 		} finally {
 			if(!this.isEditMode())
 				this.abilitaOperazioni();
@@ -655,7 +656,7 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 			scadenzePresenti = true;
 			ScadenzaPccBean scadenzaPccBean = listaScadenze.get(0);
 			String sistemaRichiedente2 = scadenzaPccBean.getDTO().getSistemaRichiedente();
-			dataPianoString = scadenzaPccBean.getDTO().getDataRichiesta() != null ? sdf.format(scadenzaPccBean.getDTO().getDataRichiesta()) : Utils.getInstance().getMessageFromResourceBundle("fattura.dataScadenza.sconosciuta");
+			dataPianoString = scadenzaPccBean.getDTO().getDataRichiesta() != null ? sdf.format(scadenzaPccBean.getDTO().getDataRichiesta()) : org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.dataScadenza.sconosciuta");
 			pianoString = sistemaRichiedente2;
 		}
 

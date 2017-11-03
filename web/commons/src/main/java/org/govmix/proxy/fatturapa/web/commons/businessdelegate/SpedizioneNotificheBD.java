@@ -24,9 +24,6 @@ import java.sql.Connection;
 import java.util.Date;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.govmix.proxy.fatturapa.orm.IdFattura;
-import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.orm.PccNotifica;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.dao.IDipartimentoService;
@@ -39,6 +36,7 @@ import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
 import org.openspcoop2.generic_project.expression.IPaginatedExpression;
 import org.openspcoop2.generic_project.expression.SortOrder;
+import org.slf4j.Logger;
 
 public class SpedizioneNotificheBD extends BaseBD {
 
@@ -59,22 +57,6 @@ public class SpedizioneNotificheBD extends BaseBD {
 		this.dipartimentoService = this.serviceManager.getDipartimentoService();
 	}
 
-	public boolean existsNotificaEsitoCommittente(IdFattura idFattura) throws Exception {
-		try {
-			IExpression expression = this.service.newExpression();
-			expression.equals(NotificaEsitoCommittente.model().IDENTIFICATIVO_SDI, idFattura.getIdentificativoSdi());
-			expression.equals(NotificaEsitoCommittente.model().POSIZIONE, idFattura.getPosizione());
-			
-			return this.service.count(expression).longValue() > 0;
-		} catch (ServiceException e) {
-			this.log.error("Errore durante la create: " + e.getMessage(), e);
-			throw new Exception(e);
-		} catch (NotImplementedException e) {
-			this.log.error("Errore durante la create: " + e.getMessage(), e);
-			throw new Exception(e);
-		}
-	}
-	
 	public void update(PccNotifica pccNotifica) throws Exception {
 		try {
 			this.service.update(pccNotifica);

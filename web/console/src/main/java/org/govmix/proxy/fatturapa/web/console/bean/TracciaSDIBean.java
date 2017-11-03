@@ -24,6 +24,7 @@ import java.util.List;
 
 import javax.faces.context.FacesContext;
 
+import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.Metadato;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
@@ -59,6 +60,8 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IViewB
 	private Button xml = null;
 	private Button pdf = null;
 	
+	private IdFattura idFattura = null;
+	
 	public TracciaSDIBean() {
 		try{
 			this.init();
@@ -74,14 +77,14 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IViewB
 		this.idEgov = this.getFactory().getOutputFieldFactory().createText("idEgov","tracciaSDI.idEgov");
 		this.contentType = this.getFactory().getOutputFieldFactory().createText("contentType","tracciaSDI.contentType");
 		this.statoProtocollazione = this.getFactory().getOutputFieldFactory().createText("statoProtocollazione","tracciaSDI.statoProtocollazione");
-		this.dataProtocollazione = this.getFactory().getOutputFieldFactory().createDateTime("dataProtocollazione","tracciaSDI.dataProtocollazione","dd/MM/yyyy");
-		this.dataProssimaProtocollazione = this.getFactory().getOutputFieldFactory().createDateTime("dataProssimaProtocollazione","tracciaSDI.dataProssimaProtocollazione","dd/MM/yyyy");
+		this.dataProtocollazione = this.getFactory().getOutputFieldFactory().createDateTime("dataProtocollazione","tracciaSDI.dataProtocollazione",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_MM_YYYY);
+		this.dataProssimaProtocollazione = this.getFactory().getOutputFieldFactory().createDateTime("dataProssimaProtocollazione","tracciaSDI.dataProssimaProtocollazione",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_MM_YYYY);
 		this.tentativiProtocollazione = this.getFactory().getOutputFieldFactory().createText("tentativiProtocollazione","tracciaSDI.tentativiProtocollazione");
 		this.dettaglioProtocollazione = this.getFactory().getOutputFieldFactory().createText("dettaglioProtocollazione","tracciaSDI.dettaglioProtocollazione");
 		this.metadato = this.getFactory().getOutputFieldFactory().createText("metadato","tracciaSDI.metadato");
-		this.data = this.getFactory().getOutputFieldFactory().createDateTime("data","tracciaSDI.data","dd/MM/yyyy");
-		this.xml = this.getFactory().getOutputFieldFactory().createButton("xml","tracciaSDI.label.xml",null,"/images/fatturapa/icons/xml.png","tracciaSDI.label.xml.iconTitle","tracciaSDI.label.xml.iconTitle");
-		this.pdf = this.getFactory().getOutputFieldFactory().createButton("pdf","tracciaSDI.label.pdf",null,"/images/fatturapa/icons/pdf.png","tracciaSDI.label.pdf.iconTitle","tracciaSDI.label.pdf.iconTitle");
+		this.data = this.getFactory().getOutputFieldFactory().createDateTime("data","tracciaSDI.data",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_MM_YYYY);
+		this.xml = this.getFactory().getOutputFieldFactory().createButton("xml","tracciaSDI.label.xml",null,org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_XML,"tracciaSDI.label.xml.iconTitle","tracciaSDI.label.xml.iconTitle");
+		this.pdf = this.getFactory().getOutputFieldFactory().createButton("pdf","tracciaSDI.label.pdf",null,org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_PDF,"tracciaSDI.label.pdf.iconTitle","tracciaSDI.label.pdf.iconTitle");
 		
 		this.setField(this.identificativoSdi);
 		this.setField(this.tipoComunicazione);
@@ -135,7 +138,7 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IViewB
 		this.metadato.setValue(sb.toString());
 		this.data.setValue(this.getDTO().getData());
 		
-		this.prepareUrls();
+		
 	}
 	
 	
@@ -149,41 +152,22 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IViewB
 		
 		String actionValue = "com";
 		
+		Long idLongComunicazione = this.getDTO().getId();
 		
 		if(this.getDTO().getTipoComunicazione() != null) {
-			switch (this.getDTO().getTipoComunicazione() ) {
-			case ATTESTAZIONE_TRASMISSIONE_FATTURA:
-				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_ATTESTAZIONE_TRASMISSIONE_FATTURA;
-				break;
-			case AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO:
-				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO;
-				break;
-			case FATTURA_USCITA:
-				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_FATTURA_USCITA;
-				break;
-			case NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE:
-				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE;
-				break;
-			case NOTIFICA_ESITO_COMMITTENTE:
-				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_ESITO_COMMITTENTE;
-				break;
-			case NOTIFICA_MANCATA_CONSEGNA:
-				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_MANCATA_CONSEGNA;
-				break;
-			case NOTIFICA_SCARTO:
-				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_SCARTO;
-				break;
-			case RICEVUTA_CONSEGNA:
-				actionValue = FattureExporter.PARAMETRO_ACTION_COMUNICAZIONE_RICEVUTA_CONSEGNA;
-				break;
-			default:
-				break;
+			actionValue = "com_" + this.getDTO().getTipoComunicazione().toString();
+			
+			if(this.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.FAT_OUT) && this.idFattura != null){
+				idLongComunicazione = this.idFattura.getId();
+				actionValue = FattureExporter.PARAMETRO_ACTION_FATTURA;
 			}
 		}
 
+		
+		
 		String url = context.getExternalContext().getRequestContextPath() 
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
-				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getId()
+				+FattureExporter.PARAMETRO_IDS+"=" + idLongComunicazione
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ actionValue;
 
@@ -191,7 +175,7 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IViewB
 
 		url = context.getExternalContext().getRequestContextPath() 
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
-				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getId()
+				+FattureExporter.PARAMETRO_IDS+"=" + idLongComunicazione
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_PDF
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ actionValue;
 
@@ -308,6 +292,15 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IViewB
 
 	public void setMetadato(Text metadato) {
 		this.metadato = metadato;
+	}
+
+	public IdFattura getIdFattura() {
+		return idFattura;
+	}
+
+	public void setIdFattura(IdFattura idFattura) {
+		this.idFattura = idFattura;
+		this.prepareUrls();
 	}
 	
 	

@@ -26,10 +26,12 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
+import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.dao.IDBTracciaSDIService;
 import org.govmix.proxy.fatturapa.orm.dao.ITracciaSDIService;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.TracciaSdIFilter;
 import org.openspcoop2.generic_project.beans.IField;
+import org.openspcoop2.generic_project.beans.UpdateField;
 import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
@@ -101,6 +103,16 @@ public class TracciaSdIBD extends BaseBD {
 	
 	public TracciaSdIFilter newFilter() {
 		return new TracciaSdIFilter(this.service);
+	}
+
+	public void updateStatoProtocollazione(TracciaSDI tracciaSDI, StatoProtocollazioneType stato) throws Exception {
+		try {
+			this.service.updateFields(tracciaSDI, new UpdateField(TracciaSDI.model().STATO_PROTOCOLLAZIONE, stato));
+		} catch (ServiceException e) {
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			throw new Exception(e);
+		}		
 	}
 
 }

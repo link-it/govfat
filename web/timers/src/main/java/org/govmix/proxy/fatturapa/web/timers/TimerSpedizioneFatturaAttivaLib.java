@@ -24,10 +24,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
+import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.sonde.Sonda;
+import org.slf4j.Logger;
 
 /**
  * Implementazione dell'interfaccia {@link TimerConsegnaFattura}.
@@ -55,7 +55,7 @@ public class TimerSpedizioneFatturaAttivaLib extends AbstractTimerLib {
 
 			this.log.info("Cerco fatture");
 			
-			IWorkFlow workflow = new SpedizioneFattureAttive();
+			SpedizioneFattureAttive workflow = new SpedizioneFattureAttive();
 			
 			workflow.init(this.log, connection, this.limit);
 			long countFatture = workflow.count();
@@ -64,17 +64,17 @@ public class TimerSpedizioneFatturaAttivaLib extends AbstractTimerLib {
 
 			if(countFatture > 0) {
 				this.log.info("Gestisco ["+countFatture+"] fatture, ["+this.limit+"] alla volta");
-				List<FatturaElettronica> lst = workflow.getNextListaFatture();
+				List<LottoFatture> lst = workflow.getNextLista();
 
 				while(lst != null && !lst.isEmpty()) {
 					try {
-						for(FatturaElettronica fattura : lst) {
+						for(LottoFatture fattura : lst) {
 							workflow.process(fattura);
 							countFattureElaborate++;
 						}
 						this.log.info("Gestite ["+countFattureElaborate+"\\"+countFatture+"] fatture");
 
-						lst = workflow.getNextListaFatture();
+						lst = workflow.getNextLista();
 						
 						connection.commit();
 						Sonda.getInstance().registraChiamataServizioOK(this.getTimerName());

@@ -43,6 +43,7 @@ public class TracciaSDIModel extends AbstractModel<TracciaSDI> {
 		super();
 	
 		this.IDENTIFICATIVO_SDI = new Field("identificativoSdi",java.lang.Integer.class,"TracciaSDI",TracciaSDI.class);
+		this.POSIZIONE = new Field("posizione",java.lang.Integer.class,"TracciaSDI",TracciaSDI.class);
 		this.TIPO_COMUNICAZIONE = new Field("tipoComunicazione",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.NOME_FILE = new Field("nomeFile",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.DATA = new Field("data",java.util.Date.class,"TracciaSDI",TracciaSDI.class);
@@ -55,6 +56,7 @@ public class TracciaSDIModel extends AbstractModel<TracciaSDI> {
 		this.TENTATIVI_PROTOCOLLAZIONE = new Field("tentativiProtocollazione",java.lang.Integer.class,"TracciaSDI",TracciaSDI.class);
 		this.DETTAGLIO_PROTOCOLLAZIONE = new Field("dettaglioProtocollazione",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.METADATO = new org.govmix.proxy.fatturapa.orm.model.MetadatoModel(new Field("Metadato",org.govmix.proxy.fatturapa.orm.Metadato.class,"TracciaSDI",TracciaSDI.class));
+		this.LOTTO_FATTURE = new org.govmix.proxy.fatturapa.orm.model.LottoFattureModel(new Field("LottoFatture",org.govmix.proxy.fatturapa.orm.LottoFatture.class,"TracciaSDI",TracciaSDI.class));
 	
 	}
 	
@@ -63,6 +65,7 @@ public class TracciaSDIModel extends AbstractModel<TracciaSDI> {
 		super(father);
 	
 		this.IDENTIFICATIVO_SDI = new ComplexField(father,"identificativoSdi",java.lang.Integer.class,"TracciaSDI",TracciaSDI.class);
+		this.POSIZIONE = new ComplexField(father,"posizione",java.lang.Integer.class,"TracciaSDI",TracciaSDI.class);
 		this.TIPO_COMUNICAZIONE = new ComplexField(father,"tipoComunicazione",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.NOME_FILE = new ComplexField(father,"nomeFile",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.DATA = new ComplexField(father,"data",java.util.Date.class,"TracciaSDI",TracciaSDI.class);
@@ -75,12 +78,15 @@ public class TracciaSDIModel extends AbstractModel<TracciaSDI> {
 		this.TENTATIVI_PROTOCOLLAZIONE = new ComplexField(father,"tentativiProtocollazione",java.lang.Integer.class,"TracciaSDI",TracciaSDI.class);
 		this.DETTAGLIO_PROTOCOLLAZIONE = new ComplexField(father,"dettaglioProtocollazione",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.METADATO = new org.govmix.proxy.fatturapa.orm.model.MetadatoModel(new ComplexField(father,"Metadato",org.govmix.proxy.fatturapa.orm.Metadato.class,"TracciaSDI",TracciaSDI.class));
+		this.LOTTO_FATTURE = new org.govmix.proxy.fatturapa.orm.model.LottoFattureModel(new ComplexField(father,"LottoFatture",org.govmix.proxy.fatturapa.orm.LottoFatture.class,"TracciaSDI",TracciaSDI.class));
 	
 	}
 	
 	
 
 	public IField IDENTIFICATIVO_SDI = null;
+	 
+	public IField POSIZIONE = null;
 	 
 	public IField TIPO_COMUNICAZIONE = null;
 	 
@@ -105,6 +111,8 @@ public class TracciaSDIModel extends AbstractModel<TracciaSDI> {
 	public IField DETTAGLIO_PROTOCOLLAZIONE = null;
 	 
 	public org.govmix.proxy.fatturapa.orm.model.MetadatoModel METADATO = null;
+	 
+	public org.govmix.proxy.fatturapa.orm.model.LottoFattureModel LOTTO_FATTURE = null;
 	 
 
 	@Override

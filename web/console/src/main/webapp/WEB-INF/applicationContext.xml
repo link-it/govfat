@@ -35,11 +35,19 @@
 	<bean id="fatturaElettronicaAttivaSearchForm"
 		class="org.govmix.proxy.fatturapa.web.console.search.FatturaElettronicaAttivaSearchForm"
 		scope="session" />
+		
+	<bean id="fileUploadBean" class="org.govmix.proxy.fatturapa.web.console.mbean.FileUploadBean" scope="session" />
 
 	<bean id="fatturaElettronicaAttivaService"
 		class="org.govmix.proxy.fatturapa.web.console.service.FatturaElettronicaAttivaService"
 		scope="request">
 		<property name="form" ref="fatturaElettronicaAttivaSearchForm" />
+	</bean>
+	
+	<bean id="fatturaElettronicaAttivaForm"
+		class="org.govmix.proxy.fatturapa.web.console.form.FatturaForm"
+		scope="request" >
+		<property name="fatturaFile" ref="fileUploadBean" />
 	</bean>
 
 	<bean id="fatturaElettronicaAttivaMBean"
@@ -47,7 +55,10 @@
 		scope="request">
 		<property name="service" ref="fatturaElettronicaAttivaService" />
 		<property name="search" ref="fatturaElettronicaAttivaSearchForm" />
+		<property name="form" ref="fatturaElettronicaAttivaForm" />
 	</bean>
+	
+	
 
 	<!-- Sezione PCC -->
 	<!-- Scadenze -->

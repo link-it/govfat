@@ -21,8 +21,10 @@
 package org.govmix.proxy.fatturapa.web.console.mbean;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,14 +35,17 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.bouncycastle.util.Arrays;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
+import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.IdRegistro;
-import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
+import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException.CODICE;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoRequest;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoResponse;
@@ -63,12 +68,12 @@ import org.govmix.proxy.fatturapa.web.console.search.FatturaElettronicaAttivaSea
 import org.govmix.proxy.fatturapa.web.console.service.AllegatiService;
 import org.govmix.proxy.fatturapa.web.console.service.TracciaSDIService;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
+import org.openspcoop2.generic_project.web.form.Form;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.DataModelListView;
 import org.openspcoop2.generic_project.web.mbean.exception.FiltraException;
 import org.openspcoop2.generic_project.web.mbean.exception.MenuActionException;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.MessageUtils;
-import org.richfaces.model.UploadItem;
 
 /**
  * FatturaElettronicaMBean ManagedBean per le schermate di visualizzazione delle fatture.
@@ -119,6 +124,10 @@ IFatturaElettronicaAttivaService>{
 
 	public FatturaElettronicaAttivaMBean(){
 		super(LoggerManager.getConsoleLogger());
+//		this.form = new FatturaForm();
+		this.protocolloPattern = Pattern.compile(FatturaElettronicaAttivaMBean.PROTOCOLLO_PATTERN);
+		this.annoPattern = Pattern.compile(FatturaElettronicaAttivaMBean.ANNO_PATTERN);
+
 		this.log.debug("FatturaAttiva MBean");
 	}
 	/*
@@ -143,7 +152,7 @@ IFatturaElettronicaAttivaService>{
 			this.table.setEnableDelete(false);
 			this.table.setShowAddButton(false);
 			this.table.setShowDetailColumn(false);
-			this.table.setShowSelectAll(true);
+			this.table.setShowSelectAll(false);
 			this.table.setHeaderText("fatturaAttiva.label.ricercaFattureAttive.tabellaRisultati");
 			this.table.setDetailLinkText("fatturaAttiva.dettaglioTitle");
 			this.table.setTablePanelStyleClass(Costanti.TABLE_DIV_STYLE_CLASS);
@@ -190,12 +199,34 @@ IFatturaElettronicaAttivaService>{
 		this.search.setmBean(this);
 	}
 
+	
+	@Override
+	public void setForm(Form form) {
+		super.setForm(form);
+
+		if(this.form != null) {
+			this.form.setmBean(this); 
+			this.form.setRendered(true);
+			((SelectListImpl)this.form.getDipartimento()).setElencoSelectItems(this._getDipartimenti(false,true));
+			this.form.reset();
+		}
+	}
 
 	@Override
 	public void setSelectedElement(FatturaElettronicaAttivaBean selectedElement) {
 		this.selectedElement = selectedElement;
 		this.selectedIdFattura = null;
 
+		if(this.selectedElement != null){
+			try{
+				// forzo il ricaricamento della fattura perche' potrebbe essere passato il batch e averne cambiato lo stato
+				this.selectedElement = ((IFatturaElettronicaAttivaService)this.service).findById(this.selectedElement.getId());
+			}catch(Exception e){
+				this.log.debug("Si e' verificato un errore durante il caricamento della fattura: "+ e.getMessage(), e);
+	
+			}
+		}
+		
 		if(this.selectedElement != null){
 
 			this.selectedIdFattura = new IdFattura();
@@ -253,10 +284,10 @@ IFatturaElettronicaAttivaService>{
 		if (this.listaPeriodoTemporale == null) {
 			this.listaPeriodoTemporale = new ArrayList<SelectItem>();
 
-			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(FatturaElettronicaAttivaSearchForm.DATA_INVIO_PERIODO_ULTIMA_SETTIMANA, ("fattura.search.dataRicezione.ultimaSettimana"))));
-			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(FatturaElettronicaAttivaSearchForm.DATA_INVIO_PERIODO_ULTIMO_MESE, ("fattura.search.dataRicezione.ultimoMese"))));
-			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(FatturaElettronicaAttivaSearchForm.DATA_INVIO_PERIODO_ULTIMI_TRE_MESI, ("fattura.search.dataRicezione.ultimiTreMesi"))));
-			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(FatturaElettronicaAttivaSearchForm.DATA_INVIO_PERIODO_PERSONALIZZATO, ("fattura.search.dataRicezione.personalizzato"))));
+			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_PERIODO_ULTIMA_SETTIMANA, ("fattura.search.dataRicezione.ultimaSettimana"))));
+			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_PERIODO_ULTIMO_MESE, ("fattura.search.dataRicezione.ultimoMese"))));
+			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_PERIODO_ULTIMI_TRE_MESI, ("fattura.search.dataRicezione.ultimiTreMesi"))));
+			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_PERIODO_PERSONALIZZATO, ("fattura.search.dataRicezione.personalizzato"))));
 
 		}
 
@@ -285,15 +316,21 @@ IFatturaElettronicaAttivaService>{
 			this.listaStatoElaborazione = new ArrayList<SelectItem>();
 
 			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("*", ("commons.label.qualsiasi"))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoElaborazioneType.SPEDIZIONE_OK.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.SPEDIZIONE_OK.getValue()))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoElaborazioneType.SPEDIZIONE_NON_ATTIVA.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.SPEDIZIONE_NON_ATTIVA.getValue()))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoElaborazioneType.PROTOCOLLAZIONE_OK.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.PROTOCOLLAZIONE_OK.getValue()))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoElaborazioneType.NON_FIRMATO.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.NON_FIRMATO.getValue()))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoElaborazioneType.FIRMA_OK.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.FIRMA_OK.getValue()))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoElaborazioneType.ERRORE_SPEDIZIONE.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.ERRORE_SPEDIZIONE.getValue()))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoElaborazioneType.ERRORE_PROTOCOLLAZIONE.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.ERRORE_PROTOCOLLAZIONE.getValue()))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoElaborazioneType.ERRORE_FIRMA.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.ERRORE_FIRMA.getValue()))));
-
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoElaborazioneType.ERRORE_DI_FIRMA.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.ERRORE_DI_FIRMA.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoElaborazioneType.ERRORE_DI_PROTOCOLLO.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.ERRORE_DI_PROTOCOLLO.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoElaborazioneType.ERRORE_DI_SPEDIZIONE.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.ERRORE_DI_SPEDIZIONE.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoElaborazioneType.IMPOSSIBILITA_DI_RECAPITO.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.IMPOSSIBILITA_DI_RECAPITO.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoElaborazioneType.IN_CORSO_DI_FIRMA.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.IN_CORSO_DI_FIRMA.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoElaborazioneType.IN_CORSO_DI_PROTOCOLLAZIONE.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.IN_CORSO_DI_PROTOCOLLAZIONE.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoElaborazioneType.MANCATA_CONSEGNA.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.MANCATA_CONSEGNA.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoElaborazioneType.PRESA_IN_CARICO.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.PRESA_IN_CARICO.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoElaborazioneType.PROTOCOLLATA.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.PROTOCOLLATA.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoElaborazioneType.RICEVUTA_DALLO_SDI.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.RICEVUTA_DALLO_SDI.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoElaborazioneType.RICEVUTA_DAL_DESTINATARIO.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.RICEVUTA_DAL_DESTINATARIO.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoElaborazioneType.RICEVUTA_DECORRENZA_TERMINI.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.RICEVUTA_DECORRENZA_TERMINI.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoElaborazioneType.RICEVUTO_ESITO_CEDENTE_PRESTATORE.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.RICEVUTO_ESITO_CEDENTE_PRESTATORE.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoElaborazioneType.RICEVUTO_SCARTO_SDI.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.RICEVUTO_SCARTO_SDI.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(StatoElaborazioneType.SOLO_CONSERVAZIONE.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.SOLO_CONSERVAZIONE.getValue()))));
 		}
 
 		return this.listaStatoElaborazione;
@@ -349,14 +386,15 @@ IFatturaElettronicaAttivaService>{
 			this.listaTipoComunicazione = new ArrayList<SelectItem>();
 
 			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("*", ("commons.label.qualsiasi"))));
-			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("FATTURA_USCITA",  ("fattura.tipoComunicazione.FATTURA_USCITA"))));
-			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("NOTIFICA_SCARTO",  ("fattura.tipoComunicazione.NOTIFICA_SCARTO"))));
-			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("RICEVUTA_CONSEGNA",  ("fattura.tipoComunicazione.RICEVUTA_CONSEGNA"))));
-			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("NOTIFICA_MANCATA_CONSEGNA",  ("fattura.tipoComunicazione.NOTIFICA_MANCATA_CONSEGNA"))));
-			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("ATTESTAZIONE_TRASMISSIONE_FATTURA",  ("fattura.tipoComunicazione.ATTESTAZIONE_TRASMISSIONE_FATTURA"))));
-			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("NOTIFICA_ESITO_COMMITTENTE",  ("fattura.tipoComunicazione.NOTIFICA_ESITO_COMMITTENTE"))));
-			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE",  ("fattura.tipoComunicazione.NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE"))));
-			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem("AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO",  ("fattura.tipoComunicazione.AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO"))));
+			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(TipoComunicazioneType.FAT_OUT.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.FAT_OUT.toString()))));
+			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(TipoComunicazioneType.EC.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.EC.toString()))));
+			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(TipoComunicazioneType.NE.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.NE.toString()))));
+			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(TipoComunicazioneType.DT.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.DT.toString()))));
+			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(TipoComunicazioneType.SE.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.SE.toString()))));
+			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(TipoComunicazioneType.RC.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.RC.toString()))));
+			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(TipoComunicazioneType.NS.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.NS.toString()))));
+			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(TipoComunicazioneType.MC.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.MC.toString()))));
+			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.input.SelectItem(TipoComunicazioneType.AT.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.AT.toString()))));
 		}
 
 		return this.listaTipoComunicazione;
@@ -468,13 +506,14 @@ IFatturaElettronicaAttivaService>{
 	public String ritentaConsegna(){
 		try{
 
-			FatturaAttivaBD fatturaBD = new FatturaAttivaBD(log);
+			LottoBD fatturaBD = new LottoBD(log);
 			FatturaElettronica current = this.selectedElement.getDTO();
-			// [TODO]
-			//			fatturaBD.forzaRispedizioneFattura(current);
+			IdLotto idLotto = new IdLotto();
+			idLotto.setIdentificativoSdi(current.getIdentificativoSdi());
+			StatoElaborazioneType nuovoStato = fatturaBD.ritentaConsegna(idLotto);
 			MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegna.cambioStatoOK"));
 
-			current.setStatoConsegna(StatoConsegnaType.IN_RICONSEGNA);
+			current.getLottoFatture().setStatoElaborazioneInUscita(nuovoStato);
 
 			this.selectedElement.setDTO(current); 
 
@@ -546,15 +585,66 @@ IFatturaElettronicaAttivaService>{
 		this.checkFormFattura = true;
 
 		this.form.getFatturaFile().checkCaricamenti();
+		String codDip = this.form.getDipartimento().getValue().getValue();
+
+		try {
+			List<InserimentoLottoSoloConservazioneRequest> requestList = new ArrayList<InserimentoLottoSoloConservazioneRequest>();
+			
+			Map<String, byte[]> filesMap = new HashMap<String, byte[]>();
+
+			List<String> nomeFiles = this.form.getFatturaFile().getNomeFile();
+			for (int i = 0; i < nomeFiles.size(); i++) {
+				String nomeFattura = nomeFiles.get(i);
+				byte[] xml = this.form.getFatturaFile().getContenuto().get(i);
+				
+				if(filesMap.containsKey(nomeFattura) && Arrays.areEqual(filesMap.get(nomeFattura), xml)) {
+					// NON INSERISCO
+					
+					this.log.info("Non inserisco il file ["+nomeFattura+"] in quanto duplicato");
+				} else {
+					filesMap.put(nomeFattura, xml);
+					this.log.info("Inserisco il file ["+nomeFattura+"]");
+					InserimentoLottoSoloConservazioneRequest dto = new InserimentoLottoSoloConservazioneRequest();
+					dto.setNomeFile(nomeFattura);
+					dto.setDipartimento(codDip);
+					requestList.add(dto);
+				}
+			}
+			
+			((IFatturaElettronicaAttivaService)this.service).checkLottoSoloConservazione(requestList);
+			
+		}catch(InserimentoLottiException e) {
+			this.checkFormFattura = false;
+			CODICE codEccezione = e.getCodice() != null ? e.getCodice() : CODICE.ERRORE_GENERICO;
+			String msgCod = "fattura.salvaFattura." + codEccezione.name();
+			Object[] msgParams = e.getParams();
+			
+			if(msgParams != null && msgParams.length > 0) {
+				msgCod +=".parametri";
+				this.checkFormFatturaMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle(msgCod, msgParams);
+			} else {
+				this.checkFormFatturaMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle(msgCod);
+			}
+			return null;
+		} catch(Exception e) {
+			this.checkFormFattura = false;
+			this.checkFormFatturaMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura."+CODICE.ERRORE_GENERICO.name());
+			return null;
+		}
 
 		this.listaConservazione = null;
 		List<String> nomeFile = this.form.getFatturaFile().getNomeFile();
-		String codDip = this.form.getDipartimento().getValue().getValue();
 		Dipartimento dipartimento =  this.getDipartimento(codDip);
 		IdRegistro idRegistro = dipartimento.getRegistro();
 		
 		boolean valoreValidoRegistro = (idRegistro != null && StringUtils.isNotEmpty(idRegistro.getNome())); 
-		String registro = valoreValidoRegistro ? idRegistro.getNome() : "";  
+		String registro = valoreValidoRegistro ? idRegistro.getNome() : "";
+		
+		this.labelColonnaRegistro = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.form.registro");
+		
+		// [BUSSU] Per ora il registro e' opzionale, per far apparire l'asterisco del campo obbligatorio abilitare le seguenti tre righe.
+//		this.labelColonnaRegistro = valoreValidoRegistro ? org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.form.registro")
+//				: org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.form.registro.obbligatorio");
 
 		for (String string : nomeFile) {
 			ConservazioneBean conservazioneBean = new ConservazioneBean();
@@ -569,6 +659,7 @@ IFatturaElettronicaAttivaService>{
 		return null;
 	}
 	public String salvaFatture(){
+		this.form.disableButton();
 		this.salvataggioOk = false;
 		this.checkFormFatturaMessage = null;
 		this.checkFormFattura = false;
@@ -578,6 +669,7 @@ IFatturaElettronicaAttivaService>{
 
 			if(this.checkFormFatturaMessage != null) {
 				this.checkFormFattura = false;
+				this.form.enableButton();
 				return null;
 			}
 
@@ -585,18 +677,32 @@ IFatturaElettronicaAttivaService>{
 
 			this.form.getFatturaFile().checkCaricamenti();
 
-			List<UploadItem> files = this.form.getFatturaFile().getFilesCache();
+			List<String> nomiFileRicevuti = this.form.getFatturaFile().getNomeFile();
 
 			List<InserimentoLottoRequest> toSave = new ArrayList<InserimentoLottoRequest>();
+			
+			//** Mappa per duplicati **//
+			
+			Map<String, byte[]> filesMap = new HashMap<String, byte[]>();
+			
 			// scorro la lista dei files e creo le fatture
-			for (int i = 0; i < files.size(); i++) {
-				String nomeFattura = this.form.getFatturaFile().getNomeFile().get(i);
+			for (int i = 0; i < nomiFileRicevuti.size(); i++) {
+				String nomeFattura = nomiFileRicevuti.get(i);
 				byte[] xml = this.form.getFatturaFile().getContenuto().get(i);
-				InserimentoLottoRequest dto = new InserimentoLottoRequest();
-				dto.setNomeFile(nomeFattura);
-				dto.setXml(xml);
-				dto.setDipartimento(this.form.getDipartimento().getValue().getValue());
-				toSave.add(dto);
+				
+				if(filesMap.containsKey(nomeFattura) && Arrays.areEqual(filesMap.get(nomeFattura), xml)) {
+					// NON INSERISCO
+					
+					this.log.info("Non inserisco il file ["+nomeFattura+"] in quanto duplicato");
+				} else {
+					filesMap.put(nomeFattura, xml);
+					this.log.info("Inserisco il file ["+nomeFattura+"]");
+					InserimentoLottoRequest dto = new InserimentoLottoRequest();
+					dto.setNomeFile(nomeFattura);
+					dto.setXml(xml);
+					dto.setDipartimento(this.form.getDipartimento().getValue().getValue());
+					toSave.add(dto);
+				}
 			}
 
 			InserimentoLottoResponse salvaFatture = ((IFatturaElettronicaAttivaService)this.service).salvaFatture(toSave);
@@ -628,34 +734,9 @@ IFatturaElettronicaAttivaService>{
 			this.checkFormFatturaMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura."+CODICE.ERRORE_GENERICO.name());
 		}
 
-
+		this.form.enableButton();
 		return null;
 	}
-
-	//	public String validaFormFatture() {
-	//		String toRet = null;
-	//
-	//		List<UploadItem> files = this.form.getFatturaFile().getFilesCache();
-	//
-	//		if(files == null || (files != null && files.size() == 0)) {
-	//			return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.salvaFattura.nessunFileSelezionato");
-	//		}		
-	//
-	//
-	//		// Dipartimento
-	//		org.openspcoop2.generic_project.web.input.SelectItem _dipartimento = this.form.getDipartimento().getValue();
-	//
-	//		String valueCodiceDipartimento = null; 
-	//
-	//		if(_dipartimento != null)
-	//			valueCodiceDipartimento = _dipartimento.getValue();
-	//
-	//		if( valueCodiceDipartimento == null || (valueCodiceDipartimento != null && valueCodiceDipartimento.equals(CostantiForm.ALL)))
-	//			return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromCommonsResourceBundle(CostantiForm.SELECT_VALORE_NON_VALIDO,this.form.getDipartimento().getLabel());
-	//
-	//
-	//		return toRet;
-	//	}
 
 	public String salvaFormCorservazione(){
 		this.checkConservazione = false;
@@ -669,12 +750,12 @@ IFatturaElettronicaAttivaService>{
 
 			// collezionare le informazioni della conservazione e chiamare il salvataggio
 
-			List<UploadItem> files = this.form.getFatturaFile().getFilesCache();
+			List<String> nomiFileRicevuti = this.form.getFatturaFile().getNomeFile();
 
 			List<InserimentoLottoSoloConservazioneRequest> toSave = new ArrayList<InserimentoLottoSoloConservazioneRequest>();
 			// scorro la lista dei files e creo le fatture
-			for (int i = 0; i < files.size(); i++) {
-				String nomeFattura = this.form.getFatturaFile().getNomeFile().get(i);
+			for (int i = 0; i < nomiFileRicevuti.size(); i++) {
+				String nomeFattura = nomiFileRicevuti.get(i);
 				byte[] xml = this.form.getFatturaFile().getContenuto().get(i);
 
 				InserimentoLottoSoloConservazioneRequest dto = new InserimentoLottoSoloConservazioneRequest();
@@ -724,13 +805,11 @@ IFatturaElettronicaAttivaService>{
 
 	public String validaFormConservazione() {
 		for (ConservazioneBean conservazione : this.listaConservazione) {
-			
-			if(StringUtils.isEmpty(conservazione.getRegistro())){
-				return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.registroVuoto",conservazione.getNomeFile());
-			}
 
-			//formato registro?
-			// registro si puo' modificare?
+			// [BUSSU] Per ora il registro e' opzionale, per renderlo obbligatorio abilitare le seguenti tre righe.
+//			if(StringUtils.isEmpty(conservazione.getRegistro())){
+//				return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.registroVuoto",conservazione.getNomeFile());
+//			}
 			
 			if(StringUtils.isEmpty(conservazione.getProtocollo())){
 				return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("fattura.conservazione.validazione.protocolloVuoto",conservazione.getNomeFile());
@@ -832,5 +911,15 @@ IFatturaElettronicaAttivaService>{
 		this.checkFormConservazioneMessage = checkFormConservazioneMessage;
 	}
 
+	public String getLabelColonnaRegistro() {
+		return labelColonnaRegistro;
+	}
+
+	public void setLabelColonnaRegistro(String labelColonnaRegistro) {
+		this.labelColonnaRegistro = labelColonnaRegistro;
+	}
+
 	private boolean visualizzaTastoCaricaFattura = false;
+	private String labelColonnaRegistro = null;
+	
 }

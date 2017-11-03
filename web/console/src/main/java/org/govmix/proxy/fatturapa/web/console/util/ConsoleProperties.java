@@ -51,6 +51,9 @@ public class ConsoleProperties extends AbstractProperties {
 	private String proxyPccWsFattureUsername;
 	private String proxyPccWsFatturePassword;
 	
+	private int fatturaAttivaCaricamentoMaxNumeroFile;
+	private String fatturaAttivaCaricamentoTipologieFileAccettati;
+	
 	private TreeMap<String, String> codiciErrorePCC = null;
 	
     private String consoleFont = "";
@@ -104,6 +107,9 @@ public class ConsoleProperties extends AbstractProperties {
 		this.proxyPccWsFattureUrl = this.getProperty("org.govmix.proxy.fatturapa.web.console.proxyPcc.wsFatture.url", true);
 		this.proxyPccWsFattureUsername = this.getProperty("org.govmix.proxy.fatturapa.web.console.proxyPcc.wsFatture.username", true);
 		this.proxyPccWsFatturePassword = this.getProperty("org.govmix.proxy.fatturapa.web.console.proxyPcc.wsFatture.password", true);
+
+		this.fatturaAttivaCaricamentoMaxNumeroFile = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.console.fatturazioneAttiva.caricamento.maxNumeroFile", true));
+		this.fatturaAttivaCaricamentoTipologieFileAccettati = this.getProperty("org.govmix.proxy.fatturapa.web.console.fatturazioneAttiva.caricamento.tipologieFileAccettate", true);
 
 		String codErrPCC = this.getProperty("org.govmix.proxy.fatturapa.web.console.proxyPCC.codiciErrore", false);
 		this.codiciErrorePCC = new TreeMap<String, String>();
@@ -204,6 +210,11 @@ public class ConsoleProperties extends AbstractProperties {
 	public String getLogoHeaderLink() {
 		return logoHeaderLink;
 	}
-	
-	
+	public int getFatturaAttivaCaricamentoMaxNumeroFile() {
+		return fatturaAttivaCaricamentoMaxNumeroFile;
+	}
+
+	public String getFatturaAttivaCaricamentoTipologieFileAccettati() {
+		return fatturaAttivaCaricamentoTipologieFileAccettati;
+	}
 }

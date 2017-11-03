@@ -65,11 +65,11 @@ public class ScadenzaPccBean  extends BaseBean<PccScadenza, Long> implements IVi
 		this.importo = this.getFactory().getOutputFieldFactory().createNumber("importo","scadenza.importo");
 		this.importo.setConverterType(Costanti.CONVERT_TYPE_CURRENCY);
 		this.importo.setCurrencySymbol(Costanti.CURRENCY_SYMBOL_EURO);
-		this.importo.setTableColumnStyleClass("allinatoDX");
+		this.importo.setTableColumnStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_ALLINATO_DX);
 
-		this.dataScadenza = this.getFactory().getOutputFieldFactory().createDateTime("dataScadenza","scadenza.dataScadenza","dd/M/yyyy");
-		this.dataRichiesta = this.getFactory().getOutputFieldFactory().createDateTime("dataRichiesta","scadenza.dataRichiesta","dd/M/yyyy HH:mm:ss");
-		this.dataQuery = this.getFactory().getOutputFieldFactory().createDateTime("dataQuery","scadenza.dataQuery","dd/M/yyyy HH:mm:ss");
+		this.dataScadenza = this.getFactory().getOutputFieldFactory().createDateTime("dataScadenza","scadenza.dataScadenza",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY);
+		this.dataRichiesta = this.getFactory().getOutputFieldFactory().createDateTime("dataRichiesta","scadenza.dataRichiesta",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS);
+		this.dataQuery = this.getFactory().getOutputFieldFactory().createDateTime("dataQuery","scadenza.dataQuery",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS);
 //		this.stato = this.getFactory().getOutputFieldFactory().createText("stato","scadenza.stato");
 		this.sistemaRichiedente = this.getFactory().getOutputFieldFactory().createText("sistemaRichiedente","scadenza.sistemaRichiedente");
 		this.utenteRichiedente = this.getFactory().getOutputFieldFactory().createText("utenteRichiedente","scadenza.utenteRichiedente");
@@ -89,8 +89,8 @@ public class ScadenzaPccBean  extends BaseBean<PccScadenza, Long> implements IVi
 		this.fieldsDatiGenerali.addField(this.dataRichiesta);
 		this.fieldsDatiGenerali.addField(this.dataQuery);
 
-		this.fieldsDatiGenerali.setStyleClass("datiTrasmissioneTable"); 
-		this.fieldsDatiGenerali.setColumnClasses("labelAllineataDx,valueAllineataSx");
+		this.fieldsDatiGenerali.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.fieldsDatiGenerali.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE);
 		
 		this.fieldsDatiGenerali.setField(this.importo);
 		this.fieldsDatiGenerali.setField(this.dataScadenza);

@@ -38,26 +38,36 @@ import org.openspcoop2.generic_project.exception.NotFoundException;
 @javax.xml.bind.annotation.XmlEnum(String.class)
 public enum StatoElaborazioneType implements IEnumeration , Serializable , Cloneable {
 
-	@javax.xml.bind.annotation.XmlEnumValue("NON_FIRMATO")
-	NON_FIRMATO ("NON_FIRMATO"),
-	@javax.xml.bind.annotation.XmlEnumValue("FIRMA_IN_PROGRESS")
-	FIRMA_IN_PROGRESS ("FIRMA_IN_PROGRESS"),
-	@javax.xml.bind.annotation.XmlEnumValue("ERRORE_FIRMA")
-	ERRORE_FIRMA ("ERRORE_FIRMA"),
-	@javax.xml.bind.annotation.XmlEnumValue("FIRMA_OK")
-	FIRMA_OK ("FIRMA_OK"),
-	@javax.xml.bind.annotation.XmlEnumValue("PROTOCOLLAZIONE_IN_PROGRESS")
-	PROTOCOLLAZIONE_IN_PROGRESS ("PROTOCOLLAZIONE_IN_PROGRESS"),
-	@javax.xml.bind.annotation.XmlEnumValue("ERRORE_PROTOCOLLAZIONE")
-	ERRORE_PROTOCOLLAZIONE ("ERRORE_PROTOCOLLAZIONE"),
-	@javax.xml.bind.annotation.XmlEnumValue("PROTOCOLLAZIONE_OK")
-	PROTOCOLLAZIONE_OK ("PROTOCOLLAZIONE_OK"),
-	@javax.xml.bind.annotation.XmlEnumValue("ERRORE_SPEDIZIONE")
-	ERRORE_SPEDIZIONE ("ERRORE_SPEDIZIONE"),
-	@javax.xml.bind.annotation.XmlEnumValue("SPEDIZIONE_OK")
-	SPEDIZIONE_OK ("SPEDIZIONE_OK"),
-	@javax.xml.bind.annotation.XmlEnumValue("SPEDIZIONE_NON_ATTIVA")
-	SPEDIZIONE_NON_ATTIVA ("SPEDIZIONE_NON_ATTIVA");
+	@javax.xml.bind.annotation.XmlEnumValue("PRESA_IN_CARICO")
+	PRESA_IN_CARICO ("PRESA_IN_CARICO"),
+	@javax.xml.bind.annotation.XmlEnumValue("IN_CORSO_DI_PROTOCOLLAZIONE")
+	IN_CORSO_DI_PROTOCOLLAZIONE ("IN_CORSO_DI_PROTOCOLLAZIONE"),
+	@javax.xml.bind.annotation.XmlEnumValue("IN_CORSO_DI_FIRMA")
+	IN_CORSO_DI_FIRMA ("IN_CORSO_DI_FIRMA"),
+	@javax.xml.bind.annotation.XmlEnumValue("PROTOCOLLATA")
+	PROTOCOLLATA ("PROTOCOLLATA"),
+	@javax.xml.bind.annotation.XmlEnumValue("ERRORE_DI_FIRMA")
+	ERRORE_DI_FIRMA ("ERRORE_DI_FIRMA"),
+	@javax.xml.bind.annotation.XmlEnumValue("ERRORE_DI_PROTOCOLLO")
+	ERRORE_DI_PROTOCOLLO ("ERRORE_DI_PROTOCOLLO"),
+	@javax.xml.bind.annotation.XmlEnumValue("ERRORE_DI_SPEDIZIONE")
+	ERRORE_DI_SPEDIZIONE ("ERRORE_DI_SPEDIZIONE"),
+	@javax.xml.bind.annotation.XmlEnumValue("RICEVUTA_DALLO_SDI")
+	RICEVUTA_DALLO_SDI ("RICEVUTA_DALLO_SDI"),
+	@javax.xml.bind.annotation.XmlEnumValue("RICEVUTO_SCARTO_SDI")
+	RICEVUTO_SCARTO_SDI ("RICEVUTO_SCARTO_SDI"),
+	@javax.xml.bind.annotation.XmlEnumValue("RICEVUTA_DAL_DESTINATARIO")
+	RICEVUTA_DAL_DESTINATARIO ("RICEVUTA_DAL_DESTINATARIO"),
+	@javax.xml.bind.annotation.XmlEnumValue("MANCATA_CONSEGNA")
+	MANCATA_CONSEGNA ("MANCATA_CONSEGNA"),
+	@javax.xml.bind.annotation.XmlEnumValue("IMPOSSIBILITA_DI_RECAPITO")
+	IMPOSSIBILITA_DI_RECAPITO ("IMPOSSIBILITA_DI_RECAPITO"),
+	@javax.xml.bind.annotation.XmlEnumValue("RICEVUTO_ESITO_CEDENTE_PRESTATORE")
+	RICEVUTO_ESITO_CEDENTE_PRESTATORE ("RICEVUTO_ESITO_CEDENTE_PRESTATORE"),
+	@javax.xml.bind.annotation.XmlEnumValue("RICEVUTA_DECORRENZA_TERMINI")
+	RICEVUTA_DECORRENZA_TERMINI ("RICEVUTA_DECORRENZA_TERMINI"),
+	@javax.xml.bind.annotation.XmlEnumValue("SOLO_CONSERVAZIONE")
+	SOLO_CONSERVAZIONE ("SOLO_CONSERVAZIONE");
 	
 	
 	/** Value */

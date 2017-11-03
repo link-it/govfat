@@ -79,6 +79,21 @@ public class TimerStartup {
 		this.initialize();
 	}
 
+
+	public void reInit() {
+		this.destroy();
+		
+		try {
+			org.govmix.proxy.fatturapa.web.timers.utils.BatchProperties.initInstance(); //Rilegge le properties da file
+		} catch(Exception e) {
+			TimerStartup.log.error("Errore durante la lettura delle BatchProperties", e);
+			return;
+		}
+		
+		this.initialize();
+	}
+
+	
 	private void initialize() {
 
 		this.startDate = System.currentTimeMillis();
@@ -139,15 +154,19 @@ public class TimerStartup {
 				for(Object timerNameObject : properties.getJndiTimerEJBName().keySet()) {
 					String timerName = (String)timerNameObject;
 
+					log.debug("Init timer ejb ["+timerName+"]...");
 					if(this.lookupTimer(timerName, properties, jndi)) {
 						lst.add(createEJBTimer(timerName, properties));
 					}
+					log.debug("Init timer ejb ["+timerName+"] OK");
 				}
 			} else {
 				for(Object timerNameObject : properties.getJndiTimerEJBName().keySet()) {
 					String timerName = (String)timerNameObject;
 
+					log.debug("Init timer thread ["+timerName+"]...");
 					lst.add(createThreadTimer(timerName, properties));
+					log.debug("Init timer thread ["+timerName+"] OK");
 				}
 			}
 
@@ -174,6 +193,8 @@ public class TimerStartup {
 				timer = TimerStartup.createTimerWorkFlowFattura(properties);
 			}else if(TimerSpedizioneFatturaAttiva.ID_MODULO.equals(timerName)){
 				timer = TimerStartup.createTimerSpedizioneFatturaAttiva(properties);
+			}else if(TimerProtocollazioneRicevuta.ID_MODULO.equals(timerName)){
+				timer = TimerStartup.createTimerProtocollazioneRicevuta(properties);
 			} else {
 				return null;
 			}
@@ -201,11 +222,18 @@ public class TimerStartup {
 				timer = new TimerWorkFlowFatturaThread();
 			}else if(TimerSpedizioneFatturaAttiva.ID_MODULO.equals(timerName)){
 				timer = new TimerSpedizioneFatturaAttivaThread();
+			}else if(TimerProtocollazioneRicevuta.ID_MODULO.equals(timerName)){
+				timer = new TimerProtocollazioneRicevutaThread();
 			} else {
 				return null;
 			}
 
-			return new ThreadTimerObject(timer, properties.getTimers().get(timerName));
+			TimerProperties timerProperties = properties.getTimers().get(timerName);
+			
+			
+			
+			log.debug("Timer ["+timerName+"] enable ["+timerProperties.isTimerAbilitato()+"] timer timeout ["+timerProperties.getTimerTimeout()+"]");
+			return new ThreadTimerObject(timer, timerProperties);
 
 		}
 
@@ -354,6 +382,25 @@ public class TimerStartup {
 		TimerSpedizioneFatturaAttivaHome timerHome = 
 				(TimerSpedizioneFatturaAttivaHome) PortableRemoteObject.narrow(objref,TimerSpedizioneFatturaAttivaHome.class);
 		TimerSpedizioneFatturaAttiva timerDiServizio = timerHome.create();	
+
+		return timerDiServizio;
+
+
+	}
+
+	private static TimerProtocollazioneRicevuta createTimerProtocollazioneRicevuta(BatchProperties properties) throws Exception {
+
+		GestoreJNDI jndi = null;
+		if(properties.getJndiContextTimerEJB()==null)
+			jndi = new GestoreJNDI();
+		else
+			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
+
+		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerProtocollazioneRicevuta.ID_MODULO);
+		Object objref = jndi.lookup(nomeJNDI);
+		TimerProtocollazioneRicevutaHome timerHome = 
+				(TimerProtocollazioneRicevutaHome) PortableRemoteObject.narrow(objref,TimerProtocollazioneRicevutaHome.class);
+		TimerProtocollazioneRicevuta timerDiServizio = timerHome.create();	
 
 		return timerDiServizio;
 

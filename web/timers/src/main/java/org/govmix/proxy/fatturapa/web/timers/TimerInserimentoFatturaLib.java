@@ -20,9 +20,6 @@
  */
 package org.govmix.proxy.fatturapa.web.timers;
 
-import it.gov.fatturapa.sdi.messaggi.v1_0.NotificaEsitoCommittenteType;
-import it.gov.fatturapa.sdi.messaggi.v1_0.constants.EsitoCommittenteType;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
@@ -31,7 +28,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFatturePassiveBD;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFattura;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaUtils;
@@ -40,6 +37,9 @@ import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.InvioNoti
 import org.govmix.proxy.fatturapa.web.commons.sonde.Sonda;
 import org.govmix.proxy.fatturapa.web.timers.utils.BatchProperties;
 import org.openspcoop2.generic_project.exception.ValidationException;
+
+import it.gov.fatturapa.sdi.messaggi.v1_0.NotificaEsitoCommittenteType;
+import it.gov.fatturapa.sdi.messaggi.v1_0.constants.EsitoCommittenteType;
 
 /**
  * Implementazione dell'interfaccia {@link TimerInserimentoFattura}
@@ -65,7 +65,7 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 			BatchProperties properties = BatchProperties.getInstance(); 
 
 			ConsegnaFattura consegnaFattura = new ConsegnaFattura(log, properties.isValidazioneDAOAbilitata(), connection, false);
-			LottoBD lottoBD = new LottoBD(log, connection, false);
+			LottoFatturePassiveBD lottoBD = new LottoFatturePassiveBD(log, connection, false);
 
 			Date limitDate = new Date();
 			this.log.info("Cerco lotti di fatture da inserire");

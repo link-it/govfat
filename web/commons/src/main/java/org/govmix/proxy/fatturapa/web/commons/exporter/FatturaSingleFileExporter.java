@@ -37,6 +37,7 @@ import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
+import org.govmix.proxy.fatturapa.web.commons.exporter.PDFCreator.TipoXSL;
 import org.govmix.proxy.fatturapa.web.commons.exporter.exception.ExportException;
 import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.openspcoop2.generic_project.exception.NotFoundException;
@@ -64,6 +65,18 @@ public class FatturaSingleFileExporter extends AbstractSingleFileXMLExporter<Fat
 		this.notificaECSFE = new NotificaECSingleFileExporter(log, connection, autocommit);
 		this.notificaDTSFE = new NotificaDTSingleFileExporter(log, connection, autocommit);
 		this.lottoSFE = new LottoSingleFileExporter(log, connection, autocommit);
+	}
+
+
+	@Override
+	protected TipoXSL getTipoXsl(FatturaElettronica object) {
+		switch(object.getFormatoTrasmissione()) {
+		case FPA12: return TipoXSL.FATTURA_V12;
+		case FPR12: return TipoXSL.FATTURA_V12;
+		case SDI10: return TipoXSL.FATTURA_V10;
+		case SDI11: return TipoXSL.FATTURA_V11;
+		default: return TipoXSL.FATTURA_V12;
+		}
 	}
 
 	@Override

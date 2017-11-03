@@ -87,7 +87,7 @@ ParameterizedDataModel<PccTraccia, Long, TracciaPccEstesaBean, IOperazioneServic
 					limit = ((SequenceRange)range).getRows();
 				}
 
-				log.debug("Richiesti Record S["+start+"] L["+limit+"]"); 
+				OperazioneDM.log.debug("Richiesti Record S["+start+"] L["+limit+"]"); 
 
 				this.getDataProvider().getForm().setStart(start);
 				this.getDataProvider().getForm().setLimit(limit); 

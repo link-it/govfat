@@ -45,6 +45,7 @@ public class LoggerManager {
 	private static Logger batchInserimentoFatturaLogger = null;
 	private static Logger batchAccettazioneFatturaLogger = null;
 	private static Logger batchWorkFlowFatturaLogger = null;
+	private static Logger batchProtocollazioneRicevutaLogger = null;
 	private static Logger batchSpedizioneFatturaAttivaLogger = null;
 	private static Logger batchSpedizioneEsitiLogger = null;
 	private static Logger batchSpedizioneNotificheLogger = null;
@@ -88,6 +89,9 @@ public class LoggerManager {
 
 		if(batchSpedizioneFatturaAttivaLogger == null)
 			batchSpedizioneFatturaAttivaLogger = LoggerWrapperFactory.getLogger("batch.spedizioneFatturaAttiva");
+
+		if(batchProtocollazioneRicevutaLogger == null)
+			batchProtocollazioneRicevutaLogger = LoggerWrapperFactory.getLogger("batch.protocollazioneRicevuta");
 
 		if(batchConsegnaComunicazioneUscitaLogger == null)
 			batchConsegnaComunicazioneUscitaLogger = LoggerWrapperFactory.getLogger("batch.consegnaComunicazioneUscita");
@@ -240,5 +244,8 @@ public class LoggerManager {
 		return batchSpedizioneFatturaAttivaLogger;
 	}
 
+	public static Logger getBatchProtocollazioneRicevutaLogger() {
+		return batchProtocollazioneRicevutaLogger;
+	}
 
 }

@@ -146,10 +146,10 @@ public class ScadenzaDM extends BaseDataModel<ScadenzaPccBean, Long,  IScadenzaS
 	@Override
 	public void setDataProvider(IScadenzaService dataProvider) {
 		try{
-			log.debug("set data provider ["+dataProvider+"]");
+			ScadenzaDM.log.debug("set data provider ["+dataProvider+"]");
 			this.initDataProvider(dataProvider);
 		}catch(Exception e){
-			log.error("Errore durante la init del data providere: "+ e.getMessage(),e);
+			ScadenzaDM.log.error("Errore durante la init del data providere: "+ e.getMessage(),e);
 		}
 	}
 

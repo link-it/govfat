@@ -77,9 +77,20 @@
 				</p>
 				<op2web:fieldset legend="#{msg['rispedizione.form.label']}"
 					collapsible="false" closed="false" rendered="#{true}">
+					
+					<op2web:prop label="#{rispedizioneMBean.form.codiceErrore.label}" required="#{rispedizioneMBean.form.codiceErrore.required}" 
+							rendered="#{rispedizioneMBean.form.codiceErrore.rendered}">
+						<div>
+							<div class="keepMargin">
+								<h:inputText id="input_#{rispedizioneMBean.form.codiceErrore.name}" value="#{rispedizioneMBean.form.codiceErrore.value}" 
+								style="#{rispedizioneMBean.form.codiceErrore.style}" disabled="#{rispedizioneMBean.form.codiceErrore.disabled}" />	
+							</div>
+						</div>
+					
+				 	</op2web:prop>
 
 					<op2web:formFields
-						nomiFields="#{'codiceErrore,descrizioneErrore,numeroTentativi,intervalloRispedizione,tipoErrore'}" />
+						nomiFields="#{'descrizioneErrore,numeroTentativi,intervalloRispedizione,tipoErrore'}" />
 
 					<op2web:prop
 						label="#{rispedizioneMBean.form.rispedizioneAutomatica.label}"

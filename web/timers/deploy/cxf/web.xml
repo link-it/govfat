@@ -11,9 +11,19 @@
 		<servlet-class>org.govmix.proxy.fatturapa.web.commons.sonde.ServletSondaBatch</servlet-class>
 	</servlet>
 	
+	<servlet>
+		<servlet-name>ReInit</servlet-name>
+		<servlet-class>org.govmix.proxy.fatturapa.web.timers.ServletReinitBatch</servlet-class>
+	</servlet>
+	
 	<servlet-mapping>
 		<servlet-name>Sonda</servlet-name>
 		<url-pattern>/sonda</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ReInit</servlet-name>
+		<url-pattern>/reinit</url-pattern>
 	</servlet-mapping>
 
   <listener>

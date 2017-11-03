@@ -80,7 +80,7 @@ ParameterizedDataModel<PccTracciaTrasmissione, Long, TracciaTrasmissionePCCBean,
 					limit = ((SequenceRange)range).getRows();
 				}
 
-				log.debug("Richiesti Record S["+start+"] L["+limit+"]"); 
+				TrasmissioneDM.log.debug("Richiesti Record S["+start+"] L["+limit+"]"); 
 
 				this.getDataProvider().getForm().setStart(start);
 				this.getDataProvider().getForm().setLimit(limit); 

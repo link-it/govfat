@@ -46,10 +46,10 @@ public class TrasmissioneService extends BaseService<TrasmissioneSearchForm> imp
 	
 	public TrasmissioneService() {
 		try {
-			this.tracciamentoBD = new PccTracciamentoBD(log);
+			this.tracciamentoBD = new PccTracciamentoBD(TrasmissioneService.log);
 		
 		} catch (Exception e) {
-			log.error("Errore durante la init di TrasmissioneService: " + e.getMessage(),e); 
+			TrasmissioneService.log.error("Errore durante la init di TrasmissioneService: " + e.getMessage(),e); 
 		}
 	}
 
@@ -71,7 +71,7 @@ public class TrasmissioneService extends BaseService<TrasmissioneSearchForm> imp
 
 			return 0;
 		} catch (Exception e) {
-			log.error("Errore durante la _findAll: " + e.getMessage(),e); 
+			TrasmissioneService.log.error("Errore durante la _findAll: " + e.getMessage(),e); 
 			throw new ServiceException(e);
 		}
 	}
@@ -100,9 +100,9 @@ public class TrasmissioneService extends BaseService<TrasmissioneSearchForm> imp
 			
 			return bean;
 		} catch(NotFoundException e){
-			log.debug("Nessuna trasmissione con ID ["+key+"] trovata.");
+			TrasmissioneService.log.debug("Nessuna trasmissione con ID ["+key+"] trovata.");
 		}catch (Exception e) {
-			log.error("Errore durante la findById: " + e.getMessage(),e); 
+			TrasmissioneService.log.error("Errore durante la findById: " + e.getMessage(),e); 
 			throw new ServiceException(e);
 		}
 		
@@ -153,15 +153,17 @@ public class TrasmissioneService extends BaseService<TrasmissioneSearchForm> imp
 
 			return lst;
 		} catch (Exception e) {
-			log.error("Errore durante la _findAll: " + e.getMessage(),e); 
+			TrasmissioneService.log.error("Errore durante la _findAll: " + e.getMessage(),e); 
 			throw new ServiceException(e);
 		}
 	}
 
+	@Override
 	public IdTraccia getIdTraccia() {
 		return idTraccia;
 	}
 
+	@Override
 	public void setIdTraccia(IdTraccia idTraccia) {
 		this.idTraccia = idTraccia;
 	}

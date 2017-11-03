@@ -182,7 +182,6 @@ public class FatturaPassivaBD extends FatturaBD {
 
 			StringBuffer update = new StringBuffer();
 
-			List<Class<?>> listClass = new ArrayList<Class<?>>();
 			List<Object> listObjects = new ArrayList<Object>();
 
 			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase());
@@ -190,23 +189,20 @@ public class FatturaPassivaBD extends FatturaBD {
 			update.append("update "+converter.toTable(FatturaElettronica.model())+" set ");
 			if(protocollo != null) {
 				update.append(converter.toColumn(FatturaElettronica.model().PROTOCOLLO, false)).append(" = ? , ");
-				listClass.add(FatturaElettronica.model().PROTOCOLLO.getFieldType());
 				listObjects.add(protocollo);
 			}
 
 			update.append(converter.toColumn(FatturaElettronica.model().STATO_PROTOCOLLAZIONE, false)).append(" = ? , ");
-			listClass.add(FatturaElettronica.model().STATO_PROTOCOLLAZIONE.getFieldType());
 			listObjects.add(protocollo != null ? StatoProtocollazioneType.PROTOCOLLATA : StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE);
 			
 			update.append(converter.toColumn(FatturaElettronica.model().DATA_PROTOCOLLAZIONE, false)).append(" = ? ");
-			listClass.add(FatturaElettronica.model().DATA_PROTOCOLLAZIONE.getFieldType());
 			listObjects.add(new Date());
 			
 			update.append(" where ").append(converter.toColumn(FatturaElettronica.model().IDENTIFICATIVO_SDI, false)).append(" = ? ");
-			listClass.add(FatturaElettronica.model().IDENTIFICATIVO_SDI.getFieldType());
 			listObjects.add(idLotto.getIdentificativoSdi());
 			
-			this.service.nativeQuery(update.toString(), listClass, listObjects);
+			List<Class<?>> listReturnTypes = new ArrayList<>();
+			this.serviceSearch.nativeUpdate(update.toString(), listReturnTypes, listObjects.toArray(new Object[]{}));
 			
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la updateProtocollo: " + e.getMessage(), e);

@@ -32,7 +32,6 @@ import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
-import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
@@ -96,6 +95,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 	private Text anno = null;
 	private Text causale = null;
 	private Text statoElaborazione = null;
+	private Text statoElaborazioneDettaglio = null;
 	private Text protocollo = null;
 	private DateTime dataConsegna = null;
 	private Text formatoTrasmissione = null;
@@ -123,7 +123,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 
 	//Gruppo informazioni Contenuto Fattura
 	private OutputGroup causaleFattura = null;
-
+	
 	public FatturaElettronicaAttivaBean(){
 		try{
 			this.init();
@@ -132,29 +132,29 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		}
 	}
 
-	public void init() throws FactoryException{
+public void init() throws FactoryException{
 		this.cedentePrestatore = this.getFactory().getOutputFieldFactory().createText("cedentePrestatore","fattura.cedentePrestatoreDenominazione");
 		this.cedentePrestatorePaese = this.getFactory().getOutputFieldFactory().createText("cedentePrestatorePaese","fattura.cedentePrestatorePaese");
 		this.dipartimento = this.getFactory().getOutputFieldFactory().createText("dipartimento","fattura.dipartimento");
 		this.annoNumero = this.getFactory().getOutputFieldFactory().createText("annoNumero","fattura.annoNumero");
-		this.dataInvio = this.getFactory().getOutputFieldFactory().createDateTime("dataRicezione","fattura.dataInvio","dd/M/yyyy");
+		this.dataInvio = this.getFactory().getOutputFieldFactory().createDateTime("dataRicezione","fattura.dataInvio",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY);
 
 		this.importo = this.getFactory().getOutputFieldFactory().createNumber("importo","fattura.importoTotaleDocumento");
 		this.importo.setConverterType(Costanti.CONVERT_TYPE_CURRENCY);
 		this.importo.setCurrencySymbol(Costanti.CURRENCY_SYMBOL_EURO);
-		this.importo.setTableColumnStyleClass("allinatoDX");
+		this.importo.setTableColumnStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_ALLINATO_DX);
 
 		this.importoRiepilogo = this.getFactory().getOutputFieldFactory().createNumber("importoRiepilogo","fattura.importoTotaleRiepilogo");
-		this.importoRiepilogo.setValueStyleClass("diag_error");
+		this.importoRiepilogo.setValueStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DIAG_ERROR);
 		this.importoRiepilogo.setConverterType(Costanti.CONVERT_TYPE_CURRENCY);
 		this.importoRiepilogo.setCurrencySymbol(Costanti.CURRENCY_SYMBOL_EURO);
 
 		this.notificaEC = this.getFactory().getOutputFieldFactory().createButton("notificaEC","fattura.notificaEC");
 		this.notificaDT = this.getFactory().getOutputFieldFactory().createImage("notificaDT","fattura.notificaDT");
 
-		this.xml = this.getFactory().getOutputFieldFactory().createButton("xml","commons.label.xml",null,"/images/fatturapa/icons/xml.png","commons.label.xml.iconTitle","commons.label.xml.iconTitle");
-		this.pdf = this.getFactory().getOutputFieldFactory().createButton("pdf","commons.label.pdf",null,"/images/fatturapa/icons/pdf.png","commons.label.pdf.iconTitle","commons.label.pdf.iconTitle");
-		this.zip = this.getFactory().getOutputFieldFactory().createButton("zip","commons.button.scaricaTutto",null,"/images/fatturapa/icons/zip.png","commons.button.scaricaTutto.iconTitle","commons.button.scaricaTutto.iconTitle");
+		this.xml = this.getFactory().getOutputFieldFactory().createButton("xml","commons.label.xml",null,org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_XML,"commons.label.xml.iconTitle","commons.label.xml.iconTitle");
+		this.pdf = this.getFactory().getOutputFieldFactory().createButton("pdf","commons.label.pdf",null,org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_PDF,"commons.label.pdf.iconTitle","commons.label.pdf.iconTitle");
+		this.zip = this.getFactory().getOutputFieldFactory().createButton("zip","commons.button.scaricaTutto",null,org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_ZIP,"commons.button.scaricaTutto.iconTitle","commons.button.scaricaTutto.iconTitle");
 
 		this.identificativoSdi = this.getFactory().getOutputFieldFactory().createText("identificativoSdi","fattura.identificativoSdi");
 		this.posizione = this.getFactory().getOutputFieldFactory().createText("posizione","fattura.posizione");
@@ -170,18 +170,19 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.nomeFile = this.getFactory().getOutputFieldFactory().createText("nomeFile","fattura.nomeFile");
 		this.messageId = this.getFactory().getOutputFieldFactory().createText("messageId","fattura.messageId");
 		this.divisa = this.getFactory().getOutputFieldFactory().createText("divisa","fattura.divisa");
-		this.data = this.getFactory().getOutputFieldFactory().createDateTime("data","fattura.data","dd/M/yyyy");
-		this.dataConsegna = this.getFactory().getOutputFieldFactory().createDateTime("dataConsegna","fattura.dataConsegna","dd/M/yyyy");
+		this.data = this.getFactory().getOutputFieldFactory().createDateTime("data","fattura.data",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY);
+		this.dataConsegna = this.getFactory().getOutputFieldFactory().createDateTime("dataConsegna","fattura.dataConsegna",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY);
 
 		this.numero = this.getFactory().getOutputFieldFactory().createText("numero","fattura.numero");
 		this.anno = this.getFactory().getOutputFieldFactory().createText("anno","fattura.anno");
 		this.causale = this.getFactory().getOutputFieldFactory().createText("causale","fattura.causale","fattura.causale.assente");
-		this.causale.setValueStyleClass("whiteSpaceNewLine");
+		this.causale.setValueStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_WHITE_SPACE_NEW_LINE);
 		this.protocollo = this.getFactory().getOutputFieldFactory().createText("protocollo","fattura.protocollo","fattura.protocollo.assente");
 		this.statoElaborazione = this.getFactory().getOutputFieldFactory().createText("statoElaborazione","fattura.statoElaborazione");
+		this.statoElaborazioneDettaglio = this.getFactory().getOutputFieldFactory().createText("statoElaborazioneDettaglio","fattura.statoElaborazione");
 		this.formatoTrasmissione = this.getFactory().getOutputFieldFactory().createText("formatoTrasmissione","fattura.formatoTrasmissione");
 
-		this.dataProssimaConsegna = this.getFactory().getOutputFieldFactory().createDateTime("dataProssimaConsegna","fattura.dataProssimaConsegna","dd/MM/yyyy HH:mm");
+		this.dataProssimaConsegna = this.getFactory().getOutputFieldFactory().createDateTime("dataProssimaConsegna","fattura.dataProssimaConsegna",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS);
 		//this.dataScadenza = this.getFactory().getOutputFieldFactory().createDateTime("dataScadenza","fattura.dataScadenza","dd/M/yyyy");
 		this.dataScadenzaAssente = this.getFactory().getOutputFieldFactory().createText("dataScadenzaAssente","fattura.dataScadenzaAssente");
 
@@ -218,6 +219,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.setField(this.causale);
 		this.setField(this.protocollo);
 		this.setField(this.statoElaborazione);
+		this.setField(this.statoElaborazioneDettaglio);
 		this.setField(this.formatoTrasmissione);
 		this.setField(this.dataProssimaConsegna);
 		//this.setField(this.dataScadenza);
@@ -225,8 +227,8 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 
 		this.datiIntestazione = this.getFactory().getOutputFieldFactory().createOutputGroup("datiIntestazione",6);
 		this.datiIntestazione.setRendered(true);
-		this.datiIntestazione.setStyleClass("datiTrasmissioneTable"); 
-		this.datiIntestazione.setColumnClasses("labelAllineataDx,valueAllineataSx,labelAllineataDx,valueAllineataSx,labelAllineataDx,valueAllineataSx");
+		this.datiIntestazione.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.datiIntestazione.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_SEI_COLONNE);
 		this.datiIntestazione.addField(this.cessionarioCommittente);
 		this.datiIntestazione.addField(this.cessionarioCommittenteCF);
 		this.datiIntestazione.addField(this.cessionarioCommittentePaese);
@@ -244,8 +246,8 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 
 		this.datiTrasmissione1 = this.getFactory().getOutputFieldFactory().createOutputGroup("datiTrasmissione1",5);
 		this.datiTrasmissione1.setRendered(true);
-		this.datiTrasmissione1.setStyleClass("datiTrasmissioneTable"); 
-		this.datiTrasmissione1.setColumnClasses("labelAllineataDx,valueAllineataSx,labelAllineataDx,valueAllineataSx,valueAllineataSx");
+		this.datiTrasmissione1.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.datiTrasmissione1.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_CINQUE_COLONNE);
 		this.datiTrasmissione1.addField(this.identificativoSdi);
 		this.datiTrasmissione1.addField(this.posizione);
 		this.datiTrasmissione1.addField(this.nomeFile);
@@ -258,12 +260,13 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.datiTrasmissione1.addField(this.dataConsegna);
 		this.datiTrasmissione1.addField(this.dataProssimaConsegna);
 		this.datiTrasmissione1.addField(this.statoElaborazione);
+		this.datiTrasmissione1.addField(this.statoElaborazioneDettaglio);
 		this.datiTrasmissione1.addField(this.protocollo);
 
 		this.contenutoFattura = this.getFactory().getOutputFieldFactory().createOutputGroup("contenutoFattura",4);
 		this.contenutoFattura.setRendered(true);
-		this.contenutoFattura.setStyleClass("datiTrasmissioneTable"); 
-		this.contenutoFattura.setColumnClasses("labelAllineataDx,valueAllineataSx,labelAllineataDx,valueAllineataSx");
+		this.contenutoFattura.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE_CONTENUTO_FATTURA); 
+		this.contenutoFattura.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_QUATTRO_COLONNE);
 
 		this.contenutoFattura.addField(this.divisa);
 		this.contenutoFattura.addField(this.importo);
@@ -273,8 +276,8 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 
 		this.causaleFattura = this.getFactory().getOutputFieldFactory().createOutputGroup("causaleFattura",2);
 		this.causaleFattura.setRendered(true);
-		this.causaleFattura.setStyleClass("datiTrasmissioneTable"); 
-		this.causaleFattura.setColumnClasses("labelAllineataDx align-top,valueAllineataSx");
+		this.causaleFattura.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.causaleFattura.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE_TOP);
 		this.causaleFattura.addField(this.causale);
 
 	}
@@ -398,8 +401,6 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 
 		this.prepareUrls();
 
-		this.posizione.setValue(this.getDTO().getPosizione() + "");
-		this.identificativoSdi.setValue(this.getDTO().getIdentificativoSdi() + "");
 		this.cedentePrestatoreCF.setValue(this.getDTO().getCedentePrestatoreCodiceFiscale());
 		this.cedentePrestatorePaese.setValue(this.getDTO().getCedentePrestatorePaese());
 		this.cessionarioCommittente.setValue(this.getDTO().getCessionarioCommittenteDenominazione());
@@ -435,7 +436,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.anno.setValue(this.getDTO().getAnno() + "");
 		this.causale.setValue(this.getDTO().getCausale());
 
-		this.protocollo.setValue(this.getDTO().getProtocollo());
+		
 		this.dataConsegna.setValue(this.getDTO().getDataConsegna());
 		this.dataProssimaConsegna.setValue(this.getDTO().getDataProssimaConsegna());   
 		this.dataProssimaConsegna.setRendered(false);
@@ -458,25 +459,50 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 
 		StatoElaborazioneType _statoElaborazione = this.getDTO().getLottoFatture() != null ? this.getDTO().getLottoFatture().getStatoElaborazioneInUscita() : null; 
 
+		
 		//		if(this.getDTO().getProtocollo() != null) {
 		//			this.statoConsegna.setValue("fattura.statoConsegna.protocollata");
 		//		} else {
 		if(_statoElaborazione != null) {
+			this.statoElaborazione.setValue("fattura.statoElaborazione."+_statoElaborazione.getValue());
+		}
+
+		
+		// [TODO] Ripristinare dopo test
+		//String valoreProtocollo = null;
+		
+		String valoreProtocollo = this.getDTO().getProtocollo();
+		String valoreIdentificavoSDI = null;
+		String valorePosizione = null;
+		if(_statoElaborazione != null) {
 			switch (_statoElaborazione) {
-			case ERRORE_FIRMA:
-			case ERRORE_PROTOCOLLAZIONE:
-			case ERRORE_SPEDIZIONE:
-			case FIRMA_OK:
-			case NON_FIRMATO:
-			case PROTOCOLLAZIONE_OK:
-			case SPEDIZIONE_NON_ATTIVA:
-			case SPEDIZIONE_OK:
+			case RICEVUTA_DALLO_SDI:
+			case RICEVUTA_DAL_DESTINATARIO:
+			case IMPOSSIBILITA_DI_RECAPITO:
+			case MANCATA_CONSEGNA:
+			case RICEVUTO_ESITO_CEDENTE_PRESTATORE:
+			case RICEVUTO_SCARTO_SDI:
+			case RICEVUTA_DECORRENZA_TERMINI:
+				valoreProtocollo = this.getDTO().getProtocollo();
+				valoreIdentificavoSDI = this.getDTO().getIdentificativoSdi() + "";
+				valorePosizione = this.getDTO().getPosizione() + "";
+				this.statoElaborazioneDettaglio.setValue("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				break;
+			case PROTOCOLLATA:
+			case ERRORE_DI_SPEDIZIONE:
+			case SOLO_CONSERVAZIONE:
+				valoreProtocollo = this.getDTO().getProtocollo();
+				this.statoElaborazioneDettaglio.setValue("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				break;
 			default:
-				this.statoElaborazione.setValue("fattura.statoElaborazione."+_statoElaborazione.getValue());
+				this.statoElaborazioneDettaglio.setValue("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
 				break;
 			}
 		}
 
+		this.posizione.setValue(valorePosizione);
+		this.identificativoSdi.setValue(valoreIdentificavoSDI);
+		this.protocollo.setValue(valoreProtocollo);
 		//		}
 	}
 
@@ -724,7 +750,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 			Text terzoIntermediarioOSoggettoEmittentePaese) {
 		this.terzoIntermediarioOSoggettoEmittentePaese = terzoIntermediarioOSoggettoEmittentePaese;
 	}
-	
+
 
 	public Text getStatoElaborazione() {
 		return statoElaborazione;
@@ -924,10 +950,11 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 	public boolean isVisualizzaLinkRiconsegna(){
 		if(this.getDTO().getStatoConsegna() != null){
 			boolean isAdmin = Utils.getLoginBean().isAdmin();
-			StatoConsegnaType statoConsegnaType =  this.getDTO().getStatoConsegna();
 
-			if((statoConsegnaType.equals(StatoConsegnaType.IN_RICONSEGNA) || 
-					statoConsegnaType.equals(StatoConsegnaType.ERRORE_CONSEGNA)) && isAdmin)
+			StatoElaborazioneType statoElaborazione = this.getDTO().getLottoFatture().getStatoElaborazioneInUscita();
+			if((statoElaborazione.equals(StatoElaborazioneType.ERRORE_DI_FIRMA) || 
+					statoElaborazione.equals(StatoElaborazioneType.ERRORE_DI_PROTOCOLLO) ||
+					statoElaborazione.equals(StatoElaborazioneType.ERRORE_DI_SPEDIZIONE)) && isAdmin)
 				return true;
 		}
 
@@ -958,6 +985,13 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.listaComunicazioni = listaComunicazioni;
 	}
 
+	public Text getStatoElaborazioneDettaglio() {
+		return statoElaborazioneDettaglio;
+	}
+
+	public void setStatoElaborazioneDettaglio(Text statoElaborazioneDettaglio) {
+		this.statoElaborazioneDettaglio = statoElaborazioneDettaglio;
+	}
 	
 	
 }

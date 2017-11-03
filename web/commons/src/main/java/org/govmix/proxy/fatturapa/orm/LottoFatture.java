@@ -70,6 +70,9 @@ import java.io.Serializable;
  * 			&lt;element name="fatturazioneAttiva" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="statoElaborazioneInUscita" type="{http://www.govmix.org/proxy/fatturapa/orm}StatoElaborazioneType" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="dataUltimaElaborazione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="dettaglioElaborazione" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="dataProssimaElaborazione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="tentativiConsegna" type="{http://www.w3.org/2001/XMLSchema}nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="dataRicezione" type="{http://www.govmix.org/proxy/fatturapa/orm}date" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="statoInserimento" type="{http://www.govmix.org/proxy/fatturapa/orm}StatoInserimentoType" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="statoConsegna" type="{http://www.govmix.org/proxy/fatturapa/orm}StatoConsegnaType" minOccurs="1" maxOccurs="1"/>
@@ -122,6 +125,9 @@ import java.io.Serializable;
   	"fatturazioneAttiva",
   	"statoElaborazioneInUscita",
   	"dataUltimaElaborazione",
+  	"dettaglioElaborazione",
+  	"dataProssimaElaborazione",
+  	"tentativiConsegna",
   	"dataRicezione",
   	"statoInserimento",
   	"statoConsegna",
@@ -425,6 +431,30 @@ public class LottoFatture extends org.openspcoop2.utils.beans.BaseBean implement
     this.dataUltimaElaborazione = dataUltimaElaborazione;
   }
 
+  public java.lang.String getDettaglioElaborazione() {
+    return this.dettaglioElaborazione;
+  }
+
+  public void setDettaglioElaborazione(java.lang.String dettaglioElaborazione) {
+    this.dettaglioElaborazione = dettaglioElaborazione;
+  }
+
+  public java.util.Date getDataProssimaElaborazione() {
+    return this.dataProssimaElaborazione;
+  }
+
+  public void setDataProssimaElaborazione(java.util.Date dataProssimaElaborazione) {
+    this.dataProssimaElaborazione = dataProssimaElaborazione;
+  }
+
+  public java.lang.Integer getTentativiConsegna() {
+    return this.tentativiConsegna;
+  }
+
+  public void setTentativiConsegna(java.lang.Integer tentativiConsegna) {
+    this.tentativiConsegna = tentativiConsegna;
+  }
+
   public java.util.Date getDataRicezione() {
     return this.dataRicezione;
   }
@@ -694,6 +724,19 @@ public class LottoFatture extends org.openspcoop2.utils.beans.BaseBean implement
   @javax.xml.bind.annotation.XmlSchemaType(name="dateTime")
   @XmlElement(name="dataUltimaElaborazione",required=false,nillable=false,type=java.lang.String.class)
   protected java.util.Date dataUltimaElaborazione;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @XmlElement(name="dettaglioElaborazione",required=false,nillable=false)
+  protected java.lang.String dettaglioElaborazione;
+
+  @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.DateTime2String.class)
+  @javax.xml.bind.annotation.XmlSchemaType(name="dateTime")
+  @XmlElement(name="dataProssimaElaborazione",required=false,nillable=false,type=java.lang.String.class)
+  protected java.util.Date dataProssimaElaborazione;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="nonNegativeInteger")
+  @XmlElement(name="tentativiConsegna",required=true,nillable=false)
+  protected java.lang.Integer tentativiConsegna;
 
   @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.Date2String.class)
   @javax.xml.bind.annotation.XmlSchemaType(name="date")

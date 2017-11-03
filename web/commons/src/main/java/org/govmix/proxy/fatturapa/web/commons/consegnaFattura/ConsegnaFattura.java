@@ -55,23 +55,7 @@ public class ConsegnaFattura {
 		this.allegatoBD = new AllegatoFatturaBD(this.log, conn, autocommit);
 	}
 
-	public void consegnaFattura(ConsegnaFatturaParameters params) throws Exception {
-
-		AbstractFatturaConverter<?> converter = null;
-
-		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.equals(params.getFormatoFatturaPA())) {
-			converter = new FatturaV10Converter(params.getXml(), params);
-		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.equals(params.getFormatoFatturaPA())) {
-			converter = new FatturaV11Converter(params.getXml(), params);
-		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.equals(params.getFormatoFatturaPA()) || 
-				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.equals(params.getFormatoFatturaPA())) {
-			converter = new FPA12Converter(params.getXml(), params);
-		} else {
-			throw new Exception("Formato FatturaPA ["+params.getFormatoFatturaPA()+"] non riconosciuto");
-		}
-
-		
-
+	public void inserisciFattura(ConsegnaFatturaParameters params, AbstractFatturaConverter<?> converter) throws Exception {
 		FatturaElettronica fatturaElettronica = converter.getFatturaElettronica();
 		List<AllegatoFattura> allegatiLst = converter.getAllegati();
 
@@ -95,7 +79,28 @@ public class ConsegnaFattura {
 				this.allegatoBD.create(allegato);
 			}
 		}
+	}
+
+	public void consegnaFattura(ConsegnaFatturaParameters params) throws Exception {
+
+		AbstractFatturaConverter<?> converter = ConsegnaFattura.getConverter(params);
+		inserisciFattura(params, converter);
+		
+	}
+	
+	public static AbstractFatturaConverter<?> getConverter(ConsegnaFatturaParameters params) throws Exception {
+		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.equals(params.getFormatoFatturaPA())) {
+			return new FatturaV10Converter(params.getXml(), params);
+		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.equals(params.getFormatoFatturaPA())) {
+			return new FatturaV11Converter(params.getXml(), params);
+		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.equals(params.getFormatoFatturaPA()) || 
+				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.equals(params.getFormatoFatturaPA())) {
+			return new FPA12Converter(params.getXml(), params);
+		} else {
+			throw new Exception("Formato FatturaPA ["+params.getFormatoFatturaPA()+"] non riconosciuto");
+		}
 
 	}
+	
 
 }

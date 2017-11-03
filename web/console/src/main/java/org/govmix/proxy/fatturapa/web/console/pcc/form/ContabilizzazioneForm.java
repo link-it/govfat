@@ -66,9 +66,8 @@ public class ContabilizzazioneForm extends BaseForm implements Form {
 	@Override
 	public void init() throws Exception {
 
-		this.euroPattern = Pattern.compile(TWO_DIGITS_PATTERN);
-
 		WebGenericProjectFactory factory = this.getFactory();
+		this.euroPattern = Pattern.compile(ContabilizzazioneForm.TWO_DIGITS_PATTERN);
 
 		this.setClosable(false);
 		this.setId("addContForm");

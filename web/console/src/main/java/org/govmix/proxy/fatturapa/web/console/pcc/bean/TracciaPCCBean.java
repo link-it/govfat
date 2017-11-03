@@ -88,7 +88,7 @@ public class TracciaPCCBean extends BaseBean<PccTraccia, Long> implements IViewB
 	public TracciaPCCBean(){
 		try{
 			this.init();
-			this.sdf = new  SimpleDateFormat("yyyyMMdd_HHmmss");
+			this.sdf = new  SimpleDateFormat(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_YYYY_M_MDD_H_HMMSS);
 		}catch(Exception e){
 
 		}
@@ -107,28 +107,28 @@ public class TracciaPCCBean extends BaseBean<PccTraccia, Long> implements IViewB
 		this.operazione = this.getFactory().getOutputFieldFactory().createText("operazione","tracciaPcc.operazione");
 		this.tipoOperazione = this.getFactory().getOutputFieldFactory().createText("tipoOperazione","tracciaPcc.tipoOperazione");
 		this.stato = this.getFactory().getOutputFieldFactory().createText("stato","tracciaPcc.stato");
-		this.dataUltimoTentativoEsito = this.getFactory().getOutputFieldFactory().createDateTime("dataUltimoTentativoEsito","tracciaPcc.dataUltimoTentativoEsito","dd/M/yyyy HH:mm:ss");
+		this.dataUltimoTentativoEsito = this.getFactory().getOutputFieldFactory().createDateTime("dataUltimoTentativoEsito","tracciaPcc.dataUltimoTentativoEsito",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS);
 		this.rispedizione = this.getFactory().getOutputFieldFactory().createText("rispedizione","tracciaPcc.rispedizione");
 		this.rispedizioneMaxTentativi = this.getFactory().getOutputFieldFactory().createNumber("rispedizioneMaxTentativi","tracciaPcc.rispedizioneMaxTentativi");
 		this.rispedizioneMaxTentativi.setConverterType(Costanti.CONVERT_TYPE_NUMBER);
-		this.rispedizioneMaxTentativi.setTableColumnStyleClass("allinatoDX");
-		this.dataUltimaTrasmissione = this.getFactory().getOutputFieldFactory().createDateTime("dataUltimaTrasmissione","tracciaPcc.dataUltimaTrasmissione","dd/M/yyyy HH:mm:ss");
-		this.dataCreazione = this.getFactory().getOutputFieldFactory().createDateTime("dataCreazione","tracciaPcc.dataCreazione","dd/M/yyyy HH:mm:ss");
+		this.rispedizioneMaxTentativi.setTableColumnStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_ALLINATO_DX);
+		this.dataUltimaTrasmissione = this.getFactory().getOutputFieldFactory().createDateTime("dataUltimaTrasmissione","tracciaPcc.dataUltimaTrasmissione",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS);
+		this.dataCreazione = this.getFactory().getOutputFieldFactory().createDateTime("dataCreazione","tracciaPcc.dataCreazione",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS);
 
 
-		this.rispedizioneProssimoTentativo = this.getFactory().getOutputFieldFactory().createDateTime("rispedizioneProssimoTentativo","tracciaPcc.rispedizioneProssimoTentativo","dd/M/yyyy HH:mm:ss");
+		this.rispedizioneProssimoTentativo = this.getFactory().getOutputFieldFactory().createDateTime("rispedizioneProssimoTentativo","tracciaPcc.rispedizioneProssimoTentativo",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS);
 		this.rispedizioneNumeroTentativi = this.getFactory().getOutputFieldFactory().createNumber("rispedizioneNumeroTentativi","tracciaPcc.rispedizioneNumeroTentativi");
 		this.rispedizioneNumeroTentativi.setConverterType(Costanti.CONVERT_TYPE_NUMBER);
-		this.rispedizioneNumeroTentativi.setTableColumnStyleClass("allinatoDX");
-		this.rispedizioneUltimoTentativo = this.getFactory().getOutputFieldFactory().createDateTime("rispedizioneUltimoTentativo","tracciaPcc.rispedizioneUltimoTentativo","dd/M/yyyy HH:mm:ss");
+		this.rispedizioneNumeroTentativi.setTableColumnStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_ALLINATO_DX);
+		this.rispedizioneUltimoTentativo = this.getFactory().getOutputFieldFactory().createDateTime("rispedizioneUltimoTentativo","tracciaPcc.rispedizioneUltimoTentativo",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS);
 
 		this.richiesta = this.getFactory().getOutputFieldFactory().createButton("tracciaRichiesta","tracciaPcc.tracciaRichiesta",null,
-					"/images/fatturapa/icons/xml.png","tracciaPcc.tracciaRichiesta.iconTitle","tracciaPcc.tracciaRichiesta.iconTitle");
+				org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_XML,"tracciaPcc.tracciaRichiesta.iconTitle","tracciaPcc.tracciaRichiesta.iconTitle");
 		this.risposta = this.getFactory().getOutputFieldFactory().createButton("tracciaRisposta","tracciaPcc.tracciaRisposta",null,
-					"/images/fatturapa/icons/xml.png","tracciaPcc.tracciaRisposta.iconTitle","tracciaPcc.tracciaRisposta.iconTitle");
+				org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_XML,"tracciaPcc.tracciaRisposta.iconTitle","tracciaPcc.tracciaRisposta.iconTitle");
 		
 		this.pdfRiallineamento = this.getFactory().getOutputFieldFactory().createButton("pdfRiallineamento","tracciaPcc.pdfRiallineamento",null,
-				"/images/fatturapa/icons/pdf.png","tracciaPcc.pdfRiallineamento.iconTitle","tracciaPcc.pdfRiallineamento.iconTitle");
+				org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_PDF,"tracciaPcc.pdfRiallineamento.iconTitle","tracciaPcc.pdfRiallineamento.iconTitle");
 
 
 		this.setField(this.cfTrasmittente);
@@ -174,8 +174,8 @@ public class TracciaPCCBean extends BaseBean<PccTraccia, Long> implements IViewB
 		//		this.fieldsDatiGenerali.addField(this.rispedizioneNumeroTentativi);
 		//		this.fieldsDatiGenerali.addField(this.rispedizioneUltimoTentativo);
 
-		this.fieldsDatiGenerali.setStyleClass("datiTrasmissioneTable"); 
-		this.fieldsDatiGenerali.setColumnClasses("labelAllineataDx,valueAllineataSx,valueAllineataSx"); 
+		this.fieldsDatiGenerali.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.fieldsDatiGenerali.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_TRE_COLONNE); 
 	}
 
 	@Override
@@ -278,7 +278,7 @@ public class TracciaPCCBean extends BaseBean<PccTraccia, Long> implements IViewB
 		}
 		catch(Exception e1)
 		{
-			MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("tracciaPcc.tracciaRichiesta.erroreDownload"));
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("tracciaPcc.tracciaRichiesta.erroreDownload"));
 		}
 		fc.responseComplete();
 		return null;
@@ -303,7 +303,7 @@ public class TracciaPCCBean extends BaseBean<PccTraccia, Long> implements IViewB
 		}
 		catch(Exception e1)
 		{
-			MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("tracciaPcc.tracciaRisposta.erroreDownload"));
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("tracciaPcc.tracciaRisposta.erroreDownload"));
 		}
 		fc.responseComplete();
 		return null;

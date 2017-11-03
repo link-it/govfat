@@ -31,6 +31,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
+import org.govmix.proxy.fatturapa.web.commons.exporter.PDFCreator.TipoXSL;
 import org.govmix.proxy.fatturapa.web.commons.exporter.exception.ExportException;
 import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
@@ -40,9 +41,8 @@ public abstract class AbstractSingleFileXMLExporter<T,K> extends AbstractSingleF
 
 	public String exportAsPdf(T object,OutputStream out) throws ExportException {
 		InputStream xmlfile = new ByteArrayInputStream(this.getRawContent(object));
-		InputStream xsltfile = getXsltFileStream(object);
 		try {
-			PDFCreator.getInstance(log).createPDF(xmlfile, xsltfile, out);
+			PDFCreator.getInstance(log).createPDF(xmlfile, getTipoXsl(object), out);
 		} catch (Exception e) {
 			throw new ExportException(e);
 		}
@@ -54,6 +54,7 @@ public abstract class AbstractSingleFileXMLExporter<T,K> extends AbstractSingleF
 	}
 	
 	protected abstract String getNomeRisorsaXLST(T object) throws Exception;
+	protected abstract TipoXSL getTipoXsl(T object) throws Exception;
 
 	protected InputStream getXsltFileStream(T object) throws ExportException {
 		InputStream xsltfile = null;

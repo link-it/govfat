@@ -49,11 +49,6 @@ import org.openspcoop2.generic_project.web.input.Text;
  */
 public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implements SearchForm, Cloneable{
 
-	public static final String DATA_INVIO_PERIODO_PERSONALIZZATO = "3";
-	public static final String DATA_INVIO_PERIODO_ULTIMI_TRE_MESI = "2";
-	public static final String DATA_INVIO_PERIODO_ULTIMO_MESE = "1";
-	public static final String DATA_INVIO_PERIODO_ULTIMA_SETTIMANA = "0";
-	
 	private Text cessionarioCommittente = null;
 	private List<SelectItem> cessCommSelList = null;
 	private SelectList dipartimento = null;
@@ -97,13 +92,13 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 //		this.dataInvioPeriodo = new SelectListField();
 //		this.dataInvioPeriodo.setName("dataInvioPeriodo");
 		//NOTA: Modificato a seguito della CR 80
-		this.dataInvioPeriodo = factory.getInputFieldFactory().createSelectList("dataInvioPeriodo","fattura.search.dataInvio",new SelectItem(FatturaElettronicaAttivaSearchForm.DATA_INVIO_PERIODO_ULTIMO_MESE,"fattura.search.dataInvio.ultimoMese"),false);
+		this.dataInvioPeriodo = factory.getInputFieldFactory().createSelectList("dataInvioPeriodo","fattura.search.dataInvio",new SelectItem(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_PERIODO_ULTIMO_MESE,"fattura.search.dataInvio.ultimoMese"),false);
 
 		this.dataInvioPeriodo.setFieldsToUpdate(this.getId () + "_searchPnl");
 		this.dataInvioPeriodo.setForm(this);
 
-		this.dataInvio = factory.getInputFieldFactory().createDateTimeInterval("dataInvio","fattura.search.dataInvio.personalizzato","dd/M/yyyy",null,null,false);
-		this.dataEsatta = factory.getInputFieldFactory().createDateTime("dataEsatta","fattura.search.dataEsatta","dd/M/yyyy",null,false);
+		this.dataInvio = factory.getInputFieldFactory().createDateTimeInterval("dataInvio","fattura.search.dataInvio.personalizzato",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY,null,null,false);
+		this.dataEsatta = factory.getInputFieldFactory().createDateTime("dataEsatta","fattura.search.dataEsatta",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY,null,false);
 		
 		// imposto i valori di default per le date
 		this._setPeriodo();
@@ -228,7 +223,7 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 
 	public DateTime getDataInvio() {
 		boolean rendered = (this.getDataInvioPeriodo().getValue() != null && this.getDataInvioPeriodo().getValue().getValue()
-				.equals(FatturaElettronicaAttivaSearchForm.DATA_INVIO_PERIODO_PERSONALIZZATO)); //Utils.getMessageFromResourceBundle("fattura.search.dataInvio.personalizzato")));
+				.equals(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_PERIODO_PERSONALIZZATO)); //Utils.getMessageFromResourceBundle("fattura.search.dataInvio.personalizzato")));
 
 		this.dataInvio.setRendered(rendered);
 
@@ -301,7 +296,7 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		Date dataInizio = this.getDataInvio().getValue();
 		Date dataFine = this.getDataInvio().getValue2();
 		
-		String periodo = this.getDataInvioPeriodo().getValue() != null ? this.getDataInvioPeriodo().getValue().getValue() : FatturaElettronicaAttivaSearchForm.DATA_INVIO_PERIODO_ULTIMA_SETTIMANA ;
+		String periodo = this.getDataInvioPeriodo().getValue() != null ? this.getDataInvioPeriodo().getValue().getValue() : org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_PERIODO_ULTIMA_SETTIMANA ;
 
 		Calendar today = Calendar.getInstance();
 		today.set(Calendar.HOUR_OF_DAY, 23);
@@ -310,7 +305,7 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		today.clear(Calendar.MILLISECOND);
 
 		//ultima settimana
-		if (FatturaElettronicaAttivaSearchForm.DATA_INVIO_PERIODO_ULTIMA_SETTIMANA.equals(periodo)) {
+		if (org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_PERIODO_ULTIMA_SETTIMANA.equals(periodo)) {
 			Calendar lastWeek = (Calendar) today.clone();
 			Calendar c = Calendar.getInstance();
 			dataFine = c.getTime();
@@ -318,7 +313,7 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 			lastWeek.set(Calendar.MINUTE, 0);
 			lastWeek.add(Calendar.DATE, -7);
 			dataInizio = lastWeek.getTime();
-		} else if (FatturaElettronicaAttivaSearchForm.DATA_INVIO_PERIODO_ULTIMO_MESE.equals( periodo)) {
+		} else if (org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_PERIODO_ULTIMO_MESE.equals( periodo)) {
 			Calendar lastMonth = (Calendar) today.clone();
 
 			// prendo la data corrente
@@ -329,7 +324,7 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 			lastMonth.set(Calendar.MINUTE, 0);
 			lastMonth.add(Calendar.DATE, -30);
 			dataInizio = lastMonth.getTime();
-		} else if (FatturaElettronicaAttivaSearchForm.DATA_INVIO_PERIODO_ULTIMI_TRE_MESI.equals( periodo)) {
+		} else if (org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_PERIODO_ULTIMI_TRE_MESI.equals( periodo)) {
 			Calendar lastyear = (Calendar) today.clone();
 
 			dataFine = Calendar.getInstance().getTime();

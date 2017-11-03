@@ -24,6 +24,7 @@ import java.io.InputStream;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -37,6 +38,10 @@ public interface EndpointEnte {
 	@Consumes("text/xml")
 	@Path("riceviNotificaEC")
 	Response postRiceviNotificaEC(InputStream esitoStream);
+
+	@POST
+	@Path("riceviFatturaAttiva")
+	Response postRiceviFatturaAttiva(@HeaderParam("ProxyFatturaPA-FileName") String fileName, @HeaderParam("ProxyFatturaPA-Dipartimento") String dipartimento, InputStream esitoStream);
 	
 	@GET
 	@Produces("text/plain")

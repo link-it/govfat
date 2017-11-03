@@ -48,13 +48,23 @@
 							<h:outputText value="&#160;&#160;" />
 							
 							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.dataInvio}" insideGroup="true" />
-							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.protocollo}" insideGroup="true" />
-							<h:outputText value="&#160;&#160;" />
+							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.statoElaborazioneDettaglio}" insideGroup="true" />
+							<h:panelGroup>
+								<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{fatturaElettronicaAttivaMBean.selectedElement.visualizzaLinkRiconsegna == false}"/>
+								<h:form id="formRiconsegna" rendered="#{fatturaElettronicaAttivaMBean.selectedElement.visualizzaLinkRiconsegna}">
+									<a4j:commandLink id="ritentaRiconsegna-Link"  
+										action="#{fatturaElettronicaAttivaMBean.ritentaConsegna}"
+										reRender="panelDettaglio2"
+										styleClass="buttonNoRed" ajaxSingle="true">
+										<h:outputText value="#{msg['fattura.ritentaConsegna']}" />
+									</a4j:commandLink>
+								</h:form>
+							</h:panelGroup>
 							
-							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.statoElaborazione}" insideGroup="true" />
-							<h:outputText value="&#160;&#160;" rendered="#{true}"/>
-							<h:outputText value="&#160;&#160;" rendered="#{true}"/>
-							<h:outputText value="&#160;&#160;" rendered="#{true}"/>
+							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.protocollo}" insideGroup="true" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{true}" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{true}" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{true}" />
 						</h:panelGrid>
 					</op2web:fieldset>
 					

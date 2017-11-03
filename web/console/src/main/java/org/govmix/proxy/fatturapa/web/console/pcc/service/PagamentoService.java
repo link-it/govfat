@@ -44,9 +44,9 @@ public class PagamentoService extends BaseService<PagamentoSearchForm>  implemen
 	private PccPagamentoBD bd = null;
 	public PagamentoService() {
 		try{
-			this.bd = new PccPagamentoBD(log);
+			this.bd = new PccPagamentoBD(PagamentoService.log);
 		}catch(Exception e){
-			log.error("Errore durante la init di PagamentoService: "+ e.getMessage(), e); 
+			PagamentoService.log.error("Errore durante la init di PagamentoService: "+ e.getMessage(), e); 
 		}
 	}
 
@@ -85,7 +85,7 @@ public class PagamentoService extends BaseService<PagamentoSearchForm>  implemen
 			PccPagamento dto = this.bd.findById(key);
 			bean.setDTO(dto);
 		} catch (NotFoundException e) {
-			log.debug("Elemento non trovato");
+			PagamentoService.log.debug("Elemento non trovato");
 		}
 
 		return bean;
@@ -117,7 +117,7 @@ public class PagamentoService extends BaseService<PagamentoSearchForm>  implemen
 			}
 
 		} catch (Exception e) {
-			log.error("Errore durante l'esecuzione del metodo ["+methodName+"] : "+ e.getMessage() , e);
+			PagamentoService.log.error("Errore durante l'esecuzione del metodo ["+methodName+"] : "+ e.getMessage() , e);
 		}
 
 		return lst;
@@ -129,10 +129,12 @@ public class PagamentoService extends BaseService<PagamentoSearchForm>  implemen
 		return this.bd.exists(pagamento);
 	}
 
+	@Override
 	public IdFattura getIdFattura() {
 		return idFattura;
 	}
 
+	@Override
 	public void setIdFattura(IdFattura idFattura) {
 		this.idFattura = idFattura;
 	}

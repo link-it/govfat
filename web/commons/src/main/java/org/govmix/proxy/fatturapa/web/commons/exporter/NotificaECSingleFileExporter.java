@@ -35,6 +35,7 @@ import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.orm.dao.INotificaEsitoCommittenteServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCNotificaEsitoCommittenteServiceSearch;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
+import org.govmix.proxy.fatturapa.web.commons.exporter.PDFCreator.TipoXSL;
 import org.govmix.proxy.fatturapa.web.commons.exporter.exception.ExportException;
 import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.openspcoop2.generic_project.exception.ExpressionException;
@@ -69,6 +70,11 @@ public class NotificaECSingleFileExporter extends AbstractSingleFileXMLExporter<
 	protected String getNomeRisorsaXLST(ExtendedNotificaEsitoCommittente object)
 			throws Exception {
 		return CommonsProperties.getInstance(this.log).getXslNotificaEC();
+	}
+
+	@Override
+	protected TipoXSL getTipoXsl(ExtendedNotificaEsitoCommittente object) {
+		return TipoXSL.NOTIFICA_EC;
 	}
 
 	@Override
@@ -111,6 +117,8 @@ public class NotificaECSingleFileExporter extends AbstractSingleFileXMLExporter<
 			pagExpr.equals(NotificaEsitoCommittente.model().ID_FATTURA.IDENTIFICATIVO_SDI, id.getIdentificativoSdi());
 			pagExpr.and();
 			pagExpr.equals(NotificaEsitoCommittente.model().ID_FATTURA.POSIZIONE, id.getPosizione());
+			pagExpr.and();
+			pagExpr.isNotNull(NotificaEsitoCommittente.model().DATA_INVIO_SDI);
 
 			List<NotificaEsitoCommittente> necLst = this.notificaECSearchDAO.findAll(pagExpr);
 			

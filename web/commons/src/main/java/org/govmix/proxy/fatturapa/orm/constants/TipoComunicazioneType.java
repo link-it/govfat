@@ -38,22 +38,28 @@ import org.openspcoop2.generic_project.exception.NotFoundException;
 @javax.xml.bind.annotation.XmlEnum(String.class)
 public enum TipoComunicazioneType implements IEnumeration , Serializable , Cloneable {
 
-	@javax.xml.bind.annotation.XmlEnumValue("FATTURA_USCITA")
-	FATTURA_USCITA ("FATTURA_USCITA"),
-	@javax.xml.bind.annotation.XmlEnumValue("NOTIFICA_SCARTO")
-	NOTIFICA_SCARTO ("NOTIFICA_SCARTO"),
-	@javax.xml.bind.annotation.XmlEnumValue("RICEVUTA_CONSEGNA")
-	RICEVUTA_CONSEGNA ("RICEVUTA_CONSEGNA"),
-	@javax.xml.bind.annotation.XmlEnumValue("NOTIFICA_MANCATA_CONSEGNA")
-	NOTIFICA_MANCATA_CONSEGNA ("NOTIFICA_MANCATA_CONSEGNA"),
-	@javax.xml.bind.annotation.XmlEnumValue("ATTESTAZIONE_TRASMISSIONE_FATTURA")
-	ATTESTAZIONE_TRASMISSIONE_FATTURA ("ATTESTAZIONE_TRASMISSIONE_FATTURA"),
-	@javax.xml.bind.annotation.XmlEnumValue("NOTIFICA_ESITO_COMMITTENTE")
-	NOTIFICA_ESITO_COMMITTENTE ("NOTIFICA_ESITO_COMMITTENTE"),
-	@javax.xml.bind.annotation.XmlEnumValue("NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE")
-	NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE ("NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE"),
-	@javax.xml.bind.annotation.XmlEnumValue("AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO")
-	AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO ("AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO");
+	@javax.xml.bind.annotation.XmlEnumValue("FAT_OUT")
+	FAT_OUT ("FAT_OUT"),
+	@javax.xml.bind.annotation.XmlEnumValue("FAT_IN")
+	FAT_IN ("FAT_IN"),
+	@javax.xml.bind.annotation.XmlEnumValue("RC")
+	RC ("RC"),
+	@javax.xml.bind.annotation.XmlEnumValue("NS")
+	NS ("NS"),
+	@javax.xml.bind.annotation.XmlEnumValue("MC")
+	MC ("MC"),
+	@javax.xml.bind.annotation.XmlEnumValue("NE")
+	NE ("NE"),
+	@javax.xml.bind.annotation.XmlEnumValue("MT")
+	MT ("MT"),
+	@javax.xml.bind.annotation.XmlEnumValue("EC")
+	EC ("EC"),
+	@javax.xml.bind.annotation.XmlEnumValue("SE")
+	SE ("SE"),
+	@javax.xml.bind.annotation.XmlEnumValue("DT")
+	DT ("DT"),
+	@javax.xml.bind.annotation.XmlEnumValue("AT")
+	AT ("AT");
 	
 	
 	/** Value */

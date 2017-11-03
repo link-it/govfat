@@ -81,8 +81,8 @@ public class RispedizioneBean extends BaseBean<PccRispedizione, Long> implements
 		this.fieldsDatiGenerali.addField(this.rispedizioneAutomatica);
 //		this.fieldsDatiGenerali.addField(this.regolaDefault);
 		
-		this.fieldsDatiGenerali.setStyleClass("datiTrasmissioneTable"); 
-		this.fieldsDatiGenerali.setColumnClasses("labelAllineataDx,valueAllineataSx");
+		this.fieldsDatiGenerali.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.fieldsDatiGenerali.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE);
 	}
 	
 	@Override

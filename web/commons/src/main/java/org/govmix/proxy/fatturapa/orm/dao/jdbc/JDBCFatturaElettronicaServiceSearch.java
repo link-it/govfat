@@ -1399,4 +1399,34 @@ public class JDBCFatturaElettronicaServiceSearch implements IDBFatturaElettronic
 	
 	}
 	
+	@Override
+	public int nativeUpdate(String sql, List<Class<?>> returnClassTypes,Object ... param) throws ServiceException,NotFoundException,NotImplementedException{
+	
+		Connection connection = null;
+		try{
+			
+			// ISQLQueryObject
+			ISQLQueryObject sqlQueryObject = this.jdbcSqlObjectFactory.createSQLQueryObject(this.jdbcProperties.getDatabase());
+			sqlQueryObject.setANDLogicOperator(true);
+			// Connection sql
+			connection = this.jdbcServiceManager.getConnection();
+
+			return ((JDBCFatturaElettronicaServiceSearchImpl)this.serviceSearch).nativeUpdate(this.jdbcProperties,this.log,connection,sqlQueryObject,sql,returnClassTypes,param);		
+	
+		}catch(ServiceException e){
+			this.log.error(e.getMessage(),e); throw e;
+		}catch(NotFoundException e){
+			this.log.debug(e.getMessage(),e); throw e;
+		}catch(NotImplementedException e){
+			this.log.error(e.getMessage(),e); throw e;
+		}catch(Exception e){
+			this.log.error(e.getMessage(),e); throw new ServiceException("nativeQuery not completed: "+e.getMessage(),e);
+		}finally{
+			if(connection!=null){
+				this.jdbcServiceManager.closeConnection(connection);
+			}
+		}
+	
+	}
+	
 }

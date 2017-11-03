@@ -46,9 +46,9 @@ public class ScadenzaService extends BaseService<ScadenzaSearchForm>  implements
 
 	public ScadenzaService() {
 		try{
-			this.bd = new PccScadenzaBD(log);
+			this.bd = new PccScadenzaBD(ScadenzaService.log);
 		}catch(Exception e){
-			log.error("Errore durante la init di ScadenzaService: "+ e.getMessage(), e); 
+			ScadenzaService.log.error("Errore durante la init di ScadenzaService: "+ e.getMessage(), e); 
 		}
 	}
 
@@ -182,7 +182,7 @@ public class ScadenzaService extends BaseService<ScadenzaSearchForm>  implements
 				bean = new ScadenzaPccBean();
 				bean.setDTO(dto);
 			} catch (NotFoundException e) {
-				log.debug("Elemento non trovato");
+				ScadenzaService.log.debug("Elemento non trovato");
 			}
 		}
 		return bean;
@@ -214,7 +214,7 @@ public class ScadenzaService extends BaseService<ScadenzaSearchForm>  implements
 			}
 
 		} catch (Exception e) {
-			log.error("Errore durante l'esecuzione del metodo ["+methodName+"] : "+ e.getMessage() , e);
+			ScadenzaService.log.error("Errore durante l'esecuzione del metodo ["+methodName+"] : "+ e.getMessage() , e);
 		}
 
 		return lst;
@@ -226,10 +226,12 @@ public class ScadenzaService extends BaseService<ScadenzaSearchForm>  implements
 		return this.bd.exists(scadenza);
 	}
 
+	@Override
 	public IdFattura getIdFattura() {
 		return idFattura;
 	}
 
+	@Override
 	public void setIdFattura(IdFattura idFattura) {
 		this.idFattura = idFattura;
 	}

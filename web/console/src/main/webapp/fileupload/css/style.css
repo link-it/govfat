@@ -1,0 +1,84 @@
+@charset "UTF-8";
+
+body {
+	font-family: 'Roboto';
+    margin: 0;
+    padding: 0;
+    background-color: #FFF;
+    background-repeat: repeat-x;
+    font-size: 11px;
+}
+
+p {
+    margin: 0 0 2px;
+}
+
+
+.btn {
+	color: #ffffff;
+	border: 1px solid #46464e;
+	background-color: #46464e;
+	background-image: none;
+	font-size: 12px; 
+	font-weight: bold;
+	padding: 5px;
+	border-radius: 5px;
+	margin: 5px;
+	min-width: 80px;
+	cursor:pointer;
+	font-family: 'Roboto';
+}
+
+button.btn:hover, #fiBtn:hover{
+   	border: 1px solid #f0641e;
+	background-color: #f0641e;
+	color: #ffffff;
+	background-image: none;
+}
+
+.progress {
+	margin-bottom: 0px;	
+}
+
+.listaFile {
+	height: 325px;
+}
+
+.iconCaricamentoOk {
+    padding: 8px;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-left: 4px;
+}
+
+
+.rich-fileupload-list-overflow {
+	overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+
+.rich-fileupload-toolbar-decor {
+    border-bottom: 1px solid;
+/*     border-top: 1px solid; */
+/*     border-left: 1px solid; */
+    padding: 5px;
+    background-color: #f9f9f9;
+    border-bottom-color: #C0C0C0;
+    border-top-color: #FFF;
+    border-left-color: #FFF;
+    width: 100%;
+}
+
+.rich-fileupload-button-border {
+    border: 1px solid;
+    margin: 2px;
+    border-color: #C0C0C0;
+}
+
+.rich-fileupload-button-dis {
+    background-repeat: repeat-x;
+    cursor: pointer;
+    padding: 2px;
+}

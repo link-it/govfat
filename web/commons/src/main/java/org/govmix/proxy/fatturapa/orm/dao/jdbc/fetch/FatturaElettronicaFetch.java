@@ -186,6 +186,8 @@ public class FatturaElettronicaFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "fatturazione_attiva", FatturaElettronica.model().LOTTO_FATTURE.FATTURAZIONE_ATTIVA.getFieldType()));
 				setParameter(object, "set_value_statoElaborazioneInUscita", String.class,
 					jdbcParameterUtilities.readParameter(rs, "stato_elaborazione_in_uscita", FatturaElettronica.model().LOTTO_FATTURE.STATO_ELABORAZIONE_IN_USCITA.getFieldType())+"");
+				setParameter(object, "setTentativiConsegna", LottoFatture.model().TENTATIVI_CONSEGNA.getFieldType(),
+						jdbcParameterUtilities.readParameter(rs, "tentativi_consegna", LottoFatture.model().TENTATIVI_CONSEGNA.getFieldType()));
 				setParameter(object, "setDataUltimaElaborazione", FatturaElettronica.model().LOTTO_FATTURE.DATA_ULTIMA_ELABORAZIONE.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "data_ultima_elaborazione", FatturaElettronica.model().LOTTO_FATTURE.DATA_ULTIMA_ELABORAZIONE.getFieldType()));
 				setParameter(object, "setDataRicezione", FatturaElettronica.model().LOTTO_FATTURE.DATA_RICEZIONE.getFieldType(),
@@ -360,6 +362,8 @@ public class FatturaElettronicaFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"LottoFatture.fatturazioneAttiva"));
 				setParameter(object, "set_value_statoElaborazioneInUscita", String.class,
 					this.getObjectFromMap(map,"LottoFatture.statoElaborazioneInUscita"));
+				setParameter(object, "setTentativiConsegna", LottoFatture.model().TENTATIVI_CONSEGNA.getFieldType(),
+						this.getObjectFromMap(map,"tentativiConsegna"));
 				setParameter(object, "setDataRicezione", FatturaElettronica.model().LOTTO_FATTURE.DATA_RICEZIONE.getFieldType(),
 					this.getObjectFromMap(map,"LottoFatture.dataRicezione"));
 				setParameter(object, "set_value_statoInserimento", String.class,

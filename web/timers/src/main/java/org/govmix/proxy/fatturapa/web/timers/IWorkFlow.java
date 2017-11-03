@@ -4,16 +4,15 @@ import java.sql.Connection;
 import java.util.List;
 
 import org.slf4j.Logger;
-import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 
-public interface IWorkFlow {
+public interface IWorkFlow<T> {
 
 	public void init(Logger log, Connection connection, int limit) throws Exception;
 
 	public long count() throws Exception;
 
-	public List<FatturaElettronica> getNextListaFatture() throws Exception;
+	public List<T> getNextLista() throws Exception;
 
-	public void process(FatturaElettronica fattura) throws Exception;
+	public void process(T object) throws Exception;
 
 }

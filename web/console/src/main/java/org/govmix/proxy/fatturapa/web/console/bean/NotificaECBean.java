@@ -79,15 +79,15 @@ public class NotificaECBean extends BaseBean<NotificaEsitoCommittente, Long> imp
 		this.scarto = this.getFactory().getOutputFieldFactory().createText("scarto","notificaEsitoCommittente.scarto");
 		this.scartoNote = this.getFactory().getOutputFieldFactory().createText("scartoNote","notificaEsitoCommittente.scartoNote");
 		this.esito = this.getFactory().getOutputFieldFactory().createText("esito","notificaEsitoCommittente.esito");
-		this.data = this.getFactory().getOutputFieldFactory().createDateTime("data","notificaEsitoCommittente.data","dd/M/yyyy");
-		this.dataInvio = this.getFactory().getOutputFieldFactory().createDateTime("dataInvio","notificaEsitoCommittente.dataInvio","dd/M/yyyy");
+		this.data = this.getFactory().getOutputFieldFactory().createDateTime("data","notificaEsitoCommittente.data",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY);
+		this.dataInvio = this.getFactory().getOutputFieldFactory().createDateTime("dataInvio","notificaEsitoCommittente.dataInvio",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY);
 		this.descrizione = this.getFactory().getOutputFieldFactory().createText("descrizione","notificaEsitoCommittente.descrizione");
 		this.modalitaBatch = this.getFactory().getOutputFieldFactory().createText("modalitaBatch","notificaEsitoCommittente.modalitaBatch");
 
-		this.xml = this.getFactory().getOutputFieldFactory().createButton("xml","notificaEsitoCommittente.label.xml",null,"/images/fatturapa/icons/xml.png","notificaEsitoCommittente.label.xml.iconTitle","notificaEsitoCommittente.label.xml.iconTitle");
-		this.pdf = this.getFactory().getOutputFieldFactory().createButton("pdf","notificaEsitoCommittente.label.pdf",null,"/images/fatturapa/icons/pdf.png","notificaEsitoCommittente.label.pdf.iconTitle","notificaEsitoCommittente.label.pdf.iconTitle");
-		this.scartoXml = this.getFactory().getOutputFieldFactory().createButton("scartoXml","notificaEsitoCommittente.scarto.label.xml",null,"/images/fatturapa/icons/xml.png","notificaEsitoCommittente.scarto.label.xml.iconTitle","notificaEsitoCommittente.scarto.label.xml.iconTitle");
-		this.scartoPdf = this.getFactory().getOutputFieldFactory().createButton("scartoPdf","notificaEsitoCommittente.scarto.label.pdf",null,"/images/fatturapa/icons/pdf.png","notificaEsitoCommittente.scarto.label.pdf.iconTitle","notificaEsitoCommittente.scarto.label.pdf.iconTitle");
+		this.xml = this.getFactory().getOutputFieldFactory().createButton("xml","notificaEsitoCommittente.label.xml",null,org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_XML,"notificaEsitoCommittente.label.xml.iconTitle","notificaEsitoCommittente.label.xml.iconTitle");
+		this.pdf = this.getFactory().getOutputFieldFactory().createButton("pdf","notificaEsitoCommittente.label.pdf",null,org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_PDF,"notificaEsitoCommittente.label.pdf.iconTitle","notificaEsitoCommittente.label.pdf.iconTitle");
+		this.scartoXml = this.getFactory().getOutputFieldFactory().createButton("scartoXml","notificaEsitoCommittente.scarto.label.xml",null,org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_XML,"notificaEsitoCommittente.scarto.label.xml.iconTitle","notificaEsitoCommittente.scarto.label.xml.iconTitle");
+		this.scartoPdf = this.getFactory().getOutputFieldFactory().createButton("scartoPdf","notificaEsitoCommittente.scarto.label.pdf",null,org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_PDF,"notificaEsitoCommittente.scarto.label.pdf.iconTitle","notificaEsitoCommittente.scarto.label.pdf.iconTitle");
 		this.utente = this.getFactory().getOutputFieldFactory().createText("utente","notificaEsitoCommittente.utente");
 		
 		this.separatore = this.getFactory().getOutputFieldFactory().createText("separatore",null);

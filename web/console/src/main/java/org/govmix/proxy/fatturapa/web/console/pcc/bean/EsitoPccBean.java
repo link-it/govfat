@@ -71,10 +71,10 @@ public class EsitoPccBean extends BaseBean<PccTracciaTrasmissioneEsito, Long> im
 		this.idTrasmissione = this.getFactory().getOutputFieldFactory().createText("idTrasmissione","esitoPcc.idTrasmissione");
 		this.esitoTrasmissione = this.getFactory().getOutputFieldFactory().createText("esitoTrasmissione","esitoPcc.esitoTrasmissione");
 		this.dettaglioErroreTrasmissione = this.getFactory().getOutputFieldFactory().createText("dettaglioErroreTrasmissione","esitoPcc.dettaglioErroreTrasmissione");
-		this.dettaglioErroreTrasmissione.setValueStyleClass("whiteSpaceNewLine");
+		this.dettaglioErroreTrasmissione.setValueStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_WHITE_SPACE_NEW_LINE);
 		this.idEgovRichiesta = this.getFactory().getOutputFieldFactory().createText("idEgovRichiesta","esitoPcc.idEgovRichiesta");
-		this.dataFineElaborazione = this.getFactory().getOutputFieldFactory().createDateTime("dataFineElaborazione","esitoPcc.dataFineElaborazione","dd/M/yyyy HH:mm:ss");
-		this.gdo = this.getFactory().getOutputFieldFactory().createDateTime("gdo","esitoPcc.gdo","dd/M/yyyy HH:mm:ss"); 
+		this.dataFineElaborazione = this.getFactory().getOutputFieldFactory().createDateTime("dataFineElaborazione","esitoPcc.dataFineElaborazione",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS);
+		this.gdo = this.getFactory().getOutputFieldFactory().createDateTime("gdo","esitoPcc.gdo",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS); 
 		this.sdf = new SimpleDateFormat(this.gdo.getPattern());
 		
 		
@@ -98,8 +98,8 @@ public class EsitoPccBean extends BaseBean<PccTracciaTrasmissioneEsito, Long> im
 		this.fieldsDatiGenerali.addField(this.dettaglioErroreTrasmissione);
 
 
-		this.fieldsDatiGenerali.setStyleClass("datiTrasmissioneTable"); 
-		this.fieldsDatiGenerali.setColumnClasses("labelAllineataDx,valueAllineataSx");
+		this.fieldsDatiGenerali.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.fieldsDatiGenerali.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE);
 
 		this.listaErroriElaborazione = new ArrayList<ErroreElaborazionePccBean>();
 	}
