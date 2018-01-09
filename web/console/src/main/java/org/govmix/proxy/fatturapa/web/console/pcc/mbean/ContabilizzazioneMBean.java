@@ -397,7 +397,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 			}
 
 		}
-		catch (Exception e) {
+		catch (Throwable e) {
 			this.log.error("Si e' verificato un errore durante il salvataggio della contabilizzazione: " + e.getMessage(), e);
 
 			if(e instanceof javax.xml.ws.soap.SOAPFaultException){
@@ -563,7 +563,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoKO.dipartimentoNonAutorizzato"));
 			}
 		} 
-		catch (Exception e) {
+		catch (Throwable e) {
 			this.log.error("Si e' verificato un errore durante il salvataggio della contabilizzazione: " + e.getMessage(), e);
 
 			if(e instanceof javax.xml.ws.soap.SOAPFaultException){
@@ -931,7 +931,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoAsincronaKO.dipartimentoNonAutorizzato"));
 			}
 		} 
-		catch (Exception e) {
+		catch (Throwable e) {
 			this.log.error("Si e' verificato un errore durante il salvataggio della contabilizzazione: " + e.getMessage(), e);
 
 			if(e instanceof javax.xml.ws.soap.SOAPFaultException){

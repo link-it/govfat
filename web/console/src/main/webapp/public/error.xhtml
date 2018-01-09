@@ -29,7 +29,7 @@
         <f:loadBundle var="msg" basename="messages" />
 	<a4j:loadScript src="resource://jquery.js" />
 	<ui:define name="body">
-		<c:if test="#{!loginBean.loggedIn}">
+		<c:if test="#{loginBean.isLoggedInAsString == 'false'}">
 			<style>
 				.rich-page-body {
     					margin-left: 0px;

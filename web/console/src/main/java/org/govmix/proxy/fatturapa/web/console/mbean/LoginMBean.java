@@ -88,6 +88,8 @@ public class LoginMBean extends LoginBean{
 		String fieldsToUpdate = this.getLanguageForm().getId() + "_formPnl,headerContentParent,footerct,bodyWrapper,menuct";
 		// Fix per il form della lingua nella grafica rossa
 		this.getLanguageForm().getLingua().setFieldsToUpdate(fieldsToUpdate );
+		this.getLanguageForm().getLingua().setWidth(80);
+		this.getLanguageForm().getLingua().setStyle("width:80px");
 	}
 
 	@Override

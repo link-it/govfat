@@ -54,7 +54,9 @@
 					<div>
                         <a4j:outputPanel layout="block" id="#{utenteMBean.search.denominazione.name}ComboCtr" styleClass="keepMargin">
 	                        <h:inputText id="input_#{utenteMBean.search.denominazione.name}Combo" value="#{utenteMBean.search.denominazione.value}"
-	                                style="#{utenteMBean.search.denominazione.style}" />
+	                                style="#{utenteMBean.search.denominazione.style}" 
+	                                styleClass="#{utenteMBean.search.denominazione.styleClass}"
+	                                />
 	                        <rich:suggestionbox id="input_#{utenteMBean.search.denominazione.name}Suggestion" width="#{utenteMBean.search.denominazione.width}"
 	                                for="input_#{utenteMBean.search.denominazione.name}Combo" listWidth="#{utenteMBean.search.denominazione.selectItemsWidth}"
 	                                suggestionAction="#{utenteMBean.search.denominazione.fieldAutoComplete}" var="selectItem" fetchValue="#{selectItem.value}"

@@ -349,7 +349,7 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneInviaScadenzeKO.dipartimentoNonAutorizzato"));
 			}
 		}
-		catch (Exception e) {
+		catch (Throwable e) {
 			this.log.error("Si e' verificato un errore durante l'invio della scadenze: " + e.getMessage(), e);
 
 			if(e instanceof javax.xml.ws.soap.SOAPFaultException){
@@ -528,7 +528,7 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("scadenza.form.operazioneCancellazioneScadenzeKO.dipartimentoNonAutorizzato"));
 			}
 		}
-		catch (Exception e) {
+		catch (Throwable e) {
 			this.log.error("Si e' verificato un errore durante l'invio della scadenze: " + e.getMessage(), e);
 
 			if(e instanceof javax.xml.ws.soap.SOAPFaultException){

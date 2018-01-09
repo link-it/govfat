@@ -108,21 +108,23 @@
 
 						<op2web:simpleListView id="tabellaAllegati" rendered="#{not empty listaAllegati}" value="#{listaAllegati}" itemMetadata="#{metadataAllegato}">
 						
-							<!-- Colonne nome,descrizione,compressione,formato-->
-							<op2web:tableColumns nomiColonne="#{'nomeAttachment,descrizioneAttachment,algoritmoCompressione,formatoAttachment'}" />
-							
-							<!-- Visualizza -->
-							<rich:column style="text-align: center;" styleClass="columnHeaderLabel">
+							<!-- nomeAttachment -->
+							<rich:column>
 								<f:facet name="header">
-									<h:outputText value="#{metadataAllegato.attachment.label}" />
+									<h:outputText value="#{metadataAllegato.nomeAttachment.label}" styleClass="columnHeaderLabel" />
 								</f:facet>
 
 								<h:panelGroup>
+									<h:outputText value="#{item.nomeAttachment.value}" rendered="#{empty item.attachment.href}" />
 									<h:outputLink value="#{item.attachment.href}" target="_blank" rendered="#{not empty item.attachment.href}">
-										<h:graphicImage value="#{item.attachment.image}" width="16" height="16" title="#{item.attachment.title}" />
+										<h:outputText value="#{item.nomeAttachment.value}" rendered="#{not empty item.attachment.href}" />
 									</h:outputLink>
 								</h:panelGroup>
 							</rich:column>
+							
+							<!-- Colonne nome,descrizione,compressione,formato-->
+							<op2web:tableColumns nomiColonne="#{'descrizioneAttachment,algoritmoCompressione,formatoAttachment'}" />
+							
 						</op2web:simpleListView>
 					</op2web:fieldset>
 					
@@ -171,7 +173,7 @@
 										</h:panelGroup>
 									</rich:column>
 
-<!-- Forza rispedizione -->
+									<!-- Forza rispedizione -->
 									<rich:column style="text-align: center;" rendered="#{fatturaElettronicaMBean.selectedElement.visualizzaColonnaRiconsegnaNotificaEC}">
 										<f:facet name="header"></f:facet>
 		

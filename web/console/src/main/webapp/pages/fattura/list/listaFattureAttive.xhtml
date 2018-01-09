@@ -325,9 +325,9 @@
 				<op2web:tableColumns nomiColonne="#{'importo'}" />
 				
 				<!-- XML (Icona) -->
-				<rich:column style="text-align: center;" styleClass="columnHeaderLabel">
+				<rich:column style="text-align: center;">
 					<f:facet name="header">
-						<h:outputText value="#{itemMetadata.xml.label}" />
+						<h:outputText value="#{itemMetadata.xml.label}"  styleClass="columnHeaderLabel" />
 					</f:facet>
 					 
 					<h:panelGroup>
@@ -338,9 +338,9 @@
 				</rich:column>
 				
 				<!-- PDF (Icona) -->
-				<rich:column style="text-align: center;" styleClass="columnHeaderLabel">
+				<rich:column style="text-align: center;">
 					<f:facet name="header">
-						<h:outputText value="#{itemMetadata.pdf.label}" />
+						<h:outputText value="#{itemMetadata.pdf.label}"  styleClass="columnHeaderLabel" />
 					</f:facet>
 					 <h:panelGroup>
 					 	<h:commandLink id="visualizzaPdfLink" target="_blank" action="#{item.visualizzaPdf}" rendered="#{not empty item.pdf.href}">

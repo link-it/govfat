@@ -1052,3 +1052,39 @@ input.rich-spinner-input {
 	width: 384px;
 	border-right: none;
 }
+
+.rich-tab-header {
+	font-family: 'Roboto';
+	font-size: 12px; 
+}
+
+.rich-tab-active {
+	background-image: none;
+	background-color: #c2c2c4;
+}
+
+.rich-tab-inactive {
+	background-image: none;
+	background-color: #fff;
+	cursor: pointer;
+}
+
+.rich-tabhdr-side-border {
+	background-image: none;
+	border-right: 1px solid #c2c2c4;
+}
+
+.rich-tabhdr-side-cell {
+	border-top-color: #c2c2c4;
+}
+
+.rich-tab-bottom-line {
+	border-bottom-color: #c2c2c4;
+}
+
+.rich-tabpanel-content{
+	padding: 24px;
+	border-bottom-color: #c2c2c4;
+    border-right-color: #c2c2c4;
+    border-left-color: #c2c2c4;
+}

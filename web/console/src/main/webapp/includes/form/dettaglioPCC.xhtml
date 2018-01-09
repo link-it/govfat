@@ -51,14 +51,13 @@
 						<!-- Link dettagli ,tabellaContabilizzazioni,panelStatoContabilizzazioni,panelStatoScadenze,tabellaScadenze,tabellaPagamenti-->
 						<rich:column width="50px" style="text-align: center;">
 							<f:facet name="header">
-								<h:panelGroup style="width:50px;" layout="block">
-									<a4j:commandLink id="refreshPagina"
+								<h:panelGroup style="text-align: center;" layout="block" styleClass="columnHeaderLabel">
+									<a4j:commandLink id="refreshPagina" style="font-size: 14px; font-weight: normal;"
 										reRender="tabellaOperazioni"
 										rendered="#{operazioneMBean.visualizzaRefresh}"
 										action="#{operazioneMBean.refreshDettaglioPcc}"
 										oncomplete="refreshPnl()">
-										<h:graphicImage value="/images/arrow_refresh.png" width="16"
-											height="16" title="#{msg['operazione.label.aggiornaPagina']}" />
+										<h:outputText value="#{msg['operazione.label.aggiornaPagina']}" />
 									</a4j:commandLink>
 								</h:panelGroup>
 							</f:facet>
@@ -105,6 +104,8 @@
 				</h:form>
 			</a4j:outputPanel>
 		</op2web:fieldset>
+		
+		<div class="spacerDettaglio"></div>
 
 		<!-- Contabilizzazioni -->
 		<op2web:fieldset
@@ -253,6 +254,8 @@
 				</h:form>
 			</a4j:outputPanel>
 		</op2web:fieldset>
+		
+		<div class="spacerDettaglio"></div>
 
 		<!-- Scadenze -->
 		<op2web:fieldset legend="#{msg['scadenza.sezioneScadenze']}"
@@ -395,6 +398,8 @@
 				</h:form>
 			</a4j:outputPanel>
 		</op2web:fieldset>
+		
+		<div class="spacerDettaglio"></div>
 
 		<!-- Pagamento -->
 		<op2web:fieldset legend="#{msg['pagamentoPcc.sezionePagamenti']}"
@@ -551,27 +556,24 @@
 	</rich:modalPanel>
 
 	<rich:modalPanel id="invioOperazioneContabile_Confirmation" width="300"
-		height="150">
+		height="180">
 		<f:facet name="header">
 			<h:outputText
 				value="#{msg['contabilizzazione.form.operazioneContabile.conferma.title']}" />
 		</f:facet>
-		<h:panelGrid style="width:100%;">
-			<h:panelGrid columns="3" style="text-align: center;">
-				<h:graphicImage value="/images/001_11.png"
-					alt="#{msg['contabilizzazione.form.operazioneContabile.conferma.label']}" />
-				<rich:spacer width="10px" />
-				<h:outputText
-					value="#{msg['contabilizzazione.form.operazioneContabile.conferma.label']}"
-					style="font-weight: bold;" />
-			</h:panelGrid>
-			<h:panelGroup>
-				<rich:spacer height="20px" />
+		<div class="form-container noborder">
+	        <div class="buttonrowmodal">
+	            <h:panelGrid columns="2">
+	               <h:graphicImage value="/images/tema_link/alert_orange.png" alt="#{msg['contabilizzazione.form.operazioneContabile.conferma.label']}" />
+	                      <h:outputText value="#{msg['contabilizzazione.form.operazioneContabile.conferma.label']}" style="font-weight: bold;" />
+	            </h:panelGrid>
+	        </div>
+		 	<div class="errorsSpacer"/>
+		 	<div class="buttonrowmodal">
 				<h:form>
-					<div class="buttonrow" style="text-align: center;">
+					<div style="text-align: center;">
 						<a4j:htmlCommandLink
 							id="invioOperazioneContabile_confermaBtn-iconLink"
-							styleClass="icon-ok buttonNoRed"
 							action="#{contabilizzazioneMBean.inviaOperazioneContabile}"
 							reRender="panelStatoContabilizzazioni,tabellaContabilizzazioni,tabellaOperazioni"
 							onclick="disableLink('invioOperazioneContabile_confermaBtn-iconLink')"
@@ -581,38 +583,35 @@
 							<f:setPropertyActionListener value="tabPCC"
 								target="#{fatturaElettronicaMBean.selectedTab}" />
 						</a4j:htmlCommandLink>
-						<input id="invioOperazioneContabile_annullaBtn" type="button"
+						<input id="invioOperazioneContabile_annullaBtn" type="button" style="min-width: 80px;" 
 							value="#{msg['contabilizzazione.form.operazioneContabile.conferma.ko']}"
-							class="negative icon-delete"
+							class="negative"
 							onclick="Richfaces.hideModalPanel('invioOperazioneContabile_Confirmation');return false" />
 					</div>
 				</h:form>
-			</h:panelGroup>
-		</h:panelGrid>
+			</div>
+		</div>
 	</rich:modalPanel>
 
 	<rich:modalPanel id="invioRichiestaRiallineamento_Confirmation"
-		width="300" height="150">
+		width="380" height="180">
 		<f:facet name="header">
 			<h:outputText
 				value="#{msg['contabilizzazione.form.operazioneRichiestaRiallineamento.conferma.title']}" />
 		</f:facet>
-		<h:panelGrid style="width:100%;">
-			<h:panelGrid columns="3" style="text-align: center;">
-				<h:graphicImage value="/images/001_11.png"
-					alt="#{msg['contabilizzazione.form.operazioneRichiestaRiallineamento.conferma.label']}" />
-				<rich:spacer width="10px" />
-				<h:outputText
-					value="#{msg['contabilizzazione.form.operazioneRichiestaRiallineamento.conferma.label']}"
-					style="font-weight: bold;" />
-			</h:panelGrid>
-			<h:panelGroup>
-				<rich:spacer height="20px" />
+		<div class="form-container noborder">
+	        <div class="buttonrowmodal">
+	            <h:panelGrid columns="2">
+	               <h:graphicImage value="/images/tema_link/alert_orange.png" alt="#{msg['contabilizzazione.form.operazioneRichiestaRiallineamento.conferma.label']}" />
+	                      <h:outputText value="#{msg['contabilizzazione.form.operazioneRichiestaRiallineamento.conferma.label']}" style="font-weight: bold;" />
+	            </h:panelGrid>
+	        </div>
+		 	<div class="errorsSpacer"/>
+		 	<div class="buttonrowmodal">
 				<h:form>
-					<div class="buttonrow" style="text-align: center;">
+					<div style="text-align: center;">
 						<a4j:htmlCommandLink
 							id="invioRichiestaRiallineamento_confermaBtn-iconLink"
-							styleClass="icon-ok buttonNoRed"
 							action="#{contabilizzazioneMBean.inviaRichiestaRiallineamento}"
 							reRender="panelStatoContabilizzazioni,tabellaContabilizzazioni,tabellaOperazioni,tabellaPagamenti"
 							onclick="disableLink('invioRichiestaRiallineamento_confermaBtn-iconLink')"
@@ -622,39 +621,36 @@
 							<f:setPropertyActionListener value="tabPCC"
 								target="#{fatturaElettronicaMBean.selectedTab}" />
 						</a4j:htmlCommandLink>
-						<input id="invioRichiestaRiallineamento_annullaBtn" type="button"
+						<input id="invioRichiestaRiallineamento_annullaBtn" type="button" style="min-width: 80px;" 
 							value="#{msg['contabilizzazione.form.operazioneRichiestaRiallineamento.conferma.ko']}"
-							class="negative icon-delete"
+							class="negative"
 							onclick="Richfaces.hideModalPanel('invioRichiestaRiallineamento_Confirmation');return false" />
 					</div>
 				</h:form>
-			</h:panelGroup>
-		</h:panelGrid>
+			</div>
+		</div>
 	</rich:modalPanel>
 
 	<rich:modalPanel
-		id="invioRichiestaRiallineamentoAsincrona_Confirmation" width="300"
-		height="150">
+		id="invioRichiestaRiallineamentoAsincrona_Confirmation" width="350"
+		height="180">
 		<f:facet name="header">
 			<h:outputText
 				value="#{msg['contabilizzazione.form.operazioneRichiestaRiallineamentoAsincrona.conferma.title']}" />
 		</f:facet>
-		<h:panelGrid style="width:100%;">
-			<h:panelGrid columns="3" style="text-align: center;">
-				<h:graphicImage value="/images/001_11.png"
-					alt="#{msg['contabilizzazione.form.operazioneRichiestaRiallineamentoAsincrona.conferma.label']}" />
-				<rich:spacer width="10px" />
-				<h:outputText
-					value="#{msg['contabilizzazione.form.operazioneRichiestaRiallineamentoAsincrona.conferma.label']}"
-					style="font-weight: bold;" />
-			</h:panelGrid>
-			<h:panelGroup>
-				<rich:spacer height="20px" />
+		<div class="form-container noborder">
+	        <div class="buttonrowmodal">
+	            <h:panelGrid columns="2">
+	               <h:graphicImage value="/images/tema_link/alert_orange.png" alt="#{msg['contabilizzazione.form.operazioneRichiestaRiallineamentoAsincrona.conferma.label']}" />
+	                      <h:outputText value="#{msg['contabilizzazione.form.operazioneRichiestaRiallineamentoAsincrona.conferma.label']}" style="font-weight: bold;" />
+	            </h:panelGrid>
+	        </div>
+		 	<div class="errorsSpacer"/>
+		 	<div class="buttonrowmodal">
 				<h:form>
-					<div class="buttonrow" style="text-align: center;">
+					<div style="text-align: center;">
 						<a4j:htmlCommandLink
 							id="invioRichiestaRiallineamentoAsincrona_confermaBtn-iconLink"
-							styleClass="icon-ok buttonNoRed"
 							action="#{contabilizzazioneMBean.inviaRichiestaRiallineamentoAsincrono}"
 							reRender="panelStatoContabilizzazioni,tabellaContabilizzazioni,tabellaOperazioni,panelStatoScadenze,tabellaScadenze,tabellaPagamenti"
 							onclick="disableLink('invioRichiestaRiallineamentoAsincrona_confermaBtn-iconLink')"
@@ -665,38 +661,35 @@
 								target="#{fatturaElettronicaMBean.selectedTab}" />
 						</a4j:htmlCommandLink>
 						<input id="invioRichiestaRiallineamentoAsincrona_annullaBtn"
-							type="button"
+							type="button" style="min-width: 80px;" 
 							value="#{msg['contabilizzazione.form.operazioneRichiestaRiallineamentoAsincrona.conferma.ko']}"
-							class="negative icon-delete"
+							class="negative"
 							onclick="Richfaces.hideModalPanel('invioRichiestaRiallineamentoAsincrona_Confirmation');return false" />
 					</div>
 				</h:form>
-			</h:panelGroup>
-		</h:panelGrid>
+			</div>
+		</div>
 	</rich:modalPanel>
 
 	<rich:modalPanel id="invioRichiestaScadenze_Confirmation" width="300"
-		height="150">
+		height="180">
 		<f:facet name="header">
 			<h:outputText
 				value="#{msg['scadenza.form.operazioneInviaScadenze.conferma.title']}" />
 		</f:facet>
-		<h:panelGrid style="width:100%;">
-			<h:panelGrid columns="3" style="text-align: center;">
-				<h:graphicImage value="/images/001_11.png"
-					alt="#{msg['scadenza.form.operazioneInviaScadenze.conferma.label']}" />
-				<rich:spacer width="10px" />
-				<h:outputText
-					value="#{msg['scadenza.form.operazioneInviaScadenze.conferma.label']}"
-					style="font-weight: bold;" />
-			</h:panelGrid>
-			<h:panelGroup>
-				<rich:spacer height="20px" />
+		<div class="form-container noborder">
+	        <div class="buttonrowmodal">
+	            <h:panelGrid columns="2">
+	               <h:graphicImage value="/images/tema_link/alert_orange.png" alt="#{msg['scadenza.form.operazioneInviaScadenze.conferma.label']}" />
+	                      <h:outputText value="#{msg['scadenza.form.operazioneInviaScadenze.conferma.label']}" style="font-weight: bold;" />
+	            </h:panelGrid>
+	        </div>
+		 	<div class="errorsSpacer"/>
+		 	<div class="buttonrowmodal">
 				<h:form>
-					<div class="buttonrow" style="text-align: center;">
+					<div style="text-align: center;">
 						<a4j:htmlCommandLink
 							id="invioRichiestaScadenze_confermaBtn-iconLink"
-							styleClass="icon-ok buttonNoRed"
 							action="#{scadenzaMBean.inviaAggiornamentoScadenze}"
 							reRender="panelStatoScadenze,tabellaScadenze,tabellaOperazioni"
 							onclick="disableLink('invioRichiestaScadenze_confermaBtn-iconLink')"
@@ -706,38 +699,35 @@
 							<f:setPropertyActionListener value="tabPCC"
 								target="#{fatturaElettronicaMBean.selectedTab}" />
 						</a4j:htmlCommandLink>
-						<input id="invioRichiestaScadenze_annullaBtn" type="button"
+						<input id="invioRichiestaScadenze_annullaBtn" type="button" style="min-width: 80px;" 
 							value="#{msg['scadenza.form.operazioneInviaScadenze.conferma.ko']}"
-							class="negative icon-delete"
+							class="negative"
 							onclick="Richfaces.hideModalPanel('invioRichiestaScadenze_Confirmation');return false" />
 					</div>
 				</h:form>
-			</h:panelGroup>
-		</h:panelGrid>
+			 </div>
+		 </div>
 	</rich:modalPanel>
 	
 	<rich:modalPanel id="invioCancellazioneScadenze_Confirmation"
-		width="300" height="150">
+		width="300" height="180">
 		<f:facet name="header">
 			<h:outputText
 				value="#{msg['scadenza.form.operazioneCancellazioneScadenze.conferma.title']}" />
 		</f:facet>
-		<h:panelGrid style="width:100%;">
-			<h:panelGrid columns="3" style="text-align: center;">
-				<h:graphicImage value="/images/001_11.png"
-					alt="#{msg['scadenza.form.operazioneCancellazioneScadenze.conferma.label']}" />
-				<rich:spacer width="10px" />
-				<h:outputText
-					value="#{msg['scadenza.form.operazioneCancellazioneScadenze.conferma.label']}"
-					style="font-weight: bold;" />
-			</h:panelGrid>
-			<h:panelGroup>
-				<rich:spacer height="20px" />
+		<div class="form-container noborder">
+	        <div class="buttonrowmodal">
+	            <h:panelGrid columns="2">
+	               <h:graphicImage value="/images/tema_link/alert_orange.png" alt="#{msg['scadenza.form.operazioneCancellazioneScadenze.conferma.label']}" />
+	                      <h:outputText value="#{msg['scadenza.form.operazioneCancellazioneScadenze.conferma.label']}" style="font-weight: bold;" />
+	            </h:panelGrid>
+	        </div>
+		 	<div class="errorsSpacer"/>
+		 	<div class="buttonrowmodal">
 				<h:form>
-					<div class="buttonrow" style="text-align: center;">
+					<div style="text-align: center;">
 					<a4j:htmlCommandLink
 							id="invioCancellazioneScadenze_confermaBtn-iconLink"
-							styleClass="icon-ok buttonNoRed"
 							action="#{scadenzaMBean.cancellaScadenze}"
 							reRender="panelStatoScadenze,tabellaScadenze,tabellaOperazioni"
 							onclick="disableLink('invioCancellazioneScadenze_confermaBtn-iconLink')"
@@ -747,14 +737,14 @@
 							<f:setPropertyActionListener value="tabPCC"
 								target="#{fatturaElettronicaMBean.selectedTab}" />
 						</a4j:htmlCommandLink>
-						<input id="invioCancellazioneScadenze_annullaBtn" type="button"
+						<input id="invioCancellazioneScadenze_annullaBtn" type="button" style="min-width: 80px;" 
 							value="#{msg['scadenza.form.operazioneCancellazioneScadenze.conferma.ko']}"
-							class="negative icon-delete"
+							class="negative"
 							onclick="Richfaces.hideModalPanel('invioCancellazioneScadenze_Confirmation');return false" />
 					</div>
 				</h:form>
-			</h:panelGroup>
-		</h:panelGrid>
+		 	</div>
+		 </div>
 	</rich:modalPanel>
 
 </ui:composition>
