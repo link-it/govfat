@@ -294,6 +294,18 @@
 		                        function #{id}_disabilitaEsporta_2( inputId, abilita ){
 		                        	 jQuery("[id$='"+inputId+"']").attr('disabled',abilita);
 		                        }
+		                        
+		                        function checkSelection2(containerId){
+		                            var name = containerId + "_checkSelection";
+		                            var n = jQuery("div [id$='"+containerId+"_tbl'] input:checkbox[id$='column_ckb_2']:checked").length;
+		                                   if(n==0){
+		                                           Richfaces.showModalPanel(name);
+		                                           return false;
+		                                   }else{
+		                                           return true;
+		                                   }
+		                    	};
+
 		                     //]]>
 		                    </script>
 		                  	<h:selectBooleanCheckbox id="#{id}_checkAll_2" title="#{commonsMsg['pagedDataTable.component.selectAll']}" onclick="#{id}_checkAllCheckboxesInTable_2( '#{id}', this.checked );">
@@ -352,7 +364,7 @@
 				<ui:define name="buttonsListView">
 					<h:commandLink id="exportFatture-iconLink" target="_blank" 
 						styleClass="icon-compress" action="#{fatturaElettronicaAttivaMBean.exportSelected}"
-						onclick="return checkSelection('fatturaElettronicaTable_dt');">
+						onclick="return checkSelection2('fatturaElettronicaTable_dt');">
 						<h:outputText value="#{msg['commons.button.esporta']}" />
 					</h:commandLink>
 					
@@ -439,7 +451,7 @@
 							        <div class="rich-combobox">	 
 							            <iframe id="uploadFattureFrame" name="uploadFattureFrame" class="rich-fileupload-list-decor"
 							            	frameborder="0" scrolling="no" 
-							            	src="../../../includes/form/uploadForm.jsp" width="500px" height="400px">
+							            	src="#{facesContext.externalContext.request.contextPath}/includes/form/uploadForm.jsp" width="500px" height="400px">
 							              <p>Your browser does not support iframes.</p>
 							            </iframe>
 						            </div>

@@ -52,10 +52,22 @@
 				<op2web:prop label="#{utenteMBean.search.denominazione.label}" required="#{utenteMBean.search.denominazione.required}" 
 						rendered="#{utenteMBean.search.denominazione.rendered}">
 					<div>
-						<div class="keepMargin">
-							<h:inputText id="input_#{utenteMBean.search.denominazione.name}" value="#{utenteMBean.search.denominazione.value}" 
-							style="#{utenteMBean.search.denominazione.style}" disabled="#{utenteMBean.search.denominazione.disabled}" />	
-						</div>
+                        <a4j:outputPanel layout="block" id="#{utenteMBean.search.denominazione.name}ComboCtr" styleClass="keepMargin">
+	                        <h:inputText id="input_#{utenteMBean.search.denominazione.name}Combo" value="#{utenteMBean.search.denominazione.value}"
+	                                style="#{utenteMBean.search.denominazione.style}" />
+	                        <rich:suggestionbox id="input_#{utenteMBean.search.denominazione.name}Suggestion" width="#{utenteMBean.search.denominazione.width}"
+	                                for="input_#{utenteMBean.search.denominazione.name}Combo" listWidth="#{utenteMBean.search.denominazione.selectItemsWidth}"
+	                                suggestionAction="#{utenteMBean.search.denominazione.fieldAutoComplete}" var="selectItem" fetchValue="#{selectItem.value}"
+	                                ajaxSingle="true" nothingLabel="--" param="input_#{utenteMBean.search.denominazione.name}Combo">
+	                                <h:column>
+	                                        <h:outputText value="#{selectItem.label}" rendered="true" />
+	                                </h:column>
+	                                <a4j:support status="mainStatus" event="onselect" rendered="#{!empty utenteMBean.search.denominazione.fieldsToUpdate}"
+	                                        actionListener="#{utenteMBean.search.denominazione.fieldSelected}"
+	                                        reRender="#{utenteMBean.search.denominazione.fieldsToUpdate}" />
+	                        </rich:suggestionbox>
+                        </a4j:outputPanel>
+						
 					</div>
 				
 			 	</op2web:prop>	
