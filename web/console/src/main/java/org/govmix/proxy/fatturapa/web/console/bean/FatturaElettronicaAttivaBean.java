@@ -137,7 +137,7 @@ public void init() throws FactoryException{
 		this.cedentePrestatorePaese = this.getFactory().getOutputFieldFactory().createText("cedentePrestatorePaese","fattura.cedentePrestatorePaese");
 		this.dipartimento = this.getFactory().getOutputFieldFactory().createText("dipartimento","fattura.dipartimento");
 		this.annoNumero = this.getFactory().getOutputFieldFactory().createText("annoNumero","fattura.annoNumero");
-		this.dataInvio = this.getFactory().getOutputFieldFactory().createDateTime("dataRicezione","fattura.dataInvio",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY);
+		this.dataInvio = this.getFactory().getOutputFieldFactory().createDateTime("dataInvio","fattura.dataInvio",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY);
 
 		this.importo = this.getFactory().getOutputFieldFactory().createNumber("importo","fattura.importoTotaleDocumento");
 		this.importo.setConverterType(Costanti.CONVERT_TYPE_CURRENCY);

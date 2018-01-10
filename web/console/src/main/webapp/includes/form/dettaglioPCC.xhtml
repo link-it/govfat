@@ -46,46 +46,43 @@
 						</f:facet>
 
 						<op2web:tableColumns
-							nomiColonne="#{'dataUltimaTrasmissione,operazioneContabile,sistemaRichiedente,utenteRichiedente,stato'}" />
-
-						<!-- Link dettagli ,tabellaContabilizzazioni,panelStatoContabilizzazioni,panelStatoScadenze,tabellaScadenze,tabellaPagamenti-->
-						<rich:column width="50px" style="text-align: center;">
+							nomiColonne="#{'dataUltimaTrasmissione'}" />
+							
+						<!-- Link dettagli operazioneContabile -->
+						<rich:column styleClass="#{itemMetadata.operazioneContabile.tableColumnStyleClass}">
 							<f:facet name="header">
-								<h:panelGroup style="text-align: center;" layout="block" styleClass="columnHeaderLabel">
-									<a4j:commandLink id="refreshPagina" style="font-size: 14px; font-weight: normal;"
-										reRender="tabellaOperazioni"
-										rendered="#{operazioneMBean.visualizzaRefresh}"
-										action="#{operazioneMBean.refreshDettaglioPcc}"
-										oncomplete="refreshPnl()">
-										<h:outputText value="#{msg['operazione.label.aggiornaPagina']}" />
-									</a4j:commandLink>
-								</h:panelGroup>
+								<h:outputText value="#{itemMetadata.operazioneContabile.label}" 
+									rendered="#{not empty itemMetadata.operazioneContabile.label}" styleClass="#{itemMetadata.operazioneContabile.tableHeaderLabelStyleClass}" />
 							</f:facet>
 							<h:panelGroup>
-								<a4j:htmlCommandLink id="dettaglio_btn"
-									action="dettaglioOperazione" ajaxSingle="true">
-									<f:setPropertyActionListener value="#{item.DTO.id}"
-										target="#{operazioneMBean.selectedId}" />
-									<f:setPropertyActionListener value="dettaglioFattura"
-										target="#{operazioneMBean.paginaFrom}" />
-									<f:setPropertyActionListener value="#{fatturaSelezionata}"
-										target="#{operazioneMBean.fattura}" />
-									<h:graphicImage value="/images/magnifier.png" width="16"
-										alt="#{msg['operazione.label.ricercaOperazioni.dettaglioTitle']}"
-										height="16"
-										title="#{msg['operazione.label.ricercaOperazioni.dettaglioTitle']}" />
-								</a4j:htmlCommandLink>
+								<a4j:commandLink id="dettaglio_btn" action="dettaglioOperazione" ajaxSingle="true" title="#{msg['operazione.label.ricercaOperazioni.dettaglioTitle']}">
+									<f:setPropertyActionListener value="#{item.DTO.id}" target="#{operazioneMBean.selectedId}" />
+									<f:setPropertyActionListener value="dettaglioFattura" target="#{operazioneMBean.paginaFrom}" />
+									<f:setPropertyActionListener value="#{fatturaSelezionata}" target="#{operazioneMBean.fattura}" />
+									<h:outputText id="outCodice2" value="#{item.operazioneContabile.value}" />
+								</a4j:commandLink>
 							</h:panelGroup>
 						</rich:column>
+						
+						<op2web:tableColumns
+							nomiColonne="#{'sistemaRichiedente,utenteRichiedente,stato'}" />
 
 						<ui:define name="buttons">
+						
+							<a4j:commandLink id="refreshPagina" 
+								reRender="tabellaOperazioni"
+								rendered="#{operazioneMBean.visualizzaRefresh}"
+								action="#{operazioneMBean.refreshDettaglioPcc}"
+								oncomplete="refreshPnl()">
+								<h:outputText value="#{msg['operazione.label.aggiornaPagina']}" />
+							</a4j:commandLink>
 
 							<!--Invia Riallineamento Sincrono -->
 							<a4j:commandLink id="inviaRichiestaRiallineamentoS-iconLink"
 								disabled="#{!contabilizzazioneMBean.abilitaOperazioni}"
 								rendered="#{contabilizzazioneMBean.visualizzaRiallineamentoSincrono}"
 								onclick="#{rich:component('invioRichiestaRiallineamento_Confirmation')}.show(); return false;"
-								styleClass="icon-fatturapa-up-grey buttonNoRed">
+								>
 								<h:outputText
 									value="#{msg['contabilizzazione.inviaRichiestaAllineamento.sincrono']}" />
 							</a4j:commandLink>
@@ -94,7 +91,7 @@
 							<a4j:commandLink id="inviaRichiestaRiallineamentoAS-iconLink"
 								disabled="#{!contabilizzazioneMBean.abilitaOperazioneAsincrona}"
 								onclick="#{rich:component('invioRichiestaRiallineamentoAsincrona_Confirmation')}.show(); return false;"
-								styleClass="icon-fatturapa-up-grey buttonNoRed">
+								>
 								<h:outputText
 									value="#{msg['contabilizzazione.inviaRichiestaAllineamento.asincrono']}" />
 							</a4j:commandLink>
@@ -710,7 +707,7 @@
 	</rich:modalPanel>
 	
 	<rich:modalPanel id="invioCancellazioneScadenze_Confirmation"
-		width="300" height="180">
+		width="350" height="180">
 		<f:facet name="header">
 			<h:outputText
 				value="#{msg['scadenza.form.operazioneCancellazioneScadenze.conferma.title']}" />

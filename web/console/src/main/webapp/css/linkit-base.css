@@ -380,3 +380,29 @@ a.iconLinkie{
 
 span.iconLinkie{
 }
+
+.whiteSpace {
+        white-space: pre;
+}
+
+.whiteSpaceNewLine {
+        white-space: pre-line !important;
+}
+
+
+/* Tabella notifiche EC*/
+
+.ec_sc{
+        width: 100%;
+}
+
+.ec_col_sx {}
+.ec_col_dx {
+        padding-left: 40px;
+}
+
+.linkClicked {
+       pointer-events: none;
+       cursor: default;
+} 
+

@@ -38,7 +38,7 @@
 			<li><a4j:htmlCommandLink action="#{fatturaElettronicaMBean.restoreSearch}"
 					value="#{msg['fattura.listaFatture.pageTitle']}">
 				</a4j:htmlCommandLink></li>
-			<li><h:graphicImage value="/images/tema_link/next_white.png" width="16" height="16"/></li>
+			<li><h:graphicImage value="/images/tema_link/next_white.png" width="16" height="16" rendered="#{notificaECMBean.fromPage == 'dettaglioFattura'}" /></li>
 			<li><a4j:htmlCommandLink action="dettaglioBack"
 					id="dettaglioFattura"
 					rendered="#{notificaECMBean.fromPage == 'dettaglioFattura'}"
@@ -64,7 +64,7 @@
 
 		<c:set var="fatturaBean" value="#{notificaECMBean.fattura}" />
 
-		<rich:panel id="panelContainer1" style="padding:0"
+		<rich:panel id="panelContainer1" style="padding:0"  bodyClass="nopadding" 
 			headerClass="outpanelHeader" styleClass="noborder">
 			<h:outputText id="outNoDettaglio"
 				value="#{msg['fattura.dettaglio.nodata']}"
@@ -89,6 +89,8 @@
 						<op2web:outputGroup
 							group="#{fatturaBean.datiIntestazione}"  />
 					</op2web:fieldset>
+					
+					<div class="spacerDettaglio"></div>
 
 					<!-- Dati Trasmissione  -->
 					<op2web:fieldset legend="#{msg['fattura.label.generale']}" collapsible="false" closed="false" rendered="#{true}">

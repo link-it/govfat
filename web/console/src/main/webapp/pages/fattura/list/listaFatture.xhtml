@@ -133,7 +133,7 @@
 						<h:outputText value="#{itemMetadata.identificativoSdi.label}" rendered="#{not empty itemMetadata.identificativoSdi.label}" styleClass="#{itemMetadata.identificativoSdi.tableHeaderLabelStyleClass}" />
 					</f:facet>
 					<h:panelGroup>
-						<a4j:commandLink id="dettaglio_btn" action="dettaglio" ajaxSingle="true">
+						<a4j:commandLink id="dettaglio_btn" action="dettaglio" ajaxSingle="true" title="#{msg['fattura.label.ricercaFatture.dettaglioTitle']}">
 							<f:setPropertyActionListener value="tabSDI" target="#{fatturaElettronicaMBean.selectedTab}" />
 							<f:setPropertyActionListener value="#{item}" target="#{fatturaElettronicaMBean.selectedElement}" />
 							<h:outputText id="outCodice2" value="#{item.identificativoSdi.value}" />

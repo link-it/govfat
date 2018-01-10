@@ -24,6 +24,7 @@ package org.govmix.proxy.fatturapa.web.console.form;
 import javax.faces.event.ActionEvent;
 
 import org.govmix.proxy.fatturapa.orm.constants.EsitoCommittenteType;
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.Form;
 import org.openspcoop2.generic_project.web.impl.jsf1.form.BaseForm;
@@ -61,7 +62,7 @@ public class NotificaECForm extends BaseForm implements Form {
 		this.esito.setForm(this);
 
 		this.descrizione = factory.getInputFieldFactory().createTextArea("descrizione","notificaEsitoCommittente.descrizione",null,true);
-		
+		this.descrizione.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
 		
 		this._setEsito();
 		

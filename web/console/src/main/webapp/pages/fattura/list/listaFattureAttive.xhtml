@@ -318,11 +318,26 @@
                 </rich:column>
 
 				
-				<!-- Colonne mittente,destinatario,identificativoSDI, annonumero, data, dataricezione, importo -->
-				<op2web:tableColumns nomiColonne="#{'cessionarioCommittente,dipartimento,identificativoSdi,annoNumero,data,dataInvio'}" />
+				<!-- Colonne mittente,destinatario,identificativoSDI -->
+				<op2web:tableColumns nomiColonne="#{'cessionarioCommittente,dipartimento,identificativoSdi'}" />
 				
-				<!-- Colonne mittente,destinatario,identificativoSDI, annonumero, data, dataricezione, importo -->
-				<op2web:tableColumns nomiColonne="#{'importo'}" />
+				<!-- Link dettagli annoNumero -->
+				<rich:column styleClass="#{itemMetadata.annoNumero.tableColumnStyleClass}">
+					<f:facet name="header">
+						<h:outputText value="#{itemMetadata.annoNumero.label}" 
+							rendered="#{not empty itemMetadata.annoNumero.label}" styleClass="#{itemMetadata.annoNumero.tableHeaderLabelStyleClass}" />
+					</f:facet>
+					<h:panelGroup>
+						<a4j:commandLink id="dettaglio_btn" action="dettaglioAttiva" ajaxSingle="true" title="#{msg['fattura.label.ricercaFatture.dettaglioTitle']}">
+							<f:setPropertyActionListener value="tabSDI" target="#{fatturaElettronicaAttivaMBean.selectedTab}" />
+							<f:setPropertyActionListener value="#{item}" target="#{fatturaElettronicaAttivaMBean.selectedElement}" />
+							<h:outputText id="outCodice2" value="#{item.annoNumero.value}" />
+						</a4j:commandLink>
+					</h:panelGroup>
+				</rich:column>
+				
+				<!-- Colonne data, dataricezione, importo -->
+				<op2web:tableColumns nomiColonne="#{'data,dataInvio,importo'}" />
 				
 				<!-- XML (Icona) -->
 				<rich:column style="text-align: center;">
@@ -340,24 +355,12 @@
 				<!-- PDF (Icona) -->
 				<rich:column style="text-align: center;">
 					<f:facet name="header">
-						<h:outputText value="#{itemMetadata.pdf.label}"  styleClass="columnHeaderLabel" />
+						<h:outputText value="#{itemMetadata.pdf.label}" styleClass="columnHeaderLabel" />
 					</f:facet>
 					 <h:panelGroup>
 					 	<h:commandLink id="visualizzaPdfLink" target="_blank" action="#{item.visualizzaPdf}" rendered="#{not empty item.pdf.href}">
 							<h:graphicImage value="#{item.pdf.image}" width="16" height="16" title="#{item.pdf.title}" alt="#{item.pdf.alt}" />
 						</h:commandLink>
-					</h:panelGroup>
-				</rich:column>
-				
-				<!-- Link dettagli -->
-				<rich:column style="text-align: center;">
-					<h:panelGroup>
-						<a4j:commandLink id="dettaglio_btn" action="dettaglioAttiva" ajaxSingle="true">
-							<f:setPropertyActionListener value="tabSDI" target="#{fatturaElettronicaAttivaMBean.selectedTab}" />
-							<f:setPropertyActionListener value="#{item}" target="#{fatturaElettronicaAttivaMBean.selectedElement}" />
-							<h:graphicImage value="/images/magnifier.png" width="16" alt="#{msg['fattura.label.ricercaFatture.dettaglioTitle']}"
-								height="16" title="#{msg['fattura.label.ricercaFatture.dettaglioTitle']}" />
-						</a4j:commandLink>
 					</h:panelGroup>
 				</rich:column>
 				

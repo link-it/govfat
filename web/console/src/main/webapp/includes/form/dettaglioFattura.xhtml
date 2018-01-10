@@ -148,9 +148,9 @@
 									<op2web:tableColumns nomiColonne="#{'esito,dataInvio,data,dataProssimaConsegnaSdi,statoConsegnaSdi,utente,modalitaBatch,descrizione'}" />
 									
 									<!-- XML (Icona) -->
-									<rich:column style="text-align: center;" styleClass="columnHeaderLabel">
+									<rich:column style="text-align: center;">
 										<f:facet name="header">
-											<h:outputText value="#{metadataNotificaEC.xml.label}" />
+											<h:outputText value="#{metadataNotificaEC.xml.label}" styleClass="columnHeaderLabel"/>
 										</f:facet>
 		
 										<h:panelGroup>
@@ -161,9 +161,9 @@
 									</rich:column>
 		
 									<!-- PDF (Icona) -->
-									<rich:column style="text-align: center;" styleClass="columnHeaderLabel">
+									<rich:column style="text-align: center;">
 										<f:facet name="header">
-											<h:outputText value="#{metadataNotificaEC.pdf.label}" />
+											<h:outputText value="#{metadataNotificaEC.pdf.label}" styleClass="columnHeaderLabel" />
 										</f:facet>
 		
 										<h:panelGroup>
@@ -196,9 +196,9 @@
 									<op2web:tableColumns nomiColonne="#{'scarto,scartoNote'}" />
 									
 									<!-- Scarto XML (Icona) -->
-									<rich:column style="text-align: center;" styleClass="columnHeaderLabel">
+									<rich:column style="text-align: center;">
 										<f:facet name="header">
-											<h:outputText value="#{metadataNotificaEC.scartoXml.label}" />
+											<h:outputText value="#{metadataNotificaEC.scartoXml.label}"  styleClass="columnHeaderLabel" />
 										</f:facet>
 		
 										<h:panelGroup>
@@ -209,9 +209,9 @@
 									</rich:column>
 
 									<!-- SCarto PDF (Icona) -->
-									<rich:column style="text-align: center;" styleClass="columnHeaderLabel">
+									<rich:column style="text-align: center;">
 										<f:facet name="header">
-											<h:outputText value="#{metadataNotificaEC.scartoPdf.label}" />
+											<h:outputText value="#{metadataNotificaEC.scartoPdf.label}"  styleClass="columnHeaderLabel" />
 										</f:facet>
 		
 										<h:panelGroup>
@@ -241,9 +241,9 @@
 							<op2web:tableColumns nomiColonne="#{'dataRicezione,nomeFile,descrizione,note'}" />
 
 							<!-- XML (Icona) -->
-							<rich:column style="text-align: center;" styleClass="columnHeaderLabel">
+							<rich:column style="text-align: center;" >
 								<f:facet name="header">
-									<h:outputText value="#{metadataNotificaDT.xml.label}" />
+									<h:outputText value="#{metadataNotificaDT.xml.label}" styleClass="columnHeaderLabel" />
 								</f:facet>
 
 								<h:panelGroup>
@@ -254,9 +254,9 @@
 							</rich:column>
 
 							<!-- PDF (Icona) -->
-							<rich:column style="text-align: center;" styleClass="columnHeaderLabel">
+							<rich:column style="text-align: center;" >
 								<f:facet name="header">
-									<h:outputText value="#{metadataNotificaDT.pdf.label}" />
+									<h:outputText value="#{metadataNotificaDT.pdf.label}"  styleClass="columnHeaderLabel"/>
 								</f:facet>
 
 								<h:panelGroup>
