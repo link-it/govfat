@@ -313,6 +313,37 @@
 		</resources>
 		<plugins>
 			<plugin>
+              <artifactId>maven-resources-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>copy-css-dir</id>
+                  <phase>validate</phase>
+                  <goals>
+                    <goal>copy-resources</goal>
+                  </goals>
+                  <configuration>
+                    <outputDirectory>${project.basedir}/target/css</outputDirectory>
+                    <resources>
+                      <resource>
+                        <directory>${project.basedir}/src/main/webapp/css</directory>
+                        <filtering>true</filtering>
+                        <includes>
+                          <include>*.css</include>
+                        </includes>
+                        <excludes>
+                            <exclude>roboto</exclude>
+                        </excludes>
+                      </resource>
+                    </resources>
+                    <filters>
+                    	<filter>${basedir}/../../resources/filters/css/tema.${env}.css.properties</filter>
+                    </filters>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+			
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
@@ -332,6 +363,23 @@
 							<filtering>true</filtering>
 							<includes>
 								<include>*.xml</include>
+							</includes>
+						</resource>
+						<resource>
+							<directory>${project.basedir}/src/main/webapp/css</directory>
+							<targetPath>css</targetPath>
+							<includes>
+								<include>roboto</include>
+							</includes>
+							<excludes>
+								<exclude>*.css</exclude>
+							</excludes>
+						</resource>
+						<resource>
+							<directory>${project.basedir}/target/css</directory>
+							<targetPath>css</targetPath>
+							<includes>
+								<include>*.css</include>
 							</includes>
 						</resource>
 					</webResources>
