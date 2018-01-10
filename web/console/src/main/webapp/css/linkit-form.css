@@ -219,32 +219,6 @@ div.form-container .display-form table.controlset label{
 	margin-left: 170px;
 	margin-bottom: 12px;
 }
-/* POSITIVE */
-.buttonrow input[type="submit"].positive, input[type="button"].positive, .buttonrow a.positive{
-    color:#529214;
-}
-.buttonrow a.positive:hover, input[type="button"].positive:hover, input[type="submit"].positive:hover{
-    background-color:#E6EFC2;
-    border:1px solid #C6D880;
-    color:#529214;
-}
-.buttonrow a.positive:disabled, input[type="button"].positive:disabled, input[type="submit"].positive:disabled{
-    color: #565656;
-    cursor: default;
-}
-.buttonrow a.positive[disabled]:hover, input[type="button"].positive[disabled]:hover, input[type="submit"].positive[disabled]:hover{
-    color: #565656;
-    cursor: default;
-   	background-color: #f5f5f5;
-	border: 1px solid #dedede;
-    border-top: 1px solid #eee;
-    border-left: 1px solid #eee;
-}
-.buttonrow a.positive:active{
-    background-color:#529214;
-    border:1px solid #529214;
-    color:#fff;
-}
 
 .buttonrowsonda a,
 .buttonrowsonda input[type="button"],
@@ -267,6 +241,7 @@ div.form-container .display-form table.controlset label{
 	min-width: 120px;
 	cursor:pointer;
 	font-family: 'Roboto';
+	text-decoration: none;
 }
 
 input[type="submit"]:hover, input[type="button"]:hover, .buttonrow a:hover, .buttonrowmodal a:hover, .buttonrowsonda a:hover{

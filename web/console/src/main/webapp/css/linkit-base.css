@@ -37,18 +37,20 @@ legend {
 }
 
 a {
-	color: #f0641e;
-	text-decoration: none;
+	color: #46464e;
+	text-decoration: underline;
 	font-family: 'Roboto';
 	font-size: 12px;
 }
 
 a:hover {
 	color: #f0641e;
+	text-decoration: none;
 }
 
 a:visited {
 	color: #f0641e;
+	text-decoration: none;
 }
 	
 body {
@@ -358,6 +360,10 @@ a.titleLinkRight:hover {
 
 /*Link con icona*/
 a[id$='iconLink']{
+ 	color: #46464e;
+}
+
+a:hover[id$='iconLink']{
  	color: #f0641e;
 }
 
@@ -371,14 +377,22 @@ label[id$='iconLabel']{
 }
 
 span[id$='iconLink']{
-	color: #f0641e;
+	color: #46464e;
 }
 
 a.iconLinkie{
+	color: #46464e;
+}
+
+a:hover.iconLinkie{
 	color: #f0641e;
 }
 
 span.iconLinkie{
+}
+
+.divNoEdit {
+	padding-top: 2px;
 }
 
 .whiteSpace {

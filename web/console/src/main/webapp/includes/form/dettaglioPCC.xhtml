@@ -45,27 +45,26 @@
 								value="#{msg['operazione.label.ricercaOperazioni.tabellaRisultati.noData']}" />
 						</f:facet>
 
-						<op2web:tableColumns
-							nomiColonne="#{'dataUltimaTrasmissione'}" />
-							
 						<!-- Link dettagli operazioneContabile -->
-						<rich:column styleClass="#{itemMetadata.operazioneContabile.tableColumnStyleClass}">
+						<rich:column styleClass="#{itemMetadata.dataUltimaTrasmissione.tableColumnStyleClass}">
 							<f:facet name="header">
-								<h:outputText value="#{itemMetadata.operazioneContabile.label}" 
-									rendered="#{not empty itemMetadata.operazioneContabile.label}" styleClass="#{itemMetadata.operazioneContabile.tableHeaderLabelStyleClass}" />
+								<h:outputText value="#{itemMetadata.dataUltimaTrasmissione.label}" 
+									rendered="#{not empty itemMetadata.dataUltimaTrasmissione.label}" styleClass="#{itemMetadata.dataUltimaTrasmissione.tableHeaderLabelStyleClass}" />
 							</f:facet>
 							<h:panelGroup>
 								<a4j:commandLink id="dettaglio_btn" action="dettaglioOperazione" ajaxSingle="true" title="#{msg['operazione.label.ricercaOperazioni.dettaglioTitle']}">
 									<f:setPropertyActionListener value="#{item.DTO.id}" target="#{operazioneMBean.selectedId}" />
 									<f:setPropertyActionListener value="dettaglioFattura" target="#{operazioneMBean.paginaFrom}" />
 									<f:setPropertyActionListener value="#{fatturaSelezionata}" target="#{operazioneMBean.fattura}" />
-									<h:outputText id="outCodice2" value="#{item.operazioneContabile.value}" />
+									<h:outputText id="outDataRichLive2" value="#{item.dataUltimaTrasmissione.value}">
+										<f:convertDateTime pattern="#{itemMetadata.dataUltimaTrasmissione.pattern}" defaultTime="00:00" timeZone="Europe/Rome" />
+                            		 </h:outputText>
 								</a4j:commandLink>
 							</h:panelGroup>
 						</rich:column>
 						
 						<op2web:tableColumns
-							nomiColonne="#{'sistemaRichiedente,utenteRichiedente,stato'}" />
+							nomiColonne="#{'operazioneContabile,sistemaRichiedente,utenteRichiedente,stato'}" />
 
 						<ui:define name="buttons">
 						

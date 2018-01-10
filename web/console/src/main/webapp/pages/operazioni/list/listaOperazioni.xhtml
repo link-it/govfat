@@ -75,7 +75,7 @@
 			<op2web:managedPagedListView  value="#{operazioneDM}" mBean="#{operazioneMBean}">
 			
 				<!-- Link dettagli -->
-				<rich:column styleClass="columnHeaderLabel">
+				<rich:column>
 					<f:facet name="header">
 						<h:outputText value="#{itemMetadata.dataUltimaTrasmissione.label}"  styleClass="#{itemMetadata.dataUltimaTrasmissione.tableHeaderLabelStyleClass}"/>
 					</f:facet>
@@ -84,7 +84,7 @@
 							<f:setPropertyActionListener value="menu" target="#{operazioneMBean.paginaFrom}" />
 							<f:setPropertyActionListener value="#{item.DTO.id}" target="#{operazioneMBean.selectedId}" />
 							<h:outputText id="outDataRichLive2" value="#{item.dataUltimaTrasmissione.value}">
-								<f:convertDateTime pattern="#{item.dataUltimaTrasmissione.pattern}" defaultTime="00:00" timeZone="Europe/Rome" />
+								<f:convertDateTime pattern="#{itemMetadata.dataUltimaTrasmissione.pattern}" defaultTime="00:00" timeZone="Europe/Rome" />
                              </h:outputText>
 						</a4j:htmlCommandLink>
 					</h:panelGroup>
