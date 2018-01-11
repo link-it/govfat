@@ -26,7 +26,7 @@ String serverName = request.getServerName();     // hostname.com
 int serverPort = request.getServerPort();        // 80
 String contextPath = request.getContextPath();   // /mywebapp
 
-String destinationUrl = "/fattura/list/listaFatture.jsf";
+String destinationUrl = "/pages/fattura/list/listaFatture.jsf";
 
 //if(ConfigProperties.getInstance().isLoginApplication())
 //	destinationUrl = "/public/login.jsf";

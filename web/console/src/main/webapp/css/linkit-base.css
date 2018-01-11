@@ -14,7 +14,7 @@ html {
 }
 
 fieldset {
-	border: 1px solid #c2c2c4; 
+	border: 1px solid ${fieldset.border.color}; 
 	border-radius: 5px;
 }
 
@@ -33,30 +33,30 @@ legend {
 	font-weight: bold;
 	padding-left: 10px;
     padding-right: 10px;
-    color: #46464e;
+    color: ${legend.color};
 }
 
 a {
-	color: #46464e;
+	color: ${a.color};
 	text-decoration: underline;
 	font-family: 'Roboto';
 	font-size: 12px;
 }
 
 a:hover {
-	color: #f0641e;
+	color: ${a.hover.color};
 	text-decoration: none;
 }
 
 a:visited {
-	color: #f0641e;
+	color: ${a.visited.color};
 	text-decoration: none;
 }
 	
 body {
 	color: #212121;
 	height: 100%;
-	background: #5c5c64;
+	background: ${body.background.color};
 }
 
 table {
@@ -67,114 +67,114 @@ table {
 
 select {
 	padding: 2px;
-	border: 1px solid #c2c2c4;
+	border: 1px solid ${input.border.color};
 	font-family: 'Roboto';
 	font-size: 12px;
 	background: none;
 }
 
 select:focus {
-	border: 1px solid  #f0641e  ;
+	border: 1px solid  ${input.focus.border.color};
 }
 
 textarea {
 	padding: 2px;
-	border: 1px solid #c2c2c4;
+	border: 1px solid ${input.border.color};
 	font-family: 'Roboto';
 	font-size: 12px;
 }
 textarea:focus {
-	border: 1px solid  #f0641e  ;
+	border: 1px solid  ${input.focus.border.color};
 }
 
 input:focus {
-	border: 1px solid  #f0641e  ;
+	border: 1px solid  ${input.focus.border.color};
 }
 
 input[type="text"] {
 	padding: 2px;
-	border: 1px solid #c2c2c4;
+	border: 1px solid ${input.border.color};
 	font-family: 'Roboto';
 	font-size: 12px;
 }
 
 input[type="text"]:disabled{
-    background: #dfdfdf;
-    color: #46464e;
+    background: ${input.text.disabled.background.color};
+    color: ${input.text.disabled.color};
 }
 
 input[type="text"]:focus {
-	border: 1px solid  #f0641e  ;
+	border: 1px solid  ${input.focus.border.color};
 }
 
 input[type="password"] {
 	padding: 2px;
-	border: 1px solid #c2c2c4;
+	border: 1px solid ${input.border.color};
 	font-family: 'Roboto';
 	font-size: 12px;
 }
 
 input[type="password"]:disabled {
-    background: #dfdfdf;
-    color: #46464e;
+    background: ${input.password.disabled.background.color};
+    color: ${input.password.disabled.color};
 }
 
 input[type="password"]:focus {
-	border: 1px solid  #f0641e  ;
+	border: 1px solid  ${input.focus.border.color};
 }
 
 input[type="checkbox"] {
 	padding: 2px;
-	border: 1px solid #c2c2c4;
+	border: 1px solid ${input.border.color};
 	font-family: 'Roboto';
 	font-size: 12px;
-	background-color: #ffffff ;	
+	background-color: ${input.background.color} ;	
 	background-image: none !important;
 }
 
 input[type="checkbox"]:focus {
-	border: 1px solid  #f0641e  ;
+	border: 1px solid  ${input.focus.border.color};
 }
 
 input[type="radio"] {
 	padding: 2px;
-	border: 1px solid  #c2c2c4;
+	border: 1px solid  ${input.border.color};
 	font-family: 'Roboto';
 	font-size: 12px;
-	background-color: #ffffff;	
+	background-color: ${input.background.color};	
 	background-image: none !important;
 }
 
 input[type="radio"]:focus {
-	border: 1px solid  #f0641e  ;
+	border: 1px solid  ${input.focus.border.color};
 }
 
 option:checked  {
-	background-color: #ffe6d2;
-	color:  #46464e;
+	background-color: ${option.checked.background.color};
+	color:  ${option.checked.color};
 }
 
 option:hover  {
-	background-color: #ffe6d2;
-	color:  #46464e;
+	background-color: ${option.hover.background.color};
+	color:  ${option.hover.color};
 }
 
 option:active  {
-	background-color: #ffe6d2;
-	color:  #46464e;
+	background-color: ${option.active.background.color};
+	color:  ${option.active.color};
 }
 
 .inputLink {
-	background-color: #ffffff ;	
+	background-color: ${input.background.color} ;	
 	background-image: none !important;
-	color: #3c3c44;
+	color: ${input.color};
 }
 
 .inputLinkLong {
-	background-color: #ffffff ;	
+	background-color: ${input.background.color} ;	
 	background-image: none !important;
 	width: 406px;
-	color: #3c3c44;
+	color: ${input.color};
 }
 
 
@@ -183,7 +183,7 @@ option:active  {
 .titleRight {
 	vertical-align: middle; 
 	font-size: 13px;
-	color: #ffffff;
+	color: ${page.header.text.color};
 }
 
 .titleRight label,
@@ -193,27 +193,27 @@ option:active  {
 
 .titleLinkRight  {
 	font-size: 13px;
-	color: #ffffff;
+	color: ${page.header.text.color};
 }
 
 a.titleLinkRight:visited {
 	font-size: 13px;
-	color: #ffffff !important;
+	color: ${page.header.text.color} !important;
 }
 
 a.titleLinkRight:hover {
 	font-size: 13px;
-	color: #ffffff;
+	color: ${page.header.text.color};
 }
 
 .titleStatusIconLinkLeft {
 	text-decoration: none; 
-	color: #ffffff; 
+	color: ${page.header.text.color}; 
 }
 
 .titleStatusIconLinkRight {
 	text-decoration: none; 
-	color: #ffffff; 
+	color: ${page.header.text.color}; 
 	vertical-align: bottom;
 }
 
@@ -237,7 +237,7 @@ a.titleLinkRight:hover {
 }
 
 .panelLista {
-    background: #ffffff;
+    background: ${paginacorrente.background.color};
     padding: 24px;
     border: none;
 }
@@ -245,7 +245,7 @@ a.titleLinkRight:hover {
 /*	diagnostici severita */
 .errorSpcoop, .errorOpenspcoop, .diag_error,
 .errorProtocol, .errorIntegration{
-	color: #ff0000;
+	color: ${diagnostici.error.color};
 }
 
 .infoSpcoop,
@@ -253,13 +253,13 @@ a.titleLinkRight:hover {
 .diag_info,
 .infoIntegration,
 .infoProtocol{
-	color: #17B517;
+	color: ${diagnostici.info.color};
 }
 
 .fatalOpenspcoop,
 .diag_fatal,
 .fatal{
-	color: #ff0000;
+	color: ${diagnostici.error.color};
 	font-weight: bold;
 	font-style: normal;
 }
@@ -274,14 +274,14 @@ a.titleLinkRight:hover {
 	Esito dettaglio messaggio
  */
  .esito_ok{
- 	color: #17B517;
+ 	color: ${diagnostici.info.color};
  }
  .esito_ko{
- 	color: #ff0000;
+ 	color: ${diagnostici.error.color};
  }
 
 .errorMessage{
-	color: #ff0000;
+	color: ${diagnostici.error.color};
 }
 
 .noborder {
@@ -294,20 +294,20 @@ a.titleLinkRight:hover {
 
 /*Table row*/
 .even {
-	background-color: #ffffff;
+	background-color: ${table.row.even.background.color};
 }
 
 .odd {
-	background-color: #f6f6fc;
+	background-color: ${table.row.odd.background.color};
 }
 
 .active {
-	background-color: #FFE6D2;
+	background-color: ${table.row.hover.background.color};
 }
 /*End Table row*/
 
 .columnHeaderLabel {
-	color: #000000;
+	color: ${table.thead.label.color};
 	font-weight: bold;
 }
 
@@ -331,7 +331,7 @@ a.titleLinkRight:hover {
 }
 
 .outputFieldLabel {
-	color: #46464e;;
+	color: ${label.color};
 	font-weight: bold;
 }
 
@@ -360,11 +360,11 @@ a.titleLinkRight:hover {
 
 /*Link con icona*/
 a[id$='iconLink']{
- 	color: #46464e;
+ 	color: ${a.color};
 }
 
 a:hover[id$='iconLink']{
- 	color: #f0641e;
+ 	color: ${a.hover.color};
 }
 
 label[id$='iconLabel']{
@@ -377,15 +377,15 @@ label[id$='iconLabel']{
 }
 
 span[id$='iconLink']{
-	color: #46464e;
+	color: ${a.color};
 }
 
 a.iconLinkie{
-	color: #46464e;
+	color: ${a.color};
 }
 
 a:hover.iconLinkie{
-	color: #f0641e;
+	color: ${a.hover.color};
 }
 
 span.iconLinkie{

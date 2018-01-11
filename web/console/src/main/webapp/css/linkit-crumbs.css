@@ -1,6 +1,6 @@
 #crumbs {
 	height: 2.3em;
-	background: #5c5c64;
+	background: ${body.background.color};
 }
 
 #crumbs ul, li{
@@ -14,7 +14,7 @@
 }
 #crumbs li {
 	float:left;
-	color: #ffffff;
+	color: ${crumbs.label.color};
 	padding-right: 4px;
 }		
 #crumbs li a {
@@ -22,12 +22,12 @@
 	}							
 #crumbs li a:link,
 #crumbs li a:visited {
-	color: #ffffff;
+	color: ${crumbs.label.color};
 	text-decoration:none;
 	}	
 #crumbs li a:hover,
 #crumbs li a:focus {
-	color: #ffffff;
+	color: ${crumbs.label.color};
 	text-decoration:none;
 }
 #breadcrumb-ct{
@@ -35,6 +35,6 @@
 }
 
 .ultimo-path, .ultimo-path span{
-	color: #f0641e;
+	color: ${crumbs.label.active.color};
 }
 

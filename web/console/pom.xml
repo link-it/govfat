@@ -382,6 +382,13 @@
 								<include>*.css</include>
 							</includes>
 						</resource>
+						<resource>
+							<directory>${basedir}/../../resources/filters/images/${env}</directory>
+							<targetPath>images</targetPath>
+							<includes>
+								<include>*.*</include>
+							</includes>
+						</resource>
 					</webResources>
 					<warName>fatturaPA</warName>
 				</configuration>

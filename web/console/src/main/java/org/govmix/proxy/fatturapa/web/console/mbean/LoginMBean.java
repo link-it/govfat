@@ -65,18 +65,16 @@ public class LoginMBean extends LoginBean{
 	private Utente loggedUtente = null;
 
 	private List<Dipartimento> listDipartimenti;
-
-	//	private Ente ente = null;
-
 	private Protocollo protocollo = null;
-
 
 	public LoginMBean(boolean initDao){
 		super(initDao);
+		this.caricaProperties();
 	}
 
 	public LoginMBean(){
 		super();
+		this.caricaProperties();
 	}
 
 	@Override
@@ -90,7 +88,19 @@ public class LoginMBean extends LoginBean{
 		this.getLanguageForm().getLingua().setFieldsToUpdate(fieldsToUpdate );
 		this.getLanguageForm().getLingua().setWidth(80);
 		this.getLanguageForm().getLingua().setStyle("width:80px");
+		
 	}
+	
+	private void caricaProperties(){
+        try {
+                this.setLogoHeaderImage(ConsoleProperties.getInstance(LoginMBean.log).getLogoHeaderImage());
+                this.setLogoHeaderLink(ConsoleProperties.getInstance(LoginMBean.log).getLogoHeaderLink());
+                this.setLogoHeaderTitolo(ConsoleProperties.getInstance(LoginMBean.log).getLogoHeaderTitolo()); 
+        } catch (Exception e) {
+                LoginMBean.log.error("Errore durante la lettura delle properties applicazione: " + e.getMessage(),e);
+        }
+}
+
 
 	@Override
 	public String login() {
