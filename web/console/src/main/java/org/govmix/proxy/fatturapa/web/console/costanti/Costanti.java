@@ -26,6 +26,7 @@ public class Costanti {
 	public static final String INPUT_STYLE_CLASS = "inputLink";
 	
 	public static final String TABLE_DIV_STYLE_CLASS = "panelLista";
+	public static final String LABEL_LONG_STYLE_CLASS = "longLabel";
 
 	/**Costanti formati date */
 	

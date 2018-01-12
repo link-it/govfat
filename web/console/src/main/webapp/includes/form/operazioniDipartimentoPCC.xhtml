@@ -12,21 +12,31 @@
 	<op2web:fieldset legend="#{msg['dipartimento.pcc']}"
 		collapsible="false" closed="false"
 		rendered="#{mBean.form.codicePCC.value}">
-
-		<op2web:prop label="#{form.indirizziNotifica.label}" note="#{msg['dipartimento.pcc.indirizziNotifica.note']}" required="#{form.indirizziNotifica.required}"
-			rendered="#{form.indirizziNotifica.rendered}">
-				<h:inputTextarea id="input_#{form.indirizziNotifica.name}" value="#{form.indirizziNotifica.value}"
-			style="#{form.indirizziNotifica.style}" disabled="#{form.indirizziNotifica.disabled}" rows="#{form.indirizziNotifica.rows}"
-			cols="#{form.indirizziNotifica.columns}"/>
-		</op2web:prop>
-
+		
+		<a4j:outputPanel rendered="#{form.indirizziNotifica.rendered}" layout="block">
+			<div class="prop">
+	        	<label class="longLabel">
+		            <h:outputText value="#{form.indirizziNotifica.label}" />
+		            <c:if test="#{form.indirizziNotifica.required}">
+		                    <em>*</em>
+		            </c:if>
+	            </label>
+	            <h:inputTextarea id="input_#{form.indirizziNotifica.name}" value="#{form.indirizziNotifica.value}" styleClass="#{form.indirizziNotifica.styleClass}"
+				style="#{form.indirizziNotifica.style}" disabled="#{form.indirizziNotifica.disabled}" rows="#{form.indirizziNotifica.rows}"
+				cols="#{form.indirizziNotifica.columns}"/>
+	            <p class="note" style="margin-left: 220px;">
+	            	<h:outputText value="#{msg['dipartimento.pcc.indirizziNotifica.note']}" />
+	            </p>
+	        </div>
+        </a4j:outputPanel>
+		
 		<rich:spacer height="10" />
 		
-		<op2web:prop label="#{msg['dipartimento.pcc.labelAutorizzazione']}" rendered="#{mBean.form.codicePCC.value}">
+		<op2web:prop label="#{msg['dipartimento.pcc.labelAutorizzazione']}" rendered="#{mBean.form.codicePCC.value}" styleClass="longLabel">
 				<rich:spacer height="20" />
 		</op2web:prop>
 
-			<op2web:prop label="#{form.pagamentoIVA.label}" rendered="#{form.pagamentoIVA.rendered}">
+			<op2web:prop label="#{form.pagamentoIVA.label}" rendered="#{form.pagamentoIVA.rendered}" styleClass="longLabel">
 			<h:selectOneRadio id="input_#{form.pagamentoIVA.name}"
 				layout="#{form.pagamentoIVA.direzione}" styleClass="controlset"
 				disabled="#{form.pagamentoIVA.disabled}" 
@@ -36,7 +46,7 @@
 			</h:selectOneRadio>
 		</op2web:prop>
 
-		<op2web:prop label="#{form.datiFattura.label}" rendered="#{form.datiFattura.rendered}">
+		<op2web:prop label="#{form.datiFattura.label}" rendered="#{form.datiFattura.rendered}" styleClass="longLabel">
 			<h:selectOneRadio id="input_#{form.datiFattura.name}"
 				layout="#{form.datiFattura.direzione}" styleClass="controlset"
 				disabled="#{form.datiFattura.disabled}"
@@ -45,7 +55,7 @@
 			</h:selectOneRadio>
 		</op2web:prop>
 
-		<op2web:prop label="#{form.inserimentoFattura.label}" rendered="#{form.inserimentoFattura.rendered}">
+		<op2web:prop label="#{form.inserimentoFattura.label}" rendered="#{form.inserimentoFattura.rendered}" styleClass="longLabel">
 			<h:selectOneRadio id="input_#{form.inserimentoFattura.name}"
 				layout="#{form.inserimentoFattura.direzione}"
 				styleClass="controlset"
@@ -55,7 +65,7 @@
 			</h:selectOneRadio>
 		</op2web:prop>
 
-		<op2web:prop label="#{form.statoFattura.label}" rendered="#{form.statoFattura.rendered}">
+		<op2web:prop label="#{form.statoFattura.label}" rendered="#{form.statoFattura.rendered}" styleClass="longLabel">
 			<h:selectOneRadio id="input_#{form.statoFattura.name}"
 				layout="#{form.statoFattura.direzione}" styleClass="controlset"
 				disabled="#{form.statoFattura.disabled}"
@@ -64,7 +74,7 @@
 			</h:selectOneRadio>
 		</op2web:prop>
 
-		<op2web:prop label="#{form.movimentiErarioIVA.label}" rendered="#{form.movimentiErarioIVA.rendered}">
+		<op2web:prop label="#{form.movimentiErarioIVA.label}" rendered="#{form.movimentiErarioIVA.rendered}" styleClass="longLabel">
 			<h:selectOneRadio id="input_#{form.movimentiErarioIVA.name}"
 				layout="#{form.movimentiErarioIVA.direzione}"
 				styleClass="controlset"
@@ -74,7 +84,7 @@
 			</h:selectOneRadio>
 		</op2web:prop>
 
-		<op2web:prop label="#{form.downloadDocumento.label}" rendered="#{form.downloadDocumento.rendered}">
+		<op2web:prop label="#{form.downloadDocumento.label}" rendered="#{form.downloadDocumento.rendered}" styleClass="longLabel">
 			<h:selectOneRadio id="input_#{form.downloadDocumento.name}"
 				layout="#{form.downloadDocumento.direzione}" styleClass="controlset"
 				disabled="#{form.downloadDocumento.disabled}"
@@ -83,7 +93,7 @@
 			</h:selectOneRadio>
 		</op2web:prop>
 
-		<op2web:prop label="#{form.consultazioneTracce.label}"
+		<op2web:prop label="#{form.consultazioneTracce.label}" styleClass="longLabel"
 			rendered="#{form.consultazioneTracce.rendered}">
 			<h:selectOneRadio id="input_#{form.consultazioneTracce.name}"
 				layout="#{form.consultazioneTracce.direzione}"
@@ -94,7 +104,7 @@
 			</h:selectOneRadio>
 		</op2web:prop>
 
-		<op2web:prop label="#{form.pagamento.label}"
+		<op2web:prop label="#{form.pagamento.label}" styleClass="longLabel"
 			rendered="#{form.pagamento.rendered}">
 			<h:selectOneRadio id="input_#{form.pagamento.name}"
 				layout="#{form.pagamento.direzione}" styleClass="controlset"
@@ -104,7 +114,7 @@
 			</h:selectOneRadio>
 		</op2web:prop>
 
-		<op2web:prop label="#{form.stornoPagamento.label}"
+		<op2web:prop label="#{form.stornoPagamento.label}" styleClass="longLabel"
 			rendered="#{form.stornoPagamento.rendered}">
 			<h:selectOneRadio id="input_#{form.stornoPagamento.name}"
 				layout="#{form.stornoPagamento.direzione}" styleClass="controlset"
@@ -115,7 +125,7 @@
 		</op2web:prop>
 
 
-		<op2web:prop label="#{form.comunicazioneScadenza.label}"
+		<op2web:prop label="#{form.comunicazioneScadenza.label}" styleClass="longLabel"
 			rendered="#{form.comunicazioneScadenza.rendered}">
 			<h:selectOneRadio id="input_#{form.comunicazioneScadenza.name}"
 				layout="#{form.comunicazioneScadenza.direzione}"
@@ -128,7 +138,7 @@
 		</op2web:prop>
 
 
-		<op2web:prop label="#{form.cancellazioneScadenze.label}"
+		<op2web:prop label="#{form.cancellazioneScadenze.label}" styleClass="longLabel"
 			rendered="#{form.cancellazioneScadenze.rendered}">
 			<h:selectOneRadio id="input_#{form.cancellazioneScadenze.name}"
 				layout="#{form.cancellazioneScadenze.direzione}"
@@ -140,7 +150,7 @@
 			</h:selectOneRadio>
 		</op2web:prop>
 
-		<op2web:prop label="#{form.contabilizzazione.label}"
+		<op2web:prop label="#{form.contabilizzazione.label}" styleClass="longLabel"
 			rendered="#{form.contabilizzazione.rendered}">
 			<h:selectOneRadio id="input_#{form.contabilizzazione.name}"
 				layout="#{form.contabilizzazione.direzione}" styleClass="controlset"
@@ -150,7 +160,7 @@
 			</h:selectOneRadio>
 		</op2web:prop>
 
-		<op2web:prop label="#{form.stornoContabilizzazione.label}"
+		<op2web:prop label="#{form.stornoContabilizzazione.label}" styleClass="longLabel"
 			rendered="#{form.stornoContabilizzazione.rendered}">
 			<h:selectOneRadio id="input_#{form.stornoContabilizzazione.name}"
 				layout="#{form.stornoContabilizzazione.direzione}"
@@ -162,7 +172,7 @@
 			</h:selectOneRadio>
 		</op2web:prop>
 
-		<op2web:prop label="#{form.ricezioneFattura.label}"
+		<op2web:prop label="#{form.ricezioneFattura.label}" styleClass="longLabel"
 			rendered="#{form.ricezioneFattura.rendered}">
 			<h:selectOneRadio id="input_#{form.ricezioneFattura.name}"
 				layout="#{form.ricezioneFattura.direzione}" styleClass="controlset"
@@ -172,7 +182,7 @@
 			</h:selectOneRadio>
 		</op2web:prop>
 
-		<op2web:prop label="#{form.rifiutoFattura.label}"
+		<op2web:prop label="#{form.rifiutoFattura.label}" styleClass="longLabel"
 			rendered="#{form.rifiutoFattura.rendered}">
 			<h:selectOneRadio id="input_#{form.rifiutoFattura.name}"
 				layout="#{form.rifiutoFattura.direzione}" styleClass="controlset"

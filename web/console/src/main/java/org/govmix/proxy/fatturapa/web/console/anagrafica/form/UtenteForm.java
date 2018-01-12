@@ -134,7 +134,8 @@ public class UtenteForm extends BaseForm implements Form, Serializable{
 		this.dipartimento.setAutoComplete(true);
 		this.dipartimento.setEnableManualInput(true);
 		((PickListImpl)this.dipartimento).setCheckDimensions(true); 
-		this.dipartimento.setFontName("Arial"); //"Arial,Verdana,sans-serif" 
+//		this.dipartimento.setFontName("Arial"); //"Arial,Verdana,sans-serif"
+		((PickListImpl)this.dipartimento).setSuggestionBoxStyle("background-image: none !important;    width: 396x; margin-left: 8px;");
 
 		this.ruolo = inputFieldFactory.createSelectList("ruolo","utente.form.ruolo",null,true);
 		this.ruolo.setFieldsToUpdate(nomeForm +"_formPnl"); 
@@ -150,10 +151,11 @@ public class UtenteForm extends BaseForm implements Form, Serializable{
 
 		this.utenteEsterno = inputFieldFactory.createBooleanCheckBox("utenteEsterno","utente.pcc.utenteEsterno",null,false);
 		this.utenteEsterno.setFieldsToUpdate(nomeForm +"_formPnl"); 
-		this.utenteEsterno.setForm(this); 
+		this.utenteEsterno.setForm(this);
+		this.utenteEsterno.setLabelStyleClass(Costanti.LABEL_LONG_STYLE_CLASS);
 		this.sistemaEsterno = inputFieldFactory.createText("sistemaEsterno","utente.pcc.sistemaEsterno",null,false);
 		this.sistemaEsterno.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS); 
-
+		this.sistemaEsterno.setLabelStyleClass(Costanti.LABEL_LONG_STYLE_CLASS);
 
 
 		this.pagamentoIVA = inputFieldFactory.createRadioButtonFatturaPA("pIVA","utente.pcc.pagamentoIVA",null,false);

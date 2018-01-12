@@ -387,6 +387,7 @@
 							<targetPath>images</targetPath>
 							<includes>
 								<include>*.*</include>
+								<include>tema_link/*.*</include>
 							</includes>
 						</resource>
 					</webResources>

@@ -106,6 +106,7 @@ public class RegistroForm extends BaseForm implements Form{
 					proprieta.setName("prop_" + prop.getIdProperty().getNome());
 					proprieta.setDefaultValue(prop.getValore());
 					proprieta.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS);
+					proprieta.setLabelStyleClass(Costanti.LABEL_LONG_STYLE_CLASS);
 
 					this.properties.add(proprieta);
 				}
@@ -140,6 +141,8 @@ public class RegistroForm extends BaseForm implements Form{
 						proprieta.setLabel(registroProperty.getLabel());
 						proprieta.setName(namePrefix + registroProperty.getNome());
 						proprieta.setDefaultValue(null);
+						proprieta.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS);
+						proprieta.setLabelStyleClass(Costanti.LABEL_LONG_STYLE_CLASS);
 
 						this.properties.add(proprieta);
 					}
@@ -162,6 +165,8 @@ public class RegistroForm extends BaseForm implements Form{
 							proprieta.setLabel(registroProperty.getLabel());
 							proprieta.setName(namePrefix + registroProperty.getNome());
 							proprieta.setDefaultValue(null);
+							proprieta.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS);
+							proprieta.setLabelStyleClass(Costanti.LABEL_LONG_STYLE_CLASS);
 
 							this.properties.add(proprieta);
 						}

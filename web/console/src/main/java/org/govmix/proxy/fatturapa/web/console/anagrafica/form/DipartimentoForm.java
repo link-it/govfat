@@ -163,6 +163,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 
 			this.indirizziNotifica = inputFieldFactory.createTextArea("indirizziNotifica","dipartimento.pcc.indirizziNotifica",null,true);
 			this.indirizziNotifica.setNote("dipartimento.pcc.indirizziNotifica.note");
+			this.indirizziNotifica.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS);
 			
 			this.pagamentoIVA = inputFieldFactory.createRadioButtonFatturaPA("pagamentoIVA","dipartimento.pcc.pagamentoIVA",null,false);
 			this.datiFattura = inputFieldFactory.createRadioButtonFatturaPA("datiFattura","dipartimento.pcc.datiFattura",null,false);
@@ -330,7 +331,9 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 					proprieta.setLabel(prop.getIdProperty().getNome());
 					proprieta.setName("prop_" + prop.getIdProperty().getNome());
 					proprieta.setDefaultValue(prop.getValore());
-
+					proprieta.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS);
+					proprieta.setLabelStyleClass(Costanti.LABEL_LONG_STYLE_CLASS);
+					
 					this.properties.add(proprieta);
 				}
 
@@ -425,6 +428,8 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 						proprieta.setLabel(dipartimentoProperty.getLabel());
 						proprieta.setName(namePrefix + dipartimentoProperty.getNome());
 						proprieta.setDefaultValue(null);
+						proprieta.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS);
+						proprieta.setLabelStyleClass(Costanti.LABEL_LONG_STYLE_CLASS);
 
 						this.properties.add(proprieta);
 					}
@@ -448,6 +453,8 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 							proprieta.setLabel(dipartimentoProperty.getLabel());
 							proprieta.setName(namePrefix + dipartimentoProperty.getNome());
 							proprieta.setDefaultValue(null);
+							proprieta.setStyleClass(Costanti.INPUT_LONG_STYLE_CLASS);
+							proprieta.setLabelStyleClass(Costanti.LABEL_LONG_STYLE_CLASS);
 
 							this.properties.add(proprieta);
 						}
