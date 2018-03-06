@@ -116,7 +116,9 @@ public class FatturaSingleFileExporter extends AbstractSingleFileXMLExporter<Fat
 
 			String nomeEntryFattura = this.getRawName(object);
 
-			String fatturaDir = rootDir + File.separatorChar + nomeEntryFattura + File.separatorChar;
+			String rootD = (rootDir != null && !rootDir.isEmpty()) ? rootDir + File.separatorChar : ""; 
+			
+			String fatturaDir = rootD + nomeEntryFattura + File.separatorChar;
 
 			// Creazione File XML
 			String nomeFatturaXML = fatturaDir + this.exportAsRaw(object, baos);

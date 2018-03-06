@@ -22,8 +22,8 @@ package org.govmix.proxy.fatturapa.web.timers.policies;
 
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
-import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.web.timers.utils.BatchProperties;
 
 public class PolicyRispedizioneFactory {
@@ -32,6 +32,20 @@ public class PolicyRispedizioneFactory {
 		PolicyRispedizioneRetry policy = new PolicyRispedizioneRetry();
 		policy.setFattore(BatchProperties.getInstance().getFattoreRispedizione());
 		policy.setMaxTentativiRispedizione(BatchProperties.getInstance().getMaxTentativiRispedizione());
+		PolicyRispedizioneParameters params = new PolicyRispedizioneParameters();
+		params.setTentativi(fattura.getTentativiConsegna()+1);
+		policy.setParams(params);
+		return policy;
+
+	}
+
+	public static IPolicyRispedizione getPolicyRispedizione(TracciaSDI tracciaSdI) throws Exception {
+		PolicyRispedizioneRetry policy = new PolicyRispedizioneRetry();
+		policy.setFattore(BatchProperties.getInstance().getFattoreRispedizione());
+		policy.setMaxTentativiRispedizione(BatchProperties.getInstance().getMaxTentativiRispedizione());
+		PolicyRispedizioneParameters params = new PolicyRispedizioneParameters();
+		params.setTentativi(tracciaSdI.getTentativiProtocollazione()+1);
+		policy.setParams(params);
 		return policy;
 
 	}
@@ -40,6 +54,9 @@ public class PolicyRispedizioneFactory {
 		PolicyRispedizioneRetry policy = new PolicyRispedizioneRetry();
 		policy.setFattore(BatchProperties.getInstance().getFattoreRispedizioneWFM());
 		policy.setMaxTentativiRispedizione(BatchProperties.getInstance().getMaxTentativiRispedizioneWFM());
+		PolicyRispedizioneParameters params = new PolicyRispedizioneParameters();
+		params.setTentativi(lotto.getTentativiConsegna()+1);
+		policy.setParams(params);
 		return policy;
 
 	}
@@ -48,6 +65,9 @@ public class PolicyRispedizioneFactory {
 		PolicyRispedizioneRetry policy = new PolicyRispedizioneRetry();
 		policy.setFattore(BatchProperties.getInstance().getFattoreRispedizioneSdI());
 		policy.setMaxTentativiRispedizione(BatchProperties.getInstance().getMaxTentativiRispedizioneSdI());
+		PolicyRispedizioneParameters params = new PolicyRispedizioneParameters();
+		params.setTentativi(lotto.getTentativiConsegna()+1);
+		policy.setParams(params);
 		return policy;
 
 	}
@@ -56,16 +76,21 @@ public class PolicyRispedizioneFactory {
 		PolicyRispedizioneRetry policy = new PolicyRispedizioneRetry();
 		policy.setFattore(BatchProperties.getInstance().getFattoreRispedizione());
 		policy.setMaxTentativiRispedizione(BatchProperties.getInstance().getMaxTentativiRispedizione());
+		PolicyRispedizioneParameters params = new PolicyRispedizioneParameters();
+		params.setTentativi(notifica.getTentativiConsegnaSdi()+1);
+		policy.setParams(params);
 		return policy;
 
 	}
-
-	public static IPolicyRispedizione getPolicyRispedizione(NotificaDecorrenzaTermini notifica) throws Exception {
-		PolicyRispedizioneRetry policy = new PolicyRispedizioneRetry();
-		policy.setFattore(BatchProperties.getInstance().getFattoreRispedizione());
-		policy.setMaxTentativiRispedizione(BatchProperties.getInstance().getMaxTentativiRispedizione());
-		return policy;
-
-	}
+//
+//	public static IPolicyRispedizione getPolicyRispedizione(NotificaDecorrenzaTermini notifica) throws Exception {
+//		PolicyRispedizioneRetry policy = new PolicyRispedizioneRetry();
+//		policy.setFattore(BatchProperties.getInstance().getFattoreRispedizione());
+//		policy.setMaxTentativiRispedizione(BatchProperties.getInstance().getMaxTentativiRispedizione());
+//		PolicyRispedizioneParameters params = new PolicyRispedizioneParameters();
+//		params.setTentativi(notifica.getTentativiConsegna()+1);
+//		policy.setParams(params);
+//		return policy;
+//	}
 
 }

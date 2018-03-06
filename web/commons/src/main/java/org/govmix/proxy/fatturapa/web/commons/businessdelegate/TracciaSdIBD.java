@@ -21,6 +21,7 @@
 package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 
 import java.sql.Connection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -104,9 +105,19 @@ public class TracciaSdIBD extends BaseBD {
 		return new TracciaSdIFilter(this.service);
 	}
 
-	public void updateStatoProtocollazione(TracciaSDI tracciaSDI, StatoProtocollazioneType stato) throws Exception {
+	public void updateStatoProtocollazioneOK(TracciaSDI tracciaSDI, StatoProtocollazioneType stato) throws Exception {
 		try {
-			this.service.updateFields(tracciaSDI, new UpdateField(TracciaSDI.model().STATO_PROTOCOLLAZIONE, stato));
+			this.service.updateFields(tracciaSDI, new UpdateField(TracciaSDI.model().STATO_PROTOCOLLAZIONE, stato), new UpdateField(TracciaSDI.model().DATA_PROTOCOLLAZIONE, new Date()));
+		} catch (ServiceException e) {
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			throw new Exception(e);
+		}		
+	}
+
+	public void updateStatoProtocollazioneKO(TracciaSDI tracciaSDI, StatoProtocollazioneType stato, String dettaglio, Date dataProssimaProtocollazione, int tentativiProtocollazione) throws Exception {
+		try {
+			this.service.updateFields(tracciaSDI, new UpdateField(TracciaSDI.model().STATO_PROTOCOLLAZIONE, stato), new UpdateField(TracciaSDI.model().DETTAGLIO_PROTOCOLLAZIONE, dettaglio), new UpdateField(TracciaSDI.model().DATA_PROSSIMA_PROTOCOLLAZIONE, dataProssimaProtocollazione), new UpdateField(TracciaSDI.model().TENTATIVI_PROTOCOLLAZIONE, tentativiProtocollazione));
 		} catch (ServiceException e) {
 			throw new Exception(e);
 		} catch (NotImplementedException e) {

@@ -13,13 +13,12 @@ import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFattureAttiveBD;
 import org.govmix.proxy.fatturapa.web.commons.fatturaattiva.EsitoInvioFattura;
-import org.govmix.proxy.fatturapa.web.commons.fatturaattiva.InvioFattura;
 import org.govmix.proxy.fatturapa.web.commons.fatturaattiva.EsitoInvioFattura.ESITO;
+import org.govmix.proxy.fatturapa.web.commons.fatturaattiva.InvioFattura;
 import org.govmix.proxy.fatturapa.web.commons.ricevicomunicazionesdi.RiceviComunicazioneSdI;
 import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.govmix.proxy.fatturapa.web.timers.policies.IPolicyRispedizione;
 import org.govmix.proxy.fatturapa.web.timers.policies.PolicyRispedizioneFactory;
-import org.govmix.proxy.fatturapa.web.timers.policies.PolicyRispedizioneParameters;
 
 public class SpedizioneFattureAttive implements IWorkFlow<LottoFatture> {
 
@@ -86,16 +85,13 @@ public class SpedizioneFattureAttive implements IWorkFlow<LottoFatture> {
 
 			this.log.debug("Elaboro il lotto ["+this.lottoFattureAttiveBD.convertToId(lotto).toJson()+"]: stato ["+lotto.getStatoElaborazioneInUscita()+"] -> ["+StatoElaborazioneType.RICEVUTA_DALLO_SDI+"]");
 		} else {
-			IPolicyRispedizione policy = PolicyRispedizioneFactory.getPolicyRispedizioneWFM(lotto);
+			IPolicyRispedizione policy = PolicyRispedizioneFactory.getPolicyRispedizioneSdI(lotto);
 
 			long now = new Date().getTime();
 			
-			PolicyRispedizioneParameters params = new PolicyRispedizioneParameters();
-			params.setTentativi(lotto.getTentativiConsegna() + 1);
-			
-			long offset = policy.getOffsetRispedizione(params);
+			long offset = policy.getOffsetRispedizione();
 
-			StatoElaborazioneType nextStato = policy.isRispedizioneAbilitata(params) ? StatoElaborazioneType.PROTOCOLLATA : StatoElaborazioneType.ERRORE_DI_SPEDIZIONE;
+			StatoElaborazioneType nextStato = policy.isRispedizioneAbilitata() ? StatoElaborazioneType.PROTOCOLLATA : StatoElaborazioneType.ERRORE_DI_SPEDIZIONE;
 
 			this.lottoFattureAttiveBD.updateStatoElaborazioneInUscitaKO(this.lottoFattureAttiveBD.convertToId(lotto), nextStato, new Date(now+offset), null, lotto.getTentativiConsegna() + 1);
 			

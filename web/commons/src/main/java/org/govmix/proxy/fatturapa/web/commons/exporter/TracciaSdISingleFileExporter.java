@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
+import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.orm.dao.IDBTracciaSDIServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.ITracciaSDIServiceSearch;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
@@ -103,6 +104,14 @@ public class TracciaSdISingleFileExporter extends AbstractSingleFileXMLExporter<
 		int endIndex =object.getNomeFile().lastIndexOf(".");
 
 		return endIndex > 0 ? object.getNomeFile().substring(0, endIndex): object.getNomeFile();
+	}
+
+	@Override
+	public String getRawExtension(TracciaSDI object) {
+		if(TipoComunicazioneType.AT.equals(object.getTipoComunicazione())) {
+			return "zip";
+		}
+		return super.getRawExtension(object);
 	}
 
 	@Override

@@ -21,7 +21,6 @@ import org.govmix.proxy.fatturapa.web.commons.utils.Endpoint;
 import org.govmix.proxy.fatturapa.web.commons.utils.EndpointSelector;
 import org.govmix.proxy.fatturapa.web.timers.policies.IPolicyRispedizione;
 import org.govmix.proxy.fatturapa.web.timers.policies.PolicyRispedizioneFactory;
-import org.govmix.proxy.fatturapa.web.timers.policies.PolicyRispedizioneParameters;
 
 public class WorkFlow implements IWorkFlow<LottoFatture> {
 
@@ -91,8 +90,8 @@ public class WorkFlow implements IWorkFlow<LottoFatture> {
 					httpConn.setRequestProperty(CostantiProtocollazione.IDENTIFICATIVO_SDI_HEADER_PARAM, ""+lotto.getIdentificativoSdi());
 					httpConn.setRequestProperty(CostantiProtocollazione.NOME_FILE_HEADER_PARAM, ""+lotto.getNomeFile());
 					httpConn.setRequestProperty(CostantiProtocollazione.DESTINATARIO_HEADER_PARAM, lotto.getCodiceDestinatario());
-					if(lotto.getDettaglioConsegna() != null)
-						httpConn.setRequestProperty(CostantiProtocollazione.DETTAGLIO_CONSEGNA_HEADER_PARAM, lotto.getDettaglioConsegna());
+					if(lotto.getDettaglioElaborazione() != null)
+						httpConn.setRequestProperty(CostantiProtocollazione.DETTAGLIO_CONSEGNA_HEADER_PARAM, lotto.getDettaglioElaborazione());
 					
 					String ct = FormatoArchivioInvioFatturaType.XML.equals(lotto.getFormatoArchivioInvioFattura()) ? "text/xml" : "application/pkcs7-mime";  
 					httpConn.setRequestProperty("Content-Type", ct);
@@ -115,9 +114,9 @@ public class WorkFlow implements IWorkFlow<LottoFatture> {
 					
 					esitoPositivo = httpConn.getResponseCode() < 299;
 					
-					response = IOUtils.readStringFromStream(httpConn.getInputStream());
+					response = IOUtils.readStringFromStream(esitoPositivo ? httpConn.getInputStream() : httpConn.getErrorStream());
 				} catch(Exception e) {
-					this.log.error("Errore durante l'avvio del workflow per il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"]");
+					this.log.error("Errore durante l'avvio del workflow per il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"]: " + e.getMessage(), e);
 				}
 				
 				if(esitoPositivo) {
@@ -128,15 +127,12 @@ public class WorkFlow implements IWorkFlow<LottoFatture> {
 
 					long now = new Date().getTime();
 					
-					PolicyRispedizioneParameters params = new PolicyRispedizioneParameters();
-					params.setTentativi(lotto.getTentativiConsegna() + 1);
-					
-					long offset = policy.getOffsetRispedizione(params);
+					long offset = policy.getOffsetRispedizione();
 
-					StatoElaborazioneType nextStato = policy.isRispedizioneAbilitata(params) ? StatoElaborazioneType.PRESA_IN_CARICO : nextStatoKO;
+					StatoElaborazioneType nextStato = policy.isRispedizioneAbilitata() ? StatoElaborazioneType.PRESA_IN_CARICO : nextStatoKO;
 
 					this.lottoBD.updateStatoElaborazioneInUscitaKO(idLotto, nextStato, new Date(now+offset), response, lotto.getTentativiConsegna() + 1);
-					this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+lotto.getStatoElaborazioneInUscita()+"] -> ["+nextStatoKO+"]");
+					this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+lotto.getStatoElaborazioneInUscita()+"] -> ["+nextStato+"]");
 				}
 			} catch(Exception e) {
 				this.lottoBD.updateStatoElaborazioneInUscitaKO(idLotto, nextStatoKO, new Date(), lotto.getDettaglioElaborazione(), lotto.getTentativiConsegna() + 1);

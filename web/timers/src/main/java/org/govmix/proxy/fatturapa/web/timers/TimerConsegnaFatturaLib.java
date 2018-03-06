@@ -48,7 +48,6 @@ import org.govmix.proxy.fatturapa.web.commons.utils.Endpoint;
 import org.govmix.proxy.fatturapa.web.commons.utils.EndpointSelector;
 import org.govmix.proxy.fatturapa.web.timers.policies.IPolicyRispedizione;
 import org.govmix.proxy.fatturapa.web.timers.policies.PolicyRispedizioneFactory;
-import org.govmix.proxy.fatturapa.web.timers.policies.PolicyRispedizioneParameters;
 import org.govmix.proxy.fatturapa.web.timers.utils.BatchProperties;
 
 /**
@@ -201,12 +200,9 @@ public class TimerConsegnaFatturaLib extends AbstractTimerLib {
 									fattura.setDettaglioConsegna(response);
 									fattura.setDataConsegna(new Date(now));
 
-									PolicyRispedizioneParameters params = new PolicyRispedizioneParameters();
-									params.setTentativi(fattura.getTentativiConsegna());
-									
-									long offset = policy.getOffsetRispedizione(params);
+									long offset = policy.getOffsetRispedizione();
 
-									if(policy.isRispedizioneAbilitata(params)) {
+									if(policy.isRispedizioneAbilitata()) {
 										fattura.setStatoConsegna(StatoConsegnaType.IN_RICONSEGNA);
 									} else {
 										fattura.setStatoConsegna(StatoConsegnaType.ERRORE_CONSEGNA);

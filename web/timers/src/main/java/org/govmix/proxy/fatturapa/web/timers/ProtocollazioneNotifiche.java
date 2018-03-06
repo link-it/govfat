@@ -17,6 +17,8 @@ import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.TracciaSdI
 import org.govmix.proxy.fatturapa.web.commons.utils.CostantiProtocollazione;
 import org.govmix.proxy.fatturapa.web.commons.utils.Endpoint;
 import org.govmix.proxy.fatturapa.web.commons.utils.EndpointSelector;
+import org.govmix.proxy.fatturapa.web.timers.policies.IPolicyRispedizione;
+import org.govmix.proxy.fatturapa.web.timers.policies.PolicyRispedizioneFactory;
 
 public class ProtocollazioneNotifiche implements IWorkFlow<TracciaSDI> {
 
@@ -61,7 +63,7 @@ public class ProtocollazioneNotifiche implements IWorkFlow<TracciaSDI> {
 		StatoProtocollazioneType nextStatoKO = StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE;
 		this.log.debug("Elaboro la traccia con id ["+tracciaSDI.getId()+"]");
 		
-		Endpoint endpoint = endpointSelector.findEndpoint(tracciaSDI);
+		Endpoint endpoint = this.endpointSelector.findEndpoint(tracciaSDI);
 		
 		URL urlOriginale = endpoint.getEndpoint().toURL();
 		
@@ -71,7 +73,6 @@ public class ProtocollazioneNotifiche implements IWorkFlow<TracciaSDI> {
 
 		URLConnection conn = url.openConnection();
 		HttpURLConnection httpConn = (HttpURLConnection) conn;
-		String errore = null;
 		boolean esitoPositivo = false;
 		String response = null;
 		try{
@@ -82,6 +83,7 @@ public class ProtocollazioneNotifiche implements IWorkFlow<TracciaSDI> {
 
 			httpConn.setRequestProperty(CostantiProtocollazione.NOME_FILE_HEADER_PARAM, ""+tracciaSDI.getNomeFile());
 			httpConn.setRequestProperty(CostantiProtocollazione.DESTINATARIO_HEADER_PARAM, tracciaSDI.getLottoFatture().getCodiceDestinatario());
+			httpConn.setRequestProperty(CostantiProtocollazione.TIPO_RICEVUTA_HEADER_PARAM, tracciaSDI.getTipoComunicazione().toString());
 			
 			httpConn.setRequestProperty("Content-Type", tracciaSDI.getContentType());
 			
@@ -104,20 +106,31 @@ public class ProtocollazioneNotifiche implements IWorkFlow<TracciaSDI> {
 			
 			esitoPositivo = httpConn.getResponseCode() < 299;
 			
-			response = IOUtils.readStringFromStream(httpConn.getInputStream());
-			
-			if(esitoPositivo) {
-				this.tracciaSdiBD.updateStatoProtocollazione(tracciaSDI, nextStatoOK);
-				this.log.debug("Elaboro la traccia ["+tracciaSDI.getId()+"], stato ["+tracciaSDI.getStatoProtocollazione()+"] -> ["+nextStatoOK+"]");
-			} else {
-				this.tracciaSdiBD.updateStatoProtocollazione(tracciaSDI, nextStatoKO);
-				this.log.debug("Elaboro la traccia ["+tracciaSDI.getId()+"], stato ["+tracciaSDI.getStatoProtocollazione()+"] -> ["+nextStatoKO+"]");
-			}
+					response = IOUtils.readStringFromStream(esitoPositivo ? httpConn.getInputStream() : httpConn.getErrorStream());
 		} catch(Exception e) {
 			this.log.error("Errore durante la protocollazione della traccia: " + e.getMessage(), e);
-			this.tracciaSdiBD.updateStatoProtocollazione(tracciaSDI, nextStatoKO);
-			this.log.debug("Elaboro la traccia ["+tracciaSDI.getId()+"], stato ["+tracciaSDI.getStatoProtocollazione()+"] -> ["+nextStatoKO+"]");
 		}
+		
+		
+		if(esitoPositivo) {
+			this.log.debug("Elaboro la traccia ["+tracciaSDI.getId()+"], stato ["+tracciaSDI.getStatoProtocollazione()+"] -> ["+nextStatoOK+"]...");
+			this.tracciaSdiBD.updateStatoProtocollazioneOK(tracciaSDI, nextStatoOK);
+			this.log.debug("Elaboro la traccia ["+tracciaSDI.getId()+"], stato ["+tracciaSDI.getStatoProtocollazione()+"] -> ["+nextStatoOK+"] OK");
+		} else {
+			
+			IPolicyRispedizione policy = PolicyRispedizioneFactory.getPolicyRispedizione(tracciaSDI);
+
+			long now = new Date().getTime();
+			
+			long offset = policy.getOffsetRispedizione();
+
+			StatoProtocollazioneType nextStato = policy.isRispedizioneAbilitata() ? StatoProtocollazioneType.NON_PROTOCOLLATA : nextStatoKO;
+
+			this.log.debug("Elaboro la traccia ["+tracciaSDI.getId()+"], stato ["+tracciaSDI.getStatoProtocollazione()+"] -> ["+nextStato+"]...");
+			this.tracciaSdiBD.updateStatoProtocollazioneKO(tracciaSDI, nextStato, response, new Date(now+offset), tracciaSDI.getTentativiProtocollazione() + 1);
+			this.log.debug("Elaboro la traccia ["+tracciaSDI.getId()+"], stato ["+tracciaSDI.getStatoProtocollazione()+"] -> ["+nextStato+"] OK");
+		}
+
 	}
 
 }

@@ -32,7 +32,7 @@ import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaPar
 
 public abstract class AbstractFatturaConverter<T> {
 
-	protected T fattura;
+	private T fattura;
 	protected ConsegnaFatturaParameters params;
 	protected byte[] fatturaAsByte;
 	protected SimpleDateFormat sdfYear;
@@ -154,6 +154,10 @@ public abstract class AbstractFatturaConverter<T> {
 	}
 	
 	public abstract List<AllegatoFattura> getAllegati();
+
+	public T getFattura() {
+		return this.fattura;
+	}
 
 
 }

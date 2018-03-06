@@ -50,4 +50,5 @@ public class CostantiProtocollazione {
 	public static final String DETTAGLIO_CONSEGNA_HEADER_PARAM = "X-ProxyFatturaPA-DettaglioConsegna";
 	public static final String TIPO_COMUNICAZIONE_HEADER_PARAM = "X-ProxyFatturaPA-TipoComunicazione";
 	public static final String PROGRESSIVO_HEADER_PARAM = "X-ProxyFatturaPA-Progressivo";
+	public static final String TIPO_RICEVUTA_HEADER_PARAM = "X-ProxyFatturaPA-TipoRicevuta";
 }

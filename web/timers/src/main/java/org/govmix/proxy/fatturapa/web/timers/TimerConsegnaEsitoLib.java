@@ -20,11 +20,6 @@
  */
 package org.govmix.proxy.fatturapa.web.timers;
 
-import it.gov.fatturapa.sdi.messaggi.v1_0.NotificaEsitoCommittenteType;
-import it.gov.fatturapa.sdi.messaggi.v1_0.RiferimentoFatturaType;
-import it.gov.fatturapa.sdi.messaggi.v1_0.ScartoEsitoCommittenteType;
-import it.gov.fatturapa.sdi.messaggi.v1_0.constants.EsitoCommittenteType;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
@@ -40,10 +35,14 @@ import org.govmix.proxy.fatturapa.web.commons.businessdelegate.NotificaEsitoComm
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.InvioNotifica;
 import org.govmix.proxy.fatturapa.web.commons.sonde.Sonda;
-import org.govmix.proxy.fatturapa.web.timers.utils.BatchProperties;
 import org.govmix.proxy.fatturapa.web.timers.policies.IPolicyRispedizione;
 import org.govmix.proxy.fatturapa.web.timers.policies.PolicyRispedizioneFactory;
-import org.govmix.proxy.fatturapa.web.timers.policies.PolicyRispedizioneParameters;
+import org.govmix.proxy.fatturapa.web.timers.utils.BatchProperties;
+
+import it.gov.fatturapa.sdi.messaggi.v1_0.NotificaEsitoCommittenteType;
+import it.gov.fatturapa.sdi.messaggi.v1_0.RiferimentoFatturaType;
+import it.gov.fatturapa.sdi.messaggi.v1_0.ScartoEsitoCommittenteType;
+import it.gov.fatturapa.sdi.messaggi.v1_0.constants.EsitoCommittenteType;
 
 /**
  * Timer per la consegna degli esiti delle fatture alla PdD
@@ -149,10 +148,8 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 								int esitoChiamata = invioNotifica.getEsitoChiamata();
 
 								if(esitoChiamata > 299) {
-									PolicyRispedizioneParameters params = new PolicyRispedizioneParameters();
-									params.setTentativi(notifica.getTentativiConsegnaSdi());
 									IPolicyRispedizione policyRispedizione = PolicyRispedizioneFactory.getPolicyRispedizione(notifica);
-									long offset = policyRispedizione.getOffsetRispedizione(params);
+									long offset = policyRispedizione.getOffsetRispedizione();
 									Date nextDate = new Date(System.currentTimeMillis() + offset);
 									this.log.info("Risposta dallo SdI con codice ["+esitoChiamata+"]. ritentero' l'invio in data ["+nextDate+"]");
 									notifica.setDataProssimaConsegnaSdi(nextDate);
@@ -160,7 +157,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 
 									int tentativiConsegnaSdi = notifica.getTentativiConsegnaSdi();
 									notifica.setTentativiConsegnaSdi(tentativiConsegnaSdi  + 1);
-									notifica.setStatoConsegnaSdi(policyRispedizione.isRispedizioneAbilitata(params) ? StatoConsegnaType.IN_RICONSEGNA: StatoConsegnaType.ERRORE_CONSEGNA);
+									notifica.setStatoConsegnaSdi(policyRispedizione.isRispedizioneAbilitata() ? StatoConsegnaType.IN_RICONSEGNA: StatoConsegnaType.ERRORE_CONSEGNA);
 									notificaEsitoCommittenteBD.update(notifica);
 									countNotificheElaborate++;
 									continue;
@@ -299,16 +296,14 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 								notificaEsitoCommittenteBD.update(notifica);
 							} catch(Exception e) {
 								this.log.error("Errore durante l'invio della notifica relativa alla fattura ["+notifica.getIdFattura().toJson()+"]:"+e.getMessage(), e);
-								PolicyRispedizioneParameters params = new PolicyRispedizioneParameters();
-								int tentativiConsegnaSdi = notifica.getTentativiConsegnaSdi();
-								params.setTentativi(tentativiConsegnaSdi);
 								IPolicyRispedizione policyRispedizione = PolicyRispedizioneFactory.getPolicyRispedizione(notifica);
-								long offset = policyRispedizione.getOffsetRispedizione(params);
+								long offset = policyRispedizione.getOffsetRispedizione();
 								Date nextDate = new Date(System.currentTimeMillis() + offset);
 								notifica.setDataUltimaConsegnaSdi(new Date());
 								notifica.setDataProssimaConsegnaSdi(nextDate);
+								int tentativiConsegnaSdi = notifica.getTentativiConsegnaSdi();
 								notifica.setTentativiConsegnaSdi(tentativiConsegnaSdi  + 1);
-								notifica.setStatoConsegnaSdi(policyRispedizione.isRispedizioneAbilitata(params) ? StatoConsegnaType.IN_RICONSEGNA: StatoConsegnaType.ERRORE_CONSEGNA);
+								notifica.setStatoConsegnaSdi(policyRispedizione.isRispedizioneAbilitata() ? StatoConsegnaType.IN_RICONSEGNA: StatoConsegnaType.ERRORE_CONSEGNA);
 								notificaEsitoCommittenteBD.update(notifica);
 							}
 							countNotificheElaborate++;
