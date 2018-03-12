@@ -75,7 +75,7 @@ public class LottoSingleFileExporter extends AbstractSingleFileExporter<LottoFat
 	private int getIndex(LottoFatture object) {
 		String nomeFile = object.getNomeFile(); 
 		if(nomeFile.endsWith(".p7m")) {
-			nomeFile.substring(0, ".p7m".length());
+			nomeFile = nomeFile.substring(0, nomeFile.length() - ".p7m".length());
 		}
 		return nomeFile.lastIndexOf(".");
 	}

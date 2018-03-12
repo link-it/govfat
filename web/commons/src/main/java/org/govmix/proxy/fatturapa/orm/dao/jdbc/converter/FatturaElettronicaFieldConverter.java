@@ -621,6 +621,13 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 				return "stato_elaborazione_in_uscita";
 			}
 		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.TIPI_COMUNICAZIONE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".tipi_comunicazione";
+			}else{
+				return "tipi_comunicazione";
+			}
+		}
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DATA_ULTIMA_ELABORAZIONE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".data_ultima_elaborazione";
@@ -1051,6 +1058,9 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE, returnAlias);
 		}
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.STATO_ELABORAZIONE_IN_USCITA)){
+			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE, returnAlias);
+		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.TIPI_COMUNICAZIONE)){
 			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE, returnAlias);
 		}
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DATA_ULTIMA_ELABORAZIONE)){

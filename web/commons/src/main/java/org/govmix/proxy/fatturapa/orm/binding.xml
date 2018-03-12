@@ -163,6 +163,7 @@
     <value name="xml" field="xml" usage="required"/>
     <value name="fatturazioneAttiva" field="fatturazioneAttiva" usage="required"/>
     <value name="statoElaborazioneInUscita" field="statoElaborazioneInUscita" usage="optional" enum-value-method="toString"/>
+    <value name="tipiComunicazione" field="tipiComunicazione" usage="optional"/>
     <value name="dataUltimaElaborazione" field="dataUltimaElaborazione" usage="optional"/>
     <value name="dettaglioElaborazione" field="dettaglioElaborazione" usage="optional"/>
     <value name="dataProssimaElaborazione" field="dataProssimaElaborazione" usage="optional"/>
@@ -208,6 +209,7 @@
     <value name="xml" field="xml" usage="required"/>
     <value name="fatturazioneAttiva" field="fatturazioneAttiva" usage="required"/>
     <value name="statoElaborazioneInUscita" field="statoElaborazioneInUscita" usage="optional" enum-value-method="toString"/>
+    <value name="tipiComunicazione" field="tipiComunicazione" usage="optional"/>
     <value name="dataUltimaElaborazione" field="dataUltimaElaborazione" usage="optional"/>
     <value name="dettaglioElaborazione" field="dettaglioElaborazione" usage="optional"/>
     <value name="dataProssimaElaborazione" field="dataProssimaElaborazione" usage="optional"/>

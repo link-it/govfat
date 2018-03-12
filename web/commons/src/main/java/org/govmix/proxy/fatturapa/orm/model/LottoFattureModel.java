@@ -69,6 +69,7 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 		this.XML = new Field("xml",byte[].class,"LottoFatture",LottoFatture.class);
 		this.FATTURAZIONE_ATTIVA = new Field("fatturazioneAttiva",boolean.class,"LottoFatture",LottoFatture.class);
 		this.STATO_ELABORAZIONE_IN_USCITA = new Field("statoElaborazioneInUscita",java.lang.String.class,"LottoFatture",LottoFatture.class);
+		this.TIPI_COMUNICAZIONE = new Field("tipiComunicazione",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.DATA_ULTIMA_ELABORAZIONE = new Field("dataUltimaElaborazione",java.util.Date.class,"LottoFatture",LottoFatture.class);
 		this.DETTAGLIO_ELABORAZIONE = new Field("dettaglioElaborazione",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.DATA_PROSSIMA_ELABORAZIONE = new Field("dataProssimaElaborazione",java.util.Date.class,"LottoFatture",LottoFatture.class);
@@ -117,6 +118,7 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 		this.XML = new ComplexField(father,"xml",byte[].class,"LottoFatture",LottoFatture.class);
 		this.FATTURAZIONE_ATTIVA = new ComplexField(father,"fatturazioneAttiva",boolean.class,"LottoFatture",LottoFatture.class);
 		this.STATO_ELABORAZIONE_IN_USCITA = new ComplexField(father,"statoElaborazioneInUscita",java.lang.String.class,"LottoFatture",LottoFatture.class);
+		this.TIPI_COMUNICAZIONE = new ComplexField(father,"tipiComunicazione",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.DATA_ULTIMA_ELABORAZIONE = new ComplexField(father,"dataUltimaElaborazione",java.util.Date.class,"LottoFatture",LottoFatture.class);
 		this.DETTAGLIO_ELABORAZIONE = new ComplexField(father,"dettaglioElaborazione",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.DATA_PROSSIMA_ELABORAZIONE = new ComplexField(father,"dataProssimaElaborazione",java.util.Date.class,"LottoFatture",LottoFatture.class);
@@ -189,6 +191,8 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 	public IField FATTURAZIONE_ATTIVA = null;
 	 
 	public IField STATO_ELABORAZIONE_IN_USCITA = null;
+	 
+	public IField TIPI_COMUNICAZIONE = null;
 	 
 	public IField DATA_ULTIMA_ELABORAZIONE = null;
 	 

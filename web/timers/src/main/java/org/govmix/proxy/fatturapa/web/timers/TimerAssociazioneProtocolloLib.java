@@ -76,7 +76,7 @@ public class TimerAssociazioneProtocolloLib extends AbstractTimerLib {
 			EndpointSelector endpointSelector = new EndpointSelector(log, connection, false);
 
 			if(countFatture > 0) {
-				connection.setAutoCommit(false);
+//				connection.setAutoCommit(false);
 
 				this.log.info("Gestisco ["+countFatture+"] lotti di fatture da consegnare, ["+this.limit+"] alla volta");
 				List<LottoFatture> lstId = lottoBD.getLottiDaAssociare(limitDate, 0, this.limit);
@@ -143,15 +143,15 @@ public class TimerAssociazioneProtocolloLib extends AbstractTimerLib {
 
 						lstId = lottoBD.getLottiDaAssociare(limitDate, 0, this.limit);
 
-						connection.commit();
+//						connection.commit();
 						Sonda.getInstance().registraChiamataServizioOK(this.getTimerName());
 					} catch(Exception e) {
 						this.log.error("Errore durante l'esecuzione del batch ConsegnaLotto: "+e.getMessage(), e);
-						connection.rollback();
+//						connection.rollback();
 					}
 				}
 				this.log.info("Gestiti ["+countFattureElaborate+"\\"+countFatture+"] lotti di fatture da consegnare. Fine.");
-				connection.setAutoCommit(true);
+//				connection.setAutoCommit(true);
 			}
 
 		} finally {

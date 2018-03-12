@@ -6,27 +6,21 @@ import java.util.List;
 
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
+import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.openspcoop2.generic_project.dao.IExpressionConstructor;
 import org.openspcoop2.generic_project.exception.ExpressionException;
 import org.openspcoop2.generic_project.exception.ExpressionNotImplementedException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
+import org.openspcoop2.generic_project.expression.LikeMode;
 
 public class FatturaAttivaFilter extends FatturaFilter {
 
 	private List<StatoElaborazioneType> statoElaborazioneList;
+	private TipoComunicazioneType tipoComunicazione;
 	private Date dataUltimaElaborazioneMin;
 	private Date dataUltimaElaborazioneMax;
-	private String protocollo;
-	
-	public String getProtocollo() {
-		return protocollo;
-	}
-
-	public void setProtocollo(String protocollo) {
-		this.protocollo = protocollo;
-	}
 
 	public FatturaAttivaFilter(IExpressionConstructor expressionConstructor) {
 		super(expressionConstructor, true);
@@ -41,8 +35,8 @@ public class FatturaAttivaFilter extends FatturaFilter {
 				expression.in(FatturaElettronica.model().LOTTO_FATTURE.STATO_ELABORAZIONE_IN_USCITA, this.statoElaborazioneList);
 			}
 			
-			if(this.protocollo != null) {
-				expression.equals(FatturaElettronica.model().PROTOCOLLO, this.protocollo);
+			if(this.tipoComunicazione != null) {
+				expression.ilike(FatturaElettronica.model().LOTTO_FATTURE.TIPI_COMUNICAZIONE, "#" + this.tipoComunicazione.name() + "#", LikeMode.ANYWHERE);
 			}
 			
 			if(this.dataUltimaElaborazioneMin != null) {
@@ -91,6 +85,14 @@ public class FatturaAttivaFilter extends FatturaFilter {
 
 	public void setDataUltimaElaborazioneMax(Date dataUltimaElaborazioneMax) {
 		this.dataUltimaElaborazioneMax = dataUltimaElaborazioneMax;
+	}
+
+	public TipoComunicazioneType getTipoComunicazione() {
+		return tipoComunicazione;
+	}
+
+	public void setTipoComunicazione(TipoComunicazioneType tipoComunicazione) {
+		this.tipoComunicazione = tipoComunicazione;
 	}
 	
 	

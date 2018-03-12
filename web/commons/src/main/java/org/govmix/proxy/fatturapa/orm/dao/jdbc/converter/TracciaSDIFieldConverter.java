@@ -369,11 +369,39 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 				return "stato_elaborazione_in_uscita";
 			}
 		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.TIPI_COMUNICAZIONE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".tipi_comunicazione";
+			}else{
+				return "tipi_comunicazione";
+			}
+		}
 		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DATA_ULTIMA_ELABORAZIONE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".data_ultima_elaborazione";
 			}else{
 				return "data_ultima_elaborazione";
+			}
+		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DETTAGLIO_ELABORAZIONE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".dettaglio_elaborazione";
+			}else{
+				return "dettaglio_elaborazione";
+			}
+		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DATA_PROSSIMA_ELABORAZIONE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".data_prossima_elaborazione";
+			}else{
+				return "data_prossima_elaborazione";
+			}
+		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.TENTATIVI_CONSEGNA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".tentativi_consegna";
+			}else{
+				return "tentativi_consegna";
 			}
 		}
 		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DATA_RICEZIONE)){
@@ -672,7 +700,19 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.STATO_ELABORAZIONE_IN_USCITA)){
 			return this.toTable(TracciaSDI.model().LOTTO_FATTURE, returnAlias);
 		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.TIPI_COMUNICAZIONE)){
+			return this.toTable(TracciaSDI.model().LOTTO_FATTURE, returnAlias);
+		}
 		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DATA_ULTIMA_ELABORAZIONE)){
+			return this.toTable(TracciaSDI.model().LOTTO_FATTURE, returnAlias);
+		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DETTAGLIO_ELABORAZIONE)){
+			return this.toTable(TracciaSDI.model().LOTTO_FATTURE, returnAlias);
+		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DATA_PROSSIMA_ELABORAZIONE)){
+			return this.toTable(TracciaSDI.model().LOTTO_FATTURE, returnAlias);
+		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.TENTATIVI_CONSEGNA)){
 			return this.toTable(TracciaSDI.model().LOTTO_FATTURE, returnAlias);
 		}
 		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DATA_RICEZIONE)){

@@ -825,6 +825,7 @@
 			<xsd:element name="xml" type="xsd:base64Binary" />
 			<xsd:element name="fatturazioneAttiva" type="xsd:boolean" />
 			<xsd:element name="statoElaborazioneInUscita" type="StatoElaborazioneType" minOccurs="0"/>
+			<xsd:element name="tipiComunicazione" type="xsd:string" minOccurs="0"/>
 			<xsd:element name="dataUltimaElaborazione" type="xsd:dateTime" minOccurs="0" />
 			<xsd:element name="dettaglioElaborazione" type="xsd:string" minOccurs="0" />
 			<xsd:element name="dataProssimaElaborazione" type="xsd:dateTime" minOccurs="0" />

@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
+import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.openspcoop2.generic_project.beans.UpdateField;
 import org.openspcoop2.generic_project.exception.ExpressionException;
 import org.openspcoop2.generic_project.exception.ExpressionNotImplementedException;
@@ -68,7 +69,7 @@ public class LottoFattureAttiveBD extends LottoBD {
 	
 	public void updateIdentificativoSdI(LottoFatture lotto, Integer identificativoSdI) throws ServiceException, NotFoundException {
 		try {
-			this.service.updateFields(this.service.convertToId(lotto), new UpdateField(LottoFatture.model().IDENTIFICATIVO_SDI, identificativoSdI));
+			this.service.updateFields(this.service.convertToId(lotto), new UpdateField(LottoFatture.model().IDENTIFICATIVO_SDI, identificativoSdI), new UpdateField(LottoFatture.model().TIPI_COMUNICAZIONE, "#"+TipoComunicazioneType.FAT_OUT.name()+"#"));
 		} catch (NotImplementedException e) {
 			throw new ServiceException(e);
 		}

@@ -191,7 +191,8 @@ public class EndpointPdDImpl implements EndpointPdD {
 				lotto.setStatoConsegna(StatoConsegnaType.NON_CONSEGNATA);
 				lotto.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
 				lotto.setStatoInserimento(StatoInserimentoType.NON_INSERITO);
-
+				lotto.setTentativiConsegna(0);
+				
 				this.log.info("Inserimento del Lotto con identificativo SdI ["+lotto.getIdentificativoSdi()+"]...");
 				this.lottoBD.create(lotto);	
 				this.log.info("Inserimento del Lotto con identificativo SdI ["+lotto.getIdentificativoSdi()+"] completato");

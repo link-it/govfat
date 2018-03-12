@@ -94,7 +94,7 @@ public class TimerAccettazioneFatturaLib extends AbstractTimerLib {
 			long countFattureElaborate = 0; 
 
 			if(countFatture > 0) {
-				connection.setAutoCommit(false);
+//				connection.setAutoCommit(false);
 
 				this.log.info("Gestisco ["+countFatture+"] fatture da accettare, ["+this.limit+"] alla volta");
 				List<FatturaElettronica> lstId = fatturaElettronicaBD.getFattureDaAccettare(0, this.limit, limitDate);
@@ -123,15 +123,15 @@ public class TimerAccettazioneFatturaLib extends AbstractTimerLib {
 
 						lstId = fatturaElettronicaBD.getFattureDaAccettare(0, this.limit, limitDate);
 
-						connection.commit();
+//						connection.commit();
 						Sonda.getInstance().registraChiamataServizioOK(this.getTimerName());
 					} catch(Exception e) {
 						this.log.error("Errore durante la spedizione dell'esito: "+e.getMessage(), e);
-						connection.rollback();
+//						connection.rollback();
 					}
 				}
 				this.log.info("Gestite ["+countFattureElaborate+"\\"+countFatture+"] fatture da accettare. Fine.");
-				connection.setAutoCommit(true);
+//				connection.setAutoCommit(true);
 			}
 		}catch(Exception e){
 			this.log.error("Errore durante l'esecuzione del batch AccettazioneFattura: "+e.getMessage(), e);

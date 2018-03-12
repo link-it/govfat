@@ -257,6 +257,13 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 				return "stato_elaborazione_in_uscita";
 			}
 		}
+		if(field.equals(LottoFatture.model().TIPI_COMUNICAZIONE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".tipi_comunicazione";
+			}else{
+				return "tipi_comunicazione";
+			}
+		}
 		if(field.equals(LottoFatture.model().DATA_ULTIMA_ELABORAZIONE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".data_ultima_elaborazione";
@@ -531,6 +538,9 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 			return this.toTable(LottoFatture.model(), returnAlias);
 		}
 		if(field.equals(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA)){
+			return this.toTable(LottoFatture.model(), returnAlias);
+		}
+		if(field.equals(LottoFatture.model().TIPI_COMUNICAZIONE)){
 			return this.toTable(LottoFatture.model(), returnAlias);
 		}
 		if(field.equals(LottoFatture.model().DATA_ULTIMA_ELABORAZIONE)){

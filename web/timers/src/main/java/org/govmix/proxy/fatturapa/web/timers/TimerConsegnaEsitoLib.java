@@ -107,7 +107,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 			long countNotificheElaborate = 0; 
 
 			if(countNotifiche > 0) {
-				connection.setAutoCommit(false);
+//				connection.setAutoCommit(false);
 
 				this.log.info("Gestisco ["+countNotifiche+"] NotificheEsitoCommittente da consegnare, ["+limit+"] alla volta");
 				List<NotificaEsitoCommittente> lstNotifiche = notificaEsitoCommittenteBD.findAllNotifiche(limitDate, 0, this.limit);
@@ -311,16 +311,16 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 						this.log.info("Gestite ["+countNotificheElaborate+"\\"+countNotifiche+"] NotificheEsitoCommittente da consegnare");
 
 						lstNotifiche = notificaEsitoCommittenteBD.findAllNotifiche(limitDate, 0, this.limit);
-						connection.commit();
+//						connection.commit();
 					}
 					Sonda.getInstance().registraChiamataServizioOK(this.getTimerName());
 				} catch(Exception e) {
 					log.error("Errore durante la consegnaEsito:"+e.getMessage(), e);
-					connection.rollback();
+//					connection.rollback();
 				}
 
 				this.log.info("Gestite ["+countNotificheElaborate+"\\"+countNotifiche+"] NotificheEsitoCommittente da consegnare. Fine");
-				connection.setAutoCommit(true);
+//				connection.setAutoCommit(true);
 			}
 
 		} finally {

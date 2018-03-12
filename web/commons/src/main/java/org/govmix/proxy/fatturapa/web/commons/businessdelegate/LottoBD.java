@@ -162,9 +162,17 @@ public class LottoBD extends BaseBD {
 	}
 	
 	public void updateStatoElaborazioneInUscitaOK(IdLotto lotto, StatoElaborazioneType stato) throws Exception {
+		this.updateStatoElaborazioneInUscitaOK(lotto, stato, null);
+	}
+	
+	public void updateStatoElaborazioneInUscitaOK(IdLotto lotto, StatoElaborazioneType stato, String tipiComunicazione) throws Exception {
 		try {
 			List<UpdateField> list = new ArrayList<UpdateField>();
 			list.add(new UpdateField(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA, stato));
+			
+			if(tipiComunicazione!= null)
+				list.add(new UpdateField(LottoFatture.model().TIPI_COMUNICAZIONE, tipiComunicazione));
+			
 			list.add(new UpdateField(LottoFatture.model().DATA_ULTIMA_ELABORAZIONE, new Date()));
 			list.add(new UpdateField(LottoFatture.model().DATA_PROSSIMA_ELABORAZIONE, new Date()));
 			list.add(new UpdateField(LottoFatture.model().TENTATIVI_CONSEGNA, 0));
@@ -200,9 +208,13 @@ public class LottoBD extends BaseBD {
 		}
 	}
 
-	public void updateDocumentoFirmato(IdLotto lotto, byte[] docFirmato) throws Exception {
+	public void updateDocumentoFirmato(LottoFatture lotto, byte[] docFirmato) throws Exception {
 		try {
-			this.service.updateFields(lotto, new UpdateField(LottoFatture.model().XML, docFirmato), new UpdateField(LottoFatture.model().FORMATO_ARCHIVIO_INVIO_FATTURA, FormatoArchivioInvioFatturaType.P7M));
+			this.service.updateFields(this.service.convertToId(lotto), 
+					new UpdateField(LottoFatture.model().XML, docFirmato), 
+					new UpdateField(LottoFatture.model().FORMATO_ARCHIVIO_INVIO_FATTURA, FormatoArchivioInvioFatturaType.P7M),
+					new UpdateField(LottoFatture.model().NOME_FILE, lotto.getNomeFile() + ".p7m"));
+			
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la updateDocumentoFirmato: " + e.getMessage(), e);
 			throw new Exception(e);

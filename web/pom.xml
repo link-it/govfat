@@ -34,7 +34,7 @@
 		<rel-to-parent>.</rel-to-parent>
 		<javaVersion>1.6</javaVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<openspcoop2.version>2.3.8.2</openspcoop2.version>
+		<openspcoop2.version>2.3.8.4</openspcoop2.version>
 		<openspcoop2.sdi.version>12429</openspcoop2.sdi.version>
 		<cxf.version>2.7.11</cxf.version>
         <richfaces.version>3.3.4.Final</richfaces.version>

@@ -103,6 +103,7 @@ public class WorkFlow implements IWorkFlow<LottoFatture> {
 						httpConn.setRequestProperty("Authorization", authentication);
 					}
 	
+
 					httpConn.setDoOutput(true);
 					httpConn.setDoInput(true);
 					
@@ -114,14 +115,20 @@ public class WorkFlow implements IWorkFlow<LottoFatture> {
 					
 					esitoPositivo = httpConn.getResponseCode() < 299;
 					
+					this.log.debug("ResponseCode ["+httpConn.getResponseCode()+"]");
 					response = IOUtils.readStringFromStream(esitoPositivo ? httpConn.getInputStream() : httpConn.getErrorStream());
+					
+					if(!esitoPositivo) {
+						this.log.debug("Response: "+response);
+					}
 				} catch(Exception e) {
 					this.log.error("Errore durante l'avvio del workflow per il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"]: " + e.getMessage(), e);
 				}
 				
 				if(esitoPositivo) {
+					this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+lotto.getStatoElaborazioneInUscita()+"] -> ["+nextStatoOK+"]...");
 					this.lottoBD.updateStatoElaborazioneInUscitaOK(idLotto, nextStatoOK);
-					this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+lotto.getStatoElaborazioneInUscita()+"] -> ["+nextStatoOK+"]");
+					this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+lotto.getStatoElaborazioneInUscita()+"] -> ["+nextStatoOK+"] OK");
 				} else {
 					IPolicyRispedizione policy = PolicyRispedizioneFactory.getPolicyRispedizioneWFM(lotto);
 
@@ -130,13 +137,15 @@ public class WorkFlow implements IWorkFlow<LottoFatture> {
 					long offset = policy.getOffsetRispedizione();
 
 					StatoElaborazioneType nextStato = policy.isRispedizioneAbilitata() ? StatoElaborazioneType.PRESA_IN_CARICO : nextStatoKO;
-
+					this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+lotto.getStatoElaborazioneInUscita()+"] -> ["+nextStato+"]...");
 					this.lottoBD.updateStatoElaborazioneInUscitaKO(idLotto, nextStato, new Date(now+offset), response, lotto.getTentativiConsegna() + 1);
-					this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+lotto.getStatoElaborazioneInUscita()+"] -> ["+nextStato+"]");
+					this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+lotto.getStatoElaborazioneInUscita()+"] -> ["+nextStato+"] OK");
 				}
 			} catch(Exception e) {
+				this.log.error("Errore durante l'avvio del workflow per il lotto ["+idLotto.toJson()+"]: " + e.getMessage(), e);
+				this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+lotto.getStatoElaborazioneInUscita()+"] -> ["+nextStatoKO+"]...");
 				this.lottoBD.updateStatoElaborazioneInUscitaKO(idLotto, nextStatoKO, new Date(), lotto.getDettaglioElaborazione(), lotto.getTentativiConsegna() + 1);
-				this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+lotto.getStatoElaborazioneInUscita()+"] -> ["+nextStatoKO+"]");
+				this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+lotto.getStatoElaborazioneInUscita()+"] -> ["+nextStatoKO+"] OK");
 			}
 		}
 

@@ -150,6 +150,8 @@
 							</op2web:prop>
 						</ui:define>
 					</op2web:inlineProp>
+					
+					<op2web:formField field="#{fatturaElettronicaAttivaMBean.search.statoElaborazione}" />
 				</op2web:fieldset>
 					
 				<op2web:fieldset legend="#{msg['fattura.search.datiFattura']}" rendered="#{true}" collapsible="false" closed="false">
@@ -172,8 +174,6 @@
 				<op2web:fieldset legend="#{msg['fattura.search.protocollo']}"
 					rendered="#{true}" collapsible="false" closed="false">
 					<op2web:formField field="#{fatturaElettronicaAttivaMBean.search.identificativoProtocollo}" />
-						
-					<op2web:formField field="#{fatturaElettronicaAttivaMBean.search.statoElaborazione}" />
 				</op2web:fieldset>
 				
 				<ui:define name="buttons">

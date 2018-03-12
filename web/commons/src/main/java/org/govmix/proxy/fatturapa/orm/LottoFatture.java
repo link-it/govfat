@@ -69,6 +69,7 @@ import java.io.Serializable;
  * 			&lt;element name="xml" type="{http://www.w3.org/2001/XMLSchema}base64Binary" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="fatturazioneAttiva" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="statoElaborazioneInUscita" type="{http://www.govmix.org/proxy/fatturapa/orm}StatoElaborazioneType" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="tipiComunicazione" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="dataUltimaElaborazione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="dettaglioElaborazione" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="dataProssimaElaborazione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0" maxOccurs="1"/>
@@ -124,6 +125,7 @@ import java.io.Serializable;
   	"xml",
   	"fatturazioneAttiva",
   	"statoElaborazioneInUscita",
+  	"tipiComunicazione",
   	"dataUltimaElaborazione",
   	"dettaglioElaborazione",
   	"dataProssimaElaborazione",
@@ -423,6 +425,14 @@ public class LottoFatture extends org.openspcoop2.utils.beans.BaseBean implement
     this.statoElaborazioneInUscita = statoElaborazioneInUscita;
   }
 
+  public java.lang.String getTipiComunicazione() {
+    return this.tipiComunicazione;
+  }
+
+  public void setTipiComunicazione(java.lang.String tipiComunicazione) {
+    this.tipiComunicazione = tipiComunicazione;
+  }
+
   public java.util.Date getDataUltimaElaborazione() {
     return this.dataUltimaElaborazione;
   }
@@ -719,6 +729,10 @@ public class LottoFatture extends org.openspcoop2.utils.beans.BaseBean implement
 
   @XmlElement(name="statoElaborazioneInUscita",required=false,nillable=false)
   protected StatoElaborazioneType statoElaborazioneInUscita;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @XmlElement(name="tipiComunicazione",required=false,nillable=false)
+  protected java.lang.String tipiComunicazione;
 
   @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.DateTime2String.class)
   @javax.xml.bind.annotation.XmlSchemaType(name="dateTime")

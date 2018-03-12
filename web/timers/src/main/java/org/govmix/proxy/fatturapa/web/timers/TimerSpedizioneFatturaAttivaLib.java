@@ -51,7 +51,6 @@ public class TimerSpedizioneFatturaAttivaLib extends AbstractTimerLib {
 		Connection connection = null;
 		try {
 			connection = DAOFactory.getInstance().getConnection();
-			connection.setAutoCommit(false);
 
 			this.log.info("Cerco fatture");
 			
@@ -76,15 +75,12 @@ public class TimerSpedizioneFatturaAttivaLib extends AbstractTimerLib {
 
 						lst = workflow.getNextLista();
 						
-						connection.commit();
 						Sonda.getInstance().registraChiamataServizioOK(this.getTimerName());
 					} catch(Exception e) {
 						this.log.error("Errore durante la spedizione dell'esito: "+e.getMessage(), e);
-						connection.rollback();
 					}
 				}
 				this.log.info("Gestite ["+countFattureElaborate+"\\"+countFatture+"] fatture. Fine.");
-				connection.setAutoCommit(true);
 			}
 		}catch(Exception e){
 			this.log.error("Errore durante l'esecuzione del batch TimerWorkFlowFatturaLib: "+e.getMessage(), e);

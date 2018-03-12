@@ -491,6 +491,7 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().XML,true));
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().FATTURAZIONE_ATTIVA,true));
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA,true));
+		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().TIPI_COMUNICAZIONE,true));
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_ULTIMA_ELABORAZIONE,true));
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DETTAGLIO_ELABORAZIONE,true));
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_PROSSIMA_ELABORAZIONE,true));

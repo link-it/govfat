@@ -93,7 +93,6 @@ public class TimerConsegnaFatturaLib extends AbstractTimerLib {
 
 			DateFormat sdf = new SimpleDateFormat("MM/dd/yyy HH:mm:ss Z");
 			if(countFatture > 0) {
-				connection.setAutoCommit(false);
 
 				this.log.info("Gestisco ["+countFatture+"] fatture da consegnare, ["+this.limit+"] alla volta");
 				List<FatturaElettronica> lstId = consegnaContestuale ? fatturaElettronicaBD.getFattureDaSpedireContestuale(0, this.limit, limitDate) : fatturaElettronicaBD.getFattureDaSpedire(0, this.limit, limitDate);
@@ -220,15 +219,12 @@ public class TimerConsegnaFatturaLib extends AbstractTimerLib {
 						this.log.info("Gestite ["+countFattureElaborate+"\\"+countFatture+"] fatture da consegnare");
 
 						lstId = consegnaContestuale ? fatturaElettronicaBD.getFattureDaSpedireContestuale(0, this.limit, limitDate) : fatturaElettronicaBD.getFattureDaSpedire(0, this.limit, limitDate);
-						connection.commit();
 						Sonda.getInstance().registraChiamataServizioOK(this.getTimerName());
 					} catch(Exception e) {
 						this.log.error("Errore durante l'esecuzione del batch ConsegnaFattura: "+e.getMessage(), e);
-						connection.rollback();
 					}
 				}
 				this.log.info("Gestite ["+countFattureElaborate+"\\"+countFatture+"] fatture da consegnare. Fine.");
-				connection.setAutoCommit(true);
 			}
 
 		} finally {

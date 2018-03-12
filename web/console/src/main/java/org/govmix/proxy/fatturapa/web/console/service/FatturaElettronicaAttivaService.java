@@ -30,6 +30,7 @@ import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
+import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaAttivaFilter;
@@ -375,6 +376,13 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 					!StringUtils.isEmpty(search.getStatoElaborazione().getValue().getValue()) && !search.getStatoElaborazione().getValue().getValue().equals("*")){
 				StatoElaborazioneType statoElaborazioneType = StatoElaborazioneType.toEnumConstant(search.getStatoElaborazione().getValue().getValue());
 				filter.getStatoElaborazioneList().add(statoElaborazioneType);
+			}
+			
+			// tipo comunicazione
+			if(search.getTipoComunicazione().getValue() != null &&
+					!StringUtils.isEmpty(search.getTipoComunicazione().getValue().getValue()) && !search.getTipoComunicazione().getValue().getValue().equals("*")){
+				TipoComunicazioneType tipoComunicazioneType = TipoComunicazioneType.toEnumConstant(search.getTipoComunicazione().getValue().getValue());
+				filter.setTipoComunicazione(tipoComunicazioneType);
 			}
 
 		}catch(Exception e){

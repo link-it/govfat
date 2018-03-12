@@ -24,6 +24,7 @@ import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
+import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
@@ -72,7 +73,7 @@ public class RiceviComunicazioneSdI {
 		this.tracciaBD.insert(tracciaSdI);
 		StatoElaborazioneType nuovoStatoLotto = null;
 		switch(tracciaSdI.getTipoComunicazione()) {
-			case AT: nuovoStatoLotto = StatoElaborazioneType.IMPOSSIBILITA_DI_RECAPITO; 
+			case AT: nuovoStatoLotto = StatoElaborazioneType.IMPOSSIBILITA_DI_RECAPITO;
 				break;
 			case DT: nuovoStatoLotto = StatoElaborazioneType.RICEVUTA_DECORRENZA_TERMINI;
 				break;
@@ -101,7 +102,12 @@ public class RiceviComunicazioneSdI {
 		if(nuovoStatoLotto != null) {
 			IdLotto idLotto = new IdLotto();
 			idLotto.setIdentificativoSdi(tracciaSdI.getIdentificativoSdi());
-			this.lottoBD.updateStatoElaborazioneInUscitaOK(idLotto, nuovoStatoLotto);
+			LottoFatture lotto = this.lottoBD.get(idLotto);
+			String tipiComunicazione =  "#" + tracciaSdI.getTipoComunicazione().name() + "#";
+			if(lotto.getTipiComunicazione() != null && !lotto.getTipiComunicazione().contains(tipiComunicazione)) {
+				tipiComunicazione += "." + lotto.getTipiComunicazione();  
+			}
+			this.lottoBD.updateStatoElaborazioneInUscitaOK(idLotto, nuovoStatoLotto, tipiComunicazione);
 		}
 	}
 }
