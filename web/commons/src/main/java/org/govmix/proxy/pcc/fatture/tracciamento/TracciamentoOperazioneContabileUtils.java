@@ -30,7 +30,9 @@ import it.tesoro.fatture.StatoContabileFatturaTipo;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
@@ -73,15 +75,11 @@ public class TracciamentoOperazioneContabileUtils {
 	private Logger log;
 	
 	// riallineamento
-	private List<String> addLiq;
-	private List<String> addSosp;
-	private List<String> addNoliq;
-	private List<String> addPagamento;
+	private Map<String, RiallineamentoBean> liq;
+	private Map<String, RiallineamentoBean> sosp;
+	private Map<String, RiallineamentoBean> noliq;
+	private Map<String, RiallineamentoBean> pagamento;
 	
-	private List<String> clearLiq;
-	private List<String> clearSosp;
-	private List<String> clearNoliq;
-
 	public TracciamentoOperazioneContabileUtils(Logger log) throws Exception {
 		this.log = log;
 		this.pccOperazioneContabileBD = new PccOperazioneContabileBD(log);
@@ -96,79 +94,52 @@ public class TracciamentoOperazioneContabileUtils {
 		this.operazioniTracciabili.add(TipoOperazioneTipo.CCS);
 		this.operazioniTracciabili.add(TipoOperazioneTipo.SC);
 		
-		this.addLiq = new ArrayList<String>();
-		this.addLiq.add("DebitiPerInteressiMoratori");
-		this.addLiq.add("DocumentiRespintiFoglia");
-		this.addLiq.add("EccedenzeDiContabilizzazione");
-		this.addLiq.add("EccedenzeDiPagamento");
-		this.addLiq.add("DocumentiPresentati");
-		this.addLiq.add("DocumentiRicevuti");
-		this.addLiq.add("ErarioIVASplit");
+		this.liq = new HashMap<String, RiallineamentoBean>();
+		this.liq.put("DebitiLiquidatiCO", new RiallineamentoBean(null, NaturaSpesaType.CO));
+		this.liq.put("DebitiInAttesaDiLiquidazioneCO", new RiallineamentoBean(null, NaturaSpesaType.CO));
+		this.liq.put("DebitiLiquidabiliNonCommercialiCO", new RiallineamentoBean(null, NaturaSpesaType.CO));
+		
+		this.liq.put("DebitiLiquidatiCA", new RiallineamentoBean(null, NaturaSpesaType.CA));
+		this.liq.put("DebitiInAttesaDiLiquidazioneCA", new RiallineamentoBean(null, NaturaSpesaType.CA));
+		this.liq.put("DebitiLiquidabiliNonCommercialiCA", new RiallineamentoBean(null, NaturaSpesaType.CA));
+		
+		this.liq.put("DebitiInAttesaDiLiquidazioneNA", new RiallineamentoBean(null, NaturaSpesaType.NA));
 		
 		
-		this.addSosp = new ArrayList<String>();
-		this.addSosp.add("PagamentiFornitoriCO");
-		this.addSosp.add("PagamentiFornitoriCA");
-		this.addSosp.add("VersamentiIVASplit");
-		this.addSosp.add("PagamentiBancheCessionarieCO");
-		this.addSosp.add("PagamentiBancheCessionarieCA");
-		this.addSosp.add("CompensazioniAltreChiusureIVA");
-		this.addSosp.add("PagamentiAgenziaRiscossioneCO");
-		this.addSosp.add("PagamentiAgenziaRiscossioneCA");
-		this.addSosp.add("PagamentiAgenziaEntrateCO");
-		this.addSosp.add("PagamentiAgenziaEntrateCA");
+		this.sosp = new HashMap<String, RiallineamentoBean>();
+		this.sosp.put("DebitiACaricoDiTerziCA", new RiallineamentoBean(CausaleType.PAGTERZI, NaturaSpesaType.CA));
+		this.sosp.put("DebitiContestatiCA", new RiallineamentoBean(null, NaturaSpesaType.CA));
+		this.sosp.put("DebitiInAttesaDiAccettazioneCA", new RiallineamentoBean(null, NaturaSpesaType.CA));
+		this.sosp.put("DebitiInContenziosoCA", new RiallineamentoBean(CausaleType.CONT, NaturaSpesaType.CA));
+
+		this.sosp.put("DebitiACaricoDiTerziCO", new RiallineamentoBean(CausaleType.PAGTERZI, NaturaSpesaType.CO));
+		this.sosp.put("DebitiContestatiCO", new RiallineamentoBean(null, NaturaSpesaType.CO));
+		this.sosp.put("DebitiInAttesaDiAccettazioneCO", new RiallineamentoBean(null, NaturaSpesaType.CO));
+		this.sosp.put("DebitiInContenziosoCO", new RiallineamentoBean(CausaleType.CONT, NaturaSpesaType.CO));
+		
+		this.sosp.put("DebitiACaricoDiTerziNA", new RiallineamentoBean(CausaleType.PAGTERZI, NaturaSpesaType.NA));
+		this.sosp.put("DebitiContestatiNA", new RiallineamentoBean(null, NaturaSpesaType.NA));
+		this.sosp.put("DebitiInAttesaDiAccettazioneNA", new RiallineamentoBean(null, NaturaSpesaType.NA));
+		this.sosp.put("DebitiInContenziosoNA", new RiallineamentoBean(CausaleType.CONT, NaturaSpesaType.NA));
+		
+		
+		this.noliq = new HashMap<String, RiallineamentoBean>();
+		this.noliq.put("DebitiNonRiconosciuti", new RiallineamentoBean(null, NaturaSpesaType.NA)); // CONT / ATTNC
+		this.noliq.put("DebitiNonCommerciali", new RiallineamentoBean(CausaleType.IVARC, NaturaSpesaType.NA));
+		this.noliq.put("DebitiPerInteressiMoratori", new RiallineamentoBean(null, NaturaSpesaType.NA));
 
 		
-		this.addNoliq = new ArrayList<String>();
-		this.addNoliq.add("DebitiNonRiconosciuti");
-		this.addNoliq.add("DebitiNonCommerciali");
-		this.addNoliq.add("DebitiPerInteressiMoratori");
+		this.pagamento = new HashMap<String, RiallineamentoBean>();
 
+		this.pagamento.put("PagamentiAgenziaEntrateCO", new RiallineamentoBean(null, NaturaSpesaType.CO));
+		this.pagamento.put("PagamentiAgenziaRiscossioneCO", new RiallineamentoBean(null, NaturaSpesaType.CO));
+		this.pagamento.put("PagamentiBancheCessionarieCO", new RiallineamentoBean(null, NaturaSpesaType.CO));
+		this.pagamento.put("PagamentiFornitoriCO", new RiallineamentoBean(null, NaturaSpesaType.CO));
 		
-		this.addPagamento = new ArrayList<String>();
-
-		this.addPagamento.add("PagamentiAgenziaEntrateCO");
-		this.addPagamento.add("PagamentiAgenziaEntrateCA");
-		this.addPagamento.add("PagamentiAgenziaRiscossioneCO");
-		this.addPagamento.add("PagamentiAgenziaRiscossioneCA");
-		this.addPagamento.add("PagamentiBancheCessionarieCO");
-		this.addPagamento.add("PagamentiBancheCessionarieCA");
-		this.addPagamento.add("PagamentiFornitoriCO");
-		this.addPagamento.add("PagamentiFornitoriCA");
-		this.addPagamento.add("EccedenzeDiPagamento");
-		this.addPagamento.add("CompensazioniAltreChiusureIVA");
-		this.addPagamento.add("VersamentiIVASplit");
-
-		this.clearLiq = new ArrayList<String>();
-		this.clearLiq.add("DebitiLiquidatiCO");
-		this.clearLiq.add("DebitiLiquidatiCA");
-		this.clearLiq.add("DebitiInAttesaDiLiquidazioneCO");
-		this.clearLiq.add("DebitiInAttesaDiLiquidazioneCA");
-		this.clearLiq.add("DebitiInAttesaDiLiquidazioneNA");
-		this.clearLiq.add("DebitiLiquidabiliNonCommercialiCO");
-		this.clearLiq.add("DebitiLiquidabiliNonCommercialiCA");
-
-		this.clearNoliq = new ArrayList<String>();
-		this.clearNoliq.add("DebitiNonRiconosciuti");
-		this.clearNoliq.add("DebitiNonCommerciali");
-		this.clearNoliq.add("DebitiPerInteressiMoratori");
-
-		
-		this.clearSosp = new ArrayList<String>();
-		this.clearSosp.add("DebitiACaricoDiTerziCA");
-		this.clearSosp.add("DebitiACaricoDiTerziCO");
-		this.clearSosp.add("DebitiACaricoDiTerziNA");
-		this.clearSosp.add("DebitiContestatiCA");
-		this.clearSosp.add("DebitiContestatiCO");
-		this.clearSosp.add("DebitiContestatiNA");
-		this.clearSosp.add("DebitiInAttesaDiAccettazioneCA");
-		this.clearSosp.add("DebitiInAttesaDiAccettazioneCO");
-		this.clearSosp.add("DebitiInAttesaDiAccettazioneNA");
-		this.clearSosp.add("DebitiInContenziosoCA");
-		this.clearSosp.add("DebitiInContenziosoCO");
-		this.clearSosp.add("DebitiInContenziosoNA");
-
-		
+		this.pagamento.put("PagamentiAgenziaEntrateCA", new RiallineamentoBean(null, NaturaSpesaType.CA));
+		this.pagamento.put("PagamentiAgenziaRiscossioneCA", new RiallineamentoBean(null, NaturaSpesaType.CA));
+		this.pagamento.put("PagamentiBancheCessionarieCA", new RiallineamentoBean(null, NaturaSpesaType.CA));
+		this.pagamento.put("PagamentiFornitoriCA", new RiallineamentoBean(null, NaturaSpesaType.CA));
 
 	}
 
@@ -330,14 +301,14 @@ public class TracciamentoOperazioneContabileUtils {
 				PccContabilizzazione pccContabilizzazione = new PccContabilizzazione();
 				pccContabilizzazione.setDataRichiesta(new Date());
 				
-				if(contabilizzazione.getIdentificativoMovimento() != null) {
+				if(TransformUtils.isDescrizioneRaw(contabilizzazione.getDescrizione())) {
+					TransformUtils.populateContabilizzazione(pccContabilizzazione, contabilizzazione.getDescrizione());
+				} else {
 					pccContabilizzazione.setIdImporto(contabilizzazione.getIdentificativoMovimento());
 					pccContabilizzazione.setDescrizione(contabilizzazione.getDescrizione());
-				} else {
-					TransformUtils.populateContabilizzazione(pccContabilizzazione, contabilizzazione.getDescrizione());
+					pccContabilizzazione.setSistemaRichiedente(sistemaRichiedente);
+					pccContabilizzazione.setUtenteRichiedente(utenteRichiedente);
 				}
-				pccContabilizzazione.setSistemaRichiedente(sistemaRichiedente);
-				pccContabilizzazione.setUtenteRichiedente(utenteRichiedente);
 
 				pccContabilizzazione.setImportoMovimento(contabilizzazione.getImportoMovimento().doubleValue());
 				pccContabilizzazione.setNaturaSpesa(NaturaSpesaType.toEnumConstant(contabilizzazione.getNaturaSpesa().toString()));
@@ -581,36 +552,34 @@ public class TracciamentoOperazioneContabileUtils {
 					DettaglioMovimentoTipo movimento = datiFattura.getDatiRisposta().getDettaglioFattura().getDatiDocumento().getListaDettaglioMovimento().getMovimento().get(i);
 					String statoDebito = movimento.getStatoDebito().trim();
 					String causale = movimento.getCausale().trim();
-					String descrizione = movimento.getDescrizioneContabilizzazione();
 					
-					this.log.debug("Trovato statoDebito ["+causale+"]");
-					if(this.addLiq.contains(causale) && descrizione != null) {
-						this.log.debug("Trovato statoDebito ["+causale+"], aggiungo contabilizzazioni LIQ");
-						lstLiq.addAll(getContabilizzazione(movimento));
-					} else if(this.addSosp.contains(causale) && descrizione != null) {
-						this.log.debug("Trovato statoDebito ["+causale+"], aggiungo contabilizzazioni SOSP");
-						lstSosp.addAll(getContabilizzazione(movimento));
-					} else if(this.addNoliq.contains(causale) && descrizione != null) {
-						this.log.debug("Trovato statoDebito ["+causale+"], aggiungo contabilizzazioni NOLIQ");
-						lstNoliq.addAll(getContabilizzazione(movimento));
-					} else if(this.addPagamento.contains(causale) && "Pagamento".equals(statoDebito)) {
-						this.log.debug("Trovato statoDebito ["+causale+"], aggiungo Pagamento");
-						lstPag.addAll(getPagamento(movimento, false));
-					} else if(this.addPagamento.contains(causale) && "StornoPagamento".equals(statoDebito)) {
-						this.log.debug("Trovato statoDebito ["+causale+"], aggiungo PAG negativo");
-						lstPag.addAll(getPagamento(movimento, true));
-						lstLiq.addAll(getContabilizzazione(movimento));
-					} else if(this.clearLiq.contains(causale) && "StornoContabilizzazione".equals(statoDebito)) {
-						this.log.debug("Trovato statoDebito ["+causale+"], azzero LIQ");
+					this.log.debug("Trovato statoDebito ["+statoDebito+"] e causale ["+causale+"]");
+					if(this.liq.containsKey(causale) && "Contabilizzazione".equals(statoDebito)) {
+						this.log.debug("Trovato statoDebito ["+statoDebito+"] e causale ["+causale+"], aggiungo contabilizzazioni LIQ");
+						lstLiq.addAll(getContabilizzazione(movimento, this.liq.get(causale)));
+					} else if(this.sosp.containsKey(causale) && "Contabilizzazione".equals(statoDebito)) {
+						this.log.debug("Trovato statoDebito ["+statoDebito+"] e causale ["+causale+"], aggiungo contabilizzazioni SOSP");
+						lstSosp.addAll(getContabilizzazione(movimento, this.sosp.get(causale)));
+					} else if(this.noliq.containsKey(causale) && "Contabilizzazione".equals(statoDebito)) {
+						this.log.debug("Trovato statoDebito ["+statoDebito+"] e causale ["+causale+"], aggiungo contabilizzazioni NOLIQ");
+						lstNoliq.addAll(getContabilizzazione(movimento, this.noliq.get(causale)));
+					} else if(this.pagamento.containsKey(causale) && "Pagamento".equals(statoDebito)) {
+						this.log.debug("Trovato statoDebito ["+statoDebito+"] e causale ["+causale+"], aggiungo Pagamento");
+						lstPag.addAll(getPagamento(movimento, this.pagamento.get(causale), false));
+					} else if(this.pagamento.containsKey(causale) && "StornoPagamento".equals(statoDebito)) {
+						this.log.debug("Trovato statoDebito ["+statoDebito+"] e causale ["+causale+"], aggiungo PAG negativo");
+						lstPag.addAll(getPagamento(movimento, this.pagamento.get(causale), true));
+					} else if(this.liq.containsKey(causale) && "StornoContabilizzazione".equals(statoDebito)) {
+						this.log.debug("Trovato statoDebito ["+statoDebito+"] e causale ["+causale+"], azzero LIQ");
 						lstLiq.clear();
-					} else if(this.clearSosp.contains(causale) && "StornoContabilizzazione".equals(statoDebito)) {
-						this.log.debug("Trovato statoDebito ["+causale+"], azzero SOSP");
+					} else if(this.sosp.containsKey(causale) && "StornoContabilizzazione".equals(statoDebito)) {
+						this.log.debug("Trovato statoDebito ["+statoDebito+"] e causale ["+causale+"], azzero SOSP");
 						lstSosp.clear();
-					} else if(this.clearNoliq.contains(causale) && "StornoContabilizzazione".equals(statoDebito)) {
-						this.log.debug("Trovato statoDebito ["+causale+"], azzero NOLIQ");
+					} else if(this.noliq.containsKey(causale) && "StornoContabilizzazione".equals(statoDebito)) {
+						this.log.debug("Trovato statoDebito ["+statoDebito+"] e causale ["+causale+"], azzero NOLIQ");
 						lstNoliq.clear();
 					} else {
-						this.log.debug("StatoDebito ["+causale+"] corrisponde a NOP");
+						this.log.debug("StatoDebito  ["+statoDebito+"] e causale ["+causale+"] corrisponde a NOP");
 					}
 					
 				}
@@ -638,7 +607,7 @@ public class TracciamentoOperazioneContabileUtils {
 					cont.setIdFattura(idFattura);
 					cont.setStatoDebito(StatoDebitoType.SOSP);
 					if(cont.getSistemaRichiedente() == null) {
-						TransformUtils.populateContabilizzazioneDefault(cont, true);
+						TransformUtils.populateContabilizzazioneDefault(cont, false);
 					}
 					this.pccContabilizzazioneBD.create(cont);
 				}
@@ -652,7 +621,7 @@ public class TracciamentoOperazioneContabileUtils {
 					cont.setIdFattura(idFattura);
 					cont.setStatoDebito(StatoDebitoType.NOLIQ);
 					if(cont.getSistemaRichiedente() == null) {
-						TransformUtils.populateContabilizzazioneDefault(cont, true);
+						TransformUtils.populateContabilizzazioneDefault(cont, false);
 					}
 					this.pccContabilizzazioneBD.create(cont);
 				}
@@ -703,15 +672,16 @@ public class TracciamentoOperazioneContabileUtils {
 			
 	}
 	
-	private PccContabilizzazione getContabilizzazione(DettaglioMovimentoTipo movimento, NaturaSpesaType naturaSpesa, double importo) throws Exception {
+	private PccContabilizzazione getContabilizzazione(DettaglioMovimentoTipo movimento, NaturaSpesaType naturaSpesa, CausaleType causale, double importo) throws Exception {
 		PccContabilizzazione pccContabilizzazione = new PccContabilizzazione();
 		pccContabilizzazione.setDataRichiesta(movimento.getDataMovimento());
 		pccContabilizzazione.setImportoMovimento(Math.abs(importo));
 		pccContabilizzazione.setNaturaSpesa(naturaSpesa);
 		pccContabilizzazione.setCapitoliSpesa(movimento.getCapitoloPgConto());
 		
-		if(movimento.getCausale() != null)
-			pccContabilizzazione.setCausale(CausaleType.toEnumConstant(movimento.getCausale()));
+		if(causale != null)
+			pccContabilizzazione.setCausale(causale);
+		
 		try {
 			TransformUtils.populateContabilizzazione(pccContabilizzazione, movimento.getDescrizioneContabilizzazione());
 		} catch(Exception e) {
@@ -734,31 +704,18 @@ public class TracciamentoOperazioneContabileUtils {
 		return pccContabilizzazione;
 	}
 	
-	private List<PccContabilizzazione> getContabilizzazione(DettaglioMovimentoTipo movimento) throws Exception {
+	private List<PccContabilizzazione> getContabilizzazione(DettaglioMovimentoTipo movimento, RiallineamentoBean riallineamento) throws Exception {
 		List<PccContabilizzazione> lstContabilizzazione = new ArrayList<PccContabilizzazione>();
 		
-		double contoCapitale = movimento.getImportoContoCapitale() != null ? movimento.getImportoContoCapitale().doubleValue() : 0;
-		double naturaCorrente = movimento.getImportoNaturaCorrente() != null ? movimento.getImportoNaturaCorrente().doubleValue() : 0;
-		if(contoCapitale != 0) {
-			if(naturaCorrente != 0) {
-				if((naturaCorrente + contoCapitale) != movimento.getImporto().doubleValue()) {
-					throw new Exception("Somma importo natura corrente["+naturaCorrente
-							+"] e importo conto capitale ["+contoCapitale+"] dovrebbe essere uguale all'importo ["
-							+movimento.getImporto().doubleValue()+"] totale del movimento");
-				}
-				
-				lstContabilizzazione.add(getContabilizzazione(movimento, NaturaSpesaType.CO, naturaCorrente));
-				lstContabilizzazione.add(getContabilizzazione(movimento, NaturaSpesaType.CA, contoCapitale));
-			} else {
-				lstContabilizzazione.add(getContabilizzazione(movimento, NaturaSpesaType.CA, movimento.getImporto().doubleValue()));
-			}
-		} else {
-			if(naturaCorrente != 0) {
-				lstContabilizzazione.add(getContabilizzazione(movimento, NaturaSpesaType.CO, naturaCorrente));
-			} else {
-				lstContabilizzazione.add(getContabilizzazione(movimento, NaturaSpesaType.NA, movimento.getImporto().doubleValue()));
-			}
-			
+		switch(riallineamento.getNaturaSpesa()) {
+		case CA: lstContabilizzazione.add(getContabilizzazione(movimento, NaturaSpesaType.CA, riallineamento.getCausale(), movimento.getImporto().doubleValue()));
+			break;
+		case CO: lstContabilizzazione.add(getContabilizzazione(movimento, NaturaSpesaType.CO, riallineamento.getCausale(), movimento.getImporto().doubleValue()));
+			break;
+		case NA: lstContabilizzazione.add(getContabilizzazione(movimento, NaturaSpesaType.NA, riallineamento.getCausale(), movimento.getImporto().doubleValue()));
+			break;
+		default:
+			break;
 		}
 		
 		return lstContabilizzazione;
@@ -794,32 +751,18 @@ public class TracciamentoOperazioneContabileUtils {
 		return pccPagamento;
 	}
 
-	private List<PccPagamento> getPagamento(DettaglioMovimentoTipo movimento, boolean storno) throws Exception {
+	private List<PccPagamento> getPagamento(DettaglioMovimentoTipo movimento, RiallineamentoBean riallineamento, boolean storno) throws Exception {
 		List<PccPagamento> lstPagamento = new ArrayList<PccPagamento>();
 		
-		double contoCapitale = movimento.getImportoContoCapitale() != null ? movimento.getImportoContoCapitale().doubleValue() : 0;
-		double naturaCorrente = movimento.getImportoNaturaCorrente() != null ? movimento.getImportoNaturaCorrente().doubleValue() : 0;
-
-		if(contoCapitale != 0) {
-			if(naturaCorrente != 0) {
-				if((naturaCorrente + contoCapitale) != movimento.getImporto().doubleValue()) {
-					throw new Exception("Somma importo natura corrente["+naturaCorrente
-							+"] e importo conto capitale ["+contoCapitale+"] dovrebbe essere uguale all'importo ["
-							+movimento.getImporto().doubleValue()+"] totale del movimento");
-				}
-				
-				lstPagamento.add(getPagamento(movimento, NaturaSpesaType.CO, naturaCorrente, storno));
-				lstPagamento.add(getPagamento(movimento, NaturaSpesaType.CA, contoCapitale, storno));
-			} else {
-				lstPagamento.add(getPagamento(movimento, NaturaSpesaType.CA, movimento.getImporto().doubleValue(), storno));
-			}
-		} else {
-			if(naturaCorrente != 0) {
-				lstPagamento.add(getPagamento(movimento, NaturaSpesaType.CO, naturaCorrente, storno));
-			} else {
-				lstPagamento.add(getPagamento(movimento, NaturaSpesaType.NA, movimento.getImporto().doubleValue(), storno));
-			}
-			
+		switch(riallineamento.getNaturaSpesa()) {
+		case CA: lstPagamento.add(getPagamento(movimento, NaturaSpesaType.CA, movimento.getImporto().doubleValue(), storno));
+			break;
+		case CO: lstPagamento.add(getPagamento(movimento, NaturaSpesaType.CO, movimento.getImporto().doubleValue(), storno));
+			break;
+		case NA: lstPagamento.add(getPagamento(movimento, NaturaSpesaType.NA, movimento.getImporto().doubleValue(), storno));
+			break;
+		default:
+			break;
 		}
 
 		return lstPagamento;

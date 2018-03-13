@@ -52,6 +52,7 @@ import org.openspcoop2.generic_project.beans.IField;
 import org.openspcoop2.generic_project.beans.NonNegativeNumber;
 import org.openspcoop2.generic_project.beans.UpdateField;
 import org.openspcoop2.generic_project.exception.ExpressionException;
+import org.openspcoop2.generic_project.exception.ExpressionNotImplementedException;
 import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
@@ -181,30 +182,6 @@ public class PccTracciamentoBD extends BaseBD {
 			this.log.error("Errore durante la create: " + e.getMessage(), e);
 			throw new Exception(e);
 		}
-	}
-
-	public List<PccTraccia> getTraccePerEsiti(int offset, int limit, Date date) throws Exception {
-		IPaginatedExpression exp1 = this.tracciamentoService.newPaginatedExpression();
-		exp1.equals(PccTraccia.model().STATO, StatoType.AS_PRESA_IN_CARICO);
-		exp1.equals(PccTraccia.model().TIPO_OPERAZIONE, TipoOperazionePccType.PROXY);
-
-
-		IPaginatedExpression exp2 = this.tracciamentoService.newPaginatedExpression();
-
-		exp2.isNull(PccTraccia.model().DATA_ULTIMO_TENTATIVO_ESITO).or().lessEquals(PccTraccia.model().DATA_ULTIMO_TENTATIVO_ESITO, date);
-
-		IPaginatedExpression exp = this.tracciamentoService.newPaginatedExpression();
-
-		exp.and(exp1, exp2);
-
-		PccTracciaFieldConverter fc = new PccTracciaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase()); 
-
-		exp.sortOrder(SortOrder.ASC);
-		exp.addOrder(new CustomField("id", Long.class, "id", fc.toTable(PccTraccia.model())));
-		exp.offset(offset);
-		exp.limit(limit);
-
-		return this.getTracce(exp, true);
 	}
 
 	public PccTraccia getTracciaByIdPa(String idPa) throws Exception {
@@ -501,19 +478,39 @@ public class PccTracciamentoBD extends BaseBD {
 		return ((JDBCPccErroreElaborazioneServiceSearch)this.erroreService).get(idErrore);
 	}
 
+	public List<PccTraccia> getTraccePerEsiti(int offset, int limit, Date date) throws Exception {
+
+		IPaginatedExpression exp = this.tracciamentoService.toPaginatedExpression(getExpressionEsiti(date));
+
+		PccTracciaFieldConverter fc = new PccTracciaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase()); 
+
+		exp.sortOrder(SortOrder.ASC);
+		exp.addOrder(new CustomField("id", Long.class, "id", fc.toTable(PccTraccia.model())));
+		exp.offset(offset);
+		exp.limit(limit);
+
+		return this.getTracce(exp, true);
+	}
+
 	public long countTraccePerEsiti(Date date) throws Exception {
+		IExpression exp = getExpressionEsiti(date);
+
+		return this.tracciamentoService.count(exp).longValue();
+	}
+
+	private IExpression getExpressionEsiti(Date date)
+			throws ServiceException, NotImplementedException, ExpressionNotImplementedException, ExpressionException {
 		IExpression exp1 = this.tracciamentoService.newExpression();
 		exp1.equals(PccTraccia.model().STATO, StatoType.AS_PRESA_IN_CARICO);
 		exp1.equals(PccTraccia.model().TIPO_OPERAZIONE, TipoOperazionePccType.PROXY);
-
+		exp1.equals(PccTraccia.model().RISPEDIZIONE, false);
 
 		IExpression exp2 = this.tracciamentoService.newExpression();
 		exp2.isNull(PccTraccia.model().DATA_ULTIMO_TENTATIVO_ESITO).or().lessEquals(PccTraccia.model().DATA_ULTIMO_TENTATIVO_ESITO, date);
 
 		IExpression exp = this.tracciamentoService.newExpression();
 		exp.and(exp1, exp2);
-
-		return this.tracciamentoService.count(exp).longValue();
+		return exp;
 	}
 
 

@@ -103,6 +103,7 @@ import org.govmix.pcc.fatture.TestataRispTipo;
 import org.govmix.pcc.fatture.TipoDocumentoTipo;
 import org.govmix.pcc.fatture.TipoOperazioneTipo;
 import org.govmix.pcc.fatture.TipologiaMovimentoErarioTipo;
+import org.govmix.proxy.fatturapa.web.commons.utils.TransformUtils;
 
 public class ProxyConverter {
 
@@ -871,8 +872,11 @@ public class ProxyConverter {
 		StrutturaDatiOperazioneTipo strutturaDatiOperazione = new StrutturaDatiOperazioneTipo();
 		
 		List<ContabilizzazioneTipo> contabilizzazione = lista.getContabilizzazione();
-		if(contabilizzazione != null && !contabilizzazione.isEmpty())
-			strutturaDatiOperazione.getListaContabilizzazione().add(toProxy(contabilizzazione.get(0)));
+		if(contabilizzazione != null && !contabilizzazione.isEmpty()) {
+			for(ContabilizzazioneTipo cont : contabilizzazione) {
+				strutturaDatiOperazione.getListaContabilizzazione().add(toProxy(cont));
+			}
+		}
 		
 		pccVO.setStrutturaDatiOperazione(strutturaDatiOperazione);
 		return pccVO;
@@ -958,7 +962,13 @@ public class ProxyConverter {
 		pccVO.setNaturaSpesa(toProxy(vo.getNaturaSpesa()));
 		pccVO.setCapitoliSpesa(vo.getCapitoliSpesa());
 		pccVO.setOperazione(toProxy(vo.getOperazione()));
-		pccVO.setDescrizione(vo.getDescrizione());
+		
+		try {
+			TransformUtils.populateContabilizzazione(pccVO, vo.getDescrizione());
+		} catch (Exception e) {
+			pccVO.setDescrizione(vo.getDescrizione());
+		}
+
 		pccVO.setEstremiImpegno(vo.getEstremiImpegno());
 		pccVO.setCodiceCIG(vo.getCodiceCIG());
 		pccVO.setCodiceCUP(vo.getCodiceCUP());

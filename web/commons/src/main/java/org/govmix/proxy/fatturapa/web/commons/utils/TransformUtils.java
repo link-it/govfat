@@ -61,6 +61,25 @@ public class TransformUtils {
 		return sistemaRichiedente + DESCRIZIONE_FIELD_SEPARATOR + utenteRichiedente + DESCRIZIONE_FIELD_SEPARATOR + idImporto + DESCRIZIONE_SEPARATOR + realDescrizione;
 	} 
 	
+	public static void populateContabilizzazione(org.govmix.pcc.fatture.ContabilizzazioneTipo cont, String descrizioneRaw) throws Exception {
+		if(descrizioneRaw == null) throw new Exception("Descrizione non puo' essere null");
+		
+		String campiNascosti = descrizioneRaw.substring(0, descrizioneRaw.indexOf(DESCRIZIONE_SEPARATOR));
+
+		String[] campiNascostiSplit = campiNascosti.split(DESCRIZIONE_REGEX_FIELD_SEPARATOR);
+		
+		if(campiNascostiSplit.length != 3) throw new Exception("Formato descrizione ["+descrizioneRaw+"] non valido. La sottostringa ["+campiNascosti+"]: la stringa ["+DESCRIZIONE_FIELD_SEPARATOR+"] dovrebbe separare 3 stringhe, trovate ["+campiNascostiSplit.length+"]");
+
+		cont.setIdentificativoMovimento(campiNascostiSplit[2]);
+
+		cont.setDescrizione(toStringDescrizioneImportoContabilizzazione(descrizioneRaw));
+
+	} 
+
+	public static boolean isDescrizioneRaw(String descrizione) {
+		return descrizione.contains(DESCRIZIONE_SEPARATOR);
+	}
+	
 	public static void populateContabilizzazione(PccContabilizzazione cont, String descrizioneRaw) throws Exception {
 		if(descrizioneRaw == null) throw new Exception("Descrizione non puo' essere null");
 		

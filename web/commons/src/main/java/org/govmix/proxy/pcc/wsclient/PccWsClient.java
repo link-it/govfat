@@ -135,18 +135,18 @@ public class PccWsClient {
 		Map<String, List<String>> map = (Map<String, List<String>>) bp.getResponseContext().get(MessageContext.HTTP_RESPONSE_HEADERS);
 
 		String idEgovHeader = PccProperties.getInstance().getIdEgovRichiestaHeader();
-		if(map.containsKey(idEgovHeader)) {
+		if(map != null && map.containsKey(idEgovHeader)) {
 			return map.get(idEgovHeader).get(0);
 		}
-		return null;
+		return "--";
 	}
 
 	public void wSProxyPagamentoIva(PccTraccia traccia) throws WSGenericFault {
-		this.log.info("invoke : wSProxyPagamentoIva");
 		try {
 
 			it.tesoro.fatture.ProxyPagamentoIvaRichiestaTipo proxyPagamentoIvaRichiestaTipo = this.jaxbSerializer.toProxyPagamentoIvaRichiestaTipo(traccia.getRichiestaXml());
 			this.processTestataPerRispedizione(proxyPagamentoIvaRichiestaTipo.getTestataRichiesta(),traccia);
+			this.log.info("invoke : wSProxyPagamentoIva per la traccia ["+traccia.getIdPaTransazione()+"]");
 
 			it.tesoro.fatture.FattureWS port = this.getFattureWS(OperazioneType.PROXY_PAGAMENTO_IVA);
 
@@ -160,16 +160,22 @@ public class PccWsClient {
 
 			
 
-			this.tracciamentoUtils.popolaTracciaETrasmissioneProxy(traccia, wSProxyPagamentoIva, getIdEgov(port));
+			this.tracciamentoUtils.popolaTracciaETrasmissioneProxy(traccia, wSProxyPagamentoIva, getIdEgov(port), this.jaxbSerializer.toXML(proxyPagamentoIvaRichiestaTipo));
+			
+			this.log.info("invoke : wSProxyPagamentoIva: OK per la traccia ["+traccia.getIdPaTransazione()+"]");
+
 		}catch(Exception e) {
 			this.log.error("Error: " + e.getMessage(), e);
 			if(traccia != null) {
 				try {
+					this.log.error("Error: traccia ["+traccia.getIdPaTransazione()+"]");
 					this.tracciamentoUtils.popolaTracciaConInfoRispedizioneDefault(traccia, e);
 					if(traccia.getRispedizione()) { //se la rispedizione e' abilitata, consideriamo il caso come ok
 						return;
 					}
 				} catch (Exception ec) {}
+			} else {
+				this.log.error("Error: traccia null");
 			}
 
 			throw new WSGenericFault(e.getMessage(), e);
@@ -199,7 +205,7 @@ public class PccWsClient {
 				throw new Exception("Errore interno: " + e.getMessage(), e);
 			}
 
-			TestataRispTipo testata = this.tracciamentoUtils.popolaTracciaETrasmissioneProxy(traccia, wSProxyPagamentoIva,getIdEgov(port));
+			TestataRispTipo testata = this.tracciamentoUtils.popolaTracciaETrasmissioneProxy(traccia, wSProxyPagamentoIva,getIdEgov(port), this.jaxbSerializer.toXML(request));
 			this.log.info("Invoke: wSProxyPagamentoIva: OK");
 
 			return ProxyConverter.toProxy(wSProxyPagamentoIva, testata);
@@ -239,22 +245,10 @@ public class PccWsClient {
 			}
 			this.tracciamentoUtils.aggiornaTracciaETrasmissioneQuery(traccia, trasm, beanRequest, wSQueryInserimentoFattura.getDatiRisposta(), getIdEgov(port), this.jaxbSerializer.toXML(wSQueryInserimentoFattura));
 
-			this.checkPerNotifica(traccia, wSQueryInserimentoFattura.getDatiRisposta().getEsitoTrasmissione(), wSQueryInserimentoFattura.getDatiRisposta().getEsitoElaborazioneTransazione());
-
 			this.log.info("Invoke: wSQueryInserimentoFattura: OK");
 		}catch(Exception e) {
 			this.log.error("Error: " + e.getMessage(), e);
 			throw new WSGenericFault(e.getMessage(), e);
-		}
-	}
-
-	private void checkPerNotifica(PccTraccia traccia, EsitoOkKoTipo esitoTrasmissione, String esitoElaborazione) throws Exception {
-		if(!traccia.getRispedizione()) {
-			if(esitoTrasmissione.equals(EsitoOkKoTipo.KO)  || !esitoElaborazione.equals("OK")) {
-				if(!traccia.getSistemaRichiedente().equals(PccProperties.getInstance().getSistemaRichiedenteCruscotto())) {
-					this.tracciamentoUtils.creaNotifica(traccia);
-				}
-			}
 		}
 	}
 
@@ -371,8 +365,8 @@ public class PccWsClient {
 	}
 
 	public void wSQueryOperazioneContabile(PccTraccia traccia, PccTracciaTrasmissione trasm, org.govmix.pcc.fatture.TipoOperazioneTipo tipoOperazione) throws WSGenericFault {
-		this.log.info("invoke : wSQueryOperazioneContabile");
 		try {
+			this.log.info("invoke : wSQueryOperazioneContabile per la traccia ["+traccia.getIdPaTransazione()+"]");
 
 			FatturaElettronica fattura = this.fatturaBD.getById(traccia.getIdFattura());
 			IdFattura idFattura = new IdFattura();
@@ -392,19 +386,24 @@ public class PccWsClient {
 			beanRequest.setCodiceDipartimento(fattura.getCodiceDestinatario());
 			PccTracciaTrasmissioneEsito esito = this.tracciamentoUtils.aggiornaTracciaETrasmissioneQueryOperazioneContabile(traccia, trasm, beanRequest, wSQueryOperazioneContabile.getDatiRisposta(), getIdEgov(port), this.jaxbSerializer.toXML(wSQueryOperazioneContabile));
 
-			if(tipoOperazione.value().equals(org.govmix.pcc.fatture.TipoOperazioneTipo.CO.value())) {
-				this.log.info("Tipo operazione contabile ["+TipoOperazioneTipo.CO+"], aggiorno l'esito contabilizzazione");
+			List<String> aggiornaEsitoScadenze = new ArrayList<String>();
+			aggiornaEsitoScadenze.add(org.govmix.pcc.fatture.TipoOperazioneTipo.CS.value());
+			aggiornaEsitoScadenze.add(org.govmix.pcc.fatture.TipoOperazioneTipo.CCS.value());
+			
+			List<String> aggiornaEsitoContabilizzazioni = new ArrayList<String>();
+			aggiornaEsitoContabilizzazioni.add(org.govmix.pcc.fatture.TipoOperazioneTipo.CO.value());
+			aggiornaEsitoContabilizzazioni.add(org.govmix.pcc.fatture.TipoOperazioneTipo.SP.value());
+			
+			
+			if(aggiornaEsitoContabilizzazioni.contains(tipoOperazione.value())) {
+				this.log.info("Tipo operazione contabile ["+tipoOperazione.value()+"], aggiorno l'esito contabilizzazione");
 				this.fatturaBD.updateEsitoContabilizzazione(idFattura, esito);
-			} else if(tipoOperazione.value().equals(org.govmix.pcc.fatture.TipoOperazioneTipo.CS.value())) {
-				this.log.info("Tipo operazione contabile ["+TipoOperazioneTipo.CS+"], aggiorno l'esito scadenza");
-				this.fatturaBD.updateEsitoScadenza(idFattura, esito);
-			} else if(tipoOperazione.value().equals(org.govmix.pcc.fatture.TipoOperazioneTipo.CCS.value())) {
-				this.log.info("Tipo operazione contabile ["+TipoOperazioneTipo.CCS+"], aggiorno l'esito scadenza");
+			} else if(aggiornaEsitoScadenze.contains(tipoOperazione.value())) {
+				this.log.info("Tipo operazione contabile ["+tipoOperazione.value()+"], aggiorno l'esito scadenza");
 				this.fatturaBD.updateEsitoScadenza(idFattura, esito);
 			}
 
-			this.checkPerNotifica(traccia, wSQueryOperazioneContabile.getDatiRisposta().getEsitoTrasmissione(), wSQueryOperazioneContabile.getDatiRisposta().getEsitoElaborazioneTransazione());
-			this.log.info("Invoke: wSQueryOperazioneContabile: OK");
+			this.log.info("Invoke: wSQueryOperazioneContabile: OK per la traccia ["+traccia.getIdPaTransazione()+"]");
 		}catch(Exception e) {
 			this.log.error("Error: " + e.getMessage(), e);
 			throw new WSGenericFault(e.getMessage(), e);
@@ -412,11 +411,11 @@ public class PccWsClient {
 	}
 
 	public void wSProxyDatiFattura(PccTraccia traccia) throws WSGenericFault {
-		this.log.info("invoke : wSProxyDatiFattura");
-
 		try {
 			it.tesoro.fatture.ProxyDatiFatturaRichiestaTipo proxyDatiFatturaRichiestaTipo = this.jaxbSerializer.toProxyDatiFatturaRichiestaTipo(traccia.getRichiestaXml());
 			this.processTestataPerRispedizione(proxyDatiFatturaRichiestaTipo.getTestataRichiesta(), traccia);
+
+			this.log.info("invoke : wSProxyDatiFattura per la traccia ["+traccia.getIdPaTransazione()+"]");
 
 			FatturaElettronica fattura = this.fatturaBD.getById(traccia.getIdFattura());
 			IdFattura idFattura = new IdFattura();
@@ -444,7 +443,7 @@ public class PccWsClient {
 				throw new Exception("Errore interno: " + e.getMessage(), e);
 			}
 
-			this.tracciamentoUtils.popolaTracciaETrasmissioneProxy(traccia, wSProxyDatiFattura, getIdEgov(port));
+			this.tracciamentoUtils.popolaTracciaETrasmissioneProxy(traccia, wSProxyDatiFattura, getIdEgov(port), this.jaxbSerializer.toXML(proxyDatiFatturaRichiestaTipo));
 			
 
 			if(!traccia.isRispedizioneDopoQuery()) {
@@ -455,16 +454,19 @@ public class PccWsClient {
 			}
 
 
-			this.log.info("Invoke: wSProxyDatiFattura: OK");
+			this.log.info("Invoke: wSProxyDatiFattura: OK per la traccia ["+traccia.getIdPaTransazione()+"]");
 		}catch(Exception e) {
 			this.log.error("Error: " + e.getMessage(), e); 
 			if(traccia != null) {
 				try {
+					this.log.error("Error: traccia ["+traccia.getIdPaTransazione()+"]");
 					this.tracciamentoUtils.popolaTracciaConInfoRispedizioneDefault(traccia, e);
 					if(traccia.getRispedizione()) { //se la rispedizione e' abilitata, consideriamo il caso come ok
 						return;
 					}
 				} catch (Exception ec) {}
+			} else {
+				this.log.error("Error: traccia null");
 			}
 
 			throw new WSGenericFault(e.getMessage(), e);
@@ -505,6 +507,7 @@ public class PccWsClient {
 			try {
 				wSProxyDatiFattura = port.wSProxyDatiFattura(pccRequest);
 			} catch(javax.xml.ws.WebServiceException e) {
+				this.log.error("Errore durante la comunicazione con PCC: " + e.getMessage(), e);
 				this.tracciamentoUtils.popolaTracciaETrasmissioneProxyErrore(traccia, e, getIdEgov(port));
 				throw new Exception("Errore interno: " + e.getMessage(), e);
 			}
@@ -515,7 +518,7 @@ public class PccWsClient {
 				this.fatturaBD.updateEsitoScadenza(beanResponse.getIdLogicoFattura(), null);
 			}
 
-			TestataRispTipo testata = this.tracciamentoUtils.popolaTracciaETrasmissioneProxy(traccia, wSProxyDatiFattura, getIdEgov(port));
+			TestataRispTipo testata = this.tracciamentoUtils.popolaTracciaETrasmissioneProxy(traccia, wSProxyDatiFattura, getIdEgov(port), this.jaxbSerializer.toXML(pccRequest));
 			this.log.info("Invoke: wSProxyDatiFattura: OK");
 			return ProxyConverter.toProxy(wSProxyDatiFattura, testata);
 		}catch(Exception e) {
@@ -532,11 +535,11 @@ public class PccWsClient {
 	}
 
 	public void wSProxyInserimentoFattura(PccTraccia traccia) throws WSGenericFault {
-		this.log.info("invoke : wSProxyInserimentoFattura");
 		try {
 
 			it.tesoro.fatture.ProxyInserimentoFatturaRichiestaTipo proxyInserimentoFatturaRichiestaTipo = this.jaxbSerializer.toProxyInserimentoFatturaRichiestaTipo(traccia.getRichiestaXml());
 			this.processTestataPerRispedizione(proxyInserimentoFatturaRichiestaTipo.getTestataRichiesta(), traccia);
+			this.log.info("invoke : wSProxyInserimentoFattura per la traccia ["+traccia.getIdPaTransazione()+"]");
 
 			it.tesoro.fatture.FattureWS port = this.getFattureWS(OperazioneType.PROXY_INSERIMENTO_FATTURA);
 			it.tesoro.fatture.ProxyRispostaTipo wSProxyInserimentoFattura = null;
@@ -546,17 +549,20 @@ public class PccWsClient {
 				this.tracciamentoUtils.popolaTracciaETrasmissioneProxyErrore(traccia, e, getIdEgov(port));
 				throw new Exception("Errore interno: " + e.getMessage(), e);
 			}
-			this.tracciamentoUtils.popolaTracciaETrasmissioneProxy(traccia, wSProxyInserimentoFattura, getIdEgov(port));
-			this.log.info("Invoke: wSProxyInserimentoFattura: OK");
+			this.tracciamentoUtils.popolaTracciaETrasmissioneProxy(traccia, wSProxyInserimentoFattura, getIdEgov(port), this.jaxbSerializer.toXML(proxyInserimentoFatturaRichiestaTipo));
+			this.log.info("Invoke: wSProxyInserimentoFattura: OK per la traccia ["+traccia.getIdPaTransazione()+"]");
 		}catch(Exception e) {
 			this.log.error("Error: " + e.getMessage(), e); 
 			if(traccia != null) {
 				try {
+					this.log.error("Error: traccia ["+traccia.getIdPaTransazione()+"]");
 					this.tracciamentoUtils.popolaTracciaConInfoRispedizioneDefault(traccia, e);
 					if(traccia.getRispedizione()) { //se la rispedizione e' abilitata, consideriamo il caso come ok
 						return;
 					}
 				} catch (Exception ec) {}
+			} else {
+				this.log.error("Error: traccia null");
 			}
 
 			throw new WSGenericFault(e.getMessage(), e);
@@ -586,7 +592,7 @@ public class PccWsClient {
 				this.tracciamentoUtils.popolaTracciaETrasmissioneProxyErrore(traccia, e, getIdEgov(port));
 				throw new Exception("Errore interno: " + e.getMessage(), e);
 			}
-			TestataRispTipo testata = this.tracciamentoUtils.popolaTracciaETrasmissioneProxy(traccia, wSProxyInserimentoFattura, getIdEgov(port));
+			TestataRispTipo testata = this.tracciamentoUtils.popolaTracciaETrasmissioneProxy(traccia, wSProxyInserimentoFattura, getIdEgov(port), this.jaxbSerializer.toXML(pccRequest));
 			this.log.info("Invoke: wSProxyInserimentoFattura: OK");
 			return ProxyConverter.toProxy(wSProxyInserimentoFattura, testata);
 		}catch(Exception e) {
@@ -608,10 +614,10 @@ public class PccWsClient {
 	}
 
 	public void wSProxyOperazioneContabile(PccTraccia traccia) throws WSGenericFault {
-		this.log.info("invoke : wSProxyOperazioneContabile");
 		try {
 			it.tesoro.fatture.ProxyOperazioneContabileRichiestaTipo proxyOperazioneContabileRichiestaTipo = this.jaxbSerializer.toProxyOperazioneContabileRichiestaTipo(traccia.getRichiestaXml()); 
 			this.processTestataPerRispedizione(proxyOperazioneContabileRichiestaTipo.getTestataRichiesta(),traccia);
+			this.log.info("invoke: wSProxyOperazioneContabile per la traccia ["+traccia.getIdPaTransazione()+"]");
 
 			FatturaElettronica fattura = this.fatturaBD.getById(traccia.getIdFattura());
 			IdFattura idFattura = new IdFattura();
@@ -642,10 +648,15 @@ public class PccWsClient {
 					element.setProgressivoOperazione(0);
 					element.setTipoOperazione(TipoOperazioneTipo.SC);
 					element.setStrutturaDatiOperazione(new StrutturaDatiOperazioneTipo());
-					proxyOperazioneContabileRichiestaTipo.getDatiRichiesta().getListaOperazione().getOperazione().add(0, element);
-					for(int i = 0; i < proxyOperazioneContabileRichiestaTipo.getDatiRichiesta().getListaOperazione().getOperazione().size(); i++) {
-						OperazioneTipo oper = proxyOperazioneContabileRichiestaTipo.getDatiRichiesta().getListaOperazione().getOperazione().get(i);
-						oper.setProgressivoOperazione(i);
+					if(bean.isStornoSenzaRicontabilizzazione()) {
+						proxyOperazioneContabileRichiestaTipo.getDatiRichiesta().getListaOperazione().getOperazione().clear();
+						proxyOperazioneContabileRichiestaTipo.getDatiRichiesta().getListaOperazione().getOperazione().add(element);
+					} else {
+						proxyOperazioneContabileRichiestaTipo.getDatiRichiesta().getListaOperazione().getOperazione().add(0, element);
+						for(int i = 0; i < proxyOperazioneContabileRichiestaTipo.getDatiRichiesta().getListaOperazione().getOperazione().size(); i++) {
+							OperazioneTipo oper = proxyOperazioneContabileRichiestaTipo.getDatiRichiesta().getListaOperazione().getOperazione().get(i);
+							oper.setProgressivoOperazione(i);
+						}
 					}
 				}
 
@@ -657,7 +668,7 @@ public class PccWsClient {
 					throw new Exception("Errore interno: " + e.getMessage(), e);
 				}
 
-				TestataRispTipo testata = this.tracciamentoUtils.popolaTracciaETrasmissioneProxy(traccia, wSProxyOperazioneContabile, getIdEgov(port));
+				TestataRispTipo testata = this.tracciamentoUtils.popolaTracciaETrasmissioneProxy(traccia, wSProxyOperazioneContabile, getIdEgov(port), this.jaxbSerializer.toXML(proxyOperazioneContabileRichiestaTipo));
 
 				if(!traccia.isRispedizioneDopoQuery()) {
 					if(testata.getEsito().value().equals(org.govmix.pcc.fatture.EsitoOkKoTipo.OK.value()) && testata.getOrigine().value().equals(org.govmix.pcc.fatture.OrigineTipo.PCC.value())) {
@@ -670,19 +681,22 @@ public class PccWsClient {
 				}
 
 
-				this.log.info("Invoke: wSProxyOperazioneContabile: OK");
+				this.log.info("Invoke: wSProxyOperazioneContabile: OK per la traccia ["+traccia.getIdPaTransazione()+"]");
 			} else {
-				throw new Exception("Dati incompatibili trovati nella traccia");
+				throw new Exception("Dati incompatibili trovati nella traccia ["+traccia.getIdPaTransazione()+"]");
 			}
 		}catch(Exception e) {
 			this.log.error("Error: " + e.getMessage(), e);
 			if(traccia != null) {
 				try {
+					this.log.error("Error: traccia ["+traccia.getIdPaTransazione()+"]");
 					this.tracciamentoUtils.popolaTracciaConInfoRispedizioneDefault(traccia, e);
 					if(traccia.getRispedizione()) { //se la rispedizione e' abilitata, consideriamo il caso come ok
 						return;
 					}
 				} catch (Exception ec) {}
+			} else {
+				this.log.error("Error: traccia null");
 			}
 
 			throw new WSGenericFault(e.getMessage(), e);
@@ -757,7 +771,7 @@ public class PccWsClient {
 				throw new Exception("Errore interno: " + e.getMessage(), e);
 			}
 
-			TestataRispTipo testata = this.tracciamentoUtils.popolaTracciaETrasmissioneProxy(traccia, wSProxyOperazioneContabile, getIdEgov(port));
+			TestataRispTipo testata = this.tracciamentoUtils.popolaTracciaETrasmissioneProxy(traccia, wSProxyOperazioneContabile, getIdEgov(port), this.jaxbSerializer.toXML(pccRequest));
 			
 			this.log.info("Esito invocazione pcc: " +testata.getEsito() + ". Origine: " + testata.getOrigine());
 			if(testata.getEsito().value().equals(org.govmix.pcc.fatture.EsitoOkKoTipo.OK.value()) && testata.getOrigine().value().equals(org.govmix.pcc.fatture.OrigineTipo.PCC.value())) {
@@ -809,12 +823,18 @@ public class PccWsClient {
 					!operazione.getStrutturaDatiOperazione().getListaContabilizzazione().isEmpty()) {
 				//aggiorno la descrizione per inviare i metadati alla PCC
 				for(ContabilizzazioneTipo cont: operazione.getStrutturaDatiOperazione().getListaContabilizzazione()) {
-					if(cont.getDescrizione() != null && cont.getDescrizione().length() > 70) {
-						throw new Exception("La lunghezza della descrizione della contabilizzazione ("+cont.getDescrizione()+") non puo superare i 70 caratteri.");
-					}
 
-					cont.setDescrizione(TransformUtils.toRawDescrizioneImportoContabilizzazione(cont.getDescrizione(), sistemaRichiedente, 
-							utenteRichiedente, cont.getIdentificativoMovimento()));
+					String rawDesc = TransformUtils.toRawDescrizioneImportoContabilizzazione(cont.getDescrizione(), sistemaRichiedente, 
+							utenteRichiedente, cont.getIdentificativoMovimento());
+					
+					int maxLength = 100;
+					if(rawDesc.length() > maxLength) {
+						String oldRawDesc = rawDesc;
+						rawDesc = rawDesc.substring(0, maxLength);
+						this.log.info("Descrizione contabilizzazione ["+oldRawDesc+"] di lunghezza ["+oldRawDesc.length()+"] maggiore del massimo consentito ["+maxLength+"], la tronco a ["+rawDesc+"].");
+					}
+					
+					cont.setDescrizione(rawDesc);
 				}
 			}
 
@@ -863,7 +883,8 @@ public class PccWsClient {
 				}
 			}
 
-			if(importoDaContabilizzare < importoGiaContabilizzato) {
+			
+			if(Math.abs(importoDaContabilizzare) < Math.abs(importoGiaContabilizzato)) {
 				 if(this.tracciamentoOperazioneContabileUtils.existPagamentiByIdFattura(idFattura)) {
 					 throw new OperazioneNonPermessaException("Impossibile contabilizzare l'importo"+importoDaContabilizzare+" in quanto risulta gia' contabilizzato un importo maggiore ("+importoGiaContabilizzato+"). Impossibile effettuare lo storno in quanto esistono gia' dei pagamenti per la fattura.");
 				 }
@@ -1011,7 +1032,7 @@ public class PccWsClient {
 		Date dataScadenza = this.tracciamentoOperazioneContabileUtils.getDataScadenza(idFattura, fattura.getImportoTotaleDocumento());
 		boolean daPagare = this.tracciamentoOperazioneContabileUtils.isDaPagare(idFattura);
 		this.log.info("Aggiornamento data scadenza della fattura ["+dataScadenza+"]...");
-		this.fatturaBD.updateDataScadenza(idFattura, dataScadenza, daPagare);
+		this.fatturaBD.aggiornaDataScadenza(idFattura, dataScadenza, daPagare);
 		this.log.info("Aggiornamento data scadenza della fattura ["+dataScadenza+"] completato");
 	}
 
@@ -1060,8 +1081,9 @@ public class PccWsClient {
 	}
 
 	public it.tesoro.fatture.QueryDatiFatturaRispostaTipo wSQueryDatiFattura(PccTraccia traccia, PccTracciaTrasmissione trasm) throws WSGenericFault {
-		this.log.info("invoke : wSQueryDatiFattura");
 		try {
+
+			this.log.info("invoke : wSQueryDatiFattura per la traccia ["+traccia.getIdPaTransazione()+"]");
 
 			FatturaElettronica fattura = this.fatturaBD.getById(traccia.getIdFattura());
 			IdFattura idFattura = new IdFattura();
@@ -1096,14 +1118,12 @@ public class PccWsClient {
 				Date dataScadenza = this.tracciamentoOperazioneContabileUtils.getDataScadenza(idFattura, fattura.getImportoTotaleDocumento());
 				boolean daPagare = this.tracciamentoOperazioneContabileUtils.isDaPagare(idFattura);
 				this.log.info("Aggiornamento data scadenza della fattura ["+dataScadenza+"]...");
-				this.fatturaBD.updateDataScadenza(idFattura, dataScadenza, daPagare);
+				this.fatturaBD.aggiornaDataScadenza(idFattura, dataScadenza, daPagare);
 				this.log.info("Aggiornamento data scadenza della fattura ["+dataScadenza+"] completato");
 
 			}
 
-			this.checkPerNotifica(traccia, wSQueryDatiFattura.getDatiRisposta().getEsitoTrasmissione(), wSQueryDatiFattura.getDatiRisposta().getEsitoElaborazioneTransazione());
-
-			this.log.info("Invoke: wSQueryDatiFattura: OK");
+			this.log.info("Invoke: wSQueryDatiFattura: OK per la traccia ["+traccia.getIdPaTransazione()+"]");
 			return wSQueryDatiFattura;
 		}catch(Exception e) {
 			this.log.error("Error: " + e.getMessage(), e);
@@ -1168,8 +1188,6 @@ public class PccWsClient {
 				throw new Exception("Errore interno: " + e.getMessage(), e);
 			}
 			this.tracciamentoUtils.aggiornaTracciaETrasmissioneQuery(traccia, trasm, beanRequest, wSQueryPagamentoIva.getDatiRisposta(), getIdEgov(port), this.jaxbSerializer.toXML(wSQueryPagamentoIva));
-
-			this.checkPerNotifica(traccia, wSQueryPagamentoIva.getDatiRisposta().getEsitoTrasmissione(), wSQueryPagamentoIva.getDatiRisposta().getEsitoElaborazioneTransazione());
 
 			this.log.info("Invoke: wSQueryPagamentoIva: OK");
 		}catch(Exception e) {

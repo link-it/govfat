@@ -280,7 +280,7 @@ public class CommonsProperties extends AbstractProperties {
 	}
 	
 	public String getInfoVersione() {
-		return "Versione ProxyFatturaPA["+CostantiFatturaPA.VERSIONE+"] commit id["+CostantiFatturaPA.COMMIT_ID+"]";
+		return "Versione Software["+CostantiFatturaPA.VERSIONE+"] Commit["+CostantiFatturaPA.COMMIT_ID+"]";
 	}
 
 

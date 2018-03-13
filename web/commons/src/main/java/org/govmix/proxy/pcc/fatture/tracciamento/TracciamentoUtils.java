@@ -184,7 +184,7 @@ public class TracciamentoUtils {
 		
 	}
 
-	public TestataRispTipo popolaTracciaETrasmissioneProxy(PccTraccia traccia, ProxyRispostaTipo risposta, String idEgov) throws Exception {
+	public TestataRispTipo popolaTracciaETrasmissioneProxy(PccTraccia traccia, ProxyRispostaTipo risposta, String idEgov, byte[] richiesta) throws Exception {
 		
 		
 		String idPa = traccia.getIdPaTransazioneRispedizione() != null ? traccia.getIdPaTransazioneRispedizione() : traccia.getIdPaTransazione();
@@ -205,6 +205,7 @@ public class TracciamentoUtils {
 		
 		traccia.setDataUltimoTentativoEsito(new Date(System.currentTimeMillis()+ (PccProperties.getInstance().getIntervalloSpedizioneEsito() * 60000) ));
 		traccia.setDataUltimaTrasmissione(dataTrasmissione);
+		traccia.setRichiestaXml(richiesta);
 		
 		traccia.addPccTracciaTrasmissione(trasmissione);
 
@@ -273,7 +274,6 @@ public class TracciamentoUtils {
 		traccia.addPccTracciaTrasmissione(trasmissione);
 
 		this.log.debug("Traccia idPA["+idPa+"]: esito KO, dettaglio["+e.getMessage()+"]");
-		traccia.setStato(StatoType.AS_ERRORE_PRESA_IN_CARICO);
 
 		trasmissione.setDettaglioErroreTrasmissione("Impossibile contattare la PCC");
 		trasmissione.setEsitoTrasmissione(EsitoTrasmissioneType.KO);
@@ -670,13 +670,13 @@ public class TracciamentoUtils {
 		String idPa = traccia.getIdPaTransazioneRispedizione() != null ? traccia.getIdPaTransazioneRispedizione() : traccia.getIdPaTransazione();
 
 		if(isRispedizionePerEccezioneAbilitata) {
-
-			if(traccia.getStato() == null) {
-				traccia.setStato(StatoType.AS_ERRORE_PRESA_IN_CARICO);
-			}
+			traccia.setRispedizione(true);
+			
+			if(traccia.getStato() == null)
+				traccia.setStato(StatoType.AS_PRESA_IN_CARICO);
+			
 			traccia.setRispedizioneProssimoTentativo(new Date(System.currentTimeMillis()+ (PccProperties.getInstance().getIntervalloRispedizioneDefault() * 60000) )); //intervallo tentativi espresso in minuti
 			traccia.setRispedizioneUltimoTentativo(new Date());
-			traccia.setRispedizione(true);
 			this.log.debug("Traccia idPA["+idPa+"]: trovata rispedizione di default: proxTentativo ["+traccia.getRispedizioneProssimoTentativo()+"]");
 		} else {
 			traccia.setRispedizione(false);

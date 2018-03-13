@@ -350,7 +350,7 @@ public class FatturaPassivaBD extends FatturaBD {
 		}
 	}
 
-	public void updateDataScadenza(IdFattura idFattura, Date dataScadenza, boolean daPagare) throws Exception {
+	public void aggiornaDataScadenza(IdFattura idFattura, Date dataScadenza, boolean daPagare) throws Exception {
 		try {
 			
 			UpdateField updateField = new UpdateField(FatturaElettronica.model().DATA_SCADENZA, dataScadenza);
