@@ -42,6 +42,7 @@ import org.govmix.proxy.fatturapa.orm.PccTracciaTrasmissioneEsito;
 import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.PccTracciamentoBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.UtenteBD;
+import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.openspcoop2.generic_project.expression.IPaginatedExpression;
 import org.openspcoop2.generic_project.expression.SortOrder;
@@ -60,6 +61,7 @@ public class RecuperaTracceImpl implements WsTracce {
 		this.tracciamentoBD = new PccTracciamentoBD(log);
 		this.utenteBD = new UtenteBD(log);
 		this.log.info("Inizializzazione del servizio WSTracce completata");
+		this.log.info("Info versione: " + CommonsProperties.getInstance(log).getInfoVersione());
 	}
 	
 	@Override

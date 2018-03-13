@@ -41,6 +41,8 @@ import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoRe
 import org.govmix.proxy.fatturapa.web.commons.fatturaattiva.EsitoInvioFattura.ESITO;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.business.InvioNotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.web.commons.recuperaFatture.RecuperaFatture;
+import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
+import org.govmix.proxy.fatturapa.web.commons.utils.CostantiFatturaPA;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 
 public class EndpointEnteImpl implements EndpointEnte {
@@ -59,6 +61,8 @@ public class EndpointEnteImpl implements EndpointEnte {
 		this.invioNotificaEsitoCommittente = new InvioNotificaEsitoCommittente(this.log);
 		this.recuperaFatture = new RecuperaFatture(this.log);
 		this.log.info("Inizializzazione endpoint Ente completata");
+		
+		this.log.info("Info versione: " + CommonsProperties.getInstance(log).getInfoVersione());
 	}
 	
 	

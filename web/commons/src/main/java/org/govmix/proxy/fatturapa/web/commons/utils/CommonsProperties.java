@@ -278,6 +278,10 @@ public class CommonsProperties extends AbstractProperties {
 		}
 
 	}
+	
+	public String getInfoVersione() {
+		return "Versione ProxyFatturaPA["+CostantiFatturaPA.VERSIONE+"] commit id["+CostantiFatturaPA.COMMIT_ID+"]";
+	}
 
 
 }

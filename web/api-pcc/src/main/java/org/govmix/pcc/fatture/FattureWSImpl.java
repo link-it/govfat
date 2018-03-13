@@ -30,6 +30,7 @@ import javax.xml.ws.handler.MessageContext;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.PccTraccia;
 import org.govmix.proxy.fatturapa.orm.constants.NomePccOperazioneType;
+import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.pcc.fatture.authorization.AuthorizationBeanFactory;
 import org.govmix.proxy.pcc.fatture.authorization.AuthorizationBeanResponse;
@@ -51,6 +52,7 @@ public class FattureWSImpl implements FattureWS {
 		this.client = new PccWsClient(this.log);
 		this.authorizationManager = new AuthorizationManager(log);
 		this.log.info("Inizializzazione Endpoint WSFatture completata");
+		this.log.info("Info versione: " + CommonsProperties.getInstance(log).getInfoVersione());
 	}
 
 	private String getPrincipal() throws Exception {

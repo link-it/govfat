@@ -81,6 +81,8 @@ public class EndpointPdDImpl implements EndpointPdD {
 		this.log.info("Inizializzazione unmarshaller completata");
 		
 		this.log.info("Inizializzazione endpoint PdD completata");
+		
+		this.log.info("Info versione: " + CommonsProperties.getInstance(log).getInfoVersione());
 	}
 
 	@Override

@@ -29,9 +29,11 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
 import org.apache.log4j.Logger;
+import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.commons.utils.timers.BatchProperties;
 import org.govmix.proxy.fatturapa.web.commons.utils.timers.TimerProperties;
+import org.govmix.proxy.fatturapa.web.console.listener.ConsoleStartupListener;
 import org.openspcoop2.utils.date.DateManager;
 import org.openspcoop2.utils.resources.GestoreJNDI;
 
@@ -140,6 +142,14 @@ public class TimerStartup {
 			for(TimerObject timer : TimerStartup.this.timerLst) {
 				timer.start(log);
 			}
+
+			try {
+				log.info("Info versione: " + CommonsProperties.getInstance(log).getInfoVersione());
+			} catch (Exception e) {
+				TimerStartup.log.error("Errore durante la Info versione", e);
+				return;
+			}
+
 		}
 
 		private List<TimerObject> initTimers(BatchProperties properties) throws Exception {

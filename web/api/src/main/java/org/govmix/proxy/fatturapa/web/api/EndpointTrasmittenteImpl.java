@@ -25,6 +25,7 @@ import java.io.InputStream;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
+import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 
 public class EndpointTrasmittenteImpl implements EndpointTrasmittente {
@@ -42,6 +43,7 @@ public class EndpointTrasmittenteImpl implements EndpointTrasmittente {
 		this.log.info("Inizializzazione endpoint Trasmittente...");
 //		this.riceviComunicazioneSdi = new RiceviComunicazioneSdI(this.log);
 		this.log.info("Inizializzazione endpoint Trasmittente completata");
+		this.log.info("Info versione: " + CommonsProperties.getInstance(log).getInfoVersione());
 	}
 
 //	private IdUtente getIdUtente() throws Exception {

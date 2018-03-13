@@ -29,6 +29,7 @@ import javax.servlet.ServletContextEvent;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.openspcoop2.generic_project.web.listener.ApplicationStartupListener;
 
 public class ConsoleStartupListener extends ApplicationStartupListener {
@@ -92,6 +93,10 @@ public class ConsoleStartupListener extends ApplicationStartupListener {
 
 		if(ConsoleStartupListener.log!=null)
 			ConsoleStartupListener.log.info("Undeploy FatturaPA WebConsole effettuato.");
+		
+		if(ConsoleStartupListener.log!=null)
+			try {ConsoleStartupListener.log.info("Info versione: " + CommonsProperties.getInstance(ConsoleStartupListener.log).getInfoVersione());} catch (Exception e) {}
+
 
 	}
 }
