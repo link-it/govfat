@@ -29,6 +29,7 @@ CREATE TABLE lotti
 	xml BYTEA NOT NULL,
 	fatturazione_attiva BOOLEAN NOT NULL,
 	stato_elaborazione_in_uscita VARCHAR(255),
+	tipi_comunicazione VARCHAR(255),
 	data_ultima_elaborazione TIMESTAMP,
 	dettaglio_elaborazione VARCHAR(255),
 	data_prossima_elaborazione TIMESTAMP,
