@@ -33,7 +33,6 @@ import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.commons.utils.timers.BatchProperties;
 import org.govmix.proxy.fatturapa.web.commons.utils.timers.TimerProperties;
-import org.govmix.proxy.fatturapa.web.console.listener.ConsoleStartupListener;
 import org.openspcoop2.utils.date.DateManager;
 import org.openspcoop2.utils.resources.GestoreJNDI;
 
