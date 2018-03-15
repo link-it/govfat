@@ -382,6 +382,8 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 			if(search.getTipoComunicazione().getValue() != null &&
 					!StringUtils.isEmpty(search.getTipoComunicazione().getValue().getValue()) && !search.getTipoComunicazione().getValue().getValue().equals("*")){
 				TipoComunicazioneType tipoComunicazioneType = TipoComunicazioneType.toEnumConstant(search.getTipoComunicazione().getValue().getValue());
+				if(tipoComunicazioneType==null)
+					throw new Exception("Valore ["+search.getTipoComunicazione().getValue().getValue()+"] non ammesso per il tipoComunicazione");
 				filter.setTipoComunicazione(tipoComunicazioneType);
 			}
 
