@@ -87,7 +87,7 @@ public class RiceviComunicazioneSdI {
 				break;
 			case MT:  // non gestita
 				break;
-			case NE: nuovoStatoLotto = StatoElaborazioneType.RICEVUTO_ESITO_CEDENTE_PRESTATORE;
+			case NE: nuovoStatoLotto = StatoElaborazioneType.RICEVUTO_ESITO_CEDENTE_PRESTATORE_ACCETTAZIONE; // TODO Bussu!
 				break;
 			case NS: nuovoStatoLotto = StatoElaborazioneType.RICEVUTO_SCARTO_SDI;
 				break;

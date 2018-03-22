@@ -386,6 +386,23 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 					throw new Exception("Valore ["+search.getTipoComunicazione().getValue().getValue()+"] non ammesso per il tipoComunicazione");
 				filter.setTipoComunicazione(tipoComunicazioneType);
 			}
+			
+			// Decorrenza Termini
+			if(search.getNotificaDecorrenzaTermini().getValue() != null &&
+					!StringUtils.isEmpty(search.getNotificaDecorrenzaTermini().getValue().getValue()) && !search.getNotificaDecorrenzaTermini().getValue().getValue().equals("*")){
+				if(search.getNotificaDecorrenzaTermini().getValue().getValue().equals("Y")){
+//					filter.setDecorrenzaTermini(true); // TODO Bussu
+				} else {
+//					filter.setDecorrenzaTermini(false); // TODO Bussu
+				}
+			}
+			
+			if(search.getConservazione().getValue() != null) {
+				boolean conseravazione = (search.getConservazione().getValue() ? true : false);
+				if(conseravazione) {
+					// 	TODO Bussu ricevi sempre true o false
+				}
+			}
 
 		}catch(Exception e){
 			FatturaElettronicaAttivaService.log.error("Si e' verificato un errore durante la conversione del filtro di ricerca: " + e.getMessage(), e);

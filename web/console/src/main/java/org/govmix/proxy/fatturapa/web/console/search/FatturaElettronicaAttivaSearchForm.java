@@ -35,6 +35,7 @@ import org.openspcoop2.generic_project.web.form.SearchForm;
 import org.openspcoop2.generic_project.web.impl.jsf1.form.BaseSearchForm;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
+import org.openspcoop2.generic_project.web.input.BooleanCheckBox;
 import org.openspcoop2.generic_project.web.input.DateTime;
 import org.openspcoop2.generic_project.web.input.SelectList;
 import org.openspcoop2.generic_project.web.input.Text;
@@ -61,6 +62,8 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 	private Text identificativoLotto = null;
 	private Text identificativoProtocollo = null;
 	private SelectList<SelectItem> statoElaborazione = null;
+	private SelectList<SelectItem> notificaDecorrenzaTermini = null;
+	private BooleanCheckBox conservazione = null;
 
 	public FatturaElettronicaAttivaSearchForm()throws Exception{
 		this.init();
@@ -118,6 +121,10 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		
 		this.tipoComunicazione = factory.getInputFieldFactory().createSelectList("tipoComunicazione","fattura.search.tipoComunicazione",null,false);
 		
+		this.notificaDecorrenzaTermini = factory.getInputFieldFactory().createSelectList( "notificaDecorrenzaTermini","fattura.search.notificaDT",null,false);
+		
+		this.conservazione = factory.getInputFieldFactory().createBooleanCheckBox("consSearch","fattura.search.conservazione",null,false);
+		
 		
 		this.setField(this.cessionarioCommittente);
 		this.setField(this.dipartimento);
@@ -130,8 +137,9 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		this.setField(this.identificativoLotto);
 		this.setField(this.identificativoProtocollo); 
 		this.setField(this.statoElaborazione); 
-
+		this.setField(this.notificaDecorrenzaTermini); 
 		this.setField(this.tipoComunicazione); 
+		this.setField(this.conservazione);
 		
 		this.reset();
 	}
@@ -157,11 +165,11 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		this._setPeriodo();
 		this.tipoDocumento.reset();
 		this.tipoComunicazione.reset();
-		
+		this.conservazione.reset();
 		this.identificativoLotto.reset();
 		this.dataEsatta.reset(); 
 		this.numero.reset();
-		
+		this.notificaDecorrenzaTermini.reset();
 		this.statoElaborazione.reset();
 		this.identificativoProtocollo.reset();
 
@@ -413,5 +421,20 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		this.tipoComunicazione = tipoComunicazione;
 	}	
 	
+	public SelectList<SelectItem> getNotificaDecorrenzaTermini() {
+		return this.notificaDecorrenzaTermini;
+	}
+
+	public void setNotificaDecorrenzaTermini(
+			SelectList<SelectItem> notificaDecorrenzaTermini) {
+		this.notificaDecorrenzaTermini = notificaDecorrenzaTermini;
+	}
 	
+	public BooleanCheckBox getConservazione() {
+		return conservazione;
+	}
+
+	public void setConservazione(BooleanCheckBox conservazione) {
+		this.conservazione = conservazione;
+	}
 }

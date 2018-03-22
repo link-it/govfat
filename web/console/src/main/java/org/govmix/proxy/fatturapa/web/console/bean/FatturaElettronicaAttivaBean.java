@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
-import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
@@ -64,7 +63,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 	private DateTime dataInvio = null;
 	private OutputNumber importo = null; 
 	private OutputNumber importoRiepilogo = null; 
-	private Button notificaEC = null;
+	private Image esitoElaborazione = null;
 	private Image notificaDT = null;
 	private Button xml = null;
 	private Button pdf = null;
@@ -97,7 +96,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 	private Text formatoTrasmissione = null;
 	private DateTime dataProssimaConsegna = null;
 	private Text dataScadenzaAssente = null;
-
+	
 	// Informazioni necessarie per la visualizzazione del dettaglio
 	// Metadata Allegati
 	private AllegatoFatturaBean metadataAllegato = new AllegatoFatturaBean();
@@ -145,7 +144,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.importoRiepilogo.setConverterType(Costanti.CONVERT_TYPE_CURRENCY);
 		this.importoRiepilogo.setCurrencySymbol(Costanti.CURRENCY_SYMBOL_EURO);
 
-		this.notificaEC = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("notificaEC","fattura.notificaEC");
+		this.esitoElaborazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createImage("esitoElaborazione","fattura.esitoElaborazione");
 		this.notificaDT = this.getWebGenericProjectFactory().getOutputFieldFactory().createImage("notificaDT","fattura.notificaDT");
 
 		this.xml = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("xml","commons.label.xml",null,org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_XML,"commons.label.xml.iconTitle","commons.label.xml.iconTitle");
@@ -189,7 +188,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.setField(this.dataInvio);
 		this.setField(this.importo);
 		this.setField(this.importoRiepilogo);
-		this.setField(this.notificaEC);
+		this.setField(this.esitoElaborazione);
 		this.setField(this.notificaDT);
 		this.setField(this.xml);
 		this.setField(this.pdf);
@@ -332,69 +331,6 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 			this.contenutoFattura.addField(this.numero);
 		}
 
-		//valore dell'icona notifica ec
-		//Non Esitato
-		if(this.dto.getEsito()== null){
-			this.notificaEC.setImage("/images/fatturapa/icons/plus-grey.png");
-			this.notificaEC.setTitle(("fattura.notificaEC.iconTitle.nonPresente"));
-			this.notificaEC.setAlt("fattura.notificaEC.iconTitle.nonPresente");
-			if(this.dto.getIdDecorrenzaTermini() == null)
-				this.notificaEC.setHref("linkToDownload");
-			else 
-				this.notificaEC.setHref(null);
-		}else {
-			// In elaborazione accettata
-			if(this.dto.getEsito().equals(EsitoType.IN_ELABORAZIONE_ACCETTATO)){
-				this.notificaEC.setImage("/images/fatturapa/icons/accept_circle-yellow.png");
-				this.notificaEC.setTitle( ("fattura.notificaEC.iconTitle.inElaborazione.accettato"));
-				this.notificaEC.setAlt("fattura.notificaEC.iconTitle.inElaborazione.accettato" );
-				this.notificaEC.setHref(null);
-				//In elaborazione rifiutata
-			}else if(this.dto.getEsito().equals(EsitoType.IN_ELABORAZIONE_RIFIUTATO)){
-				this.notificaEC.setImage("/images/fatturapa/icons/no_accept-yellow.png");
-				this.notificaEC.setTitle( ("fattura.notificaEC.iconTitle.inElaborazione.rifiutato"));
-				this.notificaEC.setAlt( "fattura.notificaEC.iconTitle.inElaborazione.rifiutato");
-				this.notificaEC.setHref(null);
-				//Accettato
-			}	
-			else if(this.dto.getEsito().equals(EsitoType.INVIATA_ACCETTATO)){
-				this.notificaEC.setImage("/images/fatturapa/icons/accept_circle-green.png");
-				this.notificaEC.setTitle( ("fattura.notificaEC.iconTitle.inviata.accettato"));
-				this.notificaEC.setAlt("fattura.notificaEC.iconTitle.inviata.accettato" );
-				this.notificaEC.setHref(null);
-			}else if(this.dto.getEsito().equals(EsitoType.INVIATA_RIFIUTATO)){
-				this.notificaEC.setImage("/images/fatturapa/icons/no_accept-green.png");
-				this.notificaEC.setTitle( ("fattura.notificaEC.iconTitle.inviata.rifiutato"));
-				this.notificaEC.setAlt("fattura.notificaEC.iconTitle.inviata.rifiutato" );
-				this.notificaEC.setHref(null);
-				//Accettato
-			}	
-			else if(this.dto.getEsito().equals(EsitoType.SCARTATA_ACCETTATO)){
-				this.notificaEC.setImage("/images/fatturapa/icons/accept_circle-red.png");
-				this.notificaEC.setTitle( ("fattura.notificaEC.iconTitle.scartata.accettato"));
-				this.notificaEC.setAlt( "fattura.notificaEC.iconTitle.scartata.accettato");
-				this.notificaEC.setHref(null);
-			}else {
-				//Rifiutato
-				this.notificaEC.setImage("/images/fatturapa/icons/no_accept-red.png");
-				this.notificaEC.setTitle( ("fattura.notificaEC.iconTitle.scartata.rifiutato"));
-				this.notificaEC.setAlt( "fattura.notificaEC.iconTitle.scartata.rifiutato");
-				this.notificaEC.setHref(null);
-			}
-		}
-
-		if(this.dto.getIdDecorrenzaTermini() != null){
-			this.notificaDT.setRendered(true); 
-			this.notificaDT.setImage("/images/fatturapa/icons/accept-green.png");
-			this.notificaDT.setTitle( ("fattura.notificaDT.iconTitle.presente"));
-			this.notificaDT.setAlt("fattura.notificaDT.iconTitle.presente" );
-		} else {
-			this.notificaDT.setRendered(false); 
-			this.notificaDT.setImage("/images/fatturapa/icons/no_accept-red.png");
-			this.notificaDT.setTitle( ("fattura.notificaDT.iconTitle.nonPresente"));
-			this.notificaDT.setAlt("fattura.notificaDT.iconTitle.nonPresente" );
-		}
-
 		this.prepareUrls();
 
 		this.cedentePrestatoreCF.setValue(this.getDTO().getCedentePrestatoreCodiceFiscale());
@@ -476,7 +412,8 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 			case RICEVUTA_DAL_DESTINATARIO:
 			case IMPOSSIBILITA_DI_RECAPITO:
 			case MANCATA_CONSEGNA:
-			case RICEVUTO_ESITO_CEDENTE_PRESTATORE:
+			case RICEVUTO_ESITO_CEDENTE_PRESTATORE_ACCETTAZIONE:
+			case RICEVUTO_ESITO_CEDENTE_PRESTATORE_RIFIUTO:
 			case RICEVUTO_SCARTO_SDI:
 			case RICEVUTA_DECORRENZA_TERMINI:
 				valoreProtocollo = this.getDTO().getProtocollo();
@@ -499,7 +436,76 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.posizione.setValue(valorePosizione);
 		this.identificativoSdi.setValue(valoreIdentificavoSDI);
 		this.protocollo.setValue(valoreProtocollo);
-		//		}
+		
+		// default decorrenza termini (vuota)
+		this.notificaDT.setRendered(false); 
+		this.notificaDT.setImage("/images/fatturapa/icons/no_accept-red.png");
+		this.notificaDT.setTitle( ("fattura.notificaDT.iconTitle.nonPresente"));
+		this.notificaDT.setAlt("fattura.notificaDT.iconTitle.nonPresente" );
+		
+		
+		// valore icona esitoElaborazione
+		if(_statoElaborazione == null){
+			this.esitoElaborazione.setImage("/images/fatturapa/icons/plus-grey.png");
+			this.esitoElaborazione.setTitle(("fattura.notificaEC.iconTitle.nonPresente"));
+			this.esitoElaborazione.setAlt("fattura.notificaEC.iconTitle.nonPresente");
+			this.esitoElaborazione.setRendered(false);
+		}else {
+			switch (_statoElaborazione) {
+			case PRESA_IN_CARICO:
+			case PROTOCOLLATA:
+			case IN_CORSO_DI_FIRMA:
+			case IN_CORSO_DI_PROTOCOLLAZIONE:
+			case SOLO_CONSERVAZIONE:
+			case RICEVUTA_DALLO_SDI:
+			case RICEVUTA_DAL_DESTINATARIO:
+				this.esitoElaborazione.setImage("/images/fatturapa/icons/plus-grey.png");
+				this.esitoElaborazione.setTitle("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				this.esitoElaborazione.setAlt("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				break;
+			case ERRORE_DI_SPEDIZIONE:
+			case ERRORE_DI_FIRMA:
+			case ERRORE_DI_PROTOCOLLO:
+				this.esitoElaborazione.setImage("/images/fatturapa/icons/accept_circle-yellow.png");
+				this.esitoElaborazione.setTitle("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				this.esitoElaborazione.setAlt("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				break;
+			case RICEVUTO_ESITO_CEDENTE_PRESTATORE_ACCETTAZIONE:
+				this.esitoElaborazione.setImage("/images/fatturapa/icons/accept_circle-green.png");
+				this.esitoElaborazione.setTitle("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				this.esitoElaborazione.setAlt("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				break;
+			case RICEVUTO_ESITO_CEDENTE_PRESTATORE_RIFIUTO:
+				this.esitoElaborazione.setImage("/images/fatturapa/icons/accept_circle-red.png");
+				this.esitoElaborazione.setTitle("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				this.esitoElaborazione.setAlt("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				break;
+				
+			case IMPOSSIBILITA_DI_RECAPITO:
+			case MANCATA_CONSEGNA:
+				this.esitoElaborazione.setImage("/images/fatturapa/icons/no_accept-green.png");
+				this.esitoElaborazione.setTitle("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				this.esitoElaborazione.setAlt("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				break;
+				
+			case RICEVUTO_SCARTO_SDI:
+				this.esitoElaborazione.setImage("/images/fatturapa/icons/no_accept-red.png");
+				this.esitoElaborazione.setTitle("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				this.esitoElaborazione.setAlt("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				break;
+			case RICEVUTA_DECORRENZA_TERMINI:
+				this.esitoElaborazione.setImage("/images/fatturapa/icons/accept_circle-green.png");
+				this.esitoElaborazione.setTitle("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				this.esitoElaborazione.setAlt("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				
+				this.notificaDT.setRendered(true); 
+				this.notificaDT.setImage("/images/fatturapa/icons/accept-green.png");
+				this.notificaDT.setTitle( ("fattura.notificaDT.iconTitle.presente"));
+				this.notificaDT.setAlt("fattura.notificaDT.iconTitle.presente" );
+				break;
+
+			}
+		}
 	}
 
 	public Text getCedentePrestatore() {
@@ -534,12 +540,12 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.dipartimento = dipartimento;
 	}
 
-	public Button getNotificaEC() {
-		return this.notificaEC;
+	public Image getEsitoElaborazione() {
+		return this.esitoElaborazione;
 	}
 
-	public void setNotificaEC(Button notificaEC) {
-		this.notificaEC = notificaEC;
+	public void setEsitoElaborazione(Image esitoElaborazione) {
+		this.esitoElaborazione = esitoElaborazione;
 	}
 
 	public Image getNotificaDT() {
