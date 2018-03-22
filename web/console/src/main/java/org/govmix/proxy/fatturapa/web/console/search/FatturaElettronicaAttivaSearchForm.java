@@ -120,6 +120,7 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		this.statoElaborazione = factory.getInputFieldFactory().createSelectList("statoElaborazione","fattura.search.statoElaborazione",null,false);
 		
 		this.tipoComunicazione = factory.getInputFieldFactory().createSelectList("tipoComunicazione","fattura.search.tipoComunicazione",null,false);
+		this.tipoComunicazione.setRendered(false); 
 		
 		this.notificaDecorrenzaTermini = factory.getInputFieldFactory().createSelectList( "notificaDecorrenzaTermini","fattura.search.notificaDT",null,false);
 		
