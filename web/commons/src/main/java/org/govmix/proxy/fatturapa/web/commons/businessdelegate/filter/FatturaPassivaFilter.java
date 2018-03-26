@@ -24,7 +24,6 @@ public class FatturaPassivaFilter extends FatturaFilter {
 	private EsitoType esito;
 	private boolean esitoNull;
 	
-	private Boolean decorrenzaTermini;
 	private Boolean inScadenza;
 	
 	public FatturaPassivaFilter(IExpressionConstructor expressionConstructor) {
@@ -135,14 +134,6 @@ public class FatturaPassivaFilter extends FatturaFilter {
 
 	public void setEsitoNull(boolean esitoNull) {
 		this.esitoNull = esitoNull;
-	}
-
-	public Boolean getDecorrenzaTermini() {
-		return decorrenzaTermini;
-	}
-
-	public void setDecorrenzaTermini(Boolean decorrenzaTermini) {
-		this.decorrenzaTermini = decorrenzaTermini;
 	}
 
 	public Boolean getInScadenza() {

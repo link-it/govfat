@@ -55,7 +55,8 @@ public class FatturaFilter extends AbstractFilter {
 	private String tipoDocumento;
 	
 	private String protocollo;
-	
+	protected Boolean decorrenzaTermini;
+
 	public FatturaFilter(IExpressionConstructor expressionConstructor, Boolean fatturazioneAttiva) {
 		super(expressionConstructor);
 		this.fatturazioneAttiva = fatturazioneAttiva;
@@ -333,6 +334,14 @@ public class FatturaFilter extends AbstractFilter {
 
 	public void setCcDenominazioneList(List<String> ccDenominazioneList) {
 		this.ccDenominazioneList = ccDenominazioneList;
+	}
+
+	public Boolean getDecorrenzaTermini() {
+		return decorrenzaTermini;
+	}
+
+	public void setDecorrenzaTermini(Boolean decorrenzaTermini) {
+		this.decorrenzaTermini = decorrenzaTermini;
 	}
 
 }
