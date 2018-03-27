@@ -21,6 +21,15 @@ public class FatturaAttivaFilter extends FatturaFilter {
 	private TipoComunicazioneType tipoComunicazione;
 	private Date dataUltimaElaborazioneMin;
 	private Date dataUltimaElaborazioneMax;
+	private Boolean soloConservazione;
+
+	public Boolean getSoloConservazione() {
+		return soloConservazione;
+	}
+
+	public void setSoloConservazione(Boolean soloConservazione) {
+		this.soloConservazione = soloConservazione;
+	}
 
 	public FatturaAttivaFilter(IExpressionConstructor expressionConstructor) {
 		super(expressionConstructor, true);
@@ -36,7 +45,7 @@ public class FatturaAttivaFilter extends FatturaFilter {
 			}
 			
 			if(this.tipoComunicazione != null) {
-				expression.ilike(FatturaElettronica.model().LOTTO_FATTURE.TIPI_COMUNICAZIONE, "#" + this.tipoComunicazione.name() + "#", LikeMode.ANYWHERE);
+				expression.ilike(FatturaElettronica.model().LOTTO_FATTURE.TIPI_COMUNICAZIONE,  "#" + this.tipoComunicazione.name() + "#", LikeMode.ANYWHERE);
 			}
 			
 			if(this.dataUltimaElaborazioneMin != null) {
@@ -51,6 +60,20 @@ public class FatturaAttivaFilter extends FatturaFilter {
 				exp2.isNull(FatturaElettronica.model().LOTTO_FATTURE.DATA_ULTIMA_ELABORAZIONE).or().lessThan(FatturaElettronica.model().LOTTO_FATTURE.DATA_ULTIMA_ELABORAZIONE, this.dataUltimaElaborazioneMax);
 				expression.and(exp2);
 			}
+			
+			if(this.decorrenzaTermini != null) {
+				if(this.decorrenzaTermini)
+					expression.equals(FatturaElettronica.model().LOTTO_FATTURE.STATO_ELABORAZIONE_IN_USCITA, StatoElaborazioneType.RICEVUTA_DECORRENZA_TERMINI.toString());
+				else
+					expression.notEquals(FatturaElettronica.model().LOTTO_FATTURE.STATO_ELABORAZIONE_IN_USCITA, StatoElaborazioneType.RICEVUTA_DECORRENZA_TERMINI.toString());
+			}
+			
+			if(this.soloConservazione != null) {
+				if(this.soloConservazione)
+					expression.equals(FatturaElettronica.model().LOTTO_FATTURE.STATO_ELABORAZIONE_IN_USCITA, StatoElaborazioneType.SOLO_CONSERVAZIONE.toString());
+				else
+					expression.notEquals(FatturaElettronica.model().LOTTO_FATTURE.STATO_ELABORAZIONE_IN_USCITA, StatoElaborazioneType.SOLO_CONSERVAZIONE.toString());
+			}			
 			
 			return expression;
 		} catch (NotImplementedException e) {

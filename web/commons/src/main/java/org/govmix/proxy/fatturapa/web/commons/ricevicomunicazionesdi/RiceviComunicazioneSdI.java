@@ -30,6 +30,7 @@ import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.TracciaSdIBD;
+import org.govmix.proxy.fatturapa.web.commons.converter.notificaesitocommittente.NotificaEsitoConverter;
 
 public class RiceviComunicazioneSdI {
 
@@ -41,7 +42,6 @@ public class RiceviComunicazioneSdI {
 		this.log = log;
 		this.tracciaBD = new TracciaSdIBD(this.log);
 		this.lottoBD = new LottoBD(this.log);
-
 	}
 
 	public RiceviComunicazioneSdI(Logger log, Connection connection, boolean autocommit) throws Exception {
@@ -51,7 +51,7 @@ public class RiceviComunicazioneSdI {
 	}
 
 	public static TipoComunicazioneType getTipoComunicazione(String tipo) throws Exception {
-		
+
 		if("RicevutaConsegna".equals(tipo)) {
 			return TipoComunicazioneType.RC;
 		} else if("NotificaMancataConsegna".equals(tipo)) {
@@ -72,42 +72,58 @@ public class RiceviComunicazioneSdI {
 	public void ricevi(TracciaSDI tracciaSdI) throws Exception {
 		this.tracciaBD.insert(tracciaSdI);
 		StatoElaborazioneType nuovoStatoLotto = null;
-		switch(tracciaSdI.getTipoComunicazione()) {
-			case AT: nuovoStatoLotto = StatoElaborazioneType.IMPOSSIBILITA_DI_RECAPITO;
-				break;
-			case DT: nuovoStatoLotto = StatoElaborazioneType.RICEVUTA_DECORRENZA_TERMINI;
-				break;
-			case EC: // solo fatturazione passiva, non gestita
-				break;
-			case FAT_IN: // solo fatturazione passiva, non gestita
-				break;
-			case FAT_OUT: // solo fatturazione passiva, non gestita
-				break;
-			case MC: nuovoStatoLotto = StatoElaborazioneType.MANCATA_CONSEGNA;
-				break;
-			case MT:  // non gestita
-				break;
-			case NE: nuovoStatoLotto = StatoElaborazioneType.RICEVUTO_ESITO_CEDENTE_PRESTATORE_ACCETTAZIONE; // TODO Bussu!
-				break;
-			case NS: nuovoStatoLotto = StatoElaborazioneType.RICEVUTO_SCARTO_SDI;
-				break;
-			case RC: nuovoStatoLotto = StatoElaborazioneType.RICEVUTA_DAL_DESTINATARIO;
-				break;
-			case SE:  // solo fatturazione passiva, non gestita
-				break;
-			default:
-				break;
-		}
+		NotificaEsitoConverter notificaEsitoConverter = null;
 		
+		switch(tracciaSdI.getTipoComunicazione()) {
+		case AT: nuovoStatoLotto = StatoElaborazioneType.IMPOSSIBILITA_DI_RECAPITO;
+		break;
+		case DT: nuovoStatoLotto = StatoElaborazioneType.RICEVUTA_DECORRENZA_TERMINI;
+		break;
+		case EC: // solo fatturazione passiva, non gestita
+			break;
+		case FAT_IN: // solo fatturazione passiva, non gestita
+			break;
+		case FAT_OUT: // solo fatturazione passiva, non gestita
+			break;
+		case MC: nuovoStatoLotto = StatoElaborazioneType.MANCATA_CONSEGNA;
+		break;
+		case MT:  // non gestita
+			break;
+		case NE: notificaEsitoConverter = new NotificaEsitoConverter(tracciaSdI.getRawData()); nuovoStatoLotto = notificaEsitoConverter.getNuovoStatoLotto();
+		break;
+		case NS: nuovoStatoLotto = StatoElaborazioneType.RICEVUTO_SCARTO_SDI;
+		break;
+		case RC: nuovoStatoLotto = StatoElaborazioneType.RICEVUTA_DAL_DESTINATARIO;
+		break;
+		case SE:  // solo fatturazione passiva, non gestita
+			break;
+		default:
+			break;
+		}
+
 		if(nuovoStatoLotto != null) {
 			IdLotto idLotto = new IdLotto();
 			idLotto.setIdentificativoSdi(tracciaSdI.getIdentificativoSdi());
 			LottoFatture lotto = this.lottoBD.get(idLotto);
-			String tipiComunicazione =  "#" + tracciaSdI.getTipoComunicazione().name() + "#";
+			String tipiComunicazione =  toTipiComunicazione(tracciaSdI, notificaEsitoConverter);
 			if(lotto.getTipiComunicazione() != null && !lotto.getTipiComunicazione().contains(tipiComunicazione)) {
 				tipiComunicazione += "." + lotto.getTipiComunicazione();  
 			}
 			this.lottoBD.updateStatoElaborazioneInUscitaOK(idLotto, nuovoStatoLotto, tipiComunicazione);
 		}
 	}
+
+	public static String toTipiComunicazione(TracciaSDI tracciaSdI, NotificaEsitoConverter notificaEsitoConverter) throws Exception {
+
+		String tipo = null;
+		if(TipoComunicazioneType.NE.equals(tracciaSdI.getTipoComunicazione())) {
+			tipo = notificaEsitoConverter.getTipoComunicazione();
+		} else {
+			tipo = tracciaSdI.getTipoComunicazione().name();
+		}
+		
+		return "#" + tipo + "#";
+
+	}
+
 }

@@ -106,7 +106,7 @@ public class ProtocollazioneNotifiche implements IWorkFlow<TracciaSDI> {
 			
 			esitoPositivo = httpConn.getResponseCode() < 299;
 			
-					response = IOUtils.readStringFromStream(esitoPositivo ? httpConn.getInputStream() : httpConn.getErrorStream());
+			response = IOUtils.readStringFromStream(esitoPositivo ? httpConn.getInputStream() : httpConn.getErrorStream());
 		} catch(Exception e) {
 			this.log.error("Errore durante la protocollazione della traccia: " + e.getMessage(), e);
 		}

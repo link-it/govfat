@@ -143,6 +143,70 @@ public class FatturaDeserializerUtils {
 		}
 	}
 	
+	public static String getCapDestinatarioFromFattura(FatturaElettronica fattura) throws Exception {
+		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+			FatturaV10Converter converter = new FatturaV10Converter(fattura.getXml(), null);
+			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getCap();
+		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+			FatturaV11Converter converter = new FatturaV11Converter(fattura.getXml(), null);
+			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getCap();
+		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.getValue().equals(fattura.getFormatoTrasmissione().getValue()) || 
+				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+			FPA12Converter converter = new FPA12Converter(fattura.getXml(), null);
+			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getCap();
+		} else {
+			throw new Exception("Formato FatturaPA ["+fattura.getFormatoTrasmissione()+"] non riconosciuto");
+		}
+	}
+	
+	public static String getComuneDestinatarioFromFattura(FatturaElettronica fattura) throws Exception {
+		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+			FatturaV10Converter converter = new FatturaV10Converter(fattura.getXml(), null);
+			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getComune();
+		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+			FatturaV11Converter converter = new FatturaV11Converter(fattura.getXml(), null);
+			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getComune();
+		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.getValue().equals(fattura.getFormatoTrasmissione().getValue()) || 
+				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+			FPA12Converter converter = new FPA12Converter(fattura.getXml(), null);
+			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getComune();
+		} else {
+			throw new Exception("Formato FatturaPA ["+fattura.getFormatoTrasmissione()+"] non riconosciuto");
+		}
+	}
+	
+	public static String getProvinciaFromFattura(FatturaElettronica fattura) throws Exception {
+		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+			FatturaV10Converter converter = new FatturaV10Converter(fattura.getXml(), null);
+			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getProvincia();
+		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+			FatturaV11Converter converter = new FatturaV11Converter(fattura.getXml(), null);
+			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getProvincia();
+		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.getValue().equals(fattura.getFormatoTrasmissione().getValue()) || 
+				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+			FPA12Converter converter = new FPA12Converter(fattura.getXml(), null);
+			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getProvincia();
+		} else {
+			throw new Exception("Formato FatturaPA ["+fattura.getFormatoTrasmissione()+"] non riconosciuto");
+		}
+	}
+	
+	public static String getStatoFromFattura(FatturaElettronica fattura) throws Exception {
+		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+			FatturaV10Converter converter = new FatturaV10Converter(fattura.getXml(), null);
+			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getNazione();
+		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+			FatturaV11Converter converter = new FatturaV11Converter(fattura.getXml(), null);
+			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getNazione();
+		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.getValue().equals(fattura.getFormatoTrasmissione().getValue()) || 
+				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+			FPA12Converter converter = new FPA12Converter(fattura.getXml(), null);
+			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getNazione();
+		} else {
+			throw new Exception("Formato FatturaPA ["+fattura.getFormatoTrasmissione()+"] non riconosciuto");
+		}
+	}
+	
 	public static String getPartitaIVADestinatarioFromFattura(FatturaElettronica fattura) throws Exception {
 		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
 			FatturaV10Converter converter = new FatturaV10Converter(fattura.getXml(), null);

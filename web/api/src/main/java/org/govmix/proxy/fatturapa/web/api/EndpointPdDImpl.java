@@ -20,18 +20,12 @@
  */
 package org.govmix.proxy.fatturapa.web.api;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.util.Date;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 import org.apache.cxf.helpers.IOUtils;
 import org.apache.log4j.Logger;
@@ -49,22 +43,17 @@ import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaUtils;
+import org.govmix.proxy.fatturapa.web.commons.converter.notificaesitocommittente.NotificaEsitoConverter;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.riceviNotificaDT.RiceviNotifica;
 import org.govmix.proxy.fatturapa.web.commons.ricevicomunicazionesdi.RiceviComunicazioneSdI;
 import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 
-import it.gov.fatturapa.sdi.messaggi.v1_0.NotificaEsitoCommittenteType;
-import it.gov.fatturapa.sdi.messaggi.v1_0.NotificaEsitoType;
-
 public class EndpointPdDImpl implements EndpointPdD {
 
 	private RiceviNotifica riceviNotifica;
 	private LottoBD lottoBD;
-//	private static final String HEADER_IDENTIFICATIVO_SDI = "X-SDI-IdentificativoSdI";
-//	private RiceviComunicazioneSdI riceviComunicazioneSdi;
-	private Unmarshaller unmarshaller;
 
 	private Logger log;
 
@@ -74,11 +63,6 @@ public class EndpointPdDImpl implements EndpointPdD {
 		this.riceviNotifica = new RiceviNotifica(this.log);
 		this.lottoBD = new LottoBD(log);
 		this.lottoBD.setValidate(WebApiProperties.getInstance().isValidazioneDAOAbilitata());
-		
-		this.log.info("Inizializzazione unmarshaller...");
-		JAXBContext jaxbContext = JAXBContext.newInstance(NotificaEsitoCommittenteType.class.getPackage().getName());
-		this.unmarshaller = jaxbContext.createUnmarshaller();
-		this.log.info("Inizializzazione unmarshaller completata");
 		
 		this.log.info("Inizializzazione endpoint PdD completata");
 		
@@ -242,20 +226,6 @@ public class EndpointPdDImpl implements EndpointPdD {
 		return Response.ok().build();
 	}
 	
-	
-	private NotificaEsitoType toNotificaEsitoCommittenteType(byte[] input) throws JAXBException, IOException {
-		ByteArrayInputStream bais = null;
-		try {
-			bais = new ByteArrayInputStream(input);
-			JAXBElement<NotificaEsitoType> unmarshal = (JAXBElement<NotificaEsitoType>) this.unmarshaller.unmarshal(bais);
-			return unmarshal.getValue();
-		} finally {
-			if(bais != null) {
-				bais.close();
-			}
-		}
-	}
-	
 	@Override
 	public Response riceviComunicazioniSdI(Integer X_SDI_IdentificativoSDI, String azione, String X_SDI_NomeFile, String contentType, HttpHeaders headers, InputStream comunicazioneStream) {
 		this.log.info("Invoke riceviComunicazioniSdi");
@@ -279,11 +249,7 @@ public class EndpointPdDImpl implements EndpointPdD {
 			// la posizione e' irrilevante, tranne per le notifiche di esito, che possono essere mandate per fattura e non necessariamente per lotto
 			Integer posizione = null;
 			if(TipoComunicazioneType.NE.equals(tipoComunicazione)) {
-				
-				NotificaEsitoType nec = this.toNotificaEsitoCommittenteType(rawData);
-				
-				if(nec != null && nec.getEsitoCommittente() != null && nec.getEsitoCommittente().getRiferimentoFattura() != null && nec.getEsitoCommittente().getRiferimentoFattura().getPosizioneFattura()!= null)
-					posizione = nec.getEsitoCommittente().getRiferimentoFattura().getPosizioneFattura();
+				posizione = new NotificaEsitoConverter(rawData).getPosizione();
 			}
 			
 			FatturaFilter filter = fatturaBD.newFilter();
