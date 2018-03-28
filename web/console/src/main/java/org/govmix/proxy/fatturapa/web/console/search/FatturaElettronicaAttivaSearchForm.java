@@ -124,7 +124,7 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		
 		this.notificaDecorrenzaTermini = factory.getInputFieldFactory().createSelectList( "notificaDecorrenzaTermini","fattura.search.notificaDT",null,false);
 		
-		this.conservazione = factory.getInputFieldFactory().createBooleanCheckBox("consSearch","fattura.search.conservazione",null,false);
+		this.conservazione = factory.getInputFieldFactory().createBooleanCheckBox("consSearch","fattura.search.conservazione",false,false);
 		
 		
 		this.setField(this.cessionarioCommittente);
