@@ -429,7 +429,8 @@
 			<xsd:enumeration value="RICEVUTA_DAL_DESTINATARIO" />
 			<xsd:enumeration value="MANCATA_CONSEGNA" />
 			<xsd:enumeration value="IMPOSSIBILITA_DI_RECAPITO" />
-			<xsd:enumeration value="RICEVUTO_ESITO_CEDENTE_PRESTATORE" />
+			<xsd:enumeration value="RICEVUTO_ESITO_CEDENTE_PRESTATORE_ACCETTAZIONE" />
+			<xsd:enumeration value="RICEVUTO_ESITO_CEDENTE_PRESTATORE_RIFIUTO" />
 			<xsd:enumeration value="RICEVUTA_DECORRENZA_TERMINI" />
 			<xsd:enumeration value="SOLO_CONSERVAZIONE" />
 		</xsd:restriction>

@@ -74,9 +74,10 @@ public class SpedizioneFattureAttive implements IWorkFlow<LottoFatture> {
 			tracciaSdi.setNomeFile(nomeFile);
 			tracciaSdi.setRawData(lotto.getXml());
 			
-			tracciaSdi.setStatoProtocollazione(StatoProtocollazioneType.PROTOCOLLATA);
+			tracciaSdi.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
 			tracciaSdi.setTentativiProtocollazione(0);
-			
+			tracciaSdi.setDataProssimaProtocollazione(new Date());
+
 			tracciaSdi.setIdEgov(esitoInvioFattura.getMetadato(CommonsProperties.getInstance(log).getIdEgovHeader()));
 	
 			this.riceviComunicazioneSdi.ricevi(tracciaSdi);

@@ -91,6 +91,9 @@ IFatturaElettronicaAttivaService>{
 
 	// Select List Statiche 
 
+	// Notifica Decorrenza Termini
+	private List<SelectItem> listaNotificaDT = null;
+	
 	// Filtro date
 	private List<SelectItem> listaPeriodoTemporale = null;
 
@@ -184,6 +187,7 @@ IFatturaElettronicaAttivaService>{
 		// Popolo le selectList Statiche
 		((SelectListImpl)this.search.getTipoDocumento()).setElencoSelectItems(this.getListaTipoDocumento());
 		((SelectListImpl)this.search.getTipoComunicazione()).setElencoSelectItems(this.getListaTipoComunicazione());
+		((SelectListImpl)this.search.getNotificaDecorrenzaTermini()).setElencoSelectItems(this.getListaNotificaDT());
 		((SelectListImpl)this.search.getDataInvioPeriodo()).setElencoSelectItems(this.getListaPeriodoTemporale());
 		((SelectListImpl)this.search.getDipartimento()).setElencoSelectItems(this.getDipartimenti());
 		((SelectListImpl)this.search.getStatoElaborazione()).setElencoSelectItems(this.getListaStatoElaborazione()); 
@@ -269,6 +273,18 @@ IFatturaElettronicaAttivaService>{
 	}
 
 	// Valori delle select List
+	
+	public List<SelectItem> getListaNotificaDT() {
+		if (this.listaNotificaDT == null) {
+			this.listaNotificaDT = new ArrayList<SelectItem>();
+
+			this.listaNotificaDT.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*",  ("commons.label.qualsiasi"))));
+			this.listaNotificaDT.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("Y",   ("commons.label.presente"))));
+			this.listaNotificaDT.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("N",   ("commons.label.nonPresente"))));
+		}
+
+		return this.listaNotificaDT;
+	}
 
 	public List<SelectItem> getListaPeriodoTemporale() {
 		if (this.listaPeriodoTemporale == null) {
@@ -310,17 +326,12 @@ IFatturaElettronicaAttivaService>{
 			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.ERRORE_DI_PROTOCOLLO.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.ERRORE_DI_PROTOCOLLO.getValue()))));
 			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.ERRORE_DI_SPEDIZIONE.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.ERRORE_DI_SPEDIZIONE.getValue()))));
 			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.IMPOSSIBILITA_DI_RECAPITO.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.IMPOSSIBILITA_DI_RECAPITO.getValue()))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.IN_CORSO_DI_FIRMA.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.IN_CORSO_DI_FIRMA.getValue()))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.IN_CORSO_DI_PROTOCOLLAZIONE.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.IN_CORSO_DI_PROTOCOLLAZIONE.getValue()))));
 			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.MANCATA_CONSEGNA.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.MANCATA_CONSEGNA.getValue()))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.PRESA_IN_CARICO.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.PRESA_IN_CARICO.getValue()))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.PROTOCOLLATA.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.PROTOCOLLATA.getValue()))));
 			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.RICEVUTA_DALLO_SDI.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.RICEVUTA_DALLO_SDI.getValue()))));
 			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.RICEVUTA_DAL_DESTINATARIO.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.RICEVUTA_DAL_DESTINATARIO.getValue()))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.RICEVUTA_DECORRENZA_TERMINI.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.RICEVUTA_DECORRENZA_TERMINI.getValue()))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.RICEVUTO_ESITO_CEDENTE_PRESTATORE.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.RICEVUTO_ESITO_CEDENTE_PRESTATORE.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.RICEVUTO_ESITO_CEDENTE_PRESTATORE_ACCETTAZIONE.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.RICEVUTO_ESITO_CEDENTE_PRESTATORE_ACCETTAZIONE.getValue()))));
+			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.RICEVUTO_ESITO_CEDENTE_PRESTATORE_RIFIUTO.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.RICEVUTO_ESITO_CEDENTE_PRESTATORE_RIFIUTO.getValue()))));
 			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.RICEVUTO_SCARTO_SDI.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.RICEVUTO_SCARTO_SDI.getValue()))));
-			this.listaStatoElaborazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.SOLO_CONSERVAZIONE.getValue(),  ("fattura.statoElaborazione."+StatoElaborazioneType.SOLO_CONSERVAZIONE.getValue()))));
 		}
 
 		return this.listaStatoElaborazione;

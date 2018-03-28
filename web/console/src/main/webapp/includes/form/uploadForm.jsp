@@ -1,3 +1,5 @@
+<%@page import="org.govmix.proxy.fatturapa.web.console.mbean.LoginMBean"%>
+<%@page import="java.util.Locale"%>
 <%@page import="org.govmix.proxy.fatturapa.web.console.util.Utils"%>
 <%@page import="org.govmix.proxy.fatturapa.web.console.servlet.FatturaElettronicaAttivaUploadServlet"%>
 <%@page import="org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager"%>
@@ -27,13 +29,16 @@ String tipiAccettati = ConsoleProperties.getInstance(log).getFatturaAttivaCarica
 int numeroMassimoFileAccettati = ConsoleProperties.getInstance(log).getFatturaAttivaCaricamentoMaxNumeroFile();
 String servletUrl = request.getContextPath() + FatturaElettronicaAttivaUploadServlet.FATTURA_ELETTRONICA_ATTIVA_UPLOAD_SERVLET_PATH;
 
-String addLabel = Utils.getInstance().getMessageFromResourceBundle("fileUpload.addControlLabel");
-String uploadLabel = Utils.getInstance().getMessageFromResourceBundle("fileUpload.uploadControlLabel");
-String cancelLabel = Utils.getInstance().getMessageFromResourceBundle("fileUpload.cancelEntryControlLabel");
-String deleteAllLabel = Utils.getInstance().getMessageFromResourceBundle("fileUpload.clearAllControlLabel");
-String deleteLabel = Utils.getInstance().getMessageFromResourceBundle("fileUpload.clearControlLabel");
-String erroreLabel = Utils.getInstance().getMessageFromResourceBundle("fileUpload.errorLabel");
-String processingLabel = Utils.getInstance().getMessageFromResourceBundle("fileUpload.processingLabel");
+LoginMBean lb = (LoginMBean) session.getAttribute("loginBean");
+Locale locale = lb.getCurrentLocal();
+
+String addLabel = Utils.getInstance().getMessageFromResourceBundle("fileUpload.addControlLabel",locale);
+String uploadLabel = Utils.getInstance().getMessageFromResourceBundle("fileUpload.uploadControlLabel",locale);
+String cancelLabel = Utils.getInstance().getMessageFromResourceBundle("fileUpload.cancelEntryControlLabel",locale);
+String deleteAllLabel = Utils.getInstance().getMessageFromResourceBundle("fileUpload.clearAllControlLabel",locale);
+String deleteLabel = Utils.getInstance().getMessageFromResourceBundle("fileUpload.clearControlLabel",locale);
+String erroreLabel = Utils.getInstance().getMessageFromResourceBundle("fileUpload.errorLabel",locale);
+String processingLabel = Utils.getInstance().getMessageFromResourceBundle("fileUpload.processingLabel",locale);
 %>
 
 </head>

@@ -152,6 +152,18 @@
 					</op2web:inlineProp>
 					
 					<op2web:formField field="#{fatturaElettronicaAttivaMBean.search.statoElaborazione}" />
+					
+					<op2web:formField field="#{fatturaElettronicaAttivaMBean.search.notificaDecorrenzaTermini}" />
+					
+					<div class="prop">
+						<label>
+							<h:outputText value="#{fatturaElettronicaAttivaMBean.search.conservazione.label}" />
+						</label>
+						<h:selectBooleanCheckbox id="input_#{fatturaElettronicaAttivaMBean.search.conservazione.name}"
+							styleClass="controlset" disabled="#{fatturaElettronicaAttivaMBean.search.conservazione.disabled}"
+							value="#{fatturaElettronicaAttivaMBean.search.conservazione.value}" >
+						</h:selectBooleanCheckbox>
+					</div>
 				</op2web:fieldset>
 					
 				<op2web:fieldset legend="#{msg['fattura.search.datiFattura']}" rendered="#{true}" collapsible="false" closed="false">
@@ -318,6 +330,31 @@
 				
 				<!-- Colonne mittente,destinatario,identificativoSDI, annonumero, data, dataricezione, importo -->
 				<op2web:tableColumns nomiColonne="#{'importo'}" />
+				
+				<!-- Esito Elaborazione (Icona) -->
+				<rich:column style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{itemMetadata.esitoElaborazione.label}" />
+					</f:facet>
+					 
+					<h:panelGroup>
+						<h:graphicImage value="#{item.esitoElaborazione.image}" width="16" height="16"	title="#{item.esitoElaborazione.title}"  alt="#{item.esitoElaborazione.alt}"
+								 rendered="#{item.esitoElaborazione.rendered == true}" />
+						<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{item.esitoElaborazione.rendered == false}" />
+					</h:panelGroup>
+				</rich:column>
+					
+				<!-- Notifica DT (Icona) -->
+				<rich:column style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{itemMetadata.notificaDT.label}" />
+					</f:facet>
+					 
+					<h:panelGroup>
+						<h:graphicImage value="#{item.notificaDT.image}" width="16" alt="#{item.notificaDT.alt}" height="16"	title="#{item.notificaDT.title}" rendered="#{item.notificaDT.rendered == true}" />
+						<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{item.notificaDT.rendered == false}" />
+					</h:panelGroup>
+				</rich:column>
 				
 				<!-- XML (Icona) -->
 				<rich:column style="text-align: center;">
