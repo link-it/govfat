@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -42,6 +41,9 @@ import java.util.List;
  * 			&lt;element name="codice" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="ente" type="{http://www.govmix.org/proxy/fatturapa/orm}id-ente" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="descrizione" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="fatturazioneAttiva" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1" default="false"/>
+ * 			&lt;element name="idProcedimento" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="firmaAutomatica" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1" default="false"/>
  * 			&lt;element name="accettazioneAutomatica" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1" default="false"/>
  * 			&lt;element name="modalitaPush" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1" default="true"/>
  * 			&lt;element name="registro" type="{http://www.govmix.org/proxy/fatturapa/orm}id-registro" minOccurs="0" maxOccurs="1"/>
@@ -64,6 +66,9 @@ import java.util.List;
   	"codice",
   	"ente",
   	"descrizione",
+  	"fatturazioneAttiva",
+  	"idProcedimento",
+  	"firmaAutomatica",
   	"accettazioneAutomatica",
   	"modalitaPush",
   	"registro",
@@ -114,6 +119,38 @@ public class Dipartimento extends org.openspcoop2.utils.beans.BaseBean implement
 
   public void setDescrizione(java.lang.String descrizione) {
     this.descrizione = descrizione;
+  }
+
+  public boolean isFatturazioneAttiva() {
+    return this.fatturazioneAttiva;
+  }
+
+  public boolean getFatturazioneAttiva() {
+    return this.fatturazioneAttiva;
+  }
+
+  public void setFatturazioneAttiva(boolean fatturazioneAttiva) {
+    this.fatturazioneAttiva = fatturazioneAttiva;
+  }
+
+  public java.lang.String getIdProcedimento() {
+    return this.idProcedimento;
+  }
+
+  public void setIdProcedimento(java.lang.String idProcedimento) {
+    this.idProcedimento = idProcedimento;
+  }
+
+  public boolean isFirmaAutomatica() {
+    return this.firmaAutomatica;
+  }
+
+  public boolean getFirmaAutomatica() {
+    return this.firmaAutomatica;
+  }
+
+  public void setFirmaAutomatica(boolean firmaAutomatica) {
+    this.firmaAutomatica = firmaAutomatica;
   }
 
   public boolean isAccettazioneAutomatica() {
@@ -209,6 +246,18 @@ public class Dipartimento extends org.openspcoop2.utils.beans.BaseBean implement
   @javax.xml.bind.annotation.XmlSchemaType(name="string")
   @XmlElement(name="descrizione",required=true,nillable=false)
   protected java.lang.String descrizione;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="boolean")
+  @XmlElement(name="fatturazioneAttiva",required=true,nillable=false,defaultValue="false")
+  protected boolean fatturazioneAttiva = false;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @XmlElement(name="idProcedimento",required=false,nillable=false)
+  protected java.lang.String idProcedimento;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="boolean")
+  @XmlElement(name="firmaAutomatica",required=true,nillable=false,defaultValue="false")
+  protected boolean firmaAutomatica = false;
 
   @javax.xml.bind.annotation.XmlSchemaType(name="boolean")
   @XmlElement(name="accettazioneAutomatica",required=true,nillable=false,defaultValue="false")

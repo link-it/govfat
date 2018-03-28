@@ -2,8 +2,8 @@
   ProxyFatturaPA - Gestione del formato Fattura Elettronica 
   http://www.gov4j.it/fatturapa
   
-  Copyright (c) 2014-2016 Link.it srl (http://link.it). 
-  Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+  Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+  Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
   
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -74,7 +74,17 @@
 					</p>
 					<op2web:fieldset legend="#{msg['protocollo.form.label']}" collapsible="false" closed="false" rendered="#{true}">
 
-						<op2web:formFields nomiFields="#{'nome,descrizione,endpoint'}" />
+						<op2web:prop label="#{protocolloMBean.form.nome.label}" required="#{protocolloMBean.form.nome.required}" 
+							rendered="#{protocolloMBean.form.nome.rendered}">
+							<div>
+								<div class="keepMargin">
+									<h:inputText id="input_#{protocolloMBean.form.nome.name}" value="#{protocolloMBean.form.nome.value}" 
+									style="#{protocolloMBean.form.nome.style}" disabled="#{protocolloMBean.form.nome.disabled}" />	
+								</div>
+							</div>
+						
+					 	</op2web:prop>
+						<op2web:formFields nomiFields="#{'descrizione,endpoint'}" />
 
 					</op2web:fieldset>
 	

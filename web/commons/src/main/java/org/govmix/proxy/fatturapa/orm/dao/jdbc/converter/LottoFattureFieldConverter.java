@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -244,6 +243,55 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 				return "xml";
 			}
 		}
+		if(field.equals(LottoFatture.model().FATTURAZIONE_ATTIVA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".fatturazione_attiva";
+			}else{
+				return "fatturazione_attiva";
+			}
+		}
+		if(field.equals(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".stato_elaborazione_in_uscita";
+			}else{
+				return "stato_elaborazione_in_uscita";
+			}
+		}
+		if(field.equals(LottoFatture.model().TIPI_COMUNICAZIONE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".tipi_comunicazione";
+			}else{
+				return "tipi_comunicazione";
+			}
+		}
+		if(field.equals(LottoFatture.model().DATA_ULTIMA_ELABORAZIONE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".data_ultima_elaborazione";
+			}else{
+				return "data_ultima_elaborazione";
+			}
+		}
+		if(field.equals(LottoFatture.model().DETTAGLIO_ELABORAZIONE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".dettaglio_elaborazione";
+			}else{
+				return "dettaglio_elaborazione";
+			}
+		}
+		if(field.equals(LottoFatture.model().DATA_PROSSIMA_ELABORAZIONE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".data_prossima_elaborazione";
+			}else{
+				return "data_prossima_elaborazione";
+			}
+		}
+		if(field.equals(LottoFatture.model().TENTATIVI_CONSEGNA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".tentativi_consegna";
+			}else{
+				return "tentativi_consegna";
+			}
+		}
 		if(field.equals(LottoFatture.model().DATA_RICEZIONE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".data_ricezione";
@@ -305,6 +353,97 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 				return this.toAliasTable(field)+".id_egov";
 			}else{
 				return "id_egov";
+			}
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.CODICE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".codice";
+			}else{
+				return "codice";
+			}
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.ENTE.NOME)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".nome";
+			}else{
+				return "nome";
+			}
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.DESCRIZIONE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".descrizione";
+			}else{
+				return "descrizione";
+			}
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.FATTURAZIONE_ATTIVA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".fatturazione_attiva";
+			}else{
+				return "fatturazione_attiva";
+			}
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.ID_PROCEDIMENTO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".id_procedimento";
+			}else{
+				return "id_procedimento";
+			}
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.FIRMA_AUTOMATICA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".firma_automatica";
+			}else{
+				return "firma_automatica";
+			}
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.ACCETTAZIONE_AUTOMATICA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".accettazione_automatica";
+			}else{
+				return "accettazione_automatica";
+			}
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.MODALITA_PUSH)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".modalita_push";
+			}else{
+				return "modalita_push";
+			}
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.REGISTRO.NOME)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".nome";
+			}else{
+				return "nome";
+			}
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.LISTA_EMAIL_NOTIFICHE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".lista_email_notifiche";
+			}else{
+				return "lista_email_notifiche";
+			}
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.VALORE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".valore";
+			}else{
+				return "valore";
+			}
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.NOME)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".nome";
+			}else{
+				return "nome";
+			}
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE.NOME)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".nome";
+			}else{
+				return "nome";
 			}
 		}
 
@@ -395,6 +534,27 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 		if(field.equals(LottoFatture.model().XML)){
 			return this.toTable(LottoFatture.model(), returnAlias);
 		}
+		if(field.equals(LottoFatture.model().FATTURAZIONE_ATTIVA)){
+			return this.toTable(LottoFatture.model(), returnAlias);
+		}
+		if(field.equals(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA)){
+			return this.toTable(LottoFatture.model(), returnAlias);
+		}
+		if(field.equals(LottoFatture.model().TIPI_COMUNICAZIONE)){
+			return this.toTable(LottoFatture.model(), returnAlias);
+		}
+		if(field.equals(LottoFatture.model().DATA_ULTIMA_ELABORAZIONE)){
+			return this.toTable(LottoFatture.model(), returnAlias);
+		}
+		if(field.equals(LottoFatture.model().DETTAGLIO_ELABORAZIONE)){
+			return this.toTable(LottoFatture.model(), returnAlias);
+		}
+		if(field.equals(LottoFatture.model().DATA_PROSSIMA_ELABORAZIONE)){
+			return this.toTable(LottoFatture.model(), returnAlias);
+		}
+		if(field.equals(LottoFatture.model().TENTATIVI_CONSEGNA)){
+			return this.toTable(LottoFatture.model(), returnAlias);
+		}
 		if(field.equals(LottoFatture.model().DATA_RICEZIONE)){
 			return this.toTable(LottoFatture.model(), returnAlias);
 		}
@@ -422,6 +582,45 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 		if(field.equals(LottoFatture.model().ID_EGOV)){
 			return this.toTable(LottoFatture.model(), returnAlias);
 		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.CODICE)){
+			return this.toTable(LottoFatture.model().DIPARTIMENTO, returnAlias);
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.ENTE.NOME)){
+			return this.toTable(LottoFatture.model().DIPARTIMENTO.ENTE, returnAlias);
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.DESCRIZIONE)){
+			return this.toTable(LottoFatture.model().DIPARTIMENTO, returnAlias);
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.FATTURAZIONE_ATTIVA)){
+			return this.toTable(LottoFatture.model().DIPARTIMENTO, returnAlias);
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.ID_PROCEDIMENTO)){
+			return this.toTable(LottoFatture.model().DIPARTIMENTO, returnAlias);
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.FIRMA_AUTOMATICA)){
+			return this.toTable(LottoFatture.model().DIPARTIMENTO, returnAlias);
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.ACCETTAZIONE_AUTOMATICA)){
+			return this.toTable(LottoFatture.model().DIPARTIMENTO, returnAlias);
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.MODALITA_PUSH)){
+			return this.toTable(LottoFatture.model().DIPARTIMENTO, returnAlias);
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.REGISTRO.NOME)){
+			return this.toTable(LottoFatture.model().DIPARTIMENTO.REGISTRO, returnAlias);
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.LISTA_EMAIL_NOTIFICHE)){
+			return this.toTable(LottoFatture.model().DIPARTIMENTO, returnAlias);
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.VALORE)){
+			return this.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE, returnAlias);
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.NOME)){
+			return this.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY, returnAlias);
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE.NOME)){
+			return this.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE, returnAlias);
+		}
 
 
 		return super.toTable(field,returnAlias);
@@ -437,6 +636,24 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 		
 		if(model.equals(LottoFatture.model())){
 			return "lotti";
+		}
+		if(model.equals(LottoFatture.model().DIPARTIMENTO)){
+			return "dipartimenti";
+		}
+		if(model.equals(LottoFatture.model().DIPARTIMENTO.ENTE)){
+			return "enti";
+		}
+		if(model.equals(LottoFatture.model().DIPARTIMENTO.REGISTRO)){
+			return "registri";
+		}
+		if(model.equals(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE)){
+			return "dipartimenti_prop_values";
+		}
+		if(model.equals(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY)){
+			return "dipartimenti_props";
+		}
+		if(model.equals(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE)){
+			return "id_ente";
 		}
 
 

@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -35,7 +34,7 @@ import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.constants.UserRole;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.DipartimentoBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.EnteBD;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.PccAutorizzazioneBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.UtenteBD;
 import org.govmix.proxy.pcc.fatture.utils.PccProperties;
@@ -48,13 +47,13 @@ public class AuthorizationManager {
 	private UtenteBD utenteBD;
 	private DipartimentoBD dipartimentoBD;
 	private EnteBD enteBD;
-	private FatturaElettronicaBD fatturaBD;
+	private FatturaPassivaBD fatturaBD;
 	private Logger log;
 	public AuthorizationManager(Logger log) throws Exception {
 		this.log = log;
 		this.authBD = new PccAutorizzazioneBD(log);
 		this.utenteBD = new UtenteBD(log);
-		this.fatturaBD = new FatturaElettronicaBD(log);
+		this.fatturaBD = new FatturaPassivaBD(log);
 		this.dipartimentoBD = new DipartimentoBD(log);
 		this.enteBD = new EnteBD(log);
 	}
@@ -157,6 +156,7 @@ public class AuthorizationManager {
 			}
 	
 		} catch(NotFoundException e) {
+			this.log.error("Fattura non presente nel sistema: " + e.getMessage(), e);
 			throw getWSAuthorizationFault("Fattura non presente nel sistema");
 		}
 

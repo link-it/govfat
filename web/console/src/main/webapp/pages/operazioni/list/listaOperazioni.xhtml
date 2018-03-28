@@ -2,8 +2,8 @@
   ProxyFatturaPA - Gestione del formato Fattura Elettronica 
   http://www.gov4j.it/operazionepa
   
-  Copyright (c) 2014-2016 Link.it srl (http://link.it). 
-  Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+  Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+  Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
   
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -50,10 +50,20 @@
 				 fieldsToUpdateButtonReset="panelOperazioni" >
 				
 				<op2web:fieldset legend="#{msg['operazione.search.ricercaOperazioni']}" rendered="#{true}" collapsible="false" closed="false">
-					<op2web:searchFields nomiFields="#{'oper,sisRic,utRic,dataPeriodo,data,esito,idPaTrans'}"    />
+					<op2web:searchFields nomiFields="#{'oper,sisRic,utRic,dataPeriodo,data,esito,idPaTrans,codiceErrore'}"    />
 					
 					<op2web:fieldset legend="#{msg['operazione.search.riferimentoFattura']}" rendered="#{true}" collapsible="false" closed="false">
-						<op2web:searchFields nomiFields="#{'cedPres,numero,idLotto'}" />
+						<op2web:searchFields nomiFields="#{'cedPres,numero'}" />
+						<op2web:prop label="#{operazioneMBean.search.identificativoLotto.label}" required="#{operazioneMBean.search.identificativoLotto.required}" 
+							rendered="#{operazioneMBean.search.identificativoLotto.rendered}">
+							<div>
+								<div class="keepMargin">
+									<h:inputText id="input_#{operazioneMBean.search.identificativoLotto.name}" value="#{operazioneMBean.search.identificativoLotto.value}" 
+									style="#{operazioneMBean.search.identificativoLotto.style}" disabled="#{operazioneMBean.search.identificativoLotto.disabled}" />	
+								</div>
+							</div>
+						
+					 	</op2web:prop>
 					</op2web:fieldset>
 				</op2web:fieldset>
 			</op2web:search>

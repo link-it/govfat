@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -44,11 +43,15 @@ public class RecuperoEsitiUtils {
 			break;
 		case OPERAZIONE_CONTABILE_CCS: client.wSQueryOperazioneContabile(traccia, tracciaTrasmissione, TipoOperazioneTipo.CCS);
 		break;
+		case OPERAZIONE_CONTABILE_CPS: client.wSQueryOperazioneContabile(traccia, tracciaTrasmissione, TipoOperazioneTipo.CO);
+		break;
 		case OPERAZIONE_CONTABILE_CO: client.wSQueryOperazioneContabile(traccia, tracciaTrasmissione, TipoOperazioneTipo.CO);
 		break;
 		case OPERAZIONE_CONTABILE_CP: client.wSQueryOperazioneContabile(traccia, tracciaTrasmissione, TipoOperazioneTipo.CP);
 		break;
 		case OPERAZIONE_CONTABILE_CS: client.wSQueryOperazioneContabile(traccia, tracciaTrasmissione, TipoOperazioneTipo.CS);
+		break;
+		case OPERAZIONE_CONTABILE_CSPC: client.wSQueryOperazioneContabile(traccia, tracciaTrasmissione, TipoOperazioneTipo.CS);
 		break;
 		case OPERAZIONE_CONTABILE_RC: client.wSQueryOperazioneContabile(traccia, tracciaTrasmissione, TipoOperazioneTipo.RC);
 		break;
@@ -79,9 +82,11 @@ public class RecuperoEsitiUtils {
 		case PAGAMENTO_IVA: client.wSProxyPagamentoIva(traccia);
 		break;
 		case OPERAZIONE_CONTABILE_CCS:
+		case OPERAZIONE_CONTABILE_CPS:
 		case OPERAZIONE_CONTABILE_CO:
 		case OPERAZIONE_CONTABILE_CP:
 		case OPERAZIONE_CONTABILE_CS:
+		case OPERAZIONE_CONTABILE_CSPC:
 		case OPERAZIONE_CONTABILE_RC:
 		case OPERAZIONE_CONTABILE_RF:
 		case OPERAZIONE_CONTABILE_SC:

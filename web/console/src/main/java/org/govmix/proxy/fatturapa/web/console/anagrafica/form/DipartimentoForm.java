@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -100,16 +99,20 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 	private FormField<String> stornoContabilizzazione = null;
 	private FormField<String> ricezioneFattura = null;
 	private FormField<String> rifiutoFattura = null;
+	
+	private BooleanCheckBox fatturazioneAttiva= null;
+	private BooleanCheckBox firmaAutomatica= null;
+	private FormField<String> codiceProcedimento = null;
 
 	private List<DipartimentoProperty> listaNomiProperties = null;
 
-	public static final String DIPARTIMENTO_PATTERN = "[A-Z0-9]{6}";
+	public static final String DIPARTIMENTO_PATTERN = "[A-Z0-9]{6,7}";
 	
 	public static final String CF_TRASMITTENTE_PATTERN = "[0-9]{11}";
 	
 	private static final String EMAIL_PATTERN = 
 			"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
 
 	private Pattern dipartimentoPattern = null;
 	private Pattern emailPattern = null;
@@ -152,7 +155,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 
 			this.registro = inputFieldFactory.createSelectList("registro","dipartimento.form.registro",null,false);
 
-			this._setModalitaPush();
+			
 
 
 			this.indirizziNotifica = inputFieldFactory.createTextArea("indirizziNotifica","dipartimento.pcc.indirizziNotifica",null,true);
@@ -174,6 +177,15 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 			this.stornoContabilizzazione = inputFieldFactory.createRadioButtonFatturaPA("stornoContabilizzazione","dipartimento.pcc.stornoContabilizzazione", null, false);
 			this.ricezioneFattura = inputFieldFactory.createRadioButtonFatturaPA("ricezioneFattura","dipartimento.pcc.ricezioneFattura", null, false);
 			this.rifiutoFattura =  inputFieldFactory.createRadioButtonFatturaPA("rifiutoFattura","dipartimento.pcc.rifiutoFattura", null, false);
+			
+			this.fatturazioneAttiva = inputFieldFactory.createBooleanCheckBox("fatturazioneAttiva","dipartimento.form.fatturazioneAttiva",null,false);
+			this.fatturazioneAttiva.setFieldsToUpdate(this.getId() + "_formPnl"); 
+			this.fatturazioneAttiva.setForm(this); 
+			this.firmaAutomatica = inputFieldFactory.createBooleanCheckBox("firmaAutomatica","dipartimento.form.firmaAutomatica",null,false);
+			this.codiceProcedimento = inputFieldFactory.createText("codiceProcedimento","dipartimento.form.codiceProcedimento",null,false);
+			
+			this._setModalitaPush();
+			this._setFatturazioneAttiva();
 
 			this.setField(this.codice);
 			this.setField(this.descrizione);
@@ -202,6 +214,10 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 			this.setField(this.stornoContabilizzazione);
 			this.setField(this.ricezioneFattura);
 			this.setField(this.rifiutoFattura);
+			
+			this.setField(this.fatturazioneAttiva);
+			this.setField(this.firmaAutomatica);
+			this.setField(this.codiceProcedimento);
 
 			this.properties = new ArrayList<Text>();
 
@@ -222,9 +238,16 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		this.ente .reset();
 		this.registro .reset();
 		this.codicePCC.reset();
-
+		
 		this._setModalitaPush();
-
+		
+		this.fatturazioneAttiva.reset();
+		this.firmaAutomatica.reset();
+		this.codiceProcedimento.reset();
+		
+		this._setFatturazioneAttiva();
+		this._abilitaRegistro();
+		
 		for (FormField<String> prop : this.properties) {
 			prop.reset();
 		}
@@ -307,6 +330,10 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 
 
 				this.indirizziNotifica.setDefaultValue(bean.getDTO().getListaEmailNotifiche());
+				
+				this.fatturazioneAttiva.setDefaultValue(bean.getDTO().isFatturazioneAttiva());
+				this.firmaAutomatica.setDefaultValue(bean.getDTO().isFirmaAutomatica());
+				this.codiceProcedimento.setDefaultValue(bean.getDTO().getIdProcedimento()); 
 
 
 				// prelevo le properties abilitate
@@ -341,6 +368,10 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 				this.codicePCC.setDefaultValue(false);
 
 				this.indirizziNotifica.setDefaultValue(null); 
+				
+				this.fatturazioneAttiva.setDefaultValue(false);
+				this.firmaAutomatica.setDefaultValue(false);
+				this.codiceProcedimento.setDefaultValue(null); 
 
 				// tutte le properties false
 				Utils.impostaValoreProprietaPCCDipartimentoForm(this.listaProprietaConsentiteAiDipartimenti, listaProprietaAbilitate, NomePccOperazioneType.PAGAMENTO_IVA, this.pagamentoIVA,true);
@@ -520,16 +551,16 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		}
 
 		boolean mod = this.modalitaPush.getValue() != null ? (this.getModalitaPush().getValue() ? true : false) : false;
+		boolean fattAttiva = this.fatturazioneAttiva.getValue() != null ? (this.getFatturazioneAttiva().getValue() ? true : false) : false;
 
 		SelectItem registroSI = this.registro.getValue();
 		if(registroSI!= null){
 			String _registro = registroSI.getValue();
 
-			if(_registro.equals(CostantiForm.NON_SELEZIONATO) && mod)
+			// [TODO] attivare
+			if(_registro.equals(CostantiForm.NON_SELEZIONATO) && (mod)) // && (mod || fattAttiva))
 				return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromCommonsResourceBundle(CostantiForm.SELECT_VALORE_NON_VALIDO, this.registro.getLabel());
 		}
-
-
 
 		//
 		if(mod){
@@ -587,6 +618,20 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 			}
 			
 		}
+		
+		// fatturazione attiva
+		
+		
+		if(fattAttiva)  {
+			
+			
+			// [TODO] codice procedimento non obbligatorio ma validare pattern 
+			String _codiceProcedimento = this.codiceProcedimento.getValue();
+			if(StringUtils.isNotEmpty(_codiceProcedimento)) {
+				
+			}
+		}
+		
 
 		return null;
 	}
@@ -666,6 +711,16 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		if(this.codicePCC.getValue()){
 			dipartimento.setListaEmailNotifiche(this.indirizziNotifica.getValue()); 
 		}
+		
+		
+		// fatturazione attiva
+		boolean _fatturazioneAttiva = this.fatturazioneAttiva.getValue() != null ? (this.fatturazioneAttiva.getValue() ? true : false) : false;
+		boolean _firmaAutomatica = this.firmaAutomatica.getValue() != null ? (this.firmaAutomatica.getValue() ? true : false) : false;
+		String _codiceProcedimento = this.codiceProcedimento.getValue();
+		
+		dipartimento.setFatturazioneAttiva(_fatturazioneAttiva);
+		dipartimento.setFirmaAutomatica(_firmaAutomatica);
+		dipartimento.setIdProcedimento(_codiceProcedimento); 
 
 		return dipartimento;
 	}
@@ -724,8 +779,10 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 	public SelectList<SelectItem> getRegistro() {
 		this.registro.setRequired(false);
 		boolean mod = this.modalitaPush.getValue() != null ? (this.getModalitaPush().getValue() ? true : false) : false;
+		// [TODO] agganciare
+		boolean fatAt = false;//this.fatturazioneAttiva.getValue() != null ? (this.getFatturazioneAttiva().getValue() ? true : false) : false;
 
-		if(mod)
+		if(mod || fatAt)
 			this.registro.setRequired(true);
 
 		return this.registro;
@@ -761,10 +818,10 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 
 	public void modalitaPushOnChangeListener(ActionEvent ae){
 		this._setModalitaPush();
+		this._abilitaRegistro();
 	}
 
 	private void _setModalitaPush() {
-		this.registro.setRequired(false);
 		this.endpoint.setRendered(false);
 		this.password.setRendered(false);
 		this.username.setRendered(false);
@@ -772,7 +829,6 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		boolean mod = this.modalitaPush.getValue() != null ? (this.getModalitaPush().getValue() ? true : false) : false;
 
 		if(mod){
-			this.registro.setRequired(true);
 			this.endpoint.setRendered(true);
 			this.password.setRendered(true);
 			this.username.setRendered(true);
@@ -782,6 +838,18 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 			}
 		}
 
+	}
+	
+	private void _abilitaRegistro() {
+		this.registro.setRequired(false);
+		
+		boolean mod = this.modalitaPush.getValue() != null ? (this.getModalitaPush().getValue() ? true : false) : false;
+		// [TODO] agganciare
+		boolean fatAt = false; //this.fatturazioneAttiva.getValue() != null ? (this.getFatturazioneAttiva().getValue() ? true : false) : false;
+
+		if(mod || fatAt){
+			this.registro.setRequired(true);
+		}
 	}
 
 	public TextArea getIndirizziNotifica() {
@@ -969,4 +1037,57 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		this.downloadDocumento = downloadDocumento;
 	}
 
+	public BooleanCheckBox getFatturazioneAttiva() {
+		return fatturazioneAttiva;
+	}
+
+	public void setFatturazioneAttiva(BooleanCheckBox fatturazioneAttiva) {
+		this.fatturazioneAttiva = fatturazioneAttiva;
+	}
+
+	public BooleanCheckBox getFirmaAutomatica() {
+		this.firmaAutomatica.setRendered(false);
+		boolean mod = this.fatturazioneAttiva.getValue() != null ? (this.fatturazioneAttiva.getValue() ? true : false) : false;
+
+		if(mod)
+			this.firmaAutomatica.setRendered(true);
+
+		return this.firmaAutomatica;
+	}
+
+	public void setFirmaAutomatica(BooleanCheckBox firmaAutomatica) {
+		this.firmaAutomatica = firmaAutomatica;
+	}
+
+	public FormField<String> getCodiceProcedimento() {
+		this.codiceProcedimento.setRendered(false);
+		boolean mod = this.fatturazioneAttiva.getValue() != null ? (this.fatturazioneAttiva.getValue() ? true : false) : false;
+
+		if(mod)
+			this.codiceProcedimento.setRendered(true);
+
+		return this.codiceProcedimento;
+	}
+
+	public void setCodiceProcedimento(FormField<String> codiceProcedimento) {
+		this.codiceProcedimento = codiceProcedimento;
+	}
+	
+	public void fatturazioneAttivaOnChangeListener(ActionEvent ae){
+		this._setFatturazioneAttiva();
+		this._abilitaRegistro();
+	}
+
+	private void _setFatturazioneAttiva() {
+		this.codiceProcedimento.setRendered(false);
+		this.firmaAutomatica.setRendered(false);
+
+		boolean mod = this.fatturazioneAttiva.getValue() != null ? (this.fatturazioneAttiva.getValue() ? true : false) : false;
+
+		if(mod){
+			this.codiceProcedimento.setRendered(true);
+			this.firmaAutomatica.setRendered(true);
+		}
+
+	}
 }

@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,30 +22,26 @@ package org.govmix.proxy.fatturapa.orm.dao.jdbc;
 
 import java.sql.Connection;
 
-import org.openspcoop2.utils.sql.ISQLQueryObject;
-
 import org.apache.log4j.Logger;
-
-import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceCRUDWithId;
 import org.govmix.proxy.fatturapa.orm.IdUtente;
+import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
+import org.govmix.proxy.fatturapa.orm.Utente;
+import org.govmix.proxy.fatturapa.orm.UtenteDipartimento;
 import org.openspcoop2.generic_project.beans.NonNegativeNumber;
 import org.openspcoop2.generic_project.beans.UpdateField;
 import org.openspcoop2.generic_project.beans.UpdateModel;
-
-import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities;
+import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceCRUDWithId;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCPaginatedExpression;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
 import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject;
+import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
-import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
-import org.openspcoop2.generic_project.dao.jdbc.JDBCPaginatedExpression;
-
-import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
-
-import org.govmix.proxy.fatturapa.orm.UtenteDipartimento;
-import org.govmix.proxy.fatturapa.orm.Utente;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCServiceManager;
+import org.openspcoop2.generic_project.expression.IPaginatedExpression;
+import org.openspcoop2.utils.sql.ISQLQueryObject;
 
 /**     
  * JDBCUtenteServiceImpl
@@ -419,6 +414,14 @@ public class JDBCUtenteServiceImpl extends JDBCUtenteServiceSearchImpl
 	
 		if(id!=null && id.longValue()<=0){
 			throw new ServiceException("Id is less equals 0");
+		}
+		IdUtente idUtente = this.convertToId(jdbcProperties, log, connection, sqlQueryObject, this.get(jdbcProperties, log, connection, sqlQueryObject, id, null));
+		
+		IPaginatedExpression expression = this.getServiceManager().getNotificaEsitoCommittenteServiceSearch().newPaginatedExpression();
+		expression.equals(NotificaEsitoCommittente.model().UTENTE.USERNAME, idUtente.getUsername());
+		
+		if(this.getServiceManager().getNotificaEsitoCommittenteServiceSearch().findAll(expression).size() > 0) {
+			throw new ServiceException("utente.delete.ko.esitoCommittente");
 		}
 		
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 

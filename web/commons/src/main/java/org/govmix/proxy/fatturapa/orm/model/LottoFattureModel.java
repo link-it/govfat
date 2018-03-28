@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -68,6 +67,13 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 		this.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE_FISCALE = new Field("terzoIntermediarioOSoggettoEmittenteCodiceFiscale",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.CODICE_DESTINATARIO = new Field("codiceDestinatario",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.XML = new Field("xml",byte[].class,"LottoFatture",LottoFatture.class);
+		this.FATTURAZIONE_ATTIVA = new Field("fatturazioneAttiva",boolean.class,"LottoFatture",LottoFatture.class);
+		this.STATO_ELABORAZIONE_IN_USCITA = new Field("statoElaborazioneInUscita",java.lang.String.class,"LottoFatture",LottoFatture.class);
+		this.TIPI_COMUNICAZIONE = new Field("tipiComunicazione",java.lang.String.class,"LottoFatture",LottoFatture.class);
+		this.DATA_ULTIMA_ELABORAZIONE = new Field("dataUltimaElaborazione",java.util.Date.class,"LottoFatture",LottoFatture.class);
+		this.DETTAGLIO_ELABORAZIONE = new Field("dettaglioElaborazione",java.lang.String.class,"LottoFatture",LottoFatture.class);
+		this.DATA_PROSSIMA_ELABORAZIONE = new Field("dataProssimaElaborazione",java.util.Date.class,"LottoFatture",LottoFatture.class);
+		this.TENTATIVI_CONSEGNA = new Field("tentativiConsegna",java.lang.Integer.class,"LottoFatture",LottoFatture.class);
 		this.DATA_RICEZIONE = new Field("dataRicezione",java.util.Date.class,"LottoFatture",LottoFatture.class);
 		this.STATO_INSERIMENTO = new Field("statoInserimento",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.STATO_CONSEGNA = new Field("statoConsegna",java.lang.String.class,"LottoFatture",LottoFatture.class);
@@ -77,6 +83,7 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 		this.DATA_PROTOCOLLAZIONE = new Field("dataProtocollazione",java.util.Date.class,"LottoFatture",LottoFatture.class);
 		this.PROTOCOLLO = new Field("protocollo",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.ID_EGOV = new Field("id-egov",java.lang.String.class,"LottoFatture",LottoFatture.class);
+		this.DIPARTIMENTO = new org.govmix.proxy.fatturapa.orm.model.DipartimentoModel(new Field("Dipartimento",org.govmix.proxy.fatturapa.orm.Dipartimento.class,"LottoFatture",LottoFatture.class));
 	
 	}
 	
@@ -109,6 +116,13 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 		this.TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE_FISCALE = new ComplexField(father,"terzoIntermediarioOSoggettoEmittenteCodiceFiscale",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.CODICE_DESTINATARIO = new ComplexField(father,"codiceDestinatario",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.XML = new ComplexField(father,"xml",byte[].class,"LottoFatture",LottoFatture.class);
+		this.FATTURAZIONE_ATTIVA = new ComplexField(father,"fatturazioneAttiva",boolean.class,"LottoFatture",LottoFatture.class);
+		this.STATO_ELABORAZIONE_IN_USCITA = new ComplexField(father,"statoElaborazioneInUscita",java.lang.String.class,"LottoFatture",LottoFatture.class);
+		this.TIPI_COMUNICAZIONE = new ComplexField(father,"tipiComunicazione",java.lang.String.class,"LottoFatture",LottoFatture.class);
+		this.DATA_ULTIMA_ELABORAZIONE = new ComplexField(father,"dataUltimaElaborazione",java.util.Date.class,"LottoFatture",LottoFatture.class);
+		this.DETTAGLIO_ELABORAZIONE = new ComplexField(father,"dettaglioElaborazione",java.lang.String.class,"LottoFatture",LottoFatture.class);
+		this.DATA_PROSSIMA_ELABORAZIONE = new ComplexField(father,"dataProssimaElaborazione",java.util.Date.class,"LottoFatture",LottoFatture.class);
+		this.TENTATIVI_CONSEGNA = new ComplexField(father,"tentativiConsegna",java.lang.Integer.class,"LottoFatture",LottoFatture.class);
 		this.DATA_RICEZIONE = new ComplexField(father,"dataRicezione",java.util.Date.class,"LottoFatture",LottoFatture.class);
 		this.STATO_INSERIMENTO = new ComplexField(father,"statoInserimento",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.STATO_CONSEGNA = new ComplexField(father,"statoConsegna",java.lang.String.class,"LottoFatture",LottoFatture.class);
@@ -118,6 +132,7 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 		this.DATA_PROTOCOLLAZIONE = new ComplexField(father,"dataProtocollazione",java.util.Date.class,"LottoFatture",LottoFatture.class);
 		this.PROTOCOLLO = new ComplexField(father,"protocollo",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.ID_EGOV = new ComplexField(father,"id-egov",java.lang.String.class,"LottoFatture",LottoFatture.class);
+		this.DIPARTIMENTO = new org.govmix.proxy.fatturapa.orm.model.DipartimentoModel(new ComplexField(father,"Dipartimento",org.govmix.proxy.fatturapa.orm.Dipartimento.class,"LottoFatture",LottoFatture.class));
 	
 	}
 	
@@ -173,6 +188,20 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 	 
 	public IField XML = null;
 	 
+	public IField FATTURAZIONE_ATTIVA = null;
+	 
+	public IField STATO_ELABORAZIONE_IN_USCITA = null;
+	 
+	public IField TIPI_COMUNICAZIONE = null;
+	 
+	public IField DATA_ULTIMA_ELABORAZIONE = null;
+	 
+	public IField DETTAGLIO_ELABORAZIONE = null;
+	 
+	public IField DATA_PROSSIMA_ELABORAZIONE = null;
+	 
+	public IField TENTATIVI_CONSEGNA = null;
+	 
 	public IField DATA_RICEZIONE = null;
 	 
 	public IField STATO_INSERIMENTO = null;
@@ -190,6 +219,8 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 	public IField PROTOCOLLO = null;
 	 
 	public IField ID_EGOV = null;
+	 
+	public org.govmix.proxy.fatturapa.orm.model.DipartimentoModel DIPARTIMENTO = null;
 	 
 
 	@Override

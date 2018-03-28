@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -56,7 +55,7 @@ public class FatturaV11Converter extends AbstractFatturaConverter<FatturaElettro
 		@Override
 		public void populateFatturaConDatiSpecifici(FatturaElettronica fatturaElettronica) {
 
-			FatturaElettronicaBodyType fatturaBody = fattura.getFatturaElettronicaBody(0);
+			FatturaElettronicaBodyType fatturaBody = getFattura().getFatturaElettronicaBody(0);
 
 			TipoDocumentoType tipoDoc;
 			switch(fatturaBody.getDatiGenerali().getDatiGeneraliDocumento().getTipoDocumento()) {
@@ -93,7 +92,7 @@ public class FatturaV11Converter extends AbstractFatturaConverter<FatturaElettro
 
 		@Override
 		public List<String> getCausali() {
-			FatturaElettronicaBodyType fatturaBody = fattura.getFatturaElettronicaBody(0);
+			FatturaElettronicaBodyType fatturaBody = getFattura().getFatturaElettronicaBody(0);
 			
 			List<String> lst = new ArrayList<String>();
 			
@@ -108,7 +107,7 @@ public class FatturaV11Converter extends AbstractFatturaConverter<FatturaElettro
 		@Override
 		public List<AllegatoFattura> getAllegati() {
 			
-			FatturaElettronicaBodyType fatturaBody = fattura.getFatturaElettronicaBody(0);
+			FatturaElettronicaBodyType fatturaBody = getFattura().getFatturaElettronicaBody(0);
 
 			List<AllegatoFattura> lst = new ArrayList<AllegatoFattura>();
 			if(fatturaBody.getAllegatiList() != null) {
@@ -132,10 +131,10 @@ public class FatturaV11Converter extends AbstractFatturaConverter<FatturaElettro
 
 		@Override
 		public void validate() throws Exception {
-			if(fattura.getFatturaElettronicaBodyList() == null || fattura.getFatturaElettronicaBodyList().size() == 0){
+			if(getFattura().getFatturaElettronicaBodyList() == null || getFattura().getFatturaElettronicaBodyList().size() == 0){
 				throw new Exception("Nessuna fattura contenuta nel lotto ricevuto");
-			} else if(fattura.getFatturaElettronicaBodyList().size() != 1) {
-				throw new Exception("Impossibile gestire fatture multiple. Trovate ["+fattura.getFatturaElettronicaBodyList().size()+"] fatture");
+			} else if(getFattura().getFatturaElettronicaBodyList().size() != 1) {
+				throw new Exception("Impossibile gestire fatture multiple. Trovate ["+getFattura().getFatturaElettronicaBodyList().size()+"] fatture");
 			}
 		}
 		
@@ -159,7 +158,7 @@ public class FatturaV11Converter extends AbstractFatturaConverter<FatturaElettro
 //		}
 		
 		private Double _getImportoTotaleDocumento() {
-			return fattura.getFatturaElettronicaBody(0).getDatiGenerali().getDatiGeneraliDocumento().getImportoTotaleDocumento();
+			return getFattura().getFatturaElettronicaBody(0).getDatiGenerali().getDatiGeneraliDocumento().getImportoTotaleDocumento();
 		}
 		
 		@Override
@@ -182,7 +181,7 @@ public class FatturaV11Converter extends AbstractFatturaConverter<FatturaElettro
 		private double _getImportoTotaleRiepilogo() {
 
 			double importo = 0;
-			List<DatiRiepilogoType> riepilogoLst = fattura.getFatturaElettronicaBody(0).getDatiBeniServizi().getDatiRiepilogoList();
+			List<DatiRiepilogoType> riepilogoLst = getFattura().getFatturaElettronicaBody(0).getDatiBeniServizi().getDatiRiepilogoList();
 			
 			for(DatiRiepilogoType riepilogo : riepilogoLst) {
 				importo += riepilogo.getImponibileImporto().doubleValue() + riepilogo.getImposta().doubleValue();

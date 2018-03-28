@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -40,8 +39,6 @@ import java.io.Serializable;
  * 			&lt;element name="nome" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="descrizione" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="endpoint" type="{http://www.w3.org/2001/XMLSchema}anyURI" minOccurs="1" maxOccurs="1"/>
- * 			&lt;element name="endpointConsegnaLotto" type="{http://www.w3.org/2001/XMLSchema}anyURI" minOccurs="0" maxOccurs="1"/>
- * 			&lt;element name="endpointRichiediProtocollo" type="{http://www.w3.org/2001/XMLSchema}anyURI" minOccurs="0" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -58,9 +55,7 @@ import java.io.Serializable;
   propOrder = {
   	"nome",
   	"descrizione",
-  	"endpoint",
-  	"endpointConsegnaLotto",
-  	"endpointRichiediProtocollo"
+  	"endpoint"
   }
 )
 
@@ -108,22 +103,6 @@ public class Protocollo extends org.openspcoop2.utils.beans.BaseBean implements 
     this.endpoint = endpoint;
   }
 
-  public java.net.URI getEndpointConsegnaLotto() {
-    return this.endpointConsegnaLotto;
-  }
-
-  public void setEndpointConsegnaLotto(java.net.URI endpointConsegnaLotto) {
-    this.endpointConsegnaLotto = endpointConsegnaLotto;
-  }
-
-  public java.net.URI getEndpointRichiediProtocollo() {
-    return this.endpointRichiediProtocollo;
-  }
-
-  public void setEndpointRichiediProtocollo(java.net.URI endpointRichiediProtocollo) {
-    this.endpointRichiediProtocollo = endpointRichiediProtocollo;
-  }
-
   private static final long serialVersionUID = 1L;
 
   @XmlTransient
@@ -154,13 +133,5 @@ public class Protocollo extends org.openspcoop2.utils.beans.BaseBean implements 
   @javax.xml.bind.annotation.XmlSchemaType(name="anyURI")
   @XmlElement(name="endpoint",required=true,nillable=false)
   protected java.net.URI endpoint;
-
-  @javax.xml.bind.annotation.XmlSchemaType(name="anyURI")
-  @XmlElement(name="endpointConsegnaLotto",required=false,nillable=false)
-  protected java.net.URI endpointConsegnaLotto;
-
-  @javax.xml.bind.annotation.XmlSchemaType(name="anyURI")
-  @XmlElement(name="endpointRichiediProtocollo",required=false,nillable=false)
-  protected java.net.URI endpointRichiediProtocollo;
 
 }

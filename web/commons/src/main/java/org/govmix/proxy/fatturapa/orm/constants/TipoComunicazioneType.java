@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -28,7 +27,7 @@ import org.openspcoop2.generic_project.beans.IEnumeration;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 
 /**     
- * Enumeration dell'elemento ComunicazioneSdi.tipoComunicazione xsd (tipo:string) 
+ * Enumeration dell'elemento TracciaSDI.tipoComunicazione xsd (tipo:string) 
  *
  * @author Giuseppe Papandrea (papandrea@link.it)
  * @author Giovanni Bussu (bussu@link.it)
@@ -39,22 +38,28 @@ import org.openspcoop2.generic_project.exception.NotFoundException;
 @javax.xml.bind.annotation.XmlEnum(String.class)
 public enum TipoComunicazioneType implements IEnumeration , Serializable , Cloneable {
 
-	@javax.xml.bind.annotation.XmlEnumValue("FATTURA_USCITA")
-	FATTURA_USCITA ("FATTURA_USCITA"),
-	@javax.xml.bind.annotation.XmlEnumValue("NOTIFICA_SCARTO")
-	NOTIFICA_SCARTO ("NOTIFICA_SCARTO"),
-	@javax.xml.bind.annotation.XmlEnumValue("RICEVUTA_CONSEGNA")
-	RICEVUTA_CONSEGNA ("RICEVUTA_CONSEGNA"),
-	@javax.xml.bind.annotation.XmlEnumValue("NOTIFICA_MANCATA_CONSEGNA")
-	NOTIFICA_MANCATA_CONSEGNA ("NOTIFICA_MANCATA_CONSEGNA"),
-	@javax.xml.bind.annotation.XmlEnumValue("ATTESTAZIONE_TRASMISSIONE_FATTURA")
-	ATTESTAZIONE_TRASMISSIONE_FATTURA ("ATTESTAZIONE_TRASMISSIONE_FATTURA"),
-	@javax.xml.bind.annotation.XmlEnumValue("NOTIFICA_ESITO_COMMITTENTE")
-	NOTIFICA_ESITO_COMMITTENTE ("NOTIFICA_ESITO_COMMITTENTE"),
-	@javax.xml.bind.annotation.XmlEnumValue("NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE")
-	NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE ("NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE"),
-	@javax.xml.bind.annotation.XmlEnumValue("AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO")
-	AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO ("AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO");
+	@javax.xml.bind.annotation.XmlEnumValue("FAT_OUT")
+	FAT_OUT ("FAT_OUT"),
+	@javax.xml.bind.annotation.XmlEnumValue("FAT_IN")
+	FAT_IN ("FAT_IN"),
+	@javax.xml.bind.annotation.XmlEnumValue("RC")
+	RC ("RC"),
+	@javax.xml.bind.annotation.XmlEnumValue("NS")
+	NS ("NS"),
+	@javax.xml.bind.annotation.XmlEnumValue("MC")
+	MC ("MC"),
+	@javax.xml.bind.annotation.XmlEnumValue("NE")
+	NE ("NE"),
+	@javax.xml.bind.annotation.XmlEnumValue("MT")
+	MT ("MT"),
+	@javax.xml.bind.annotation.XmlEnumValue("EC")
+	EC ("EC"),
+	@javax.xml.bind.annotation.XmlEnumValue("SE")
+	SE ("SE"),
+	@javax.xml.bind.annotation.XmlEnumValue("DT")
+	DT ("DT"),
+	@javax.xml.bind.annotation.XmlEnumValue("AT")
+	AT ("AT");
 	
 	
 	/** Value */

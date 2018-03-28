@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -39,6 +38,8 @@ public class PccProperties extends AbstractProperties {
 	private String urlWadlEndpointPdd;
 	private String urlWsdlFattureWS;
 	private String urlWsdlTracceWS;
+	private int maxTentativiRispedizione;
+	private int fattoreRispedizione;
 
 	private String urlPCC;
 	private String usernamePCC;
@@ -51,6 +52,9 @@ public class PccProperties extends AbstractProperties {
 
 	private String sistemaRichiedenteGestionale;
 	private String utenteRichiedenteGestionale;
+
+	private Integer intervalloRispedizioneDefault;
+	private Integer intervalloSpedizioneEsito;
 
 
 	private PccProperties(String path) throws RuntimeException {
@@ -69,6 +73,13 @@ public class PccProperties extends AbstractProperties {
 			this.utenteRichiedenteCruscotto = this.getProperty("org.govmix.proxy.pcc.utenteRichiedenteCruscotto", true);
 			this.sistemaRichiedenteGestionale = this.getProperty("org.govmix.proxy.pcc.sistemaRichiedenteGestionale", true);
 			this.utenteRichiedenteGestionale = this.getProperty("org.govmix.proxy.pcc.utenteRichiedenteGestionale", true);
+
+		
+			this.maxTentativiRispedizione = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.maxTentativiRispedizione", true));
+			this.fattoreRispedizione = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.fattoreRispedizione", true));
+		
+			this.intervalloRispedizioneDefault = Integer.parseInt(this.getProperty("org.govmix.proxy.pcc.intervalloRispedizioneDefault", true));
+			this.intervalloSpedizioneEsito = Integer.parseInt(this.getProperty("org.govmix.proxy.pcc.intervalloSpedizioneEsito", true));
 		} catch(Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -116,6 +127,19 @@ public class PccProperties extends AbstractProperties {
 
 	public String getUrlWsdlTracceWS() {
 		return urlWsdlTracceWS;
+	}
+	public int getMaxTentativiRispedizione() {
+		return maxTentativiRispedizione;
+	}
+	public Integer getIntervalloRispedizioneDefault() {
+		return intervalloRispedizioneDefault;
+	}
+	public int getFattoreRispedizione() {
+		return fattoreRispedizione;
+	}
+
+	public Integer getIntervalloSpedizioneEsito() {
+		return intervalloSpedizioneEsito;
 	}
 
 }

@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -53,6 +52,7 @@ import org.openspcoop2.generic_project.beans.IField;
 import org.openspcoop2.generic_project.beans.NonNegativeNumber;
 import org.openspcoop2.generic_project.beans.UpdateField;
 import org.openspcoop2.generic_project.exception.ExpressionException;
+import org.openspcoop2.generic_project.exception.ExpressionNotImplementedException;
 import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
@@ -119,12 +119,12 @@ public class PccTracciamentoBD extends BaseBD {
 	public void forzaRispedizione(IdTraccia idTraccia) throws Exception {
 		try {
 
-
 			UpdateField rispedizioneField = new UpdateField(PccTraccia.model().RISPEDIZIONE, true);
 			UpdateField intervalloRispedizioneField = new UpdateField(PccTraccia.model().RISPEDIZIONE_PROSSIMO_TENTATIVO, new Date());
 			UpdateField tentativiRispedizioneField = new UpdateField(PccTraccia.model().RISPEDIZIONE_NUMERO_TENTATIVI, 0);;
 			UpdateField maxTentativiRispedizioneField = new UpdateField(PccTraccia.model().RISPEDIZIONE_MAX_TENTATIVI, 1);
-			this.tracciamentoService.updateFields(idTraccia, rispedizioneField, intervalloRispedizioneField, tentativiRispedizioneField, maxTentativiRispedizioneField);
+			UpdateField statoTracciaField = new UpdateField(PccTraccia.model().STATO, StatoType.AS_PRESA_IN_CARICO);
+			this.tracciamentoService.updateFields(idTraccia, rispedizioneField, intervalloRispedizioneField, tentativiRispedizioneField, maxTentativiRispedizioneField, statoTracciaField);
 
 		} catch (Exception e) {
 			this.log.error("Errore durante la update traccia: " + e.getMessage(), e);
@@ -184,30 +184,6 @@ public class PccTracciamentoBD extends BaseBD {
 		}
 	}
 
-	public List<PccTraccia> getTraccePerEsiti(int offset, int limit, Date date) throws Exception {
-		IPaginatedExpression exp1 = this.tracciamentoService.newPaginatedExpression();
-		exp1.equals(PccTraccia.model().STATO, StatoType.AS_PRESA_IN_CARICO);
-		exp1.equals(PccTraccia.model().TIPO_OPERAZIONE, TipoOperazionePccType.PROXY);
-
-
-		IPaginatedExpression exp2 = this.tracciamentoService.newPaginatedExpression();
-
-		exp2.isNull(PccTraccia.model().DATA_ULTIMO_TENTATIVO_ESITO).or().lessEquals(PccTraccia.model().DATA_ULTIMO_TENTATIVO_ESITO, date);
-
-		IPaginatedExpression exp = this.tracciamentoService.newPaginatedExpression();
-
-		exp.and(exp1, exp2);
-
-		PccTracciaFieldConverter fc = new PccTracciaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase()); 
-
-		exp.sortOrder(SortOrder.ASC);
-		exp.addOrder(new CustomField("id", Long.class, "id", fc.toTable(PccTraccia.model())));
-		exp.offset(offset);
-		exp.limit(limit);
-
-		return this.getTracce(exp, true);
-	}
-
 	public PccTraccia getTracciaByIdPa(String idPa) throws Exception {
 		IExpression exp = this.tracciamentoService.newExpression();
 		exp.equals(PccTraccia.model().ID_PA_TRANSAZIONE, idPa);
@@ -233,6 +209,11 @@ public class PccTracciamentoBD extends BaseBD {
 				traccia.addPccTracciaTrasmissione(pccTracciaTrasmissione);
 			}
 		}
+		
+		if(traccia.getIdFattura() > 0) {
+			traccia.setFatturaElettronica(((IDBFatturaElettronicaServiceSearch)fatturaService).get(traccia.getIdFattura()));
+		}
+		
 		return traccia;
 
 	}
@@ -497,19 +478,39 @@ public class PccTracciamentoBD extends BaseBD {
 		return ((JDBCPccErroreElaborazioneServiceSearch)this.erroreService).get(idErrore);
 	}
 
+	public List<PccTraccia> getTraccePerEsiti(int offset, int limit, Date date) throws Exception {
+
+		IPaginatedExpression exp = this.tracciamentoService.toPaginatedExpression(getExpressionEsiti(date));
+
+		PccTracciaFieldConverter fc = new PccTracciaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase()); 
+
+		exp.sortOrder(SortOrder.ASC);
+		exp.addOrder(new CustomField("id", Long.class, "id", fc.toTable(PccTraccia.model())));
+		exp.offset(offset);
+		exp.limit(limit);
+
+		return this.getTracce(exp, true);
+	}
+
 	public long countTraccePerEsiti(Date date) throws Exception {
+		IExpression exp = getExpressionEsiti(date);
+
+		return this.tracciamentoService.count(exp).longValue();
+	}
+
+	private IExpression getExpressionEsiti(Date date)
+			throws ServiceException, NotImplementedException, ExpressionNotImplementedException, ExpressionException {
 		IExpression exp1 = this.tracciamentoService.newExpression();
 		exp1.equals(PccTraccia.model().STATO, StatoType.AS_PRESA_IN_CARICO);
 		exp1.equals(PccTraccia.model().TIPO_OPERAZIONE, TipoOperazionePccType.PROXY);
-
+		exp1.equals(PccTraccia.model().RISPEDIZIONE, false);
 
 		IExpression exp2 = this.tracciamentoService.newExpression();
 		exp2.isNull(PccTraccia.model().DATA_ULTIMO_TENTATIVO_ESITO).or().lessEquals(PccTraccia.model().DATA_ULTIMO_TENTATIVO_ESITO, date);
 
 		IExpression exp = this.tracciamentoService.newExpression();
 		exp.and(exp1, exp2);
-
-		return this.tracciamentoService.count(exp).longValue();
+		return exp;
 	}
 
 

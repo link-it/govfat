@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -24,21 +23,20 @@ package org.govmix.proxy.fatturapa.web.timers;
 import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.govmix.proxy.fatturapa.notificaesitocommittente.EsitoCommittente;
+import org.govmix.proxy.fatturapa.notificaesitocommittente.NotificaEC;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdUtente;
-import org.govmix.proxy.fatturapa.notificaesitocommittente.EsitoCommittente;
-import org.govmix.proxy.fatturapa.notificaesitocommittente.NotificaEC;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.UtenteBD;
+import org.govmix.proxy.fatturapa.web.commons.converter.notificaesitocommittente.NotificaEsitoCommittenteConverter;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.business.InvioNotificaEsitoCommittente;
-import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.converter.NotificaEsitoCommittenteConverter;
 import org.govmix.proxy.fatturapa.web.commons.sonde.Sonda;
 
 /**
@@ -68,25 +66,35 @@ public class TimerAccettazioneFatturaLib extends AbstractTimerLib {
 		try {
 			connection = DAOFactory.getInstance().getConnection();
 			
-			FatturaElettronicaBD fatturaElettronicaBD = new FatturaElettronicaBD(log, connection, false);
+			FatturaPassivaBD fatturaElettronicaBD = new FatturaPassivaBD(log, connection, false);
 			UtenteBD utenteBD = new UtenteBD(log, connection, false);
 			InvioNotificaEsitoCommittente invio = new InvioNotificaEsitoCommittente(this.log);
 			
-			Calendar calendar = Calendar.getInstance();
-			calendar.set(Calendar.HOUR_OF_DAY, 0);
-			calendar.set(Calendar.MINUTE, 0);
-			calendar.set(Calendar.SECOND, 0);
-			calendar.set(Calendar.MILLISECOND, 0);
-			calendar.add(Calendar.DATE, -giorniScarto);
-			Date limitDate = calendar.getTime();
+//			Calendar calendar = Calendar.getInstance();
+//			calendar.set(Calendar.HOUR_OF_DAY, 0);
+//			calendar.set(Calendar.MINUTE, 0);
+//			calendar.set(Calendar.SECOND, 0);
+//			calendar.set(Calendar.MILLISECOND, 0);
+//			calendar.add(Calendar.DATE, -giorniScarto);
+//			Date limitDate = calendar.getTime();
+
+			Date currentDate = new Date();
 			
+			long millisecondsInHour = 60*60*1000;
+			long millisecondsInDay = 24*millisecondsInHour;
+			long millisecondsToday = currentDate.getTime() % millisecondsInDay;
+			
+			Date dataSenzaOra = new Date(currentDate.getTime() - millisecondsToday - millisecondsInHour); // TODO migliorare: per ora sottraggo un'ora per il fuso orario
+			
+			Date limitDate = new Date(dataSenzaOra.getTime() - ((this.giorniScarto-1)*millisecondsInDay));
+
 			this.log.info("Cerco fatture da consegnare");
 			long countFatture = fatturaElettronicaBD.countFattureDaAccettare(limitDate);
 			this.log.info("Trovate ["+countFatture+"] fatture da accettare fino al giorno ["+limitDate+"]");
 			long countFattureElaborate = 0; 
 
 			if(countFatture > 0) {
-				connection.setAutoCommit(false);
+//				connection.setAutoCommit(false);
 
 				this.log.info("Gestisco ["+countFatture+"] fatture da accettare, ["+this.limit+"] alla volta");
 				List<FatturaElettronica> lstId = fatturaElettronicaBD.getFattureDaAccettare(0, this.limit, limitDate);
@@ -115,15 +123,15 @@ public class TimerAccettazioneFatturaLib extends AbstractTimerLib {
 
 						lstId = fatturaElettronicaBD.getFattureDaAccettare(0, this.limit, limitDate);
 
-						connection.commit();
+//						connection.commit();
 						Sonda.getInstance().registraChiamataServizioOK(this.getTimerName());
 					} catch(Exception e) {
 						this.log.error("Errore durante la spedizione dell'esito: "+e.getMessage(), e);
-						connection.rollback();
+//						connection.rollback();
 					}
 				}
 				this.log.info("Gestite ["+countFattureElaborate+"\\"+countFatture+"] fatture da accettare. Fine.");
-				connection.setAutoCommit(true);
+//				connection.setAutoCommit(true);
 			}
 		}catch(Exception e){
 			this.log.error("Errore durante l'esecuzione del batch AccettazioneFattura: "+e.getMessage(), e);

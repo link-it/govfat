@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -44,6 +43,9 @@ public class LoggerManager {
 	private static Logger batchConsegnaEsitoLogger  = null;
 	private static Logger batchInserimentoFatturaLogger = null;
 	private static Logger batchAccettazioneFatturaLogger = null;
+	private static Logger batchWorkFlowFatturaLogger = null;
+	private static Logger batchProtocollazioneRicevutaLogger = null;
+	private static Logger batchSpedizioneFatturaAttivaLogger = null;
 	private static Logger batchSpedizioneEsitiLogger = null;
 	private static Logger batchSpedizioneNotificheLogger = null;
 	private static Logger batchRispedizioneMessaggiLogger = null;
@@ -80,6 +82,15 @@ public class LoggerManager {
 
 		if(batchAccettazioneFatturaLogger == null)
 			batchAccettazioneFatturaLogger = Logger.getLogger("batch.accettazioneFattura");
+
+		if(batchWorkFlowFatturaLogger == null)
+			batchWorkFlowFatturaLogger = Logger.getLogger("batch.workFlowFattura");
+
+		if(batchSpedizioneFatturaAttivaLogger == null)
+			batchSpedizioneFatturaAttivaLogger = Logger.getLogger("batch.spedizioneFatturaAttiva");
+
+		if(batchProtocollazioneRicevutaLogger == null)
+			batchProtocollazioneRicevutaLogger = Logger.getLogger("batch.protocollazioneRicevuta");
 
 		if(batchConsegnaComunicazioneUscitaLogger == null)
 			batchConsegnaComunicazioneUscitaLogger = Logger.getLogger("batch.consegnaComunicazioneUscita");
@@ -224,5 +235,16 @@ public class LoggerManager {
 		return daoLogger;
 	}
 
+	public static Logger getBatchWorkFlowFatturaLogger() {
+		return batchWorkFlowFatturaLogger;
+	}
+
+	public static Logger getBatchSpedizioneFatturaAttivaLogger() {
+		return batchSpedizioneFatturaAttivaLogger;
+	}
+
+	public static Logger getBatchProtocollazioneRicevutaLogger() {
+		return batchProtocollazioneRicevutaLogger;
+	}
 
 }

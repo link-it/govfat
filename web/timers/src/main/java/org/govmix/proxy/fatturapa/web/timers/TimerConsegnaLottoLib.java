@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -38,7 +37,7 @@ import org.apache.soap.encoding.soapenc.Base64;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoArchivioInvioFatturaType;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFatturePassiveBD;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.sonde.Sonda;
 import org.govmix.proxy.fatturapa.web.commons.utils.CostantiProtocollazione;
@@ -75,7 +74,7 @@ public class TimerConsegnaLottoLib extends AbstractTimerLib {
 		Connection connection = null;
 		try {
 			connection = DAOFactory.getInstance().getConnection();
-			LottoBD lottoBD = new LottoBD(log, connection, false);
+			LottoFatturePassiveBD lottoBD = new LottoFatturePassiveBD(log, connection, false);
 
 			Date limitDate = new Date();
 			this.log.info("Cerco lotti di fatture da consegnare");
@@ -86,7 +85,7 @@ public class TimerConsegnaLottoLib extends AbstractTimerLib {
 			EndpointSelector endpointSelector = new EndpointSelector(log);
 
 			if(countFatture > 0) {
-				connection.setAutoCommit(false);
+//				connection.setAutoCommit(false);
 				DateFormat sdf = new SimpleDateFormat("MM/dd/yyy HH:mm:ss Z");
 
 				this.log.info("Gestisco ["+countFatture+"] lotti di fatture da consegnare, ["+this.limit+"] alla volta");
@@ -100,11 +99,11 @@ public class TimerConsegnaLottoLib extends AbstractTimerLib {
 	
 								Endpoint endpoint = endpointSelector.findEndpoint(lotto);
 	
-								URL urlOriginale = endpoint.getEndpointConsegnaLotto().toURL();
+								URL urlOriginale = endpoint.getEndpoint().toURL();
 								
 								this.log.debug("Spedisco il lotto di fatture ["+idLotto.toJson()+"] all'endpoint ["+urlOriginale.toString()+"]");
 								
-								URL url = new URL(urlOriginale.toString());
+								URL url = new URL(urlOriginale.toString() + "/protocollazioneLotto");
 	
 								URLConnection conn = url.openConnection();
 								HttpURLConnection httpConn = (HttpURLConnection) conn;
@@ -210,15 +209,15 @@ public class TimerConsegnaLottoLib extends AbstractTimerLib {
 
 						lstId = lottoBD.getLottiDaConsegnare(limitDate, 0, this.limit);
 
-						connection.commit();
+//						connection.commit();
 						Sonda.getInstance().registraChiamataServizioOK(this.getTimerName());
 					} catch(Exception e) {
 						this.log.error("Errore durante l'esecuzione del batch ConsegnaLotto: "+e.getMessage(), e);
-						connection.rollback();
+//						connection.rollback();
 					}
 				}
 				this.log.info("Gestiti ["+countFattureElaborate+"\\"+countFatture+"] lotti di fatture da consegnare. Fine.");
-				connection.setAutoCommit(true);
+//				connection.setAutoCommit(true);
 			}
 
 		} finally {

@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -49,11 +48,6 @@ import org.openspcoop2.generic_project.web.input.Text;
  */
 public class FatturaElettronicaSearchForm extends BaseSearchForm implements SearchForm, Cloneable{
 
-	public static final String DATA_RICEZIONE_PERIODO_PERSONALIZZATO = "3";
-	public static final String DATA_RICEZIONE_PERIODO_ULTIMI_TRE_MESI = "2";
-	public static final String DATA_RICEZIONE_PERIODO_ULTIMO_MESE = "1";
-	public static final String DATA_RICEZIONE_PERIODO_ULTIMA_SETTIMANA = "0";
-	
 	private Text cedentePrestatore = null;
 	private List<SelectItem> cedPrestSelList = null;
 	private SelectList<SelectItem> dipartimento = null;
@@ -101,13 +95,13 @@ public class FatturaElettronicaSearchForm extends BaseSearchForm implements Sear
 //		this.dataRicezionePeriodo = new SelectListField();
 //		this.dataRicezionePeriodo.setName("dataRicezionePeriodo");
 		//NOTA: Modificato a seguito della CR 80
-		this.dataRicezionePeriodo = factory.getInputFieldFactory().createSelectList("dataRicezionePeriodo","fattura.search.dataRicezione",new SelectItem(FatturaElettronicaSearchForm.DATA_RICEZIONE_PERIODO_ULTIMO_MESE,"fattura.search.dataRicezione.ultimoMese"),false);
+		this.dataRicezionePeriodo = factory.getInputFieldFactory().createSelectList("dataRicezionePeriodo","fattura.search.dataRicezione",new SelectItem(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_RICEZIONE_PERIODO_ULTIMO_MESE,"fattura.search.dataRicezione.ultimoMese"),false);
 
 		this.dataRicezionePeriodo.setFieldsToUpdate(this.getId () + "_searchPnl");
 		this.dataRicezionePeriodo.setForm(this);
 
-		this.dataRicezione = factory.getInputFieldFactory().createDateTimeInterval("dataRicezione","fattura.search.dataRicezione.personalizzato","dd/M/yyyy",null,null,false);
-		this.dataEsatta = factory.getInputFieldFactory().createDateTime("dataEsatta","fattura.search.dataEsatta","dd/M/yyyy",null,false);
+		this.dataRicezione = factory.getInputFieldFactory().createDateTimeInterval("dataRicezione","fattura.search.dataRicezione.personalizzato",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY,null,null,false);
+		this.dataEsatta = factory.getInputFieldFactory().createDateTime("dataEsatta","fattura.search.dataEsatta",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY,null,false);
 		
 		// imposto i valori di default per le date
 		this._setPeriodo();
@@ -232,7 +226,7 @@ public class FatturaElettronicaSearchForm extends BaseSearchForm implements Sear
 
 	public DateTime getDataRicezione() {
 		boolean rendered = (this.getDataRicezionePeriodo().getValue() != null && this.getDataRicezionePeriodo().getValue().getValue()
-				.equals(FatturaElettronicaSearchForm.DATA_RICEZIONE_PERIODO_PERSONALIZZATO)); //Utils.getMessageFromResourceBundle("fattura.search.dataRicezione.personalizzato")));
+				.equals(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_RICEZIONE_PERIODO_PERSONALIZZATO)); //Utils.getMessageFromResourceBundle("fattura.search.dataRicezione.personalizzato")));
 
 		this.dataRicezione.setRendered(rendered);
 
@@ -323,7 +317,7 @@ public class FatturaElettronicaSearchForm extends BaseSearchForm implements Sear
 		Date dataInizio = this.getDataRicezione().getValue();
 		Date dataFine = this.getDataRicezione().getValue2();
 		
-		String periodo = this.getDataRicezionePeriodo().getValue() != null ? this.getDataRicezionePeriodo().getValue().getValue() : FatturaElettronicaSearchForm.DATA_RICEZIONE_PERIODO_ULTIMA_SETTIMANA ;
+		String periodo = this.getDataRicezionePeriodo().getValue() != null ? this.getDataRicezionePeriodo().getValue().getValue() : org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_RICEZIONE_PERIODO_ULTIMA_SETTIMANA ;
 
 		Calendar today = Calendar.getInstance();
 		today.set(Calendar.HOUR_OF_DAY, 23);
@@ -332,7 +326,7 @@ public class FatturaElettronicaSearchForm extends BaseSearchForm implements Sear
 		today.clear(Calendar.MILLISECOND);
 
 		//ultima settimana
-		if (FatturaElettronicaSearchForm.DATA_RICEZIONE_PERIODO_ULTIMA_SETTIMANA.equals(periodo)) {
+		if (org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_RICEZIONE_PERIODO_ULTIMA_SETTIMANA.equals(periodo)) {
 			Calendar lastWeek = (Calendar) today.clone();
 			Calendar c = Calendar.getInstance();
 			dataFine = c.getTime();
@@ -340,7 +334,7 @@ public class FatturaElettronicaSearchForm extends BaseSearchForm implements Sear
 			lastWeek.set(Calendar.MINUTE, 0);
 			lastWeek.add(Calendar.DATE, -7);
 			dataInizio = lastWeek.getTime();
-		} else if (FatturaElettronicaSearchForm.DATA_RICEZIONE_PERIODO_ULTIMO_MESE.equals( periodo)) {
+		} else if (org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_RICEZIONE_PERIODO_ULTIMO_MESE.equals( periodo)) {
 			Calendar lastMonth = (Calendar) today.clone();
 
 			// prendo la data corrente
@@ -351,7 +345,7 @@ public class FatturaElettronicaSearchForm extends BaseSearchForm implements Sear
 			lastMonth.set(Calendar.MINUTE, 0);
 			lastMonth.add(Calendar.DATE, -30);
 			dataInizio = lastMonth.getTime();
-		} else if (FatturaElettronicaSearchForm.DATA_RICEZIONE_PERIODO_ULTIMI_TRE_MESI.equals( periodo)) {
+		} else if (org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_RICEZIONE_PERIODO_ULTIMI_TRE_MESI.equals( periodo)) {
 			Calendar lastyear = (Calendar) today.clone();
 
 			dataFine = Calendar.getInstance().getTime();

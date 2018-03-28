@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -32,6 +31,10 @@ public class BatchProperties extends org.govmix.proxy.fatturapa.web.commons.util
 	private String ricezioneEsitoUsername;
 	private int maxTentativiRispedizione;
 	private int fattoreRispedizione;
+	private int maxTentativiRispedizioneWFM;
+	private int fattoreRispedizioneWFM;
+	private int maxTentativiRispedizioneSdI;
+	private int fattoreRispedizioneSdI;
 	private boolean consegnaFatturaContestuale;
 	private boolean validazioneDAOAbilitata;
 	private boolean rifiutoAutomaticoAbilitato;
@@ -40,9 +43,13 @@ public class BatchProperties extends org.govmix.proxy.fatturapa.web.commons.util
 	
 	private static BatchProperties props;
 	
+	public static void initInstance() throws Exception {
+		props = new BatchProperties("/batch.properties");
+	}
+	
 	public static BatchProperties getInstance() throws Exception {
 		if(props == null) {
-			props = new BatchProperties("/batch.properties");
+			initInstance();
 		}
 		
 		return props;
@@ -59,6 +66,10 @@ public class BatchProperties extends org.govmix.proxy.fatturapa.web.commons.util
 			
 			this.maxTentativiRispedizione = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.maxTentativiRispedizione", true));
 			this.fattoreRispedizione = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.fattoreRispedizione", true));
+			this.maxTentativiRispedizioneWFM = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.maxTentativiRispedizioneWFM", true));
+			this.fattoreRispedizioneWFM = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.fattoreRispedizioneWFM", true));
+			this.maxTentativiRispedizioneSdI = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.maxTentativiRispedizioneSdI", true));
+			this.fattoreRispedizioneSdI = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.fattoreRispedizioneSdI", true));
 			String consegnaFatturaContestualeString = this.getProperty("org.govmix.proxy.fatturapa.web.api.consegnaFatturaAssociata", true);
 			this.consegnaFatturaContestuale = Boolean.parseBoolean(consegnaFatturaContestualeString);
 
@@ -122,6 +133,38 @@ public class BatchProperties extends org.govmix.proxy.fatturapa.web.commons.util
 	}
 	public int getFattoreRispedizione() {
 		return fattoreRispedizione;
+	}
+
+	public int getMaxTentativiRispedizioneSdI() {
+		return maxTentativiRispedizioneSdI;
+	}
+
+	public void setMaxTentativiRispedizioneSdI(int maxTentativiRispedizioneSdI) {
+		this.maxTentativiRispedizioneSdI = maxTentativiRispedizioneSdI;
+	}
+
+	public int getFattoreRispedizioneSdI() {
+		return fattoreRispedizioneSdI;
+	}
+
+	public void setFattoreRispedizioneSdI(int fattoreRispedizioneSdI) {
+		this.fattoreRispedizioneSdI = fattoreRispedizioneSdI;
+	}
+
+	public int getMaxTentativiRispedizioneWFM() {
+		return maxTentativiRispedizioneWFM;
+	}
+
+	public void setMaxTentativiRispedizioneWFM(int maxTentativiRispedizioneWFM) {
+		this.maxTentativiRispedizioneWFM = maxTentativiRispedizioneWFM;
+	}
+
+	public int getFattoreRispedizioneWFM() {
+		return fattoreRispedizioneWFM;
+	}
+
+	public void setFattoreRispedizioneWFM(int fattoreRispedizioneWFM) {
+		this.fattoreRispedizioneWFM = fattoreRispedizioneWFM;
 	}
 
 }

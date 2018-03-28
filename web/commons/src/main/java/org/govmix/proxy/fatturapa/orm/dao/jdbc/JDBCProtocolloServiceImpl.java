@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -73,17 +72,13 @@ public class JDBCProtocolloServiceImpl extends JDBCProtocolloServiceSearchImpl
 		sqlQueryObjectInsert.addInsertField(this.getProtocolloFieldConverter().toColumn(Protocollo.model().NOME,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getProtocolloFieldConverter().toColumn(Protocollo.model().DESCRIZIONE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getProtocolloFieldConverter().toColumn(Protocollo.model().ENDPOINT,false),"?");
-		sqlQueryObjectInsert.addInsertField(this.getProtocolloFieldConverter().toColumn(Protocollo.model().ENDPOINT_CONSEGNA_LOTTO,false),"?");
-		sqlQueryObjectInsert.addInsertField(this.getProtocolloFieldConverter().toColumn(Protocollo.model().ENDPOINT_RICHIEDI_PROTOCOLLO,false),"?");
 
 		// Insert protocollo
 		org.openspcoop2.utils.jdbc.IKeyGeneratorObject keyGenerator = this.getProtocolloFetch().getKeyGeneratorObject(Protocollo.model());
 		long id = jdbcUtilities.insertAndReturnGeneratedKey(sqlQueryObjectInsert, keyGenerator, jdbcProperties.isShowSql(),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(protocollo.getNome(),Protocollo.model().NOME.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(protocollo.getDescrizione(),Protocollo.model().DESCRIZIONE.getFieldType()),
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(protocollo.getEndpoint(),Protocollo.model().ENDPOINT.getFieldType()),
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(protocollo.getEndpointConsegnaLotto(),Protocollo.model().ENDPOINT_CONSEGNA_LOTTO.getFieldType()),
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(protocollo.getEndpointRichiediProtocollo(),Protocollo.model().ENDPOINT_RICHIEDI_PROTOCOLLO.getFieldType())
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(protocollo.getEndpoint(),Protocollo.model().ENDPOINT.getFieldType())
 		);
 		protocollo.setId(id);
 
@@ -138,10 +133,6 @@ public class JDBCProtocolloServiceImpl extends JDBCProtocolloServiceSearchImpl
 		lstObjects_protocollo.add(new JDBCObject(protocollo.getDescrizione(), Protocollo.model().DESCRIZIONE.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getProtocolloFieldConverter().toColumn(Protocollo.model().ENDPOINT,false), "?");
 		lstObjects_protocollo.add(new JDBCObject(protocollo.getEndpoint(), Protocollo.model().ENDPOINT.getFieldType()));
-		sqlQueryObjectUpdate.addUpdateField(this.getProtocolloFieldConverter().toColumn(Protocollo.model().ENDPOINT_CONSEGNA_LOTTO,false), "?");
-		lstObjects_protocollo.add(new JDBCObject(protocollo.getEndpointConsegnaLotto(), Protocollo.model().ENDPOINT_CONSEGNA_LOTTO.getFieldType()));
-		sqlQueryObjectUpdate.addUpdateField(this.getProtocolloFieldConverter().toColumn(Protocollo.model().ENDPOINT_RICHIEDI_PROTOCOLLO,false), "?");
-		lstObjects_protocollo.add(new JDBCObject(protocollo.getEndpointRichiediProtocollo(), Protocollo.model().ENDPOINT_RICHIEDI_PROTOCOLLO.getFieldType()));
 		sqlQueryObjectUpdate.addWhereCondition("id=?");
 		lstObjects_protocollo.add(new JDBCObject(tableId, Long.class));
 

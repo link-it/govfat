@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,6 +20,9 @@
  */
 package org.govmix.proxy.fatturapa.web.console.util;
 
+import java.util.TreeMap;
+
+import org.apache.commons.lang.StringUtils;
 import org.govmix.proxy.pcc.fatture.utils.AbstractProperties;
 
 
@@ -48,6 +50,11 @@ public class ConsoleProperties extends AbstractProperties {
 	private String proxyPccWsFattureUrl;
 	private String proxyPccWsFattureUsername;
 	private String proxyPccWsFatturePassword;
+	
+	private int fatturaAttivaCaricamentoMaxNumeroFile;
+	private String fatturaAttivaCaricamentoTipologieFileAccettati;
+	
+	private TreeMap<String, String> codiciErrorePCC = null;
 	
 	
 	private static final String propertiesPath = "/fatturapa.properties";
@@ -95,6 +102,19 @@ public class ConsoleProperties extends AbstractProperties {
 		this.proxyPccWsFattureUsername = this.getProperty("org.govmix.proxy.fatturapa.web.console.proxyPcc.wsFatture.username", true);
 		this.proxyPccWsFatturePassword = this.getProperty("org.govmix.proxy.fatturapa.web.console.proxyPcc.wsFatture.password", true);
 
+		this.fatturaAttivaCaricamentoMaxNumeroFile = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.console.fatturazioneAttiva.caricamento.maxNumeroFile", true));
+		this.fatturaAttivaCaricamentoTipologieFileAccettati = this.getProperty("org.govmix.proxy.fatturapa.web.console.fatturazioneAttiva.caricamento.tipologieFileAccettate", true);
+
+		String codErrPCC = this.getProperty("org.govmix.proxy.fatturapa.web.console.proxyPCC.codiciErrore", false);
+		this.codiciErrorePCC = new TreeMap<String, String>();
+		if(StringUtils.isNotEmpty(codErrPCC)){
+			String[] codiciSplit = codErrPCC.split(",");
+			if(codiciSplit != null && codiciSplit.length > 0){
+				for (String codice : codiciSplit) {
+					this.codiciErrorePCC.put(codice.trim(), codice.trim());
+				}
+			}
+		}
 	}
 
 	/* ********  P R O P E R T I E S  ******** */
@@ -157,6 +177,18 @@ public class ConsoleProperties extends AbstractProperties {
 
 	public String getTimersProxyFatturaPASondaUrl() {
 		return timersProxyFatturaPASondaUrl;
+	}
+
+	public TreeMap<String, String> getCodiciErrorePCC() {
+		return codiciErrorePCC;
+	}
+
+	public int getFatturaAttivaCaricamentoMaxNumeroFile() {
+		return fatturaAttivaCaricamentoMaxNumeroFile;
+	}
+
+	public String getFatturaAttivaCaricamentoTipologieFileAccettati() {
+		return fatturaAttivaCaricamentoTipologieFileAccettati;
 	}
 	
 }

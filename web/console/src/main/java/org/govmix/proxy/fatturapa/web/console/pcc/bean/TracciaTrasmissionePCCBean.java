@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -66,15 +65,15 @@ public class TracciaTrasmissionePCCBean extends BaseBean<PccTracciaTrasmissione,
 	private void init() throws FactoryException{
 		this.listaEsiti = new ArrayList<EsitoPccBean>();
 
-		this.tsTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("tsTrasmissione","trasmissionePcc.tsTrasmissione","dd/M/yyyy HH:mm:ss");
+		this.tsTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("tsTrasmissione","trasmissionePcc.tsTrasmissione",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS);
 		this.sdf = new SimpleDateFormat(this.tsTrasmissione.getPattern());
 		this.idPccTransazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("idPccTransazione","trasmissionePcc.idPccTransazione");
 		this.esitoTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("esitoTrasmissione","trasmissionePcc.esitoTrasmissione");
 		this.statoEsito = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("statoEsito","trasmissionePcc.statoEsito");
-		this.gdo = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("gdo","trasmissionePcc.gdo","dd/M/yyyy HH:mm:ss"); 
-		this.dataFineElaborazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataFineElaborazione","trasmissionePcc.dataFineElaborazione","dd/M/yyyy HH:mm:ss");
+		this.gdo = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("gdo","trasmissionePcc.gdo",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS); 
+		this.dataFineElaborazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataFineElaborazione","trasmissionePcc.dataFineElaborazione",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS);
 		this.dettaglioErroreTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("dettaglioErroreTrasmissione","trasmissionePcc.dettaglioErroreTrasmissione");
-		this.dettaglioErroreTrasmissione.setValueStyleClass("whiteSpaceNewLine");
+		this.dettaglioErroreTrasmissione.setValueStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_WHITE_SPACE_NEW_LINE);
 		this.idEgovRichiesta = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("idEgovRichiesta","trasmissionePcc.idEgovRichiesta");
 
 
@@ -99,8 +98,8 @@ public class TracciaTrasmissionePCCBean extends BaseBean<PccTracciaTrasmissione,
 		this.fieldsDatiGenerali.addField(this.dettaglioErroreTrasmissione);
 		this.fieldsDatiGenerali.addField(this.idEgovRichiesta);
 
-		this.fieldsDatiGenerali.setStyleClass("datiTrasmissioneTable"); 
-		this.fieldsDatiGenerali.setColumnClasses("labelAllineataDx,valueAllineataSx"); 
+		this.fieldsDatiGenerali.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.fieldsDatiGenerali.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE); 
 	}
 
 	@Override

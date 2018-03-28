@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -167,6 +166,9 @@ public class JDBCDipartimentoServiceSearchImpl implements IJDBCDipartimentoServi
 			fields.add(Dipartimento.model().ACCETTAZIONE_AUTOMATICA);
 			fields.add(Dipartimento.model().MODALITA_PUSH);
 			fields.add(Dipartimento.model().LISTA_EMAIL_NOTIFICHE);
+			fields.add(Dipartimento.model().FATTURAZIONE_ATTIVA);
+			fields.add(Dipartimento.model().FIRMA_AUTOMATICA);
+			fields.add(Dipartimento.model().ID_PROCEDIMENTO);
 			fields.add(Dipartimento.model().ENTE.NOME);
 
 			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));
@@ -561,6 +563,9 @@ public class JDBCDipartimentoServiceSearchImpl implements IJDBCDipartimentoServi
 		sqlQueryObjectGet_dipartimento.addSelectField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().ACCETTAZIONE_AUTOMATICA,true));
 		sqlQueryObjectGet_dipartimento.addSelectField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().MODALITA_PUSH,true));
 		sqlQueryObjectGet_dipartimento.addSelectField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().LISTA_EMAIL_NOTIFICHE,true));
+		sqlQueryObjectGet_dipartimento.addSelectField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().FATTURAZIONE_ATTIVA,true));
+		sqlQueryObjectGet_dipartimento.addSelectField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().FIRMA_AUTOMATICA,true));
+		sqlQueryObjectGet_dipartimento.addSelectField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().ID_PROCEDIMENTO,true));
 		sqlQueryObjectGet_dipartimento.addWhereCondition("id=?");
 
 		// Get dipartimento
@@ -697,6 +702,12 @@ public class JDBCDipartimentoServiceSearchImpl implements IJDBCDipartimentoServi
 			String tableName1 = this.getDipartimentoFieldConverter().toAliasTable(Dipartimento.model());
 			String tableName2 = this.getDipartimentoFieldConverter().toAliasTable(Dipartimento.model().ENTE);
 			sqlQueryObject.addWhereCondition(tableName1+".id_ente="+tableName2+".id");
+		}
+
+		if(expression.inUseModel(Dipartimento.model().REGISTRO,false)){
+			String tableName1 = this.getDipartimentoFieldConverter().toAliasTable(Dipartimento.model());
+			String tableName2 = this.getDipartimentoFieldConverter().toAliasTable(Dipartimento.model().REGISTRO);
+			sqlQueryObject.addWhereCondition(tableName1+".id_registro="+tableName2+".id");
 		}
 
 		if(expression.inUseModel(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE,false)){

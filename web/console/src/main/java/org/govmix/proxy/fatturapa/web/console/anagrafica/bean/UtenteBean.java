@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -144,8 +143,8 @@ public class UtenteBean extends BaseBean<Utente, Long> implements IBean<Utente, 
 		this.setField(this.rifiutoFattura);
 
 		this.fieldsDatiGenerali = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
-		this.fieldsDatiGenerali.setStyleClass("datiTrasmissioneTable"); 
-		this.fieldsDatiGenerali.setColumnClasses("labelAllineataDx,valueAllineataSx");
+		this.fieldsDatiGenerali.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.fieldsDatiGenerali.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE);
 
 		this.fieldsDatiGenerali.addField(this.cognome);
 		this.fieldsDatiGenerali.addField(this.nome);
@@ -155,8 +154,8 @@ public class UtenteBean extends BaseBean<Utente, Long> implements IBean<Utente, 
 //		this.fieldsDatiGenerali.addField(this.ente);
 
 		this.fieldsDatiPCC = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiPCC",2);
-		this.fieldsDatiPCC.setStyleClass("datiTrasmissioneTable"); 
-		this.fieldsDatiPCC.setColumnClasses("labelAllineataDx,valueAllineataSx");
+		this.fieldsDatiPCC.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.fieldsDatiPCC.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE);
 
 		this.fieldsDatiPCC.addField(this.utenteEsterno);
 		this.fieldsDatiPCC.addField(this.sistemaEsterno);
@@ -507,7 +506,5 @@ public class UtenteBean extends BaseBean<Utente, Long> implements IBean<Utente, 
 	public void setShowPCC(boolean showPCC) {
 		this.showPCC = showPCC;
 	}
-
-
 
 }

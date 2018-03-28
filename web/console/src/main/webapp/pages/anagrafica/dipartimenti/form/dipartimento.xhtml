@@ -2,8 +2,8 @@
   ProxyFatturaPA - Gestione del formato Fattura Elettronica 
   http://www.gov4j.it/fatturapa
   
-  Copyright (c) 2014-2016 Link.it srl (http://link.it). 
-  Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+  Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+  Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
   
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -69,8 +69,26 @@
 					#{msg['commons.label.campiObbligatori']}
 				</p>
 				<op2web:fieldset legend="#{msg['dipartimento.form.label']}" collapsible="false" closed="false" rendered="#{true}">
+					
+					<op2web:prop label="#{dipartimentoMBean.form.codice.label}" required="#{dipartimentoMBean.form.codice.required}" 
+							rendered="#{dipartimentoMBean.form.codice.rendered}">
+						<div>
+							<div class="keepMargin">
+								<h:inputText id="input_#{dipartimentoMBean.form.codice.name}" value="#{dipartimentoMBean.form.codice.value}" 
+								style="#{dipartimentoMBean.form.codice.style}" disabled="#{dipartimentoMBean.form.codice.disabled}" />	
+							</div>
+						</div>
+						
+					 </op2web:prop>
 
-					<op2web:formFields nomiFields="#{'codice,descrizione,ente,registro,modalitaPush,notificaAutomatica'}"/>
+					<op2web:formFields nomiFields="#{'descrizione,ente,registro,modalitaPush,notificaAutomatica'}"/>
+
+				</op2web:fieldset>
+				<rich:spacer height="10"/>
+				
+				<op2web:fieldset legend="#{msg['dipartimento.form.fatturazioneAttiva.label']}" collapsible="false" closed="false" rendered="#{true}">
+
+					<op2web:formFields nomiFields="#{'fatturazioneAttiva,firmaAutomatica,codiceProcedimento'}"/>
 
 				</op2web:fieldset>
 				<rich:spacer height="10"/>
@@ -102,7 +120,7 @@
 
 					<!-- Dati Generali  -->
 					<op2web:fieldset legend="#{msg['dipartimento.label.generale']}" rendered="#{true}">
-						<op2web:outputGroup group="#{dipartimentoMBean.selectedElement.fieldsDatiGenerali}" nomiFields="#{'codice,descrizione,ente,registro,notificaAutomatica,modalitaPush'}"/>
+						<op2web:outputGroup group="#{dipartimentoMBean.selectedElement.fieldsDatiGenerali}" nomiFields="#{'codice,descrizione,ente,registro,notificaAutomatica,modalitaPush,fatturazioneAttiva,firmaAutomatica,codiceProcedimento'}"/>
 					</op2web:fieldset>
 
 					<op2web:fieldset legend="#{msg['dipartimento.label.properties']}" rendered="#{not empty dipartimentoMBean.selectedElement.fieldsProperties.fields}">

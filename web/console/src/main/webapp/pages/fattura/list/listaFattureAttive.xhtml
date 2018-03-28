@@ -1,0 +1,614 @@
+<!-- 
+  ProxyFatturaPA - Gestione del formato Fattura Elettronica 
+  http://www.gov4j.it/fatturapa
+  
+  Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+  Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+ 
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+ 
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<ui:composition template="/templates/defaultTemplate.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:rich="http://richfaces.org/rich" xmlns:op2web="http://www.openspcoop2.org/web/taglib/jsf">
+	<f:loadBundle var="msg" basename="messages" />
+	<a4j:loadScript src="resource://jquery.js" />
+
+	<ui:define name="pageTitle">#{msg['fatturaAttiva.listaFattureAttive.pageTitle']}</ui:define>
+	<ui:define name="pageHeader">#{msg['fatturaAttiva.listaFattureAttive.pageTitle']}</ui:define>
+	<ui:define name="navbar">
+		<ul>
+			<li><h:outputText value="/#{msg['menu.group.operazioni']}" /></li>
+			<li><h:outputText value="/#{msg['fatturaAttiva.listaFattureAttive.pageTitle']}" /></li>
+		</ul>
+	</ui:define>
+	<ui:define name="body">
+		<a4j:keepAlive beanName="fatturaElettronicaAttivaMBean" ajaxOnly="true" />
+		<style>
+			div.errorsSpacer {
+			    height: 4px;
+			}
+			.rich-mpnl-controls {
+				top: 6px;
+				right: 6px;
+			}
+		</style>
+		<script type="text/javascript">
+		//<![CDATA[
+			function aggiungiFile(file){
+				//console.log(file);
+				if(!file.error){
+					var ids = jQuery("[id$='idFilesValidi']").val();
+					
+					if(ids.length > 0)
+						ids += ',';
+					
+					ids += file.id;
+					jQuery("[id$='idFilesValidi']").val(ids);
+				}
+			}
+			
+			function cancellaFile(data){
+				console.log(data);
+				if(data.url){
+					var idx = data.url.indexOf('=');
+					if(idx > -1) {
+						var id = data.url.substring(idx + 1);
+						var ids = jQuery("[id$='idFilesValidi']").val().split(',');
+						
+						var f;
+						for(var t= 0 ; t < ids.length; t++){
+							if(ids[t] == id) {
+								f = t;
+								break;
+							}
+						}
+						
+						var newIds = '';
+						for(var t= 0 ; t < ids.length; t++){
+							if(t != f) {
+								if(newIds.length > 0)
+									newIds += ',';
+								
+								newIds += ids[t];
+							}
+						}
+						
+						jQuery("[id$='idFilesValidi']").val(newIds);
+					}
+				}
+			}
+			
+			function startUploads(){
+				propagaStartUploads();
+			}
+			
+			function stopUploads(){
+				propagaStopUploads();
+			}
+			
+			function endUploadFail(){
+				propagaEndUploadFail();
+			}
+			
+			function endDeleteOk(){
+				//propagaEndDeleteOk();
+			}
+			 //]]>
+		</script>
+		<rich:panel styleClass="noborder" id="pagina">
+		
+			<h:form id="formRicaricaListaFattureAttive">
+            	<a4j:outputPanel layout="block" ajaxRendered="false">
+					<a4j:jsFunction name="ricaricaListaFattureAttive" reRender="fatturaElettronicaTable" limitToList="true" status="mainStatus">
+            		</a4j:jsFunction>
+           		</a4j:outputPanel>
+       		</h:form>
+			
+			<op2web:searchForm searchBean="#{fatturaElettronicaAttivaMBean.search}">
+		
+				<op2web:fieldset legend="#{msg['fattura.search.datiTrasmissione']}" rendered="#{true}" collapsible="false" closed="false">
+					<op2web:searchFields nomiFields="#{'cessionarioCommittente,identificativoLotto,dipartimento,dataInvioPeriodo'}"    />
+
+					<op2web:inlineProp labelEsterna="#{fatturaElettronicaAttivaMBean.search.dataInvio.label}"
+						rendered="#{fatturaElettronicaAttivaMBean.search.dataInvio.rendered}">
+
+						<ui:define name="prop1">
+							<op2web:prop label="#{commonsMsg['form.component.dal']}" 
+								styleClass="insideLeftProp" rendered="#{fatturaElettronicaAttivaMBean.search.dataInvio.rendered}">
+								<rich:calendar id="input1_#{fatturaElettronicaAttivaMBean.search.dataInvio.name}" value="#{fatturaElettronicaAttivaMBean.search.dataInvio.value}"
+									disabled="#{fatturaElettronicaAttivaMBean.search.dataInvio.disabled}" style="#{fatturaElettronicaAttivaMBean.search.dataInvio.style}" bypassUpdates="true"
+									datePattern="#{fatturaElettronicaAttivaMBean.search.dataInvio.pattern}" defaultTime="00:00" validatorMessage="#{msg['fattura.search.dataInvio.da.formatoNonValido']}"
+									enableManualInput="true" validator="#{fatturaElettronicaAttivaMBean.search.dataInizioValidator}" valueChangeListener="#{fatturaElettronicaAttivaMBean.search.dataInizioChangeListener}"
+									converter="dateConverter" >
+								 </rich:calendar>
+							</op2web:prop>
+						</ui:define>
+
+						<ui:define name="prop2">
+							<op2web:prop label="#{commonsMsg['form.component.al']}"
+								styleClass="insideRightProp" rendered="#{fatturaElettronicaAttivaMBean.search.dataInvio.rendered}">
+								<rich:calendar id="input2_#{fatturaElettronicaAttivaMBean.search.dataInvio.name}" value="#{fatturaElettronicaAttivaMBean.search.dataInvio.value2}"
+									disabled="#{fatturaElettronicaAttivaMBean.search.dataInvio.disabled}" style="#{fatturaElettronicaAttivaMBean.search.dataInvio.style}"
+									datePattern="#{fatturaElettronicaAttivaMBean.search.dataInvio.pattern}" defaultTime="23:59" converter="dateConverter" 
+									enableManualInput="true" />
+							</op2web:prop>
+						</ui:define>
+					</op2web:inlineProp>
+					
+					<op2web:formField field="#{fatturaElettronicaAttivaMBean.search.statoElaborazione}" />
+					
+					<op2web:formField field="#{fatturaElettronicaAttivaMBean.search.notificaDecorrenzaTermini}" />
+					
+					<div class="prop">
+						<label>
+							<h:outputText value="#{fatturaElettronicaAttivaMBean.search.conservazione.label}" />
+						</label>
+						<h:selectBooleanCheckbox id="input_#{fatturaElettronicaAttivaMBean.search.conservazione.name}"
+							styleClass="controlset" disabled="#{fatturaElettronicaAttivaMBean.search.conservazione.disabled}"
+							value="#{fatturaElettronicaAttivaMBean.search.conservazione.value}" >
+						</h:selectBooleanCheckbox>
+					</div>
+				</op2web:fieldset>
+					
+				<op2web:fieldset legend="#{msg['fattura.search.datiFattura']}" rendered="#{true}" collapsible="false" closed="false">
+					<op2web:formField field="#{fatturaElettronicaAttivaMBean.search.numero}" />
+						
+					<op2web:prop label="#{fatturaElettronicaAttivaMBean.search.dataEsatta.label}" rendered="#{fatturaElettronicaAttivaMBean.search.dataEsatta.rendered}">
+						<rich:calendar id="input_#{fatturaElettronicaAttivaMBean.search.dataEsatta.name}" value="#{fatturaElettronicaAttivaMBean.search.dataEsatta.value}"  disabled="#{fatturaElettronicaAttivaMBean.search.dataEsatta.disabled}"
+		 					style="#{fatturaElettronicaAttivaMBean.search.dataEsatta.style}" datePattern="#{fatturaElettronicaAttivaMBean.search.dataEsatta.pattern}" defaultTime="00:00" 
+		 					validatorMessage="#{msg['fattura.search.dataEsatta.formatoNonValido']}" converter="dateEmptyConverter"
+									enableManualInput="true" validator="#{fatturaElettronicaAttivaMBean.search.dataEsattaValidator}" />
+					</op2web:prop>
+					
+					<op2web:formField
+						field="#{fatturaElettronicaAttivaMBean.search.tipoDocumento}" />
+						
+						<op2web:formField
+						field="#{fatturaElettronicaAttivaMBean.search.tipoComunicazione}" />
+				</op2web:fieldset>
+
+				<op2web:fieldset legend="#{msg['fattura.search.protocollo']}"
+					rendered="#{true}" collapsible="false" closed="false">
+					<op2web:formField field="#{fatturaElettronicaAttivaMBean.search.identificativoProtocollo}" />
+				</op2web:fieldset>
+				
+				<ui:define name="buttons">
+					<a4j:commandButton id="filtraButton"
+						value="#{msg['commons.button.filtra']}" styleClass="icon-refresh"
+						reRender="fatturaElettronicaTable" status="mainStatus" action="#{fatturaElettronicaAttivaMBean.filtra}">
+					</a4j:commandButton>
+		
+					<a4j:commandButton id="pulisciButton"
+						value="#{msg['commons.button.reset']}" reRender="#{fatturaElettronicaAttivaMBean.search.id}_searchPnl,fatturaElettronicaTable"
+						status="mainStatus" styleClass="icon-delete" action="#{fatturaElettronicaAttivaMBean.reset}">
+					</a4j:commandButton>
+					
+				</ui:define>
+			</op2web:searchForm>	
+			<rich:spacer height="20"/>
+			
+			<op2web:managedPagedListView  value="#{fatturaElettronicaAttivaDM}" mBean="#{fatturaElettronicaAttivaMBean}" >
+			
+            	<rich:column align="center" width="50px" id="ckbClmn_2" rendered="#{not empty mBean}">
+      	        	<f:facet name="header">
+		                <h:panelGroup style="width:50px;" layout="block">
+		                	<script type="text/javascript" >
+		                  	//<![CDATA[
+		                    	function #{id}_checkAllCheckboxesInTable_2( inputId, state ){
+		                              var size = 0;
+		                              var tid = ":"+inputId+"_tbl";
+		                              if(state){
+		                                  size = jQuery("table [id$='"+tid+"'] input:checkbox[id$='#{id}_column_ckb_2']").not("[id$='selectedAllChbx_2']").attr("checked","on").size();
+		                                  #{id}_disabilitaEsporta_2('carica-iconLink',true);
+		                              }else{
+		                                  jQuery("table [id$='"+tid+"'] input:checkbox[id$='#{id}_column_ckb_2']").removeAttr("checked");
+		                                  #{id}_disabilitaEsporta_2('carica-iconLink',false);
+		                                  size=0;
+		                              }
+		
+		                              if(true){
+		                                  var _totRows = #{value.rowCount};
+		                                  var _rows = #{rowsToDisplay};
+		                                  if(state && _totRows>_rows ){
+		                                          var t1= formatMessage("#{commonsMsg['pagedDataTable.script.checkAllCheckboxesInTable.selezionati']}",{0:size,1:_totRows});
+		                                          jQuery("[id$='"+inputId+"_selectedInfoLbl']").show().text(t1);
+		                                          var t2= formatMessage("#{commonsMsg['pagedDataTable.script.checkAllCheckboxesInTable.selezionaTutti']}",{0:_totRows});
+		                                          jQuery("[id$='"+inputId+"_selectAllLink']").show().text(t2);
+                                          }else{
+                                                  jQuery("[id$='"+inputId+"_selectedInfoLbl']").hide();
+                                                  jQuery("[id$='"+inputId+"_selectAllLink']").hide();
+                                                  jQuery("[id$='"+inputId+"_undoSelectAllLink']").hide();                         
+                                          }
+                                      }
+		                     	}
+                     			function #{id}_selectAllListener_2(inputId, selectAll){
+		                          	var _totRows = #{value.rowCount};
+		                          	var tid = ":"+inputId+"_tbl";
+	                                if(selectAll){
+	                                        jQuery("[id$='"+inputId+"_selectedAllChbx_2']").attr("checked","on");
+	                                        var t1 = formatMessage("#{commonsMsg['pagedDataTable.script.selectAllListener.selezionatiTutti']}",{0:_totRows});
+	                                        jQuery("[id$='"+inputId+"_selectedInfoLbl']").show().text(t1);
+	                                        jQuery("[id$='"+inputId+"_selectAllLink']").hide();
+	                                        jQuery("[id$='"+inputId+"_undoSelectAllLink']").show().text("#{commonsMsg['pagedDataTable.script.selectAllListener.annullaSelezione']}.");
+	                                }else{
+	                                        jQuery("[id$='"+inputId+"_selectedAllChbx_2']").removeAttr("checked");
+	                                        jQuery("[id$='"+inputId+"_selectedInfoLbl']").hide();
+                                          	jQuery("[id$='"+inputId+"_selectAllLink']").hide();
+                                         	 jQuery("[id$='"+inputId+"_undoSelectAllLink']").hide();
+                                         	 //jQuery("div [id$='"+inputId+"'] input:checkbox").removeAttr("checked");
+                                         	jQuery("table [id$='"+tid+"'] input:checkbox[id$='#{id}_column_ckb_2']").removeAttr("checked");
+                                          	jQuery("table [id$='"+tid+"'] input:checkbox[id$='#{id}_checkAll_2']").removeAttr("checked");
+                                   }
+		                              
+		                        }
+		                        function formatMessage(text,values){
+		                                    for(var v in values){
+		                                              text =text.replace('{' + v + '}', values[v]);
+		                                          }
+		                                          return text;
+                                }
+		                          
+		                        function #{id}_singleCheckboxListener_2( inputId, state , showSelectAll, _totRows , _rows ){
+		                              //var tid = ":"+inputId+"_tbl";
+		                              var tid = inputId+"_tbl";
+		
+		                              var allSize = jQuery("table [id$='"+tid+"'] input:checkbox[id$='"+inputId+"_column_ckb_2']").not("[id$='selectedAllChbx_2']").size();
+		                              var size = jQuery("table [id$='"+tid+"'] input:checkbox[id$='"+inputId+"_column_ckb_2']:checked").not("[id$='selectedAllChbx_2']").size();
+		                              
+		                              if(size > 0){
+		                            	  #{id}_disabilitaEsporta_2('carica-iconLink',true);
+		                              } else {
+		                            	  #{id}_disabilitaEsporta_2('carica-iconLink',false);
+		                              }
+		                              
+		                              
+		                              if(showSelectAll){
+			                             if(state && _totRows>_rows ){
+		                                     if(size >= allSize){
+	                                             jQuery("table [id$='"+tid+"'] input:checkbox[id$='"+inputId+"_checkAll_2']").attr("checked","on");
+	                                             var t1= formatMessage("#{commonsMsg['pagedDataTable.script.checkAllCheckboxesInTable.selezionati']}",{0:size,1:_totRows});
+	                                             jQuery("[id$='"+inputId+"_selectedInfoLbl']").show().text(t1);
+	                                             var t2= formatMessage("#{commonsMsg['pagedDataTable.script.checkAllCheckboxesInTable.selezionaTutti']}",{0:_totRows});
+		                                         jQuery("[id$='"+inputId+"_selectAllLink']").show().text(t2);
+		                                     }
+			                             }else{
+			                                     jQuery("[id$='"+inputId+"_selectedInfoLbl']").hide();
+			                                     jQuery("[id$='"+inputId+"_selectAllLink']").hide();
+			                                     jQuery("[id$='"+inputId+"_undoSelectAllLink']").hide();
+			                                     jQuery("[id$='"+inputId+"_selectedAllChbx_2']").removeAttr("checked");
+			                                     jQuery("table [id$='"+tid+"'] input:checkbox[id$='"+inputId+"_checkAll_2']").removeAttr("checked");
+			                                     
+			                             }
+			                         }
+			                     }
+		                     
+		                        function #{id}_disabilitaEsporta_2( inputId, abilita ){
+		                        	 jQuery("[id$='"+inputId+"']").attr('disabled',abilita);
+		                        }
+		                        
+		                        function checkSelection2(containerId){
+		                            var name = containerId + "_checkSelection";
+		                            var n = jQuery("div [id$='"+containerId+"_tbl'] input:checkbox[id$='column_ckb_2']:checked").length;
+		                                   if(n==0){
+		                                           Richfaces.showModalPanel(name);
+		                                           return false;
+		                                   }else{
+		                                           return true;
+		                                   }
+		                    	};
+
+		                     //]]>
+		                    </script>
+		                  	<h:selectBooleanCheckbox id="#{id}_checkAll_2" title="#{commonsMsg['pagedDataTable.component.selectAll']}" onclick="#{id}_checkAllCheckboxesInTable_2( '#{id}', this.checked );">
+		
+		                  	</h:selectBooleanCheckbox>
+		                  	<h:selectBooleanCheckbox id="#{id}_selectedAllChbx_2" value="#{mBean.selectedAll}" style="display:none"/>
+		                </h:panelGroup>
+	                </f:facet>
+                    <h:selectBooleanCheckbox id="#{id}_column_ckb_2" value="#{selectionMapTarget}" disabled="false" onclick="#{id}_singleCheckboxListener_2( '#{id}', this.checked , true ,#{value.rowCount} , #{rowsToDisplay} );"/>
+                </rich:column>
+
+				
+				<!-- Colonne mittente,destinatario,identificativoSDI, annonumero, data, dataricezione, importo -->
+				<op2web:tableColumns nomiColonne="#{'cessionarioCommittente,dipartimento,identificativoSdi,annoNumero,data,dataInvio'}" />
+				
+				<!-- Colonne mittente,destinatario,identificativoSDI, annonumero, data, dataricezione, importo -->
+				<op2web:tableColumns nomiColonne="#{'importo'}" />
+				
+				<!-- Esito Elaborazione (Icona) -->
+				<rich:column style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{itemMetadata.esitoElaborazione.label}" />
+					</f:facet>
+					 
+					<h:panelGroup>
+						<h:graphicImage value="#{item.esitoElaborazione.image}" width="16" height="16"	title="#{item.esitoElaborazione.title}"  alt="#{item.esitoElaborazione.alt}"
+								 rendered="#{item.esitoElaborazione.rendered == true}" />
+						<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{item.esitoElaborazione.rendered == false}" />
+					</h:panelGroup>
+				</rich:column>
+					
+				<!-- Notifica DT (Icona) -->
+				<rich:column style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{itemMetadata.notificaDT.label}" />
+					</f:facet>
+					 
+					<h:panelGroup>
+						<h:graphicImage value="#{item.notificaDT.image}" width="16" alt="#{item.notificaDT.alt}" height="16"	title="#{item.notificaDT.title}" rendered="#{item.notificaDT.rendered == true}" />
+						<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{item.notificaDT.rendered == false}" />
+					</h:panelGroup>
+				</rich:column>
+				
+				<!-- XML (Icona) -->
+				<rich:column style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{itemMetadata.xml.label}" />
+					</f:facet>
+					 
+					<h:panelGroup>
+					 	<h:commandLink id="visualizzaXmlLink" target="_blank" action="#{item.visualizzaXml}" rendered="#{not empty item.xml.href}">
+							<h:graphicImage value="#{item.xml.image}" width="16" alt="#{item.xml.alt}" height="16"	title="#{item.xml.title}" />
+						</h:commandLink>
+					</h:panelGroup>
+				</rich:column>
+				
+				<!-- PDF (Icona) -->
+				<rich:column style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{itemMetadata.pdf.label}" />
+					</f:facet>
+					 <h:panelGroup>
+					 	<h:commandLink id="visualizzaPdfLink" target="_blank" action="#{item.visualizzaPdf}" rendered="#{not empty item.pdf.href}">
+							<h:graphicImage value="#{item.pdf.image}" width="16" height="16"	title="#{item.pdf.title}" alt="#{item.pdf.alt}" />
+						</h:commandLink>
+					</h:panelGroup>
+				</rich:column>
+				
+				<!-- Link dettagli -->
+				<rich:column style="text-align: center;">
+					<h:panelGroup>
+						<a4j:commandLink id="dettaglio_btn" action="dettaglioAttiva" ajaxSingle="true">
+							<f:setPropertyActionListener value="tabSDI" target="#{fatturaElettronicaAttivaMBean.selectedTab}" />
+							<f:setPropertyActionListener value="#{item}" target="#{fatturaElettronicaAttivaMBean.selectedElement}" />
+							<h:graphicImage value="/images/magnifier.png" width="16" alt="#{msg['fattura.label.ricercaFatture.dettaglioTitle']}"
+								height="16" title="#{msg['fattura.label.ricercaFatture.dettaglioTitle']}" />
+						</a4j:commandLink>
+					</h:panelGroup>
+				</rich:column>
+				
+				<ui:define name="buttonsListView">
+					<h:commandLink id="exportFatture-iconLink" target="_blank" 
+						styleClass="icon-compress" action="#{fatturaElettronicaAttivaMBean.exportSelected}"
+						onclick="return checkSelection2('fatturaElettronicaTable_dt');" style="color: #dd2c0d;">
+						<h:outputText value="#{msg['commons.button.esporta']}" />
+					</h:commandLink>
+					
+					<a4j:commandButton id="carica-iconLink" styleClass="icon-carica-fattura" style="padding: 4px 6px 4px 5px;"
+						reRender="fileUploadModalPnl" value="#{msg['fattura.button.carica']}"
+						actionListener="#{fatturaElettronicaAttivaMBean.nuovaFatturaListener}"
+						rendered="#{fatturaElettronicaAttivaMBean.visualizzaTastoCaricaFattura}"
+						oncomplete="#{rich:component('fileUploadModalPnl')}.show()">
+					</a4j:commandButton>
+				</ui:define>
+			</op2web:managedPagedListView>
+		</rich:panel>
+		
+		<rich:modalPanel id="fileUploadModalPnl" showWhenRendered="false"
+				autosized="true">
+				<f:facet name="header">
+					<h:outputText id="dsOutUploadPnl" value="#{msg['fileUpload.caricaFile']}" />
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup id="dsPanelChiudiUpload">
+						<a href="#"
+							onclick="Richfaces.hideModalPanel('fileUploadModalPnl');">#{msg['commons.label.chiudi']}</a>
+					</h:panelGroup>
+				</f:facet>
+				<a4j:outputPanel id="dsFileUploadErrorsCtr" ajaxRendered="true">
+					<h:panelGroup  styleClass="errors" layout="block" rendered="#{not empty fatturaElettronicaAttivaMBean.checkFormFatturaMessage}">
+						<h:panelGroup rendered="#{not empty fatturaElettronicaAttivaMBean.checkFormFatturaMessage}">
+							<p>
+								<em>
+									<h:outputText value="#{msg['fattura.form.modale.presenzaErrori']}"/>
+								</em>
+							</p>
+							<div class="errorsSpacer"/>
+						</h:panelGroup>
+						<div class="errorsSpacer"/>
+						<rich:messages id="errorDsUploadMessages">
+						</rich:messages>
+						<h:outputText id="dsFileUploadErrors"  
+							value="#{fatturaElettronicaAttivaMBean.checkFormFatturaMessage}"
+							rendered="#{not empty fatturaElettronicaAttivaMBean.checkFormFatturaMessage}" />
+					</h:panelGroup>
+				</a4j:outputPanel>
+				<div class="form-container noborder">
+					<h:form id="formControlloUpload">
+		            	<a4j:outputPanel layout="block" ajaxRendered="false">
+							<a4j:jsFunction name="propagaStartUploads" reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" 
+									actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.startUploadsListener}" limitToList="true">
+							</a4j:jsFunction>
+							<a4j:jsFunction name="propagaStopUploads" reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" 
+									actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.stopUploadsListener}" limitToList="true">
+							</a4j:jsFunction>
+							<a4j:jsFunction name="propagaEndUploadFail" reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" 
+									actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.uploadCanceledListener}" limitToList="true">
+							</a4j:jsFunction>
+							<a4j:jsFunction name="propagaEndDeleteOk" reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" 
+									actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.deleteCompleteListener}" limitToList="true">
+							</a4j:jsFunction>
+		           		</a4j:outputPanel>
+		       		</h:form>
+				
+					<a4j:outputPanel layout="block" id="formCaricaFattura_formPnl" ajaxRendered="false">
+					<h:form id="dSFormUploadPnl" prependId="false">
+					<h:inputHidden value = "#{fatturaElettronicaAttivaMBean.checkFormFattura}" id = "checkFormFatturaHidden" /> 
+						<style>
+						.rich-fileupload-del {
+							visibility: hidden;
+						}
+						.rich-fileupload-list-decor { 
+							    border: 1px solid;
+							    border-color: #C0C0C0;
+							    background-color: #FFF;
+						}
+						</style>
+						<p class="legend">
+							<strong>#{msg['commons.label.note']}</strong> (<em>*</em>)
+							#{msg['commons.label.campiObbligatori']}
+						</p>
+						
+						<op2web:fieldset legend="#{msg['fattura.fieldset.datiFattura']}" collapsible="false" closed="false">
+							
+							<op2web:prop label="#{fatturaElettronicaAttivaMBean.form.descrittoreFattura.label}" required="#{true}"
+								note="#{msg['fattura.form.descrittoreFattura.note']}">
+								<div id="wrapUploadFattureFrame"> 
+							        <div class="rich-combobox">	 
+							            <iframe id="uploadFattureFrame" name="uploadFattureFrame" class="rich-fileupload-list-decor"
+							            	frameborder="0" scrolling="no" 
+							            	src="#{facesContext.externalContext.request.contextPath}/includes/form/uploadForm.jsp" width="500px" height="400px">
+							              <p>Your browser does not support iframes.</p>
+							            </iframe>
+						            </div>
+					            </div>
+					            
+					            <h:inputHidden value="#{fatturaElettronicaAttivaMBean.form.idFiles}" id="idFilesValidi" /> 
+							</op2web:prop>
+							<op2web:formField field="#{fatturaElettronicaAttivaMBean.form.dipartimento}" />
+					    	<div class="prop">
+								<label class="" style="padding-top: 3px;">
+									<h:outputText value="#{fatturaElettronicaAttivaMBean.form.conservazione.label}" />
+								</label>
+								<h:panelGroup>
+									<h:selectBooleanCheckbox id="input_#{fatturaElettronicaAttivaMBean.form.conservazione.name}"
+										styleClass="controlset" disabled="#{fatturaElettronicaAttivaMBean.form.conservazione.disabled}"
+										value="#{fatturaElettronicaAttivaMBean.form.conservazione.value}" >
+											<a4j:support status="mainStatus" event="onchange"
+												reRender="#{fatturaElettronicaAttivaMBean.form.conservazione.fieldsToUpdate}"
+												actionListener="#{fatturaElettronicaAttivaMBean.form.conservazione.valueChanged}" />
+										</h:selectBooleanCheckbox>
+										<h:graphicImage value="/images/sh/help.png" id="helpImg" style="padding-left: 6px;"/>
+										<rich:toolTip for="helpImg" value="#{msg['fattura.form.conservazione.note']}"/>
+								</h:panelGroup>
+							</div>
+						</op2web:fieldset>
+						<a4j:outputPanel layout="block" id="formCaricaFattura_btnPnl" ajaxRendered="false">
+							<div class="buttonrow" style="margin-left: 320px; margin-top:20px;">
+								<a4j:commandButton styleClass="icon-save positive" style="padding: 4px 6px 4px 5px;" id="caricaFattureConservazioneButton"
+									disabled="#{!fatturaElettronicaAttivaMBean.form.buttonEnabled}"
+									value="#{msg['fattura.button.salva']}" action="#{fatturaElettronicaAttivaMBean.preparaFormConservazione}"
+									reRender="dsFileUploadErrorsCtr,conservazioneFattureForm_formPnl" rendered="#{fatturaElettronicaAttivaMBean.form.mostraFormCorservazione}"
+									onclick="this.disabled=true"
+									oncomplete="this.disabled=false; if (#{fatturaElettronicaAttivaMBean.checkFormFattura == 'true'}) { #{rich:component('pannelloConservazioneFatture')}.show(); }" />
+								<a4j:commandButton styleClass="icon-save positive" style="padding: 4px 6px 4px 5px;" id="caricaFattureButton"
+									disabled="#{!fatturaElettronicaAttivaMBean.form.buttonEnabled}"
+									value="#{msg['fattura.button.salva']}" action="#{fatturaElettronicaAttivaMBean.salvaFatture}"
+									reRender="dsFileUploadErrorsCtr" rendered="#{not fatturaElettronicaAttivaMBean.form.mostraFormCorservazione}"
+									onclick="this.disabled=true"
+									oncomplete="this.disabled=false; if (#{fatturaElettronicaAttivaMBean.salvataggioOk == 'true'}) { #{rich:component('fileUploadModalPnl')}.hide(); ricaricaListaFattureAttive(); }" />
+							</div>
+						</a4j:outputPanel>		
+					</h:form>	
+					</a4j:outputPanel>
+				</div>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="pannelloConservazioneFatture" width="750" autosized="true">
+			   <f:facet name="header">
+			   	<h:outputText value="#{msg['fattura.conservazioneFattureForm.titoloFinestra']}" />
+			   </f:facet>
+   				<f:facet name="controls">
+					<h:panelGroup id="consPanelChiudi">
+						<a href="#"
+							onclick="Richfaces.hideModalPanel('pannelloConservazioneFatture');">#{msg['commons.label.chiudi']}</a>
+					</h:panelGroup>
+				</f:facet>
+		   		<div class="form-container noborder">
+					<a4j:outputPanel id="outPanelFormConservazioneError" ajaxRendered="true">
+						<h:panelGroup id="panelGroupFormConservazioneError" layout="block"
+							styleClass="errors" rendered="#{not empty fatturaElettronicaAttivaMBean.checkFormConservazioneMessage}">
+								<h:panelGroup rendered="#{not empty fatturaElettronicaAttivaMBean.checkFormConservazioneMessage}">
+								<p>
+									<em>
+										<h:outputText value="#{msg['fattura.form.modale.presenzaErrori']}"/>
+									</em>
+								</p>
+								<div class="errorsSpacer"/>
+							</h:panelGroup>
+							<div class="errorsSpacer"/>
+							<rich:messages id="errorFormConservazioneMessages">
+							</rich:messages>
+							<h:outputText id="dsFormConservazioneErrors"  
+								value="#{fatturaElettronicaAttivaMBean.checkFormConservazioneMessage}"
+								rendered="#{not empty fatturaElettronicaAttivaMBean.checkFormConservazioneMessage}" />
+						</h:panelGroup>
+					</a4j:outputPanel>
+		   			<a4j:outputPanel layout="block" id="conservazioneFattureForm_formPnl" ajaxRendered="false">
+						<h:form id="conservazioneForm" prependId="false">
+							<p class="legend">
+								<strong>#{msg['commons.label.note']}</strong> (<em>*</em>)
+								#{msg['commons.label.campiObbligatori']}
+							</p>
+							<h:inputHidden value = "#{fatturaElettronicaAttivaMBean.checkConservazione}" id = "checkConservazioneHidden" /> 
+							<op2web:fieldset legend="#{msg['fattura.fieldset.datiFattura']}" collapsible="false" closed="false">
+							<rich:dataTable value="#{fatturaElettronicaAttivaMBean.listaConservazione}" 
+								var="item" rows="25"
+									id="tabellaConservazione" onRowMouseOver="activeRow(this)"
+										rowClasses="even,odd" width="100%">
+								 	<rich:column>
+								 		<f:facet name="header">
+			                                 <h:outputText value="#{msg['fattura.form.nomeFileFattura']}" />	
+		                                </f:facet>
+		                                <h:outputText id="outNomeFile" value="#{item.nomeFile}"/>
+		                            </rich:column>
+		                            <rich:column>
+			                            <f:facet name="header">
+			                                <h:outputText value="#{fatturaElettronicaAttivaMBean.labelColonnaRegistro}" />
+		                                </f:facet>
+		                                 <h:outputText id="output_registro_tab" value="#{item.registro}" rendered="#{not item.editRegistro}"/>
+		                                 <h:inputText id="input_registro_tab" value="#{item.registro}" style="width: 99%;" rendered="#{item.editRegistro}"/>
+		                            </rich:column>
+		                            <rich:column>
+			                            <f:facet name="header">
+			                                <h:outputText value="#{msg['fattura.form.protocollo.obbligatorio']}" />
+		                                </f:facet>
+		                                <h:inputText id="input_protocollo_tab" value="#{item.protocollo}" style="width: 99%;"/>
+		                            </rich:column>
+		                            <rich:column>
+			                            <f:facet name="header">
+			                                <h:outputText value="#{msg['fattura.form.anno.obbligatorio']}" />
+		                                </f:facet>
+		                                 <h:inputText id="input_anno_tab" value="#{item.anno}" style="width: 99%;"/>
+		                            </rich:column>
+								 </rich:dataTable>
+				        	</op2web:fieldset>
+				        	<div class="buttonrow" style="margin-left: 310px;">
+				        		<a4j:commandButton styleClass="icon-save positive" style="padding: 4px 6px 4px 5px;"
+									value="#{msg['fattura.button.invia']}" action="#{fatturaElettronicaAttivaMBean.salvaFormCorservazione}"
+									reRender="conservazioneFattureForm_formPnl,outPanelFormConservazioneError"
+									oncomplete="if (#{fatturaElettronicaAttivaMBean.checkConservazione == 'true'}) { #{rich:component('pannelloConservazioneFatture')}.hide(); #{rich:component('fileUploadModalPnl')}.hide(); ricaricaListaFattureAttive(); }" />
+				        	</div>
+			        		
+			       		</h:form>
+			        </a4j:outputPanel>
+				 </div>
+			</rich:modalPanel>
+	</ui:define>
+</ui:composition>

@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -56,7 +55,7 @@ public class ErroreElaborazionePccBean extends BaseBean<PccErroreElaborazione, L
 		this.progressivoOperazione.setConverterType(Costanti.CONVERT_TYPE_NUMBER); 
 		this.codiceEsito = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("codiceEsito","erroreElaborazione.codiceEsito");
 		this.descrizioneEsito = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("descrizioneEsito","erroreElaborazione.descrizioneEsito");
-		this.descrizioneEsito.setValueStyleClass("whiteSpaceNewLine");
+		this.descrizioneEsito.setValueStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_WHITE_SPACE_NEW_LINE);
 		this.tipoErrore = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("tipoErrore","erroreElaborazione.tipoErrore");
 		
 		
@@ -74,8 +73,8 @@ public class ErroreElaborazionePccBean extends BaseBean<PccErroreElaborazione, L
 		this.fieldsDatiGenerali.addField(this.descrizioneEsito);
 		this.fieldsDatiGenerali.addField(this.tipoErrore);
 
-		this.fieldsDatiGenerali.setStyleClass("datiTrasmissioneTable"); 
-		this.fieldsDatiGenerali.setColumnClasses("labelAllineataDx,valueAllineataSx");
+		this.fieldsDatiGenerali.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.fieldsDatiGenerali.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE);
 	}
 
 	@Override

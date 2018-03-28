@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -49,9 +48,9 @@ public class ContabilizzazioneService extends BaseService<ContabilizzazioneSearc
 
 	public ContabilizzazioneService() {
 		try{
-			this.bd = new PccContabilizzazioneBD(log);
+			this.bd = new PccContabilizzazioneBD(ContabilizzazioneService.log);
 		}catch(Exception e){
-			log.error("Errore durante la init di ContabilizzazioneService: "+ e.getMessage(), e); 
+			ContabilizzazioneService.log.error("Errore durante la init di ContabilizzazioneService: "+ e.getMessage(), e); 
 		}
 	}
 
@@ -183,7 +182,7 @@ public class ContabilizzazioneService extends BaseService<ContabilizzazioneSearc
 				bean = new ContabilizzazionePccBean();
 				bean.setDTO(dto);
 			} catch (NotFoundException e) {
-				log.debug("Elemento non trovato");
+				ContabilizzazioneService.log.debug("Elemento non trovato");
 			}
 		}
 		return bean;
@@ -222,7 +221,7 @@ public class ContabilizzazioneService extends BaseService<ContabilizzazioneSearc
 			}
 
 		} catch (Exception e) {
-			log.error("Errore durante l'esecuzione del metodo ["+methodName+"] : "+ e.getMessage() , e);
+			ContabilizzazioneService.log.error("Errore durante l'esecuzione del metodo ["+methodName+"] : "+ e.getMessage() , e);
 		}
 
 		return lst;
@@ -234,10 +233,12 @@ public class ContabilizzazioneService extends BaseService<ContabilizzazioneSearc
 		return this.bd.exists(contabilizzazione);
 	}
 
+	@Override
 	public IdFattura getIdFattura() {
 		return idFattura;
 	}
 
+	@Override
 	public void setIdFattura(IdFattura idFattura) {
 		this.idFattura = idFattura;
 	}
@@ -251,6 +252,7 @@ public class ContabilizzazioneService extends BaseService<ContabilizzazioneSearc
 		return cacheDati;
 	}
 
+	@Override
 	public void setCacheDati(List<ContabilizzazionePccBean> cacheDati) {
 		this.cacheDati = cacheDati;
 	}

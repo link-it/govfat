@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -188,11 +187,25 @@ public class PccTracciaFieldConverter extends AbstractSQLFieldConverter {
 				return "data_ultimo_tentativo_esito";
 			}
 		}
+		if(field.equals(PccTraccia.model().CODICI_ERRORE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".codici_errore";
+			}else{
+				return "codici_errore";
+			}
+		}
 		if(field.equals(PccTraccia.model().RISPEDIZIONE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".rispedizione";
 			}else{
 				return "rispedizione";
+			}
+		}
+		if(field.equals(PccTraccia.model().RISPEDIZIONE_DOPO_QUERY)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".rispedizione_dopo_query";
+			}else{
+				return "rispedizione_dopo_query";
 			}
 		}
 		if(field.equals(PccTraccia.model().RISPEDIZIONE_MAX_TENTATIVI)){
@@ -714,7 +727,13 @@ public class PccTracciaFieldConverter extends AbstractSQLFieldConverter {
 		if(field.equals(PccTraccia.model().DATA_ULTIMO_TENTATIVO_ESITO)){
 			return this.toTable(PccTraccia.model(), returnAlias);
 		}
+		if(field.equals(PccTraccia.model().CODICI_ERRORE)){
+			return this.toTable(PccTraccia.model(), returnAlias);
+		}
 		if(field.equals(PccTraccia.model().RISPEDIZIONE)){
+			return this.toTable(PccTraccia.model(), returnAlias);
+		}
+		if(field.equals(PccTraccia.model().RISPEDIZIONE_DOPO_QUERY)){
 			return this.toTable(PccTraccia.model(), returnAlias);
 		}
 		if(field.equals(PccTraccia.model().RISPEDIZIONE_MAX_TENTATIVI)){

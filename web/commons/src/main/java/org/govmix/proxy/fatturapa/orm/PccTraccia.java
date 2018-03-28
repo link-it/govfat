@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -58,7 +57,9 @@ import java.util.List;
  * 			&lt;element name="stato" type="{http://www.govmix.org/proxy/fatturapa/orm}StatoType" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="dataUltimaTrasmissione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="dataUltimoTentativoEsito" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="codiciErrore" type="{http://www.govmix.org/proxy/fatturapa/orm}normalizedString" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="rispedizione" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1" default="false"/>
+ * 			&lt;element name="rispedizioneDopoQuery" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="rispedizioneMaxTentativi" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="rispedizioneProssimoTentativo" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="rispedizioneNumeroTentativi" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0" maxOccurs="1"/>
@@ -96,7 +97,9 @@ import java.util.List;
   	"stato",
   	"dataUltimaTrasmissione",
   	"dataUltimoTentativoEsito",
+  	"codiciErrore",
   	"rispedizione",
+  	"rispedizioneDopoQuery",
   	"rispedizioneMaxTentativi",
   	"rispedizioneProssimoTentativo",
   	"rispedizioneNumeroTentativi",
@@ -286,6 +289,14 @@ public class PccTraccia extends org.openspcoop2.utils.beans.BaseBean implements 
     this.dataUltimoTentativoEsito = dataUltimoTentativoEsito;
   }
 
+  public java.lang.String getCodiciErrore() {
+    return this.codiciErrore;
+  }
+
+  public void setCodiciErrore(java.lang.String codiciErrore) {
+    this.codiciErrore = codiciErrore;
+  }
+
   public boolean isRispedizione() {
     return this.rispedizione;
   }
@@ -296,6 +307,18 @@ public class PccTraccia extends org.openspcoop2.utils.beans.BaseBean implements 
 
   public void setRispedizione(boolean rispedizione) {
     this.rispedizione = rispedizione;
+  }
+
+  public boolean isRispedizioneDopoQuery() {
+    return this.rispedizioneDopoQuery;
+  }
+
+  public boolean getRispedizioneDopoQuery() {
+    return this.rispedizioneDopoQuery;
+  }
+
+  public void setRispedizioneDopoQuery(boolean rispedizioneDopoQuery) {
+    this.rispedizioneDopoQuery = rispedizioneDopoQuery;
   }
 
   public int getRispedizioneMaxTentativi() {
@@ -456,9 +479,18 @@ public class PccTraccia extends org.openspcoop2.utils.beans.BaseBean implements 
   @XmlElement(name="dataUltimoTentativoEsito",required=false,nillable=false,type=java.lang.String.class)
   protected java.util.Date dataUltimoTentativoEsito;
 
+  @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(javax.xml.bind.annotation.adapters.NormalizedStringAdapter.class)
+  @javax.xml.bind.annotation.XmlSchemaType(name="normalizedString")
+  @XmlElement(name="codiciErrore",required=false,nillable=false)
+  protected java.lang.String codiciErrore;
+
   @javax.xml.bind.annotation.XmlSchemaType(name="boolean")
   @XmlElement(name="rispedizione",required=true,nillable=false,defaultValue="false")
   protected boolean rispedizione = false;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="boolean")
+  @XmlElement(name="rispedizioneDopoQuery",required=true,nillable=false)
+  protected boolean rispedizioneDopoQuery;
 
   @javax.xml.bind.annotation.XmlSchemaType(name="int")
   @XmlElement(name="rispedizioneMaxTentativi",required=false,nillable=false)

@@ -1,0 +1,153 @@
+<ui:composition 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:op2web="http://www.openspcoop2.org/web/taglib/jsf">
+	<f:loadBundle var="msg" basename="messages" />
+
+ 
+ 		<h:panelGrid id="panelDettaglio2"
+					columnClasses="gridContent verticalAlignTop"
+					rendered="#{!empty fatturaSelezionata}"
+					columns="1" width="100%">
+
+					<!-- Dati Intestazione  -->
+					<op2web:fieldset legend="#{msg['fattura.label.intestazione']}" collapsible="false" closed="false" rendered="#{true}">
+						<op2web:outputGroup group="#{fatturaSelezionata.datiIntestazione}" />
+					</op2web:fieldset>
+
+					<!-- Dati Trasmissione  -->
+					<op2web:fieldset legend="#{msg['fattura.label.generale']}" collapsible="false" closed="false" rendered="#{true}">
+													
+						<c:set var="datiTrasmissione1" value="#{fatturaElettronicaAttivaMBean.selectedElement.datiTrasmissione1}" />
+							
+						<h:panelGrid id="panelGroupOut_#{datiTrasmissione1.id}" styleClass="#{datiTrasmissione1.styleClass}"
+							columnClasses="#{datiTrasmissione1.columnClasses}" 
+							rendered="#{datiTrasmissione1.rendered}" columns="#{datiTrasmissione1.columns}">
+					
+							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.identificativoSdi}" insideGroup="true" />
+							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.posizione}" insideGroup="true" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							
+							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.nomeFile}" insideGroup="true" />
+							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.formatoTrasmissione}" insideGroup="true" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							
+							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.tipoDocumento}" insideGroup="true" />
+							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.messageId}" insideGroup="true" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							
+							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.dipartimento}" insideGroup="true" />
+							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.codiceDestinatario}" insideGroup="true" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							
+							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.dataInvio}" insideGroup="true" />
+							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.statoElaborazioneDettaglio}" insideGroup="true" />
+							<h:panelGroup>
+								<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{fatturaElettronicaAttivaMBean.selectedElement.visualizzaLinkRiconsegna == false}"/>
+								<h:form id="formRiconsegna" rendered="#{fatturaElettronicaAttivaMBean.selectedElement.visualizzaLinkRiconsegna}">
+									<a4j:commandLink id="ritentaRiconsegna-Link"  
+										action="#{fatturaElettronicaAttivaMBean.ritentaConsegna}"
+										reRender="panelDettaglio2"
+										styleClass="buttonNoRed" ajaxSingle="true">
+										<h:outputText value="#{msg['fattura.ritentaConsegna']}" />
+									</a4j:commandLink>
+								</h:form>
+							</h:panelGroup>
+							
+							<op2web:output field="#{fatturaElettronicaAttivaMBean.selectedElement.protocollo}" insideGroup="true" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{true}" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{true}" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{true}" />
+						</h:panelGrid>
+					</op2web:fieldset>
+
+					<!-- Contenuto Fattura -->
+					<op2web:fieldset legend="#{msg['fattura.label.contenuto']}" collapsible="false" closed="false" rendered="#{true}">
+						<op2web:outputGroup group="#{fatturaSelezionata.contenutoFattura}" />
+						
+						<op2web:outputGroup group="#{fatturaSelezionata.causaleFattura}" />
+					</op2web:fieldset>
+
+					<!-- Tabella Allegati -->
+					<op2web:fieldset legend="#{msg['fattura.label.allegati']}" collapsible="false" closed="false"
+						rendered="#{true}">
+						<c:set var="metadataAllegato" value="#{fatturaSelezionata.metadataAllegato}" />
+
+						<c:set var="listaAllegati" value="#{fatturaSelezionata.allegati}" />
+
+						<h:outputText id="outNoListaAllegati" value="#{msg['fattura.label.allegati.nodata']}" rendered="#{empty listaAllegati}" />
+
+						<op2web:simpleListView id="tabellaAllegati" rendered="#{not empty listaAllegati}" value="#{listaAllegati}" itemMetadata="#{metadataAllegato}">
+						
+							<!-- Colonne nome,descrizione,compressione,formato-->
+							<op2web:tableColumns nomiColonne="#{'nomeAttachment,descrizioneAttachment,algoritmoCompressione,formatoAttachment'}" />
+							
+							<!-- Visualizza -->
+							<rich:column style="text-align: center;">
+								<f:facet name="header">
+									<h:outputText value="#{metadataAllegato.attachment.label}" />
+								</f:facet>
+
+								<h:panelGroup>
+									<h:outputLink value="#{item.attachment.href}" target="_blank" rendered="#{not empty item.attachment.href}">
+										<h:graphicImage value="#{item.attachment.image}" width="16" height="16" title="#{item.attachment.title}" />
+									</h:outputLink>
+								</h:panelGroup>
+							</rich:column>
+						</op2web:simpleListView>
+					</op2web:fieldset>
+
+					<!-- Comunicazioni sdi-->
+					<op2web:fieldset legend="#{msg['fattura.label.comunicazioniSdi']}" collapsible="false" closed="false" rendered="#{true}">
+						<c:set var="metadataComunicazione" value="#{fatturaSelezionata.metadataComunicazione}" />
+
+						<c:set var="listaComunicazioni" value="#{fatturaSelezionata.listaComunicazioni}" />
+
+						<h:outputText id="outNoListaComunicazioni" value="#{msg['fattura.label.comunicazioniSdi.nodata']}" rendered="#{empty listaComunicazioni}" />
+
+						<op2web:simpleListView id="tabellaComunicazioni" value="#{listaComunicazioni}" rendered="#{not empty listaComunicazioni}" itemMetadata="#{metadataComunicazione}">
+						
+							<!-- Data, Nome File, identificativoSdi -->
+							<op2web:tableColumns nomiColonne="#{'tipoComunicazione,data,nomeFile,idEgov,statoProtocollazione'}" />
+
+							<!-- XML (Icona) -->
+							<rich:column style="text-align: center;">
+								<f:facet name="header">
+									<h:outputText value="#{metadataComunicazione.xml.label}" />
+								</f:facet>
+
+								<h:panelGroup>
+									<h:outputLink value="#{item.xml.href}" target="_blank" rendered="#{not empty item.xml.href}">
+										<h:graphicImage value="#{item.xml.image}" width="16" height="16" title="#{item.xml.title}" />
+									</h:outputLink>
+								</h:panelGroup>
+							</rich:column>
+							
+							<!-- PDF (Icona) -->
+							<rich:column style="text-align: center;">
+								<f:facet name="header">
+									<h:outputText value="#{metadataComunicazione.pdf.label}" />
+								</f:facet>
+
+								<h:panelGroup>
+									<h:outputLink value="#{item.pdf.href}"  target="_blank" rendered="#{not empty item.pdf.href}">
+										<h:graphicImage value="#{item.pdf.image}" width="16" height="16" title="#{item.pdf.title}" />
+									</h:outputLink>
+								</h:panelGroup>
+							</rich:column>
+							
+						</op2web:simpleListView>
+					</op2web:fieldset>
+
+				</h:panelGrid>
+ 
+ 
+ 
+ 
+ 
+    </ui:composition>

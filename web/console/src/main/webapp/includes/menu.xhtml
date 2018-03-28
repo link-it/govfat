@@ -2,8 +2,8 @@
   ProxyFatturaPA - Gestione del formato Fattura Elettronica 
   http://www.gov4j.it/fatturapa
   
-  Copyright (c) 2014-2016 Link.it srl (http://link.it). 
-  Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+  Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+  Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
   
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -40,6 +40,7 @@
 					</rich:panelMenuGroup>
 					<rich:panelMenuGroup label="#{msg['menu.group.operazioni']}" expanded="true">
 						<rich:panelMenuItem id="menuLink1" label="#{msg['menu.group.operazioni.listaFatture']}" action="#{fatturaElettronicaMBean.menuAction}" />
+						<rich:panelMenuItem id="menuLink3" label="#{msg['menu.group.operazioni.listaFattureAttive']}" action="#{fatturaElettronicaAttivaMBean.menuAction}" />
 						<rich:panelMenuItem id="menuLink2" label="#{msg['menu.group.operazioni.listaOperazioni']}" action="#{operazioneMBean.menuAction}" rendered="#{loginBean.showMenuItemOperazioniPCC}" actionListener="#{operazioneSearchForm.initSearchListener}">
 						</rich:panelMenuItem>
 					</rich:panelMenuGroup>

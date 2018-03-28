@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -48,9 +47,9 @@ public class ErroreService extends BaseService<ErroreSearchForm> implements IErr
 
 	public ErroreService() {
 		try {
-			this.tracciamentoBD = new PccTracciamentoBD(log);
+			this.tracciamentoBD = new PccTracciamentoBD(ErroreService.log);
 		} catch (Exception e) {
-			log.error("Errore durante la init di ErroreService: " + e.getMessage(),e); 
+			ErroreService.log.error("Errore durante la init di ErroreService: " + e.getMessage(),e); 
 		}
 	}
 
@@ -72,7 +71,7 @@ public class ErroreService extends BaseService<ErroreSearchForm> implements IErr
 
 			return 0;
 		} catch (Exception e) {
-			log.error("Errore durante la _findAll: " + e.getMessage(),e); 
+			ErroreService.log.error("Errore durante la _findAll: " + e.getMessage(),e); 
 			throw new ServiceException(e);
 		}
 	}
@@ -99,9 +98,9 @@ public class ErroreService extends BaseService<ErroreSearchForm> implements IErr
 			
 			return bean;
 		} catch(NotFoundException e){
-			log.debug("Nessuna esito con ID ["+key+"] trovata.");
+			ErroreService.log.debug("Nessuna esito con ID ["+key+"] trovata.");
 		}catch (Exception e) {
-			log.error("Errore durante la findById: " + e.getMessage(),e); 
+			ErroreService.log.error("Errore durante la findById: " + e.getMessage(),e); 
 			throw new ServiceException(e);
 		}
 		
@@ -153,15 +152,17 @@ public class ErroreService extends BaseService<ErroreSearchForm> implements IErr
 
 			return lst;
 		} catch (Exception e) {
-			log.error("Errore durante la _findAll: " + e.getMessage(),e); 
+			ErroreService.log.error("Errore durante la _findAll: " + e.getMessage(),e); 
 			throw new ServiceException(e);
 		}
 	}
 
+	@Override
 	public IdTrasmissioneEsito getIdEsito() {
 		return idEsito;
 	}
 
+	@Override
 	public void setIdEsito(IdTrasmissioneEsito idEsito) {
 		this.idEsito = idEsito;
 	}

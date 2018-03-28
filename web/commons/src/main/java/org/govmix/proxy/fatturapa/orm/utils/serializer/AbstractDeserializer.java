@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -31,6 +30,8 @@ import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito;
+import org.govmix.proxy.fatturapa.orm.Dipartimento;
+import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.IdTrasmissione;
 import org.govmix.proxy.fatturapa.orm.PccTracciaTrasmissioneEsito;
 import org.govmix.proxy.fatturapa.orm.PccErroreElaborazione;
@@ -46,10 +47,10 @@ import org.govmix.proxy.fatturapa.orm.PccDipartimentoOperazione;
 import org.govmix.proxy.fatturapa.orm.IdOperazione;
 import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.IdTraccia;
-import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.DipartimentoPropertyValue;
 import org.govmix.proxy.fatturapa.orm.Metadato;
 import org.govmix.proxy.fatturapa.orm.PccRispedizione;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.Registro;
 import org.govmix.proxy.fatturapa.orm.RegistroPropertyValue;
 import org.govmix.proxy.fatturapa.orm.IdPagamento;
@@ -62,12 +63,11 @@ import org.govmix.proxy.fatturapa.orm.IdDipartimentoProperty;
 import org.govmix.proxy.fatturapa.orm.Ente;
 import org.govmix.proxy.fatturapa.orm.UtenteDipartimento;
 import org.govmix.proxy.fatturapa.orm.PccPagamento;
+import org.govmix.proxy.fatturapa.orm.IdDocumento;
 import org.govmix.proxy.fatturapa.orm.IdUtente;
 import org.govmix.proxy.fatturapa.orm.PccUtenteOperazione;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
-import org.govmix.proxy.fatturapa.orm.ComunicazioneSdi;
 import org.govmix.proxy.fatturapa.orm.IdContabilizzazione;
-import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.PccTracciaTrasmissione;
 import org.govmix.proxy.fatturapa.orm.PccOperazione;
 import org.govmix.proxy.fatturapa.orm.Utente;
@@ -639,6 +639,132 @@ public abstract class AbstractDeserializer {
 	 */
 	public IdTrasmissioneEsito readIdTrasmissioneEsitoFromString(String in) throws DeserializerException {
 		return (IdTrasmissioneEsito) this.xmlToObj(in.getBytes(), IdTrasmissioneEsito.class);
+	}	
+	
+	
+	
+	/*
+	 =================================================================================
+	 Object: Dipartimento
+	 =================================================================================
+	*/
+	
+	/**
+	 * Transform the xml in <var>fileName</var> in the object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
+	 * 
+	 * @param fileName Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public Dipartimento readDipartimento(String fileName) throws DeserializerException {
+		return (Dipartimento) this.xmlToObj(fileName, Dipartimento.class);
+	}
+	
+	/**
+	 * Transform the xml in <var>file</var> in the object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
+	 * 
+	 * @param file Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public Dipartimento readDipartimento(File file) throws DeserializerException {
+		return (Dipartimento) this.xmlToObj(file, Dipartimento.class);
+	}
+	
+	/**
+	 * Transform the input stream <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
+	 * 
+	 * @param in InputStream to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public Dipartimento readDipartimento(InputStream in) throws DeserializerException {
+		return (Dipartimento) this.xmlToObj(in, Dipartimento.class);
+	}	
+	
+	/**
+	 * Transform the byte array <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
+	 * 
+	 * @param in Byte array to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public Dipartimento readDipartimento(byte[] in) throws DeserializerException {
+		return (Dipartimento) this.xmlToObj(in, Dipartimento.class);
+	}	
+	
+	/**
+	 * Transform the String <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
+	 * 
+	 * @param in String to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public Dipartimento readDipartimentoFromString(String in) throws DeserializerException {
+		return (Dipartimento) this.xmlToObj(in.getBytes(), Dipartimento.class);
+	}	
+	
+	
+	
+	/*
+	 =================================================================================
+	 Object: LottoFatture
+	 =================================================================================
+	*/
+	
+	/**
+	 * Transform the xml in <var>fileName</var> in the object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
+	 * 
+	 * @param fileName Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public LottoFatture readLottoFatture(String fileName) throws DeserializerException {
+		return (LottoFatture) this.xmlToObj(fileName, LottoFatture.class);
+	}
+	
+	/**
+	 * Transform the xml in <var>file</var> in the object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
+	 * 
+	 * @param file Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public LottoFatture readLottoFatture(File file) throws DeserializerException {
+		return (LottoFatture) this.xmlToObj(file, LottoFatture.class);
+	}
+	
+	/**
+	 * Transform the input stream <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
+	 * 
+	 * @param in InputStream to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public LottoFatture readLottoFatture(InputStream in) throws DeserializerException {
+		return (LottoFatture) this.xmlToObj(in, LottoFatture.class);
+	}	
+	
+	/**
+	 * Transform the byte array <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
+	 * 
+	 * @param in Byte array to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public LottoFatture readLottoFatture(byte[] in) throws DeserializerException {
+		return (LottoFatture) this.xmlToObj(in, LottoFatture.class);
+	}	
+	
+	/**
+	 * Transform the String <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
+	 * 
+	 * @param in String to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public LottoFatture readLottoFattureFromString(String in) throws DeserializerException {
+		return (LottoFatture) this.xmlToObj(in.getBytes(), LottoFatture.class);
 	}	
 	
 	
@@ -1590,69 +1716,6 @@ public abstract class AbstractDeserializer {
 	
 	/*
 	 =================================================================================
-	 Object: Dipartimento
-	 =================================================================================
-	*/
-	
-	/**
-	 * Transform the xml in <var>fileName</var> in the object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
-	 * 
-	 * @param fileName Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
-	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
-	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
-	 */
-	public Dipartimento readDipartimento(String fileName) throws DeserializerException {
-		return (Dipartimento) this.xmlToObj(fileName, Dipartimento.class);
-	}
-	
-	/**
-	 * Transform the xml in <var>file</var> in the object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
-	 * 
-	 * @param file Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
-	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
-	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
-	 */
-	public Dipartimento readDipartimento(File file) throws DeserializerException {
-		return (Dipartimento) this.xmlToObj(file, Dipartimento.class);
-	}
-	
-	/**
-	 * Transform the input stream <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
-	 * 
-	 * @param in InputStream to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
-	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
-	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
-	 */
-	public Dipartimento readDipartimento(InputStream in) throws DeserializerException {
-		return (Dipartimento) this.xmlToObj(in, Dipartimento.class);
-	}	
-	
-	/**
-	 * Transform the byte array <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
-	 * 
-	 * @param in Byte array to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
-	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
-	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
-	 */
-	public Dipartimento readDipartimento(byte[] in) throws DeserializerException {
-		return (Dipartimento) this.xmlToObj(in, Dipartimento.class);
-	}	
-	
-	/**
-	 * Transform the String <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
-	 * 
-	 * @param in String to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
-	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.Dipartimento}
-	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
-	 */
-	public Dipartimento readDipartimentoFromString(String in) throws DeserializerException {
-		return (Dipartimento) this.xmlToObj(in.getBytes(), Dipartimento.class);
-	}	
-	
-	
-	
-	/*
-	 =================================================================================
 	 Object: DipartimentoPropertyValue
 	 =================================================================================
 	*/
@@ -1836,6 +1899,69 @@ public abstract class AbstractDeserializer {
 	 */
 	public PccRispedizione readPccRispedizioneFromString(String in) throws DeserializerException {
 		return (PccRispedizione) this.xmlToObj(in.getBytes(), PccRispedizione.class);
+	}	
+	
+	
+	
+	/*
+	 =================================================================================
+	 Object: TracciaSDI
+	 =================================================================================
+	*/
+	
+	/**
+	 * Transform the xml in <var>fileName</var> in the object type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI}
+	 * 
+	 * @param fileName Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public TracciaSDI readTracciaSDI(String fileName) throws DeserializerException {
+		return (TracciaSDI) this.xmlToObj(fileName, TracciaSDI.class);
+	}
+	
+	/**
+	 * Transform the xml in <var>file</var> in the object type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI}
+	 * 
+	 * @param file Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public TracciaSDI readTracciaSDI(File file) throws DeserializerException {
+		return (TracciaSDI) this.xmlToObj(file, TracciaSDI.class);
+	}
+	
+	/**
+	 * Transform the input stream <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI}
+	 * 
+	 * @param in InputStream to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public TracciaSDI readTracciaSDI(InputStream in) throws DeserializerException {
+		return (TracciaSDI) this.xmlToObj(in, TracciaSDI.class);
+	}	
+	
+	/**
+	 * Transform the byte array <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI}
+	 * 
+	 * @param in Byte array to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public TracciaSDI readTracciaSDI(byte[] in) throws DeserializerException {
+		return (TracciaSDI) this.xmlToObj(in, TracciaSDI.class);
+	}	
+	
+	/**
+	 * Transform the String <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI}
+	 * 
+	 * @param in String to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public TracciaSDI readTracciaSDIFromString(String in) throws DeserializerException {
+		return (TracciaSDI) this.xmlToObj(in.getBytes(), TracciaSDI.class);
 	}	
 	
 	
@@ -2598,6 +2724,69 @@ public abstract class AbstractDeserializer {
 	
 	/*
 	 =================================================================================
+	 Object: id-documento
+	 =================================================================================
+	*/
+	
+	/**
+	 * Transform the xml in <var>fileName</var> in the object type {@link org.govmix.proxy.fatturapa.orm.IdDocumento}
+	 * 
+	 * @param fileName Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.IdDocumento}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.IdDocumento}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public IdDocumento readIdDocumento(String fileName) throws DeserializerException {
+		return (IdDocumento) this.xmlToObj(fileName, IdDocumento.class);
+	}
+	
+	/**
+	 * Transform the xml in <var>file</var> in the object type {@link org.govmix.proxy.fatturapa.orm.IdDocumento}
+	 * 
+	 * @param file Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.IdDocumento}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.IdDocumento}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public IdDocumento readIdDocumento(File file) throws DeserializerException {
+		return (IdDocumento) this.xmlToObj(file, IdDocumento.class);
+	}
+	
+	/**
+	 * Transform the input stream <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.IdDocumento}
+	 * 
+	 * @param in InputStream to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.IdDocumento}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.IdDocumento}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public IdDocumento readIdDocumento(InputStream in) throws DeserializerException {
+		return (IdDocumento) this.xmlToObj(in, IdDocumento.class);
+	}	
+	
+	/**
+	 * Transform the byte array <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.IdDocumento}
+	 * 
+	 * @param in Byte array to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.IdDocumento}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.IdDocumento}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public IdDocumento readIdDocumento(byte[] in) throws DeserializerException {
+		return (IdDocumento) this.xmlToObj(in, IdDocumento.class);
+	}	
+	
+	/**
+	 * Transform the String <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.IdDocumento}
+	 * 
+	 * @param in String to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.IdDocumento}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.IdDocumento}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public IdDocumento readIdDocumentoFromString(String in) throws DeserializerException {
+		return (IdDocumento) this.xmlToObj(in.getBytes(), IdDocumento.class);
+	}	
+	
+	
+	
+	/*
+	 =================================================================================
 	 Object: id-utente
 	 =================================================================================
 	*/
@@ -2787,69 +2976,6 @@ public abstract class AbstractDeserializer {
 	
 	/*
 	 =================================================================================
-	 Object: ComunicazioneSdi
-	 =================================================================================
-	*/
-	
-	/**
-	 * Transform the xml in <var>fileName</var> in the object type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi}
-	 * 
-	 * @param fileName Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi}
-	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi}
-	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
-	 */
-	public ComunicazioneSdi readComunicazioneSdi(String fileName) throws DeserializerException {
-		return (ComunicazioneSdi) this.xmlToObj(fileName, ComunicazioneSdi.class);
-	}
-	
-	/**
-	 * Transform the xml in <var>file</var> in the object type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi}
-	 * 
-	 * @param file Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi}
-	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi}
-	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
-	 */
-	public ComunicazioneSdi readComunicazioneSdi(File file) throws DeserializerException {
-		return (ComunicazioneSdi) this.xmlToObj(file, ComunicazioneSdi.class);
-	}
-	
-	/**
-	 * Transform the input stream <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi}
-	 * 
-	 * @param in InputStream to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi}
-	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi}
-	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
-	 */
-	public ComunicazioneSdi readComunicazioneSdi(InputStream in) throws DeserializerException {
-		return (ComunicazioneSdi) this.xmlToObj(in, ComunicazioneSdi.class);
-	}	
-	
-	/**
-	 * Transform the byte array <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi}
-	 * 
-	 * @param in Byte array to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi}
-	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi}
-	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
-	 */
-	public ComunicazioneSdi readComunicazioneSdi(byte[] in) throws DeserializerException {
-		return (ComunicazioneSdi) this.xmlToObj(in, ComunicazioneSdi.class);
-	}	
-	
-	/**
-	 * Transform the String <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi}
-	 * 
-	 * @param in String to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi}
-	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi}
-	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
-	 */
-	public ComunicazioneSdi readComunicazioneSdiFromString(String in) throws DeserializerException {
-		return (ComunicazioneSdi) this.xmlToObj(in.getBytes(), ComunicazioneSdi.class);
-	}	
-	
-	
-	
-	/*
-	 =================================================================================
 	 Object: id-contabilizzazione
 	 =================================================================================
 	*/
@@ -2907,69 +3033,6 @@ public abstract class AbstractDeserializer {
 	 */
 	public IdContabilizzazione readIdContabilizzazioneFromString(String in) throws DeserializerException {
 		return (IdContabilizzazione) this.xmlToObj(in.getBytes(), IdContabilizzazione.class);
-	}	
-	
-	
-	
-	/*
-	 =================================================================================
-	 Object: LottoFatture
-	 =================================================================================
-	*/
-	
-	/**
-	 * Transform the xml in <var>fileName</var> in the object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
-	 * 
-	 * @param fileName Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
-	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
-	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
-	 */
-	public LottoFatture readLottoFatture(String fileName) throws DeserializerException {
-		return (LottoFatture) this.xmlToObj(fileName, LottoFatture.class);
-	}
-	
-	/**
-	 * Transform the xml in <var>file</var> in the object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
-	 * 
-	 * @param file Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
-	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
-	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
-	 */
-	public LottoFatture readLottoFatture(File file) throws DeserializerException {
-		return (LottoFatture) this.xmlToObj(file, LottoFatture.class);
-	}
-	
-	/**
-	 * Transform the input stream <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
-	 * 
-	 * @param in InputStream to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
-	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
-	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
-	 */
-	public LottoFatture readLottoFatture(InputStream in) throws DeserializerException {
-		return (LottoFatture) this.xmlToObj(in, LottoFatture.class);
-	}	
-	
-	/**
-	 * Transform the byte array <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
-	 * 
-	 * @param in Byte array to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
-	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
-	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
-	 */
-	public LottoFatture readLottoFatture(byte[] in) throws DeserializerException {
-		return (LottoFatture) this.xmlToObj(in, LottoFatture.class);
-	}	
-	
-	/**
-	 * Transform the String <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
-	 * 
-	 * @param in String to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
-	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
-	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
-	 */
-	public LottoFatture readLottoFattureFromString(String in) throws DeserializerException {
-		return (LottoFatture) this.xmlToObj(in.getBytes(), LottoFatture.class);
 	}	
 	
 	

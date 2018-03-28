@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -318,7 +317,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 			if(dataUltimaOperazioneAttuale != null && this.dataUltimaOperazione != null){
 				if(dataUltimaOperazioneAttuale.getTime() > this.dataUltimaOperazione.getTime()){
 					// c'e' stata una modifica segnalo all'utente.
-					MessageUtils.addWarnMsg(Utils.getInstance().getMessageWithParamsFromResourceBundle("contabilizzazione.form.operazioneContabile.fatturaAggiornata"));
+					MessageUtils.addWarnMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("contabilizzazione.form.operazioneContabile.fatturaAggiornata"));
 					return null;
 				}
 			}
@@ -351,11 +350,12 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 
 			TestataRispTipo testataRisposta = wSProxyOperazioneContabile.getTestataRisposta();
 			EsitoOkKoTipo esito = testataRisposta.getEsito();
+			@SuppressWarnings("unused")
 			String detail = testataRisposta.getDetail();
 			OrigineTipo origine = testataRisposta.getOrigine();
 
 			if(esito.equals(EsitoOkKoTipo.OK)){
-				MessageUtils.addInfoMsg(Utils.getInstance().getMessageWithParamsFromResourceBundle("contabilizzazione.form.operazioneContabilePresaInCaricoOK.parametri",origine.toString()));
+				MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("contabilizzazione.form.operazioneContabilePresaInCaricoOK.parametri",origine.toString()));
 
 				// Ricarico lo stato solo nel caso OK
 				((ContabilizzazioneService) this.service).setIdFattura(this.idFattura); 
@@ -370,20 +370,20 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 				this.scadenzaMBean.setDataUltimaOperazione(this.dataUltimaOperazione); 
 				
 			}else {
-				MessageUtils.addErrorMsg(Utils.getInstance().getMessageWithParamsFromResourceBundle("contabilizzazione.form.operazioneContabilePresaInCaricoKO.parametri",origine.toString()));
+				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("contabilizzazione.form.operazioneContabilePresaInCaricoKO.parametri",origine.toString()));
 			}
 		} catch (WSGenericFault e) {
 			this.log.error("Si e' verificato un errore durante il salvataggio della contabilizzazione: " + e.getMessage(), e);
-			MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneContabileKO"));
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneContabileKO"));
 		} catch (WSAuthorizationFault e) {
 			this.log.error("Si e' verificato un errore durante il salvataggio della contabilizzazione: " + e.getMessage(), e);
 			String authDetail = e.getFaultInfo().getDetail();
 			
 			// Utente non autorizzato all'operazione
 			if(authDetail.startsWith("Utente")) 
-				MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneContabileKO.utenteNonAutorizzato"));
+				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneContabileKO.utenteNonAutorizzato"));
 			else{ // Dipartimento non autorizzata 
-				MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneContabileKO.dipartimentoNonAutorizzato"));
+				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneContabileKO.dipartimentoNonAutorizzato"));
 			}
 			
 		}
@@ -392,7 +392,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 			
 			if(e instanceof javax.xml.ws.soap.SOAPFaultException){
 				if(e.getMessage() != null && e.getMessage().contains("Could not send Message")){
-					MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneContabileErroreConnessione"));
+					MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneContabileErroreConnessione"));
 					return null;
 				}
 				
@@ -400,7 +400,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 				return null;
 			}
 			
-			MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneContabileErroreGenerico"));
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneContabileErroreGenerico"));
 		}finally {
 			if(!this.editMode)
 				this.abilitaOperazioni();
@@ -476,7 +476,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 			MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.annullaModificheOk"));
 		} catch (Exception e) {
 			this.log.error("Si e' verificato un errore durante il salvataggio della contabilizzazione: " + e.getMessage(), e);
-			MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.erroreGenerico"));
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.erroreGenerico"));
 		}finally {
 			this.abilitaOperazioni();
 		}
@@ -497,7 +497,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 			if(dataUltimaOperazioneAttuale != null && this.dataUltimaOperazione != null){
 				if(dataUltimaOperazioneAttuale.getTime() > this.dataUltimaOperazione.getTime()){
 					// c'e' stata una modifica segnalo all'utente.
-					MessageUtils.addWarnMsg(Utils.getInstance().getMessageWithParamsFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamento.fatturaAggiornata"));
+					MessageUtils.addWarnMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamento.fatturaAggiornata"));
 					return null;
 				}
 			}
@@ -534,22 +534,22 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 				this.editMode = false;
 				this.scadenzaMBean.setDataUltimaOperazione(this.dataUltimaOperazione); 
 
-				MessageUtils.addInfoMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoPresaInCaricoOK"));
+				MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoPresaInCaricoOK"));
 			}else {
-				MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoPresaInCaricoKO.noRispedizione"));
+				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoPresaInCaricoKO.noRispedizione"));
 			}
 		} catch (WSGenericFault e) {
 			this.log.error("Si e' verificato un errore durante il salvataggio della contabilizzazione: " + e.getMessage(), e);
-			MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoKO"));
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoKO"));
 		} catch (WSAuthorizationFault e) {
 			this.log.error("Si e' verificato un errore durante il salvataggio della contabilizzazione: " + e.getMessage(), e);
 			String authDetail = e.getFaultInfo().getDetail();
 			
 			// Utente non autorizzato all'operazione
 			if(authDetail.startsWith("Utente")) 
-				MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoKO.utenteNonAutorizzato"));
+				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoKO.utenteNonAutorizzato"));
 			else{ // Dipartimento non autorizzata 
-				MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoKO.dipartimentoNonAutorizzato"));
+				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoKO.dipartimentoNonAutorizzato"));
 			}
 		} 
 		catch (Exception e) {
@@ -557,7 +557,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 			
 			if(e instanceof javax.xml.ws.soap.SOAPFaultException){
 				if(e.getMessage() != null && e.getMessage().contains("Could not send Message")){
-					MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoErroreConnessione"));
+					MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoErroreConnessione"));
 					return null;
 				}
 				
@@ -565,7 +565,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 				return null;
 			}
 			
-			MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoErroreGenerico"));
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoErroreGenerico"));
 		}finally {
 			if(!this.editMode)
 				this.abilitaOperazioni();
@@ -864,7 +864,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 			if(dataUltimaOperazioneAttuale != null && this.dataUltimaOperazione != null){
 				if(dataUltimaOperazioneAttuale.getTime() > this.dataUltimaOperazione.getTime()){
 					// c'e' stata una modifica segnalo all'utente.
-					MessageUtils.addWarnMsg(Utils.getInstance().getMessageWithParamsFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamento.fatturaAggiornata"));
+					MessageUtils.addWarnMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamento.fatturaAggiornata"));
 					return null;
 				}
 			}
@@ -902,22 +902,22 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 				this.scadenzaMBean.setEditMode(this.editMode); 
 				this.scadenzaMBean.setDataUltimaOperazione(this.dataUltimaOperazione); 
 
-				MessageUtils.addInfoMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoAsincronaPresaInCaricoOK"));
+				MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoAsincronaPresaInCaricoOK"));
 			}else {
-				MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoAsincronaPresaInCaricoKO.noRispedizione"));
+				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoAsincronaPresaInCaricoKO.noRispedizione"));
 			}
 		} catch (WSGenericFault e) {
 			this.log.error("Si e' verificato un errore durante il salvataggio della contabilizzazione: " + e.getMessage(), e);
-			MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoAsincronaKO"));
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoAsincronaKO"));
 		} catch (WSAuthorizationFault e) {
 			this.log.error("Si e' verificato un errore durante il salvataggio della contabilizzazione: " + e.getMessage(), e);
 			String authDetail = e.getFaultInfo().getDetail();
 			
 			// Utente non autorizzato all'operazione
 			if(authDetail.startsWith("Utente")) 
-				MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoAsincronaKO.utenteNonAutorizzato"));
+				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoAsincronaKO.utenteNonAutorizzato"));
 			else{ // Dipartimento non autorizzata 
-				MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoAsincronaKO.dipartimentoNonAutorizzato"));
+				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoAsincronaKO.dipartimentoNonAutorizzato"));
 			}
 		} 
 		catch (Exception e) {
@@ -925,7 +925,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 			
 			if(e instanceof javax.xml.ws.soap.SOAPFaultException){
 				if(e.getMessage() != null && e.getMessage().contains("Could not send Message")){
-					MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoAsincronaErroreConnessione"));
+					MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoAsincronaErroreConnessione"));
 					return null;
 				}
 					
@@ -933,7 +933,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 				return null;
 			}
 			
-			MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoAsincronaErroreGenerico"));
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("contabilizzazione.form.operazioneRichiestaRiallineamentoAsincronaErroreGenerico"));
 		}finally {
 			if(!this.editMode){
 				if(this.operazioneAsincrona){
@@ -1000,7 +1000,7 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 				found = false;
 				nextId = Utils.generaIdentificativoImporto().substring(0,3); 
 				for (ContabilizzazionePccBean bean : this.listaContabilizzazioni) {
-					if(bean.getDTO().getSistemaRichiedente().equals(ConsoleProperties.getInstance(log).getSistemaRichiedente())){
+					if(bean.getDTO().getSistemaRichiedente().equalsIgnoreCase(ConsoleProperties.getInstance(log).getSistemaRichiedente())){
 						String idImporto = bean.getDTO().getIdImporto();
 						if(idImporto.equals(nextId)){
 							found = true;

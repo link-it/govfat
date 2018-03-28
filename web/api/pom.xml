@@ -1,10 +1,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>fatturapa</groupId>
+	<parent>
+		<artifactId>fatturapa</artifactId>
+		<groupId>fatturapa</groupId>
+		<version>2.0</version>
+	</parent>
+
 	<artifactId>web-api</artifactId>
-	<version>1.1</version>
 	<packaging>war</packaging>
+
+	<name>FatturaPA API</name>
+
+	<properties>
+		<rel-to-parent>..</rel-to-parent>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>javax.ws.rs</groupId>
@@ -14,27 +24,27 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
-			<version>3.2.3.RELEASE</version>
+			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>3.2.3.RELEASE</version>
+			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>3.2.3.RELEASE</version>
+			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
-			<version>3.2.3.RELEASE</version>
+			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-frontend-jaxrs</artifactId>
-			<version>2.7.11</version>
+			<version>${cxf.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.apache.cxf</groupId>
@@ -45,15 +55,15 @@
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-api</artifactId>
-			<version>2.7.11</version>
+			<version>${cxf.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-bundle</artifactId>
-			<version>2.7.11</version>
+			<version>${cxf.version}</version>
 		</dependency>
-				
+
 		<dependency>
 			<groupId>javax.ws.rs</groupId>
 			<artifactId>jsr311-api</artifactId>
@@ -73,7 +83,7 @@
 		<dependency>
 			<groupId>fatturapa</groupId>
 			<artifactId>web-commons</artifactId>
-			<version>1.1</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
@@ -94,7 +104,7 @@
 	</dependencies>
 	<build>
 		<filters>
-			<filter>../../resources/filters/${env}.filter.properties</filter>
+			<filter>${basedir}/../../resources/filters/${env}.filter.properties</filter>
 		</filters>
 		<resources>
 			<resource>
@@ -104,15 +114,15 @@
 		</resources>
 
 		<plugins>
-                        <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-compiler-plugin</artifactId>
-                                <version>3.5.1</version>
-                                <configuration>
-                                        <source>1.6</source>
-                                        <target>1.6</target>
-                                </configuration>
-                        </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.5.1</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

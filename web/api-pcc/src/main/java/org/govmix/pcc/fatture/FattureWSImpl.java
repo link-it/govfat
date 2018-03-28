@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -31,6 +30,7 @@ import javax.xml.ws.handler.MessageContext;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.PccTraccia;
 import org.govmix.proxy.fatturapa.orm.constants.NomePccOperazioneType;
+import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.pcc.fatture.authorization.AuthorizationBeanFactory;
 import org.govmix.proxy.pcc.fatture.authorization.AuthorizationBeanResponse;
@@ -52,6 +52,7 @@ public class FattureWSImpl implements FattureWS {
 		this.client = new PccWsClient(this.log);
 		this.authorizationManager = new AuthorizationManager(log);
 		this.log.info("Inizializzazione Endpoint WSFatture completata");
+		this.log.info("Info versione: " + CommonsProperties.getInstance(log).getInfoVersione());
 	}
 
 	private String getPrincipal() throws Exception {
@@ -114,7 +115,15 @@ public class FattureWSImpl implements FattureWS {
 	public QueryOperazioneContabileRispostaTipo wSQueryOperazioneContabile(QueryOperazioneContabileRichiestaTipo queryOperazioneContabileRichiestaTipo) throws WSGenericFault, WSAuthorizationFault, WSResultNotReadyFault {
 		try {
 			PccTraccia traccia = this.client.getTraccia(queryOperazioneContabileRichiestaTipo);
-			this.authorizationManager.authorizeByIdFattura(AuthorizationBeanFactory.getAuthorizationBeanByIdFattura(this.getPrincipal(), queryOperazioneContabileRichiestaTipo.getTestataRichiesta().getUtenteRichiedente(), traccia.getIdFattura(), NomePccOperazioneType.toEnumConstant(traccia.getOperazione())));
+			
+			NomePccOperazioneType nomePccOperazione = NomePccOperazioneType.toEnumConstant(traccia.getOperazione());
+			if(nomePccOperazione.equals(NomePccOperazioneType.OPERAZIONE_CONTABILE_CPS)) {
+				this.authorizationManager.authorizeByIdFattura(AuthorizationBeanFactory.getAuthorizationBeanByIdFattura(this.getPrincipal(), queryOperazioneContabileRichiestaTipo.getTestataRichiesta().getUtenteRichiedente(), traccia.getIdFattura(), NomePccOperazioneType.OPERAZIONE_CONTABILE_CO));
+			} else if(nomePccOperazione.equals(NomePccOperazioneType.OPERAZIONE_CONTABILE_CSPC)) {
+				this.authorizationManager.authorizeByIdFattura(AuthorizationBeanFactory.getAuthorizationBeanByIdFattura(this.getPrincipal(), queryOperazioneContabileRichiestaTipo.getTestataRichiesta().getUtenteRichiedente(), traccia.getIdFattura(), NomePccOperazioneType.OPERAZIONE_CONTABILE_CS));
+			} else {
+				this.authorizationManager.authorizeByIdFattura(AuthorizationBeanFactory.getAuthorizationBeanByIdFattura(this.getPrincipal(), queryOperazioneContabileRichiestaTipo.getTestataRichiesta().getUtenteRichiedente(), traccia.getIdFattura(), nomePccOperazione));
+			}
 			return this.client.wSQueryOperazioneContabile(traccia);
 		}catch(WSAuthorizationFault e) {
 			log.error("Authorization Fault: " +e.getMessage(),e);

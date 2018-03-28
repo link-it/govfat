@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,20 +20,19 @@
  */
 package org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch;
 
+import java.sql.ResultSet;
+import java.util.Map;
+
+import org.govmix.proxy.fatturapa.orm.Dipartimento;
+import org.govmix.proxy.fatturapa.orm.DipartimentoPropertyValue;
+import org.govmix.proxy.fatturapa.orm.IdEnte;
+import org.govmix.proxy.fatturapa.orm.IdRegistro;
 import org.openspcoop2.generic_project.beans.IModel;
 import org.openspcoop2.generic_project.dao.jdbc.utils.AbstractJDBCFetch;
 import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCParameterUtilities;
 import org.openspcoop2.generic_project.exception.ServiceException;
-
-import java.sql.ResultSet;
-import java.util.Map;
-
 import org.openspcoop2.utils.TipiDatabase;
 import org.openspcoop2.utils.jdbc.IKeyGeneratorObject;
-
-import org.govmix.proxy.fatturapa.orm.IdEnte;
-import org.govmix.proxy.fatturapa.orm.DipartimentoPropertyValue;
-import org.govmix.proxy.fatturapa.orm.Dipartimento;
 
 
 /**     
@@ -62,6 +60,12 @@ public class DipartimentoFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "codice", Dipartimento.model().CODICE.getFieldType()));
 				setParameter(object, "setDescrizione", Dipartimento.model().DESCRIZIONE.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "descrizione", Dipartimento.model().DESCRIZIONE.getFieldType()));
+				setParameter(object, "setFatturazioneAttiva", Dipartimento.model().FATTURAZIONE_ATTIVA.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "fatturazione_attiva", Dipartimento.model().FATTURAZIONE_ATTIVA.getFieldType()));
+				setParameter(object, "setIdProcedimento", Dipartimento.model().ID_PROCEDIMENTO.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "id_procedimento", Dipartimento.model().ID_PROCEDIMENTO.getFieldType()));
+				setParameter(object, "setFirmaAutomatica", Dipartimento.model().FIRMA_AUTOMATICA.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "firma_automatica", Dipartimento.model().FIRMA_AUTOMATICA.getFieldType()));
 				setParameter(object, "setAccettazioneAutomatica", Dipartimento.model().ACCETTAZIONE_AUTOMATICA.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "accettazione_automatica", Dipartimento.model().ACCETTAZIONE_AUTOMATICA.getFieldType()));
 				setParameter(object, "setModalitaPush", Dipartimento.model().MODALITA_PUSH.getFieldType(),
@@ -82,6 +86,12 @@ public class DipartimentoFetch extends AbstractJDBCFetch {
 				IdEnte object = new IdEnte();
 				setParameter(object, "setNome", Dipartimento.model().ENTE.NOME.getFieldType(),
 						jdbcParameterUtilities.readParameter(rs, "nome", Dipartimento.model().ENTE.NOME.getFieldType()));
+				return object;
+			}
+			if(model.equals(Dipartimento.model().REGISTRO)){
+				IdRegistro object = new IdRegistro();
+				setParameter(object, "setNome", Dipartimento.model().REGISTRO.NOME.getFieldType(),
+						jdbcParameterUtilities.readParameter(rs, "nome", Dipartimento.model().REGISTRO.NOME.getFieldType()));
 				return object;
 			}
 			
@@ -108,6 +118,12 @@ public class DipartimentoFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"codice"));
 				setParameter(object, "setDescrizione", Dipartimento.model().DESCRIZIONE.getFieldType(),
 					this.getObjectFromMap(map,"descrizione"));
+				setParameter(object, "setFatturazioneAttiva", Dipartimento.model().FATTURAZIONE_ATTIVA.getFieldType(),
+					this.getObjectFromMap(map,"fatturazioneAttiva"));
+				setParameter(object, "setIdProcedimento", Dipartimento.model().ID_PROCEDIMENTO.getFieldType(),
+					this.getObjectFromMap(map,"idProcedimento"));
+				setParameter(object, "setFirmaAutomatica", Dipartimento.model().FIRMA_AUTOMATICA.getFieldType(),
+					this.getObjectFromMap(map,"firmaAutomatica"));
 				setParameter(object, "setAccettazioneAutomatica", Dipartimento.model().ACCETTAZIONE_AUTOMATICA.getFieldType(),
 					this.getObjectFromMap(map,"accettazioneAutomatica"));
 				setParameter(object, "setModalitaPush", Dipartimento.model().MODALITA_PUSH.getFieldType(),
@@ -128,6 +144,12 @@ public class DipartimentoFetch extends AbstractJDBCFetch {
 				IdEnte object = new IdEnte();
 				setParameter(object, "setNome", Dipartimento.model().ENTE.NOME.getFieldType(),
 					this.getObjectFromMap(map,"ente.nome"));
+				return object;
+			}
+			if(model.equals(Dipartimento.model().REGISTRO)){
+				IdRegistro object = new IdRegistro();
+				setParameter(object, "setNome", Dipartimento.model().REGISTRO.NOME.getFieldType(),
+					this.getObjectFromMap(map,"registro.nome"));
 				return object;
 			}
 			

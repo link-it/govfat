@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -66,6 +65,10 @@ public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IB
 	private Text stornoContabilizzazione = null;
 	private Text ricezioneFattura = null;
 	private Text rifiutoFattura = null;
+	
+	private Text fatturazioneAttiva = null;
+	private Text firmaAutomatica = null;
+	private Text codiceProcedimento = null;
 
 	// Gruppo Informazioni Dati Genareli
 	private OutputGroup fieldsDatiGenerali = null;
@@ -120,6 +123,10 @@ public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IB
 		this.stornoContabilizzazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("stornoContabilizzazione","dipartimento.pcc.stornoContabilizzazione");
 		this.ricezioneFattura = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("ricezioneFattura","dipartimento.pcc.ricezioneFattura");
 		this.rifiutoFattura = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("rifiutoFattura","dipartimento.pcc.rifiutoFattura");
+		
+		this.fatturazioneAttiva = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("fatturazioneAttiva","dipartimento.fatturazioneAttiva");
+		this.firmaAutomatica = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("firmaAutomatica","dipartimento.firmaAutomatica");
+		this.codiceProcedimento = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("codiceProcedimento","dipartimento.codiceProcedimento");
 
 		this.setField(this.codice);
 		this.setField(this.descrizione);
@@ -145,6 +152,10 @@ public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IB
 		this.setField(this.ricezioneFattura);
 		this.setField(this.rifiutoFattura);
 		
+		this.setField(this.fatturazioneAttiva);
+		this.setField(this.firmaAutomatica);
+		this.setField(this.codiceProcedimento);
+		
 		this.fieldsDatiGenerali = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
 		this.fieldsDatiGenerali.addField(this.codice);
 		this.fieldsDatiGenerali.addField(this.descrizione);
@@ -153,17 +164,21 @@ public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IB
 		this.fieldsDatiGenerali.addField(this.notificaAutomatica);
 		this.fieldsDatiGenerali.addField(this.modalitaPush);
 		
-		this.fieldsDatiGenerali.setStyleClass("datiTrasmissioneTable"); 
-		this.fieldsDatiGenerali.setColumnClasses("labelAllineataDx,valueAllineataSx");
+		this.fieldsDatiGenerali.addField(this.fatturazioneAttiva);
+		this.fieldsDatiGenerali.addField(this.firmaAutomatica);
+		this.fieldsDatiGenerali.addField(this.codiceProcedimento);
+		
+		this.fieldsDatiGenerali.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.fieldsDatiGenerali.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE);
 
 		this.fieldsProperties = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("dipartimentoProperties",2);
-		this.fieldsProperties.setStyleClass("datiTrasmissioneTable"); 
-		this.fieldsProperties.setColumnClasses("labelAllineataDx,valueAllineataSx");
+		this.fieldsProperties.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.fieldsProperties.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE);
 		
 		
 		this.fieldsDatiPCC = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiPCC",2);
-		this.fieldsDatiPCC.setStyleClass("datiTrasmissioneTable"); 
-		this.fieldsDatiPCC.setColumnClasses("labelAllineataDx,valueAllineataSx");
+		this.fieldsDatiPCC.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.fieldsDatiPCC.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE);
 		
 		this.fieldsDatiPCC.addField(this.indirizziNotifica);
 		this.fieldsDatiPCC.addField(this.pagamentoIVA);
@@ -210,6 +225,9 @@ public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IB
 
 		this.indirizziNotifica.setValue(this.getDTO().getListaEmailNotifiche());
 		
+		this.fatturazioneAttiva.setValue(Utils.getBooleanAsLabel(this.getDTO().isFatturazioneAttiva(),"commons.label.si", "commons.label.no"));
+		this.firmaAutomatica.setValue(Utils.getBooleanAsLabel(this.getDTO().isFirmaAutomatica(),"commons.label.si", "commons.label.no"));
+		this.codiceProcedimento.setValue(this.getDTO().getIdProcedimento());
 	}
 	
 	public void setProprietaPCC(List<PccOperazione> listaProprietaConsentiteAiDipartimenti, List<PccDipartimentoOperazione> listaProprietaAbilitate){
@@ -515,7 +533,28 @@ public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IB
 		this.downloadDocumento = downloadDocumento;
 	}
 
-	
+	public Text getFatturazioneAttiva() {
+		return fatturazioneAttiva;
+	}
 
+	public void setFatturazioneAttiva(Text fatturazioneAttiva) {
+		this.fatturazioneAttiva = fatturazioneAttiva;
+	}
+
+	public Text getFirmaAutomatica() {
+		return firmaAutomatica;
+	}
+
+	public void setFirmaAutomatica(Text firmaAutomatica) {
+		this.firmaAutomatica = firmaAutomatica;
+	}
+
+	public Text getCodiceProcedimento() {
+		return codiceProcedimento;
+	}
+
+	public void setCodiceProcedimento(Text codiceProcedimento) {
+		this.codiceProcedimento = codiceProcedimento;
+	}
 
 }

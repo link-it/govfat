@@ -2,8 +2,8 @@
   ProxyoperazionePA - Gestione del formato operazione Elettronica 
   http://www.gov4j.it/operazionepa
   
-  Copyright (c) 2014-2016 Link.it srl (http://link.it). 
-  Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+  Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+  Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
   
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -52,6 +52,11 @@
 	<ui:define name="body">
 		<a4j:keepAlive beanName="fatturaElettronicaMBean" />
 		<a4j:keepAlive beanName="esitoMBean"  />
+		<script type="text/javascript">
+				 jQuery(document).ready(function() {
+					_force_get = true;
+				 });
+		</script>
 
 		<rich:panel id="panelContainer1" style="padding:0"
 			headerClass="outpanelHeader" styleClass="noborder">

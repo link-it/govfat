@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -95,6 +94,13 @@ public class JDBCLottoFattureServiceImpl extends JDBCLottoFattureServiceSearchIm
 		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE_FISCALE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().CODICE_DESTINATARIO,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().XML,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().FATTURAZIONE_ATTIVA,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().TIPI_COMUNICAZIONE,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_ULTIMA_ELABORAZIONE,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DETTAGLIO_ELABORAZIONE,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_PROSSIMA_ELABORAZIONE,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().TENTATIVI_CONSEGNA,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_RICEZIONE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().STATO_INSERIMENTO,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().STATO_CONSEGNA,false),"?");
@@ -133,6 +139,13 @@ public class JDBCLottoFattureServiceImpl extends JDBCLottoFattureServiceSearchIm
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getTerzoIntermediarioOSoggettoEmittenteCodiceFiscale(),LottoFatture.model().TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE_FISCALE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getCodiceDestinatario(),LottoFatture.model().CODICE_DESTINATARIO.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getXml(),LottoFatture.model().XML.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getFatturazioneAttiva(),LottoFatture.model().FATTURAZIONE_ATTIVA.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getStatoElaborazioneInUscita(),LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getTipiComunicazione(),LottoFatture.model().TIPI_COMUNICAZIONE.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getDataUltimaElaborazione(),LottoFatture.model().DATA_ULTIMA_ELABORAZIONE.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getDettaglioElaborazione(),LottoFatture.model().DETTAGLIO_ELABORAZIONE.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getDataProssimaElaborazione(),LottoFatture.model().DATA_PROSSIMA_ELABORAZIONE.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getTentativiConsegna(),LottoFatture.model().TENTATIVI_CONSEGNA.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getDataRicezione(),LottoFatture.model().DATA_RICEZIONE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getStatoInserimento(),LottoFatture.model().STATO_INSERIMENTO.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getStatoConsegna(),LottoFatture.model().STATO_CONSEGNA.getFieldType()),
@@ -235,6 +248,20 @@ public class JDBCLottoFattureServiceImpl extends JDBCLottoFattureServiceSearchIm
 		lstObjects_lottoFatture.add(new JDBCObject(lottoFatture.getCodiceDestinatario(), LottoFatture.model().CODICE_DESTINATARIO.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().XML,false), "?");
 		lstObjects_lottoFatture.add(new JDBCObject(lottoFatture.getXml(), LottoFatture.model().XML.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().FATTURAZIONE_ATTIVA,false), "?");
+		lstObjects_lottoFatture.add(new JDBCObject(lottoFatture.getFatturazioneAttiva(), LottoFatture.model().FATTURAZIONE_ATTIVA.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA,false), "?");
+		lstObjects_lottoFatture.add(new JDBCObject(lottoFatture.getStatoElaborazioneInUscita(), LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().TIPI_COMUNICAZIONE,false), "?");
+		lstObjects_lottoFatture.add(new JDBCObject(lottoFatture.getTipiComunicazione(), LottoFatture.model().TIPI_COMUNICAZIONE.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_ULTIMA_ELABORAZIONE,false), "?");
+		lstObjects_lottoFatture.add(new JDBCObject(lottoFatture.getDataUltimaElaborazione(), LottoFatture.model().DATA_ULTIMA_ELABORAZIONE.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DETTAGLIO_ELABORAZIONE,false), "?");
+		lstObjects_lottoFatture.add(new JDBCObject(lottoFatture.getDettaglioElaborazione(), LottoFatture.model().DETTAGLIO_ELABORAZIONE.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_PROSSIMA_ELABORAZIONE,false), "?");
+		lstObjects_lottoFatture.add(new JDBCObject(lottoFatture.getDataProssimaElaborazione(), LottoFatture.model().DATA_PROSSIMA_ELABORAZIONE.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().TENTATIVI_CONSEGNA,false), "?");
+		lstObjects_lottoFatture.add(new JDBCObject(lottoFatture.getTentativiConsegna(), LottoFatture.model().TENTATIVI_CONSEGNA.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_RICEZIONE,false), "?");
 		lstObjects_lottoFatture.add(new JDBCObject(lottoFatture.getDataRicezione(), LottoFatture.model().DATA_RICEZIONE.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().STATO_INSERIMENTO,false), "?");

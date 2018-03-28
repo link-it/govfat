@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -95,6 +94,7 @@ public class PrincipalFilter implements Filter {
 			this.excludedPages.add("images");
 			this.excludedPages.add("css");
 			this.excludedPages.add("scripts");
+			this.excludedPages.add("fileupload");
 		//}
 		
 	}
@@ -115,8 +115,18 @@ public class PrincipalFilter implements Filter {
 			
 			// Autenticazione gestita dall'applicazione 
 			sessionControlRequiredForThisResource = isSessionControlRequiredForThisResource(httpServletRequest);
-			if(sessionControlRequiredForThisResource)
-				this.log.debug("Richiesta risorsa ["+requestPath+"], protetta ["+sessionControlRequiredForThisResource+"]");
+			if(sessionControlRequiredForThisResource) {
+				this.log.debug("Richiesta risorsa protetta ["+requestPath+"]");
+//				String uri = httpServletRequest.getScheme() + "://" +
+//						httpServletRequest.getServerName() + 
+//			             ("http".equals(httpServletRequest.getScheme()) && httpServletRequest.getServerPort() == 80 ||
+//			             	"https".equals(request.getScheme()) && httpServletRequest.getServerPort() == 443 ? "" : ":" + httpServletRequest.getServerPort() ) +
+//			             httpServletRequest.getRequestURI() +
+//			            (httpServletRequest.getQueryString() != null ? "?" + httpServletRequest.getQueryString() : "");
+//				this.log.debug("Richiesta Url Esatta Invocata ["+uri+"]");
+//				this.log.debug("Content-Type Richiesta: ["+httpServletRequest.getContentType()+"]");
+//				this.log.debug("Content-Length Richiesta: ["+httpServletRequest.getContentLength()+"]");
+			}
 			
 			if(!this.usePrincipal){
 				// is session expire control required for this request?

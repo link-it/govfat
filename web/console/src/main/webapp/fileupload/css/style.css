@@ -1,0 +1,90 @@
+@charset "UTF-8";
+
+body {
+	font-family: Arial,Verdana,sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #FFF;
+    background-repeat: repeat-x;
+    font-size: 11px;
+}
+
+p {
+    margin: 0 0 2px;
+}
+
+
+.btn {
+    /*display: block;
+    float:none;*/
+    margin:0 7px 0 0;
+    background-color:#f5f5f5;
+    border:1px solid #dedede;
+    border-top:1px solid #eee;
+    border-left:1px solid #eee;
+	border-radius: 0px;	
+    font-family:"Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
+    font-size:100%;
+    line-height:130%;
+    text-decoration:none;
+    font-weight:bold;
+    color:#565656;
+    cursor:pointer;
+    padding:5px 10px 6px 7px; /* Links */
+    text-indent: 18px;
+    background-repeat: no-repeat;
+	background-position: left;
+}
+
+button.btn:hover, #fiBtn:hover{
+    background-color:#dff4ff;
+    border:1px solid #c2e1ef;
+    color:#336699;
+}
+
+.progress {
+	margin-bottom: 0px;	
+}
+
+.listaFile {
+	height: 325px;
+}
+
+.iconCaricamentoOk {
+    padding: 8px;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-left: 4px;
+}
+
+
+.rich-fileupload-list-overflow {
+	overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+
+.rich-fileupload-toolbar-decor {
+    border-bottom: 1px solid;
+    border-top: 1px solid;
+    border-left: 1px solid;
+    padding: 5px;
+    background-color: #ECF4FE;
+    border-bottom-color: #C0C0C0;
+    border-top-color: #FFF;
+    border-left-color: #FFF;
+    width: 100%;
+}
+
+.rich-fileupload-button-border {
+    border: 1px solid;
+    margin: 2px;
+    border-color: #C0C0C0;
+}
+
+.rich-fileupload-button-dis {
+    background-repeat: repeat-x;
+    cursor: pointer;
+    padding: 2px;
+}

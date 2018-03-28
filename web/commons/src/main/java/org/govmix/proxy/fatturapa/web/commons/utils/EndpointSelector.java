@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -22,6 +21,8 @@
 package org.govmix.proxy.fatturapa.web.commons.utils;
 
 import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
@@ -30,6 +31,7 @@ import org.govmix.proxy.fatturapa.orm.IdDipartimento;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.Protocollo;
 import org.govmix.proxy.fatturapa.orm.Registro;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.DipartimentoBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.ProtocolloBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.RegistroBD;
@@ -41,11 +43,13 @@ public class EndpointSelector {
 	private RegistroBD registroBD;
 	private Logger log;
 	
+	private Map<String, Endpoint> endpoints;
 	public EndpointSelector(Logger log) throws Exception {
 		this.protocolloBD = new ProtocolloBD(log);
 		this.dipartimentoBD = new DipartimentoBD(log);
 		this.registroBD = new RegistroBD(log);
 		this.log = log;
+		this.endpoints = new HashMap<String, Endpoint>();
 	}
 	
 	public EndpointSelector(Logger log, Connection connection, boolean autoCommit) throws Exception {
@@ -53,10 +57,16 @@ public class EndpointSelector {
 		this.dipartimentoBD = new DipartimentoBD(log, connection, autoCommit);
 		this.registroBD = new RegistroBD(log, connection, autoCommit);
 		this.log = log;
+		this.endpoints = new HashMap<String, Endpoint>();
 	}
 	public Endpoint findEndpoint(FatturaElettronica fattura) throws Exception {
 		this.log.debug("Cerco endpoint per fattura Id-SdI["+fattura.getIdentificativoSdi()+"] posizione["+fattura.getPosizione()+"] con destinatario ["+fattura.getCodiceDestinatario()+"]");
 		return findEndpoint(fattura.getCodiceDestinatario());
+	}
+	
+	public Endpoint findEndpoint(TracciaSDI traccia) throws Exception {
+		this.log.debug("Cerco endpoint per fattura Id-SdI["+traccia.getIdentificativoSdi()+"] con destinatario ["+traccia.getLottoFatture().getCodiceDestinatario()+"]");
+		return findEndpoint(traccia.getLottoFatture().getCodiceDestinatario());
 	}
 	
 	public Endpoint findEndpoint(LottoFatture lotto) throws Exception {
@@ -66,25 +76,29 @@ public class EndpointSelector {
 	
 	private Endpoint findEndpoint(String codiceDestinatario) throws Exception {
 
-		Endpoint endpoint = new Endpoint();
-		IdDipartimento id = new IdDipartimento();
-		id.setCodice(codiceDestinatario);
-
-		Dipartimento dipartimento = this.dipartimentoBD.get(id);
-
-		Registro registro = this.registroBD.findById(dipartimento.getRegistro());
-		Protocollo protocollo = this.protocolloBD.get(registro.getIdProtocollo());
-		this.log.debug("Trovato ente ["+protocollo.getNome()+"] con endpoint consegna fattura ["+protocollo.getEndpoint()+"] endpoint consegna lotto ["+protocollo.getEndpointConsegnaLotto()+"] endpoint richiesta protocollo ["+protocollo.getEndpointRichiediProtocollo()+"] per codice destinatario ["+codiceDestinatario+"]");
+		if(this.endpoints.containsKey(codiceDestinatario)) {
+			return this.endpoints.get(codiceDestinatario);
+		} else{
+			Endpoint endpoint = new Endpoint();
+			IdDipartimento id = new IdDipartimento();
+			id.setCodice(codiceDestinatario);
 		
-
-		endpoint.setEndpoint(protocollo.getEndpoint());
-		endpoint.setEndpointAssociazioneLotto(protocollo.getEndpointRichiediProtocollo());
-		endpoint.setEndpointConsegnaLotto(protocollo.getEndpointConsegnaLotto());
-
-		endpoint.setUsername(registro.getUsername());
-		endpoint.setPassword(registro.getPassword());
-
-		return endpoint;
+			Dipartimento dipartimento = this.dipartimentoBD.get(id);
+		
+			Registro registro = this.registroBD.findById(dipartimento.getRegistro());
+			Protocollo protocollo = this.protocolloBD.get(registro.getIdProtocollo());
+			this.log.debug("Trovato ente ["+protocollo.getNome()+"] con endpoint["+protocollo.getEndpoint()+"]");
+			
+		
+			endpoint.setEndpoint(protocollo.getEndpoint());
+		
+			endpoint.setUsername(registro.getUsername());
+			endpoint.setPassword(registro.getPassword());
+			
+			this.endpoints.put(codiceDestinatario, endpoint);
+			
+			return endpoint;
+		}
 	}
 
 }

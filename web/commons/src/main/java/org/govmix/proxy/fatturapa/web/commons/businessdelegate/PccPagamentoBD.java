@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -135,6 +134,39 @@ public class PccPagamentoBD  extends BaseBD {
 		}
 
 		return 0;
+	}
+
+	public boolean existPagamentiByIdFattura(IdFattura idFattura) throws ServiceException {
+		String methodName = "getPagamentiByIdFattura";
+		try {
+			IPaginatedExpression expr = this.pagamentoService.newPaginatedExpression();
+
+			expr.equals(PccPagamento.model().ID_FATTURA.IDENTIFICATIVO_SDI, idFattura.getIdentificativoSdi());
+			expr.equals(PccPagamento.model().ID_FATTURA.POSIZIONE, idFattura.getPosizione());
+
+			List<PccPagamento> lst = this.pagamentoService.findAll(expr);
+			
+			double importo = 0;
+			if(lst != null && !lst.isEmpty()) {
+				for(PccPagamento pag: lst) {
+					importo += pag.getImportoPagato();
+				}
+			}
+			return importo > 0;
+		} catch (ServiceException e) {
+
+			this.log.error("Errore durante la " + methodName + ": " + e.getMessage(), e);
+			throw e;
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la " + methodName + ": " + e.getMessage(), e);
+			throw new ServiceException(e);
+		} catch (ExpressionNotImplementedException e) {
+			this.log.error("Errore durante la " + methodName + ": " + e.getMessage(), e);
+			throw new ServiceException(e);
+		} catch (ExpressionException e) {
+			this.log.error("Errore durante la " + methodName + ": " + e.getMessage(), e);
+			throw new ServiceException(e);
+		}
 	}
 
 	public void create(PccPagamento pagamento) throws ServiceException {

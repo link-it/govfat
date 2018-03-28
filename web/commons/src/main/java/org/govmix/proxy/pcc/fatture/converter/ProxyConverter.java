@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -22,6 +21,20 @@
 package org.govmix.proxy.pcc.fatture.converter;
 
 
+
+import it.tesoro.fatture.ComunicaScadenzaTipo;
+import it.tesoro.fatture.ComunicazioneScadenzaTipo;
+import it.tesoro.fatture.ContabilizzazioneTipo;
+import it.tesoro.fatture.ListaContabilizzazioneTipo;
+import it.tesoro.fatture.MandatoPagamentoTipo;
+import it.tesoro.fatture.NaturaSpesaContabiliTipo;
+import it.tesoro.fatture.NaturaSpesaTipo;
+import it.tesoro.fatture.OperazioneContabilizzazioneTipo;
+import it.tesoro.fatture.PagamentoStornoTipo;
+import it.tesoro.fatture.PagamentoTipo;
+import it.tesoro.fatture.RicezioneFatturaTipo;
+import it.tesoro.fatture.RifiutoFatturaTipo;
+import it.tesoro.fatture.StatoDebitoTipo;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -90,6 +103,7 @@ import org.govmix.pcc.fatture.TestataRispTipo;
 import org.govmix.pcc.fatture.TipoDocumentoTipo;
 import org.govmix.pcc.fatture.TipoOperazioneTipo;
 import org.govmix.pcc.fatture.TipologiaMovimentoErarioTipo;
+import org.govmix.proxy.fatturapa.web.commons.utils.TransformUtils;
 
 public class ProxyConverter {
 
@@ -100,6 +114,19 @@ public class ProxyConverter {
 		return proxyVO;
 	}
 
+	public static ProxyRispostaTipo toProxyDefault(TestataRispTipo testata) {
+		ProxyRispostaTipo proxyVO = new ProxyRispostaTipo();
+		proxyVO.setTestataRisposta(testata);
+		proxyVO.setDatiRisposta(toProxy(testata));
+		return proxyVO;
+	}
+
+
+	private static DatiRispostaProxyTipo toProxy(TestataRispTipo testata) {
+		DatiRispostaProxyTipo risp = new DatiRispostaProxyTipo();
+		risp.setEsitoTrasmissione(testata.getEsito());
+		return risp;
+	}
 
 	public static QueryInserimentoFatturaRispostaTipo toProxy(it.tesoro.fatture.QueryInserimentoFatturaRispostaTipo vo) {
 		QueryInserimentoFatturaRispostaTipo proxyVO = new QueryInserimentoFatturaRispostaTipo();
@@ -158,7 +185,7 @@ public class ProxyConverter {
 	
 	public static QueryInterrogazioneEsitiRispostaTipo toProxy(it.tesoro.fatture.QueryInterrogazioneEsitiRispostaTipo vo) {
 		QueryInterrogazioneEsitiRispostaTipo pccVO = new QueryInterrogazioneEsitiRispostaTipo();
-		pccVO.setTestataRisposta(TestataConverter.toPCCTestataQuery(vo.getTestataRisposta()));
+		pccVO.setTestataRisposta(TestataConverter.toProxyTestataQuery(vo.getTestataRisposta()));
 		pccVO.setDatiRisposta(toProxy(vo.getDatiRisposta()));
 		return pccVO;
 	}
@@ -798,6 +825,249 @@ public class ProxyConverter {
 		testataCanc.setIdentificativoTransazionePA(testataRichiesta.getIdentificativoTransazionePA() + "CANC");
 		testataCanc.setUtenteRichiedente(testataRichiesta.getUtenteRichiedente());
 		return testataCanc;
+	}
+
+	public static OperazioneTipo toProxyOperazioneList(List<it.tesoro.fatture.OperazioneTipo> voList) {
+		
+		if(voList == null || voList.isEmpty()) return null;
+		
+		it.tesoro.fatture.OperazioneTipo vo = voList.get(0);
+		
+		int index = 0;
+		if(vo.getTipoOperazione().equals(it.tesoro.fatture.TipoOperazioneTipo.CCS)) {
+			OperazioneTipo op = new OperazioneTipo();
+			op.setProgressivoOperazione(1);
+			op.setTipoOperazione(TipoOperazioneTipo.CCS);
+			op.setStrutturaDatiOperazione(new StrutturaDatiOperazioneTipo());
+			return op;
+		} else if(vo.getTipoOperazione().equals(it.tesoro.fatture.TipoOperazioneTipo.SC)) {
+			OperazioneTipo op = new OperazioneTipo();
+			op.setProgressivoOperazione(1);
+			op.setTipoOperazione(TipoOperazioneTipo.SC);
+			op.setStrutturaDatiOperazione(new StrutturaDatiOperazioneTipo());
+			return op;
+		} else if(vo.getStrutturaDatiOperazione().getComunicazioneScadenza() != null) {
+				return toProxy(vo, vo.getStrutturaDatiOperazione().getComunicazioneScadenza(), index++);
+		} else if(vo.getStrutturaDatiOperazione().getRifiutoFattura() != null) {
+				return toProxy(vo, vo.getStrutturaDatiOperazione().getRifiutoFattura(), index++);
+		} else if(vo.getStrutturaDatiOperazione().getPagamento() != null) {
+				return toProxy(vo, vo.getStrutturaDatiOperazione().getPagamento(), index++);
+		} else if(vo.getStrutturaDatiOperazione().getPagamentoStorno() != null) {
+				return toProxy(vo, vo.getStrutturaDatiOperazione().getPagamentoStorno(), index++);
+		} else if(vo.getStrutturaDatiOperazione().getRicezioneFattura() != null) {
+				return toProxy(vo, vo.getStrutturaDatiOperazione().getRicezioneFattura(), index++);
+		} else if(vo.getStrutturaDatiOperazione().getRifiutoFattura() != null) {
+				return toProxy(vo, vo.getStrutturaDatiOperazione().getRifiutoFattura(), index++);
+		} else if(vo.getStrutturaDatiOperazione().getListaContabilizzazione() != null) {
+			return toProxy(vo, vo.getStrutturaDatiOperazione().getListaContabilizzazione(), index++);
+		}
+		return null;
+	}
+	
+	private static OperazioneTipo toProxy(it.tesoro.fatture.OperazioneTipo vo, ListaContabilizzazioneTipo lista, int index) {
+		if(lista == null) return null;
+		OperazioneTipo pccVO = new OperazioneTipo();
+		pccVO.setTipoOperazione(toProxy(vo.getTipoOperazione()));
+		pccVO.setProgressivoOperazione(index);
+		StrutturaDatiOperazioneTipo strutturaDatiOperazione = new StrutturaDatiOperazioneTipo();
+		
+		List<ContabilizzazioneTipo> contabilizzazione = lista.getContabilizzazione();
+		if(contabilizzazione != null && !contabilizzazione.isEmpty()) {
+			for(ContabilizzazioneTipo cont : contabilizzazione) {
+				strutturaDatiOperazione.getListaContabilizzazione().add(toProxy(cont));
+			}
+		}
+		
+		pccVO.setStrutturaDatiOperazione(strutturaDatiOperazione);
+		return pccVO;
+	}
+	
+	private static OperazioneTipo toProxy(it.tesoro.fatture.OperazioneTipo vo, RicezioneFatturaTipo ricezioneFattura, int index) {
+		if(vo == null) return null;
+		OperazioneTipo pccVO = new OperazioneTipo();
+		pccVO.setTipoOperazione(toProxy(vo.getTipoOperazione()));
+		pccVO.setProgressivoOperazione(index);
+		StrutturaDatiOperazioneTipo strutturaDatiOperazione = new StrutturaDatiOperazioneTipo();
+		strutturaDatiOperazione.getRicezioneFattura().add(toProxy(ricezioneFattura));
+		pccVO.setStrutturaDatiOperazione(strutturaDatiOperazione);
+		return pccVO;
+	}
+	
+	private static org.govmix.pcc.fatture.RicezioneFatturaTipo toProxy(RicezioneFatturaTipo vo) {
+		if(vo == null) return null;
+		org.govmix.pcc.fatture.RicezioneFatturaTipo pccVO = new org.govmix.pcc.fatture.RicezioneFatturaTipo();
+		pccVO.setNumeroProtocolloEntrata(vo.getNumeroProtocolloEntrata());
+		pccVO.setDataRicezione(vo.getDataRicezione());
+		pccVO.setNote(vo.getNote());
+		return pccVO;
+	}
+	
+	private static OperazioneTipo toProxy(it.tesoro.fatture.OperazioneTipo vo, PagamentoTipo pagamento, int index) {
+		if(vo == null) return null;
+		OperazioneTipo pccVO = new OperazioneTipo();
+		pccVO.setTipoOperazione(toProxy(vo.getTipoOperazione()));
+		pccVO.setProgressivoOperazione(index);
+		StrutturaDatiOperazioneTipo strutturaDatiOperazione = new StrutturaDatiOperazioneTipo();
+		strutturaDatiOperazione.getPagamento().add(toProxy(pagamento));
+		pccVO.setStrutturaDatiOperazione(strutturaDatiOperazione);
+		return pccVO;
+	}
+	
+	private static OperazioneTipo toProxy(it.tesoro.fatture.OperazioneTipo vo, PagamentoStornoTipo pagamentoStorno, int index) {
+		if(vo == null) return null;
+		OperazioneTipo pccVO = new OperazioneTipo();
+		pccVO.setTipoOperazione(toProxy(vo.getTipoOperazione()));
+		pccVO.setProgressivoOperazione(index);
+		StrutturaDatiOperazioneTipo strutturaDatiOperazione = new StrutturaDatiOperazioneTipo();
+		strutturaDatiOperazione.getPagamentoStorno().add(toProxy(pagamentoStorno));
+		pccVO.setStrutturaDatiOperazione(strutturaDatiOperazione);
+		return pccVO;
+	}
+	
+	private static OperazioneTipo toProxy(it.tesoro.fatture.OperazioneTipo vo, ComunicazioneScadenzaTipo comunicazioneScadenza, int index) {
+		if(vo == null) return null;
+		OperazioneTipo pccVO = new OperazioneTipo();
+		pccVO.setTipoOperazione(toProxy(vo.getTipoOperazione()));
+		pccVO.setProgressivoOperazione(index);
+		StrutturaDatiOperazioneTipo strutturaDatiOperazione = new StrutturaDatiOperazioneTipo();
+		strutturaDatiOperazione.getComunicazioneScadenza().add(toProxy(comunicazioneScadenza));
+		pccVO.setStrutturaDatiOperazione(strutturaDatiOperazione);
+		return pccVO;
+	}
+	
+	private static OperazioneTipo toProxy(it.tesoro.fatture.OperazioneTipo vo, RifiutoFatturaTipo rifiutoFattura, int index) {
+		if(vo == null) return null;
+		OperazioneTipo pccVO = new OperazioneTipo();
+		pccVO.setTipoOperazione(toProxy(vo.getTipoOperazione()));
+		pccVO.setProgressivoOperazione(index);
+		StrutturaDatiOperazioneTipo strutturaDatiOperazione = new StrutturaDatiOperazioneTipo();
+		strutturaDatiOperazione.getRifiutoFattura().add(toProxy(rifiutoFattura));
+		pccVO.setStrutturaDatiOperazione(strutturaDatiOperazione);
+		return pccVO;
+	}
+	
+	private static org.govmix.pcc.fatture.RifiutoFatturaTipo toProxy(RifiutoFatturaTipo vo) {
+		if(vo == null) return null;
+		org.govmix.pcc.fatture.RifiutoFatturaTipo pccVO = new org.govmix.pcc.fatture.RifiutoFatturaTipo();
+		pccVO.setDataRifiuto(vo.getDataRifiuto());
+		pccVO.setDescrizioneRifiuto(vo.getDescrizioneRifiuto());
+		return pccVO;
+	}
+
+
+	private static org.govmix.pcc.fatture.ContabilizzazioneTipo toProxy(ContabilizzazioneTipo vo) {
+		if(vo == null) return null;
+		org.govmix.pcc.fatture.ContabilizzazioneTipo pccVO = new org.govmix.pcc.fatture.ContabilizzazioneTipo();
+		pccVO.setImportoMovimento(vo.getImportoMovimento());
+		pccVO.setNaturaSpesa(toProxy(vo.getNaturaSpesa()));
+		pccVO.setCapitoliSpesa(vo.getCapitoliSpesa());
+		pccVO.setOperazione(toProxy(vo.getOperazione()));
+		
+		try {
+			TransformUtils.populateContabilizzazione(pccVO, vo.getDescrizione());
+		} catch (Exception e) {
+			pccVO.setDescrizione(vo.getDescrizione());
+		}
+
+		pccVO.setEstremiImpegno(vo.getEstremiImpegno());
+		pccVO.setCodiceCIG(vo.getCodiceCIG());
+		pccVO.setCodiceCUP(vo.getCodiceCUP());
+		return pccVO;
+	}
+	
+	private static org.govmix.pcc.fatture.OperazioneContabilizzazioneTipo toProxy(OperazioneContabilizzazioneTipo vo) {
+		if(vo == null) return null;
+		org.govmix.pcc.fatture.OperazioneContabilizzazioneTipo pccVO = new org.govmix.pcc.fatture.OperazioneContabilizzazioneTipo();
+		pccVO.setStatoDebito(toProxy(vo.getStatoDebito()));
+		if(vo.getCausale() != null)
+			pccVO.setCausale(vo.getCausale());
+		return pccVO;
+	}
+
+	private static org.govmix.pcc.fatture.StatoDebitoTipo toProxy(StatoDebitoTipo vo) {
+		if(vo == null) return null;
+		switch(vo){
+		case LIQ: return org.govmix.pcc.fatture.StatoDebitoTipo.LIQ;
+		case SOSP: return org.govmix.pcc.fatture.StatoDebitoTipo.SOSP;
+		case NOLIQ: return org.govmix.pcc.fatture.StatoDebitoTipo.NOLIQ;
+		default:
+			break;
+		}
+		return null;
+	}
+
+	private static org.govmix.pcc.fatture.NaturaSpesaContabiliTipo toProxy(NaturaSpesaContabiliTipo vo) {
+		if(vo == null) return null;
+		switch(vo){
+		case CO: return org.govmix.pcc.fatture.NaturaSpesaContabiliTipo.CO;
+		case CA: return org.govmix.pcc.fatture.NaturaSpesaContabiliTipo.CA;
+		case NA: return org.govmix.pcc.fatture.NaturaSpesaContabiliTipo.NA;
+		default:
+			break;
+		}
+		return null;
+	}
+
+	private static org.govmix.pcc.fatture.ComunicazioneScadenzaTipo toProxy(ComunicazioneScadenzaTipo vo) {
+		if(vo == null) return null;
+		org.govmix.pcc.fatture.ComunicazioneScadenzaTipo pccVO = new org.govmix.pcc.fatture.ComunicazioneScadenzaTipo();
+		pccVO.setComunicaScadenza(toProxy(vo.getComunicaScadenza()));
+		pccVO.setImporto(vo.getImporto());
+		pccVO.setDataScadenza(vo.getDataScadenza());
+		return pccVO;
+	}
+
+	private static org.govmix.pcc.fatture.ComunicaScadenzaTipo toProxy(ComunicaScadenzaTipo vo) {
+		if(vo == null) return null;
+		switch(vo){
+		case SI: return org.govmix.pcc.fatture.ComunicaScadenzaTipo.SI;
+		default:
+			break;
+		}
+		return null;
+	}
+
+	private static org.govmix.pcc.fatture.PagamentoStornoTipo toProxy(PagamentoStornoTipo vo) {
+		if(vo == null) return null;
+		org.govmix.pcc.fatture.PagamentoStornoTipo pccVO = new org.govmix.pcc.fatture.PagamentoStornoTipo();
+		pccVO.setImportoStorno(vo.getImportoStorno());
+		pccVO.setNaturaSpesa(toProxy(vo.getNaturaSpesa()));
+		pccVO.setIdFiscaleIVABeneficiario(vo.getIdFiscaleIVABeneficiario());
+		return pccVO;
+	}
+
+	private static org.govmix.pcc.fatture.NaturaSpesaTipo toProxy(NaturaSpesaTipo vo) {
+		if(vo == null) return null;
+		switch(vo){
+		case CO: return org.govmix.pcc.fatture.NaturaSpesaTipo.CO;
+		case CA: return org.govmix.pcc.fatture.NaturaSpesaTipo.CA;
+		default:
+			break;
+		}
+		return null;
+	}
+
+	private static org.govmix.pcc.fatture.PagamentoTipo toProxy(PagamentoTipo vo) {
+		if(vo == null) return null;
+		org.govmix.pcc.fatture.PagamentoTipo pccVO = new org.govmix.pcc.fatture.PagamentoTipo();
+		pccVO.setImportoPagato(vo.getImportoPagato());
+		pccVO.setNaturaSpesa(toProxy(vo.getNaturaSpesa()));
+		pccVO.setCapitoliSpesa(vo.getCapitoliSpesa());
+		pccVO.setEstremiImpegno(vo.getEstremiImpegno());
+		pccVO.setMandatoPagamento(toProxy(vo.getMandatoPagamento()));
+		pccVO.setIdFiscaleIVABeneficiario(vo.getIdFiscaleIVABeneficiario());
+		pccVO.setCodiceCIG(vo.getCodiceCIG());
+		pccVO.setCodiceCUP(vo.getCodiceCUP());
+		pccVO.setDescrizione(vo.getDescrizione());
+		return pccVO;
+	}
+
+	private static org.govmix.pcc.fatture.MandatoPagamentoTipo toProxy(MandatoPagamentoTipo vo) {
+		if(vo == null) return null;
+		org.govmix.pcc.fatture.MandatoPagamentoTipo pccVO = new org.govmix.pcc.fatture.MandatoPagamentoTipo();
+		pccVO.setNumero(vo.getNumero());
+		pccVO.setDataMandatoPagamento(vo.getDataMandatoPagamento());
+		return pccVO;
 	}
 
 }

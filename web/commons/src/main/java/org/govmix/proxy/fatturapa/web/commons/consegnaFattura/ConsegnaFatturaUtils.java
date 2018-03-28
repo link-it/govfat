@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -26,9 +25,7 @@ import it.gov.fatturapa.sdi.fatturapa.v1_0.DatiAnagraficiCedenteType;
 import it.gov.fatturapa.sdi.fatturapa.v1_0.DatiAnagraficiCessionarioType;
 import it.gov.fatturapa.sdi.fatturapa.v1_0.DatiAnagraficiTerzoIntermediarioType;
 import it.gov.fatturapa.sdi.fatturapa.v1_0.IdFiscaleType;
-import it.gov.fatturapa.sdi.fatturapa.v1_0.ObjectFactory;
 import it.gov.fatturapa.sdi.fatturapa.v1_0.utils.serializer.JaxbDeserializer;
-import it.gov.fatturapa.sdi.fatturapa.v1_0.utils.serializer.JaxbSerializer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -39,14 +36,13 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoArchivioInvioFatturaType;
-import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters.Soggetto;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.openspcoop2.generic_project.exception.DeserializerException;
-import org.openspcoop2.generic_project.exception.SerializerException;
 import org.openspcoop2.protocol.sdi.constants.SDICostanti;
 import org.openspcoop2.protocol.sdi.utils.P7MInfo;
 import org.openspcoop2.protocol.sdi.utils.SDILottoUtils;
+import org.openspcoop2.utils.Utilities;
 
 public class ConsegnaFatturaUtils {
 
@@ -71,6 +67,7 @@ public class ConsegnaFatturaUtils {
 			String terzoIntermediarioOSoggettoEmittenteCodiceFiscale,
 			String terzoIntermediarioOSoggettoEmittenteIdCodice,
 			String terzoIntermediarioOSoggettoEmittenteIdPaese,
+			boolean fatturazioneAttiva,
 			InputStream fatturaStream) throws Exception, IOException {
 		
 		boolean isBase64 = false;
@@ -87,7 +84,7 @@ public class ConsegnaFatturaUtils {
 				cedentePrestatoreDenominazione, cedentePrestatoreNome, cedentePrestatoreCognome, cedentePrestatoreCodiceFiscale, cedentePrestatoreIdCodice, cedentePrestatoreIdPaese, 
 				cessionarioCommittenteDenominazione, cessionarioCommittenteNome, cessionarioCommittenteCognome, cessionarioCommittenteCodiceFiscale, cessionarioCommittenteIdCodice, cessionarioCommittenteIdPaese, 
 				terzoIntermediarioOSoggettoEmittenteDenominazione, terzoIntermediarioOSoggettoEmittenteNome, terzoIntermediarioOSoggettoEmittenteCognome, terzoIntermediarioOSoggettoEmittenteCodiceFiscale, 
-				terzoIntermediarioOSoggettoEmittenteIdCodice, terzoIntermediarioOSoggettoEmittenteIdPaese, getXmlBytes(fatturaStream, isBase64));
+				terzoIntermediarioOSoggettoEmittenteIdCodice, terzoIntermediarioOSoggettoEmittenteIdPaese, fatturazioneAttiva, getXmlBytes(fatturaStream, isBase64));
 	}
 	
 
@@ -111,6 +108,7 @@ public class ConsegnaFatturaUtils {
 			String terzoIntermediarioOSoggettoEmittenteCodiceFiscale,
 			String terzoIntermediarioOSoggettoEmittenteIdCodice,
 			String terzoIntermediarioOSoggettoEmittenteIdPaese,
+			boolean fatturazioneAttiva,
 			byte[] xml) throws Exception, IOException {
 		ConsegnaFatturaParameters params = new ConsegnaFatturaParameters();
 
@@ -170,28 +168,52 @@ public class ConsegnaFatturaUtils {
 
 			params.setTerzoIntermediarioOSoggettoEmittente(terzoIntermediarioOSoggettoEmittente);
 		}
+		params.setFatturazioneAttiva(fatturazioneAttiva);
+
 		return params;
+	}
+
+	public static ConsegnaFatturaParameters getParameters(Integer identificativoSDI, String nomeFile,
+			String formatoArchivioInvioFatturaString,
+			String formatoArchivioBase64, String messageId,
+			boolean fatturazioneAttiva,
+			InputStream is) throws Exception, IOException {
+		return getParameters(identificativoSDI, nomeFile, formatoArchivioInvioFatturaString, formatoArchivioBase64, messageId, fatturazioneAttiva, Utilities.getAsByteArray(is));
+				
+	}
+
+	public static ConsegnaFatturaParameters getParameters(Integer identificativoSDI, String nomeFile,
+			String formatoArchivioInvioFatturaString,
+			String formatoArchivioBase64, String messageId,
+			boolean fatturazioneAttiva,
+			byte[] xml) throws Exception, IOException {
+		List<String> formati = new ArrayList<String>();
+		formati.add("FPA12");
+		formati.add("SDI11");
+		formati.add("SDI10");
+		
+		for(int i =0; i < formati.size(); i++) {
+			try {
+				
+				return ConsegnaFatturaUtils.getParameters(formati.get(i),
+						identificativoSDI, nomeFile,
+						formatoArchivioInvioFatturaString, formatoArchivioBase64,
+						messageId,
+						fatturazioneAttiva,
+						xml);
+			} catch(DeserializerException e) {}			
+		}
+
+		throw new Exception("Formato fattura non riconosciuto");
 	}
 
 	public static ConsegnaFatturaParameters getParameters(String formatoFatturaPA,
 			Integer identificativoSDI, String nomeFile,
 			String formatoArchivioInvioFatturaString,
 			String formatoArchivioBase64, String messageId,
-//			String codiceDestinatario,
-			InputStream fatturaStream) throws Exception, IOException {
+			boolean fatturazioneAttiva,
+			byte[] xml) throws Exception, IOException {
 		
-		
-		
-		
-		boolean isBase64 = false;
-		if(formatoArchivioBase64 != null) {
-			try {
-				isBase64= Boolean.parseBoolean(formatoArchivioBase64);
-			} catch(Exception e){
-				throw new Exception("Parametro [X-SDI-FormatoArchivioBase64] non valido:" + formatoArchivioBase64);
-			}
-		}
-		byte[] xml = getXmlBytes(fatturaStream, isBase64);
 		byte[] xmlDecoded = getLottoXml(FormatoArchivioInvioFatturaType.toEnumConstant(formatoArchivioInvioFatturaString), xml, identificativoSDI, LoggerManager.getEndpointPdDLogger());
 		
 		ConsegnaFatturaParameters params;
@@ -232,8 +254,8 @@ public class ConsegnaFatturaUtils {
 					 anagraficaCC.getDenominazione(), anagraficaCC.getNome(), anagraficaCC.getCognome(), 
 					 datiAnagraficiCC.getCodiceFiscale(), idFiscaleCC.getIdCodice(), idFiscaleCC.getIdPaese(),
 					 anagraficaTI.getDenominazione(), anagraficaTI.getNome(), anagraficaTI.getCognome(),
-					 datiAnagraficiTI.getCodiceFiscale(), idFiscaleTI.getIdCodice(), idFiscaleTI.getIdPaese(), xml);
-		} else {
+					 datiAnagraficiTI.getCodiceFiscale(), idFiscaleTI.getIdCodice(), idFiscaleTI.getIdPaese(), fatturazioneAttiva, xml);
+		} else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.equals(formatoFatturaPA)) {
 			it.gov.fatturapa.sdi.fatturapa.v1_1.utils.serializer.JaxbDeserializer deserializer11 = new it.gov.fatturapa.sdi.fatturapa.v1_1.utils.serializer.JaxbDeserializer();
 			it.gov.fatturapa.sdi.fatturapa.v1_1.FatturaElettronicaType fattura = deserializer11.readFatturaElettronicaType(xmlDecoded);
 
@@ -271,10 +293,74 @@ public class ConsegnaFatturaUtils {
 					 anagraficaCC.getDenominazione(), anagraficaCC.getNome(), anagraficaCC.getCognome(), 
 					 datiAnagraficiCC.getCodiceFiscale(), idFiscaleCC.getIdCodice(), idFiscaleCC.getIdPaese(),
 					 anagraficaTI.getDenominazione(), anagraficaTI.getNome(), anagraficaTI.getCognome(),
-					 datiAnagraficiTI.getCodiceFiscale(), idFiscaleTI.getIdCodice(), idFiscaleTI.getIdPaese(), xml);
+					 datiAnagraficiTI.getCodiceFiscale(), idFiscaleTI.getIdCodice(), idFiscaleTI.getIdPaese(), fatturazioneAttiva, xml);
+		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.equals(formatoFatturaPA) || 
+				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.equals(formatoFatturaPA)) {
+			it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.utils.serializer.JaxbDeserializer deserializer12 = new it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.utils.serializer.JaxbDeserializer();
+			it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.FatturaElettronicaType fattura = deserializer12.readFatturaElettronicaType(xmlDecoded);
+
+			it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.DatiAnagraficiCedenteType datiAnagraficiCP = fattura.getFatturaElettronicaHeader().getCedentePrestatore().getDatiAnagrafici();
+			it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.AnagraficaType anagraficaCP = datiAnagraficiCP.getAnagrafica();
+			it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.IdFiscaleType idFiscaleCP = datiAnagraficiCP.getIdFiscaleIVA();
+			
+			it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.DatiAnagraficiCessionarioType datiAnagraficiCC = fattura.getFatturaElettronicaHeader().getCessionarioCommittente().getDatiAnagrafici();
+			it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.AnagraficaType anagraficaCC = datiAnagraficiCC.getAnagrafica();
+			it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.IdFiscaleType idFiscaleCC = datiAnagraficiCC.getIdFiscaleIVA() != null ? datiAnagraficiCC.getIdFiscaleIVA() : new it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.IdFiscaleType();
+			
+			it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.DatiAnagraficiTerzoIntermediarioType datiAnagraficiTI;
+			it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.AnagraficaType anagraficaTI;
+			it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.IdFiscaleType idFiscaleTI;
+			
+			
+			if(fattura.getFatturaElettronicaHeader().getTerzoIntermediarioOSoggettoEmittente() != null) {
+				datiAnagraficiTI = fattura.getFatturaElettronicaHeader().getTerzoIntermediarioOSoggettoEmittente().getDatiAnagrafici();
+				anagraficaTI = datiAnagraficiTI.getAnagrafica();
+				
+				if(datiAnagraficiTI.getIdFiscaleIVA() != null)
+					idFiscaleTI = datiAnagraficiTI.getIdFiscaleIVA();
+				else 
+					idFiscaleTI = new it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.IdFiscaleType();
+				
+			} else {
+				datiAnagraficiTI = new it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.DatiAnagraficiTerzoIntermediarioType();
+				anagraficaTI = new it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.AnagraficaType();
+				idFiscaleTI = new it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.IdFiscaleType();
+			}
+			
+			params = getParameters(formatoFatturaPA, identificativoSDI, nomeFile, formatoArchivioInvioFatturaString, formatoArchivioBase64, messageId, fattura.getFatturaElettronicaHeader().getDatiTrasmissione().getCodiceDestinatario(), 
+					 anagraficaCP.getDenominazione(), anagraficaCP.getNome(), anagraficaCP.getCognome(),
+					 datiAnagraficiCP.getCodiceFiscale(), idFiscaleCP.getIdCodice(), idFiscaleCP.getIdPaese(),
+					 anagraficaCC.getDenominazione(), anagraficaCC.getNome(), anagraficaCC.getCognome(), 
+					 datiAnagraficiCC.getCodiceFiscale(), idFiscaleCC.getIdCodice(), idFiscaleCC.getIdPaese(),
+					 anagraficaTI.getDenominazione(), anagraficaTI.getNome(), anagraficaTI.getCognome(),
+					 datiAnagraficiTI.getCodiceFiscale(), idFiscaleTI.getIdCodice(), idFiscaleTI.getIdPaese(), fatturazioneAttiva, xml);
+		} else {
+			throw new Exception("Formato FatturaPA ["+formatoFatturaPA+"] non riconosciuto");
 		}
 
 		return params;
+	}
+
+	public static ConsegnaFatturaParameters getParameters(String formatoFatturaPA,
+			Integer identificativoSDI, String nomeFile,
+			String formatoArchivioInvioFatturaString,
+			String formatoArchivioBase64, String messageId,
+			boolean fatturazioneAttiva,
+			InputStream fatturaStream) throws Exception, IOException {
+		
+		
+		
+		
+		boolean isBase64 = false;
+		if(formatoArchivioBase64 != null) {
+			try {
+				isBase64= Boolean.parseBoolean(formatoArchivioBase64);
+			} catch(Exception e){
+				throw new Exception("Parametro [X-SDI-FormatoArchivioBase64] non valido:" + formatoArchivioBase64);
+			}
+		}
+		byte[] xml = getXmlBytes(fatturaStream, isBase64);
+		return getParameters(formatoFatturaPA, identificativoSDI, nomeFile, formatoArchivioInvioFatturaString, formatoArchivioBase64, messageId, fatturazioneAttiva, xml);
 	}
 
 	public static ConsegnaFatturaParameters getParameters(LottoFatture lotto,
@@ -286,8 +372,9 @@ public class ConsegnaFatturaUtils {
 				lotto.getCessionarioCommittenteDenominazione(), lotto.getCessionarioCommittenteNome(), lotto.getCessionarioCommittenteCognome(), lotto.getCessionarioCommittenteCodiceFiscale(), 
 				lotto.getCessionarioCommittenteCodice(), lotto.getCessionarioCommittentePaese(), 
 				lotto.getTerzoIntermediarioOSoggettoEmittenteDenominazione(), lotto.getTerzoIntermediarioOSoggettoEmittenteNome(), lotto.getTerzoIntermediarioOSoggettoEmittenteCognome(), 
-				lotto.getTerzoIntermediarioOSoggettoEmittenteCodiceFiscale(), lotto.getTerzoIntermediarioOSoggettoEmittenteCodice(), lotto.getTerzoIntermediarioOSoggettoEmittentePaese(), xml);
+				lotto.getTerzoIntermediarioOSoggettoEmittenteCodiceFiscale(), lotto.getTerzoIntermediarioOSoggettoEmittenteCodice(), lotto.getTerzoIntermediarioOSoggettoEmittentePaese(), lotto.getFatturazioneAttiva(), xml);
 		params.setPosizioneFatturaPA(posizione);
+		params.setProtocollo(lotto.getProtocollo());
 		
 		return params;
 	}
@@ -323,58 +410,6 @@ public class ConsegnaFatturaUtils {
 		}
 
 	}
-
-	public static List<byte[]> getXmlWithSerializer(FormatoTrasmissioneType formatoTrasmissione, byte[] lottoXML,
-			JaxbDeserializer deserializer10, it.gov.fatturapa.sdi.fatturapa.v1_1.utils.serializer.JaxbDeserializer deserializer11,
-			JaxbSerializer serializer10, it.gov.fatturapa.sdi.fatturapa.v1_1.utils.serializer.JaxbSerializer serializer11,
-			ObjectFactory of10, it.gov.fatturapa.sdi.fatturapa.v1_1.ObjectFactory of11) throws SerializerException, DeserializerException {
-		
-		List<byte[]> lst = new ArrayList<byte[]>();
-		if(formatoTrasmissione.equals(FormatoTrasmissioneType.SDI10)) {
-
-
-			it.gov.fatturapa.sdi.fatturapa.v1_0.FatturaElettronicaType fattura = deserializer10.readFatturaElettronicaType(lottoXML);
-
-			for (int i = 0; i < fattura.sizeFatturaElettronicaBodyList(); i++) {
-
-				it.gov.fatturapa.sdi.fatturapa.v1_0.FatturaElettronicaType fatturaSingola = 
-						new it.gov.fatturapa.sdi.fatturapa.v1_0.FatturaElettronicaType();
-				fatturaSingola.setVersione(fattura.getVersione());
-				fatturaSingola.setFatturaElettronicaHeader(fattura.getFatturaElettronicaHeader());
-				fatturaSingola.addFatturaElettronicaBody(fattura.getFatturaElettronicaBody(i));
-
-
-				lst.add(serializer10.toByteArray(of10.createFatturaElettronica(fatturaSingola)));
-
-			}
-		} else {
-			it.gov.fatturapa.sdi.fatturapa.v1_1.FatturaElettronicaType fattura = deserializer11.readFatturaElettronicaType(lottoXML);
-
-			for (int i = 0; i < fattura.sizeFatturaElettronicaBodyList(); i++) {
-
-				it.gov.fatturapa.sdi.fatturapa.v1_1.FatturaElettronicaType fatturaSingola = 
-						new it.gov.fatturapa.sdi.fatturapa.v1_1.FatturaElettronicaType();
-				fatturaSingola.setVersione(fattura.getVersione());
-				fatturaSingola.setFatturaElettronicaHeader(fattura.getFatturaElettronicaHeader());
-				fatturaSingola.addFatturaElettronicaBody(fattura.getFatturaElettronicaBody(i));
-
-				lst.add(serializer11.toByteArray(of11.createFatturaElettronica(fatturaSingola)));
-
-
-			}
-		}
-		return lst;
-
-	}
-	
-	public static it.gov.fatturapa.sdi.fatturapa.v1_0.FatturaElettronicaType getFattura10(byte[] lottoXML, JaxbDeserializer deserializer10) throws SerializerException, DeserializerException {
-		return deserializer10.readFatturaElettronicaType(lottoXML);
-	}
-
-	public static it.gov.fatturapa.sdi.fatturapa.v1_1.FatturaElettronicaType getFattura11(byte[] lottoXML, it.gov.fatturapa.sdi.fatturapa.v1_1.utils.serializer.JaxbDeserializer deserializer11) throws SerializerException, DeserializerException {
-		return deserializer11.readFatturaElettronicaType(lottoXML);
-	}
-
 
 	public static List<byte[]> getXmlWithSDIUtils(byte[] lottoXML) throws Exception {
 		 return SDILottoUtils.splitLotto(lottoXML);

@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -40,7 +39,6 @@ import org.govmix.proxy.fatturapa.web.console.iservice.IFatturaElettronicaServic
 import org.govmix.proxy.fatturapa.web.console.pcc.bean.TracciaPccEstesaBean;
 import org.govmix.proxy.fatturapa.web.console.pcc.iservice.IOperazioneService;
 import org.govmix.proxy.fatturapa.web.console.pcc.search.OperazioneSearchForm;
-import org.govmix.proxy.fatturapa.web.console.search.FatturaElettronicaSearchForm;
 import org.govmix.proxy.fatturapa.web.console.service.FatturaElettronicaService;
 import org.openspcoop2.generic_project.exception.ExpressionException;
 import org.openspcoop2.generic_project.exception.ExpressionNotImplementedException;
@@ -68,11 +66,11 @@ public class OperazioneService extends BaseService<OperazioneSearchForm> impleme
 
 	public OperazioneService() {
 		try {
-			this.tracciamentoBD = new PccTracciamentoBD(log);
+			this.tracciamentoBD = new PccTracciamentoBD(OperazioneService.log);
 			this.fatturaService = new FatturaElettronicaService();
 			this.tracciaSearchDAO = DAOFactory.getInstance().getServiceManager().getPccTracciaServiceSearch();
 		} catch (Exception e) {
-			log.error("Errore durante la init di OperazioneService: " + e.getMessage(),e); 
+			OperazioneService.log.error("Errore durante la init di OperazioneService: " + e.getMessage(),e); 
 		}
 	}
 
@@ -96,16 +94,16 @@ public class OperazioneService extends BaseService<OperazioneSearchForm> impleme
 
 			return (int) this.tracciamentoBD.countTracce(expr);
 		}catch(NotImplementedException e){
-			log.error("Errore durante la _findAll: " + e.getMessage(),e); 
+			OperazioneService.log.error("Errore durante la _findAll: " + e.getMessage(),e); 
 			throw new ServiceException(e);
 		} catch (ExpressionNotImplementedException e) {
-			log.error("Errore durante la _findAll: " + e.getMessage(),e); 
+			OperazioneService.log.error("Errore durante la _findAll: " + e.getMessage(),e); 
 			throw new ServiceException(e);
 		} catch (ExpressionException e) {
-			log.error("Errore durante la _findAll: " + e.getMessage(),e); 
+			OperazioneService.log.error("Errore durante la _findAll: " + e.getMessage(),e); 
 			throw new ServiceException(e);
 		} catch (Exception e) {
-			log.error("Errore durante la _findAll: " + e.getMessage(),e); 
+			OperazioneService.log.error("Errore durante la _findAll: " + e.getMessage(),e); 
 			throw new ServiceException(e);
 		}
 	}
@@ -131,9 +129,9 @@ public class OperazioneService extends BaseService<OperazioneSearchForm> impleme
 			bean.setDTO(dto);
 			return bean;
 		} catch(NotFoundException e){
-			log.debug("Nessuna traccia con ID ["+key+"] trovata.");
+			OperazioneService.log.debug("Nessuna traccia con ID ["+key+"] trovata.");
 		}	catch (Exception e) {
-			log.error("Errore durante la findById ["+key+"]: " + e.getMessage(),e); 
+			OperazioneService.log.error("Errore durante la findById ["+key+"]: " + e.getMessage(),e); 
 			throw new ServiceException(e);
 		}
 		return null;
@@ -280,16 +278,16 @@ public class OperazioneService extends BaseService<OperazioneSearchForm> impleme
 			}
 
 		}catch(NotImplementedException e){
-			log.error("Errore durante la _findAll: " + e.getMessage(),e); 
+			OperazioneService.log.error("Errore durante la _findAll: " + e.getMessage(),e); 
 			throw new ServiceException(e);
 		} catch (ExpressionNotImplementedException e) {
-			log.error("Errore durante la _findAll: " + e.getMessage(),e); 
+			OperazioneService.log.error("Errore durante la _findAll: " + e.getMessage(),e); 
 			throw new ServiceException(e);
 		} catch (ExpressionException e) {
-			log.error("Errore durante la _findAll: " + e.getMessage(),e); 
+			OperazioneService.log.error("Errore durante la _findAll: " + e.getMessage(),e); 
 			throw new ServiceException(e);
 		} catch (Exception e) {
-			log.error("Errore durante la _findAll: " + e.getMessage(),e); 
+			OperazioneService.log.error("Errore durante la _findAll: " + e.getMessage(),e); 
 			throw new ServiceException(e);
 		}
 
@@ -311,7 +309,7 @@ public class OperazioneService extends BaseService<OperazioneSearchForm> impleme
 				List<SelectItem> cedPrestVals = this.form.getSistemaRichiedenteSelList();
 				String trimSelCedPrest = search.getSistemaRichiedente().getValue().trim();
 
-				log.debug("Confronto TRIM["+trimSelCedPrest+"]");
+				OperazioneService.log.debug("Confronto TRIM["+trimSelCedPrest+"]");
 				List<String> valoriCedPret = new ArrayList<String>();
 				for (SelectItem selectItem : cedPrestVals) {
 					String val = selectItem.getValue();
@@ -321,7 +319,7 @@ public class OperazioneService extends BaseService<OperazioneSearchForm> impleme
 						noSpaceRes = noSpaceRes.replace("  ", " ");
 					}
 
-					log.debug("Confronto NSRES["+noSpaceRes+"]");
+					OperazioneService.log.debug("Confronto NSRES["+noSpaceRes+"]");
 					// Se il valore trimmato selezionato dall'utente corrisponde ad uno dei valori nella lista allora li uso per fare il confronto
 					if(noSpaceRes.equals(trimSelCedPrest)){
 						valoriCedPret.add(val);
@@ -346,7 +344,7 @@ public class OperazioneService extends BaseService<OperazioneSearchForm> impleme
 				List<SelectItem> cedPrestVals = this.form.getUtenteRichiedenteSelList();
 				String trimSelCedPrest = search.getUtenteRichiedente().getValue().trim();
 
-				log.debug("Confronto TRIM["+trimSelCedPrest+"]");
+				OperazioneService.log.debug("Confronto TRIM["+trimSelCedPrest+"]");
 				List<String> valoriCedPret = new ArrayList<String>();
 				for (SelectItem selectItem : cedPrestVals) {
 					String val = selectItem.getValue();
@@ -356,7 +354,7 @@ public class OperazioneService extends BaseService<OperazioneSearchForm> impleme
 						noSpaceRes = noSpaceRes.replace("  ", " ");
 					}
 
-					log.debug("Confronto NSRES["+noSpaceRes+"]");
+					OperazioneService.log.debug("Confronto NSRES["+noSpaceRes+"]");
 					// Se il valore trimmato selezionato dall'utente corrisponde ad uno dei valori nella lista allora li uso per fare il confronto
 					if(noSpaceRes.equals(trimSelCedPrest)){
 						valoriCedPret.add(val);
@@ -398,7 +396,7 @@ public class OperazioneService extends BaseService<OperazioneSearchForm> impleme
 				List<SelectItem> cedPrestVals = this.form.getCedPrestSelList();
 				String trimSelCedPrest = search.getCedentePrestatore().getValue().trim();
 
-				log.debug("Confronto TRIM["+trimSelCedPrest+"]");
+				OperazioneService.log.debug("Confronto TRIM["+trimSelCedPrest+"]");
 				List<String> valoriCedPret = new ArrayList<String>();
 				for (SelectItem selectItem : cedPrestVals) {
 					String val = selectItem.getValue();
@@ -408,7 +406,7 @@ public class OperazioneService extends BaseService<OperazioneSearchForm> impleme
 						noSpaceRes = noSpaceRes.replace("  ", " ");
 					}
 
-					log.debug("Confronto NSRES["+noSpaceRes+"]");
+					OperazioneService.log.debug("Confronto NSRES["+noSpaceRes+"]");
 					// Se il valore trimmato selezionato dall'utente corrisponde ad uno dei valori nella lista allora li uso per fare il confronto
 					if(noSpaceRes.equals(trimSelCedPrest)){
 						valoriCedPret.add(val);
@@ -441,9 +439,17 @@ public class OperazioneService extends BaseService<OperazioneSearchForm> impleme
 			if(search.getIdPaTransazione().getValue() != null && !StringUtils.isEmpty(search.getIdPaTransazione().getValue())){
 				expr.equals(PccTraccia.model().ID_PA_TRANSAZIONE, search.getIdPaTransazione().getValue());
 			}
+			
+			//codice errore pcc
+			if(search.getCodiceErrore().getValue() != null &&
+					!StringUtils.isEmpty(search.getCodiceErrore().getValue().getValue())
+						&& !search.getCodiceErrore().getValue().getValue().equals("*")){
+				String codiceErrorePCC = search.getCodiceErrore().getValue().getValue();
+				expr.like(PccTraccia.model().CODICI_ERRORE, codiceErrorePCC, LikeMode.ANYWHERE);
+			}
 
 		}catch(Exception e){
-			log.error("Si e' verificato un errore durante la conversione del filtro di ricerca: " + e.getMessage(), e);
+			OperazioneService.log.error("Si e' verificato un errore durante la conversione del filtro di ricerca: " + e.getMessage(), e);
 			throw e;
 		}
 
@@ -462,7 +468,7 @@ public class OperazioneService extends BaseService<OperazioneSearchForm> impleme
 			Date dataInizio = dataRicezione.getValue();
 			Date dataFine = dataRicezione.getValue2();
 
-			String periodo = dataRicezionePeriodo.getValue() != null ? dataRicezionePeriodo.getValue().getValue() : FatturaElettronicaSearchForm.DATA_RICEZIONE_PERIODO_ULTIMA_SETTIMANA;
+			String periodo = dataRicezionePeriodo.getValue() != null ? dataRicezionePeriodo.getValue().getValue() : org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_RICEZIONE_PERIODO_ULTIMA_SETTIMANA;
 
 			Calendar today = Calendar.getInstance();
 			today.set(Calendar.HOUR_OF_DAY, 23);
@@ -471,7 +477,7 @@ public class OperazioneService extends BaseService<OperazioneSearchForm> impleme
 			today.clear(Calendar.MILLISECOND);
 
 			//ultima settimana
-			if ( FatturaElettronicaSearchForm.DATA_RICEZIONE_PERIODO_ULTIMA_SETTIMANA.equals(periodo)) {
+			if ( org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_RICEZIONE_PERIODO_ULTIMA_SETTIMANA.equals(periodo)) {
 				Calendar lastWeek = (Calendar) today.clone();
 				Calendar c = Calendar.getInstance();
 				dataFine = c.getTime();
@@ -480,7 +486,7 @@ public class OperazioneService extends BaseService<OperazioneSearchForm> impleme
 				lastWeek.add(Calendar.DATE, -7);
 				dataInizio = lastWeek.getTime();
 
-			} else if ( FatturaElettronicaSearchForm.DATA_RICEZIONE_PERIODO_ULTIMO_MESE.equals( periodo)) {
+			} else if ( org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_RICEZIONE_PERIODO_ULTIMO_MESE.equals( periodo)) {
 				Calendar lastMonth = (Calendar) today.clone();
 
 				// prendo la data corrente
@@ -492,7 +498,7 @@ public class OperazioneService extends BaseService<OperazioneSearchForm> impleme
 				lastMonth.add(Calendar.DATE, -30);
 				dataInizio = lastMonth.getTime();
 
-			} else if ( FatturaElettronicaSearchForm.DATA_RICEZIONE_PERIODO_ULTIMI_TRE_MESI.equals( periodo)) {
+			} else if ( org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_RICEZIONE_PERIODO_ULTIMI_TRE_MESI.equals( periodo)) {
 				Calendar lastyear = (Calendar) today.clone();
 
 				dataFine = Calendar.getInstance().getTime();
@@ -563,16 +569,16 @@ public class OperazioneService extends BaseService<OperazioneSearchForm> impleme
 				return (int) this.tracciamentoBD.countTracce(expr);
 			}
 		}catch(NotImplementedException e){
-			log.error("Errore durante la _findAll: " + e.getMessage(),e); 
+			OperazioneService.log.error("Errore durante la _findAll: " + e.getMessage(),e); 
 			throw new ServiceException(e);
 		} catch (ExpressionNotImplementedException e) {
-			log.error("Errore durante la _findAll: " + e.getMessage(),e); 
+			OperazioneService.log.error("Errore durante la _findAll: " + e.getMessage(),e); 
 			throw new ServiceException(e);
 		} catch (ExpressionException e) {
-			log.error("Errore durante la _findAll: " + e.getMessage(),e); 
+			OperazioneService.log.error("Errore durante la _findAll: " + e.getMessage(),e); 
 			throw new ServiceException(e);
 		} catch (Exception e) {
-			log.error("Errore durante la _findAll: " + e.getMessage(),e); 
+			OperazioneService.log.error("Errore durante la _findAll: " + e.getMessage(),e); 
 			throw new ServiceException(e);
 		}
 

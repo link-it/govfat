@@ -6,7 +6,7 @@
 	<xsd:annotation>
 		<xsd:appinfo>
 			<linkit:project_generator xmlns:linkit="http://www.link.it/project_generator">
-				<linkit:info version="1.0" project-name="fatturaPA">
+				<linkit:info version="2.0" project-name="fatturaPA">
 					<linkit:authors>
 						<linkit:author name="Giuseppe Papandrea" mail="papandrea@link.it" />
 						<linkit:author name="Giovanni Bussu" mail="bussu@link.it" />
@@ -17,7 +17,6 @@
 			<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 				<linkit:dao>
 					<linkit:jdbc generate="true" />
-					<linkit:jpa generate="false" />
 					<linkit:sql>
 						<linkit:sql-script generate="true">
 							<linkit:sql-table-list>
@@ -29,7 +28,7 @@
 								<linkit:sql-table object-name="PccErroreElaborazione" object-type="PccErroreElaborazione" />
 								<linkit:sql-table object-name="FatturaElettronica" object-type="FatturaElettronica" />
 								<linkit:sql-table object-name="AllegatoFattura" object-type="AllegatoFattura" />
-								<linkit:sql-table object-name="ComunicazioneSdi" object-type="ComunicazioneSdi" />
+								<linkit:sql-table object-name="TracciaSDI" object-type="TracciaSDI" />
 								<linkit:sql-table object-name="Metadato" object-type="Metadato" />
 								<linkit:sql-table object-name="Ente" object-type="Ente" />
 								<linkit:sql-table object-name="Protocollo" object-type="Protocollo" />
@@ -109,7 +108,7 @@
 
 	<xsd:simpleType name="CodiceDestinatarioType">
 		<xsd:restriction base="xsd:string">
-			<xsd:pattern value="[A-Z0-9]{6}" />
+			<xsd:pattern value="[A-Z0-9]{6,7}" />
 		</xsd:restriction>
 	</xsd:simpleType>
 
@@ -291,6 +290,8 @@
 			<xsd:enumeration value="OperazioneContabile_CO"/>
 			<xsd:enumeration value="OperazioneContabile_CS"/>
 			<xsd:enumeration value="OperazioneContabile_CCS"/>
+			<xsd:enumeration value="OperazioneContabile_CPS"/>
+			<xsd:enumeration value="OperazioneContabile_CSPC"/>
 			<xsd:enumeration value="OperazioneContabile_SP"/>
 			<xsd:enumeration value="OperazioneContabile_RF"/>
 			<xsd:enumeration value="OperazioneContabile_SC"/>
@@ -338,6 +339,8 @@
 	<xsd:simpleType name="FormatoTrasmissioneType">
 		<xsd:restriction base="xsd:string">
 			<xsd:length value="5" />
+			<xsd:enumeration value="FPA12" />
+			<xsd:enumeration value="FPR12" />
 			<xsd:enumeration value="SDI11" />
 			<xsd:enumeration value="SDI10" />
 		</xsd:restriction>
@@ -411,6 +414,27 @@
 			<xsd:enumeration value="INSERITO" />
 		</xsd:restriction>
 	</xsd:simpleType>
+	
+	<xsd:simpleType name="StatoElaborazioneType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="PRESA_IN_CARICO" />
+			<xsd:enumeration value="IN_CORSO_DI_PROTOCOLLAZIONE" />
+			<xsd:enumeration value="IN_CORSO_DI_FIRMA" />
+			<xsd:enumeration value="PROTOCOLLATA" />
+			<xsd:enumeration value="ERRORE_DI_FIRMA" />
+			<xsd:enumeration value="ERRORE_DI_PROTOCOLLO" />
+			<xsd:enumeration value="ERRORE_DI_SPEDIZIONE" />
+			<xsd:enumeration value="RICEVUTA_DALLO_SDI" />
+			<xsd:enumeration value="RICEVUTO_SCARTO_SDI" />
+			<xsd:enumeration value="RICEVUTA_DAL_DESTINATARIO" />
+			<xsd:enumeration value="MANCATA_CONSEGNA" />
+			<xsd:enumeration value="IMPOSSIBILITA_DI_RECAPITO" />
+			<xsd:enumeration value="RICEVUTO_ESITO_CEDENTE_PRESTATORE_ACCETTAZIONE" />
+			<xsd:enumeration value="RICEVUTO_ESITO_CEDENTE_PRESTATORE_RIFIUTO" />
+			<xsd:enumeration value="RICEVUTA_DECORRENZA_TERMINI" />
+			<xsd:enumeration value="SOLO_CONSERVAZIONE" />
+		</xsd:restriction>
+	</xsd:simpleType>
 
 	<xsd:simpleType name="NazioneType">
 		<xsd:restriction base="xsd:string">
@@ -454,12 +478,6 @@
 			<xsd:element name="codice" type="CodiceDestinatarioType" />
 		</xsd:sequence>
 	</xsd:complexType>
-	
-	<!--xsd:complexType name="id-pcc-ufficio">
-		<xsd:sequence>
-			<xsd:element name="codiceUfficioPcc" type="xsd:string" />
-		</xsd:sequence>
-	</xsd:complexType-->
 	
 	<xsd:complexType name="id-utente">
 		<xsd:sequence>
@@ -515,16 +533,18 @@
 	
 	<xsd:simpleType name="TipoComunicazioneType">
 		<xsd:restriction base="xsd:string">
-<!--		<xsd:enumeration value="FATTURA_INGRESSO" /> -->
-			<xsd:enumeration value="FATTURA_USCITA"/>
-			<xsd:enumeration value="NOTIFICA_SCARTO"/>
-			<xsd:enumeration value="RICEVUTA_CONSEGNA"/>
-			<xsd:enumeration value="NOTIFICA_MANCATA_CONSEGNA"/>
-			<xsd:enumeration value="ATTESTAZIONE_TRASMISSIONE_FATTURA"/>
-			<xsd:enumeration value="NOTIFICA_ESITO_COMMITTENTE"/>
-			<xsd:enumeration value="NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE"/>
-<!--		<xsd:enumeration value="NOTIFICA_DECORRENZA_TERMINI_DESTINATARIO" /> -->
-			<xsd:enumeration value="AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO"/>
+			<!--		<xsd:enumeration value="FATTURA_INGRESSO" /> -->
+			<xsd:enumeration value="FAT_OUT"/>
+			<xsd:enumeration value="FAT_IN"/>
+			<xsd:enumeration value="RC"/>
+			<xsd:enumeration value="NS"/>
+			<xsd:enumeration value="MC"/>
+			<xsd:enumeration value="NE"/>
+			<xsd:enumeration value="MT"/>
+			<xsd:enumeration value="EC"/>
+			<xsd:enumeration value="SE"/>
+			<xsd:enumeration value="DT"/>
+			<xsd:enumeration value="AT"/>
 		</xsd:restriction>
 	</xsd:simpleType>
 	
@@ -533,6 +553,11 @@
 			<xsd:element name="identificativoSdi" type="IdentificativoSdIType"/>
 			<xsd:element name="tipoComunicazione" type="TipoComunicazioneType"/>
 			<xsd:element name="progressivo" type="xsd:positiveInteger"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="id-documento">
+		<xsd:sequence>
+			<xsd:element name="idDocumento" type="xsd:string"/>
 		</xsd:sequence>
 	</xsd:complexType>
 	
@@ -574,39 +599,7 @@
 			<xsd:element name="idTrasmissioneEsito" type="xsd:long" />
 		</xsd:sequence>
 	</xsd:complexType>
-	
-	
-	<xsd:complexType name="ComunicazioneSdi">
-		<xsd:annotation>
-			<xsd:appinfo>
-				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
-					<linkit:interface crud="true" id="id-comunicazione" />
-					<linkit:sql-table-mapping generate-sql="true"
-						name="comunicazioni_sdi" on-delete-cascade="false">
-						<linkit:sql-table-unique create-index="true">
-							<linkit:sql-table-unique-field name="identificativoSdi" />
-							<linkit:sql-table-unique-field name="tipoComunicazione" />
-							<linkit:sql-table-unique-field name="progressivo" />
-						</linkit:sql-table-unique>
-					</linkit:sql-table-mapping>
-				</linkit:generator>
-			</xsd:appinfo>
-		</xsd:annotation>
-		<xsd:sequence>
-			<xsd:element name="identificativoSdi" type="IdentificativoSdIType"/>
-			<xsd:element name="tipoComunicazione" type="TipoComunicazioneType"/>
-			<xsd:element name="progressivo" type="xsd:positiveInteger"/>
-			<xsd:element name="dataRicezione" type="DataFatturaType"/>
-			<xsd:element minOccurs="0" name="nomeFile" type="NomeFileType"/> <!-- Temporaneamente -->
-			<xsd:element name="contentType" type="xsd:string"/>
-			<xsd:element name="rawData" type="xsd:base64Binary"/>
-			<xsd:element name="statoConsegna" type="StatoConsegnaType"/>
-			<xsd:element minOccurs="0" name="dataConsegna" type="xsd:dateTime"/>
-			<xsd:element minOccurs="0" name="dettaglioConsegna" type="xsd:string"/>
-			<xsd:element maxOccurs="unbounded" minOccurs="0" ref="Metadato"/>
-		</xsd:sequence>
-	</xsd:complexType>
-	
+		
 	<xsd:complexType name="Metadato">
 		<xsd:annotation>
 			<xsd:appinfo>
@@ -618,11 +611,11 @@
 			</xsd:appinfo>
 		</xsd:annotation>
 		<xsd:sequence>
+			<xsd:element name="richiesta" type="xsd:boolean"/>
 			<xsd:element name="nome" type="xsd:string"/>
 			<xsd:element name="valore" type="xsd:string"/>
 		</xsd:sequence>
 	</xsd:complexType>
-	
 	
 	<xsd:complexType name="LottoFatture">
 		<xsd:annotation>
@@ -831,6 +824,13 @@
 			</xsd:element>
 			<xsd:element name="codiceDestinatario" type="CodiceDestinatarioType" />
 			<xsd:element name="xml" type="xsd:base64Binary" />
+			<xsd:element name="fatturazioneAttiva" type="xsd:boolean" />
+			<xsd:element name="statoElaborazioneInUscita" type="StatoElaborazioneType" minOccurs="0"/>
+			<xsd:element name="tipiComunicazione" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="dataUltimaElaborazione" type="xsd:dateTime" minOccurs="0" />
+			<xsd:element name="dettaglioElaborazione" type="xsd:string" minOccurs="0" />
+			<xsd:element name="dataProssimaElaborazione" type="xsd:dateTime" minOccurs="0" />
+			<xsd:element name="tentativiConsegna" type="xsd:nonNegativeInteger" />
 			<xsd:element name="dataRicezione" type="DataFatturaType" />
 			<xsd:element name="statoInserimento" type="StatoInserimentoType" />
 			<xsd:element name="statoConsegna" type="StatoConsegnaType" />
@@ -849,9 +849,64 @@
 			</xsd:element>
 			
 			<xsd:element name="id-egov" type="xsd:string" minOccurs="0"/>
+			
+			
+			<!-- elementi per agevolare la ricerca, non mappati sul db -->
+			<xsd:element name="Dipartimento" type="Dipartimento" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-id-mapping object-name="Dipartimento"
+								object-type="Dipartimento" relationship="none" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
-
+	
+	<xsd:complexType name="TracciaSDI">
+		<xsd:annotation>
+			<xsd:appinfo>
+				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+					<linkit:interface crud="true" />
+					<linkit:sql-table-mapping generate-sql="true"
+						name="tracce_sdi" on-delete-cascade="false">
+					</linkit:sql-table-mapping>
+				</linkit:generator>
+			</xsd:appinfo>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="identificativoSdi" type="IdentificativoSdIType" />
+			<xsd:element name="posizione" type="xsd:positiveInteger" minOccurs="0" />
+			<xsd:element name="tipoComunicazione" type="TipoComunicazioneType" />
+			<xsd:element name="nomeFile" type="NomeFileType" />
+			<xsd:element name="data" type="xsd:dateTime" />
+			<xsd:element name="idEgov" type="xsd:string" />
+			<xsd:element name="contentType" type="xsd:string" />
+			<xsd:element name="rawData" type="xsd:base64Binary" minOccurs="0" />
+			<xsd:element name="statoProtocollazione" type="StatoProtocollazioneType" />
+			<xsd:element name="dataProtocollazione" type="xsd:dateTime" minOccurs="0" />
+			<xsd:element name="dataProssimaProtocollazione" type="xsd:dateTime" minOccurs="0" />
+			<xsd:element name="tentativiProtocollazione" type="xsd:nonNegativeInteger" />
+			<xsd:element name="dettaglioProtocollazione" type="xsd:string" minOccurs="0" />
+			<xsd:element ref="Metadato" minOccurs="0" maxOccurs="unbounded" />
+			
+			<!-- elementi per agevolare la ricerca, non mappato sul db -->
+			<xsd:element name="LottoFatture" type="LottoFatture" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-id-mapping object-name="LottoFatture"
+								object-type="LottoFatture" relationship="none" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+			
+		</xsd:sequence>
+	</xsd:complexType>
+	
 	<xsd:complexType name="FatturaElettronica">
 		<xsd:annotation>
 			<xsd:appinfo>
@@ -986,10 +1041,8 @@
 			<xsd:element name="dettaglioConsegna" type="xsd:string" minOccurs="0" />
 			<xsd:element name="statoProtocollazione" type="StatoProtocollazioneType" />
 			<xsd:element name="dataScadenza" type="xsd:dateTime" minOccurs="0"/>
-			<xsd:element name="dataProtocollazione" type="xsd:dateTime"
-				minOccurs="0" />
-			<xsd:element name="protocollo" type="xsd:string"
-				minOccurs="0" />
+			<xsd:element name="dataProtocollazione" type="xsd:dateTime" minOccurs="0" />
+			<xsd:element name="protocollo" type="xsd:string" minOccurs="0" />
 			<xsd:element name="xml" type="xsd:base64Binary"/>
 			<xsd:element name="idDecorrenzaTermini" type="id-notifica-decorrenza-termini"
 				minOccurs="0">
@@ -1022,6 +1075,29 @@
 							<linkit:sql-id-mapping object-name="PccTracciaTrasmissioneEsito"
 								object-type="PccTracciaTrasmissioneEsito" relationship="reversed" />
 							<linkit:sql-column-mapping name="id_scadenza" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+			
+			<!-- elementi per agevolare la ricerca, non mappati sul db -->
+			<xsd:element name="Dipartimento" type="Dipartimento" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-id-mapping object-name="Dipartimento"
+								object-type="Dipartimento" relationship="none" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+
+			<xsd:element name="LottoFatture" type="LottoFatture" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-id-mapping object-name="LottoFatture"
+								object-type="LottoFatture" relationship="none" />
 						</linkit:generator>
 					</xsd:appinfo>
 				</xsd:annotation>
@@ -1117,13 +1193,6 @@
 			<xsd:element name="messageId" type="MessageIdType" />
 			<xsd:element name="note" type="xsd:string" minOccurs="0" />
 			<xsd:element name="dataRicezione" type="xsd:dateTime" />
-			
-			<!--xsd:element name="statoConsegna" type="StatoConsegnaType" default="NON_CONSEGNATA" />
-			<xsd:element name="dataUltimaConsegna" type="xsd:dateTime" minOccurs="0" />
-			<xsd:element name="dataProssimaConsegna" type="xsd:dateTime" minOccurs="0" />
-			<xsd:element name="tentativiConsegna" type="xsd:positiveInteger"/>
-			<xsd:element name="dettaglioConsegna" type="xsd:string" minOccurs="0" /-->
-			
 			<xsd:element name="xml" type="xsd:base64Binary" />
 		</xsd:sequence>
 	</xsd:complexType>
@@ -1134,7 +1203,7 @@
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 					<linkit:interface crud="true" />
 					<linkit:sql-table-mapping generate-sql="true"
-						name="allegati" on-delete-cascade="true">
+						name="allegati" on-delete-cascade="false">
 					</linkit:sql-table-mapping>
 				</linkit:generator>
 			</xsd:appinfo>
@@ -1180,6 +1249,7 @@
 		<xsd:sequence>
 			<xsd:element name="nome" type="xsd:string" />
 			<xsd:element name="idPccAmministrazione" type="xsd:string" minOccurs="0" />
+			<xsd:element name="cfAuth" type="xsd:string" minOccurs="0"/>
 			<xsd:element name="descrizione" type="xsd:string" minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
@@ -1203,8 +1273,6 @@
 			<xsd:element name="nome" type="xsd:string" />
 			<xsd:element name="descrizione" type="xsd:string" minOccurs="0" />
 			<xsd:element name="endpoint" type="xsd:anyURI" />
-			<xsd:element name="endpointConsegnaLotto" type="xsd:anyURI" minOccurs="0" />
-			<xsd:element name="endpointRichiediProtocollo" type="xsd:anyURI" minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
 	
@@ -1381,6 +1449,11 @@
 				</xsd:annotation>
 			</xsd:element>
 			<xsd:element name="descrizione" type="xsd:string" />
+			<xsd:element name="fatturazioneAttiva" type="xsd:boolean"
+				default="false" />
+			<xsd:element name="idProcedimento" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="firmaAutomatica" type="xsd:boolean"
+				default="false" />
 			<xsd:element name="accettazioneAutomatica" type="xsd:boolean"
 				default="false" />
 			<xsd:element name="modalitaPush" type="xsd:boolean"
@@ -1395,7 +1468,6 @@
 					</xsd:appinfo>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="cfAuth" type="xsd:string" minOccurs="0"/>
 			<xsd:element name="listaEmailNotifiche" type="xsd:string" minOccurs="0">
 				<xsd:annotation>
 					<xsd:appinfo>
@@ -1421,38 +1493,6 @@
 
 
 
-	<!--xsd:element name="PccUfficio" type="PccUfficio" />
-	<xsd:complexType name="PccUfficio">
-		<xsd:annotation>
-			<xsd:appinfo>
-				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
-					<linkit:interface crud="true" id="id-pcc-ufficio" />
-					<linkit:sql-table-mapping generate-sql="true"
-						name="pcc_uffici" on-delete-cascade="false">
-						<linkit:sql-table-unique create-index="true">
-							<linkit:sql-table-unique-field
-								name="codiceUfficioPcc" />
-						</linkit:sql-table-unique>
-					</linkit:sql-table-mapping>
-				</linkit:generator>
-			</xsd:appinfo>
-		</xsd:annotation>
-		<xsd:sequence>
-	<xsd:element name="codiceUfficioPcc" type="xsd:string" />
-	<xsd:element name="denominazione" type="xsd:string" />
-	<xsd:element name="cfAuth" type="xsd:string" />
-	<xsd:element name="listaEmailNotifiche" type="xsd:string">
-		<xsd:annotation>
-			<xsd:appinfo>
-				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
-					<linkit:sql-column-mapping long-text="true" />
-				</linkit:generator>
-			</xsd:appinfo>
-		</xsd:annotation>
-	</xsd:element>
-		</xsd:sequence>
-	</xsd:complexType-->
-	
 	<xsd:element name="DipartimentoProperty" type="DipartimentoProperty" />
 	<xsd:complexType name="DipartimentoProperty">
 		<xsd:annotation>
@@ -1515,7 +1555,6 @@
 						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 							<linkit:sql-id-mapping object-name="DipartimentoProperty"
 								object-type="DipartimentoProperty" relationship="reversed" />
-							<!--linkit:sql-column-mapping required="true" / -->
 						</linkit:generator>
 					</xsd:appinfo>
 				</xsd:annotation>
@@ -1795,7 +1834,9 @@
 			<xsd:element name="stato" type="StatoType"/>
 			<xsd:element name="dataUltimaTrasmissione" type="xsd:dateTime" />
 			<xsd:element name="dataUltimoTentativoEsito" type="xsd:dateTime" minOccurs="0"/>
+			<xsd:element name="codiciErrore" type="String1000LatinType" minOccurs="0"/>
 			<xsd:element name="rispedizione" type="xsd:boolean" default="false"/>
+			<xsd:element name="rispedizioneDopoQuery" type="xsd:boolean"/>
 			<xsd:element name="rispedizioneMaxTentativi" type="xsd:int" minOccurs="0" />
 			<xsd:element name="rispedizioneProssimoTentativo" type="xsd:dateTime" minOccurs="0" >
 				<xsd:annotation>
@@ -2093,7 +2134,7 @@
 					<linkit:interface crud="true" />
 					<linkit:sql-table-mapping name="notifiche_eventi">
 						<linkit:sql-table-index>
-							<linkit:sql-table-index-field name="ora-registrazione"/>
+							<linkit:sql-table-index-field name="ora-registrazione" ignoreTypeCompatibility="true"/>
 						</linkit:sql-table-index>
 					</linkit:sql-table-mapping>
 				</linkit:generator>
@@ -2194,8 +2235,6 @@
 
 	<xsd:element name="AllegatoFattura" type="AllegatoFattura" />
 
-	<xsd:element name="ComunicazioneSdi" type="ComunicazioneSdi"/>
-	
 	<xsd:element name="Metadato" type="Metadato"/>
 	
 	<xsd:element name="Utente" type="Utente" />

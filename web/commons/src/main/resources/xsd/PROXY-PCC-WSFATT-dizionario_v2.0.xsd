@@ -524,7 +524,7 @@
 			<xs:element name="naturaSpesa" type="tns:naturaSpesaContabiliTipo"/>
 			<xs:element name="capitoliSpesa" type="tns:maxLenghtString100Type" minOccurs="0"/>
 			<xs:element name="operazione" type="tns:operazioneContabilizzazioneTipo"/>
-			<xs:element name="descrizione" type="tns:maxLenghtString100Type" minOccurs="0"/>
+			<xs:element name="descrizione" type="tns:maxLenghtString70Type" minOccurs="0"/>
 			<xs:element name="estremiImpegno" type="tns:maxLenghtString50Type" minOccurs="0"/>
 			<xs:element name="codiceCIG" type="tns:maxLenghtString15Type"/>
 			<xs:element name="codiceCUP" type="tns:maxLenghtString15Type"/>
@@ -1210,6 +1210,12 @@
 		<xs:restriction base="xs:string">
 			<xs:minLength value="1"/>
 			<xs:maxLength value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="maxLenghtString70Type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="70"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="maxLenghtString50Type">

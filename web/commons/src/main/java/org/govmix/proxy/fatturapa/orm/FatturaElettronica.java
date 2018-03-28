@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -81,6 +80,8 @@ import java.io.Serializable;
  * 			&lt;element name="idDecorrenzaTermini" type="{http://www.govmix.org/proxy/fatturapa/orm}id-notifica-decorrenza-termini" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="idEsitoContabilizzazione" type="{http://www.govmix.org/proxy/fatturapa/orm}id-trasmissione-esito" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="idEsitoScadenza" type="{http://www.govmix.org/proxy/fatturapa/orm}id-trasmissione-esito" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="Dipartimento" type="{http://www.govmix.org/proxy/fatturapa/orm}Dipartimento" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="LottoFatture" type="{http://www.govmix.org/proxy/fatturapa/orm}LottoFatture" minOccurs="0" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -133,7 +134,9 @@ import java.io.Serializable;
   	"xml",
   	"idDecorrenzaTermini",
   	"idEsitoContabilizzazione",
-  	"idEsitoScadenza"
+  	"idEsitoScadenza",
+  	"dipartimento",
+  	"lottoFatture"
   }
 )
 
@@ -551,6 +554,22 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
     this.idEsitoScadenza = idEsitoScadenza;
   }
 
+  public Dipartimento getDipartimento() {
+    return this.dipartimento;
+  }
+
+  public void setDipartimento(Dipartimento dipartimento) {
+    this.dipartimento = dipartimento;
+  }
+
+  public LottoFatture getLottoFatture() {
+    return this.lottoFatture;
+  }
+
+  public void setLottoFatture(LottoFatture lottoFatture) {
+    this.lottoFatture = lottoFatture;
+  }
+
   private static final long serialVersionUID = 1L;
 
   @XmlTransient
@@ -755,5 +774,11 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
 
   @XmlElement(name="idEsitoScadenza",required=false,nillable=false)
   protected IdTrasmissioneEsito idEsitoScadenza;
+
+  @XmlElement(name="Dipartimento",required=false,nillable=false)
+  protected Dipartimento dipartimento;
+
+  @XmlElement(name="LottoFatture",required=false,nillable=false)
+  protected LottoFatture lottoFatture;
 
 }

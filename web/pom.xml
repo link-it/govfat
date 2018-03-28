@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+    <artifactId>fatturapa</artifactId>
+	<groupId>fatturapa</groupId>
+	<version>2.0</version>
+	<packaging>pom</packaging>
+	<name>GovFat</name>
+
+	<modules>
+		<module>commons</module>
+		<module>api</module>
+		<module>api-pcc</module>
+		<module>timers</module>
+		<module>timers-pcc</module>
+		<module>console</module>
+	</modules>
+
+	<profiles>
+		<profile>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>!env</name>
+				</property>
+			</activation>
+			<properties>
+				<env>template</env>
+			</properties>
+		</profile>
+	</profiles>
+
+	<properties>
+		<rel-to-parent>.</rel-to-parent>
+		<javaVersion>1.6</javaVersion>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<openspcoop2.version>2.3.8.4</openspcoop2.version>
+		<openspcoop2.sdi.version>12429</openspcoop2.sdi.version>
+		<cxf.version>2.7.11</cxf.version>
+        <richfaces.version>3.3.4.Final</richfaces.version>
+        <jboss.home>/var/lib/jbossas-7.1.1.Final</jboss.home>
+        <spring.version>3.2.3.RELEASE</spring.version>
+	</properties>
+
+	<build>
+		<filters>
+			<filter>${rel-to-parent}/../resources/filters/${env}.filter.properties</filter>
+		</filters>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jboss.as.plugins</groupId>
+				<artifactId>jboss-as-maven-plugin</artifactId>
+				<version>7.6.Final</version>
+				<inherited>true</inherited>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>pl.project13.maven</groupId>
+				<artifactId>git-commit-id-plugin</artifactId>
+				<version>2.2.1</version>
+				<executions>
+					<execution>
+						<id>get-the-git-infos</id>
+						<goals>
+							<goal>revision</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+

@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -22,6 +21,7 @@
 package org.govmix.proxy.fatturapa.web.api;
 
 import java.io.InputStream;
+import java.sql.Connection;
 import java.util.Date;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -31,22 +31,27 @@ import org.apache.cxf.helpers.IOUtils;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoInserimentoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
+import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.web.api.utils.WebApiProperties;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
-import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFattura;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters;
-import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters.Soggetto;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaUtils;
+import org.govmix.proxy.fatturapa.web.commons.converter.notificaesitocommittente.NotificaEsitoConverter;
+import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.riceviNotificaDT.RiceviNotifica;
+import org.govmix.proxy.fatturapa.web.commons.ricevicomunicazionesdi.RiceviComunicazioneSdI;
+import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 
 public class EndpointPdDImpl implements EndpointPdD {
 
-	private ConsegnaFattura consegnaFattura;
 	private RiceviNotifica riceviNotifica;
 	private LottoBD lottoBD;
 
@@ -55,12 +60,13 @@ public class EndpointPdDImpl implements EndpointPdD {
 	public EndpointPdDImpl() throws Exception {
 		this.log = LoggerManager.getEndpointPdDLogger();
 		this.log.info("Inizializzazione endpoint PdD...");
-		this.consegnaFattura = new ConsegnaFattura(this.log, WebApiProperties.getInstance().isValidazioneDAOAbilitata());
 		this.riceviNotifica = new RiceviNotifica(this.log);
 		this.lottoBD = new LottoBD(log);
 		this.lottoBD.setValidate(WebApiProperties.getInstance().isValidazioneDAOAbilitata());
-
+		
 		this.log.info("Inizializzazione endpoint PdD completata");
+		
+		this.log.info("Info versione: " + CommonsProperties.getInstance(log).getInfoVersione());
 	}
 
 	@Override
@@ -95,13 +101,6 @@ public class EndpointPdDImpl implements EndpointPdD {
 		this.log.info("Invoke riceviLotto");
 		
 		
-		if(!headers.getRequestHeaders().keySet().isEmpty()) {
-			this.log.debug("Headers: ");
-			for(String header : headers.getRequestHeaders().keySet()){
-				this.log.debug(header + ": " + headers.getRequestHeaders().getFirst(header));
-			}
-		}
-
 		if(identificativoSDIString == null) {
 			this.log.error("Impossibile inserire il lotto, identificativo SdI nullo.");
 			return Response.status(500).build();
@@ -122,13 +121,13 @@ public class EndpointPdDImpl implements EndpointPdD {
 				this.log.warn("Lotto con identificativo SdI ["+identificativoSDI+"] esiste gia', inserimento non avvenuto");
 			} else {
 				
+				String idEgov = getIdEgov(headers);
 
-				ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(formatoFatturaPA,
-						identificativoSDI, nomeFile,
+				ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(identificativoSDI, nomeFile,
 						formatoArchivioInvioFatturaString, formatoArchivioBase64,
 						messageId,
+						false,
 						fatturaStream);
-
 
 				try {
 					params.validate(true);
@@ -167,16 +166,19 @@ public class EndpointPdDImpl implements EndpointPdD {
 				lotto.setCodiceDestinatario(params.getCodiceDestinatario());
 				lotto.setFormatoTrasmissione(FormatoTrasmissioneType.valueOf(params.getFormatoFatturaPA()));
 
+				lotto.setIdEgov(idEgov);
 				lotto.setNomeFile(params.getNomeFile());
 				lotto.setMessageId(params.getMessageId());
 
 				lotto.setXml(params.getXml());
-
+				lotto.setFatturazioneAttiva(false);
+				
 				lotto.setDataRicezione(new Date());
 				lotto.setStatoConsegna(StatoConsegnaType.NON_CONSEGNATA);
 				lotto.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
 				lotto.setStatoInserimento(StatoInserimentoType.NON_INSERITO);
-
+				lotto.setTentativiConsegna(0);
+				
 				this.log.info("Inserimento del Lotto con identificativo SdI ["+lotto.getIdentificativoSdi()+"]...");
 				this.lottoBD.create(lotto);	
 				this.log.info("Inserimento del Lotto con identificativo SdI ["+lotto.getIdentificativoSdi()+"] completato");
@@ -191,109 +193,18 @@ public class EndpointPdDImpl implements EndpointPdD {
 		return Response.ok().build();
 	}
 
-	@Override
-	public Response postConsegnaFattura(String formatoFatturaPA, 
-			Integer posizioneFatturaPA,
-			Integer identificativoSdI, 
-			String nomeFile, 
-			String messageId,
-			String codiceDestinatario,
-
-			String cedentePrestatoreDenominazione, 
-			String cedentePrestatoreNome,
-			String cedentePrestatoreCognome,
-			String cedentePrestatoreCodiceFiscale,
-			String cedentePrestatoreIdCodice,
-			String cedentePrestatoreIdPaese,
-
-			String cessionarioCommittenteDenominazione, 
-			String cessionarioCommittenteNome,
-			String cessionarioCommittenteCognome,
-			String cessionarioCommittenteCodiceFiscale,
-			String cessionarioCommittenteIdCodice,
-			String cessionarioCommittenteIdPaese,
-
-			String terzoIntermediarioOSoggettoEmittenteDenominazione, 
-			String terzoIntermediarioOSoggettoEmittenteNome,
-			String terzoIntermediarioOSoggettoEmittenteCognome,
-			String terzoIntermediarioOSoggettoEmittenteCodiceFiscale,
-			String terzoIntermediarioOSoggettoEmittenteIdCodice,
-			String terzoIntermediarioOSoggettoEmittenteIdPaese,
-
-			InputStream fattura) {
-
-		this.log.info("Invoke riceviFattura");
-		ConsegnaFatturaParameters params = new ConsegnaFatturaParameters();
-
-		params.setFormatoFatturaPA(formatoFatturaPA);
-		params.setPosizioneFatturaPA(posizioneFatturaPA);
-
-		params.setIdentificativoSdI(identificativoSdI);
-		params.setNomeFile(nomeFile);
-		params.setMessageId(messageId);
-		params.setCodiceDestinatario(codiceDestinatario);
-
-		Soggetto cedentePrestatore = params.new Soggetto();
-
-		cedentePrestatore.setDenominazione(cedentePrestatoreDenominazione);
-		cedentePrestatore.setNome(cedentePrestatoreNome);
-		cedentePrestatore.setCognome(cedentePrestatoreCognome);
-		cedentePrestatore.setIdCodice(cedentePrestatoreIdCodice);
-		cedentePrestatore.setCodiceFiscale(cedentePrestatoreCodiceFiscale);
-		cedentePrestatore.setIdPaese(cedentePrestatoreIdPaese);
-
-		params.setCedentePrestatore(cedentePrestatore);
-
-
-		Soggetto cessionarioCommittente = params.new Soggetto();
-		cessionarioCommittente.setDenominazione(cessionarioCommittenteDenominazione);
-		cessionarioCommittente.setNome(cessionarioCommittenteNome);
-		cessionarioCommittente.setCognome(cessionarioCommittenteCognome);
-		cessionarioCommittente.setIdCodice(cessionarioCommittenteIdCodice);
-		cessionarioCommittente.setCodiceFiscale(cessionarioCommittenteCodiceFiscale);
-		cessionarioCommittente.setIdPaese(cessionarioCommittenteIdPaese);
-
-		params.setCessionarioCommittente(cessionarioCommittente);
-
-		if(terzoIntermediarioOSoggettoEmittenteIdCodice != null || terzoIntermediarioOSoggettoEmittenteIdPaese != null
-				|| terzoIntermediarioOSoggettoEmittenteNome != null ||
-				terzoIntermediarioOSoggettoEmittenteCognome != null ||
-				terzoIntermediarioOSoggettoEmittenteDenominazione != null || 
-				terzoIntermediarioOSoggettoEmittenteCodiceFiscale != null) {
-			Soggetto terzoIntermediarioOSoggettoEmittente = params.new Soggetto();
-			terzoIntermediarioOSoggettoEmittente.setDenominazione(terzoIntermediarioOSoggettoEmittenteDenominazione);
-			terzoIntermediarioOSoggettoEmittente.setNome(terzoIntermediarioOSoggettoEmittenteNome);
-			terzoIntermediarioOSoggettoEmittente.setCognome(terzoIntermediarioOSoggettoEmittenteCognome);
-			terzoIntermediarioOSoggettoEmittente.setIdCodice(terzoIntermediarioOSoggettoEmittenteIdCodice);
-			terzoIntermediarioOSoggettoEmittente.setCodiceFiscale(terzoIntermediarioOSoggettoEmittenteCodiceFiscale);
-			terzoIntermediarioOSoggettoEmittente.setIdPaese(terzoIntermediarioOSoggettoEmittenteIdPaese);
-
-			params.setTerzoIntermediarioOSoggettoEmittente(terzoIntermediarioOSoggettoEmittente);
-		}
-
-
-		try {
-			params.setXml(IOUtils.readBytesFromStream(fattura));
-			try {
-				params.validate();
-			} catch(Exception e) {
-				throw new Exception("Parametri ["+params.toString()+"] ricevuti in ingresso non validi:"+e.getMessage());
+	private String getIdEgov(HttpHeaders headers) throws Exception {
+		String idEgov = null;
+		if(!headers.getRequestHeaders().keySet().isEmpty()) {
+			this.log.debug("Headers: ");
+			for(String header : headers.getRequestHeaders().keySet()){
+				this.log.debug(header + ": " + headers.getRequestHeaders().getFirst(header));
+				if(header.equalsIgnoreCase(CommonsProperties.getInstance(log).getIdEgovHeader())) {
+					idEgov = headers.getRequestHeaders().getFirst(header);
+				}
 			}
-
-			if(fattura == null) {
-				throw new Exception("La fattura ricevuta in ingresso e' null");
-			}
-
-
-
-			this.consegnaFattura.consegnaFattura(params);
-		} catch(Exception e) {
-			this.log.error("riceviFattura completata con errore:"+ e.getMessage(), e);
-			return Response.status(500).build();
 		}
-
-		this.log.info("riceviFattura completata con successo");
-		return Response.ok().build();
+		return idEgov;
 	}
 
 	@Override
@@ -314,4 +225,69 @@ public class EndpointPdDImpl implements EndpointPdD {
 		this.log.info("riceviNotificaDT completata con successo");
 		return Response.ok().build();
 	}
+	
+	@Override
+	public Response riceviComunicazioniSdI(Integer X_SDI_IdentificativoSDI, String azione, String X_SDI_NomeFile, String contentType, HttpHeaders headers, InputStream comunicazioneStream) {
+		this.log.info("Invoke riceviComunicazioniSdi");
+
+		Connection connection = null;
+		try {
+
+			connection = DAOFactory.getInstance().getConnection();
+			RiceviComunicazioneSdI riceviComunicazioneSdi = new RiceviComunicazioneSdI(this.log, connection, false);
+			FatturaAttivaBD fatturaBD = new FatturaAttivaBD(this.log, connection, false);
+			connection.setAutoCommit(false);
+
+			if(comunicazioneStream == null) {
+				throw new Exception("La comunicazione ricevuta in ingresso e' null");
+			}
+			
+			TipoComunicazioneType tipoComunicazione = RiceviComunicazioneSdI.getTipoComunicazione(azione);
+
+			byte[] rawData = IOUtils.readBytesFromStream(comunicazioneStream);
+			
+			// la posizione e' irrilevante, tranne per le notifiche di esito, che possono essere mandate per fattura e non necessariamente per lotto
+			Integer posizione = null;
+			if(TipoComunicazioneType.NE.equals(tipoComunicazione)) {
+				posizione = new NotificaEsitoConverter(rawData).getPosizione();
+			}
+			
+			FatturaFilter filter = fatturaBD.newFilter();
+			filter.setIdentificativoSdi(X_SDI_IdentificativoSDI);
+			filter.setPosizione(posizione);
+			if(fatturaBD.count(filter) <=0 ) {
+				throw new Exception("Comunicazione relativa a una fattura attiva (Identificativo SdI["+X_SDI_IdentificativoSDI+"]"+((posizione != null) ? " Posizione ["+posizione+"]" : "") +") non presente nel sistema");
+			}
+			TracciaSDI tracciaSdi = new TracciaSDI();
+			
+			tracciaSdi.setIdentificativoSdi(X_SDI_IdentificativoSDI);
+			tracciaSdi.setPosizione(posizione);
+			
+			tracciaSdi.setTipoComunicazione(tipoComunicazione);
+			tracciaSdi.setData(new Date());
+			tracciaSdi.setContentType(contentType);
+			tracciaSdi.setNomeFile(X_SDI_NomeFile);
+			tracciaSdi.setRawData(rawData);
+			
+			tracciaSdi.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
+			tracciaSdi.setTentativiProtocollazione(0);
+			tracciaSdi.setDataProssimaProtocollazione(new Date());
+			tracciaSdi.setIdEgov(getIdEgov(headers));
+
+			riceviComunicazioneSdi.ricevi(tracciaSdi);
+			
+			connection.commit();
+
+			this.log.info("riceviComunicazioniSdi completata con successo");
+			return Response.ok().build();
+
+		} catch(Exception e) {
+			if(connection != null) try {connection.rollback();} catch(Exception ex) {}
+			this.log.error("riceviComunicazioniSdi completata con errore:"+ e.getMessage(), e);
+			return Response.status(500).build();
+		} finally {
+			if(connection != null) try {connection.close();} catch(Exception ex) {}
+		}
+	}
+
 }

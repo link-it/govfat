@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -37,9 +36,9 @@ import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.NotificaEsitoCommittenteBD;
-import org.govmix.proxy.fatturapa.web.commons.exporter.SingleFileExporter;
+import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.bean.EnteBean;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.iservice.IEnteService;
@@ -58,7 +57,6 @@ import org.govmix.proxy.fatturapa.web.console.search.FatturaElettronicaSearchFor
 import org.govmix.proxy.fatturapa.web.console.service.AllegatiService;
 import org.govmix.proxy.fatturapa.web.console.service.NotificaDTService;
 import org.govmix.proxy.fatturapa.web.console.service.NotificaECService;
-import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
@@ -311,10 +309,10 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 		if (this.listaPeriodoTemporale == null) {
 			this.listaPeriodoTemporale = new ArrayList<SelectItem>();
 
-			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(FatturaElettronicaSearchForm.DATA_RICEZIONE_PERIODO_ULTIMA_SETTIMANA, ("fattura.search.dataRicezione.ultimaSettimana"))));
-			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(FatturaElettronicaSearchForm.DATA_RICEZIONE_PERIODO_ULTIMO_MESE, ("fattura.search.dataRicezione.ultimoMese"))));
-			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(FatturaElettronicaSearchForm.DATA_RICEZIONE_PERIODO_ULTIMI_TRE_MESI, ("fattura.search.dataRicezione.ultimiTreMesi"))));
-			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(FatturaElettronicaSearchForm.DATA_RICEZIONE_PERIODO_PERSONALIZZATO, ("fattura.search.dataRicezione.personalizzato"))));
+			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_RICEZIONE_PERIODO_ULTIMA_SETTIMANA, ("fattura.search.dataRicezione.ultimaSettimana"))));
+			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_RICEZIONE_PERIODO_ULTIMO_MESE, ("fattura.search.dataRicezione.ultimoMese"))));
+			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_RICEZIONE_PERIODO_ULTIMI_TRE_MESI, ("fattura.search.dataRicezione.ultimiTreMesi"))));
+			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_RICEZIONE_PERIODO_PERSONALIZZATO, ("fattura.search.dataRicezione.personalizzato"))));
 
 		}
 
@@ -400,7 +398,7 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 					+ this.isSelectedAll()
 					+ "&"+FattureExporter.PARAMETRO_IDS+"="
 					+ StringUtils.join(idFatture, ",")
-					+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ SingleFileExporter.FORMATO_ZIP_CON_ALLEGATI
+					+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_ZIP_CON_ALLEGATI
 					+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_FATTURA);
 
 			context.responseComplete();
@@ -412,7 +410,7 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							Utils.getInstance().getMessageFromResourceBundle("fattura.export.genericError"),null));
+							org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.export.genericError"),null));
 		}
 
 		return null;
@@ -483,10 +481,10 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 	public String ritentaConsegna(){
 		try{
 
-			FatturaElettronicaBD fatturaBD = new FatturaElettronicaBD(log);
+			FatturaPassivaBD fatturaBD = new FatturaPassivaBD(log);
 			FatturaElettronica current = this.selectedElement.getDTO();
 			fatturaBD.forzaRispedizioneFattura(current);
-			MessageUtils.addInfoMsg(Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegna.cambioStatoOK"));
+			MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegna.cambioStatoOK"));
 
 			current.setStatoConsegna(StatoConsegnaType.IN_RICONSEGNA);
 
@@ -494,7 +492,7 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 
 		}catch(Exception e){
 			log.error("Errore durante l'aggiornamento dello stato fattura [Errore Consegna -> In Riconsegna]: "+ e.getMessage(),e);
-			MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegna.erroreGenerico"));
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegna.erroreGenerico"));
 		}
 		return null;
 	}
@@ -504,7 +502,7 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 			if(this.selectedNotifica != null){
 				NotificaEsitoCommittenteBD notificaECBD = new NotificaEsitoCommittenteBD(log);
 				notificaECBD.forzaRispedizioneNotifica(this.selectedNotifica.getDTO());
-				MessageUtils.addInfoMsg(Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegnaNotificaEC.cambioStatoOK"));
+				MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegnaNotificaEC.cambioStatoOK"));
 
 				// resetto la notifica 
 				this.selectedNotifica = null;
@@ -531,7 +529,7 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 
 		}catch(Exception e){
 			log.error("Errore durante l'aggiornamento dello stato della NotificaEC [In Elaborazione -> In Riconsegna]: "+ e.getMessage(),e);
-			MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegnaNotificaEC.erroreGenerico"));
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegnaNotificaEC.erroreGenerico"));
 		}
 		return null;
 	}

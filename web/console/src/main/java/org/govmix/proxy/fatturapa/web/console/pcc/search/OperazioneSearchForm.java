@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -40,11 +39,6 @@ import org.openspcoop2.generic_project.web.input.Text;
 
 public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, Cloneable{
 
-	public static final String DATA_PERIODO_PERSONALIZZATO = "3";
-	public static final String DATA_PERIODO_ULTIMI_TRE_MESI = "2";
-	public static final String DATA_PERIODO_ULTIMO_MESE = "1";
-	public static final String DATA_PERIODO_ULTIMA_SETTIMANA = "0";
-
 	private SelectList<SelectItem> operazione = null;
 	private Text sistemaRichiedente = null;
 	private List<SelectItem> sistemaRichiedenteSelList = null;
@@ -60,6 +54,7 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 	private Text numero = null;
 	private Text identificativoLotto = null;
 	private Text idPaTransazione = null;
+	private SelectList<SelectItem> codiceErrore = null;
 
 	private OperazioneMBean mBean = null;
 
@@ -105,12 +100,12 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 		this.sistemaRichiedente.setFieldsToUpdate(this.getId () + "_searchPnl");
 		this.sistemaRichiedente.setForm(this);
 
-		this.dataPeriodo = factory.getInputFieldFactory().createSelectList("dataPeriodo","tracciaPcc.dataCreazione",new SelectItem(OperazioneSearchForm.DATA_PERIODO_ULTIMO_MESE,"operazione.search.data.ultimoMese"),false);
+		this.dataPeriodo = factory.getInputFieldFactory().createSelectList("dataPeriodo","tracciaPcc.dataCreazione",new SelectItem(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_PERIODO_ULTIMO_MESE,"operazione.search.data.ultimoMese"),false);
 
 		this.dataPeriodo.setFieldsToUpdate(this.getId () + "_searchPnl");
 		this.dataPeriodo.setForm(this);
 
-		this.data = factory.getInputFieldFactory().createDateTimeInterval("data","operazione.search.data.personalizzato","dd/M/yyyy",null,null,false);
+		this.data = factory.getInputFieldFactory().createDateTimeInterval("data","operazione.search.data.personalizzato",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY,null,null,false);
 
 		// imposto i valori di default per le date
 		this._setPeriodo();
@@ -127,6 +122,9 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 		this.identificativoLotto = factory.getInputFieldFactory().createText("idLotto","operazione.search.identificativoLotto",null,false);
 
 		this.idPaTransazione = factory.getInputFieldFactory().createText("idPaTrans","operazione.search.idPaTransazione",null,false);
+		
+		this.codiceErrore = factory.getInputFieldFactory().createSelectList("codiceErrore","operazione.search.codiceErrore",null,false);
+		this.codiceErrore.setDefaultValue(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi")));
 
 		this.setField(this.cedentePrestatore);
 		this.setField(this.utenteRichiedente);
@@ -138,6 +136,7 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 		this.setField(this.numero); 
 		this.setField(this.identificativoLotto); 
 		this.setField(this.idPaTransazione);
+		this.setField(this.codiceErrore);
 
 
 		this.reset();
@@ -167,6 +166,7 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 		this.identificativoLotto.reset();
 		this.numero.reset();
 		this.idPaTransazione.reset();
+		this.codiceErrore.reset();
 
 	}
 
@@ -204,7 +204,7 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 
 	public DateTime getData() {
 		boolean rendered = (this.getDataPeriodo().getValue() != null && this.getDataPeriodo().getValue().getValue()
-				.equals(OperazioneSearchForm.DATA_PERIODO_PERSONALIZZATO)); //Utils.getMessageFromResourceBundle("operazione.search.dataRicezione.personalizzato")));
+				.equals(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_PERIODO_PERSONALIZZATO)); //Utils.getMessageFromResourceBundle("operazione.search.dataRicezione.personalizzato")));
 
 		this.data.setRendered(rendered);
 
@@ -362,7 +362,7 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 		Date dataFine = this.getData().getValue2();
 
 		String periodo = this.getDataPeriodo().getValue() != null ? this.getDataPeriodo().getValue().getValue() : 
-			OperazioneSearchForm.DATA_PERIODO_ULTIMA_SETTIMANA ;
+			org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_PERIODO_ULTIMA_SETTIMANA ;
 
 		Calendar today = Calendar.getInstance();
 		today.set(Calendar.HOUR_OF_DAY, 23);
@@ -371,7 +371,7 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 		today.clear(Calendar.MILLISECOND);
 
 		//ultima settimana
-		if (OperazioneSearchForm.DATA_PERIODO_ULTIMA_SETTIMANA.equals(periodo)) {
+		if (org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_PERIODO_ULTIMA_SETTIMANA.equals(periodo)) {
 			Calendar lastWeek = (Calendar) today.clone();
 			Calendar c = Calendar.getInstance();
 			dataFine = c.getTime();
@@ -379,7 +379,7 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 			lastWeek.set(Calendar.MINUTE, 0);
 			lastWeek.add(Calendar.DATE, -7);
 			dataInizio = lastWeek.getTime();
-		} else if (OperazioneSearchForm.DATA_PERIODO_ULTIMO_MESE.equals( periodo)) {
+		} else if (org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_PERIODO_ULTIMO_MESE.equals( periodo)) {
 			Calendar lastMonth = (Calendar) today.clone();
 
 			// prendo la data corrente
@@ -390,7 +390,7 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 			lastMonth.set(Calendar.MINUTE, 0);
 			lastMonth.add(Calendar.DATE, -30);
 			dataInizio = lastMonth.getTime();
-		} else if (OperazioneSearchForm.DATA_PERIODO_ULTIMI_TRE_MESI.equals( periodo)) {
+		} else if (org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_PERIODO_ULTIMI_TRE_MESI.equals( periodo)) {
 			Calendar lastyear = (Calendar) today.clone();
 
 			dataFine = Calendar.getInstance().getTime();
@@ -454,6 +454,12 @@ public class OperazioneSearchForm extends BaseSearchForm implements SearchForm, 
 	public void setIdPaTransazione(Text idPaTransazione) {
 		this.idPaTransazione = idPaTransazione;
 	}
-	
-	
+
+	public SelectList<SelectItem> getCodiceErrore() {
+		return codiceErrore;
+	}
+
+	public void setCodiceErrore(SelectList<SelectItem> codiceErrore) {
+		this.codiceErrore = codiceErrore;
+	}
 }

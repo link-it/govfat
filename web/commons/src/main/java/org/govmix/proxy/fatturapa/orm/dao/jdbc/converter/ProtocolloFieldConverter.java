@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -90,20 +89,6 @@ public class ProtocolloFieldConverter extends AbstractSQLFieldConverter {
 				return "endpoint";
 			}
 		}
-		if(field.equals(Protocollo.model().ENDPOINT_CONSEGNA_LOTTO)){
-			if(appendTablePrefix){
-				return this.toAliasTable(field)+".endpoint_consegna_lotto";
-			}else{
-				return "endpoint_consegna_lotto";
-			}
-		}
-		if(field.equals(Protocollo.model().ENDPOINT_RICHIEDI_PROTOCOLLO)){
-			if(appendTablePrefix){
-				return this.toAliasTable(field)+".endpoint_richiedi_protocollo";
-			}else{
-				return "endpoint_richiedi_protocollo";
-			}
-		}
 
 
 		return super.toColumn(field,returnAlias,appendTablePrefix);
@@ -124,12 +109,6 @@ public class ProtocolloFieldConverter extends AbstractSQLFieldConverter {
 			return this.toTable(Protocollo.model(), returnAlias);
 		}
 		if(field.equals(Protocollo.model().ENDPOINT)){
-			return this.toTable(Protocollo.model(), returnAlias);
-		}
-		if(field.equals(Protocollo.model().ENDPOINT_CONSEGNA_LOTTO)){
-			return this.toTable(Protocollo.model(), returnAlias);
-		}
-		if(field.equals(Protocollo.model().ENDPOINT_RICHIEDI_PROTOCOLLO)){
 			return this.toTable(Protocollo.model(), returnAlias);
 		}
 

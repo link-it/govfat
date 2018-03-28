@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -106,6 +105,20 @@ public class LottoFattureFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "codice_destinatario", LottoFatture.model().CODICE_DESTINATARIO.getFieldType()));
 				setParameter(object, "setXml", LottoFatture.model().XML.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "xml", LottoFatture.model().XML.getFieldType()));
+				setParameter(object, "setFatturazioneAttiva", LottoFatture.model().FATTURAZIONE_ATTIVA.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "fatturazione_attiva", LottoFatture.model().FATTURAZIONE_ATTIVA.getFieldType()));
+				setParameter(object, "set_value_statoElaborazioneInUscita", String.class,
+					jdbcParameterUtilities.readParameter(rs, "stato_elaborazione_in_uscita", LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA.getFieldType())+"");
+				setParameter(object, "setTipiComunicazione", LottoFatture.model().TIPI_COMUNICAZIONE.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "tipi_comunicazione", LottoFatture.model().TIPI_COMUNICAZIONE.getFieldType()));
+				setParameter(object, "setDataUltimaElaborazione", LottoFatture.model().DATA_ULTIMA_ELABORAZIONE.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "data_ultima_elaborazione", LottoFatture.model().DATA_ULTIMA_ELABORAZIONE.getFieldType()));
+				setParameter(object, "setDettaglioElaborazione", LottoFatture.model().DETTAGLIO_ELABORAZIONE.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "dettaglio_elaborazione", LottoFatture.model().DETTAGLIO_ELABORAZIONE.getFieldType()));
+				setParameter(object, "setDataProssimaElaborazione", LottoFatture.model().DATA_PROSSIMA_ELABORAZIONE.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "data_prossima_elaborazione", LottoFatture.model().DATA_PROSSIMA_ELABORAZIONE.getFieldType()));
+				setParameter(object, "setTentativiConsegna", LottoFatture.model().TENTATIVI_CONSEGNA.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "tentativi_consegna", LottoFatture.model().TENTATIVI_CONSEGNA.getFieldType()));
 				setParameter(object, "setDataRicezione", LottoFatture.model().DATA_RICEZIONE.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "data_ricezione", LottoFatture.model().DATA_RICEZIONE.getFieldType()));
 				setParameter(object, "set_value_statoInserimento", String.class,
@@ -196,6 +209,20 @@ public class LottoFattureFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"codiceDestinatario"));
 				setParameter(object, "setXml", LottoFatture.model().XML.getFieldType(),
 					this.getObjectFromMap(map,"xml"));
+				setParameter(object, "setFatturazioneAttiva", LottoFatture.model().FATTURAZIONE_ATTIVA.getFieldType(),
+					this.getObjectFromMap(map,"fatturazioneAttiva"));
+				setParameter(object, "set_value_statoElaborazioneInUscita", String.class,
+					this.getObjectFromMap(map,"statoElaborazioneInUscita"));
+				setParameter(object, "setTipiComunicazione", LottoFatture.model().TIPI_COMUNICAZIONE.getFieldType(),
+					this.getObjectFromMap(map,"tipiComunicazione"));
+				setParameter(object, "setDataUltimaElaborazione", LottoFatture.model().DATA_ULTIMA_ELABORAZIONE.getFieldType(),
+					this.getObjectFromMap(map,"dataUltimaElaborazione"));
+				setParameter(object, "setDettaglioElaborazione", LottoFatture.model().DETTAGLIO_ELABORAZIONE.getFieldType(),
+					this.getObjectFromMap(map,"dettaglioElaborazione"));
+				setParameter(object, "setDataProssimaElaborazione", LottoFatture.model().DATA_PROSSIMA_ELABORAZIONE.getFieldType(),
+					this.getObjectFromMap(map,"dataProssimaElaborazione"));
+				setParameter(object, "setTentativiConsegna", LottoFatture.model().TENTATIVI_CONSEGNA.getFieldType(),
+					this.getObjectFromMap(map,"tentativiConsegna"));
 				setParameter(object, "setDataRicezione", LottoFatture.model().DATA_RICEZIONE.getFieldType(),
 					this.getObjectFromMap(map,"dataRicezione"));
 				setParameter(object, "set_value_statoInserimento", String.class,

@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -46,8 +45,6 @@ public class ProtocolloModel extends AbstractModel<Protocollo> {
 		this.NOME = new Field("nome",java.lang.String.class,"Protocollo",Protocollo.class);
 		this.DESCRIZIONE = new Field("descrizione",java.lang.String.class,"Protocollo",Protocollo.class);
 		this.ENDPOINT = new Field("endpoint",java.net.URI.class,"Protocollo",Protocollo.class);
-		this.ENDPOINT_CONSEGNA_LOTTO = new Field("endpointConsegnaLotto",java.net.URI.class,"Protocollo",Protocollo.class);
-		this.ENDPOINT_RICHIEDI_PROTOCOLLO = new Field("endpointRichiediProtocollo",java.net.URI.class,"Protocollo",Protocollo.class);
 	
 	}
 	
@@ -58,8 +55,6 @@ public class ProtocolloModel extends AbstractModel<Protocollo> {
 		this.NOME = new ComplexField(father,"nome",java.lang.String.class,"Protocollo",Protocollo.class);
 		this.DESCRIZIONE = new ComplexField(father,"descrizione",java.lang.String.class,"Protocollo",Protocollo.class);
 		this.ENDPOINT = new ComplexField(father,"endpoint",java.net.URI.class,"Protocollo",Protocollo.class);
-		this.ENDPOINT_CONSEGNA_LOTTO = new ComplexField(father,"endpointConsegnaLotto",java.net.URI.class,"Protocollo",Protocollo.class);
-		this.ENDPOINT_RICHIEDI_PROTOCOLLO = new ComplexField(father,"endpointRichiediProtocollo",java.net.URI.class,"Protocollo",Protocollo.class);
 	
 	}
 	
@@ -70,10 +65,6 @@ public class ProtocolloModel extends AbstractModel<Protocollo> {
 	public IField DESCRIZIONE = null;
 	 
 	public IField ENDPOINT = null;
-	 
-	public IField ENDPOINT_CONSEGNA_LOTTO = null;
-	 
-	public IField ENDPOINT_RICHIEDI_PROTOCOLLO = null;
 	 
 
 	@Override

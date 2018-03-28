@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -45,9 +44,9 @@ public class PagamentoService extends BaseService<PagamentoSearchForm>  implemen
 	private PccPagamentoBD bd = null;
 	public PagamentoService() {
 		try{
-			this.bd = new PccPagamentoBD(log);
+			this.bd = new PccPagamentoBD(PagamentoService.log);
 		}catch(Exception e){
-			log.error("Errore durante la init di PagamentoService: "+ e.getMessage(), e); 
+			PagamentoService.log.error("Errore durante la init di PagamentoService: "+ e.getMessage(), e); 
 		}
 	}
 
@@ -86,7 +85,7 @@ public class PagamentoService extends BaseService<PagamentoSearchForm>  implemen
 			PccPagamento dto = this.bd.findById(key);
 			bean.setDTO(dto);
 		} catch (NotFoundException e) {
-			log.debug("Elemento non trovato");
+			PagamentoService.log.debug("Elemento non trovato");
 		}
 
 		return bean;
@@ -118,7 +117,7 @@ public class PagamentoService extends BaseService<PagamentoSearchForm>  implemen
 			}
 
 		} catch (Exception e) {
-			log.error("Errore durante l'esecuzione del metodo ["+methodName+"] : "+ e.getMessage() , e);
+			PagamentoService.log.error("Errore durante l'esecuzione del metodo ["+methodName+"] : "+ e.getMessage() , e);
 		}
 
 		return lst;
@@ -130,10 +129,12 @@ public class PagamentoService extends BaseService<PagamentoSearchForm>  implemen
 		return this.bd.exists(pagamento);
 	}
 
+	@Override
 	public IdFattura getIdFattura() {
 		return idFattura;
 	}
 
+	@Override
 	public void setIdFattura(IdFattura idFattura) {
 		this.idFattura = idFattura;
 	}

@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -24,6 +23,7 @@ package org.govmix.proxy.fatturapa.web.commons.recuperaFatture;
 import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -34,20 +34,22 @@ import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdDipartimento;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdUtente;
+import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.recuperofatture.Fattura;
 import org.govmix.proxy.fatturapa.recuperofatture.ListaFattureNonConsegnateResponse;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.DipartimentoBD;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.UtenteBD;
-import org.govmix.proxy.fatturapa.web.commons.exporter.SingleFileExporter;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaPassivaFilter;
+import org.govmix.proxy.fatturapa.web.commons.exporter.FatturaSingleFileExporter;
 
 public class RecuperaFatture {
 
-	private FatturaElettronicaBD fatturaElettronicaBD;
+	private FatturaPassivaBD fatturaPassivaBD;
 	private DipartimentoBD dipartimentoBD;
 	private UtenteBD utenteBD;
-	private SingleFileExporter sfe;
+	private FatturaSingleFileExporter sfe;
 	
 	private static Marshaller marshaller;
 	
@@ -65,17 +67,25 @@ public class RecuperaFatture {
 	}
 	
 	public RecuperaFatture(Logger log) throws Exception {
-		this.fatturaElettronicaBD = new FatturaElettronicaBD(log);
+		this.fatturaPassivaBD = new FatturaPassivaBD(log);
 		this.dipartimentoBD = new DipartimentoBD(log);
 		this.utenteBD = new UtenteBD(log);
 		
-		this.sfe = new SingleFileExporter(log);
+		this.sfe = new FatturaSingleFileExporter(log);
 
 	}
 	
 	public String cercaFattureNonConsegnate(IdUtente idUtente, Integer limit) throws Exception {
-		List<FatturaElettronica> lst = this.fatturaElettronicaBD.
-				getIdFattureNonConsegnate(idUtente, limit);
+		Utente utente = this.utenteBD.findByUsername(idUtente.getUsername());
+		
+		FatturaPassivaFilter filter = this.fatturaPassivaBD.newFilter();
+		filter.setUtente(utente);
+		filter.setModalitaPush(false);
+		filter.setOffset(0);
+		filter.setLimit(limit);
+		filter.setDataRicezioneMin(new Date());
+
+		List<FatturaElettronica> lst = this.fatturaPassivaBD.findAll(filter);
 		
 		ListaFattureNonConsegnateResponse response = new ListaFattureNonConsegnateResponse();
 		
@@ -108,11 +118,12 @@ public class RecuperaFatture {
 			this.checkFattura(idUtente, idFattura);
 			
 			//aggiorno lo stato della consegna
-			this.fatturaElettronicaBD.updateStatoConsegna(idFattura, StatoConsegnaType.CONSEGNATA, null);
+			this.fatturaPassivaBD.updateStatoConsegna(idFattura, StatoConsegnaType.CONSEGNATA, null);
 			
 			
 			os = new ByteArrayOutputStream();
-			sfe.exportAsZip(Arrays.asList(idFattura), os, true);
+			FatturaElettronica fattura = this.fatturaPassivaBD.get(idFattura); 
+			sfe.exportAsZip(Arrays.asList(fattura), os);
 			return os.toByteArray();
 		} finally {
 			if(os != null) {
@@ -127,7 +138,7 @@ public class RecuperaFatture {
 
 	private void checkFattura(IdUtente idUtente, IdFattura idFattura) throws Exception {
 
-		FatturaElettronica fattura = fatturaElettronicaBD.get(idFattura);
+		FatturaElettronica fattura = fatturaPassivaBD.get(idFattura);
 
 		//check fattura consegnata
 		//NOTA: 8-04-2015: Vincolo rilassato

@@ -39,8 +39,8 @@
 		 <jaxrs:inInterceptors>
 		     <ref bean="authorizationInterceptor"/>
 		 </jaxrs:inInterceptors>
-	    
 	</jaxrs:server>
+
+	<bean id="authorizationInterceptor" class="${org.govmix.proxy.fatturapa.web.api.authentication.filter.class}"/>
 	
-	<bean id="authorizationInterceptor" class="org.govmix.proxy.fatturapa.web.api.AuthorizationInterceptor"/>	
 </beans>

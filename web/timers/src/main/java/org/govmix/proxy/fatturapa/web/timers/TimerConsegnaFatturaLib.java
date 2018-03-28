@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -40,16 +39,15 @@ import org.apache.soap.encoding.soapenc.Base64;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
-import org.govmix.proxy.fatturapa.web.commons.exporter.SingleFileExporter;
+import org.govmix.proxy.fatturapa.web.commons.exporter.FatturaSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.sonde.Sonda;
 import org.govmix.proxy.fatturapa.web.commons.utils.CostantiProtocollazione;
 import org.govmix.proxy.fatturapa.web.commons.utils.Endpoint;
 import org.govmix.proxy.fatturapa.web.commons.utils.EndpointSelector;
 import org.govmix.proxy.fatturapa.web.timers.policies.IPolicyRispedizione;
 import org.govmix.proxy.fatturapa.web.timers.policies.PolicyRispedizioneFactory;
-import org.govmix.proxy.fatturapa.web.timers.policies.PolicyRispedizioneParameters;
 import org.govmix.proxy.fatturapa.web.timers.utils.BatchProperties;
 
 /**
@@ -68,12 +66,8 @@ public class TimerConsegnaFatturaLib extends AbstractTimerLib {
 	private static final String URL_PARAM_ID_SDI = "ProxyFatturaPA-IdSDI";
 	private static final String URL_PARAM_POSIZIONE = "ProxyFatturaPA-Posizione";
 
-	private SingleFileExporter sfe;
-
 	public TimerConsegnaFatturaLib(int limit, Logger log, boolean logQuery) throws Exception{
 		super(limit, log, logQuery);
-		this.sfe = new SingleFileExporter(log);
-
 	}
 
 	@Override
@@ -82,7 +76,8 @@ public class TimerConsegnaFatturaLib extends AbstractTimerLib {
 		Connection connection = null;
 		try {
 			connection = DAOFactory.getInstance().getConnection();
-			FatturaElettronicaBD fatturaElettronicaBD = new FatturaElettronicaBD(log, connection, false);
+			FatturaPassivaBD fatturaElettronicaBD = new FatturaPassivaBD(log, connection, false);
+			FatturaSingleFileExporter sfe = new FatturaSingleFileExporter(this.log, connection, false);
 
 			Date limitDate = new Date();
 			
@@ -98,7 +93,6 @@ public class TimerConsegnaFatturaLib extends AbstractTimerLib {
 
 			DateFormat sdf = new SimpleDateFormat("MM/dd/yyy HH:mm:ss Z");
 			if(countFatture > 0) {
-				connection.setAutoCommit(false);
 
 				this.log.info("Gestisco ["+countFatture+"] fatture da consegnare, ["+this.limit+"] alla volta");
 				List<FatturaElettronica> lstId = consegnaContestuale ? fatturaElettronicaBD.getFattureDaSpedireContestuale(0, this.limit, limitDate) : fatturaElettronicaBD.getFattureDaSpedire(0, this.limit, limitDate);
@@ -124,7 +118,7 @@ public class TimerConsegnaFatturaLib extends AbstractTimerLib {
 								String response = null;
 								boolean asincrono = false;
 								int responseCode = -1;
-								URL url = new URL(urlOriginale.toString() + "?" + URL_PARAM_ID_SDI+"="+idFattura.getIdentificativoSdi() + "&"+URL_PARAM_POSIZIONE+"="+idFattura.getPosizione());
+								URL url = new URL(urlOriginale.toString() + "/protocollazioneFattura?" + URL_PARAM_ID_SDI+"="+idFattura.getIdentificativoSdi() + "&"+URL_PARAM_POSIZIONE+"="+idFattura.getPosizione());
 
 								try{
 									
@@ -163,7 +157,7 @@ public class TimerConsegnaFatturaLib extends AbstractTimerLib {
 									
 									httpConn.setRequestMethod("POST");								
 									baos = new ByteArrayOutputStream();
-									sfe.exportAsZip(Arrays.asList(idFattura), baos, true); //esporta anche l'xml del lotto di fatture
+									sfe.exportAsZip(Arrays.asList(fattura), baos);
 									
 									httpConn.getOutputStream().write(baos.toByteArray());
 									httpConn.getOutputStream().flush();
@@ -205,12 +199,9 @@ public class TimerConsegnaFatturaLib extends AbstractTimerLib {
 									fattura.setDettaglioConsegna(response);
 									fattura.setDataConsegna(new Date(now));
 
-									PolicyRispedizioneParameters params = new PolicyRispedizioneParameters();
-									params.setTentativi(fattura.getTentativiConsegna());
-									
-									long offset = policy.getOffsetRispedizione(params);
+									long offset = policy.getOffsetRispedizione();
 
-									if(policy.isRispedizioneAbilitata(params)) {
+									if(policy.isRispedizioneAbilitata()) {
 										fattura.setStatoConsegna(StatoConsegnaType.IN_RICONSEGNA);
 									} else {
 										fattura.setStatoConsegna(StatoConsegnaType.ERRORE_CONSEGNA);
@@ -228,15 +219,12 @@ public class TimerConsegnaFatturaLib extends AbstractTimerLib {
 						this.log.info("Gestite ["+countFattureElaborate+"\\"+countFatture+"] fatture da consegnare");
 
 						lstId = consegnaContestuale ? fatturaElettronicaBD.getFattureDaSpedireContestuale(0, this.limit, limitDate) : fatturaElettronicaBD.getFattureDaSpedire(0, this.limit, limitDate);
-						connection.commit();
 						Sonda.getInstance().registraChiamataServizioOK(this.getTimerName());
 					} catch(Exception e) {
 						this.log.error("Errore durante l'esecuzione del batch ConsegnaFattura: "+e.getMessage(), e);
-						connection.rollback();
 					}
 				}
 				this.log.info("Gestite ["+countFattureElaborate+"\\"+countFatture+"] fatture da consegnare. Fine.");
-				connection.setAutoCommit(true);
 			}
 
 		} finally {

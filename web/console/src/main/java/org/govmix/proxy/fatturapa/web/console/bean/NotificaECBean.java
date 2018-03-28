@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,7 +26,7 @@ import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoCommittenteType;
 import org.govmix.proxy.fatturapa.orm.constants.ScartoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
-import org.govmix.proxy.fatturapa.web.commons.exporter.SingleFileExporter;
+import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.web.bean.IBean;
@@ -76,15 +75,15 @@ public class NotificaECBean extends BaseBean<NotificaEsitoCommittente, Long> imp
 		this.scarto = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("scarto","notificaEsitoCommittente.scarto");
 		this.scartoNote = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("scartoNote","notificaEsitoCommittente.scartoNote");
 		this.esito = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("esito","notificaEsitoCommittente.esito");
-		this.data = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("data","notificaEsitoCommittente.data","dd/M/yyyy");
-		this.dataInvio = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataInvio","notificaEsitoCommittente.dataInvio","dd/M/yyyy");
+		this.data = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("data","notificaEsitoCommittente.data",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY);
+		this.dataInvio = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataInvio","notificaEsitoCommittente.dataInvio",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY);
 		this.descrizione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("descrizione","notificaEsitoCommittente.descrizione");
 		this.modalitaBatch = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("modalitaBatch","notificaEsitoCommittente.modalitaBatch");
 
-		this.xml = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("xml","notificaEsitoCommittente.label.xml",null,"/images/fatturapa/icons/xml.png","notificaEsitoCommittente.label.xml.iconTitle","notificaEsitoCommittente.label.xml.iconTitle");
-		this.pdf = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("pdf","notificaEsitoCommittente.label.pdf",null,"/images/fatturapa/icons/pdf.png","notificaEsitoCommittente.label.pdf.iconTitle","notificaEsitoCommittente.label.pdf.iconTitle");
-		this.scartoXml = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("scartoXml","notificaEsitoCommittente.scarto.label.xml",null,"/images/fatturapa/icons/xml.png","notificaEsitoCommittente.scarto.label.xml.iconTitle","notificaEsitoCommittente.scarto.label.xml.iconTitle");
-		this.scartoPdf = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("scartoPdf","notificaEsitoCommittente.scarto.label.pdf",null,"/images/fatturapa/icons/pdf.png","notificaEsitoCommittente.scarto.label.pdf.iconTitle","notificaEsitoCommittente.scarto.label.pdf.iconTitle");
+		this.xml = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("xml","notificaEsitoCommittente.label.xml",null,org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_XML,"notificaEsitoCommittente.label.xml.iconTitle","notificaEsitoCommittente.label.xml.iconTitle");
+		this.pdf = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("pdf","notificaEsitoCommittente.label.pdf",null,org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_PDF,"notificaEsitoCommittente.label.pdf.iconTitle","notificaEsitoCommittente.label.pdf.iconTitle");
+		this.scartoXml = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("scartoXml","notificaEsitoCommittente.scarto.label.xml",null,org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_XML,"notificaEsitoCommittente.scarto.label.xml.iconTitle","notificaEsitoCommittente.scarto.label.xml.iconTitle");
+		this.scartoPdf = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("scartoPdf","notificaEsitoCommittente.scarto.label.pdf",null,org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_PDF,"notificaEsitoCommittente.scarto.label.pdf.iconTitle","notificaEsitoCommittente.scarto.label.pdf.iconTitle");
 		this.utente = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("utente","notificaEsitoCommittente.utente");
 		
 		this.separatore = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("separatore",null);
@@ -309,7 +308,7 @@ public class NotificaECBean extends BaseBean<NotificaEsitoCommittente, Long> imp
 		String url = context.getExternalContext().getRequestContextPath() 
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
 				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getId()
-				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ SingleFileExporter.FORMATO_XML
+				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_NOTIFICA_EC;
 
 		this.xml.setHref(this.getDTO().getXml() != null ?  url : null);
@@ -317,7 +316,7 @@ public class NotificaECBean extends BaseBean<NotificaEsitoCommittente, Long> imp
 		url = context.getExternalContext().getRequestContextPath() 
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
 				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getId()
-				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ SingleFileExporter.FORMATO_PDF
+				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_PDF
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_NOTIFICA_EC;
 
 		this.pdf.setHref( this.getDTO().getXml() != null ? url : null);
@@ -326,7 +325,7 @@ public class NotificaECBean extends BaseBean<NotificaEsitoCommittente, Long> imp
 		url = context.getExternalContext().getRequestContextPath() 
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
 				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getId()
-				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ SingleFileExporter.FORMATO_XML
+				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_SCARTO;
 
 
@@ -335,7 +334,7 @@ public class NotificaECBean extends BaseBean<NotificaEsitoCommittente, Long> imp
 		url = context.getExternalContext().getRequestContextPath() 
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
 				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getId()
-				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ SingleFileExporter.FORMATO_PDF
+				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_PDF
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_SCARTO;
 		this.scartoPdf.setHref( this.getDTO().getScartoXml() != null ? url : null);
 	}

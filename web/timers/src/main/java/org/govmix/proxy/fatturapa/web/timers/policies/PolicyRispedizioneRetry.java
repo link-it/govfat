@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -26,10 +25,11 @@ public class PolicyRispedizioneRetry implements IPolicyRispedizione {
 	private int maxTentativiRispedizione;
 	private int fattore;
 	private static final int SECONDS = 1000;
+	private PolicyRispedizioneParameters params;
 	
 	@Override
-	public long getOffsetRispedizione(PolicyRispedizioneParameters params) {
-		return this.getFattore()*params.getTentativi()*SECONDS;
+	public long getOffsetRispedizione() {
+		return this.getFattore()*this.params.getTentativi()*SECONDS;
 	}
 
 	public int getFattore() {
@@ -49,8 +49,16 @@ public class PolicyRispedizioneRetry implements IPolicyRispedizione {
 	}
 
 	@Override
-	public boolean isRispedizioneAbilitata(PolicyRispedizioneParameters params) {
-		return params.getTentativi() < this.maxTentativiRispedizione;
+	public boolean isRispedizioneAbilitata() {
+		return this.params.getTentativi() < this.maxTentativiRispedizione;
+	}
+
+	public PolicyRispedizioneParameters getParams() {
+		return params;
+	}
+
+	public void setParams(PolicyRispedizioneParameters params) {
+		this.params = params;
 	}
 
 }

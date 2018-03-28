@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -30,7 +29,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaElettronicaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
 import org.govmix.proxy.fatturapa.web.commons.sonde.RisultatoSonda.STATO;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 
@@ -39,7 +38,7 @@ public abstract class AbstractServletSonda extends HttpServlet {
 	protected static final long serialVersionUID = 1L;
 	
 	protected Logger log;
-	protected FatturaElettronicaBD fatturaElettronicaBD;
+	protected FatturaBD fatturaElettronicaBD;
 	private List<String> urls;
 
 	public AbstractServletSonda() throws Exception {
@@ -48,7 +47,7 @@ public abstract class AbstractServletSonda extends HttpServlet {
 
 	public AbstractServletSonda(List<String> urls) throws Exception {
 		this.urls = urls;
-		this.fatturaElettronicaBD = new FatturaElettronicaBD();
+		this.fatturaElettronicaBD = new FatturaBD();
 		this.log = LoggerManager.getSondaLogger();
 	}
 

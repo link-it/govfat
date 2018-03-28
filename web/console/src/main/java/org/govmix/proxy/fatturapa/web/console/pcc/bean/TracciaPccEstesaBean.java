@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -30,7 +29,6 @@ import org.govmix.proxy.fatturapa.orm.PccTracciaTrasmissione;
 import org.govmix.proxy.fatturapa.orm.PccTracciaTrasmissioneEsito;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoTrasmissioneType;
 import org.govmix.proxy.fatturapa.web.console.bean.FatturaElettronicaBean;
-import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.web.factory.FactoryException;
 import org.openspcoop2.generic_project.web.output.DateTime;
 import org.openspcoop2.generic_project.web.output.OutputGroup;
@@ -71,8 +69,8 @@ public class TracciaPccEstesaBean extends TracciaPCCBean{
 	}
 	
 	private void init2() throws FactoryException{
-		this.dataPrimaTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataPrimaTrasmissione","tracciaPcc.dataPrimaTrasmissione","dd/M/yyyy HH:mm:ss");
-		this.dataEsito = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataEsito","tracciaPcc.dataEsito","dd/M/yyyy HH:mm:ss");
+		this.dataPrimaTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataPrimaTrasmissione","tracciaPcc.dataPrimaTrasmissione",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS);
+		this.dataEsito = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataEsito","tracciaPcc.dataEsito",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS);
 		
 		this.operazioneContabile = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("operazioneContabile","tracciaPcc.operazione");
 		this.idEgovTrasmissione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("idEgovTrasmissione","tracciaPcc.idEgovTrasmissione");
@@ -120,7 +118,7 @@ public class TracciaPccEstesaBean extends TracciaPCCBean{
 
 		
 		// combinare per una stringa migliore
-		String operazione = Utils.getInstance().getMessageFromResourceBundle("pccOperazione.nome." + dto.getOperazione());
+		String operazione = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("pccOperazione.nome." + dto.getOperazione());
 		this.operazioneContabile.setValue(operazione); 
 		
 		// integrazione dei dati

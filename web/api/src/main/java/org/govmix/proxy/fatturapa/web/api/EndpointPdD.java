@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -35,39 +34,9 @@ import javax.ws.rs.core.Response;
 public interface EndpointPdD {
 
 	@POST
-	@Consumes("text/xml")
-	@Path("riceviFattura")
-	Response postConsegnaFattura(@HeaderParam("X-SDI-FormatoFatturaPA") String X_SDI_FormatoFatturaPA, 
-			@HeaderParam("X-SDI-PosizioneFatturaPA") Integer X_SDI_PosizioneFatturaPA,
-			@HeaderParam("X-SDI-IdentificativoSDI") Integer X_SDI_IdentificativoSDI, 
-			@HeaderParam("X-SDI-NomeFile") String X_SDI_NomeFile, 
-			@HeaderParam("X-SDI-MessageId") String X_SDI_MessageId,
-			@HeaderParam("X-SDI-CodiceDestinatario") String X_SDI_CodiceDestinatario,
-			@HeaderParam("X-SDI-CedentePrestatore-Denominazione") String X_SDI_CedentePrestatore_Denominazione, 
-			@HeaderParam("X-SDI-CedentePrestatore-Nome") String X_SDI_CedentePrestatore_Nome,
-			@HeaderParam("X-SDI-CedentePrestatore-Cognome") String X_SDI_CedentePrestatore_Cognome,
-			@HeaderParam("X-SDI-CedentePrestatore-CodiceFiscale") String X_SDI_CedentePrestatore_CodiceFiscale,
-			@HeaderParam("X-SDI-CedentePrestatore-IdCodice") String X_SDI_CedentePrestatore_IdCodice,
-			@HeaderParam("X-SDI-CedentePrestatore-IdPaese") String X_SDI_CedentePrestatore_IdPaese,
-			@HeaderParam("X-SDI-CessionarioCommittente-Denominazione") String X_SDI_CessionarioCommittente_Denominazione, 
-			@HeaderParam("X-SDI-CessionarioCommittente-Nome") String X_SDI_CessionarioCommittente_Nome,
-			@HeaderParam("X-SDI-CessionarioCommittente-Cognome") String X_SDI_CessionarioCommittente_Cognome,
-			@HeaderParam("X-SDI-CessionarioCommittente-CodiceFiscale") String X_SDI_CessionarioCommittente_CodiceFiscale,
-			@HeaderParam("X-SDI-CessionarioCommittente-IdCodice") String X_SDI_CessionarioCommittente_IdCodice,
-			@HeaderParam("X-SDI-CessionarioCommittente-IdPaese") String X_SDI_CessionarioCommittente_IdPaese,
-			@HeaderParam("X-SDI-TerzoIntermediarioOSoggettoEmittente-Denominazione") String X_SDI_TerzoIntermediarioOSoggettoEmittente_Denominazione, 
-			@HeaderParam("X-SDI-TerzoIntermediarioOSoggettoEmittente-Nome") String X_SDI_TerzoIntermediarioOSoggettoEmittente_Nome,
-			@HeaderParam("X-SDI-TerzoIntermediarioOSoggettoEmittente-Cognome") String X_SDI_TerzoIntermediarioOSoggettoEmittente_Cognome,
-			@HeaderParam("X-SDI-TerzoIntermediarioOSoggettoEmittente-CodiceFiscale") String X_SDI_TerzoIntermediarioOSoggettoEmittente_CodiceFiscale,
-			@HeaderParam("X-SDI-TerzoIntermediarioOSoggettoEmittente-IdCodice") String X_SDI_TerzoIntermediarioOSoggettoEmittente_IdCodice,
-			@HeaderParam("X-SDI-TerzoIntermediarioOSoggettoEmittente-IdPaese") String X_SDI_TerzoIntermediarioOSoggettoEmittente_IdPaese,
-			InputStream fatturaStream);
-
-	@POST
-//	@Consumes("text/xml")
 	@Path("riceviLotto")
 	Response postRiceviLotto(@HeaderParam("X-SDI-FormatoFatturaPA") String X_SDI_FormatoFatturaPA, 
-			@HeaderParam("X-SDI-IdentificativoSDI") String X_SDI_IdentificativoSDIString, 
+			@HeaderParam("X-SDI-IdentificativoSdI") String X_SDI_IdentificativoSDIString, 
 			@HeaderParam("X-SDI-NomeFile") String X_SDI_NomeFile,
 			@HeaderParam("X-SDI-FormatoArchivioInvioFattura") String X_SDI_FormatoArchivioInvioFattura,
 			@HeaderParam("X-SDI-FormatoArchivioBase64") String X_SDI_FormatoArchivioBase64,
@@ -98,5 +67,15 @@ public interface EndpointPdD {
 	@Consumes("text/xml")
 	@Path("riceviNotificaDT")
 	Response postConsegnaNotificaDT(InputStream notificaStream);
+	
+	@POST
+	@Path("riceviComunicazione")
+	Response riceviComunicazioniSdI(@HeaderParam("X-SDI-IdentificativoSdI") Integer X_SDI_IdentificativoSDI,
+			@HeaderParam("X-OpenSPCoop2-Azione") String azione,
+			@HeaderParam("X-SDI-NomeFile") String X_SDI_NomeFile,
+			@HeaderParam("Content-Type") String contentType,
+			@Context HttpHeaders headers,
+			InputStream comunicazioneStream);
+
 
 }

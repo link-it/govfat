@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -31,9 +30,11 @@ package org.govmix.proxy.fatturapa.orm.model;
  */
 public class ModelFactory {
 
-	public static ComunicazioneSdiModel COMUNICAZIONE_SDI = new ComunicazioneSdiModel();
-	
 	public static LottoFattureModel LOTTO_FATTURE = new LottoFattureModel();
+	
+	public static DipartimentoModel DIPARTIMENTO = new DipartimentoModel();
+	
+	public static TracciaSDIModel TRACCIA_SDI = new TracciaSDIModel();
 	
 	public static FatturaElettronicaModel FATTURA_ELETTRONICA = new FatturaElettronicaModel();
 	
@@ -52,8 +53,6 @@ public class ModelFactory {
 	public static RegistroPropertyModel REGISTRO_PROPERTY = new RegistroPropertyModel();
 	
 	public static UtenteModel UTENTE = new UtenteModel();
-	
-	public static DipartimentoModel DIPARTIMENTO = new DipartimentoModel();
 	
 	public static DipartimentoPropertyModel DIPARTIMENTO_PROPERTY = new DipartimentoPropertyModel();
 	

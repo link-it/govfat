@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -38,32 +37,6 @@ public interface IServiceManager {
 
 	/*
 	 =====================================================================================================================
-	 Services relating to the object with name:ComunicazioneSdi type:ComunicazioneSdi
-	 =====================================================================================================================
-	*/
-	
-	/**
-	 * Return a service used to research on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi}
-	 *
-	 * @return Service used to research on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi}	
-	 * @throws ServiceException Exception thrown when an error occurs during processing of the request
-	 * @throws NotImplementedException Exception thrown when the method is not implemented
-	 */
-	public IComunicazioneSdiServiceSearch getComunicazioneSdiServiceSearch() throws ServiceException,NotImplementedException;
-	
-	/**
-	 * Return a service used to research and manage on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi}
-	 *
-	 * @return Service used to research and manage on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.ComunicazioneSdi}	
-	 * @throws ServiceException Exception thrown when an error occurs during processing of the request
-	 * @throws NotImplementedException Exception thrown when the method is not implemented
-	 */
-	public IComunicazioneSdiService getComunicazioneSdiService() throws ServiceException,NotImplementedException;
-	
-	
-	
-	/*
-	 =====================================================================================================================
 	 Services relating to the object with name:LottoFatture type:LottoFatture
 	 =====================================================================================================================
 	*/
@@ -76,7 +49,7 @@ public interface IServiceManager {
 	 * @throws NotImplementedException Exception thrown when the method is not implemented
 	 */
 	public ILottoFattureServiceSearch getLottoFattureServiceSearch() throws ServiceException,NotImplementedException;
-		public IExtendedLottoFattureServiceSearch getExtendedLottoFattureServiceSearch() throws ServiceException,NotImplementedException;
+	
 	/**
 	 * Return a service used to research and manage on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.LottoFatture}
 	 *
@@ -85,6 +58,30 @@ public interface IServiceManager {
 	 * @throws NotImplementedException Exception thrown when the method is not implemented
 	 */
 	public ILottoFattureService getLottoFattureService() throws ServiceException,NotImplementedException;
+	
+	/*
+	 =====================================================================================================================
+	 Services relating to the object with name:TracciaSDI type:TracciaSDI
+	 =====================================================================================================================
+	*/
+	
+	/**
+	 * Return a service used to research on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI}
+	 *
+	 * @return Service used to research on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI}	
+	 * @throws ServiceException Exception thrown when an error occurs during processing of the request
+	 * @throws NotImplementedException Exception thrown when the method is not implemented
+	 */
+	public ITracciaSDIServiceSearch getTracciaSDIServiceSearch() throws ServiceException,NotImplementedException;
+	
+	/**
+	 * Return a service used to research and manage on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI}
+	 *
+	 * @return Service used to research and manage on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.TracciaSDI}	
+	 * @throws ServiceException Exception thrown when an error occurs during processing of the request
+	 * @throws NotImplementedException Exception thrown when the method is not implemented
+	 */
+	public ITracciaSDIService getTracciaSDIService() throws ServiceException,NotImplementedException;
 	
 	
 	
@@ -111,9 +108,6 @@ public interface IServiceManager {
 	 * @throws NotImplementedException Exception thrown when the method is not implemented
 	 */
 	public IFatturaElettronicaService getFatturaElettronicaService() throws ServiceException,NotImplementedException;
-	
-	public IExtendedFatturaElettronicaServiceSearch getExtendedFatturaElettronicaServiceSearch() throws ServiceException, NotImplementedException;
-	
 	
 	/*
 	 =====================================================================================================================
@@ -346,6 +340,8 @@ public interface IServiceManager {
 	 * @throws NotImplementedException Exception thrown when the method is not implemented
 	 */
 	public IDipartimentoService getDipartimentoService() throws ServiceException,NotImplementedException;
+	
+	
 	
 	/*
 	 =====================================================================================================================
@@ -656,6 +652,9 @@ public interface IServiceManager {
 	 * @throws NotImplementedException Exception thrown when the method is not implemented
 	 */
 	public IPccRispedizioneService getPccRispedizioneService() throws ServiceException,NotImplementedException;
+	
+	
+	
 	/*
 	 =====================================================================================================================
 	 Services relating to the object with name:PccNotifica type:PccNotifica

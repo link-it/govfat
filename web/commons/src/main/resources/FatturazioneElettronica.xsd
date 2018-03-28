@@ -50,7 +50,7 @@
 
 	<xsd:simpleType name="CodiceDestinatarioType">
 		<xsd:restriction base="xsd:string">
-			<xsd:pattern value="[A-Z0-9]{6}"/>
+			<xsd:pattern value="[A-Z0-9]{6,7}"/>
 		</xsd:restriction>
 	</xsd:simpleType>
 
@@ -232,6 +232,8 @@
 			<xsd:enumeration value="OperazioneContabile_CO"/>
 			<xsd:enumeration value="OperazioneContabile_CS"/>
 			<xsd:enumeration value="OperazioneContabile_CCS"/>
+			<xsd:enumeration value="OperazioneContabile_CPS"/>
+			<xsd:enumeration value="OperazioneContabile_CSPC"/>
 			<xsd:enumeration value="OperazioneContabile_SP"/>
 			<xsd:enumeration value="OperazioneContabile_RF"/>
 			<xsd:enumeration value="OperazioneContabile_SC"/>
@@ -279,6 +281,8 @@
 	<xsd:simpleType name="FormatoTrasmissioneType">
 		<xsd:restriction base="xsd:string">
 			<xsd:length value="5"/>
+			<xsd:enumeration value="FPA12"/>
+			<xsd:enumeration value="FPR12"/>
 			<xsd:enumeration value="SDI11"/>
 			<xsd:enumeration value="SDI10"/>
 		</xsd:restriction>
@@ -1057,7 +1061,9 @@
 			<xsd:element name="stato" type="StatoType"/>
 			<xsd:element name="dataUltimaTrasmissione" type="xsd:dateTime"/>
 			<xsd:element minOccurs="0" name="dataUltimoTentativoEsito" type="xsd:dateTime"/>
+			<xsd:element minOccurs="0" name="codiciErrore" type="String1000LatinType"/>
 			<xsd:element default="false" name="rispedizione" type="xsd:boolean"/>
+			<xsd:element name="rispedizioneDopoQuery" type="xsd:boolean"/>
 			<xsd:element minOccurs="0" name="rispedizioneMaxTentativi" type="xsd:int"/>
 			<xsd:element minOccurs="0" name="rispedizioneProssimoTentativo" type="xsd:dateTime">
 				

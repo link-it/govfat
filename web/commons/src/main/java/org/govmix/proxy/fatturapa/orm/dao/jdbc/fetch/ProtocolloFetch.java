@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -62,10 +61,6 @@ public class ProtocolloFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "descrizione", Protocollo.model().DESCRIZIONE.getFieldType()));
 				setParameter(object, "setEndpoint", Protocollo.model().ENDPOINT.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "endpoint", Protocollo.model().ENDPOINT.getFieldType()));
-				setParameter(object, "setEndpointConsegnaLotto", Protocollo.model().ENDPOINT_CONSEGNA_LOTTO.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "endpoint_consegna_lotto", Protocollo.model().ENDPOINT_CONSEGNA_LOTTO.getFieldType()));
-				setParameter(object, "setEndpointRichiediProtocollo", Protocollo.model().ENDPOINT_RICHIEDI_PROTOCOLLO.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "endpoint_richiedi_protocollo", Protocollo.model().ENDPOINT_RICHIEDI_PROTOCOLLO.getFieldType()));
 				return object;
 			}
 			
@@ -94,10 +89,6 @@ public class ProtocolloFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"descrizione"));
 				setParameter(object, "setEndpoint", Protocollo.model().ENDPOINT.getFieldType(),
 					this.getObjectFromMap(map,"endpoint"));
-				setParameter(object, "setEndpointConsegnaLotto", Protocollo.model().ENDPOINT_CONSEGNA_LOTTO.getFieldType(),
-					this.getObjectFromMap(map,"endpointConsegnaLotto"));
-				setParameter(object, "setEndpointRichiediProtocollo", Protocollo.model().ENDPOINT_RICHIEDI_PROTOCOLLO.getFieldType(),
-					this.getObjectFromMap(map,"endpointRichiediProtocollo"));
 				return object;
 			}
 			

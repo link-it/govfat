@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,9 +20,6 @@
  */
 package org.govmix.proxy.fatturapa.web.timers;
 
-import it.gov.fatturapa.sdi.messaggi.v1_0.NotificaEsitoCommittenteType;
-import it.gov.fatturapa.sdi.messaggi.v1_0.constants.EsitoCommittenteType;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
@@ -32,7 +28,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFatturePassiveBD;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFattura;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaUtils;
@@ -40,6 +36,10 @@ import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.InvioNotifica;
 import org.govmix.proxy.fatturapa.web.commons.sonde.Sonda;
 import org.govmix.proxy.fatturapa.web.timers.utils.BatchProperties;
+import org.openspcoop2.generic_project.exception.ValidationException;
+
+import it.gov.fatturapa.sdi.messaggi.v1_0.NotificaEsitoCommittenteType;
+import it.gov.fatturapa.sdi.messaggi.v1_0.constants.EsitoCommittenteType;
 
 /**
  * Implementazione dell'interfaccia {@link TimerInserimentoFattura}
@@ -65,7 +65,7 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 			BatchProperties properties = BatchProperties.getInstance(); 
 
 			ConsegnaFattura consegnaFattura = new ConsegnaFattura(log, properties.isValidazioneDAOAbilitata(), connection, false);
-			LottoBD lottoBD = new LottoBD(log, connection, false);
+			LottoFatturePassiveBD lottoBD = new LottoFatturePassiveBD(log, connection, false);
 
 			Date limitDate = new Date();
 			this.log.info("Cerco lotti di fatture da inserire");
@@ -74,7 +74,7 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 			long countFattureElaborate = 0; 
 
 			if(countFatture > 0) {
-				connection.setAutoCommit(false);
+//				connection.setAutoCommit(false);
 
 				this.log.info("Gestisco ["+countFatture+"] lotti di fatture da inserire, ["+this.limit+"] alla volta");
 				List<LottoFatture> lstLotti = lottoBD.getLottiDaInserire(limitDate, 0, this.limit);
@@ -99,7 +99,7 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 								
 								lottoBD.setProcessato(idLotto);
 	
-							} catch(Exception e) {
+							} catch(ValidationException e) {
 								//NOTA: in caso di errore oltre che effettuare il rollback il lotto viene marcato come in errore, e viene inviata una notifica di rifiuto d'ufficio al fornitore
 								connection.rollback();
 								this.log.error("Errore durante l'inserimento del lotto con identificativo SdI ["+lotto.getIdentificativoSdi()+"]: "+e.getMessage(), e);
@@ -138,15 +138,15 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 
 						lstLotti = lottoBD.getLottiDaInserire(limitDate, 0, this.limit);
 						
-						connection.commit();
+//						connection.commit();
 						Sonda.getInstance().registraChiamataServizioOK(this.getTimerName());
 					} catch(Exception e) {
 						this.log.error("Errore durante l'esecuzione del batch InserimentoFattura: "+e.getMessage(), e);
-						connection.rollback();
+//						connection.rollback();
 					}
 				}
 				this.log.info("Gestiti ["+countFattureElaborate+"\\"+countFatture+"] lotti di fatture da inserire. Fine.");
-				connection.setAutoCommit(true);
+//				connection.setAutoCommit(true);
 			}
 
 		}catch (Throwable e) {
@@ -163,7 +163,7 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 	}
 
 	public void inserisciFattura(ConsegnaFattura consegnaFattura, LottoFatture lotto,
-			int posizione, String nomeFile, byte[] xml) throws Exception {
+			int posizione, String nomeFile, byte[] xml) throws Exception, ValidationException {
 		ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(lotto, posizione, nomeFile, xml);
 
 		try {

@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -90,6 +89,27 @@ public class DipartimentoFieldConverter extends AbstractSQLFieldConverter {
 				return "descrizione";
 			}
 		}
+		if(field.equals(Dipartimento.model().FATTURAZIONE_ATTIVA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".fatturazione_attiva";
+			}else{
+				return "fatturazione_attiva";
+			}
+		}
+		if(field.equals(Dipartimento.model().ID_PROCEDIMENTO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".id_procedimento";
+			}else{
+				return "id_procedimento";
+			}
+		}
+		if(field.equals(Dipartimento.model().FIRMA_AUTOMATICA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".firma_automatica";
+			}else{
+				return "firma_automatica";
+			}
+		}
 		if(field.equals(Dipartimento.model().ACCETTAZIONE_AUTOMATICA)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".accettazione_automatica";
@@ -159,6 +179,15 @@ public class DipartimentoFieldConverter extends AbstractSQLFieldConverter {
 			return this.toTable(Dipartimento.model().ENTE, returnAlias);
 		}
 		if(field.equals(Dipartimento.model().DESCRIZIONE)){
+			return this.toTable(Dipartimento.model(), returnAlias);
+		}
+		if(field.equals(Dipartimento.model().FATTURAZIONE_ATTIVA)){
+			return this.toTable(Dipartimento.model(), returnAlias);
+		}
+		if(field.equals(Dipartimento.model().ID_PROCEDIMENTO)){
+			return this.toTable(Dipartimento.model(), returnAlias);
+		}
+		if(field.equals(Dipartimento.model().FIRMA_AUTOMATICA)){
 			return this.toTable(Dipartimento.model(), returnAlias);
 		}
 		if(field.equals(Dipartimento.model().ACCETTAZIONE_AUTOMATICA)){

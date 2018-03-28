@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -113,7 +112,7 @@ public class ScadenzaDM extends BaseDataModel<Long, ScadenzaPccBean, IScadenzaSe
 				}
 			}
 		}catch (Exception e) {
-			log.error(e,e);
+			ScadenzaDM.log.error(e,e);
 		}
 
 	}
@@ -147,10 +146,10 @@ public class ScadenzaDM extends BaseDataModel<Long, ScadenzaPccBean, IScadenzaSe
 	@Override
 	public void setDataProvider(IScadenzaService dataProvider) {
 		try{
-			log.debug("set data provider ["+dataProvider+"]");
+			ScadenzaDM.log.debug("set data provider ["+dataProvider+"]");
 			this.initDataProvider(dataProvider);
 		}catch(Exception e){
-			log.error("Errore durante la init del data providere: "+ e.getMessage(),e);
+			ScadenzaDM.log.error("Errore durante la init del data providere: "+ e.getMessage(),e);
 		}
 	}
 

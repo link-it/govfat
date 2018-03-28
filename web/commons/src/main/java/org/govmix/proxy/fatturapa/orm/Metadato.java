@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -37,6 +36,7 @@ import java.io.Serializable;
  * <pre>
  * &lt;complexType name="Metadato">
  * 		&lt;sequence>
+ * 			&lt;element name="richiesta" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="nome" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="valore" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="1" maxOccurs="1"/>
  * 		&lt;/sequence>
@@ -53,6 +53,7 @@ import java.io.Serializable;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Metadato", 
   propOrder = {
+  	"richiesta",
   	"nome",
   	"valore"
   }
@@ -78,6 +79,18 @@ public class Metadato extends org.openspcoop2.utils.beans.BaseBean implements Se
 		this.id=new Long(-1);
   }
 
+  public boolean isRichiesta() {
+    return this.richiesta;
+  }
+
+  public boolean getRichiesta() {
+    return this.richiesta;
+  }
+
+  public void setRichiesta(boolean richiesta) {
+    this.richiesta = richiesta;
+  }
+
   public java.lang.String getNome() {
     return this.nome;
   }
@@ -100,6 +113,10 @@ public class Metadato extends org.openspcoop2.utils.beans.BaseBean implements Se
   private Long id;
 
 
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="boolean")
+  @XmlElement(name="richiesta",required=true,nillable=false)
+  protected boolean richiesta;
 
   @javax.xml.bind.annotation.XmlSchemaType(name="string")
   @XmlElement(name="nome",required=true,nillable=false)

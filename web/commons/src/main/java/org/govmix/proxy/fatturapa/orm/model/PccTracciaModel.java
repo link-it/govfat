@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -60,7 +59,9 @@ public class PccTracciaModel extends AbstractModel<PccTraccia> {
 		this.STATO = new Field("stato",java.lang.String.class,"PccTraccia",PccTraccia.class);
 		this.DATA_ULTIMA_TRASMISSIONE = new Field("dataUltimaTrasmissione",java.util.Date.class,"PccTraccia",PccTraccia.class);
 		this.DATA_ULTIMO_TENTATIVO_ESITO = new Field("dataUltimoTentativoEsito",java.util.Date.class,"PccTraccia",PccTraccia.class);
+		this.CODICI_ERRORE = new Field("codiciErrore",java.lang.String.class,"PccTraccia",PccTraccia.class);
 		this.RISPEDIZIONE = new Field("rispedizione",boolean.class,"PccTraccia",PccTraccia.class);
+		this.RISPEDIZIONE_DOPO_QUERY = new Field("rispedizioneDopoQuery",boolean.class,"PccTraccia",PccTraccia.class);
 		this.RISPEDIZIONE_MAX_TENTATIVI = new Field("rispedizioneMaxTentativi",int.class,"PccTraccia",PccTraccia.class);
 		this.RISPEDIZIONE_PROSSIMO_TENTATIVO = new Field("rispedizioneProssimoTentativo",java.util.Date.class,"PccTraccia",PccTraccia.class);
 		this.RISPEDIZIONE_NUMERO_TENTATIVI = new Field("rispedizioneNumeroTentativi",int.class,"PccTraccia",PccTraccia.class);
@@ -91,7 +92,9 @@ public class PccTracciaModel extends AbstractModel<PccTraccia> {
 		this.STATO = new ComplexField(father,"stato",java.lang.String.class,"PccTraccia",PccTraccia.class);
 		this.DATA_ULTIMA_TRASMISSIONE = new ComplexField(father,"dataUltimaTrasmissione",java.util.Date.class,"PccTraccia",PccTraccia.class);
 		this.DATA_ULTIMO_TENTATIVO_ESITO = new ComplexField(father,"dataUltimoTentativoEsito",java.util.Date.class,"PccTraccia",PccTraccia.class);
+		this.CODICI_ERRORE = new ComplexField(father,"codiciErrore",java.lang.String.class,"PccTraccia",PccTraccia.class);
 		this.RISPEDIZIONE = new ComplexField(father,"rispedizione",boolean.class,"PccTraccia",PccTraccia.class);
+		this.RISPEDIZIONE_DOPO_QUERY = new ComplexField(father,"rispedizioneDopoQuery",boolean.class,"PccTraccia",PccTraccia.class);
 		this.RISPEDIZIONE_MAX_TENTATIVI = new ComplexField(father,"rispedizioneMaxTentativi",int.class,"PccTraccia",PccTraccia.class);
 		this.RISPEDIZIONE_PROSSIMO_TENTATIVO = new ComplexField(father,"rispedizioneProssimoTentativo",java.util.Date.class,"PccTraccia",PccTraccia.class);
 		this.RISPEDIZIONE_NUMERO_TENTATIVI = new ComplexField(father,"rispedizioneNumeroTentativi",int.class,"PccTraccia",PccTraccia.class);
@@ -137,7 +140,11 @@ public class PccTracciaModel extends AbstractModel<PccTraccia> {
 	 
 	public IField DATA_ULTIMO_TENTATIVO_ESITO = null;
 	 
+	public IField CODICI_ERRORE = null;
+	 
 	public IField RISPEDIZIONE = null;
+	 
+	public IField RISPEDIZIONE_DOPO_QUERY = null;
 	 
 	public IField RISPEDIZIONE_MAX_TENTATIVI = null;
 	 

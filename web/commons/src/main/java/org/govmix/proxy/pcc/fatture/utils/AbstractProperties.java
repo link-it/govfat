@@ -19,7 +19,8 @@ public abstract class AbstractProperties {
 	private PropertiesReader externalReader;
 	private static final String PATH_PROP_NAME = "properties.path"; 
 	protected Logger log;
-
+	private String externalResourcePath;
+	
 	public AbstractProperties(String path) throws RuntimeException {
 		this(LoggerManager.getBatchStartupLogger(), path); //TODO logger corretto
 	}
@@ -34,6 +35,7 @@ public abstract class AbstractProperties {
 			this.reader = getPropertiesReader(is, path);
 			String externalResourcePath = getProperty(PATH_PROP_NAME, false);
 			if(externalResourcePath != null) {
+				this.externalResourcePath = externalResourcePath; 
 				InputStream isExternal = new FileInputStream(new File(externalResourcePath + "/proxyFatturaPA.properties"));
 				this.externalReader = getPropertiesReader(isExternal, externalResourcePath);
 			} else {
@@ -107,6 +109,12 @@ public abstract class AbstractProperties {
 
 	public PropertiesReader getExternalReader() {
 		return externalReader;
+	}
+	public String getExternalResourcePath() {
+		return externalResourcePath;
+	}
+	public void setExternalResourcePath(String externalResourcePath) {
+		this.externalResourcePath = externalResourcePath;
 	}
 
 }

@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,43 +20,37 @@
  */
 package org.govmix.proxy.fatturapa.orm.dao.jdbc;
 
-import java.util.List;
+import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import java.sql.Connection;
-
 import org.apache.log4j.Logger;
-
-import org.openspcoop2.utils.sql.ISQLQueryObject;
-
-import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
+import org.govmix.proxy.fatturapa.orm.IdLotto;
+import org.govmix.proxy.fatturapa.orm.LottoFatture;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.LottoFattureFieldConverter;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.LottoFattureFetch;
+import org.openspcoop2.generic_project.beans.CustomField;
+import org.openspcoop2.generic_project.beans.FunctionField;
+import org.openspcoop2.generic_project.beans.IField;
+import org.openspcoop2.generic_project.beans.InUse;
+import org.openspcoop2.generic_project.beans.NonNegativeNumber;
+import org.openspcoop2.generic_project.beans.Union;
+import org.openspcoop2.generic_project.beans.UnionExpression;
+import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithId;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCPaginatedExpression;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
 import org.openspcoop2.generic_project.dao.jdbc.utils.IJDBCFetch;
 import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject;
-import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithId;
-import org.govmix.proxy.fatturapa.orm.IdLotto;
-import org.openspcoop2.generic_project.utils.UtilsTemplate;
-import org.openspcoop2.generic_project.beans.CustomField;
-import org.openspcoop2.generic_project.beans.InUse;
-import org.openspcoop2.generic_project.beans.IField;
-import org.openspcoop2.generic_project.beans.NonNegativeNumber;
-import org.openspcoop2.generic_project.beans.UnionExpression;
-import org.openspcoop2.generic_project.beans.Union;
-import org.openspcoop2.generic_project.beans.FunctionField;
 import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
-import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
-import org.openspcoop2.generic_project.dao.jdbc.JDBCPaginatedExpression;
-
-import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.LottoFattureFieldConverter;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.LottoFattureFetch;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCServiceManager;
-
-import org.govmix.proxy.fatturapa.orm.LottoFatture;
+import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
+import org.openspcoop2.generic_project.utils.UtilsTemplate;
+import org.openspcoop2.utils.sql.ISQLQueryObject;
 
 /**     
  * JDBCLottoFattureServiceSearchImpl
@@ -496,6 +489,13 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE_FISCALE,true));
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().CODICE_DESTINATARIO,true));
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().XML,true));
+		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().FATTURAZIONE_ATTIVA,true));
+		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA,true));
+		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().TIPI_COMUNICAZIONE,true));
+		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_ULTIMA_ELABORAZIONE,true));
+		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DETTAGLIO_ELABORAZIONE,true));
+		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_PROSSIMA_ELABORAZIONE,true));
+		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().TENTATIVI_CONSEGNA,true));
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_RICEZIONE,true));
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().STATO_INSERIMENTO,true));
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().STATO_CONSEGNA,true));
@@ -548,6 +548,12 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 	}
 	
 	private void _join(IExpression expression, ISQLQueryObject sqlQueryObject) throws NotImplementedException, ServiceException, Exception{
+		if(expression.inUseModel(LottoFatture.model().DIPARTIMENTO,false)){
+			String tableName1 = this.getLottoFattureFieldConverter().toAliasTable(LottoFatture.model());
+			String tableName2 = this.getLottoFattureFieldConverter().toAliasTable(LottoFatture.model().DIPARTIMENTO);
+			sqlQueryObject.addWhereCondition(tableName1+".codice_destinatario="+tableName2+".codice");
+		}
+
 	}
 	
 	protected java.util.List<Object> _getRootTablePrimaryKeyValues(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdLotto id) throws NotFoundException, ServiceException, NotImplementedException, Exception{

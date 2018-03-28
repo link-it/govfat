@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -82,6 +81,8 @@ public class FatturaElettronicaModel extends AbstractModel<FatturaElettronica> {
 		this.ID_DECORRENZA_TERMINI = new org.govmix.proxy.fatturapa.orm.model.IdNotificaDecorrenzaTerminiModel(new Field("idDecorrenzaTermini",org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini.class,"FatturaElettronica",FatturaElettronica.class));
 		this.ID_ESITO_CONTABILIZZAZIONE = new org.govmix.proxy.fatturapa.orm.model.IdTrasmissioneEsitoModel(new Field("idEsitoContabilizzazione",org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito.class,"FatturaElettronica",FatturaElettronica.class));
 		this.ID_ESITO_SCADENZA = new org.govmix.proxy.fatturapa.orm.model.IdTrasmissioneEsitoModel(new Field("idEsitoScadenza",org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito.class,"FatturaElettronica",FatturaElettronica.class));
+		this.DIPARTIMENTO = new org.govmix.proxy.fatturapa.orm.model.DipartimentoModel(new Field("Dipartimento",org.govmix.proxy.fatturapa.orm.Dipartimento.class,"FatturaElettronica",FatturaElettronica.class));
+		this.LOTTO_FATTURE = new org.govmix.proxy.fatturapa.orm.model.LottoFattureModel(new Field("LottoFatture",org.govmix.proxy.fatturapa.orm.LottoFatture.class,"FatturaElettronica",FatturaElettronica.class));
 	
 	}
 	
@@ -128,6 +129,8 @@ public class FatturaElettronicaModel extends AbstractModel<FatturaElettronica> {
 		this.ID_DECORRENZA_TERMINI = new org.govmix.proxy.fatturapa.orm.model.IdNotificaDecorrenzaTerminiModel(new ComplexField(father,"idDecorrenzaTermini",org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini.class,"FatturaElettronica",FatturaElettronica.class));
 		this.ID_ESITO_CONTABILIZZAZIONE = new org.govmix.proxy.fatturapa.orm.model.IdTrasmissioneEsitoModel(new ComplexField(father,"idEsitoContabilizzazione",org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito.class,"FatturaElettronica",FatturaElettronica.class));
 		this.ID_ESITO_SCADENZA = new org.govmix.proxy.fatturapa.orm.model.IdTrasmissioneEsitoModel(new ComplexField(father,"idEsitoScadenza",org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito.class,"FatturaElettronica",FatturaElettronica.class));
+		this.DIPARTIMENTO = new org.govmix.proxy.fatturapa.orm.model.DipartimentoModel(new ComplexField(father,"Dipartimento",org.govmix.proxy.fatturapa.orm.Dipartimento.class,"FatturaElettronica",FatturaElettronica.class));
+		this.LOTTO_FATTURE = new org.govmix.proxy.fatturapa.orm.model.LottoFattureModel(new ComplexField(father,"LottoFatture",org.govmix.proxy.fatturapa.orm.LottoFatture.class,"FatturaElettronica",FatturaElettronica.class));
 	
 	}
 	
@@ -210,6 +213,10 @@ public class FatturaElettronicaModel extends AbstractModel<FatturaElettronica> {
 	public org.govmix.proxy.fatturapa.orm.model.IdTrasmissioneEsitoModel ID_ESITO_CONTABILIZZAZIONE = null;
 	 
 	public org.govmix.proxy.fatturapa.orm.model.IdTrasmissioneEsitoModel ID_ESITO_SCADENZA = null;
+	 
+	public org.govmix.proxy.fatturapa.orm.model.DipartimentoModel DIPARTIMENTO = null;
+	 
+	public org.govmix.proxy.fatturapa.orm.model.LottoFattureModel LOTTO_FATTURE = null;
 	 
 
 	@Override

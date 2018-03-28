@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -288,25 +287,30 @@ public class UtenteService extends BaseService<UtenteSearchForm> implements IUte
 
 					String[] tokens = valore.split(" ");
 
-					if(tokens != null && tokens.length > 0){
+//					if(tokens != null && tokens.length > 0){
+					if(tokens != null){
+						if(tokens.length > 1){
 
-						// Primo Cognome
-						expr.ilike(Utente.model().COGNOME,	tokens[0].toLowerCase(), LikeMode.START);
-						expr.and();
-						// Ultimo Nome
-						expr.ilike(Utente.model().NOME,	tokens[(tokens.length -1)].toLowerCase(), LikeMode.END);
-
-						// Or di tutti le parole intermedie
-						if(tokens.length > 2){
-							IExpression orExpr = this.utenteSearchDao.newExpression();
-							for (int i = 1; i < tokens.length-1; i++) {
-								orExpr.ilike(Utente.model().NOME,	tokens[i].toLowerCase(), LikeMode.ANYWHERE);
-								orExpr.ilike(Utente.model().COGNOME,	tokens[i].toLowerCase(), LikeMode.ANYWHERE);
-								orExpr.or();
+							// Primo Cognome
+							expr.ilike(Utente.model().COGNOME,	tokens[0].toLowerCase(), LikeMode.START);
+							expr.and();
+							// Ultimo Nome
+							expr.ilike(Utente.model().NOME,	tokens[(tokens.length -1)].toLowerCase(), LikeMode.END);
+	
+							// Or di tutti le parole intermedie
+							if(tokens.length > 2){
+								IExpression orExpr = this.utenteSearchDao.newExpression();
+								for (int i = 1; i < tokens.length-1; i++) {
+									orExpr.ilike(Utente.model().NOME,	tokens[i].toLowerCase(), LikeMode.ANYWHERE);
+									orExpr.ilike(Utente.model().COGNOME,	tokens[i].toLowerCase(), LikeMode.ANYWHERE);
+									orExpr.or();
+								}
+								expr.and(orExpr);
 							}
-							expr.and(orExpr);
+						} else if(tokens.length > 0){
+							// Cerchiamo in or su cognome e nome
+							expr.ilike(Utente.model().COGNOME,	tokens[0].toLowerCase(), LikeMode.ANYWHERE).or().ilike(Utente.model().NOME, tokens[0].toLowerCase(), LikeMode.ANYWHERE);
 						}
-
 					}
 				}
 
@@ -349,8 +353,7 @@ public class UtenteService extends BaseService<UtenteSearchForm> implements IUte
 
 			if(tokens != null && tokens.length > 0){
 				for (int i = 0; i < tokens.length; i++) {
-					orExpr.ilike(Utente.model().NOME,	tokens[i].toLowerCase(), LikeMode.ANYWHERE);
-					orExpr.ilike(Utente.model().COGNOME,	tokens[i].toLowerCase(), LikeMode.ANYWHERE);
+					orExpr.ilike(Utente.model().NOME, tokens[i].toLowerCase(), LikeMode.ANYWHERE).or().ilike(Utente.model().COGNOME, tokens[i].toLowerCase(), LikeMode.ANYWHERE);
 					orExpr.or();
 				}
 			}

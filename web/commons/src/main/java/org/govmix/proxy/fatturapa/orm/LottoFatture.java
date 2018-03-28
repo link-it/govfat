@@ -2,13 +2,12 @@
  * ProxyFatturaPA - Gestione del formato Fattura Elettronica 
  * http://www.gov4j.it/fatturapa
  * 
- * Copyright (c) 2014-2016 Link.it srl (http://link.it). 
- * Copyright (c) 2014-2016 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+ * Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+ * Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -30,6 +29,7 @@ import javax.xml.bind.annotation.XmlType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoArchivioInvioFatturaType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
+import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoInserimentoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import java.io.Serializable;
@@ -67,6 +67,13 @@ import java.io.Serializable;
  * 			&lt;element name="terzoIntermediarioOSoggettoEmittenteCodiceFiscale" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="codiceDestinatario" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="xml" type="{http://www.w3.org/2001/XMLSchema}base64Binary" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="fatturazioneAttiva" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="statoElaborazioneInUscita" type="{http://www.govmix.org/proxy/fatturapa/orm}StatoElaborazioneType" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="tipiComunicazione" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="dataUltimaElaborazione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="dettaglioElaborazione" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="dataProssimaElaborazione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="tentativiConsegna" type="{http://www.w3.org/2001/XMLSchema}nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="dataRicezione" type="{http://www.govmix.org/proxy/fatturapa/orm}date" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="statoInserimento" type="{http://www.govmix.org/proxy/fatturapa/orm}StatoInserimentoType" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="statoConsegna" type="{http://www.govmix.org/proxy/fatturapa/orm}StatoConsegnaType" minOccurs="1" maxOccurs="1"/>
@@ -76,6 +83,7 @@ import java.io.Serializable;
  * 			&lt;element name="dataProtocollazione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="protocollo" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="id-egov" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="Dipartimento" type="{http://www.govmix.org/proxy/fatturapa/orm}Dipartimento" minOccurs="0" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -115,6 +123,13 @@ import java.io.Serializable;
   	"terzoIntermediarioOSoggettoEmittenteCodiceFiscale",
   	"codiceDestinatario",
   	"xml",
+  	"fatturazioneAttiva",
+  	"statoElaborazioneInUscita",
+  	"tipiComunicazione",
+  	"dataUltimaElaborazione",
+  	"dettaglioElaborazione",
+  	"dataProssimaElaborazione",
+  	"tentativiConsegna",
   	"dataRicezione",
   	"statoInserimento",
   	"statoConsegna",
@@ -123,7 +138,8 @@ import java.io.Serializable;
   	"statoProtocollazione",
   	"dataProtocollazione",
   	"protocollo",
-  	"idEgov"
+  	"idEgov",
+  	"dipartimento"
   }
 )
 
@@ -377,6 +393,78 @@ public class LottoFatture extends org.openspcoop2.utils.beans.BaseBean implement
     this.xml = xml;
   }
 
+  public boolean isFatturazioneAttiva() {
+    return this.fatturazioneAttiva;
+  }
+
+  public boolean getFatturazioneAttiva() {
+    return this.fatturazioneAttiva;
+  }
+
+  public void setFatturazioneAttiva(boolean fatturazioneAttiva) {
+    this.fatturazioneAttiva = fatturazioneAttiva;
+  }
+
+  public void set_value_statoElaborazioneInUscita(String value) {
+    this.statoElaborazioneInUscita = (StatoElaborazioneType) StatoElaborazioneType.toEnumConstantFromString(value);
+  }
+
+  public String get_value_statoElaborazioneInUscita() {
+    if(this.statoElaborazioneInUscita == null){
+    	return null;
+    }else{
+    	return this.statoElaborazioneInUscita.toString();
+    }
+  }
+
+  public org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType getStatoElaborazioneInUscita() {
+    return this.statoElaborazioneInUscita;
+  }
+
+  public void setStatoElaborazioneInUscita(org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType statoElaborazioneInUscita) {
+    this.statoElaborazioneInUscita = statoElaborazioneInUscita;
+  }
+
+  public java.lang.String getTipiComunicazione() {
+    return this.tipiComunicazione;
+  }
+
+  public void setTipiComunicazione(java.lang.String tipiComunicazione) {
+    this.tipiComunicazione = tipiComunicazione;
+  }
+
+  public java.util.Date getDataUltimaElaborazione() {
+    return this.dataUltimaElaborazione;
+  }
+
+  public void setDataUltimaElaborazione(java.util.Date dataUltimaElaborazione) {
+    this.dataUltimaElaborazione = dataUltimaElaborazione;
+  }
+
+  public java.lang.String getDettaglioElaborazione() {
+    return this.dettaglioElaborazione;
+  }
+
+  public void setDettaglioElaborazione(java.lang.String dettaglioElaborazione) {
+    this.dettaglioElaborazione = dettaglioElaborazione;
+  }
+
+  public java.util.Date getDataProssimaElaborazione() {
+    return this.dataProssimaElaborazione;
+  }
+
+  public void setDataProssimaElaborazione(java.util.Date dataProssimaElaborazione) {
+    this.dataProssimaElaborazione = dataProssimaElaborazione;
+  }
+
+  public java.lang.Integer getTentativiConsegna() {
+    return this.tentativiConsegna;
+  }
+
+  public void setTentativiConsegna(java.lang.Integer tentativiConsegna) {
+    this.tentativiConsegna = tentativiConsegna;
+  }
+
   public java.util.Date getDataRicezione() {
     return this.dataRicezione;
   }
@@ -483,6 +571,14 @@ public class LottoFatture extends org.openspcoop2.utils.beans.BaseBean implement
 
   public void setIdEgov(java.lang.String idEgov) {
     this.idEgov = idEgov;
+  }
+
+  public Dipartimento getDipartimento() {
+    return this.dipartimento;
+  }
+
+  public void setDipartimento(Dipartimento dipartimento) {
+    this.dipartimento = dipartimento;
   }
 
   private static final long serialVersionUID = 1L;
@@ -624,6 +720,38 @@ public class LottoFatture extends org.openspcoop2.utils.beans.BaseBean implement
   @XmlElement(name="xml",required=true,nillable=false)
   protected byte[] xml;
 
+  @javax.xml.bind.annotation.XmlSchemaType(name="boolean")
+  @XmlElement(name="fatturazioneAttiva",required=true,nillable=false)
+  protected boolean fatturazioneAttiva;
+
+  @XmlTransient
+  protected java.lang.String _value_statoElaborazioneInUscita;
+
+  @XmlElement(name="statoElaborazioneInUscita",required=false,nillable=false)
+  protected StatoElaborazioneType statoElaborazioneInUscita;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @XmlElement(name="tipiComunicazione",required=false,nillable=false)
+  protected java.lang.String tipiComunicazione;
+
+  @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.DateTime2String.class)
+  @javax.xml.bind.annotation.XmlSchemaType(name="dateTime")
+  @XmlElement(name="dataUltimaElaborazione",required=false,nillable=false,type=java.lang.String.class)
+  protected java.util.Date dataUltimaElaborazione;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @XmlElement(name="dettaglioElaborazione",required=false,nillable=false)
+  protected java.lang.String dettaglioElaborazione;
+
+  @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.DateTime2String.class)
+  @javax.xml.bind.annotation.XmlSchemaType(name="dateTime")
+  @XmlElement(name="dataProssimaElaborazione",required=false,nillable=false,type=java.lang.String.class)
+  protected java.util.Date dataProssimaElaborazione;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="nonNegativeInteger")
+  @XmlElement(name="tentativiConsegna",required=true,nillable=false)
+  protected java.lang.Integer tentativiConsegna;
+
   @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.Date2String.class)
   @javax.xml.bind.annotation.XmlSchemaType(name="date")
   @XmlElement(name="dataRicezione",required=true,nillable=false,type=java.lang.String.class)
@@ -668,5 +796,8 @@ public class LottoFatture extends org.openspcoop2.utils.beans.BaseBean implement
   @javax.xml.bind.annotation.XmlSchemaType(name="string")
   @XmlElement(name="id-egov",required=false,nillable=false)
   protected java.lang.String idEgov;
+
+  @XmlElement(name="Dipartimento",required=false,nillable=false)
+  protected Dipartimento dipartimento;
 
 }
