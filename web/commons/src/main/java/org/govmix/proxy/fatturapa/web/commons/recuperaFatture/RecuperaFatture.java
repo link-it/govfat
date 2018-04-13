@@ -83,7 +83,6 @@ public class RecuperaFatture {
 		filter.setModalitaPush(false);
 		filter.setOffset(0);
 		filter.setLimit(limit);
-		filter.setDataRicezioneMin(new Date());
 
 		List<FatturaElettronica> lst = this.fatturaPassivaBD.findAll(filter);
 		
