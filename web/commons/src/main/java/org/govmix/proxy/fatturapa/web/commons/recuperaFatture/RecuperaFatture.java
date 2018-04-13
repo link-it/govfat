@@ -23,7 +23,6 @@ package org.govmix.proxy.fatturapa.web.commons.recuperaFatture;
 import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
