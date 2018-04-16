@@ -80,6 +80,8 @@ public class RecuperaFatture {
 		FatturaPassivaFilter filter = this.fatturaPassivaBD.newFilter();
 		filter.setUtente(utente);
 		filter.setModalitaPush(false);
+		filter.setStatiConsegna(Arrays.asList(StatoConsegnaType.NON_CONSEGNATA));
+		
 		filter.setOffset(0);
 		filter.setLimit(limit);
 

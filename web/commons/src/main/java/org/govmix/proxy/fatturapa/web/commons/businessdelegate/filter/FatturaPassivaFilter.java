@@ -56,7 +56,7 @@ public class FatturaPassivaFilter extends FatturaFilter {
 			if(this.daAccettareAutomaticamente != null && this.daAccettareAutomaticamente) {
 				expression.equals(FatturaElettronica.model().DIPARTIMENTO.ACCETTAZIONE_AUTOMATICA, true);
 				expression.isNull(FatturaElettronica.model().ESITO);
-				expression.isNotNull(new CustomField("id_notifica_decorrenza_termini", Long.class, "id_notifica_decorrenza_termini", this.getRootTable()));
+				expression.isNull(new CustomField("id_notifica_decorrenza_termini", Long.class, "id_notifica_decorrenza_termini", this.getRootTable()));
 			}
 			
 			if(this.esitoNull) {
