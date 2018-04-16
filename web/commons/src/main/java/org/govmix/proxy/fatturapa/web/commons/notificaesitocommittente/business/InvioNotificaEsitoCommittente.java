@@ -75,6 +75,7 @@ public class InvioNotificaEsitoCommittente {
 			connection = DAOFactory.getInstance().getConnection();
 			connection.setAutoCommit(false);
 			this.invia(new NotificaEsitoCommittenteConverter(esito, idUtente), connection);
+			connection.commit();
 		} catch(Exception e) {
 			this.log.error("Errore durante l'invio della Notifica di Esito Committente: "+e.getMessage(), e);
 			if(connection != null){
@@ -121,7 +122,6 @@ public class InvioNotificaEsitoCommittente {
 
 		EsitoType esito = notificaEsitoCommittente.getEsito().equals(EsitoCommittenteType.EC01) ? EsitoType.IN_ELABORAZIONE_ACCETTATO : EsitoType.IN_ELABORAZIONE_RIFIUTATO;
 		fatturaElettronicaBD.updateEsito(notificaEsitoCommittente.getIdFattura(), esito);
-		connection.commit();
 	}
 
 }
