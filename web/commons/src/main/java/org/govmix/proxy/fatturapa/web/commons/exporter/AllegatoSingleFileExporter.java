@@ -43,7 +43,6 @@ import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IPaginatedExpression;
 import org.openspcoop2.generic_project.expression.SortOrder;
-import org.openspcoop2.utils.UtilsException;
 import org.openspcoop2.utils.resources.MimeTypes;
 
 public class AllegatoSingleFileExporter extends	AbstractSingleFileExporter<AllegatoFattura, Long> {
@@ -155,33 +154,53 @@ public class AllegatoSingleFileExporter extends	AbstractSingleFileExporter<Alleg
 
 	@Override
 	public String getRawExtension(AllegatoFattura object) {
-		
-		int endIndex = object.getNomeAttachment().lastIndexOf(".");
-
-		if(endIndex > 0) {
-			return object.getNomeAttachment().substring(endIndex + 1);
-		} else {
+		try {
 			String formatoAttachment = object.getFormatoAttachment();
-	
+			
 			if(formatoAttachment == null)
-				return null;
+				formatoAttachment = "bin";//"application/octet-stream";
 			
-			formatoAttachment = formatoAttachment.replaceAll("\\.", "");
-			
-			try {
-				String ext = MimeTypes.getInstance().getExtension(formatoAttachment);
-				if(ext == null){
-					String mimeType = MimeTypes.getInstance().getMimeType(formatoAttachment);
+			String ext = MimeTypes.getInstance().getExtension(formatoAttachment);
 	
-					if(mimeType!= null)
-						ext = MimeTypes.getInstance().getExtension(mimeType);
-				}
-				return ext;
+			if(ext == null){
+				String mimeType = MimeTypes.getInstance().getMimeType(formatoAttachment);
 	
-			} catch (UtilsException e) {
-				return null;
+				if(mimeType!= null)
+					ext = MimeTypes.getInstance().getExtension(mimeType);
 			}
+			return ext;
+		} catch(Exception e) {
+			return "bin";
 		}
+//		int endIndex = object.getNomeAttachment().lastIndexOf(".");
+//
+//		if(endIndex > 0) {
+//			return object.getNomeAttachment().substring(endIndex + 1);
+//		} else {
+//			String formatoAttachment = object.getFormatoAttachment();
+//	
+//			if(formatoAttachment == null)
+//				return "bin";
+//			
+//			formatoAttachment = formatoAttachment.replaceAll("\\.", "");
+//			
+//			try {
+//				String ext = MimeTypes.getInstance().getExtension(formatoAttachment);
+//				if(ext == null){
+//					String mimeType = MimeTypes.getInstance().getMimeType(formatoAttachment);
+//	
+//					if(mimeType!= null)
+//						ext = MimeTypes.getInstance().getExtension(mimeType);
+//				}
+//				if(ext != null)
+//					return ext;
+//				else
+//					return "bin";
+//	
+//			} catch (UtilsException e) {
+//				return "bin";
+//			}
+//		}
 	}
 
 	@Override
