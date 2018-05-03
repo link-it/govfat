@@ -50,6 +50,16 @@
 		</style>
 		<script type="text/javascript">
 		//<![CDATA[
+			if(!(windows.console && console.log)){
+				console = {
+					log: function(){},
+					debug: function(){},
+					info: function(){},
+					warn: function(){},
+					error: function(){}
+				};
+			}
+			
 			function aggiungiFile(file){
 				//console.log(file);
 				if(!file.error){
@@ -64,7 +74,7 @@
 			}
 			
 			function cancellaFile(data){
-				console.log(data);
+// 				console.log(data);
 				if(data.url){
 					var idx = data.url.indexOf('=');
 					if(idx > -1) {
