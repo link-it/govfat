@@ -222,32 +222,32 @@ $(function () {
     
     // evento scelta file
     $('#fileupload').bind('fileuploadadd', function (e, data) {
-        console.log('add File scelto');
+      //  console.log('add File scelto');
     });
     
     // evento upload ok
     $('#fileupload').bind('fileuploaddone', function (e, data) {
     	var file = data.jqXHR.responseJSON.files[0];
-    	console.log('upload done');
+    //	console.log('upload done');
     	parent.window.aggiungiFile(file);
     });
     
     // evento upload fail
     $('#fileupload').bind('fileuploadfail', function (e, data) {
-        console.log('upload fail');
+     //   console.log('upload fail');
         parent.window.endUploadFail();
     });
     
  // evento cancellazione
     $('#fileupload').bind('fileuploaddestroyed', function (e, data) {
-    	console.log('cancellazione file');
+    //	console.log('cancellazione file');
     	parent.window.cancellaFile(data);
     	parent.window.endDeleteOk();
     });
  
     // evento upload start
     $('#fileupload').bind('fileuploadstop', function (e, data) {
-        console.log('stop uploads');
+     //   console.log('stop uploads');
         parent.window.stopUploads();
         
         setTimeout(fixVistaChrome, 200);
@@ -261,7 +261,7 @@ $(function () {
     
     // evento upload start
     $('#fileupload').bind('fileuploadstart', function (e, data) {
-        console.log('start uploads');
+     //   console.log('start uploads');
         parent.window.startUploads();
     });
     
