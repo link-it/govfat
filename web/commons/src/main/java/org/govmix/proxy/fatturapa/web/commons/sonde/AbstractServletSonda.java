@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.apache.soap.encoding.soapenc.Base64;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
 import org.govmix.proxy.fatturapa.web.commons.sonde.RisultatoSonda.STATO;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
@@ -39,13 +40,13 @@ public abstract class AbstractServletSonda extends HttpServlet {
 	
 	protected Logger log;
 	protected FatturaBD fatturaElettronicaBD;
-	private List<String> urls;
+	private List<InvocationUrlInfo> urls;
 
 	public AbstractServletSonda() throws Exception {
 		this(null);
 	}
 
-	public AbstractServletSonda(List<String> urls) throws Exception {
+	public AbstractServletSonda(List<InvocationUrlInfo> urls) throws Exception {
 		this.urls = urls;
 		this.fatturaElettronicaBD = new FatturaBD();
 		this.log = LoggerManager.getSondaLogger();
@@ -80,12 +81,20 @@ public abstract class AbstractServletSonda extends HttpServlet {
 	}
 	
 
-	protected void checkURL(String url) throws Exception {
-		HttpURLConnection conn = (HttpURLConnection) (new URL(url).openConnection());
+	protected void checkURL(InvocationUrlInfo urlInfo) throws Exception {
+		HttpURLConnection conn = (HttpURLConnection) (new URL(urlInfo.getUrl()).openConnection());
+		
+		if(urlInfo.getUsername() !=null && !urlInfo.getUsername().isEmpty() && 
+				urlInfo.getPassword() !=null && !urlInfo.getPassword().isEmpty() ) {
+			String auth =  urlInfo.getUsername() + ":" +  urlInfo.getPassword(); 
+			String authentication = "Basic " + Base64.encode(auth.getBytes());
+			conn.setRequestProperty("Authorization", authentication);
+		}
+		
 		conn.setDoInput(true);
 		int rc = conn.getResponseCode();
 		if(rc > 299) {
-			throw new SondaException("URL["+url+"] non disponibile. Response Code["+rc+"]");
+			throw new SondaException("URL["+urlInfo.getUrl()+"] non disponibile. Response Code["+rc+"]");
 		}
 			
 		return;
@@ -99,7 +108,7 @@ public abstract class AbstractServletSonda extends HttpServlet {
 			}
 			
 			if(this.urls != null && !this.urls.isEmpty()) {
-				for(String url: this.urls)
+				for(InvocationUrlInfo url: this.urls)
 					checkURL(url);
 			}
 			
