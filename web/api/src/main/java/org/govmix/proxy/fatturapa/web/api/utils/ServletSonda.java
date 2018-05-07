@@ -1,4 +1,4 @@
-package org.govmix.pcc.utils;
+package org.govmix.proxy.fatturapa.web.api.utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +13,8 @@ public class ServletSonda extends org.govmix.proxy.fatturapa.web.commons.sonde.S
 
 	private static List<String> getUrlList() {
 		List<String> urls = new ArrayList<String>();
-//		urls.add(PccProperties.getInstance().getUrlWsdlFattureWS());
-//		urls.add(PccProperties.getInstance().getUrlWsdlTracceWS());
+//		urls.add(PccProperties.getInstance().getUrlWadlEndpointEnte()); TODO enable
+		urls.add(PccProperties.getInstance().getUrlWadlEndpointPdd());
 		return urls;
 	}
 
