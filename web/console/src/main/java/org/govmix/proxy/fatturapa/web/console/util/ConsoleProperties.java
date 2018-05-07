@@ -47,6 +47,16 @@ public class ConsoleProperties extends AbstractProperties {
 	private String proxyFatturaPASondaUrl;
 	private String timersProxyFatturaPASondaUrl;
 
+	private String proxyPccSondaUser;
+	private String timersProxyPccSondaUser;
+	private String proxyFatturaPASondaUser;
+	private String timersProxyFatturaPASondaUser;
+
+	private String proxyPccSondaPassword;
+	private String timersProxyPccSondaPassword;
+	private String proxyFatturaPASondaPassword;
+	private String timersProxyFatturaPASondaPassword;
+
 	private String proxyPccWsFattureUrl;
 	private String proxyPccWsFattureUsername;
 	private String proxyPccWsFatturePassword;
@@ -98,6 +108,16 @@ public class ConsoleProperties extends AbstractProperties {
 		this.proxyFatturaPASondaUrl = this.getProperty("org.govmix.proxy.fatturapa.web.console.proxyFatturaPA.sonda.url", true);
 		this.timersProxyFatturaPASondaUrl = this.getProperty("org.govmix.proxy.fatturapa.web.console.timersProxyFatturaPA.sonda.url", true);
 
+		this.proxyPccSondaUser = this.getProperty("org.govmix.proxy.fatturapa.web.console.proxyPCC.sonda.user", false);
+		this.timersProxyPccSondaUser = this.getProperty("org.govmix.proxy.fatturapa.web.console.timersProxyPCC.sonda.user", false);
+		this.proxyFatturaPASondaUser = this.getProperty("org.govmix.proxy.fatturapa.web.console.proxyFatturaPA.sonda.user", false);
+		this.timersProxyFatturaPASondaUser = this.getProperty("org.govmix.proxy.fatturapa.web.console.timersProxyFatturaPA.sonda.user", false);
+
+		this.proxyPccSondaPassword = this.getProperty("org.govmix.proxy.fatturapa.web.console.proxyPCC.sonda.password", false);
+		this.timersProxyPccSondaPassword= this.getProperty("org.govmix.proxy.fatturapa.web.console.timersProxyPCC.sonda.password", false);
+		this.proxyFatturaPASondaPassword = this.getProperty("org.govmix.proxy.fatturapa.web.console.proxyFatturaPA.sonda.password", false);
+		this.timersProxyFatturaPASondaPassword= this.getProperty("org.govmix.proxy.fatturapa.web.console.timersProxyFatturaPA.sonda.password", false);
+
 		this.proxyPccWsFattureUrl = this.getProperty("org.govmix.proxy.fatturapa.web.console.proxyPcc.wsFatture.url", true);
 		this.proxyPccWsFattureUsername = this.getProperty("org.govmix.proxy.fatturapa.web.console.proxyPcc.wsFatture.username", true);
 		this.proxyPccWsFatturePassword = this.getProperty("org.govmix.proxy.fatturapa.web.console.proxyPcc.wsFatture.password", true);
@@ -118,6 +138,38 @@ public class ConsoleProperties extends AbstractProperties {
 	}
 
 	/* ********  P R O P E R T I E S  ******** */
+
+	public String getProxyPccSondaUser() {
+		return proxyPccSondaUser;
+	}
+
+	public String getTimersProxyPccSondaUser() {
+		return timersProxyPccSondaUser;
+	}
+
+	public String getProxyFatturaPASondaUser() {
+		return proxyFatturaPASondaUser;
+	}
+
+	public String getTimersProxyFatturaPASondaUser() {
+		return timersProxyFatturaPASondaUser;
+	}
+
+	public String getProxyPccSondaPassword() {
+		return proxyPccSondaPassword;
+	}
+
+	public String getTimersProxyPccSondaPassword() {
+		return timersProxyPccSondaPassword;
+	}
+
+	public String getProxyFatturaPASondaPassword() {
+		return proxyFatturaPASondaPassword;
+	}
+
+	public String getTimersProxyFatturaPASondaPassword() {
+		return timersProxyFatturaPASondaPassword;
+	}
 
 	public String getUrlModificaPassword() {
 		return urlModificaPassword;
