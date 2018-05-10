@@ -79,8 +79,10 @@ public class FatturaElettronicaAttivaUploadServlet extends HttpServlet {
 			while (iter.hasNext()) {
 				FileItem item = iter.next();
 				if (!item.isFormField()) {
-					if(item.getName().contains(File.pathSeparator)) {
-						fileName = item.getName().substring(item.getName().lastIndexOf(File.pathSeparator));
+					if(item.getName().contains("\\")) {
+						fileName = item.getName().substring(item.getName().lastIndexOf("\\"));
+					} else if(item.getName().contains("/")) {
+						fileName = item.getName().substring(item.getName().lastIndexOf("/"));
 					} else {
 						fileName = item.getName();
 					}
