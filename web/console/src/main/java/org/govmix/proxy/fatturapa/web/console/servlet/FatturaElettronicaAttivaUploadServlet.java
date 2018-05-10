@@ -3,6 +3,7 @@ package org.govmix.proxy.fatturapa.web.console.servlet;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,9 @@ import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.richfaces.model.UploadItem;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 public class FatturaElettronicaAttivaUploadServlet extends HttpServlet {
 
@@ -222,23 +226,19 @@ public class FatturaElettronicaAttivaUploadServlet extends HttpServlet {
 	]}
 	 */
 	public static String getUploadOkResponseItem(String itemName, int dimensione, String idFileRicevuto, String deleteURL) {
-		StringBuffer sb = new StringBuffer();
-		sb.append("{ \"name\" : \"");
-		sb.append(itemName);
-		sb.append("\" , \"size\" : ");
-		sb.append(dimensione);
-		sb.append(", \"url\" : \"\"");
-		sb.append(", \"thumbnailUrl\" : \"\"");
-		sb.append(", \"id\" : \"");
-		sb.append(idFileRicevuto);
-		sb.append("\" , \"deleteUrl\" : \"");
-		sb.append(deleteURL);
-		sb.append("\" , \"deleteType\" : \"DELETE\"");
-		sb.append("}");
+		JSONObject j = new JSONObject();
+		j.put("name", itemName);
+		j.put("size", dimensione);
+		j.put("url", "");
+		j.put("thumbnailUrl", "");
+		j.put("id", idFileRicevuto);
+		j.put("deleteUrl", deleteURL);
+		j.put("deleteType", "DELETE");
+		
 
-		return sb.toString();
+		return j.toString();
 	}
-
+	
 	/* 
 Response Error
 {"files": [
@@ -255,16 +255,15 @@ Response Error
 ]}
 	 */
 	public static String getUploadKoResponseItem(String itemName, int dimensione, String errorString) {
-		StringBuffer sb = new StringBuffer();
-		sb.append("{ \"name\" : \"");
-		sb.append(itemName);
-		sb.append("\" , \"size\" : ");
-		sb.append(dimensione);
-		sb.append(", \"error\" : \"");
-		sb.append(errorString);
-		sb.append("\" }");
+		
+		JSONObject j = new JSONObject();
+		j.put("name", itemName);
+		j.put("size", dimensione);
+		j.put("error", errorString);
+		
 
-		return sb.toString();
+		return j.toString();
+
 	}
 
 	/* risposta delete
@@ -279,34 +278,25 @@ Response Error
 	 * 
 	 */
 	public static String getDeleteOkResponseItem(String itemName, String idFileRicevuto, boolean stato) {
-		StringBuffer sb = new StringBuffer();
-		sb.append("{ \"");
-		sb.append(itemName);
-		sb.append("\" :  ");
-		sb.append(stato);
-		sb.append(", \"id\" : \"");
-		sb.append(idFileRicevuto);
-		sb.append("\"");
-		sb.append(" }");
+		
+		JSONObject j = new JSONObject();
+		j.put(itemName, stato);
+		j.put("id", idFileRicevuto);
+		
 
-		return sb.toString();
+		return j.toString();
+
 	}
 
-
 	public static String getResponse(List<String> itemResp) {
-		StringBuffer sb = new StringBuffer();
-		sb.append("{\"files\" : ["); 
-		boolean addComma = false; 
-		for (String item : itemResp) {
-			if(addComma)
-				sb.append(" , "); 
+		
+		JSONObject j = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+		jsonArray.addAll(itemResp);
+		j.put("files", jsonArray);
+		
 
-			sb.append(item);
-			addComma = true;
-		}
+		return j.toString();
 
-		sb.append("]}");
-
-		return sb.toString();
 	}
 }
