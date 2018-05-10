@@ -1,6 +1,7 @@
 package org.govmix.proxy.fatturapa.web.console.servlet;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,7 +79,13 @@ public class FatturaElettronicaAttivaUploadServlet extends HttpServlet {
 			while (iter.hasNext()) {
 				FileItem item = iter.next();
 				if (!item.isFormField()) {
-					fileName = item.getName();
+					if(item.getName().contains(File.pathSeparator)) {
+						fileName = item.getName().substring(item.getName().lastIndexOf(File.pathSeparator));
+					} else {
+						fileName = item.getName();
+					}
+					
+					
 					int dimensione = 0;
 					String respBodyItem = "";
 
