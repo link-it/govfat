@@ -20,6 +20,7 @@
  */
 package org.govmix.proxy.fatturapa.web.commons.exporter;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -147,21 +148,57 @@ public class AllegatoSingleFileExporter extends	AbstractSingleFileExporter<Alleg
 	}
 
 	@Override
-	public String getRawName(AllegatoFattura object) {
-		int endIndex = object.getNomeAttachment().lastIndexOf(".");
+	public String exportAsRaw(AllegatoFattura object, OutputStream out) throws ExportException {
+		try {
+			out.write(this.getRawContent(object));
+		} catch (IOException e) {
+			throw new ExportException(e);
+		}
+		
+		if(this.isNameCoherent(object)) {
+			return this.getRawName(object);
+		} else {
+			return this.getRawName(object) + "." +  this.getRawExtension(object);
+		}
+	}
 
-		return endIndex > 0 ? object.getNomeAttachment().substring(0, endIndex): object.getNomeAttachment();
+	@Override
+	public String getRawName(AllegatoFattura object) {
+		if(this.isNameCoherent(object)) {
+			int endIndex = object.getNomeAttachment().lastIndexOf(".");
+			return endIndex > 0 ? object.getNomeAttachment().substring(0, endIndex): object.getNomeAttachment();
+		} else {
+			return object.getNomeAttachment();
+		}
+	}
+	
+	private boolean isNameCoherent(AllegatoFattura object) {
+		if(object.getFormatoAttachment() == null) return true;
+		
+		int endIndex = object.getNomeAttachment().lastIndexOf(".");
+		if(endIndex < 0)
+			return false;
+		
+		String formatoAttachment = object.getFormatoAttachment().replaceAll("\\.", "").toLowerCase();
+		
+		String nomeAttachment = object.getNomeAttachment(); 
+		if(object.getNomeAttachment().toLowerCase().endsWith(".p7m") && !formatoAttachment.equalsIgnoreCase("p7m")) {
+			nomeAttachment = nomeAttachment.substring(0, object.getNomeAttachment().toLowerCase().lastIndexOf(".p7m")).toLowerCase();
+		}
+		if(nomeAttachment.endsWith(formatoAttachment))
+			return true;
+		
+		return false;
 	}
 
 	@Override
 	public String getRawExtension(AllegatoFattura object) {
-		int endIndex = object.getNomeAttachment().lastIndexOf(".");
-
-		if(endIndex > 0) {
+		if(this.isNameCoherent(object)) {
+			int endIndex = object.getNomeAttachment().lastIndexOf(".");
 			return object.getNomeAttachment().substring(endIndex + 1);
 		} else {
 			String formatoAttachment = object.getFormatoAttachment();
-	
+			
 			if(formatoAttachment == null)
 				return "bin";
 			
