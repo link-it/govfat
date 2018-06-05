@@ -44,6 +44,7 @@ public class FatturaElettronicaModel extends AbstractModel<FatturaElettronica> {
 	
 		this.FORMATO_TRASMISSIONE = new Field("formatoTrasmissione",java.lang.String.class,"FatturaElettronica",FatturaElettronica.class);
 		this.IDENTIFICATIVO_SDI = new Field("identificativoSdi",java.lang.Integer.class,"FatturaElettronica",FatturaElettronica.class);
+		this.FATTURAZIONE_ATTIVA = new Field("fatturazioneAttiva",boolean.class,"FatturaElettronica",FatturaElettronica.class);
 		this.DATA_RICEZIONE = new Field("dataRicezione",java.util.Date.class,"FatturaElettronica",FatturaElettronica.class);
 		this.NOME_FILE = new Field("nomeFile",java.lang.String.class,"FatturaElettronica",FatturaElettronica.class);
 		this.MESSAGE_ID = new Field("messageId",java.lang.String.class,"FatturaElettronica",FatturaElettronica.class);
@@ -92,6 +93,7 @@ public class FatturaElettronicaModel extends AbstractModel<FatturaElettronica> {
 	
 		this.FORMATO_TRASMISSIONE = new ComplexField(father,"formatoTrasmissione",java.lang.String.class,"FatturaElettronica",FatturaElettronica.class);
 		this.IDENTIFICATIVO_SDI = new ComplexField(father,"identificativoSdi",java.lang.Integer.class,"FatturaElettronica",FatturaElettronica.class);
+		this.FATTURAZIONE_ATTIVA = new ComplexField(father,"fatturazioneAttiva",boolean.class,"FatturaElettronica",FatturaElettronica.class);
 		this.DATA_RICEZIONE = new ComplexField(father,"dataRicezione",java.util.Date.class,"FatturaElettronica",FatturaElettronica.class);
 		this.NOME_FILE = new ComplexField(father,"nomeFile",java.lang.String.class,"FatturaElettronica",FatturaElettronica.class);
 		this.MESSAGE_ID = new ComplexField(father,"messageId",java.lang.String.class,"FatturaElettronica",FatturaElettronica.class);
@@ -139,6 +141,8 @@ public class FatturaElettronicaModel extends AbstractModel<FatturaElettronica> {
 	public IField FORMATO_TRASMISSIONE = null;
 	 
 	public IField IDENTIFICATIVO_SDI = null;
+	 
+	public IField FATTURAZIONE_ATTIVA = null;
 	 
 	public IField DATA_RICEZIONE = null;
 	 

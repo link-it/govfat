@@ -42,7 +42,6 @@ import org.govmix.proxy.fatturapa.web.commons.fatturaattiva.EsitoInvioFattura.ES
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.business.InvioNotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.web.commons.recuperaFatture.RecuperaFatture;
 import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
-import org.govmix.proxy.fatturapa.web.commons.utils.CostantiFatturaPA;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 
 public class EndpointEnteImpl implements EndpointEnte {
@@ -53,7 +52,6 @@ public class EndpointEnteImpl implements EndpointEnte {
 	private InvioNotificaEsitoCommittente invioNotificaEsitoCommittente;
 	private RecuperaFatture recuperaFatture;
 	private Logger log;
-	private InserimentoLotti inserimento;
 
 	public EndpointEnteImpl() throws Exception {
 		this.log = LoggerManager.getEndpointEnteLogger();
@@ -121,7 +119,7 @@ public class EndpointEnteImpl implements EndpointEnte {
 			
 			IdUtente idUtente = getIdUtente();
 			
-			IdFattura idFattura = new IdFattura();
+			IdFattura idFattura = recuperaFatture.newIdFattura();
 			idFattura.setIdentificativoSdi(idSdI);
 			idFattura.setPosizione(posizione);
 			

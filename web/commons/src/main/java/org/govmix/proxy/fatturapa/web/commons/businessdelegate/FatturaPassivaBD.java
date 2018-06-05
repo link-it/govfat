@@ -28,7 +28,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
-import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.PccTracciaTrasmissioneEsito;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
@@ -59,6 +58,10 @@ public class FatturaPassivaBD extends FatturaBD {
 
 	public FatturaPassivaFilter newFilter() {
 		return new FatturaPassivaFilter(this.service);
+	}
+
+	public IdFattura newIdFattura() {
+		return new IdFattura(false);
 	}
 	
 	public List<FatturaElettronica> getFattureDaSpedireContestuale(int offset, int limit, Date date) throws Exception {
@@ -174,45 +177,6 @@ public class FatturaPassivaBD extends FatturaBD {
 			this.log.error("Errore durante la updateDecorrenzaTermini: " + e.getMessage(), e);
 			throw new Exception(e);
 		}
-	}
-
-	public void assegnaProtocolloAInteroLotto(IdLotto idLotto, String protocollo) throws Exception {
-		try {
-
-			StringBuffer update = new StringBuffer();
-
-			List<Object> listObjects = new ArrayList<Object>();
-
-			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase());
-			
-			update.append("update "+converter.toTable(FatturaElettronica.model())+" set ");
-			if(protocollo != null) {
-				update.append(converter.toColumn(FatturaElettronica.model().PROTOCOLLO, false)).append(" = ? , ");
-				listObjects.add(protocollo);
-			}
-
-			update.append(converter.toColumn(FatturaElettronica.model().STATO_PROTOCOLLAZIONE, false)).append(" = ? , ");
-			listObjects.add(protocollo != null ? StatoProtocollazioneType.PROTOCOLLATA : StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE);
-			
-			update.append(converter.toColumn(FatturaElettronica.model().DATA_PROTOCOLLAZIONE, false)).append(" = ? ");
-			listObjects.add(new Date());
-			
-			update.append(" where ").append(converter.toColumn(FatturaElettronica.model().IDENTIFICATIVO_SDI, false)).append(" = ? ");
-			listObjects.add(idLotto.getIdentificativoSdi());
-			
-			this.serviceSearch.nativeUpdate(update.toString(), listObjects.toArray(new Object[]{}));
-			
-		} catch (ServiceException e) {
-			this.log.error("Errore durante la updateProtocollo: " + e.getMessage(), e);
-			throw new Exception(e);
-		} catch (NotImplementedException e) {
-			this.log.error("Errore durante la updateProtocollo: " + e.getMessage(), e);
-			throw new Exception(e);
-		}
-	}
-
-	public void erroreProtocolloAInteroLotto(IdLotto idLotto) throws Exception {
-		this.assegnaProtocolloAInteroLotto(idLotto, null);
 	}
 
 	public void updateProtocollo(IdFattura idFattura, StatoProtocollazioneType statoProtocollazioneAttuale, String protocollo, boolean asincrono) throws Exception {

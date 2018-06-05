@@ -71,7 +71,7 @@ public class NotificaEsitoCommittenteConverter {
 	public NotificaEsitoCommittente getNotificaEsitoCommittente() throws Exception {
 		NotificaEsitoCommittente notificaEsitoCommittente = new NotificaEsitoCommittente();
 		
-		IdFattura idFattura = new IdFattura();
+		IdFattura idFattura = this.fatturaElettronicaBD.newIdFattura();
 		idFattura.setIdentificativoSdi(this.esito.getIdentificativoSdi().intValue());
 		idFattura.setPosizione(this.esito.getPosizione().intValue());
 		notificaEsitoCommittente.setIdFattura(idFattura);

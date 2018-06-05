@@ -85,7 +85,7 @@ public class ObjectFactory {
      * Create an instance of {@link IdLotto }
      */
     public IdLotto createIdLotto() {
-        return new IdLotto();
+        return org.govmix.proxy.fatturapa.orm.IdLotto.newIdLotto();
     }
 
     /**
@@ -239,7 +239,7 @@ public class ObjectFactory {
      * Create an instance of {@link IdFattura }
      */
     public IdFattura createIdFattura() {
-        return new IdFattura();
+        return org.govmix.proxy.fatturapa.orm.IdFattura.newIdFattura();
     }
 
     /**

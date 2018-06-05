@@ -510,7 +510,7 @@ public class JDBCPccContabilizzazioneServiceSearchImpl implements IJDBCServiceSe
 			if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
 				id_pccContabilizzazione_fatturaElettronica = ((JDBCFatturaElettronicaServiceSearch)(this.getServiceManager().getFatturaElettronicaServiceSearch())).findId(idFK_pccContabilizzazione_fatturaElettronica, false);
 			}else{
-				id_pccContabilizzazione_fatturaElettronica = new org.govmix.proxy.fatturapa.orm.IdFattura();
+				id_pccContabilizzazione_fatturaElettronica = org.govmix.proxy.fatturapa.orm.IdFattura.newIdFattura();
 			}
 			id_pccContabilizzazione_fatturaElettronica.setId(idFK_pccContabilizzazione_fatturaElettronica);
 			pccContabilizzazione.setIdFattura(id_pccContabilizzazione_fatturaElettronica);

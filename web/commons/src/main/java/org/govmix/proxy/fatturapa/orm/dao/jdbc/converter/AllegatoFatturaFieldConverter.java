@@ -82,6 +82,13 @@ public class AllegatoFatturaFieldConverter extends AbstractSQLFieldConverter {
 				return "posizione";
 			}
 		}
+		if(field.equals(AllegatoFattura.model().ID_FATTURA.FATTURAZIONE_ATTIVA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".fatturazione_attiva";
+			}else{
+				return "fatturazione_attiva";
+			}
+		}
 		if(field.equals(AllegatoFattura.model().NOME_ATTACHMENT)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".nome_attachment";
@@ -134,6 +141,9 @@ public class AllegatoFatturaFieldConverter extends AbstractSQLFieldConverter {
 			return this.toTable(AllegatoFattura.model().ID_FATTURA, returnAlias);
 		}
 		if(field.equals(AllegatoFattura.model().ID_FATTURA.POSIZIONE)){
+			return this.toTable(AllegatoFattura.model().ID_FATTURA, returnAlias);
+		}
+		if(field.equals(AllegatoFattura.model().ID_FATTURA.FATTURAZIONE_ATTIVA)){
 			return this.toTable(AllegatoFattura.model().ID_FATTURA, returnAlias);
 		}
 		if(field.equals(AllegatoFattura.model().NOME_ATTACHMENT)){

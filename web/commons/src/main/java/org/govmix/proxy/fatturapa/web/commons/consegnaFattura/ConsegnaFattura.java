@@ -29,6 +29,7 @@ import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.AllegatoFatturaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.AbstractFatturaConverter;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FPA12Converter;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FatturaV10Converter;
@@ -71,6 +72,7 @@ public class ConsegnaFattura {
 			}	
 		}
 		
+		fatturaElettronica.setFatturazioneAttiva(params.isFatturazioneAttiva());
 		this.fatturaBD.create(fatturaElettronica);
 
 		if(allegatiLst != null) {

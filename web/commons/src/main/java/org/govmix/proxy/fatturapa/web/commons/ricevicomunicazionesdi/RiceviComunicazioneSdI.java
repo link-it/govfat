@@ -28,7 +28,7 @@ import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFattureAttiveBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.TracciaSdIBD;
 import org.govmix.proxy.fatturapa.web.commons.converter.notificaesitocommittente.NotificaEsitoConverter;
 
@@ -36,18 +36,18 @@ public class RiceviComunicazioneSdI {
 
 	private Logger log;
 	private TracciaSdIBD tracciaBD;
-	private LottoBD lottoBD;
+	private LottoFattureAttiveBD lottoBD;
 
 	public RiceviComunicazioneSdI(Logger log) throws Exception {
 		this.log = log;
 		this.tracciaBD = new TracciaSdIBD(this.log);
-		this.lottoBD = new LottoBD(this.log);
+		this.lottoBD = new LottoFattureAttiveBD(this.log);
 	}
 
 	public RiceviComunicazioneSdI(Logger log, Connection connection, boolean autocommit) throws Exception {
 		this.log = log;
 		this.tracciaBD = new TracciaSdIBD(this.log, connection, false);
-		this.lottoBD = new LottoBD(this.log, connection, false);
+		this.lottoBD = new LottoFattureAttiveBD(this.log, connection, false);
 	}
 
 	public static TipoComunicazioneType getTipoComunicazione(String tipo) throws Exception {
@@ -102,7 +102,7 @@ public class RiceviComunicazioneSdI {
 		}
 
 		if(nuovoStatoLotto != null) {
-			IdLotto idLotto = new IdLotto();
+			IdLotto idLotto = this.lottoBD.newIdLotto();
 			idLotto.setIdentificativoSdi(tracciaSdI.getIdentificativoSdi());
 			LottoFatture lotto = this.lottoBD.get(idLotto);
 			String tipiComunicazione =  toTipiComunicazione(tracciaSdI, notificaEsitoConverter);

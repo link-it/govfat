@@ -446,12 +446,14 @@
 		<xsd:sequence>
 			<xsd:element name="identificativoSdi" type="IdentificativoSdIType" />
 			<xsd:element name="posizione" type="xsd:positiveInteger" />
+			<xsd:element name="fatturazioneAttiva" type="xsd:boolean" />
 		</xsd:sequence>
 	</xsd:complexType>
 
 	<xsd:complexType name="id-lotto">
 		<xsd:sequence>
 			<xsd:element name="identificativoSdi" type="IdentificativoSdIType" />
+			<xsd:element name="fatturazioneAttiva" type="xsd:boolean" />
 		</xsd:sequence>
 	</xsd:complexType>
 	
@@ -625,8 +627,8 @@
 					<linkit:sql-table-mapping generate-sql="true"
 						name="lotti" on-delete-cascade="false">
 						<linkit:sql-table-unique create-index="true">
-							<linkit:sql-table-unique-field
-								name="identificativoSdi" />
+							<linkit:sql-table-unique-field name="identificativoSdi" />
+							<linkit:sql-table-unique-field name="fatturazioneAttiva" />
 						</linkit:sql-table-unique>
 						<linkit:sql-table-index name="idx_cp_denominazione">
 							<linkit:sql-table-index-field name="cedentePrestatorePaese" />
@@ -915,10 +917,9 @@
 					<linkit:sql-table-mapping generate-sql="true"
 						name="fatture" on-delete-cascade="false">
 						<linkit:sql-table-unique create-index="true">
-							<linkit:sql-table-unique-field
-								name="identificativoSdi" />
-							<linkit:sql-table-unique-field
-								name="posizione" />
+							<linkit:sql-table-unique-field name="identificativoSdi" />
+							<linkit:sql-table-unique-field name="posizione" />
+							<linkit:sql-table-unique-field name="fatturazioneAttiva" />
 						</linkit:sql-table-unique>
 						<linkit:sql-table-index name="idx_cp_denominazione_fatt">
 							<linkit:sql-table-index-field name="cedentePrestatorePaese" />
@@ -931,6 +932,7 @@
 		<xsd:sequence>
 			<xsd:element name="formatoTrasmissione" type="FormatoTrasmissioneType" />
 			<xsd:element name="identificativoSdi" type="IdentificativoSdIType" />
+			<xsd:element name="fatturazioneAttiva" type="xsd:boolean" />
 			<xsd:element name="dataRicezione" type="xsd:dateTime" />
 			<xsd:element name="nomeFile" type="NomeFileType" />
 			<xsd:element name="messageId" type="MessageIdType" />

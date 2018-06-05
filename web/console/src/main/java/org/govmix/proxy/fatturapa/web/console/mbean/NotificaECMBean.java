@@ -135,7 +135,7 @@ public class NotificaECMBean extends BaseFormMBean<NotificaECBean, Long, Notific
 			notificaECDTO.setPosizione(fatturaDTO.getPosizione());
 			notificaECDTO.setMessageIdCommittente(fatturaDTO.getMessageId());
 			notificaECDTO.setNumeroFattura(fatturaDTO.getNumero());
-			IdFattura idFattura = new IdFattura();
+			IdFattura idFattura = new IdFattura(fatturaDTO.isFatturazioneAttiva());
 
 			idFattura.setPosizione(fatturaDTO.getPosizione());
 			idFattura.setIdentificativoSdi(fatturaDTO.getIdentificativoSdi());

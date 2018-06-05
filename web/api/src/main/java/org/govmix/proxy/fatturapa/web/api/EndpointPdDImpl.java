@@ -39,7 +39,7 @@ import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.web.api.utils.WebApiProperties;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFatturePassiveBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaUtils;
@@ -53,7 +53,7 @@ import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 public class EndpointPdDImpl implements EndpointPdD {
 
 	private RiceviNotifica riceviNotifica;
-	private LottoBD lottoBD;
+	private LottoFatturePassiveBD lottoBD;
 
 	private Logger log;
 
@@ -61,7 +61,7 @@ public class EndpointPdDImpl implements EndpointPdD {
 		this.log = LoggerManager.getEndpointPdDLogger();
 		this.log.info("Inizializzazione endpoint PdD...");
 		this.riceviNotifica = new RiceviNotifica(this.log);
-		this.lottoBD = new LottoBD(log);
+		this.lottoBD = new LottoFatturePassiveBD(log);
 		this.lottoBD.setValidate(WebApiProperties.getInstance().isValidazioneDAOAbilitata());
 		
 		this.log.info("Inizializzazione endpoint PdD completata");
@@ -115,7 +115,7 @@ public class EndpointPdDImpl implements EndpointPdD {
 		}
 
 		try {
-			IdLotto idLotto = new IdLotto();
+			IdLotto idLotto = lottoBD.newIdLotto();
 			idLotto.setIdentificativoSdi(identificativoSDI);
 			if(this.lottoBD.exists(idLotto)) {
 				this.log.warn("Lotto con identificativo SdI ["+identificativoSDI+"] esiste gia', inserimento non avvenuto");

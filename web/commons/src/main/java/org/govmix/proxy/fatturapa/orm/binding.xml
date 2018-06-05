@@ -4,16 +4,19 @@
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
     <value name="identificativoSdi" field="identificativoSdi" usage="required"/>
     <value name="posizione" field="posizione" usage="required"/>
+    <value name="fatturazioneAttiva" field="fatturazioneAttiva" usage="required"/>
   </mapping>
 
   <mapping type-name="_IdFattura_Type" class="org.govmix.proxy.fatturapa.orm.IdFattura" abstract="true">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
     <value name="identificativoSdi" field="identificativoSdi" usage="required"/>
     <value name="posizione" field="posizione" usage="required"/>
+    <value name="fatturazioneAttiva" field="fatturazioneAttiva" usage="required"/>
   </mapping>
   <mapping name="id-lotto" class="org.govmix.proxy.fatturapa.orm.IdLotto">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
     <value name="identificativoSdi" field="identificativoSdi" usage="required"/>
+    <value name="fatturazioneAttiva" field="fatturazioneAttiva" usage="required"/>
   </mapping>
   <mapping name="id-pagamento" class="org.govmix.proxy.fatturapa.orm.IdPagamento">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
@@ -249,6 +252,7 @@
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
     <value name="formatoTrasmissione" field="formatoTrasmissione" usage="required" enum-value-method="toString"/>
     <value name="identificativoSdi" field="identificativoSdi" usage="required"/>
+    <value name="fatturazioneAttiva" field="fatturazioneAttiva" usage="required"/>
     <value name="dataRicezione" field="dataRicezione" usage="required"/>
     <value name="nomeFile" field="nomeFile" usage="required"/>
     <value name="messageId" field="messageId" usage="required"/>

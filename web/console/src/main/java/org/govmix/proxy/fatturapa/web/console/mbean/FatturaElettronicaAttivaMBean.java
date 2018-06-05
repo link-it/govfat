@@ -44,7 +44,7 @@ import org.govmix.proxy.fatturapa.orm.IdRegistro;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFattureAttiveBD;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException.CODICE;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoRequest;
@@ -223,7 +223,7 @@ IFatturaElettronicaAttivaService>{
 		
 		if(this.selectedElement != null){
 
-			this.selectedIdFattura = new IdFattura();
+			this.selectedIdFattura = new IdFattura(selectedElement.getDTO().isFatturazioneAttiva());
 			this.selectedIdFattura.setPosizione(this.selectedElement.getDTO().getPosizione());
 			this.selectedIdFattura.setIdentificativoSdi(this.selectedElement.getDTO().getIdentificativoSdi());
 			this.selectedIdFattura.setId(this.selectedElement.getDTO().getId()); 
@@ -507,9 +507,9 @@ IFatturaElettronicaAttivaService>{
 	public String ritentaConsegna(){
 		try{
 
-			LottoBD fatturaBD = new LottoBD(log);
+			LottoFattureAttiveBD fatturaBD = new LottoFattureAttiveBD(log);
 			FatturaElettronica current = this.selectedElement.getDTO();
-			IdLotto idLotto = new IdLotto();
+			IdLotto idLotto = fatturaBD.newIdLotto();
 			idLotto.setIdentificativoSdi(current.getIdentificativoSdi());
 			StatoElaborazioneType nuovoStato = fatturaBD.ritentaConsegna(idLotto);
 			MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegna.cambioStatoOK"));

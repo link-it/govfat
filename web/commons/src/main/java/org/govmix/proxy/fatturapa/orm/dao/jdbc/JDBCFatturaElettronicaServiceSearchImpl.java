@@ -103,10 +103,10 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 	@Override
 	public IdFattura convertToId(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, FatturaElettronica fatturaElettronica) throws NotImplementedException, ServiceException, Exception{
 	
-        IdFattura idFatturaElettronica = new IdFattura();
+        IdFattura idFatturaElettronica = new IdFattura(fatturaElettronica.isFatturazioneAttiva());
         idFatturaElettronica.setIdentificativoSdi(fatturaElettronica.getIdentificativoSdi());
         idFatturaElettronica.setPosizione(fatturaElettronica.getPosizione());
-
+        
         return idFatturaElettronica;
 	}
 	
@@ -165,6 +165,7 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 			fields.add(FatturaElettronica.model().FORMATO_TRASMISSIONE);
 			fields.add(FatturaElettronica.model().IDENTIFICATIVO_SDI);
 			fields.add(FatturaElettronica.model().POSIZIONE);
+			fields.add(FatturaElettronica.model().FATTURAZIONE_ATTIVA);
 			fields.add(FatturaElettronica.model().DATA_RICEZIONE);
 			fields.add(FatturaElettronica.model().NOME_FILE);
 			fields.add(FatturaElettronica.model().MESSAGE_ID);
@@ -829,6 +830,7 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 		sqlQueryObjectGet.addFromTable(this.getFatturaElettronicaFieldConverter().toTable(FatturaElettronica.model()));
 		sqlQueryObjectGet.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().IDENTIFICATIVO_SDI,true));
 		sqlQueryObjectGet.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().POSIZIONE,true));
+		sqlQueryObjectGet.addSelectField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().FATTURAZIONE_ATTIVA,true));
 		sqlQueryObjectGet.setANDLogicOperator(true);
 		sqlQueryObjectGet.addWhereCondition("id=?");
 
@@ -839,6 +841,7 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 		List<Class<?>> listaFieldIdReturnType_fatturaElettronica = new ArrayList<Class<?>>();
 		listaFieldIdReturnType_fatturaElettronica.add(FatturaElettronica.model().IDENTIFICATIVO_SDI.getFieldType());
 		listaFieldIdReturnType_fatturaElettronica.add(FatturaElettronica.model().POSIZIONE.getFieldType());
+		listaFieldIdReturnType_fatturaElettronica.add(FatturaElettronica.model().FATTURAZIONE_ATTIVA.getFieldType());
 
 		org.govmix.proxy.fatturapa.orm.IdFattura id_fatturaElettronica = null;
 		List<Object> listaFieldId_fatturaElettronica = jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet.createSQLQuery(), jdbcProperties.isShowSql(),
@@ -850,7 +853,7 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 		}
 		else{
 			// set _fatturaElettronica
-			id_fatturaElettronica = new org.govmix.proxy.fatturapa.orm.IdFattura();
+			id_fatturaElettronica = new org.govmix.proxy.fatturapa.orm.IdFattura((Boolean)listaFieldId_fatturaElettronica.get(2));
 			id_fatturaElettronica.setIdentificativoSdi((Integer)listaFieldId_fatturaElettronica.get(0));
 			id_fatturaElettronica.setPosizione((Integer)listaFieldId_fatturaElettronica.get(1));
 		}
@@ -901,11 +904,13 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 
 		sqlQueryObjectGet.addWhereCondition(fatturaFieldConverter.toColumn(FatturaElettronica.model().IDENTIFICATIVO_SDI,true)+"=?");
 		sqlQueryObjectGet.addWhereCondition(fatturaFieldConverter.toColumn(FatturaElettronica.model().POSIZIONE,true)+"=?");
+		sqlQueryObjectGet.addWhereCondition(fatturaFieldConverter.toColumn(FatturaElettronica.model().FATTURAZIONE_ATTIVA,true)+"=?");
 
 		// Recupero _fatturaElettronica
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject [] searchParams_fatturaElettronica = new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject [] {
 				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id.getIdentificativoSdi(), FatturaElettronica.model().IDENTIFICATIVO_SDI.getFieldType()),
-				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id.getPosizione(), FatturaElettronica.model().POSIZIONE.getFieldType())
+				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id.getPosizione(), FatturaElettronica.model().POSIZIONE.getFieldType()),
+				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id.getFatturazioneAttiva(), FatturaElettronica.model().FATTURAZIONE_ATTIVA.getFieldType())
 		};
 		Long id_fatturaElettronica = null;
 		try{

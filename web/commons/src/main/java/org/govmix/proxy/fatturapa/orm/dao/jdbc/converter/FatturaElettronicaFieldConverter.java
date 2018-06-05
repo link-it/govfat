@@ -82,6 +82,13 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 				return "identificativo_sdi";
 			}
 		}
+		if(field.equals(FatturaElettronica.model().FATTURAZIONE_ATTIVA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".fatturazione_attiva";
+			}else{
+				return "fatturazione_attiva";
+			}
+		}
 		if(field.equals(FatturaElettronica.model().DATA_RICEZIONE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".data_ricezione";
@@ -827,6 +834,9 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 			return this.toTable(FatturaElettronica.model(), returnAlias);
 		}
 		if(field.equals(FatturaElettronica.model().IDENTIFICATIVO_SDI)){
+			return this.toTable(FatturaElettronica.model(), returnAlias);
+		}
+		if(field.equals(FatturaElettronica.model().FATTURAZIONE_ATTIVA)){
 			return this.toTable(FatturaElettronica.model(), returnAlias);
 		}
 		if(field.equals(FatturaElettronica.model().DATA_RICEZIONE)){

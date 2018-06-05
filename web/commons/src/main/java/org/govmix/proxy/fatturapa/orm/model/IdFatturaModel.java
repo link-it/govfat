@@ -44,6 +44,7 @@ public class IdFatturaModel extends AbstractModel<IdFattura> {
 	
 		this.IDENTIFICATIVO_SDI = new Field("identificativoSdi",java.lang.Integer.class,"id-fattura",IdFattura.class);
 		this.POSIZIONE = new Field("posizione",java.lang.Integer.class,"id-fattura",IdFattura.class);
+		this.FATTURAZIONE_ATTIVA = new Field("fatturazioneAttiva",boolean.class,"id-fattura",IdFattura.class);
 	
 	}
 	
@@ -53,6 +54,7 @@ public class IdFatturaModel extends AbstractModel<IdFattura> {
 	
 		this.IDENTIFICATIVO_SDI = new ComplexField(father,"identificativoSdi",java.lang.Integer.class,"id-fattura",IdFattura.class);
 		this.POSIZIONE = new ComplexField(father,"posizione",java.lang.Integer.class,"id-fattura",IdFattura.class);
+		this.FATTURAZIONE_ATTIVA = new ComplexField(father,"fatturazioneAttiva",boolean.class,"id-fattura",IdFattura.class);
 	
 	}
 	
@@ -61,6 +63,8 @@ public class IdFatturaModel extends AbstractModel<IdFattura> {
 	public IField IDENTIFICATIVO_SDI = null;
 	 
 	public IField POSIZIONE = null;
+	 
+	public IField FATTURAZIONE_ATTIVA = null;
 	 
 
 	@Override

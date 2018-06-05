@@ -442,7 +442,7 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 			if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
 				id_notificaEsitoCommittente_fatturaElettronica = ((JDBCFatturaElettronicaServiceSearch)(this.getServiceManager().getFatturaElettronicaServiceSearch())).findId(idFK_notificaEsitoCommittente_fatturaElettronica, false);
 			}else{
-				id_notificaEsitoCommittente_fatturaElettronica = new org.govmix.proxy.fatturapa.orm.IdFattura();
+				id_notificaEsitoCommittente_fatturaElettronica = org.govmix.proxy.fatturapa.orm.IdFattura.newIdFattura();
 			}
 			id_notificaEsitoCommittente_fatturaElettronica.setId(idFK_notificaEsitoCommittente_fatturaElettronica);
 			notificaEsitoCommittente.setIdFattura(id_notificaEsitoCommittente_fatturaElettronica);

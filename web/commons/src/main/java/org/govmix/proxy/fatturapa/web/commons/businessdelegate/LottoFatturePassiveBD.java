@@ -30,6 +30,10 @@ public class LottoFatturePassiveBD extends LottoBD {
 		super(log, connection, autocommit);
 	}
 	
+	public IdLotto newIdLotto() {
+		return new IdLotto(false);
+	}
+
 	public List<LottoFatture> getLottiDaInserire(Date dataRicezione, int offset, int limit) throws Exception {
 		try {
 			IPaginatedExpression expression = this.service.toPaginatedExpression(getExpressionLottiDaInserire(dataRicezione));

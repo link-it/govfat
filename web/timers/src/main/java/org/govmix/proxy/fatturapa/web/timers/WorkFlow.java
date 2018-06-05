@@ -15,7 +15,7 @@ import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoArchivioInvioFatturaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFattureAttiveBD;
 import org.govmix.proxy.fatturapa.web.commons.utils.CostantiProtocollazione;
 import org.govmix.proxy.fatturapa.web.commons.utils.Endpoint;
 import org.govmix.proxy.fatturapa.web.commons.utils.EndpointSelector;
@@ -26,7 +26,7 @@ public class WorkFlow implements IWorkFlow<LottoFatture> {
 
 	private Logger log;
 	private int limit;
-	private LottoBD lottoBD;
+	private LottoFattureAttiveBD lottoBD;
 	private Date limitDate;
 	private EndpointSelector endpointSelector;
 
@@ -35,7 +35,7 @@ public class WorkFlow implements IWorkFlow<LottoFatture> {
 		this.log = log;
 		this.limit = limit;
 		this.limitDate = new Date();
-		this.lottoBD = new LottoBD(log, connection, false);
+		this.lottoBD = new LottoFattureAttiveBD(log, connection, false);
 		this.endpointSelector = new EndpointSelector(log, connection, false);
 	}
 

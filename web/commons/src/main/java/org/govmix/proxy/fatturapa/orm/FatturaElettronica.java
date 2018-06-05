@@ -43,6 +43,7 @@ import java.io.Serializable;
  * 		&lt;sequence>
  * 			&lt;element name="formatoTrasmissione" type="{http://www.govmix.org/proxy/fatturapa/orm}FormatoTrasmissioneType" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="identificativoSdi" type="{http://www.govmix.org/proxy/fatturapa/orm}integer" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="fatturazioneAttiva" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="dataRicezione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="nomeFile" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="messageId" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
@@ -98,6 +99,7 @@ import java.io.Serializable;
   propOrder = {
   	"formatoTrasmissione",
   	"_decimalWrapper_identificativoSdi",
+  	"fatturazioneAttiva",
   	"dataRicezione",
   	"nomeFile",
   	"messageId",
@@ -192,6 +194,18 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
     if(identificativoSdi!=null){
 		this._decimalWrapper_identificativoSdi = new org.openspcoop2.utils.jaxb.DecimalWrapper(1,12,identificativoSdi);
 	}
+  }
+
+  public boolean isFatturazioneAttiva() {
+    return this.fatturazioneAttiva;
+  }
+
+  public boolean getFatturazioneAttiva() {
+    return this.fatturazioneAttiva;
+  }
+
+  public void setFatturazioneAttiva(boolean fatturazioneAttiva) {
+    this.fatturazioneAttiva = fatturazioneAttiva;
   }
 
   public java.util.Date getDataRicezione() {
@@ -602,6 +616,10 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
 
   @XmlTransient
   protected java.lang.Integer identificativoSdi;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="boolean")
+  @XmlElement(name="fatturazioneAttiva",required=true,nillable=false)
+  protected boolean fatturazioneAttiva;
 
   @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.DateTime2String.class)
   @javax.xml.bind.annotation.XmlSchemaType(name="dateTime")

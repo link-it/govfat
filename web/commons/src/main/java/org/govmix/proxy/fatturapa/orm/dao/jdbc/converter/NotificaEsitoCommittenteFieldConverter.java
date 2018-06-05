@@ -82,6 +82,13 @@ public class NotificaEsitoCommittenteFieldConverter extends AbstractSQLFieldConv
 				return "posizione";
 			}
 		}
+		if(field.equals(NotificaEsitoCommittente.model().ID_FATTURA.FATTURAZIONE_ATTIVA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".fatturazione_attiva";
+			}else{
+				return "fatturazione_attiva";
+			}
+		}
 		if(field.equals(NotificaEsitoCommittente.model().IDENTIFICATIVO_SDI)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".identificativo_sdi";
@@ -239,6 +246,9 @@ public class NotificaEsitoCommittenteFieldConverter extends AbstractSQLFieldConv
 			return this.toTable(NotificaEsitoCommittente.model().ID_FATTURA, returnAlias);
 		}
 		if(field.equals(NotificaEsitoCommittente.model().ID_FATTURA.POSIZIONE)){
+			return this.toTable(NotificaEsitoCommittente.model().ID_FATTURA, returnAlias);
+		}
+		if(field.equals(NotificaEsitoCommittente.model().ID_FATTURA.FATTURAZIONE_ATTIVA)){
 			return this.toTable(NotificaEsitoCommittente.model().ID_FATTURA, returnAlias);
 		}
 		if(field.equals(NotificaEsitoCommittente.model().IDENTIFICATIVO_SDI)){

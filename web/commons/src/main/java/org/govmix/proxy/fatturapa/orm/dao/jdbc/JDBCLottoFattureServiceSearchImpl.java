@@ -99,9 +99,8 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 
 	@Override
 	public IdLotto convertToId(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, LottoFatture lottoFatture) throws NotImplementedException, ServiceException, Exception{
-        IdLotto idLottoFatture = new IdLotto();
+        IdLotto idLottoFatture = new IdLotto(lottoFatture.isFatturazioneAttiva());
         idLottoFatture.setIdentificativoSdi(lottoFatture.getIdentificativoSdi());
-
         return idLottoFatture;
 	}
 	
@@ -669,6 +668,7 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 		// Object _lottoFatture
 		sqlQueryObjectGet.addFromTable(this.getLottoFattureFieldConverter().toTable(LottoFatture.model()));
 		sqlQueryObjectGet.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().IDENTIFICATIVO_SDI,true));
+		sqlQueryObjectGet.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().FATTURAZIONE_ATTIVA,true));
 		sqlQueryObjectGet.setANDLogicOperator(true);
 		sqlQueryObjectGet.addWhereCondition("id=?");
 
@@ -678,6 +678,7 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 		};
 		List<Class<?>> listaFieldIdReturnType_lottoFatture = new ArrayList<Class<?>>();
 		listaFieldIdReturnType_lottoFatture.add(LottoFatture.model().IDENTIFICATIVO_SDI.getFieldType());
+		listaFieldIdReturnType_lottoFatture.add(LottoFatture.model().FATTURAZIONE_ATTIVA.getFieldType());
 
 		org.govmix.proxy.fatturapa.orm.IdLotto id_lottoFatture = null;
 		List<Object> listaFieldId_lottoFatture = jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet.createSQLQuery(), jdbcProperties.isShowSql(),
@@ -689,7 +690,7 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 		}
 		else{
 			// set _lottoFatture
-			id_lottoFatture = new org.govmix.proxy.fatturapa.orm.IdLotto();
+			id_lottoFatture = new org.govmix.proxy.fatturapa.orm.IdLotto((Boolean)listaFieldId_lottoFatture.get(1));
 			id_lottoFatture.setIdentificativoSdi((Integer)listaFieldId_lottoFatture.get(0));
 		}
 		
@@ -728,10 +729,12 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 		sqlQueryObjectGet.setANDLogicOperator(true);
 		sqlQueryObjectGet.setSelectDistinct(true);
 		sqlQueryObjectGet.addWhereCondition(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().IDENTIFICATIVO_SDI,true)+"=?");
+		sqlQueryObjectGet.addWhereCondition(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().FATTURAZIONE_ATTIVA,true)+"=?");
 
 		// Recupero _lottoFatture
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject [] searchParams_lottoFatture = new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject [] { 
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id.getIdentificativoSdi(),LottoFatture.model().IDENTIFICATIVO_SDI.getFieldType())
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id.getIdentificativoSdi(),LottoFatture.model().IDENTIFICATIVO_SDI.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id.getIdentificativoSdi(),LottoFatture.model().FATTURAZIONE_ATTIVA.getFieldType())
 		};
 		Long id_lottoFatture = null;
 		try{

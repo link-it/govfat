@@ -65,6 +65,9 @@ public class RecuperaFatture {
 		this(Logger.getLogger(RecuperaFatture.class));
 	}
 	
+	public IdFattura newIdFattura() {
+		return this.fatturaPassivaBD.newIdFattura();
+	}
 	public RecuperaFatture(Logger log) throws Exception {
 		this.fatturaPassivaBD = new FatturaPassivaBD(log);
 		this.dipartimentoBD = new DipartimentoBD(log);
