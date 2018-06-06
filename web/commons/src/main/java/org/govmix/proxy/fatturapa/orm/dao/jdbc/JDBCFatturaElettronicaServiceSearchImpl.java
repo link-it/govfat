@@ -695,6 +695,7 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 			String tableName1 = this.getFatturaElettronicaFieldConverter().toAliasTable(FatturaElettronica.model());
 			String tableName2 = this.getFatturaElettronicaFieldConverter().toAliasTable(FatturaElettronica.model().LOTTO_FATTURE);
 			sqlQueryObject.addWhereCondition(tableName1+".identificativo_sdi="+tableName2+".identificativo_sdi");
+			sqlQueryObject.addWhereCondition(tableName1+".fatturazione_attiva="+tableName2+".fatturazione_attiva");
 		}
 
 	}
