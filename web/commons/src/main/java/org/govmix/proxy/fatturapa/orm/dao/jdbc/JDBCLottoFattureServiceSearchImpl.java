@@ -734,7 +734,7 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 		// Recupero _lottoFatture
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject [] searchParams_lottoFatture = new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject [] { 
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id.getIdentificativoSdi(),LottoFatture.model().IDENTIFICATIVO_SDI.getFieldType()),
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id.getIdentificativoSdi(),LottoFatture.model().FATTURAZIONE_ATTIVA.getFieldType())
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id.getFatturazioneAttiva(),LottoFatture.model().FATTURAZIONE_ATTIVA.getFieldType())
 		};
 		Long id_lottoFatture = null;
 		try{
