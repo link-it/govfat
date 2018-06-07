@@ -169,6 +169,7 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithou
 			fields.add(getCustomField(TracciaSDI.model().LOTTO_FATTURE.PROTOCOLLO, lottoTable));
 			fields.add(getCustomField(TracciaSDI.model().LOTTO_FATTURE.ID_EGOV, lottoTable));
 
+			expression.equals(TracciaSDI.model().LOTTO_FATTURE.FATTURAZIONE_ATTIVA, true); //TODO tracce solo con fatturazione attiva
 
 			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));
 
@@ -542,6 +543,7 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithou
 			String tableName1 = this.getTracciaSDIFieldConverter().toAliasTable(TracciaSDI.model());
 			String tableName2 = this.getTracciaSDIFieldConverter().toAliasTable(TracciaSDI.model().LOTTO_FATTURE);
 			sqlQueryObject.addWhereCondition(tableName1+".identificativo_sdi="+tableName2+".identificativo_sdi");
+			
 		}
 
 		if(expression.inUseModel(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO,false)){
