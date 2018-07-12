@@ -56,6 +56,9 @@ public class FatturaFilter extends AbstractFilter {
 	
 	private String protocollo;
 	protected Boolean decorrenzaTermini;
+	
+	private String ente;
+	private Integer anno;
 
 	public FatturaFilter(IExpressionConstructor expressionConstructor, Boolean fatturazioneAttiva) {
 		super(expressionConstructor);
@@ -169,6 +172,15 @@ public class FatturaFilter extends AbstractFilter {
 					}
 				}
 				expression.in(FatturaElettronica.model().CODICE_DESTINATARIO, dipartimenti);
+			}
+			
+			
+			if(this.ente!= null) {
+				expression.equals(FatturaElettronica.model().DIPARTIMENTO.ENTE.NOME, this.ente);
+			}
+			
+			if(this.anno!= null) {
+				expression.equals(FatturaElettronica.model().ANNO, this.anno);
 			}
 			return expression;
 		} catch (ExpressionNotImplementedException e) {
@@ -342,6 +354,22 @@ public class FatturaFilter extends AbstractFilter {
 
 	public void setDecorrenzaTermini(Boolean decorrenzaTermini) {
 		this.decorrenzaTermini = decorrenzaTermini;
+	}
+
+	public String getEnte() {
+		return ente;
+	}
+
+	public void setEnte(String ente) {
+		this.ente = ente;
+	}
+
+	public Integer getAnno() {
+		return anno;
+	}
+
+	public void setAnno(Integer anno) {
+		this.anno = anno;
 	}
 
 }

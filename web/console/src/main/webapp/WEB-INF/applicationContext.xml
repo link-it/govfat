@@ -309,4 +309,23 @@
 		<property name="service" ref="erroreService" />
 		<property name="search" ref="erroreSearchForm" />
 	</bean>
+	
+	
+		<!-- Conservazione -->
+	<bean id="conservazioneSearchForm"
+		class="org.govmix.proxy.fatturapa.web.console.search.ConservazioneSearchForm"
+		scope="session" />
+
+	<bean id="conservazioneService"
+		class="org.govmix.proxy.fatturapa.web.console.service.ConservazioneService"
+		scope="request">
+		<property name="form" ref="conservazioneSearchForm" />
+	</bean>
+
+	<bean id="conservazioneMBean"
+		class="org.govmix.proxy.fatturapa.web.console.mbean.ConservazioneMBean"
+		scope="request">
+		<property name="service" ref="conservazioneService" />
+		<property name="search" ref="conservazioneSearchForm" />
+	</bean>
 </beans>

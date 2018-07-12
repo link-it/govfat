@@ -32,7 +32,11 @@ public class FatturaAttivaFilter extends FatturaFilter {
 	}
 
 	public FatturaAttivaFilter(IExpressionConstructor expressionConstructor) {
-		super(expressionConstructor, true);
+		this(expressionConstructor, true);
+	}
+	
+	public FatturaAttivaFilter(IExpressionConstructor expressionConstructor, Boolean fatturazioneAttiva) {
+		super(expressionConstructor, fatturazioneAttiva);
 	}
 
 	@Override

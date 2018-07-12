@@ -54,7 +54,7 @@ import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoSo
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.bean.AllegatoFatturaBean;
-import org.govmix.proxy.fatturapa.web.console.bean.ConservazioneBean;
+import org.govmix.proxy.fatturapa.web.console.bean.ConservazioneFormBean;
 import org.govmix.proxy.fatturapa.web.console.bean.FatturaElettronicaAttivaBean;
 import org.govmix.proxy.fatturapa.web.console.bean.TracciaSDIBean;
 import org.govmix.proxy.fatturapa.web.console.datamodel.FatturaElettronicaAttivaDM;
@@ -642,7 +642,7 @@ IFatturaElettronicaAttivaService>{
 //				: org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.form.registro.obbligatorio");
 
 		for (String string : nomeFile) {
-			ConservazioneBean conservazioneBean = new ConservazioneBean();
+			ConservazioneFormBean conservazioneBean = new ConservazioneFormBean();
 			conservazioneBean.setNomeFile(string);
 			conservazioneBean.setAnno("");
 			conservazioneBean.setProtocollo("");
@@ -787,7 +787,7 @@ IFatturaElettronicaAttivaService>{
 				dto.setDipartimento(this.form.getDipartimento().getValue().getValue());
 
 				// conservazione
-				ConservazioneBean conservazioneBean = this.listaConservazione.get(i);
+				ConservazioneFormBean conservazioneBean = this.listaConservazione.get(i);
 				dto.setNumeroProtocollo(conservazioneBean.getProtocollo());
 				dto.setAnnoProtocollo(conservazioneBean.getAnno());
 				dto.setRegistroProtocollo(conservazioneBean.getRegistro()); 
@@ -827,7 +827,7 @@ IFatturaElettronicaAttivaService>{
 	}
 
 	public String validaFormConservazione() {
-		for (ConservazioneBean conservazione : this.listaConservazione) {
+		for (ConservazioneFormBean conservazione : this.listaConservazione) {
 
 			// [BUSSU] Per ora il registro e' opzionale, per renderlo obbligatorio abilitare le seguenti tre righe.
 //			if(StringUtils.isEmpty(conservazione.getRegistro())){
@@ -860,14 +860,14 @@ IFatturaElettronicaAttivaService>{
 		return null;
 	}
 
-	public List<ConservazioneBean> getListaConservazione() {
+	public List<ConservazioneFormBean> getListaConservazione() {
 		if(listaConservazione ==null)
-			listaConservazione = new ArrayList<ConservazioneBean>();
+			listaConservazione = new ArrayList<ConservazioneFormBean>();
 
 		return listaConservazione;
 	}
 
-	public void setListaConservazione(List<ConservazioneBean> listaConservazione) {
+	public void setListaConservazione(List<ConservazioneFormBean> listaConservazione) {
 		this.listaConservazione = listaConservazione;
 	}
 
@@ -879,7 +879,7 @@ IFatturaElettronicaAttivaService>{
 		this.checkConservazione = checkConservazione;
 	}
 
-	private List<ConservazioneBean> listaConservazione = null;
+	private List<ConservazioneFormBean> listaConservazione = null;
 	private boolean checkConservazione = false;
 	private boolean salvataggioOk = false;
 	private boolean checkFormFattura = false;
