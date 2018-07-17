@@ -274,6 +274,11 @@ public class NotificaECService extends BaseService<NotificaECForm> implements IN
 						expr.and();
 					expr.equals(idFatturaModel.POSIZIONE, idFattura.getPosizione());
 				}
+
+				if(addAnd )
+					expr.and();
+				expr.equals(idFatturaModel.FATTURAZIONE_ATTIVA, idFattura.getFatturazioneAttiva());
+				
 			}
 			return expr;
 		} catch (ServiceException e) {
