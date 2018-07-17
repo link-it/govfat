@@ -39,7 +39,6 @@ import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.UserRole;
 import org.govmix.proxy.fatturapa.orm.dao.IUtenteServiceSearch;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.exporter.exception.ExportException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
@@ -261,8 +260,7 @@ public abstract class AbstractSingleFileExporter<T, K> {
 			for (IdFattura idFattura : idFatturaRichiesti) {
 				boolean found = false;
 				for (IdFattura idFatturaAutorizzata : idFattureByUtente) {
-					if(idFattura.getIdentificativoSdi().intValue() == idFatturaAutorizzata.getIdentificativoSdi().intValue() && 
-							idFattura.getPosizione().intValue() == idFatturaAutorizzata.getPosizione().intValue()){
+					if(idFattura.equals(idFatturaAutorizzata)){
 						found = true;
 						break;
 					}

@@ -112,6 +112,8 @@ public class AllegatoSingleFileExporter extends	AbstractSingleFileExporter<Alleg
 			pagExpr.equals(AllegatoFattura.model().ID_FATTURA.IDENTIFICATIVO_SDI, id.getIdentificativoSdi());
 			pagExpr.and();
 			pagExpr.equals(AllegatoFattura.model().ID_FATTURA.POSIZIONE, id.getPosizione());
+			pagExpr.and();
+			pagExpr.equals(AllegatoFattura.model().ID_FATTURA.FATTURAZIONE_ATTIVA, id.getFatturazioneAttiva());
 
 			return this.allegatoSearchDAO.findAll(pagExpr);
 		} catch(ExpressionException e) {

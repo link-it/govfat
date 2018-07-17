@@ -66,6 +66,20 @@ public class IdFattura extends org.openspcoop2.utils.beans.BaseBean implements S
 	this.fatturazioneAttiva = fatturazioneAttiva;
   }
 
+	@Override
+	public boolean equals(Object object) {
+
+		if(object == null)
+			return false;
+		if(!(object instanceof IdFattura))
+			return false;
+		IdFattura idFattura = (IdFattura) object;
+		
+		return idFattura.getIdentificativoSdi().intValue() == this.getIdentificativoSdi().intValue() && 
+				idFattura.getPosizione().intValue() == this.getPosizione().intValue() && idFattura.getFatturazioneAttiva() == this.getFatturazioneAttiva();
+
+	}
+  
   private IdFattura() {
   }
 
