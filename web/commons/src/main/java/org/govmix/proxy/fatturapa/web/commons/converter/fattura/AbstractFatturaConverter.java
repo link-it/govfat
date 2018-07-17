@@ -92,6 +92,7 @@ public abstract class AbstractFatturaConverter<T> {
 		fatturaElettronica.setStatoConsegna(StatoConsegnaType.NON_CONSEGNATA);
 		fatturaElettronica.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
 		
+		fatturaElettronica.setFatturazioneAttiva(this.params.isFatturazioneAttiva());		
 		fatturaElettronica.setTentativiConsegna(new Integer(0));
 
 		//Cedente prestatore
