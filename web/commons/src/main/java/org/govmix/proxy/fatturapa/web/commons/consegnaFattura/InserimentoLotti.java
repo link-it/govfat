@@ -223,14 +223,14 @@ public class InserimentoLotti {
 				params = ConsegnaFatturaUtils.getParameters(identificativo, req.getNomeFile(),
 								type, null,
 								messageId,
-								false,
+								true,
 								req.getXml());
 			} catch(Exception e) {
 				if(req instanceof InserimentoLottoSoloConservazioneRequest) {
 					params = ConsegnaFatturaUtils.getParameters(identificativo, req.getNomeFile(),
 							"XML", null,
 							messageId,
-							false,
+							true,
 							req.getXml());
 				} else {
 					throw e;
