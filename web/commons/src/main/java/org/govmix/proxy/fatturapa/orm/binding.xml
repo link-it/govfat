@@ -57,6 +57,19 @@
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
     <value name="nome" field="nome" usage="required"/>
   </mapping>
+  <mapping name="idSIP" class="org.govmix.proxy.fatturapa.orm.IdSip" abstract="false">
+    <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
+    <value name="idSip" field="idSip" usage="required"/>
+    <value name="statoConsegna" field="statoConsegna" usage="optional" enum-value-method="toString"/>
+    <value name="dataUltimaConsegna" field="dataUltimaConsegna" usage="optional"/>
+  </mapping>
+
+  <mapping type-name="_IdSip_Type" class="org.govmix.proxy.fatturapa.orm.IdSip" abstract="true">
+    <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
+    <value name="idSip" field="idSip" usage="required"/>
+    <value name="statoConsegna" field="statoConsegna" usage="optional" enum-value-method="toString"/>
+    <value name="dataUltimaConsegna" field="dataUltimaConsegna" usage="optional"/>
+  </mapping>
   <mapping name="idProtocollo" class="org.govmix.proxy.fatturapa.orm.IdProtocollo" abstract="false">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
     <value name="nome" field="nome" usage="required"/>
@@ -179,6 +192,7 @@
     <value name="statoProtocollazione" field="statoProtocollazione" usage="required" enum-value-method="toString"/>
     <value name="dataProtocollazione" field="dataProtocollazione" usage="optional"/>
     <value name="protocollo" field="protocollo" usage="optional"/>
+    <structure name="idSIP" field="idSIP" usage="optional" map-as="_IdSip_Type"/>
     <value name="id-egov" field="idEgov" usage="optional"/>
     <structure name="Dipartimento" field="dipartimento" usage="optional" map-as="_Dipartimento_Type"/>
   </mapping>
@@ -225,6 +239,7 @@
     <value name="statoProtocollazione" field="statoProtocollazione" usage="required" enum-value-method="toString"/>
     <value name="dataProtocollazione" field="dataProtocollazione" usage="optional"/>
     <value name="protocollo" field="protocollo" usage="optional"/>
+    <structure name="idSIP" field="idSIP" usage="optional" map-as="_IdSip_Type"/>
     <value name="id-egov" field="idEgov" usage="optional"/>
     <structure name="Dipartimento" field="dipartimento" usage="optional" map-as="_Dipartimento_Type"/>
   </mapping>
@@ -288,8 +303,10 @@
     <value name="protocollo" field="protocollo" usage="optional"/>
     <value name="xml" field="xml" usage="required"/>
     <structure field="idDecorrenzaTermini" usage="optional" map-as="org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini"/>
+    <structure name="idSIP" field="idSIP" usage="optional" map-as="_IdSip_Type"/>
     <structure name="idEsitoContabilizzazione" field="idEsitoContabilizzazione" usage="optional" map-as="_IdTrasmissioneEsito_Type"/>
     <structure name="idEsitoScadenza" field="idEsitoScadenza" usage="optional" map-as="_IdTrasmissioneEsito_Type"/>
+    <value name="statoConservazione" field="statoConservazione" usage="required" enum-value-method="toString"/>
     <structure name="Dipartimento" field="dipartimento" usage="optional" map-as="_Dipartimento_Type"/>
     <structure name="LottoFatture" field="lottoFatture" usage="optional" map-as="_LottoFatture_Type"/>
   </mapping>
@@ -364,6 +381,15 @@
     <value name="nome" field="nome" usage="required"/>
     <value name="label" field="label" usage="required"/>
     <structure name="idProtocollo" field="idProtocollo" usage="required" map-as="_IdProtocollo_Type"/>
+  </mapping>
+  <mapping name="SIP" class="org.govmix.proxy.fatturapa.orm.SIP">
+    <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
+    <value name="registro" field="registro" usage="optional"/>
+    <value name="anno" field="anno" usage="optional"/>
+    <value name="numero" field="numero" usage="optional"/>
+    <value name="statoConsegna" field="statoConsegna" default="NON_CONSEGNATA" usage="required" enum-value-method="toString"/>
+    <value name="dataUltimaConsegna" field="dataUltimaConsegna" usage="optional"/>
+    <value name="rapportoVersamento" field="rapportoVersamento" usage="optional"/>
   </mapping>
   <mapping name="RegistroPropertyValue" class="org.govmix.proxy.fatturapa.orm.RegistroPropertyValue">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>

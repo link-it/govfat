@@ -287,6 +287,14 @@ public class FatturaBD extends BaseBD {
 			throw new ServiceException(e);
 		}
 	}
+	
+	public List<Long> findAllTableIds(FatturaFilter filter)throws ServiceException {
+		try {
+			return ((IDBFatturaElettronicaService)this.service).findAllTableIds(filter.toPaginatedExpression());
+		} catch (NotImplementedException e) {
+			throw new ServiceException(e);
+		}
+	}
 
 	public List<Map<String,Object>> select(FatturaFilter filter, IField... fields) throws ServiceException {
 		try {
@@ -452,6 +460,10 @@ public class FatturaBD extends BaseBD {
 	
 	public List<String> getAutocompletamentoNumero(FatturaFilter filter) throws ServiceException {
 		return this.getListAutocomplete(filter, FatturaElettronica.model().NUMERO);
+	}
+
+	public void inviaInConservazione(List<Long> idFattura) throws ServiceException {
+		this.log.info(String.format("invio in conservazione %d fatture", idFattura.size()));
 	}
 
 
