@@ -46,7 +46,6 @@ public class ConsoleStartupListener extends ApplicationStartupListener {
 		InputStream is = null;
 		try{
 			ConsoleStartupListener.log.debug("Init FatturaPA WebConsole in corso...");
-			
 
 			String logPath = this.getLoggerProperties();
 			if(!logPath.startsWith("/"))
@@ -62,6 +61,7 @@ public class ConsoleStartupListener extends ApplicationStartupListener {
 
 
 			ConsoleStartupListener.log.debug("Init FatturaPA WebConsole completato.");
+			ConsoleStartupListener.log.info("Info versione: " + CommonsProperties.getInstance(ConsoleStartupListener.log).getInfoVersione());
 			
 			ConsoleStartupListener.log.debug("Check Graphics Environment: is HeadeLess ["+java.awt.GraphicsEnvironment.isHeadless()+"]");
 			
