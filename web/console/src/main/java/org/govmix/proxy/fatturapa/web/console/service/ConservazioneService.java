@@ -27,14 +27,12 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
-import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaAttivaFilter;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FilterSortWrapper;
-import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLotti;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.bean.ConservazioneBean;
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.iservice.IConservazioneService;
 import org.govmix.proxy.fatturapa.web.console.search.ConservazioneSearchForm;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
@@ -59,21 +57,18 @@ public class ConservazioneService extends BaseService<ConservazioneSearchForm> i
 
 	private static Logger log = LoggerManager.getDaoLogger();
 
-	private FatturaAttivaBD fatturaAttivaBD= null;
-	private InserimentoLotti inserimentoLotti = null;
-	
-	
+	private FatturaBD fatturaBD= null;
+
+
 	public ConservazioneService(){
 		try{
-			this.fatturaAttivaBD = new FatturaAttivaBD(log);
-			this.inserimentoLotti = new InserimentoLotti(log);
-			this.inserimentoLotti.setDipartimenti(Utils.getListaDipartimentiLoggedUtente());
+			this.fatturaBD = new FatturaBD(log);
 		}catch(Exception e){
 			ConservazioneService.log.error("Si e' verificato un errore durante l'inizializzazione del service:" + e.getMessage(), e);
 		}
 	}
 
-	 
+
 
 	@Override
 	public List<ConservazioneBean> findAll(int arg0, int arg1)
@@ -84,7 +79,7 @@ public class ConservazioneService extends BaseService<ConservazioneSearchForm> i
 
 		try{
 			if(abilitaRicerca()){
-				FatturaAttivaFilter filter = (FatturaAttivaFilter) this.getFilterFromSearch(fatturaAttivaBD, this.form);
+				FatturaFilter filter = this.getFilterFromSearch(fatturaBD, this.form);
 
 				//order by
 				FilterSortWrapper fsw = new FilterSortWrapper();
@@ -94,8 +89,8 @@ public class ConservazioneService extends BaseService<ConservazioneSearchForm> i
 
 				filter.setOffset(arg0);
 				filter.setLimit(arg1);
-				
-				List<FatturaElettronica> findAll = this.fatturaAttivaBD.findAll(filter);
+
+				List<FatturaElettronica> findAll = this.fatturaBD.findAll(filter);
 
 				if(findAll != null && findAll.size() > 0){
 					for (FatturaElettronica fatturaElettronica : findAll) {
@@ -120,8 +115,8 @@ public class ConservazioneService extends BaseService<ConservazioneSearchForm> i
 		try{
 
 			if(abilitaRicerca()){
-				FatturaAttivaFilter filter = (FatturaAttivaFilter) this.getFilterFromSearch(fatturaAttivaBD, this.form);
-				cnt = (int)   this.fatturaAttivaBD.count(filter);						
+				FatturaFilter filter = this.getFilterFromSearch(fatturaBD, this.form);
+				cnt = (int)   this.fatturaBD.count(filter);						
 			}
 			else 
 				return 0;
@@ -164,7 +159,7 @@ public class ConservazioneService extends BaseService<ConservazioneSearchForm> i
 
 		try{
 			if(abilitaRicerca()){
-				FatturaAttivaFilter filter = (FatturaAttivaFilter) this.getFilterFromSearch(fatturaAttivaBD, this.form);
+				FatturaFilter filter = this.getFilterFromSearch(fatturaBD, this.form);
 
 				//order by
 				FilterSortWrapper fsw = new FilterSortWrapper();
@@ -172,7 +167,7 @@ public class ConservazioneService extends BaseService<ConservazioneSearchForm> i
 				fsw.setField(FatturaElettronica.model().DATA_RICEZIONE);
 				filter.getFilterSortList().add(fsw);
 
-				List<FatturaElettronica> findAll = this.fatturaAttivaBD.findAll(filter);
+				List<FatturaElettronica> findAll = this.fatturaBD.findAll(filter);
 
 				if(findAll != null && findAll.size() > 0){
 					for (FatturaElettronica fatturaElettronica : findAll) {
@@ -200,7 +195,7 @@ public class ConservazioneService extends BaseService<ConservazioneSearchForm> i
 
 
 		try{
-			FatturaElettronica f = this.fatturaAttivaBD.getById(arg0.longValue());
+			FatturaElettronica f = this.fatturaBD.getById(arg0.longValue());
 			ConservazioneBean fat = new ConservazioneBean();
 			fat.setDTO(f);
 
@@ -217,96 +212,98 @@ public class ConservazioneService extends BaseService<ConservazioneSearchForm> i
 
 	@Override
 	public void store(ConservazioneBean arg0) throws ServiceException {}
-	
-//	@Override
-//	public InserimentoLottoResponse salvaFatture(List<InserimentoLottoRequest> listaFatture) throws ServiceException {
-//		String methodName = "salvaFatture(listaFatture)";
-//		
-//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] in corso...");
-//		
-//		InserimentoLottoResponse inserimentoLottoResponse = this.inserimentoLotti.inserisciLotto(listaFatture);
-//		
-//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] completato.");
-//		
-//		return inserimentoLottoResponse;
-//	}
-//	
-//	@Override
-//	public InserimentoLottoResponse salvaFattureSoloConservazione(
-//			List<InserimentoLottoSoloConservazioneRequest> listaFatture) throws ServiceException {
-//		String methodName = "store(salvaFattureSoloConservazione)";
-//		
-//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] in corso...");
-//		
-//		InserimentoLottoResponse inserimentoLottoResponse = this.inserimentoLotti.inserisciLottoSoloConservazione(listaFatture);
-//		
-//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] completato.");
-//		
-//		return inserimentoLottoResponse;
-//	}
-//	
-//	@Override
-//	public void checkLotto(List<InserimentoLottoRequest> requestList) throws InserimentoLottiException {
-//		String methodName = "checkLotto";
-//		
-//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] in corso...");
-//		
-//		this.inserimentoLotti.checkLotto(requestList);
-//		
-//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] completato.");
-//	}
-//
-//	@Override
-//	public void checkLottoSoloConservazione(List<InserimentoLottoSoloConservazioneRequest> requestList)
-//			throws InserimentoLottiException {
-//		String methodName = "checkLottoSoloConservazione";
-//		
-//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] in corso...");
-//		
-//		this.inserimentoLotti.checkLottoSoloConservazione(requestList);
-//		
-//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] completato.");
-//	}
-	
-	public FatturaFilter getFilterFromSearch(FatturaAttivaBD fatturaBD, ConservazioneSearchForm search) throws Exception{
-		FatturaAttivaFilter filter = null;
-			try{	
-				boolean attiva =false;
+
+	//	@Override
+	//	public InserimentoLottoResponse salvaFatture(List<InserimentoLottoRequest> listaFatture) throws ServiceException {
+	//		String methodName = "salvaFatture(listaFatture)";
+	//		
+	//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] in corso...");
+	//		
+	//		InserimentoLottoResponse inserimentoLottoResponse = this.inserimentoLotti.inserisciLotto(listaFatture);
+	//		
+	//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] completato.");
+	//		
+	//		return inserimentoLottoResponse;
+	//	}
+	//	
+	//	@Override
+	//	public InserimentoLottoResponse salvaFattureSoloConservazione(
+	//			List<InserimentoLottoSoloConservazioneRequest> listaFatture) throws ServiceException {
+	//		String methodName = "store(salvaFattureSoloConservazione)";
+	//		
+	//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] in corso...");
+	//		
+	//		InserimentoLottoResponse inserimentoLottoResponse = this.inserimentoLotti.inserisciLottoSoloConservazione(listaFatture);
+	//		
+	//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] completato.");
+	//		
+	//		return inserimentoLottoResponse;
+	//	}
+	//	
+	//	@Override
+	//	public void checkLotto(List<InserimentoLottoRequest> requestList) throws InserimentoLottiException {
+	//		String methodName = "checkLotto";
+	//		
+	//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] in corso...");
+	//		
+	//		this.inserimentoLotti.checkLotto(requestList);
+	//		
+	//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] completato.");
+	//	}
+	//
+	//	@Override
+	//	public void checkLottoSoloConservazione(List<InserimentoLottoSoloConservazioneRequest> requestList)
+	//			throws InserimentoLottiException {
+	//		String methodName = "checkLottoSoloConservazione";
+	//		
+	//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] in corso...");
+	//		
+	//		this.inserimentoLotti.checkLottoSoloConservazione(requestList);
+	//		
+	//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] completato.");
+	//	}
+
+	public FatturaFilter getFilterFromSearch(FatturaBD fatturaBD, ConservazioneSearchForm search) throws Exception{
+		FatturaFilter filter = null;
+		try{	
+			boolean attiva =false;
 			// tipo fattura
 			if(search.getTipoFattura().getValue() != null && !StringUtils.isEmpty(search.getTipoFattura().getValue().getValue())){
-				attiva = "attiva".equals(search.getTipoFattura().getValue().getValue());
-				filter = fatturaBD.newFilter(attiva);
+				attiva = Costanti.TIPO_FATTURA_ATTIVA_VALUE.equals(search.getTipoFattura().getValue().getValue());
 			}
-			
+
+			filter = fatturaBD.newFilter(attiva);
+
 			// anno
 			if(search.getAnno().getValue() != null && !StringUtils.isEmpty(search.getAnno().getValue().getValue())){
 				String annoS = search.getAnno().getValue().getValue();
 				int anno = Integer.parseInt(annoS);
 				filter.setAnno(anno); 
 			}
-			
+
 			// stato invio
 			if(search.getStatoInvio().getValue() != null &&
 					!StringUtils.isEmpty(search.getStatoInvio().getValue().getValue()) && !search.getStatoInvio().getValue().getValue().equals("*")){
-				if(attiva) {
-					StatoElaborazioneType statoElaborazioneType = StatoElaborazioneType.toEnumConstant(search.getStatoInvio().getValue().getValue());
-					filter.getStatoElaborazioneList().add(statoElaborazioneType);
-				} else {
-//					if(!search.getStatoInvio().getValue().getValue().equals("E")){
-//						EsitoType esitoType = EsitoType.toEnumConstant(search.getStatoInvio().getValue().getValue());
-//						filter.setEsito(esitoType);
-//					} else {
-//						filter.setEsitoNull(true);
-//					}
-				}
+				// TODO agganciare nuovo filtro per stato invio conservazione
+//				if(attiva) {
+//					StatoElaborazioneType statoElaborazioneType = StatoElaborazioneType.toEnumConstant(search.getStatoInvio().getValue().getValue());
+//					filter.getStatoElaborazioneList().add(statoElaborazioneType);
+//				} else {
+//					//					if(!search.getStatoInvio().getValue().getValue().equals("E")){
+//					//						EsitoType esitoType = EsitoType.toEnumConstant(search.getStatoInvio().getValue().getValue());
+//					//						filter.setEsito(esitoType);
+//					//					} else {
+//					//						filter.setEsitoNull(true);
+//					//					}
+//				}
 			}
-			
+
 			// ente
 			if(search.getEnte().getValue() != null &&
 					!StringUtils.isEmpty(search.getEnte().getValue().getValue()) && !search.getEnte().getValue().getValue().equals("*")){
 				filter.setEnte(search.getEnte().getValue().getValue());
 			}
-			
+
 		}catch(Exception e){
 			ConservazioneService.log.error("Si e' verificato un errore durante la conversione del filtro di ricerca: " + e.getMessage(), e);
 			throw e;
@@ -333,15 +330,15 @@ public class ConservazioneService extends BaseService<ConservazioneSearchForm> i
 		return converter.toTable(model);
 	}
 
-//	@Override
-//	public Date getDataUltimaOperazioneByIdFattura(IdFattura idFattura) throws ServiceException {
-//		String methodName = "getDataUltimaOperazioneByIdFattura()";
-//
-//		try{
-//			return this.operazioneContabileBD.getDataUltimaOperazioneByIdFattura(idFattura);
-//		}catch(Exception e){
-//			FatturaElettronicaAttivaService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
-//			throw new ServiceException(e);
-//		}
-//	}
+	//	@Override
+	//	public Date getDataUltimaOperazioneByIdFattura(IdFattura idFattura) throws ServiceException {
+	//		String methodName = "getDataUltimaOperazioneByIdFattura()";
+	//
+	//		try{
+	//			return this.operazioneContabileBD.getDataUltimaOperazioneByIdFattura(idFattura);
+	//		}catch(Exception e){
+	//			FatturaElettronicaAttivaService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
+	//			throw new ServiceException(e);
+	//		}
+	//	}
 }

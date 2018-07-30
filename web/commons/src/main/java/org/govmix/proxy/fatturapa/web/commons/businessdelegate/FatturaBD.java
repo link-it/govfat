@@ -67,6 +67,10 @@ public class FatturaBD extends BaseBD {
 	public FatturaBD() throws Exception {
 		this(Logger.getLogger(FatturaBD.class));
 	}
+	
+	public FatturaFilter newFilter(Boolean fatturazioneAttiva) {
+		return new FatturaFilter(this.service,fatturazioneAttiva);
+	}
 
 	public void create(FatturaElettronica fattura) throws ServiceException {
 		try {

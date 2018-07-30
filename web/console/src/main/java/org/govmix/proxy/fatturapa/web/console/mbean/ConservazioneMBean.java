@@ -1,24 +1,36 @@
 package org.govmix.proxy.fatturapa.web.console.mbean;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdEnte;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
+import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.bean.ConservazioneBean;
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.datamodel.ConservazioneDM;
+import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
 import org.govmix.proxy.fatturapa.web.console.form.FatturaForm;
 import org.govmix.proxy.fatturapa.web.console.iservice.IConservazioneService;
 import org.govmix.proxy.fatturapa.web.console.search.ConservazioneSearchForm;
+import org.govmix.proxy.fatturapa.web.console.service.ConservazioneService;
+import org.govmix.proxy.fatturapa.web.console.servlet.ConservazioneServlet;
+import org.govmix.proxy.fatturapa.web.console.util.ConservazioneThread;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.DataModelListView;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.FiltraException;
@@ -109,9 +121,15 @@ IConservazioneService>{
 		if (this.listaAnni == null) {
 			this.listaAnni = new ArrayList<SelectItem>();
 			
-			this.listaAnni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("2018", "2018")));
-			this.listaAnni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("2017", "2017")));
-			this.listaAnni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("2016", "2016")));
+			Calendar instance = Calendar.getInstance();
+			instance.setTime(new Date());
+			int year = instance.get(Calendar.YEAR);
+			
+			for (int i = year; i >= 2016; i--) {
+				String valAnno = "" + i;
+				this.listaAnni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(valAnno, valAnno)));
+				
+			}
 		}
 		
 		return listaAnni;
@@ -123,8 +141,8 @@ IConservazioneService>{
 		if (this.listaTipiFattura == null) {
 			this.listaTipiFattura = new ArrayList<SelectItem>();
 			
-			this.listaTipiFattura.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("attiva", ("conservazione.search.tipoFattura.attiva"))));
-			this.listaTipiFattura.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("passiva", ("conservazione.search.tipoFattura.passiva"))));
+			this.listaTipiFattura.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(Costanti.TIPO_FATTURA_ATTIVA_VALUE, ("conservazione.search.tipoFattura.attiva"))));
+			this.listaTipiFattura.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(Costanti.TIPO_FATTURA_PASSIVA_VALUE, ("conservazione.search.tipoFattura.passiva"))));
 		
 		}
 		return listaTipiFattura;
@@ -138,7 +156,7 @@ IConservazioneService>{
 		boolean fatturazioneAttiva = false;
 		org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem tipoFatturaSelezionata = ((SelectListImpl)this.search.getTipoFattura()).getValue();
 		if(tipoFatturaSelezionata != null) {
-			fatturazioneAttiva = "attiva".equals(tipoFatturaSelezionata.getValue());
+			fatturazioneAttiva = Costanti.TIPO_FATTURA_ATTIVA_VALUE.equals(tipoFatturaSelezionata.getValue());
 		}
 		
 		this.listaEnti = _getEnti(true, fatturazioneAttiva);
@@ -188,6 +206,7 @@ IConservazioneService>{
 	   Conservazione fallita 
 	 */
 	public List<SelectItem> getListaStatiInvio() {
+		// TODO sistemare voci dello stato invio
 		if (this.listaStatiInvio == null) {
 			this.listaStatiInvio = new ArrayList<SelectItem>();
 			
@@ -195,7 +214,7 @@ IConservazioneService>{
 			boolean fatturazioneAttiva = false;
 			org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem tipoFatturaSelezionata = ((SelectListImpl)this.search.getTipoFattura()).getValue();
 			if(tipoFatturaSelezionata != null) {
-				fatturazioneAttiva = "attiva".equals(tipoFatturaSelezionata.getValue());
+				fatturazioneAttiva = Costanti.TIPO_FATTURA_ATTIVA_VALUE.equals(tipoFatturaSelezionata.getValue());
 			}
 
 			this.listaStatiInvio.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi"))));
@@ -248,9 +267,38 @@ IConservazioneService>{
 					}
 				}
 			}
-
+			
+			FatturaBD fatturaBD = new FatturaBD(getLog());
+			FatturaFilter fatturaFilter = ((ConservazioneService)this.service).getFilterFromSearch(fatturaBD , this.search);
+			ConservazioneThread conservazioneThread = new ConservazioneThread();
+			conservazioneThread.setAll(this.isSelectedAll());
+			conservazioneThread.setIds(idFatture);
+			conservazioneThread.setFatturaBD(fatturaBD);
+			
+			
+			
+			
+			
+			
+			
 			MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("conservazione.invio.ok"));
 
+			// We must get first our context
+			FacesContext context = FacesContext.getCurrentInstance();
+
+			// Then we have to get the Response where to write our file
+			HttpServletResponse response = (HttpServletResponse) context
+					.getExternalContext().getResponse();
+
+			response.sendRedirect(context.getExternalContext()
+					.getRequestContextPath()
+					+ "/" + ConservazioneServlet.FATTURA_ELETTRONICA_CONSERVAZIONE_SERVLET_PATH+"?"+FattureExporter.PARAMETRO_IS_ALL+"="
+					+ this.isSelectedAll()
+					+ "&"+FattureExporter.PARAMETRO_IDS+"="
+					+ StringUtils.join(idFatture, ","));
+
+			context.responseComplete();
+			
 			// End of the method
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().responseComplete();

@@ -51,6 +51,7 @@ import org.govmix.proxy.fatturapa.web.commons.exporter.FatturaSingleFileExporter
 import org.govmix.proxy.fatturapa.web.commons.exporter.NotificaDTSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.exporter.NotificaECSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.exporter.PccTracciaResponseSingleFileExporter;
+import org.govmix.proxy.fatturapa.web.commons.exporter.RapportoVersamentoSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.exporter.ScartoECSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.exporter.TracciaSdISingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.exporter.exception.ExportException;
@@ -89,6 +90,7 @@ public class FattureExporter  extends HttpServlet{
 	public static final String PARAMETRO_ACTION_NOTIFICA_DT = AbstractSingleFileExporter.PARAMETRO_ACTION_NOTIFICA_DT;
 	public static final String PARAMETRO_ACTION_SCARTO = AbstractSingleFileExporter.PARAMETRO_ACTION_SCARTO;
 	public static final String PARAMETRO_ACTION_PCC_RIALLINEAMENTO = AbstractSingleFileExporter.PARAMETRO_ACTION_PCC_RIALLINEAMENTO;
+	public static final String PARAMETRO_ACTION_RAPPORTO_VERSAMENTO = AbstractSingleFileExporter.PARAMETRO_ACTION_RAPPORTO_VERSAMENTO;
     public static final String PARAMETRO_ACTION_COMUNICAZIONE_FATTURA_USCITA = AbstractSingleFileExporter.PARAMETRO_ACTION_COMUNICAZIONE_FATTURA_USCITA;
     public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_SCARTO = AbstractSingleFileExporter.PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_SCARTO;
     public static final String PARAMETRO_ACTION_COMUNICAZIONE_RICEVUTA_CONSEGNA = AbstractSingleFileExporter.PARAMETRO_ACTION_COMUNICAZIONE_RICEVUTA_CONSEGNA;
@@ -483,6 +485,22 @@ public class FattureExporter  extends HttpServlet{
 							// committing status and headers
 							//							response.flushBuffer();
 
+						}  else if(action.equals(PARAMETRO_ACTION_RAPPORTO_VERSAMENTO)){
+							if(!formato.equals(AbstractSingleFileExporter.FORMATO_XML))
+								throw new ExportException("Si e' verificato un errore durante l'export: Il formato richiesto non e' disponibile per il Rapporto di Versamento.");
+
+							RapportoVersamentoSingleFileExporter rvsfe = (RapportoVersamentoSingleFileExporter) sfe;
+							FatturaElettronica fat = rvsfe.convertToObject(ids[0]);
+
+							// Rapporto versamento formato XML
+							if(formato.equals(AbstractSingleFileExporter.FORMATO_XML)){
+								response.setContentType("text/xml");
+								fileName = rvsfe.exportAsRaw(fat, baos);
+							}
+
+							response.setHeader("Content-Disposition", "attachment; filename="+fileName);
+							// committing status and headers
+							//							response.flushBuffer();
 						}  
 
 						byte [] buffer = baos.toByteArray();
@@ -599,6 +617,8 @@ public class FattureExporter  extends HttpServlet{
 			return new TracciaSdISingleFileExporter(log);
 		}  else if(action.equals(PARAMETRO_ACTION_COMUNICAZIONE_RICEVUTA_CONSEGNA)) {
 			return new TracciaSdISingleFileExporter(log);
+		} else if(action.equals(PARAMETRO_ACTION_RAPPORTO_VERSAMENTO)) {
+			return new RapportoVersamentoSingleFileExporter(log);
 		} else {
 			throw new ExportException("Si e' verificato un errore durante l'export: Tipo di risorsa richiesta ["+action+"] non disponibile.");
 		}

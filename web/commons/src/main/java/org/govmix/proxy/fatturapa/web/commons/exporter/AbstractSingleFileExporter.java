@@ -39,7 +39,6 @@ import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.UserRole;
 import org.govmix.proxy.fatturapa.orm.dao.IUtenteServiceSearch;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.exporter.exception.ExportException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
@@ -63,6 +62,7 @@ public abstract class AbstractSingleFileExporter<T, K> {
 	public static final String PARAMETRO_ACTION_NOTIFICA_DT = "dt";
 	public static final String PARAMETRO_ACTION_SCARTO = "sc";
     public static final String PARAMETRO_ACTION_PCC_RIALLINEAMENTO = "pccDf";
+    public static final String PARAMETRO_ACTION_RAPPORTO_VERSAMENTO = "rv";
     public static final String PARAMETRO_ACTION_COMUNICAZIONE_FATTURA_USCITA = "com_"+ TipoComunicazioneType.FAT_OUT.toString();
     public static final String PARAMETRO_ACTION_COMUNICAZIONE_RICEVUTA_CONSEGNA = "com_"+ TipoComunicazioneType.RC.toString();
     public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_SCARTO = "com_"+ TipoComunicazioneType.NS.toString();

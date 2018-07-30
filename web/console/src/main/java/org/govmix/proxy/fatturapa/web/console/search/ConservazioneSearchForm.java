@@ -22,6 +22,7 @@ package org.govmix.proxy.fatturapa.web.console.search;
 
 import javax.faces.event.ActionEvent;
 
+import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.mbean.ConservazioneMBean;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.SearchForm;
@@ -64,7 +65,7 @@ public class ConservazioneSearchForm extends BaseSearchForm implements SearchFor
 		this.anno.setFontName("Arial"); //"Arial,Verdana,sans-serif" 
 		
 		// tipoFattura
-		this.tipoFattura = factory.getInputFieldFactory().createSelectList("tipoFattura","conservazione.search.tipoFattura",new SelectItem("attiva", ("conservazione.search.tipoFattura.attiva")),false);
+		this.tipoFattura = factory.getInputFieldFactory().createSelectList("tipoFattura","conservazione.search.tipoFattura",new SelectItem(Costanti.TIPO_FATTURA_ATTIVA_VALUE, ("conservazione.search.tipoFattura.attiva")),false);
 		((SelectListImpl)this.tipoFattura).setCheckItemWidth(true); 
 		this.tipoFattura.setFontName("Arial"); //"Arial,Verdana,sans-serif" 
 		this.tipoFattura.setFieldsToUpdate(this.getId () + "_searchPnl");
@@ -98,6 +99,11 @@ public class ConservazioneSearchForm extends BaseSearchForm implements SearchFor
 		this.ente.reset();
 		this.statoInvio.reset();
 
+	}
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 
 	public SelectList<SelectItem> getAnno() {
@@ -148,7 +154,7 @@ public class ConservazioneSearchForm extends BaseSearchForm implements SearchFor
 		org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem tipoFatturaSelezionata = 
 				((SelectListImpl)this.getTipoFattura()).getValue();
 		if(tipoFatturaSelezionata != null) {
-			fatturazioneAttiva = "attiva".equals(tipoFatturaSelezionata.getValue());
+			fatturazioneAttiva = Costanti.TIPO_FATTURA_ATTIVA_VALUE.equals(tipoFatturaSelezionata.getValue());
 		}
 		
 		return fatturazioneAttiva;

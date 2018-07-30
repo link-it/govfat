@@ -82,12 +82,9 @@ public class ConservazioneBean extends BaseBean<FatturaElettronica, Long> implem
 			}
 		}
 
-		//		this.annoNumero.setValue(this.getDTO().getAnno() + "-" + this.getDTO().getNumero());
 		this.annoNumero.setValue(this.getDTO().getNumero());
 		this.dataInvio.setValue(this.getDTO().getDataRicezione());
 		this.tipoFattura.setValue(this.getDTO().isFatturazioneAttiva() ? "fattura.tipoFattura.attiva" : "fattura.tipoFattura.passiva");
-
-//		StatoElaborazioneType _statoElaborazione = this.getDTO().getLottoFatture() != null ? this.getDTO().getLottoFatture().getStatoElaborazioneInUscita() : null; 
 
 		int simulaStato = (int)(Math.random() * 6) + 1;
 
@@ -128,71 +125,8 @@ public class ConservazioneBean extends BaseBean<FatturaElettronica, Long> implem
 			break;
 		}
 
-//
-//
-//
-//		// valore icona statoInvio
-//		if(_statoElaborazione == null){
-//			this.statoInvio.setImage("/images/fatturapa/icons/plus-grey.png");
-//			this.statoInvio.setTitle(("fattura.notificaEC.iconTitle.nonPresente"));
-//			this.statoInvio.setAlt("fattura.notificaEC.iconTitle.nonPresente");
-//			this.statoInvio.setRendered(true);
-//		}else {
-//			switch (_statoElaborazione) {
-//			case PRESA_IN_CARICO:
-//			case PROTOCOLLATA:
-//			case IN_CORSO_DI_FIRMA:
-//			case IN_CORSO_DI_PROTOCOLLAZIONE:
-//			case SOLO_CONSERVAZIONE:
-//			case RICEVUTA_DALLO_SDI:
-//			case RICEVUTA_DAL_DESTINATARIO:
-//				this.statoInvio.setImage("/images/fatturapa/icons/plus-grey.png");
-//				this.statoInvio.setTitle("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
-//				this.statoInvio.setAlt("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
-//				break;
-//			case ERRORE_DI_SPEDIZIONE:
-//			case ERRORE_DI_FIRMA:
-//			case ERRORE_DI_PROTOCOLLO:
-//				this.statoInvio.setImage("/images/fatturapa/icons/accept_circle-yellow.png");
-//				this.statoInvio.setTitle("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
-//				this.statoInvio.setAlt("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
-//				break;
-//			case RICEVUTO_ESITO_CEDENTE_PRESTATORE_ACCETTAZIONE:
-//				this.statoInvio.setImage("/images/fatturapa/icons/accept_circle-green.png");
-//				this.statoInvio.setTitle("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
-//				this.statoInvio.setAlt("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
-//				break;
-//			case RICEVUTO_ESITO_CEDENTE_PRESTATORE_RIFIUTO:
-//				this.statoInvio.setImage("/images/fatturapa/icons/accept_circle-red.png");
-//				this.statoInvio.setTitle("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
-//				this.statoInvio.setAlt("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
-//				break;
-//
-//			case IMPOSSIBILITA_DI_RECAPITO:
-//			case MANCATA_CONSEGNA:
-//				this.statoInvio.setImage("/images/fatturapa/icons/no_accept-green.png");
-//				this.statoInvio.setTitle("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
-//				this.statoInvio.setAlt("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
-//				break;
-//
-//			case RICEVUTO_SCARTO_SDI:
-//				this.statoInvio.setImage("/images/fatturapa/icons/no_accept-red.png");
-//				this.statoInvio.setTitle("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
-//				this.statoInvio.setAlt("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
-//				break;
-//			case RICEVUTA_DECORRENZA_TERMINI:
-//				this.statoInvio.setImage("/images/fatturapa/icons/accept_circle-green.png");
-//				this.statoInvio.setTitle("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
-//				this.statoInvio.setAlt("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
-//				break;
-//			}
-//		}
-
-		
-
 		this.identificativoSdi.setValue(this.getDTO().getIdentificativoSdi() + "");
 		this.cessionarioCommittente.setValue(this.getDTO().getCessionarioCommittenteDenominazione());
-
 	}
 
 
@@ -280,7 +214,7 @@ public class ConservazioneBean extends BaseBean<FatturaElettronica, Long> implem
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
 				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getId()
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
-				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_FATTURA;
+				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_RAPPORTO_VERSAMENTO;
 
 		this.xml.setHref(this.getDTO().getXml() != null ?  url : null);
 
@@ -307,7 +241,7 @@ public class ConservazioneBean extends BaseBean<FatturaElettronica, Long> implem
 					+ FattureExporter.PARAMETRO_IDS+"="
 					+ StringUtils.join(idFatture, ",")
 					+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
-					+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_FATTURA);
+					+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_RAPPORTO_VERSAMENTO);
 
 			context.responseComplete();
 
