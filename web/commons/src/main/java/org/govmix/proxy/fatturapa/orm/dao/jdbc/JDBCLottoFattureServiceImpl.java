@@ -69,8 +69,7 @@ public class JDBCLottoFattureServiceImpl extends JDBCLottoFattureServiceSearchIm
 		// Object _sip
 		Long id_sip = null;
 		org.govmix.proxy.fatturapa.orm.IdSip idLogic_sip = null;
-		// TODO Impostare il corretto metodo che contiene l'identificativo logico
-		//idLogic_sip = lottoFatture.getSIP();
+		idLogic_sip = lottoFatture.getIdSIP();
 		if(idLogic_sip!=null){
 			if(idMappingResolutionBehaviour==null ||
 				(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour))){
@@ -220,8 +219,7 @@ public class JDBCLottoFattureServiceImpl extends JDBCLottoFattureServiceSearchIm
 		// Object _lottoFatture_sip
 		Long id_lottoFatture_sip = null;
 		org.govmix.proxy.fatturapa.orm.IdSip idLogic_lottoFatture_sip = null;
-		// TODO Impostare il corretto metodo che contiene l'identificativo logico
-		//idLogic_lottoFatture_sip = lottoFatture.getSIP();
+		idLogic_lottoFatture_sip = lottoFatture.getIdSIP();
 		if(idLogic_lottoFatture_sip!=null){
 			if(idMappingResolutionBehaviour==null ||
 				(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour))){

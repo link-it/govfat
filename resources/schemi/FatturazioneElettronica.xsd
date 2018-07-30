@@ -1296,6 +1296,8 @@
 			<xsd:element name="idPccAmministrazione" type="xsd:string" minOccurs="0" />
 			<xsd:element name="cfAuth" type="xsd:string" minOccurs="0"/>
 			<xsd:element name="descrizione" type="xsd:string" minOccurs="0" />
+			<xsd:element name="enteVersatore" type="xsd:string" minOccurs="0" />
+			<xsd:element name="strutturaVersatore" type="xsd:string" minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
 	

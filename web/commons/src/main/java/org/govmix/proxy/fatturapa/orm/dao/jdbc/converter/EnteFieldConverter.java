@@ -96,6 +96,20 @@ public class EnteFieldConverter extends AbstractSQLFieldConverter {
 				return "descrizione";
 			}
 		}
+		if(field.equals(Ente.model().ENTE_VERSATORE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".ente_versatore";
+			}else{
+				return "ente_versatore";
+			}
+		}
+		if(field.equals(Ente.model().STRUTTURA_VERSATORE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".struttura_versatore";
+			}else{
+				return "struttura_versatore";
+			}
+		}
 
 
 		return super.toColumn(field,returnAlias,appendTablePrefix);
@@ -119,6 +133,12 @@ public class EnteFieldConverter extends AbstractSQLFieldConverter {
 			return this.toTable(Ente.model(), returnAlias);
 		}
 		if(field.equals(Ente.model().DESCRIZIONE)){
+			return this.toTable(Ente.model(), returnAlias);
+		}
+		if(field.equals(Ente.model().ENTE_VERSATORE)){
+			return this.toTable(Ente.model(), returnAlias);
+		}
+		if(field.equals(Ente.model().STRUTTURA_VERSATORE)){
 			return this.toTable(Ente.model(), returnAlias);
 		}
 

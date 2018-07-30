@@ -40,6 +40,8 @@ import java.io.Serializable;
  * 			&lt;element name="idPccAmministrazione" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="cfAuth" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="descrizione" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="enteVersatore" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="strutturaVersatore" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -57,7 +59,9 @@ import java.io.Serializable;
   	"nome",
   	"idPccAmministrazione",
   	"cfAuth",
-  	"descrizione"
+  	"descrizione",
+  	"enteVersatore",
+  	"strutturaVersatore"
   }
 )
 
@@ -113,6 +117,22 @@ public class Ente extends org.openspcoop2.utils.beans.BaseBean implements Serial
     this.descrizione = descrizione;
   }
 
+  public java.lang.String getEnteVersatore() {
+    return this.enteVersatore;
+  }
+
+  public void setEnteVersatore(java.lang.String enteVersatore) {
+    this.enteVersatore = enteVersatore;
+  }
+
+  public java.lang.String getStrutturaVersatore() {
+    return this.strutturaVersatore;
+  }
+
+  public void setStrutturaVersatore(java.lang.String strutturaVersatore) {
+    this.strutturaVersatore = strutturaVersatore;
+  }
+
   private static final long serialVersionUID = 1L;
 
   @XmlTransient
@@ -147,5 +167,13 @@ public class Ente extends org.openspcoop2.utils.beans.BaseBean implements Serial
   @javax.xml.bind.annotation.XmlSchemaType(name="string")
   @XmlElement(name="descrizione",required=false,nillable=false)
   protected java.lang.String descrizione;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @XmlElement(name="enteVersatore",required=false,nillable=false)
+  protected java.lang.String enteVersatore;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @XmlElement(name="strutturaVersatore",required=false,nillable=false)
+  protected java.lang.String strutturaVersatore;
 
 }

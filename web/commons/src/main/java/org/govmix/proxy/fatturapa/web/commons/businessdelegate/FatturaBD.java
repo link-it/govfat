@@ -32,6 +32,7 @@ import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.Utente;
+import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.dao.IDBFatturaElettronicaService;
 import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaService;
@@ -201,10 +202,10 @@ public class FatturaBD extends BaseBD {
 		filter.setPosizione(id.getPosizione());
 		return this.count(filter) > 0;
 	}
-	
-	public List<IdFattura> findAllIdFatturaByIdentificativoSdi(Integer identificativoSdI) throws ServiceException {
+
+	public List<IdFattura> findAllIdFatturaByIdentificativoSdi(Integer identificativoSdi) throws ServiceException {
 		FatturaFilter filter = this.newFilter();
-		filter.setIdentificativoSdi(identificativoSdI);
+		filter.setIdentificativoSdi(identificativoSdi);
 		List<FatturaElettronica> findAll = this.findAll(filter);
 		List<IdFattura> findAllIds = new ArrayList<IdFattura>();
 		for(FatturaElettronica fatt: findAll) {
@@ -466,8 +467,51 @@ public class FatturaBD extends BaseBD {
 		return this.getListAutocomplete(filter, FatturaElettronica.model().NUMERO);
 	}
 
-	public void inviaInConservazione(List<Long> idFattura) throws ServiceException {
-		this.log.info(String.format("invio in conservazione %d fatture", idFattura.size()));
+	public void inviaInConservazione(List<Long> ids) throws ServiceException {
+		this.log.info(String.format("invio in conservazione %d fatture", ids.size()));
+		
+		
+		try {
+
+			StringBuffer update = new StringBuffer();
+
+			List<Object> listObjects = new ArrayList<Object>();
+
+			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase());
+			
+			update.append("update ").append(converter.toTable(FatturaElettronica.model())).append(" set ");
+			update.append(converter.toColumn(FatturaElettronica.model().STATO_CONSERVAZIONE, false)).append(" = ? ");
+			
+			listObjects.add(StatoConservazioneType.PRESA_IN_CARICO.toString());
+			
+			
+			StringBuffer questionMarks = new StringBuffer();
+			for(Long id: ids) {
+				if(questionMarks.length() > 0) {
+					questionMarks.append(",");
+				}
+				questionMarks.append("?");
+				
+				listObjects.add(id);
+			}
+			update.append("where id in (").append(questionMarks.toString()).append(")");
+			
+			this.serviceSearch.nativeUpdate(update.toString(), listObjects.toArray(new Object[]{}));
+			
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la inviaInConservazione: " + e.getMessage(), e);
+			throw e;
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la inviaInConservazione: " + e.getMessage(), e);
+			throw new ServiceException(e);
+		} catch (NotFoundException e) {
+			this.log.error("Errore durante la inviaInConservazione: " + e.getMessage(), e);
+			throw new ServiceException(e);
+		} catch (ExpressionException e) {
+			this.log.error("Errore durante la inviaInConservazione: " + e.getMessage(), e);
+			throw new ServiceException(e);
+		}
+
 	}
 
 

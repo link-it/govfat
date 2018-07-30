@@ -25,13 +25,19 @@ import java.sql.Connection;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
+import org.govmix.proxy.fatturapa.orm.dao.IDBLottoFattureService;
 import org.govmix.proxy.fatturapa.orm.dao.IDBLottoFattureServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.ILottoFattureService;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.LottoFattureFieldConverter;
+import org.openspcoop2.generic_project.beans.CustomField;
+import org.openspcoop2.generic_project.beans.UpdateField;
+import org.openspcoop2.generic_project.exception.ExpressionException;
+import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
 
-public abstract class LottoBD extends BaseBD {
+public class LottoBD extends BaseBD {
 
 	protected ILottoFattureService service;
 
@@ -111,6 +117,28 @@ public abstract class LottoBD extends BaseBD {
 		} catch (NotImplementedException e) {
 			this.log.error("Errore durante la exists: " + e.getMessage(), e);
 			throw new Exception(e);
+		}
+	}
+
+	public void assegnaIdSip(LottoFatture lottoFatture, Long id) throws ServiceException {
+		try {
+			LottoFattureFieldConverter converter = new LottoFattureFieldConverter(this.serviceManager.getJdbcProperties().getDatabase()); 
+			CustomField idSipCustomField = new CustomField("id_sip", Long.class, "id_sip", converter.toTable(LottoFatture.model()));
+			UpdateField sipUpdateField = new UpdateField(idSipCustomField, id);
+
+			((IDBLottoFattureService)this.service).updateFields(lottoFatture.getId(), sipUpdateField);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la assegnaIdSip: " + e.getMessage(), e);
+			throw new ServiceException(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la assegnaIdSip: " + e.getMessage(), e);
+			throw new ServiceException(e);
+		} catch (NotFoundException e) {
+			this.log.error("Errore durante la assegnaIdSip: " + e.getMessage(), e);
+			throw new ServiceException(e);
+		} catch (ExpressionException e) {
+			this.log.error("Errore durante la assegnaIdSip: " + e.getMessage(), e);
+			throw new ServiceException(e);
 		}
 	}
 

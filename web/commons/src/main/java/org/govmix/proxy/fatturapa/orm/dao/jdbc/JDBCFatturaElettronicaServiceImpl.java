@@ -86,8 +86,7 @@ public class JDBCFatturaElettronicaServiceImpl extends JDBCFatturaElettronicaSer
 		// Object _sip
 		Long id_sip = null;
 		org.govmix.proxy.fatturapa.orm.IdSip idLogic_sip = null;
-		// TODO Impostare il corretto metodo che contiene l'identificativo logico
-		//idLogic_sip = fatturaElettronica.getSIP();
+		idLogic_sip = fatturaElettronica.getIdSIP();
 		if(idLogic_sip!=null){
 			if(idMappingResolutionBehaviour==null ||
 				(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour))){
@@ -288,8 +287,7 @@ public class JDBCFatturaElettronicaServiceImpl extends JDBCFatturaElettronicaSer
 		// Object _fatturaElettronica_sip
 		Long id_fatturaElettronica_sip = null;
 		org.govmix.proxy.fatturapa.orm.IdSip idLogic_fatturaElettronica_sip = null;
-		// TODO Impostare il corretto metodo che contiene l'identificativo logico
-		//idLogic_fatturaElettronica_sip = fatturaElettronica.getSIP();
+		idLogic_fatturaElettronica_sip = fatturaElettronica.getIdSIP();
 		if(idLogic_fatturaElettronica_sip!=null){
 			if(idMappingResolutionBehaviour==null ||
 				(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour))){

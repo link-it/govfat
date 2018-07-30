@@ -33,11 +33,13 @@ import org.govmix.proxy.fatturapa.orm.PccTracciaTrasmissioneEsito;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
+import org.govmix.proxy.fatturapa.orm.dao.IDBFatturaElettronicaService;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.FatturaElettronicaFieldConverter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaPassivaFilter;
 import org.govmix.proxy.pcc.fatture.tracciamento.OperazioneNonPermessaException;
 import org.openspcoop2.generic_project.beans.CustomField;
 import org.openspcoop2.generic_project.beans.UpdateField;
+import org.openspcoop2.generic_project.exception.ExpressionException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
@@ -352,6 +354,28 @@ public class FatturaPassivaBD extends FatturaBD {
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la checkEsitoContabilizzazione: " + e.getMessage(), e);
 			throw new Exception(e);
+		}
+	}
+
+	public void assegnaIdSip(FatturaElettronica fattura, Long id) throws ServiceException {
+		try {
+			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase()); 
+			CustomField idSipCustomField = new CustomField("id_sip", Long.class, "id_sip", converter.toTable(FatturaElettronica.model()));
+			UpdateField sipUpdateField = new UpdateField(idSipCustomField, id);
+
+			((IDBFatturaElettronicaService)this.service).updateFields(fattura.getId(), sipUpdateField);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la assegnaIdSip: " + e.getMessage(), e);
+			throw new ServiceException(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la assegnaIdSip: " + e.getMessage(), e);
+			throw new ServiceException(e);
+		} catch (NotFoundException e) {
+			this.log.error("Errore durante la assegnaIdSip: " + e.getMessage(), e);
+			throw new ServiceException(e);
+		} catch (ExpressionException e) {
+			this.log.error("Errore durante la assegnaIdSip: " + e.getMessage(), e);
+			throw new ServiceException(e);
 		}
 	}
 }

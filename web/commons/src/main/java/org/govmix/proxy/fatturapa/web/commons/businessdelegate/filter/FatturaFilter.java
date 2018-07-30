@@ -7,7 +7,6 @@ import java.util.List;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.UtenteDipartimento;
-import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.UserRole;
 import org.openspcoop2.generic_project.beans.CustomField;
@@ -58,6 +57,7 @@ public class FatturaFilter extends AbstractFilter {
 	
 	private String protocollo;
 	protected Boolean decorrenzaTermini;
+	private Boolean idSipNull;
 	
 	private String ente;
 	private Integer anno;
@@ -66,7 +66,7 @@ public class FatturaFilter extends AbstractFilter {
 
 	public FatturaFilter(IExpressionConstructor expressionConstructor, Boolean fatturazioneAttiva) {
 		super(expressionConstructor);
-		this.fatturazioneAttiva = fatturazioneAttiva;
+		this.setFatturazioneAttiva(fatturazioneAttiva);
 	}
 
 	public FatturaFilter(IExpressionConstructor expressionConstructor) {
@@ -90,8 +90,8 @@ public class FatturaFilter extends AbstractFilter {
 				expression.equals(FatturaElettronica.model().POSIZIONE, this.posizione);
 			}
 
-			if(this.fatturazioneAttiva != null) {
-				expression.equals(FatturaElettronica.model().LOTTO_FATTURE.FATTURAZIONE_ATTIVA, this.fatturazioneAttiva);
+			if(this.getFatturazioneAttiva() != null) {
+				expression.equals(FatturaElettronica.model().LOTTO_FATTURE.FATTURAZIONE_ATTIVA, this.getFatturazioneAttiva());
 			}
 			
 			if(this.dataRicezioneMin != null) {
@@ -124,6 +124,14 @@ public class FatturaFilter extends AbstractFilter {
 			
 			if(this.protocollo != null) {
 				expression.ilike(FatturaElettronica.model().PROTOCOLLO, this.protocollo);
+			}
+			
+			if(this.idSipNull!= null) {
+				if(this.idSipNull) {
+					expression.isNull(FatturaElettronica.model().ID_SIP.ID_SIP);
+				} else {
+					expression.isNotNull(FatturaElettronica.model().ID_SIP.ID_SIP);
+				}
 			}
 			
 			if(this.cpDenominazioneList != null) {
@@ -397,4 +405,19 @@ public class FatturaFilter extends AbstractFilter {
 	}
 
 	
+	public Boolean getFatturazioneAttiva() {
+		return fatturazioneAttiva;
+	}
+
+	public void setFatturazioneAttiva(Boolean fatturazioneAttiva) {
+		this.fatturazioneAttiva = fatturazioneAttiva;
+	}
+
+	public Boolean getIdSipNull() {
+		return idSipNull;
+	}
+
+	public void setIdSipNull(Boolean idSipNull) {
+		this.idSipNull = idSipNull;
+	}
 }

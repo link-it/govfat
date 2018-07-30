@@ -463,10 +463,7 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 						List<org.govmix.proxy.fatturapa.orm.DipartimentoPropertyValue> listImgSaved_dipartimento = imgSaved.getDipartimento().getDipartimentoPropertyValueList();
 						for(org.govmix.proxy.fatturapa.orm.DipartimentoPropertyValue itemImgSaved_dipartimento : listImgSaved_dipartimento){
 							boolean objEqualsToImgSaved_dipartimento = false;
-							// TODO verify equals
-							// objEqualsToImgSaved_dipartimento = org.openspcoop2.generic_project.utils.Utilities.equals(itemObj_dipartimento.getXXX(),itemImgSaved_dipartimento.getXXX()) &&
-							// 						 			...
-							//						 			org.openspcoop2.generic_project.utils.Utilities.equals(itemObj_dipartimento.getYYY(),itemImgSaved_dipartimento.getYYY());
+							objEqualsToImgSaved_dipartimento = org.openspcoop2.generic_project.utils.Utilities.equals(itemObj_dipartimento.getValore(),itemImgSaved_dipartimento.getValore());
 							if(objEqualsToImgSaved_dipartimento){
 								itemAlreadySaved_dipartimento=itemImgSaved_dipartimento;
 								break;
@@ -577,8 +574,7 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 				id_lottoFatture_sip = new org.govmix.proxy.fatturapa.orm.IdSip();
 			}
 			id_lottoFatture_sip.setId(idFK_lottoFatture_sip);
-			//TODO Impostare il corretto metodo che contiene l'identificativo logico
-			//lottoFatture.setSIP(id_lottoFatture_sip);
+			lottoFatture.setIdSIP(id_lottoFatture_sip);
 		}
 
 		
@@ -620,6 +616,12 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 			String tableName1 = this.getLottoFattureFieldConverter().toAliasTable(LottoFatture.model());
 			String tableName2 = this.getLottoFattureFieldConverter().toAliasTable(LottoFatture.model().DIPARTIMENTO);
 			sqlQueryObject.addWhereCondition(tableName1+".codice_destinatario="+tableName2+".codice");
+		}
+
+		if(expression.inUseModel(LottoFatture.model().ID_SIP,false)){
+			String tableName1 = this.getLottoFattureFieldConverter().toAliasTable(LottoFatture.model());
+			String tableName2 = this.getLottoFattureFieldConverter().toAliasTable(LottoFatture.model().ID_SIP);
+			sqlQueryObject.addWhereCondition(tableName1+".id_sip="+tableName2+".id");
 		}
 
 	}
@@ -759,17 +761,6 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 		InUse inUse = new InUse();
 		inUse.setInUse(false);
 		
-		/* 
-		 * TODO: implement code that checks whether the object identified by the id parameter is used by other objects
-		*/
-		
-		// Delete this line when you have implemented the method
-		int throwNotImplemented = 1;
-		if(throwNotImplemented==1){
-		        throw new NotImplementedException("NotImplemented");
-		}
-		// Delete this line when you have implemented the method
-
         return inUse;
 
 	}

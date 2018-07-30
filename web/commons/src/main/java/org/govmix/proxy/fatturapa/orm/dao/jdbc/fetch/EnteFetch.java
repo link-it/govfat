@@ -63,6 +63,10 @@ public class EnteFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "cf_auth", Ente.model().CF_AUTH.getFieldType()));
 				setParameter(object, "setDescrizione", Ente.model().DESCRIZIONE.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "descrizione", Ente.model().DESCRIZIONE.getFieldType()));
+				setParameter(object, "setEnteVersatore", Ente.model().ENTE_VERSATORE.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "ente_versatore", Ente.model().ENTE_VERSATORE.getFieldType()));
+				setParameter(object, "setStrutturaVersatore", Ente.model().STRUTTURA_VERSATORE.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "struttura_versatore", Ente.model().STRUTTURA_VERSATORE.getFieldType()));
 				return object;
 			}
 			
@@ -93,6 +97,10 @@ public class EnteFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"cfAuth"));
 				setParameter(object, "setDescrizione", Ente.model().DESCRIZIONE.getFieldType(),
 					this.getObjectFromMap(map,"descrizione"));
+				setParameter(object, "setEnteVersatore", Ente.model().ENTE_VERSATORE.getFieldType(),
+					this.getObjectFromMap(map,"enteVersatore"));
+				setParameter(object, "setStrutturaVersatore", Ente.model().STRUTTURA_VERSATORE.getFieldType(),
+					this.getObjectFromMap(map,"strutturaVersatore"));
 				return object;
 			}
 			

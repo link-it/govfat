@@ -138,6 +138,7 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 			fields.add(new CustomField(id, Long.class, id, this.getFatturaElettronicaFieldConverter().toTable(FatturaElettronica.model())));
 			fields.add(FatturaElettronica.model().IDENTIFICATIVO_SDI);
 			fields.add(FatturaElettronica.model().POSIZIONE);
+			fields.add(FatturaElettronica.model().FATTURAZIONE_ATTIVA);
 
 			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));
 

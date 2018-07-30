@@ -46,6 +46,8 @@ public class EnteModel extends AbstractModel<Ente> {
 		this.ID_PCC_AMMINISTRAZIONE = new Field("idPccAmministrazione",java.lang.String.class,"Ente",Ente.class);
 		this.CF_AUTH = new Field("cfAuth",java.lang.String.class,"Ente",Ente.class);
 		this.DESCRIZIONE = new Field("descrizione",java.lang.String.class,"Ente",Ente.class);
+		this.ENTE_VERSATORE = new Field("enteVersatore",java.lang.String.class,"Ente",Ente.class);
+		this.STRUTTURA_VERSATORE = new Field("strutturaVersatore",java.lang.String.class,"Ente",Ente.class);
 	
 	}
 	
@@ -57,6 +59,8 @@ public class EnteModel extends AbstractModel<Ente> {
 		this.ID_PCC_AMMINISTRAZIONE = new ComplexField(father,"idPccAmministrazione",java.lang.String.class,"Ente",Ente.class);
 		this.CF_AUTH = new ComplexField(father,"cfAuth",java.lang.String.class,"Ente",Ente.class);
 		this.DESCRIZIONE = new ComplexField(father,"descrizione",java.lang.String.class,"Ente",Ente.class);
+		this.ENTE_VERSATORE = new ComplexField(father,"enteVersatore",java.lang.String.class,"Ente",Ente.class);
+		this.STRUTTURA_VERSATORE = new ComplexField(father,"strutturaVersatore",java.lang.String.class,"Ente",Ente.class);
 	
 	}
 	
@@ -69,6 +73,10 @@ public class EnteModel extends AbstractModel<Ente> {
 	public IField CF_AUTH = null;
 	 
 	public IField DESCRIZIONE = null;
+	 
+	public IField ENTE_VERSATORE = null;
+	 
+	public IField STRUTTURA_VERSATORE = null;
 	 
 
 	@Override
