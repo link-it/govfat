@@ -9,27 +9,23 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdEnte;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
+import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
-import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.bean.ConservazioneBean;
 import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.datamodel.ConservazioneDM;
-import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
 import org.govmix.proxy.fatturapa.web.console.form.FatturaForm;
 import org.govmix.proxy.fatturapa.web.console.iservice.IConservazioneService;
 import org.govmix.proxy.fatturapa.web.console.search.ConservazioneSearchForm;
 import org.govmix.proxy.fatturapa.web.console.service.ConservazioneService;
-import org.govmix.proxy.fatturapa.web.console.servlet.ConservazioneServlet;
 import org.govmix.proxy.fatturapa.web.console.util.ConservazioneThread;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.DataModelListView;
@@ -206,35 +202,16 @@ IConservazioneService>{
 	   Conservazione fallita 
 	 */
 	public List<SelectItem> getListaStatiInvio() {
-		// TODO sistemare voci dello stato invio
 		if (this.listaStatiInvio == null) {
 			this.listaStatiInvio = new ArrayList<SelectItem>();
-			
-			
-			boolean fatturazioneAttiva = false;
-			org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem tipoFatturaSelezionata = ((SelectListImpl)this.search.getTipoFattura()).getValue();
-			if(tipoFatturaSelezionata != null) {
-				fatturazioneAttiva = Costanti.TIPO_FATTURA_ATTIVA_VALUE.equals(tipoFatturaSelezionata.getValue());
-			}
 
 			this.listaStatiInvio.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi"))));
-			if(fatturazioneAttiva) {
-				this.listaStatiInvio.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.ERRORE_DI_FIRMA.getValue(), "Non inviata in conservazione")));
-				this.listaStatiInvio.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.PRESA_IN_CARICO.getValue(),  "Presa in carico")));
-				this.listaStatiInvio.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.ERRORE_DI_PROTOCOLLO.getValue(),  ("In riconsegna"))));
-				this.listaStatiInvio.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.ERRORE_DI_SPEDIZIONE.getValue(),  ("Errore consegna"))));
-				this.listaStatiInvio.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.PROTOCOLLATA.getValue(),  ("Conservazione competata"))));
-				this.listaStatiInvio.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoElaborazioneType.MANCATA_CONSEGNA.getValue(),  ("Conservazione fallita"))));
-				
-			}
-			else {
-				this.listaStatiInvio.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("E",   "Non inviata in conservazione")));
-				this.listaStatiInvio.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(EsitoType.IN_ELABORAZIONE_ACCETTATO.getValue(),   ("Presa in carico"))));
-				this.listaStatiInvio.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(EsitoType.IN_ELABORAZIONE_RIFIUTATO.getValue(),  ("In riconsegna"))));
-				this.listaStatiInvio.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(EsitoType.INVIATA_RIFIUTATO.getValue() ,  ("Errore consegna"))));
-				this.listaStatiInvio.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(EsitoType.INVIATA_ACCETTATO.getValue(),   ("Conservazione competata"))));
-				this.listaStatiInvio.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(EsitoType.SCARTATA_ACCETTATO.getValue(),   ("Conservazione fallita"))));
-			}
+			this.listaStatiInvio.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoConservazioneType.NON_INVIATA.getValue(), ("conservazione.search.statoInvio." + StatoConservazioneType.NON_INVIATA.getValue()))));
+			this.listaStatiInvio.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoConservazioneType.PRESA_IN_CARICO.getValue(),  ("conservazione.search.statoInvio." + StatoConservazioneType.PRESA_IN_CARICO.getValue()))));
+			this.listaStatiInvio.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoConservazioneType.IN_RICONSEGNA.getValue(),  ("conservazione.search.statoInvio." + StatoConservazioneType.IN_RICONSEGNA.getValue()))));
+			this.listaStatiInvio.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoConservazioneType.ERRORE_CONSEGNA.getValue(),  ("conservazione.search.statoInvio." + StatoConservazioneType.ERRORE_CONSEGNA.getValue()))));
+			this.listaStatiInvio.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoConservazioneType.CONSERVAZIONE_COMPLETATA.getValue(), ("conservazione.search.statoInvio." + StatoConservazioneType.CONSERVAZIONE_COMPLETATA.getValue()))));
+			this.listaStatiInvio.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoConservazioneType.CONSERVAZIONE_FALLITA.getValue(),  ("conservazione.search.statoInvio." + StatoConservazioneType.CONSERVAZIONE_FALLITA.getValue()))));
 		}
 		
 		return listaStatiInvio;
@@ -242,7 +219,6 @@ IConservazioneService>{
 	public void setListaStatiInvio(List<SelectItem> listaStatiInvio) {
 		this.listaStatiInvio = listaStatiInvio;
 	}
-
 	
 	@Override
 	protected String _menuAction() throws MenuActionException {
@@ -268,37 +244,24 @@ IConservazioneService>{
 				}
 			}
 			
+			if(!this.isSelectedAll() && idFatture.isEmpty()) {
+				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("conservazione.invio.nessunaFatturaSelezionataError"));
+				return null;
+			}
+			
+			
 			FatturaBD fatturaBD = new FatturaBD(getLog());
 			FatturaFilter fatturaFilter = ((ConservazioneService)this.service).getFilterFromSearch(fatturaBD , this.search);
 			ConservazioneThread conservazioneThread = new ConservazioneThread();
 			conservazioneThread.setAll(this.isSelectedAll());
 			conservazioneThread.setIds(idFatture);
 			conservazioneThread.setFatturaBD(fatturaBD);
-			
-			
-			
-			
-			
-			
+			conservazioneThread.setFatturaFilter(fatturaFilter);
+					
+			conservazioneThread.run();
 			
 			MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("conservazione.invio.ok"));
 
-			// We must get first our context
-			FacesContext context = FacesContext.getCurrentInstance();
-
-			// Then we have to get the Response where to write our file
-			HttpServletResponse response = (HttpServletResponse) context
-					.getExternalContext().getResponse();
-
-			response.sendRedirect(context.getExternalContext()
-					.getRequestContextPath()
-					+ "/" + ConservazioneServlet.FATTURA_ELETTRONICA_CONSERVAZIONE_SERVLET_PATH+"?"+FattureExporter.PARAMETRO_IS_ALL+"="
-					+ this.isSelectedAll()
-					+ "&"+FattureExporter.PARAMETRO_IDS+"="
-					+ StringUtils.join(idFatture, ","));
-
-			context.responseComplete();
-			
 			// End of the method
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().responseComplete();

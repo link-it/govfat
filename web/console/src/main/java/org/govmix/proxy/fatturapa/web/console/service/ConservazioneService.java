@@ -27,6 +27,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
+import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FilterSortWrapper;
@@ -213,56 +214,6 @@ public class ConservazioneService extends BaseService<ConservazioneSearchForm> i
 	@Override
 	public void store(ConservazioneBean arg0) throws ServiceException {}
 
-	//	@Override
-	//	public InserimentoLottoResponse salvaFatture(List<InserimentoLottoRequest> listaFatture) throws ServiceException {
-	//		String methodName = "salvaFatture(listaFatture)";
-	//		
-	//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] in corso...");
-	//		
-	//		InserimentoLottoResponse inserimentoLottoResponse = this.inserimentoLotti.inserisciLotto(listaFatture);
-	//		
-	//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] completato.");
-	//		
-	//		return inserimentoLottoResponse;
-	//	}
-	//	
-	//	@Override
-	//	public InserimentoLottoResponse salvaFattureSoloConservazione(
-	//			List<InserimentoLottoSoloConservazioneRequest> listaFatture) throws ServiceException {
-	//		String methodName = "store(salvaFattureSoloConservazione)";
-	//		
-	//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] in corso...");
-	//		
-	//		InserimentoLottoResponse inserimentoLottoResponse = this.inserimentoLotti.inserisciLottoSoloConservazione(listaFatture);
-	//		
-	//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] completato.");
-	//		
-	//		return inserimentoLottoResponse;
-	//	}
-	//	
-	//	@Override
-	//	public void checkLotto(List<InserimentoLottoRequest> requestList) throws InserimentoLottiException {
-	//		String methodName = "checkLotto";
-	//		
-	//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] in corso...");
-	//		
-	//		this.inserimentoLotti.checkLotto(requestList);
-	//		
-	//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] completato.");
-	//	}
-	//
-	//	@Override
-	//	public void checkLottoSoloConservazione(List<InserimentoLottoSoloConservazioneRequest> requestList)
-	//			throws InserimentoLottiException {
-	//		String methodName = "checkLottoSoloConservazione";
-	//		
-	//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] in corso...");
-	//		
-	//		this.inserimentoLotti.checkLottoSoloConservazione(requestList);
-	//		
-	//		ConservazioneService.log.debug("Esecuzione ["+methodName+"] completato.");
-	//	}
-
 	public FatturaFilter getFilterFromSearch(FatturaBD fatturaBD, ConservazioneSearchForm search) throws Exception{
 		FatturaFilter filter = null;
 		try{	
@@ -281,21 +232,11 @@ public class ConservazioneService extends BaseService<ConservazioneSearchForm> i
 				filter.setAnno(anno); 
 			}
 
-			// stato invio
+			// stato conservazione
 			if(search.getStatoInvio().getValue() != null &&
 					!StringUtils.isEmpty(search.getStatoInvio().getValue().getValue()) && !search.getStatoInvio().getValue().getValue().equals("*")){
-				// TODO agganciare nuovo filtro per stato invio conservazione
-//				if(attiva) {
-//					StatoElaborazioneType statoElaborazioneType = StatoElaborazioneType.toEnumConstant(search.getStatoInvio().getValue().getValue());
-//					filter.getStatoElaborazioneList().add(statoElaborazioneType);
-//				} else {
-//					//					if(!search.getStatoInvio().getValue().getValue().equals("E")){
-//					//						EsitoType esitoType = EsitoType.toEnumConstant(search.getStatoInvio().getValue().getValue());
-//					//						filter.setEsito(esitoType);
-//					//					} else {
-//					//						filter.setEsitoNull(true);
-//					//					}
-//				}
+				StatoConservazioneType statoConservazioneType = StatoConservazioneType.toEnumConstant(search.getStatoInvio().getValue().getValue());
+				filter.getStatiConservazione().add(statoConservazioneType);
 			}
 
 			// ente
@@ -329,16 +270,4 @@ public class ConservazioneService extends BaseService<ConservazioneSearchForm> i
 		IModel<?> model = converter.getRootModel();
 		return converter.toTable(model);
 	}
-
-	//	@Override
-	//	public Date getDataUltimaOperazioneByIdFattura(IdFattura idFattura) throws ServiceException {
-	//		String methodName = "getDataUltimaOperazioneByIdFattura()";
-	//
-	//		try{
-	//			return this.operazioneContabileBD.getDataUltimaOperazioneByIdFattura(idFattura);
-	//		}catch(Exception e){
-	//			FatturaElettronicaAttivaService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
-	//			throw new ServiceException(e);
-	//		}
-	//	}
 }

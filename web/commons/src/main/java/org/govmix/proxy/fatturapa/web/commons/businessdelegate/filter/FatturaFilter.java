@@ -7,6 +7,8 @@ import java.util.List;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.UtenteDipartimento;
+import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
+import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.UserRole;
 import org.openspcoop2.generic_project.beans.CustomField;
 import org.openspcoop2.generic_project.dao.IExpressionConstructor;
@@ -59,6 +61,8 @@ public class FatturaFilter extends AbstractFilter {
 	
 	private String ente;
 	private Integer anno;
+	
+	private List<StatoConservazioneType> statiConservazione;
 
 	public FatturaFilter(IExpressionConstructor expressionConstructor, Boolean fatturazioneAttiva) {
 		super(expressionConstructor);
@@ -182,6 +186,17 @@ public class FatturaFilter extends AbstractFilter {
 			if(this.anno!= null) {
 				expression.equals(FatturaElettronica.model().ANNO, this.anno);
 			}
+			
+			if(this.statiConservazione != null && !this.statiConservazione.isEmpty()) {
+				IExpression expression2 = this.newExpression();
+
+				for(StatoConservazioneType stato: this.statiConservazione){
+					expression2.equals(FatturaElettronica.model().STATO_CONSERVAZIONE, stato);
+					expression2.or();
+				}
+				expression.and(expression2);
+			}
+			
 			return expression;
 		} catch (ExpressionNotImplementedException e) {
 			throw new ServiceException(e);
@@ -372,4 +387,14 @@ public class FatturaFilter extends AbstractFilter {
 		this.anno = anno;
 	}
 
+	public List<StatoConservazioneType> getStatiConservazione() {
+		if(this.statiConservazione == null) this.statiConservazione = new ArrayList<StatoConservazioneType>();
+		return statiConservazione;
+	}
+
+	public void setStatiConservazione(List<StatoConservazioneType> statiConservazione) {
+		this.statiConservazione = statiConservazione;
+	}
+
+	
 }

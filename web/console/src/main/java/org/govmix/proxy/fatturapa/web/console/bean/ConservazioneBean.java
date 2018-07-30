@@ -85,7 +85,7 @@ public class ConservazioneBean extends BaseBean<FatturaElettronica, Long> implem
 		this.annoNumero.setValue(this.getDTO().getNumero());
 		this.dataInvio.setValue(this.getDTO().getDataRicezione());
 		this.tipoFattura.setValue(this.getDTO().isFatturazioneAttiva() ? "fattura.tipoFattura.attiva" : "fattura.tipoFattura.passiva");
-
+		
 		int simulaStato = (int)(Math.random() * 6) + 1;
 
 		
@@ -124,6 +124,8 @@ public class ConservazioneBean extends BaseBean<FatturaElettronica, Long> implem
 			this.statoInvio.setAlt("Non inviata in conservazione");
 			break;
 		}
+		
+		this.statoInvio.setValue(statoInvioValue);
 
 		this.identificativoSdi.setValue(this.getDTO().getIdentificativoSdi() + "");
 		this.cessionarioCommittente.setValue(this.getDTO().getCessionarioCommittenteDenominazione());

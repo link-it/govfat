@@ -192,12 +192,6 @@
        </init-param>
 	</servlet>
 	
-	<servlet>
-		<servlet-name>conservazioneservlet</servlet-name>
-		<servlet-class>org.govmix.proxy.fatturapa.web.console.servlet.ConservazioneServlet</servlet-class>
-	</servlet>
-
-
 	<servlet-mapping>
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>*.jsf</url-pattern>
@@ -218,12 +212,6 @@
 		<url-pattern>/fatturaAttivaUpload</url-pattern>
 	</servlet-mapping>
 	
-	<servlet-mapping>
-		<servlet-name>conservazioneservlet</servlet-name>
-		<url-pattern>/pages/conservazioneservlet</url-pattern>
-	</servlet-mapping>
-
-
 	<!-- Session -->
 	<error-page>
 	    <exception-type>javax.faces.application.ViewExpiredException</exception-type>
