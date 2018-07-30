@@ -5,13 +5,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
-import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FilterSortWrapper;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
-import org.openspcoop2.generic_project.exception.NotFoundException;
-import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.SortOrder;
 
 public class ConservazioneThread implements Runnable{
@@ -30,6 +27,10 @@ public class ConservazioneThread implements Runnable{
 	public void run() {
 		try {
 			ConservazioneThread.log.debug("Conservazione Thread inizio elaborazione");
+			
+			
+			Thread.sleep(5000); 
+			
 			if(isAll){
 				ids = getLstIdFattura(fatturaBD, fatturaFilter);
 			}

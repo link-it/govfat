@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
+import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
 //import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
@@ -86,46 +87,51 @@ public class ConservazioneBean extends BaseBean<FatturaElettronica, Long> implem
 		this.dataInvio.setValue(this.getDTO().getDataRicezione());
 		this.tipoFattura.setValue(this.getDTO().isFatturazioneAttiva() ? "fattura.tipoFattura.attiva" : "fattura.tipoFattura.passiva");
 		
-		int simulaStato = (int)(Math.random() * 6) + 1;
 
+		StatoConservazioneType statoConservazione = this.getDTO().getStatoConservazione();
 		
-		switch (simulaStato) {
-		case 6:  // Conservazione fallita 
-			this.prepareUrls();
-			this.statoInvio.setImage("/images/fatturapa/icons/accept_circle-red.png");
-			this.statoInvio.setTitle(("Conservazione fallita"));
-			this.statoInvio.setAlt("Conservazione fallita");
-			break;
-		case 5: // Conservazione competata
-			this.prepareUrls();
-			this.statoInvio.setImage("/images/fatturapa/icons/accept_circle-green.png");
-			this.statoInvio.setTitle(("Conservazione competata"));
-			this.statoInvio.setAlt("Conservazione competata");
-			break;
-		case 4: // Errore consegna
-			this.statoInvio.setImage("/images/fatturapa/icons/no_accept-yellow.png");
-			this.statoInvio.setTitle(("Errore consegna"));
-			this.statoInvio.setAlt("Errore consegna");
-			break;
-		case 3: // In riconsegna
-			this.statoInvio.setImage("/images/fatturapa/icons/accept_circle-yellow.png");
-			this.statoInvio.setTitle(("In riconsegna"));
-			this.statoInvio.setAlt("In riconsegna");
-			break;
-		case 2: // Presa in carico
-			this.statoInvio.setImage("/images/fatturapa/icons/accept_circle-yellow.png");
-			this.statoInvio.setTitle(("Presa in carico"));
-			this.statoInvio.setAlt("Presa in carico");
-			break;
-		case 1: // Non inviata in conservazione
-		default:
+		if(statoConservazione != null) {
+			switch (statoConservazione) {
+			case CONSERVAZIONE_FALLITA:  // Conservazione fallita 
+				this.prepareUrls();
+				this.statoInvio.setImage("/images/fatturapa/icons/accept_circle-red.png");
+				this.statoInvio.setTitle("conservazione.search.statoInvio." + StatoConservazioneType.CONSERVAZIONE_FALLITA.getValue());
+				this.statoInvio.setAlt("conservazione.search.statoInvio." + StatoConservazioneType.CONSERVAZIONE_FALLITA.getValue());
+				break;
+			case CONSERVAZIONE_COMPLETATA: // Conservazione competata
+				this.prepareUrls();
+				this.statoInvio.setImage("/images/fatturapa/icons/accept_circle-green.png");
+				this.statoInvio.setTitle("conservazione.search.statoInvio." + StatoConservazioneType.CONSERVAZIONE_COMPLETATA.getValue());
+				this.statoInvio.setAlt("conservazione.search.statoInvio." + StatoConservazioneType.CONSERVAZIONE_COMPLETATA.getValue());
+				break;
+			case ERRORE_CONSEGNA: // Errore consegna
+				this.statoInvio.setImage("/images/fatturapa/icons/no_accept-yellow.png");
+				this.statoInvio.setTitle("conservazione.search.statoInvio." + StatoConservazioneType.ERRORE_CONSEGNA.getValue());
+				this.statoInvio.setAlt("conservazione.search.statoInvio." + StatoConservazioneType.ERRORE_CONSEGNA.getValue());
+				break;
+			case IN_RICONSEGNA: // In riconsegna
+				this.statoInvio.setImage("/images/fatturapa/icons/accept_circle-yellow.png");
+				this.statoInvio.setTitle("conservazione.search.statoInvio." + StatoConservazioneType.IN_RICONSEGNA.getValue());
+				this.statoInvio.setAlt("conservazione.search.statoInvio." + StatoConservazioneType.IN_RICONSEGNA.getValue());
+				break;
+			case PRESA_IN_CARICO: // Presa in carico
+				this.statoInvio.setImage("/images/fatturapa/icons/accept_circle-yellow.png");
+				this.statoInvio.setTitle("conservazione.search.statoInvio." + StatoConservazioneType.PRESA_IN_CARICO.getValue());
+				this.statoInvio.setAlt("conservazione.search.statoInvio." + StatoConservazioneType.PRESA_IN_CARICO.getValue());
+				break;
+			case NON_INVIATA: // Non inviata in conservazione
+			default:
+				this.statoInvio.setImage("/images/fatturapa/icons/plus-grey.png");
+				this.statoInvio.setTitle("conservazione.search.statoInvio." + StatoConservazioneType.NON_INVIATA.getValue());
+				this.statoInvio.setAlt("conservazione.search.statoInvio." + StatoConservazioneType.NON_INVIATA.getValue());
+				break;
+			}
+		} else {
 			this.statoInvio.setImage("/images/fatturapa/icons/plus-grey.png");
-			this.statoInvio.setTitle(("Non inviata in conservazione"));
-			this.statoInvio.setAlt("Non inviata in conservazione");
-			break;
+			this.statoInvio.setTitle(("conservazione.search.statoInvio." + StatoConservazioneType.NON_INVIATA.getValue()));
+			this.statoInvio.setAlt("conservazione.search.statoInvio." + StatoConservazioneType.NON_INVIATA.getValue());
 		}
 		
-		this.statoInvio.setValue(statoInvioValue);
 
 		this.identificativoSdi.setValue(this.getDTO().getIdentificativoSdi() + "");
 		this.cessionarioCommittente.setValue(this.getDTO().getCessionarioCommittenteDenominazione());

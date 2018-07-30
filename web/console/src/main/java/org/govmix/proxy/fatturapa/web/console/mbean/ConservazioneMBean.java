@@ -13,9 +13,7 @@ import javax.faces.model.SelectItem;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdEnte;
-import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
-import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
@@ -69,7 +67,7 @@ IConservazioneService>{
 			this.table.setEnableDelete(false);
 			this.table.setShowAddButton(false);
 			this.table.setShowDetailColumn(false);
-			this.table.setShowSelectAll(false);
+			this.table.setShowSelectAll(true);
 			this.table.setHeaderText("conservazione.label.ricercaConservazione.tabellaRisultati");
 			this.table.setMBean(this);
 			this.table.setMetadata(this.getMetadata()); 
@@ -249,7 +247,6 @@ IConservazioneService>{
 				return null;
 			}
 			
-			
 			FatturaBD fatturaBD = new FatturaBD(getLog());
 			FatturaFilter fatturaFilter = ((ConservazioneService)this.service).getFilterFromSearch(fatturaBD , this.search);
 			ConservazioneThread conservazioneThread = new ConservazioneThread();
@@ -258,9 +255,13 @@ IConservazioneService>{
 			conservazioneThread.setFatturaBD(fatturaBD);
 			conservazioneThread.setFatturaFilter(fatturaFilter);
 					
-			conservazioneThread.run();
+			Thread t = new Thread(conservazioneThread);
+			t.start();
 			
-			MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("conservazione.invio.ok"));
+			if(this.isSelectedAll() || idFatture.size() > 1)
+				MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("conservazione.invioFatture.ok"));
+			else 
+				MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("conservazione.invioFattura.ok"));
 
 			// End of the method
 		} catch (Exception e) {

@@ -149,7 +149,7 @@ IFatturaElettronicaAttivaService>{
 			this.table.setEnableDelete(false);
 			this.table.setShowAddButton(false);
 			this.table.setShowDetailColumn(false);
-			this.table.setShowSelectAll(false);
+			this.table.setShowSelectAll(true);
 			this.table.setHeaderText("fatturaAttiva.label.ricercaFattureAttive.tabellaRisultati");
 			this.table.setMBean(this);
 			this.table.setMetadata(this.getMetadata()); 
