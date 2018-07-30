@@ -205,7 +205,8 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 			fields.add(new CustomField(idEsitoContabilizzazioneField, Long.class, idEsitoContabilizzazioneField, this.getFatturaElettronicaFieldConverter().toTable(FatturaElettronica.model())));
 			String idEsitoScadenzaField = "id_scadenza";
 			fields.add(new CustomField(idEsitoScadenzaField, Long.class, idEsitoScadenzaField, this.getFatturaElettronicaFieldConverter().toTable(FatturaElettronica.model())));
-			
+			String idSipField = "id_sip";
+			fields.add(new CustomField(idSipField, Long.class, idSipField, this.getFatturaElettronicaFieldConverter().toTable(FatturaElettronica.model())));
 			
 			String lottoTable = "LottoFatture";
 			String lottoId = lottoTable + ".id";
@@ -255,6 +256,7 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 				Object idFK_fatturaElettronica_notificaDecorrenzaTermini = map.remove(idDecorrenzaTerminiField);
 				Object idFK_fatturaElettronica_esitoContabilizzazione = map.remove(idEsitoContabilizzazioneField);
 				Object idFK_fatturaElettronica_esitoScadenza = map.remove(idEsitoScadenzaField);
+				Object idFK_fatturaElettronica_sipOBJ = map.remove(idSipField);
 
 				FatturaElettronica fatturaElettronica = (FatturaElettronica)this.getFatturaElettronicaFetch().fetch(jdbcProperties.getDatabase(), FatturaElettronica.model(), map);
 
@@ -312,6 +314,25 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 								}
 								id_fatturaElettronica_pccTracciaTrasmissioneEsito.setId(idFK_fatturaElettronica_pccTracciaTrasmissioneEsito);
 								fatturaElettronica.setIdEsitoScadenza(id_fatturaElettronica_pccTracciaTrasmissioneEsito);
+							}catch(NotFoundException e) {}
+						}
+				}
+
+				if(idFK_fatturaElettronica_sipOBJ != null && idFK_fatturaElettronica_sipOBJ instanceof Long) {
+					if(idMappingResolutionBehaviour==null ||
+							(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
+						){
+							try {
+								Long idFK_fatturaElettronica_sip = (Long) idFK_fatturaElettronica_sipOBJ;
+								
+								org.govmix.proxy.fatturapa.orm.IdSip id_fatturaElettronica_sip = null;
+								if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
+									id_fatturaElettronica_sip = ((JDBCSIPServiceSearch)(this.getServiceManager().getSIPServiceSearch())).findId(idFK_fatturaElettronica_sip, false);
+								}else{
+									id_fatturaElettronica_sip = new org.govmix.proxy.fatturapa.orm.IdSip();
+								}
+								id_fatturaElettronica_sip.setId(idFK_fatturaElettronica_sip);
+								fatturaElettronica.setIdSIP(id_fatturaElettronica_sip);
 							}catch(NotFoundException e) {}
 						}
 				}
@@ -611,6 +632,10 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 				imgSaved.getIdDecorrenzaTermini()!=null){
 			obj.getIdDecorrenzaTermini().setId(imgSaved.getIdDecorrenzaTermini().getId());
 		}
+		if(obj.getIdSIP()!=null && 
+				imgSaved.getIdSIP()!=null){
+			obj.getIdSIP().setId(imgSaved.getIdSIP().getId());
+		}
 		if(obj.getIdEsitoContabilizzazione()!=null && 
 				imgSaved.getIdEsitoContabilizzazione()!=null){
 			obj.getIdEsitoContabilizzazione().setId(imgSaved.getIdEsitoContabilizzazione().getId());
@@ -709,6 +734,11 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 			sqlQueryObject.addWhereCondition(tableName1+".identificativo_sdi="+tableName2+".identificativo_sdi");
 			sqlQueryObject.addWhereCondition(tableName1+".fatturazione_attiva="+tableName2+".fatturazione_attiva");
 		}
+		if(expression.inUseModel(FatturaElettronica.model().ID_SIP,false)){
+			String tableName1 = this.getFatturaElettronicaFieldConverter().toAliasTable(FatturaElettronica.model());
+			String tableName2 = this.getFatturaElettronicaFieldConverter().toAliasTable(FatturaElettronica.model().ID_SIP);
+			sqlQueryObject.addWhereCondition(tableName1+".id_sip="+tableName2+".id");
+		}
 
 	}
 	
@@ -739,6 +769,12 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 		mapTableToPKColumn.put(converter.toTable(FatturaElettronica.model().ID_DECORRENZA_TERMINI),
 			utilities.newList(
 				new CustomField("id", Long.class, "id", converter.toTable(FatturaElettronica.model().ID_DECORRENZA_TERMINI))
+			));
+
+		// FatturaElettronica.model().ID_SIP
+		mapTableToPKColumn.put(converter.toTable(FatturaElettronica.model().ID_SIP),
+			utilities.newList(
+				new CustomField("id", Long.class, "id", converter.toTable(FatturaElettronica.model().ID_SIP))
 			));
 
 		// FatturaElettronica.model().ID_ESITO_CONTABILIZZAZIONE

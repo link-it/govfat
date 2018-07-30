@@ -55,6 +55,8 @@ import org.govmix.proxy.fatturapa.orm.dao.IPccNotificaServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.IPccOperazioneService;
 import org.govmix.proxy.fatturapa.orm.dao.IPccOperazioneServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.IPccPagamentoService;
+import org.govmix.proxy.fatturapa.orm.dao.ISIPServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.ISIPService;
 import org.govmix.proxy.fatturapa.orm.dao.IPccPagamentoServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.IPccRispedizioneService;
 import org.govmix.proxy.fatturapa.orm.dao.IPccRispedizioneServiceSearch;
@@ -509,7 +511,37 @@ public class JDBCServiceManager extends org.openspcoop2.generic_project.dao.jdbc
 	}
 	
 	
+		
+	/*
+	 =====================================================================================================================
+	 Services relating to the object with name:SIP type:SIP
+	 =====================================================================================================================
+	*/
 	
+	/**
+	 * Return a service used to research on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.SIP}
+	 *
+	 * @return Service used to research on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.SIP}	
+	 * @throws ServiceException Exception thrown when an error occurs during processing of the request
+	 * @throws NotImplementedException Exception thrown when the method is not implemented
+	 */
+	@Override
+	public ISIPServiceSearch getSIPServiceSearch() throws ServiceException,NotImplementedException{
+		return new JDBCSIPServiceSearch(this);
+	}
+	
+	/**
+	 * Return a service used to research and manage on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.SIP}
+	 *
+	 * @return Service used to research and manage on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.SIP}	
+	 * @throws ServiceException Exception thrown when an error occurs during processing of the request
+	 * @throws NotImplementedException Exception thrown when the method is not implemented
+	 */
+	@Override
+	public ISIPService getSIPService() throws ServiceException,NotImplementedException{
+		return new JDBCSIPService(this);
+	}
+
 	/*
 	 =====================================================================================================================
 	 Services relating to the object with name:Utente type:Utente

@@ -82,13 +82,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link IdLotto }
-     */
-    public IdLotto createIdLotto() {
-        return org.govmix.proxy.fatturapa.orm.IdLotto.newIdLotto();
-    }
-
-    /**
      * Create an instance of {@link DipartimentoPropertyValue }
      */
     public DipartimentoPropertyValue createDipartimentoPropertyValue() {
@@ -236,13 +229,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link IdFattura }
-     */
-    public IdFattura createIdFattura() {
-        return org.govmix.proxy.fatturapa.orm.IdFattura.newIdFattura();
-    }
-
-    /**
      * Create an instance of {@link IdScadenza }
      */
     public IdScadenza createIdScadenza() {
@@ -317,6 +303,20 @@ public class ObjectFactory {
      */
     public Protocollo createProtocollo() {
         return new Protocollo();
+    }
+
+    /**
+     * Create an instance of {@link IdSip }
+     */
+    public IdSip createIdSip() {
+        return new IdSip();
+    }
+
+    /**
+     * Create an instance of {@link SIP }
+     */
+    public SIP createSIP() {
+        return new SIP();
     }
 
     /**

@@ -290,7 +290,33 @@ public interface IServiceManager {
 	public IRegistroPropertyService getRegistroPropertyService() throws ServiceException,NotImplementedException;
 	
 	
+		/*
+	 =====================================================================================================================
+	 Services relating to the object with name:SIP type:SIP
+	 =====================================================================================================================
+	*/
 	
+	/**
+	 * Return a service used to research on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.SIP}
+	 *
+	 * @return Service used to research on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.SIP}	
+	 * @throws ServiceException Exception thrown when an error occurs during processing of the request
+	 * @throws NotImplementedException Exception thrown when the method is not implemented
+	 */
+	public ISIPServiceSearch getSIPServiceSearch() throws ServiceException,NotImplementedException;
+	
+	/**
+	 * Return a service used to research and manage on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.SIP}
+	 *
+	 * @return Service used to research and manage on the backend on objects of type {@link org.govmix.proxy.fatturapa.orm.SIP}	
+	 * @throws ServiceException Exception thrown when an error occurs during processing of the request
+	 * @throws NotImplementedException Exception thrown when the method is not implemented
+	 */
+	public ISIPService getSIPService() throws ServiceException,NotImplementedException;
+	
+	
+	
+
 	/*
 	 =====================================================================================================================
 	 Services relating to the object with name:Utente type:Utente

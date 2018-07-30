@@ -80,8 +80,10 @@ public class FatturaElettronicaModel extends AbstractModel<FatturaElettronica> {
 		this.PROTOCOLLO = new Field("protocollo",java.lang.String.class,"FatturaElettronica",FatturaElettronica.class);
 		this.XML = new Field("xml",byte[].class,"FatturaElettronica",FatturaElettronica.class);
 		this.ID_DECORRENZA_TERMINI = new org.govmix.proxy.fatturapa.orm.model.IdNotificaDecorrenzaTerminiModel(new Field("idDecorrenzaTermini",org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini.class,"FatturaElettronica",FatturaElettronica.class));
+		this.ID_SIP = new org.govmix.proxy.fatturapa.orm.model.IdSipModel(new Field("idSIP",org.govmix.proxy.fatturapa.orm.IdSip.class,"FatturaElettronica",FatturaElettronica.class));
 		this.ID_ESITO_CONTABILIZZAZIONE = new org.govmix.proxy.fatturapa.orm.model.IdTrasmissioneEsitoModel(new Field("idEsitoContabilizzazione",org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito.class,"FatturaElettronica",FatturaElettronica.class));
 		this.ID_ESITO_SCADENZA = new org.govmix.proxy.fatturapa.orm.model.IdTrasmissioneEsitoModel(new Field("idEsitoScadenza",org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito.class,"FatturaElettronica",FatturaElettronica.class));
+		this.STATO_CONSERVAZIONE = new Field("statoConservazione",java.lang.String.class,"FatturaElettronica",FatturaElettronica.class);
 		this.DIPARTIMENTO = new org.govmix.proxy.fatturapa.orm.model.DipartimentoModel(new Field("Dipartimento",org.govmix.proxy.fatturapa.orm.Dipartimento.class,"FatturaElettronica",FatturaElettronica.class));
 		this.LOTTO_FATTURE = new org.govmix.proxy.fatturapa.orm.model.LottoFattureModel(new Field("LottoFatture",org.govmix.proxy.fatturapa.orm.LottoFatture.class,"FatturaElettronica",FatturaElettronica.class));
 	
@@ -129,8 +131,10 @@ public class FatturaElettronicaModel extends AbstractModel<FatturaElettronica> {
 		this.PROTOCOLLO = new ComplexField(father,"protocollo",java.lang.String.class,"FatturaElettronica",FatturaElettronica.class);
 		this.XML = new ComplexField(father,"xml",byte[].class,"FatturaElettronica",FatturaElettronica.class);
 		this.ID_DECORRENZA_TERMINI = new org.govmix.proxy.fatturapa.orm.model.IdNotificaDecorrenzaTerminiModel(new ComplexField(father,"idDecorrenzaTermini",org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini.class,"FatturaElettronica",FatturaElettronica.class));
+		this.ID_SIP = new org.govmix.proxy.fatturapa.orm.model.IdSipModel(new ComplexField(father,"idSIP",org.govmix.proxy.fatturapa.orm.IdSip.class,"FatturaElettronica",FatturaElettronica.class));
 		this.ID_ESITO_CONTABILIZZAZIONE = new org.govmix.proxy.fatturapa.orm.model.IdTrasmissioneEsitoModel(new ComplexField(father,"idEsitoContabilizzazione",org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito.class,"FatturaElettronica",FatturaElettronica.class));
 		this.ID_ESITO_SCADENZA = new org.govmix.proxy.fatturapa.orm.model.IdTrasmissioneEsitoModel(new ComplexField(father,"idEsitoScadenza",org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito.class,"FatturaElettronica",FatturaElettronica.class));
+		this.STATO_CONSERVAZIONE = new ComplexField(father,"statoConservazione",java.lang.String.class,"FatturaElettronica",FatturaElettronica.class);
 		this.DIPARTIMENTO = new org.govmix.proxy.fatturapa.orm.model.DipartimentoModel(new ComplexField(father,"Dipartimento",org.govmix.proxy.fatturapa.orm.Dipartimento.class,"FatturaElettronica",FatturaElettronica.class));
 		this.LOTTO_FATTURE = new org.govmix.proxy.fatturapa.orm.model.LottoFattureModel(new ComplexField(father,"LottoFatture",org.govmix.proxy.fatturapa.orm.LottoFatture.class,"FatturaElettronica",FatturaElettronica.class));
 	
@@ -214,9 +218,13 @@ public class FatturaElettronicaModel extends AbstractModel<FatturaElettronica> {
 	 
 	public org.govmix.proxy.fatturapa.orm.model.IdNotificaDecorrenzaTerminiModel ID_DECORRENZA_TERMINI = null;
 	 
+	public org.govmix.proxy.fatturapa.orm.model.IdSipModel ID_SIP = null;
+	 
 	public org.govmix.proxy.fatturapa.orm.model.IdTrasmissioneEsitoModel ID_ESITO_CONTABILIZZAZIONE = null;
 	 
 	public org.govmix.proxy.fatturapa.orm.model.IdTrasmissioneEsitoModel ID_ESITO_SCADENZA = null;
+	 
+	public IField STATO_CONSERVAZIONE = null;
 	 
 	public org.govmix.proxy.fatturapa.orm.model.DipartimentoModel DIPARTIMENTO = null;
 	 

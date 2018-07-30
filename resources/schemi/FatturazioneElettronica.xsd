@@ -20,6 +20,8 @@
 					<linkit:sql>
 						<linkit:sql-script generate="true">
 							<linkit:sql-table-list>
+								<linkit:sql-table object-name="SIP" object-type="SIP" />
+
 								<linkit:sql-table object-name="LottoFatture" object-type="LottoFatture" />
 								<linkit:sql-table object-name="NotificaDecorrenzaTermini" object-type="NotificaDecorrenzaTermini" />
 								<linkit:sql-table object-name="PccTraccia" object-type="PccTraccia" />
@@ -407,6 +409,17 @@
 		</xsd:restriction>
 	</xsd:simpleType>
 
+	<xsd:simpleType name="StatoConservazioneType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="NON_INVIATA" />
+			<xsd:enumeration value="PRESA_IN_CARICO" />
+			<xsd:enumeration value="IN_RICONSEGNA" />
+			<xsd:enumeration value="ERRORE_CONSEGNA" />
+			<xsd:enumeration value="CONSERVAZIONE_COMPLETATA" />
+			<xsd:enumeration value="CONSERVAZIONE_FALLITA" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	
 	<xsd:simpleType name="StatoInserimentoType">
 		<xsd:restriction base="xsd:string">
 			<xsd:enumeration value="NON_INSERITO" />
@@ -493,6 +506,14 @@
 		</xsd:sequence>
 	</xsd:complexType>
 	
+	<xsd:complexType name="id-sip">
+		<xsd:sequence>
+			<xsd:element name="idSip" type="xsd:long" />
+			<xsd:element name="statoConsegna" type="StatoConsegnaType" minOccurs="0" />
+			<xsd:element name="dataUltimaConsegna" type="xsd:dateTime" minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
 	<xsd:complexType name="id-protocollo">
 		<xsd:sequence>
 			<xsd:element name="nome" type="xsd:string" />
@@ -849,6 +870,17 @@
 					</xsd:appinfo>
 				</xsd:annotation>
 			</xsd:element>
+			<xsd:element name="idSIP" type="id-sip" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-id-mapping object-name="SIP"
+								object-type="SIP" relationship="reversed" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+
 			
 			<xsd:element name="id-egov" type="xsd:string" minOccurs="0"/>
 			
@@ -1057,6 +1089,16 @@
 					</xsd:appinfo>
 				</xsd:annotation>
 			</xsd:element>
+			<xsd:element name="idSIP" type="id-sip" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-id-mapping object-name="SIP"
+								object-type="SIP" relationship="reversed" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
 			<xsd:element name="idEsitoContabilizzazione" type="id-trasmissione-esito"
 				minOccurs="0">
 				<xsd:annotation>
@@ -1081,6 +1123,7 @@
 					</xsd:appinfo>
 				</xsd:annotation>
 			</xsd:element>
+			<xsd:element name="statoConservazione" type="StatoConservazioneType" />
 			
 			<!-- elementi per agevolare la ricerca, non mappati sul db -->
 			<xsd:element name="Dipartimento" type="Dipartimento" minOccurs="0">
@@ -1347,6 +1390,36 @@
 						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
 							<linkit:sql-id-mapping object-name="Protocollo"
 								object-type="Protocollo" relationship="reversed" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:element name="SIP" type="SIP" />
+	<xsd:complexType name="SIP">
+		<xsd:annotation>
+			<xsd:appinfo>
+				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+					<linkit:interface crud="true" id="id-sip" />
+					<linkit:sql-table-mapping generate-sql="true"
+						name="sip" on-delete-cascade="false">
+					</linkit:sql-table-mapping>
+				</linkit:generator>
+			</xsd:appinfo>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="registro" type="xsd:string" minOccurs="0" />
+			<xsd:element name="anno" type="xsd:int" minOccurs="0" />
+			<xsd:element name="numero" type="xsd:string" minOccurs="0" />
+			<xsd:element name="statoConsegna" type="StatoConsegnaType" default="NON_CONSEGNATA" />
+			<xsd:element name="dataUltimaConsegna" type="xsd:dateTime" minOccurs="0" />
+			<xsd:element name="rapportoVersamento" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-column-mapping long-text="true" />
 						</linkit:generator>
 					</xsd:appinfo>
 				</xsd:annotation>

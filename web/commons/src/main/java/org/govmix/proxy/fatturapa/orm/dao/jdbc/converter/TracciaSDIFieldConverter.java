@@ -460,6 +460,27 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 				return "protocollo";
 			}
 		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.ID_SIP.ID_SIP)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".id_sip";
+			}else{
+				return "id_sip";
+			}
+		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.ID_SIP.STATO_CONSEGNA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".stato_consegna";
+			}else{
+				return "stato_consegna";
+			}
+		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.ID_SIP.DATA_ULTIMA_CONSEGNA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".data_ultima_consegna";
+			}else{
+				return "data_ultima_consegna";
+			}
+		}
 		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.ID_EGOV)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".id_egov";
@@ -739,6 +760,15 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.PROTOCOLLO)){
 			return this.toTable(TracciaSDI.model().LOTTO_FATTURE, returnAlias);
 		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.ID_SIP.ID_SIP)){
+			return this.toTable(TracciaSDI.model().LOTTO_FATTURE.ID_SIP, returnAlias);
+		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.ID_SIP.STATO_CONSEGNA)){
+			return this.toTable(TracciaSDI.model().LOTTO_FATTURE.ID_SIP, returnAlias);
+		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.ID_SIP.DATA_ULTIMA_CONSEGNA)){
+			return this.toTable(TracciaSDI.model().LOTTO_FATTURE.ID_SIP, returnAlias);
+		}
 		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.ID_EGOV)){
 			return this.toTable(TracciaSDI.model().LOTTO_FATTURE, returnAlias);
 		}
@@ -802,6 +832,9 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 		}
 		if(model.equals(TracciaSDI.model().LOTTO_FATTURE)){
 			return "lotti";
+		}
+		if(model.equals(TracciaSDI.model().LOTTO_FATTURE.ID_SIP)){
+			return "sip";
 		}
 		if(model.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO)){
 			return "dipartimenti";

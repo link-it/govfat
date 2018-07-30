@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlType;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
+import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import java.io.Serializable;
@@ -79,8 +80,10 @@ import java.io.Serializable;
  * 			&lt;element name="protocollo" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="xml" type="{http://www.w3.org/2001/XMLSchema}base64Binary" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="idDecorrenzaTermini" type="{http://www.govmix.org/proxy/fatturapa/orm}id-notifica-decorrenza-termini" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="idSIP" type="{http://www.govmix.org/proxy/fatturapa/orm}id-sip" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="idEsitoContabilizzazione" type="{http://www.govmix.org/proxy/fatturapa/orm}id-trasmissione-esito" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="idEsitoScadenza" type="{http://www.govmix.org/proxy/fatturapa/orm}id-trasmissione-esito" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="statoConservazione" type="{http://www.govmix.org/proxy/fatturapa/orm}StatoConservazioneType" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="Dipartimento" type="{http://www.govmix.org/proxy/fatturapa/orm}Dipartimento" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="LottoFatture" type="{http://www.govmix.org/proxy/fatturapa/orm}LottoFatture" minOccurs="0" maxOccurs="1"/>
  * 		&lt;/sequence>
@@ -135,8 +138,10 @@ import java.io.Serializable;
   	"protocollo",
   	"xml",
   	"idDecorrenzaTermini",
+  	"idSIP",
   	"idEsitoContabilizzazione",
   	"idEsitoScadenza",
+  	"statoConservazione",
   	"dipartimento",
   	"lottoFatture"
   }
@@ -552,6 +557,14 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
     this.idDecorrenzaTermini = idDecorrenzaTermini;
   }
 
+  public IdSip getIdSIP() {
+    return this.idSIP;
+  }
+
+  public void setIdSIP(IdSip idSIP) {
+    this.idSIP = idSIP;
+  }
+
   public IdTrasmissioneEsito getIdEsitoContabilizzazione() {
     return this.idEsitoContabilizzazione;
   }
@@ -566,6 +579,26 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
 
   public void setIdEsitoScadenza(IdTrasmissioneEsito idEsitoScadenza) {
     this.idEsitoScadenza = idEsitoScadenza;
+  }
+
+  public void set_value_statoConservazione(String value) {
+    this.statoConservazione = (StatoConservazioneType) StatoConservazioneType.toEnumConstantFromString(value);
+  }
+
+  public String get_value_statoConservazione() {
+    if(this.statoConservazione == null){
+    	return null;
+    }else{
+    	return this.statoConservazione.toString();
+    }
+  }
+
+  public org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType getStatoConservazione() {
+    return this.statoConservazione;
+  }
+
+  public void setStatoConservazione(org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType statoConservazione) {
+    this.statoConservazione = statoConservazione;
   }
 
   public Dipartimento getDipartimento() {
@@ -787,11 +820,20 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
   @XmlElement(name="idDecorrenzaTermini",required=false,nillable=false)
   protected IdNotificaDecorrenzaTermini idDecorrenzaTermini;
 
+  @XmlElement(name="idSIP",required=false,nillable=false)
+  protected IdSip idSIP;
+
   @XmlElement(name="idEsitoContabilizzazione",required=false,nillable=false)
   protected IdTrasmissioneEsito idEsitoContabilizzazione;
 
   @XmlElement(name="idEsitoScadenza",required=false,nillable=false)
   protected IdTrasmissioneEsito idEsitoScadenza;
+
+  @XmlTransient
+  protected java.lang.String _value_statoConservazione;
+
+  @XmlElement(name="statoConservazione",required=true,nillable=false)
+  protected StatoConservazioneType statoConservazione;
 
   @XmlElement(name="Dipartimento",required=false,nillable=false)
   protected Dipartimento dipartimento;
