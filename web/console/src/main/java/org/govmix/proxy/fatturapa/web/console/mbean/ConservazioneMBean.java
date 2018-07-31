@@ -119,7 +119,7 @@ IConservazioneService>{
 			instance.setTime(new Date());
 			int year = instance.get(Calendar.YEAR);
 			
-			for (int i = year; i >= 2016; i--) {
+			for (int i = year; i >= 2015; i--) {
 				String valAnno = "" + i;
 				this.listaAnni.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(valAnno, valAnno)));
 				
