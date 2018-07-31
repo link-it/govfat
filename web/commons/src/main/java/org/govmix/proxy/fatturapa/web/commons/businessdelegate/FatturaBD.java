@@ -57,6 +57,7 @@ public class FatturaBD extends BaseBD {
 	public FatturaBD(Logger log) throws Exception {
 		super(log);
 		this.service = this.serviceManager.getFatturaElettronicaService();
+		this.serviceSearch = this.serviceManager.getFatturaElettronicaServiceSearch();
 	}
 
 	public FatturaBD(Logger log, Connection connection, boolean autocommit) throws Exception {
