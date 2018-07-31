@@ -212,7 +212,7 @@ div.form-container .display-form table.controlset label{
 .buttonrow input[type="submit"], .buttonrow input[type="button"], .buttonrow button[type]{
     /*padding:5px 10px 5px 7px;*/ /* Firefox */
     line-height:17px; /* Safari */
-    padding: 1px;
+/*     padding: 1px; */
 }
 *:first-child+html input[type="button"],*:first-child+html button[type], *:first-child+html.buttonrow input[type="submit"] {
     padding:4px 10px 3px 7px; /* IE7 */
@@ -283,15 +283,22 @@ input[type="submit"]:hover, input[type="button"]:hover, .buttonrow a:hover{
     color:#fff;
 }
 
-.buttonrow input.icon-carica-fattura{
+.buttonrow input.icon-carica-fattura,
+.buttonrow a.icon-fatturapa-up-green,
+.buttonrow input.icon-fatturapa-up-green{
 	color: #dd2c0d;
 }
 
-.buttonrow input.icon-carica-fattura:disabled{
+.buttonrow input.icon-carica-fattura:disabled,
+.buttonrow a.icon-fatturapa-up-green:disabled,
+.buttonrow input.icon-fatturapa-up-green:disabled{
 	color: #565656;
 	cursor: default;
 }
 
+
+.buttonrow a.icon-fatturapa-up-green[disabled]:hover,
+.buttonrow input.icon-fatturapa-up-green[disabled]:hover,
 .buttonrow input.icon-carica-fattura[disabled]:hover{
 	color: #565656;
 	cursor: default;

@@ -230,19 +230,16 @@ IConservazioneService>{
 			// recupero lista diagnostici
 			List<Long> idFatture = new ArrayList<Long>();
 
-			// se nn sono in select all allore prendo solo quelle selezionate
-			if (!this.isSelectedAll()) {
-				Iterator<ConservazioneBean> it = this.selectedIds.keySet().iterator();
-				while (it.hasNext()) {
-					ConservazioneBean fatturaBean = it.next();
-					if (this.selectedIds.get(fatturaBean).booleanValue()) {
-						idFatture.add(fatturaBean.getDTO().getId());
-						it.remove();
-					}
+			Iterator<ConservazioneBean> it = this.selectedIds.keySet().iterator();
+			while (it.hasNext()) {
+				ConservazioneBean fatturaBean = it.next();
+				if (this.selectedIds.get(fatturaBean).booleanValue()) {
+					idFatture.add(fatturaBean.getDTO().getId());
+					it.remove();
 				}
 			}
 			
-			if(!this.isSelectedAll() && idFatture.isEmpty()) {
+			if(idFatture.isEmpty()) {
 				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("conservazione.invio.nessunaFatturaSelezionataError"));
 				return null;
 			}
@@ -250,7 +247,7 @@ IConservazioneService>{
 			FatturaBD fatturaBD = new FatturaBD(getLog());
 			FatturaFilter fatturaFilter = ((ConservazioneService)this.service).getFilterFromSearch(fatturaBD , this.search);
 			ConservazioneThread conservazioneThread = new ConservazioneThread();
-			conservazioneThread.setAll(this.isSelectedAll());
+			conservazioneThread.setAll(false);
 			conservazioneThread.setIds(idFatture);
 			conservazioneThread.setFatturaBD(fatturaBD);
 			conservazioneThread.setFatturaFilter(fatturaFilter);
@@ -258,10 +255,41 @@ IConservazioneService>{
 			Thread t = new Thread(conservazioneThread);
 			t.start();
 			
-			if(this.isSelectedAll() || idFatture.size() > 1)
+			if(idFatture.size() > 1)
 				MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("conservazione.invioFatture.ok"));
 			else 
 				MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("conservazione.invioFattura.ok"));
+
+			// End of the method
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().responseComplete();
+			this.log.error(e, e);
+
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("conservazione.invio.genericError"),null));
+		}
+
+		return null;
+	}
+	
+	public String inviaTutteFattureInConservazione() {
+		try {
+
+			List<Long> idFatture = new ArrayList<Long>();
+
+			FatturaBD fatturaBD = new FatturaBD(getLog());
+			FatturaFilter fatturaFilter = ((ConservazioneService)this.service).getFilterFromSearch(fatturaBD , this.search);
+			ConservazioneThread conservazioneThread = new ConservazioneThread();
+			conservazioneThread.setAll(true);
+			conservazioneThread.setIds(idFatture);
+			conservazioneThread.setFatturaBD(fatturaBD);
+			conservazioneThread.setFatturaFilter(fatturaFilter);
+					
+			Thread t = new Thread(conservazioneThread);
+			t.start();
+			
+			MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("conservazione.invioFatture.ok"));
 
 			// End of the method
 		} catch (Exception e) {

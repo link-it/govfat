@@ -378,10 +378,19 @@
 										#{id}_singleCheckboxListener( iInputId, jQuery( this ).is(':checked') , true ,#{value.rowCount} , #{rowsToDisplay} );
 									});
 									
+									var tiId2 = iInputId+"_checkSelectionContentTable";
+									
+									jQuery("table [id$='"+tiId2+"'] tr td.rich-mpnl-body").css('padding-top','20px');
+									jQuery("table [id$='"+tiId2+"'] tr td.rich-mpnl-body > table tbody tr td > table tbody tr td > img").css('margin-right','10px');
+									jQuery("table [id$='"+tiId2+"'] tr td.rich-mpnl-body > table tbody tr td > div.buttonrow").css('padding-left','110px');
+									jQuery("table [id$='"+tiId2+"'] tr td.rich-mpnl-body > table tbody tr td > div.buttonrow > input").css('padding','4px 6px 4px 5px');
+									jQuery("table [id$='"+tiId2+"'] tr td.rich-mpnl-body > table tbody tr td > div.buttonrow > input").css('text-indent','0px');
+									
 								 });
+								
 								 //]]>
 							</script>
-						</h:panelGroup>
+							</h:panelGroup>
 					</f:facet>
 					 <h:panelGroup>
 					 	<h:commandLink id="visualizzaPdfLink" target="_blank" action="#{item.visualizzaPdf}" rendered="#{not empty item.pdf.href}">

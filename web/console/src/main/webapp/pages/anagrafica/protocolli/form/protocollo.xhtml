@@ -161,7 +161,19 @@
 	                                                  jQuery("[id$='"+inputId+"_undoSelectAllLink']").hide();                         
 	                                          }
 	                                      }
-			                     	}    		
+			                     	}   
+			              		
+								jQuery(document).ready(function() {
+									
+									var iInputId = '#{id}';
+									var tiId = iInputId+"_deleteConfirmationContentTable";
+									
+									jQuery("table [id$='"+tiId+"'] tr td.rich-mpnl-body").css('padding-top','20px');
+									jQuery("table [id$='"+tiId+"'] tr td.rich-mpnl-body > table tbody tr td > table tbody tr td > img").css('margin-right','10px');
+									jQuery("table [id$='"+tiId+"'] tr td.rich-mpnl-body > table tbody tr td > div.buttonrow").css('padding-left','40px');
+									jQuery("table [id$='"+tiId+"'] tr td.rich-mpnl-body > table tbody tr td > div.buttonrow > input").css('padding','4px 6px 4px 5px');
+									
+								 });
 								//]]>
 		                		</script>
 		               		 </h:panelGroup>
