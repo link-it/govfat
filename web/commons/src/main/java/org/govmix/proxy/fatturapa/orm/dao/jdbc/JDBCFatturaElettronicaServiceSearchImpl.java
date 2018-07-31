@@ -197,6 +197,7 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 			fields.add(FatturaElettronica.model().TENTATIVI_CONSEGNA);
 			fields.add(FatturaElettronica.model().DETTAGLIO_CONSEGNA);
 			fields.add(FatturaElettronica.model().STATO_PROTOCOLLAZIONE);
+			fields.add(FatturaElettronica.model().STATO_CONSERVAZIONE);
 			fields.add(FatturaElettronica.model().DATA_PROTOCOLLAZIONE);
 			fields.add(FatturaElettronica.model().PROTOCOLLO);
 			fields.add(FatturaElettronica.model().XML);
