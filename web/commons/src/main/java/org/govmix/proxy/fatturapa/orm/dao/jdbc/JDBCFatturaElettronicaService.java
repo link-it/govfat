@@ -20,27 +20,23 @@
  */
 package org.govmix.proxy.fatturapa.orm.dao.jdbc;
 
-import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceCRUDWithId;
-import org.govmix.proxy.fatturapa.orm.IdFattura;
+import java.sql.Connection;
 
+import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
+import org.govmix.proxy.fatturapa.orm.IdFattura;
+import org.govmix.proxy.fatturapa.orm.dao.IDBFatturaElettronicaService;
+import org.govmix.proxy.fatturapa.orm.utils.ProjectInfo;
 import org.openspcoop2.generic_project.beans.NonNegativeNumber;
 import org.openspcoop2.generic_project.beans.UpdateField;
 import org.openspcoop2.generic_project.beans.UpdateModel;
+import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceCRUDWithId;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
 import org.openspcoop2.generic_project.dao.jdbc.JDBCProperties;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.exception.ValidationException;
 import org.openspcoop2.generic_project.expression.IExpression;
-import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
-
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCServiceManager;
-import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
-import org.govmix.proxy.fatturapa.orm.dao.IDBFatturaElettronicaService;
-import org.govmix.proxy.fatturapa.orm.utils.ProjectInfo;
-
-import java.sql.Connection;
-
 import org.openspcoop2.utils.sql.ISQLQueryObject;
 
 /**     
@@ -1268,4 +1264,34 @@ public class JDBCFatturaElettronicaService extends JDBCFatturaElettronicaService
 	
 	}
 	
+	@Override
+	public int nativeUpdate(String sql,Object ... param) throws ServiceException,NotFoundException,NotImplementedException{
+	
+		Connection connection = null;
+		try{
+			
+			// ISQLQueryObject
+			ISQLQueryObject sqlQueryObject = this.jdbcSqlObjectFactory.createSQLQueryObject(this.jdbcProperties.getDatabase());
+			sqlQueryObject.setANDLogicOperator(true);
+			// Connection sql
+			connection = this.jdbcServiceManager.getConnection();
+
+			return ((JDBCFatturaElettronicaServiceImpl)this.serviceCRUD).nativeUpdate(this.jdbcProperties,this.log,connection,sqlQueryObject,sql,param);		
+	
+		}catch(ServiceException e){
+			this.log.error(e,e); throw e;
+		}catch(NotFoundException e){
+			this.log.debug(e,e); throw e;
+		}catch(NotImplementedException e){
+			this.log.error(e,e); throw e;
+		}catch(Exception e){
+			this.log.error(e,e); throw new ServiceException("nativeQuery not completed: "+e.getMessage(),e);
+		}finally{
+			if(connection!=null){
+				this.jdbcServiceManager.closeConnection(connection);
+			}
+		}
+	
+	}
+
 }

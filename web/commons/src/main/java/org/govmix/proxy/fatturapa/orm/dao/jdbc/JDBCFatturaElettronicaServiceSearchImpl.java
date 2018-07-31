@@ -250,6 +250,8 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.DATA_PROTOCOLLAZIONE, lottoTable));
 			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.PROTOCOLLO, lottoTable));
 			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.ID_EGOV, lottoTable));
+			String idSipLottoField = lottoTable+".id_sip";
+			fields.add(new CustomField(idSipLottoField, Long.class, idSipLottoField, this.getFatturaElettronicaFieldConverter().toTable(FatturaElettronica.model().LOTTO_FATTURE)));
 
 
 			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));
@@ -259,11 +261,32 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 				Object idFK_fatturaElettronica_esitoContabilizzazione = map.remove(idEsitoContabilizzazioneField);
 				Object idFK_fatturaElettronica_esitoScadenza = map.remove(idEsitoScadenzaField);
 				Object idFK_fatturaElettronica_sipOBJ = map.remove(idSipField);
+				Object idFK_lottoFatture_sipOBJ = map.remove(idSipLottoField);
 
 				FatturaElettronica fatturaElettronica = (FatturaElettronica)this.getFatturaElettronicaFetch().fetch(jdbcProperties.getDatabase(), FatturaElettronica.model(), map);
 
 				LottoFatture lottoFatture = (LottoFatture)this.getFatturaElettronicaFetch().fetch(jdbcProperties.getDatabase(), FatturaElettronica.model().LOTTO_FATTURE, map);
 
+				if(idFK_lottoFatture_sipOBJ != null && idFK_lottoFatture_sipOBJ instanceof Long) {
+					if(idMappingResolutionBehaviour==null ||
+							(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
+						){
+							try {
+								Long idFK_lotto_sip = (Long) idFK_lottoFatture_sipOBJ;
+								
+								org.govmix.proxy.fatturapa.orm.IdSip id_lotto_sip = null;
+								if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
+									id_lotto_sip = ((JDBCSIPServiceSearch)(this.getServiceManager().getSIPServiceSearch())).findId(idFK_lotto_sip, false);
+								}else{
+									id_lotto_sip = new org.govmix.proxy.fatturapa.orm.IdSip();
+								}
+								id_lotto_sip.setId(idFK_lotto_sip);
+								lottoFatture.setIdSIP(id_lotto_sip);
+							}catch(NotFoundException e) {}
+						}
+				}
+
+				
 				fatturaElettronica.setLottoFatture(lottoFatture);
 				if(idFK_fatturaElettronica_notificaDecorrenzaTermini != null && idFK_fatturaElettronica_notificaDecorrenzaTermini instanceof Long) {
 					
@@ -927,14 +950,6 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 		
 		return org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.nativeQuery(jdbcProperties, log, connection, sqlQueryObject,
 																							sql,returnClassTypes,param);
-														
-	}
-	
-	public int nativeUpdate(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-											String sql,Object ... param) throws ServiceException,NotFoundException,NotImplementedException,Exception{
-		
-		return org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.nativeUpdate(jdbcProperties, log, connection, sqlQueryObject,
-																							sql,param);
 														
 	}
 	
