@@ -21,11 +21,8 @@
 package org.govmix.proxy.fatturapa.orm.dao;
 
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
-import org.openspcoop2.generic_project.dao.IServiceSearchWithId;
-import org.openspcoop2.generic_project.exception.NotFoundException;
-import org.openspcoop2.generic_project.exception.NotImplementedException;
-import org.openspcoop2.generic_project.exception.ServiceException;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
+import org.openspcoop2.generic_project.dao.IServiceSearchWithId;
 
 
 /** 
@@ -38,5 +35,4 @@ import org.govmix.proxy.fatturapa.orm.IdFattura;
  */
 
 public interface IFatturaElettronicaServiceSearch extends IServiceSearchWithId<FatturaElettronica, IdFattura> {
-	public int nativeUpdate(String sql,Object ... param) throws ServiceException,NotFoundException,NotImplementedException;
 }

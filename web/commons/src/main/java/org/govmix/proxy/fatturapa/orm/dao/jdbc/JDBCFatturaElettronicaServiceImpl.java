@@ -613,6 +613,14 @@ public class JDBCFatturaElettronicaServiceImpl extends JDBCFatturaElettronicaSer
 	
 	}
 
+	public int nativeUpdate(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
+			String sql,Object ... param) throws ServiceException,NotFoundException,NotImplementedException,Exception{
+
+		return org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.nativeUpdate(jdbcProperties, log, connection, sqlQueryObject,
+				sql,param);
+
+	}
+
 
 
 	// -- DB

@@ -36,7 +36,6 @@ import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.dao.IDBFatturaElettronicaService;
 import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaService;
-import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.FatturaElettronicaFieldConverter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaPassivaFilter;
@@ -52,18 +51,15 @@ import org.openspcoop2.generic_project.exception.ServiceException;
 public class FatturaBD extends BaseBD {
 
 	protected IFatturaElettronicaService service;
-	protected IFatturaElettronicaServiceSearch serviceSearch;
 
 	public FatturaBD(Logger log) throws Exception {
 		super(log);
 		this.service = this.serviceManager.getFatturaElettronicaService();
-		this.serviceSearch = this.serviceManager.getFatturaElettronicaServiceSearch();
 	}
 
 	public FatturaBD(Logger log, Connection connection, boolean autocommit) throws Exception {
 		super(log, connection, autocommit);
 		this.service = this.serviceManager.getFatturaElettronicaService();
-		this.serviceSearch = this.serviceManager.getFatturaElettronicaServiceSearch();
 	}
 
 	public FatturaBD() throws Exception {
@@ -345,7 +341,7 @@ public class FatturaBD extends BaseBD {
 			listObjects.add(idLotto.getIdentificativoSdi());
 			listObjects.add(idLotto.isFatturazioneAttiva());
 			
-			this.serviceSearch.nativeUpdate(update.toString(), listObjects.toArray(new Object[]{}));
+			this.service.nativeUpdate(update.toString(), listObjects.toArray(new Object[]{}));
 			
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la assegnaIdentificativoSDIAInteroLotto: " + e.getMessage(), e);
@@ -385,7 +381,7 @@ public class FatturaBD extends BaseBD {
 			listObjects.add(idLotto.getIdentificativoSdi());
 			listObjects.add(idLotto.getFatturazioneAttiva());
 			
-			this.serviceSearch.nativeUpdate(update.toString(), listObjects.toArray(new Object[]{}));
+			this.service.nativeUpdate(update.toString(), listObjects.toArray(new Object[]{}));
 			
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la updateProtocollo: " + e.getMessage(), e);
@@ -497,7 +493,7 @@ public class FatturaBD extends BaseBD {
 			}
 			update.append("where id in (").append(questionMarks.toString()).append(")");
 			
-			this.serviceSearch.nativeUpdate(update.toString(), listObjects.toArray(new Object[]{}));
+			this.service.nativeUpdate(update.toString(), listObjects.toArray(new Object[]{}));
 			
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la inviaInConservazione: " + e.getMessage(), e);
