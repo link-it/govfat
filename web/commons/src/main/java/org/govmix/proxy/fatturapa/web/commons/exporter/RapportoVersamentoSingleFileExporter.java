@@ -3,20 +3,28 @@ package org.govmix.proxy.fatturapa.web.commons.exporter;
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
+import org.govmix.proxy.fatturapa.orm.SIP;
+import org.govmix.proxy.fatturapa.orm.dao.ISIPService;
+import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.exporter.exception.ExportException;
+import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 
 public class RapportoVersamentoSingleFileExporter extends AbstractSingleFileExporter<FatturaElettronica, IdFattura>{
 	
+	private ISIPService sipDAO;
+
 	public RapportoVersamentoSingleFileExporter(Logger log) throws ServiceException, NotImplementedException, Exception {
 		super(log);
+		this.sipDAO = DAOFactory.getInstance().getServiceManager().getSIPService();
 	}
 
 	public RapportoVersamentoSingleFileExporter(Logger log, Connection connection, boolean autocommit) throws ServiceException, NotImplementedException, Exception {
@@ -25,8 +33,12 @@ public class RapportoVersamentoSingleFileExporter extends AbstractSingleFileExpo
 
 	@Override
 	public void export(FatturaElettronica object, OutputStream out, FORMAT format) throws ExportException {
-		// TODO Auto-generated method stub
-		
+		switch(format) {
+		case RAW:this.exportAsRaw(object, out);
+		break;
+		default: throw new ExportException("Formato ["+format+"] non supportato");
+		}
+
 	}
 
 	@Override
@@ -53,13 +65,43 @@ public class RapportoVersamentoSingleFileExporter extends AbstractSingleFileExpo
 
 	@Override
 	public byte[] getRawContent(FatturaElettronica object) {
-		// TODO Auto-generated method stub
+		try {
+			SIP sip = this.sipDAO.get(object.getIdSIP());
+			return sip.getRapportoVersamento().getBytes();
+		} catch (ServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MultipleResultException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotImplementedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 
 	@Override
 	public String getRawName(FatturaElettronica object) {
-		// TODO Auto-generated method stub
+		try {
+			SIP sip = this.sipDAO.get(object.getIdSIP());
+			return "NUMERO + ANNO + REGISTRO + .xml" ; //TODO pintori
+		} catch (ServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MultipleResultException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotImplementedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -80,8 +122,7 @@ public class RapportoVersamentoSingleFileExporter extends AbstractSingleFileExpo
 
 	@Override
 	public String getRawExtension(FatturaElettronica object) {
-		// TODO Auto-generated method stub
-		return null;
+		return "xml";
 	}
 
 }
