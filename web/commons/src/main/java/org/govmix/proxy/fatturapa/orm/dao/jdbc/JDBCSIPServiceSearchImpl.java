@@ -107,21 +107,7 @@ public class JDBCSIPServiceSearchImpl implements IJDBCServiceSearchWithId<SIP, I
 	public IdSip convertToId(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, SIP sip) throws NotImplementedException, ServiceException, Exception{
 	
 		IdSip idSIP = new IdSip();
-		// idSIP.setXXX(sip.getYYY());
-		// ...
-		// idSIP.setXXX(sip.getYYY());
-		// TODO: popola IdSip
-	
-		/* 
-	     * TODO: implement code that returns the object id
-	    */
-	
-	    // Delete this line when you have implemented the method
-	    int throwNotImplemented = 1;
-	    if(throwNotImplemented==1){
-	            throw new NotImplementedException("NotImplemented");
-	    }
-	    // Delete this line when you have implemented the method 
+		idSIP.setIdSip(sip.getId());
 	
 		return idSIP;
 	}
@@ -535,58 +521,14 @@ public class JDBCSIPServiceSearchImpl implements IJDBCServiceSearchWithId<SIP, I
 	
 	private void _join(IExpression expression, ISQLQueryObject sqlQueryObject) throws NotImplementedException, ServiceException, Exception{
 	
-		/* 
-		 * TODO: implement code that implement the join condition
-		*/
-		/*
-		if(expression.inUseModel(SIP.model().XXXX,false)){
-			String tableName1 = this.getSIPFieldConverter().toAliasTable(SIP.model());
-			String tableName2 = this.getSIPFieldConverter().toAliasTable(SIP.model().XXX);
-			sqlQueryObject.addWhereCondition(tableName1+".id="+tableName2+".id_table1");
-		}
-		*/
-		
-		/* 
-         * TODO: implementa il codice che aggiunge la condizione FROM Table per le condizioni di join di oggetti annidati dal secondo livello in poi 
-         *       La addFromTable deve essere aggiunta solo se l'oggetto del livello precedente non viene utilizzato nella espressione 
-         *		 altrimenti il metodo sopra 'toSqlForPreparedStatementWithFromCondition' si occupa gia' di aggiungerla
-        */
-        /*
-        if(expression.inUseModel(SIP.model().LEVEL1.LEVEL2,false)){
-			if(expression.inUseModel(SIP.model().LEVEL1,false)==false){
-				sqlQueryObject.addFromTable(this.getSIPFieldConverter().toTable(SIP.model().LEVEL1));
-			}
-		}
-		...
-		if(expression.inUseModel(SIP.model()....LEVELN.LEVELN+1,false)){
-			if(expression.inUseModel(SIP.model().LEVELN,false)==false){
-				sqlQueryObject.addFromTable(this.getSIPFieldConverter().toTable(SIP.model().LEVELN));
-			}
-		}
-		*/
-		
-		// Delete this line when you have implemented the join condition
-		int throwNotImplemented = 1;
-		if(throwNotImplemented==1){
-		        throw new NotImplementedException("NotImplemented");
-		}
-		// Delete this line when you have implemented the join condition
-        
 	}
 	
 	protected java.util.List<Object> _getRootTablePrimaryKeyValues(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdSip id) throws NotFoundException, ServiceException, NotImplementedException, Exception{
 	    // Identificativi
         java.util.List<Object> rootTableIdValues = new java.util.ArrayList<Object>();
-        // TODO: Define the column values used to identify the primary key
 		Long longId = this.findIdSIP(jdbcProperties, log, connection, sqlQueryObject.newSQLQueryObject(), id, true);
 		rootTableIdValues.add(longId);
         
-        // Delete this line when you have verified the method
-		int throwNotImplemented = 1;
-		if(throwNotImplemented==1){
-		        throw new NotImplementedException("NotImplemented");
-		}
-		// Delete this line when you have verified the method
         
         return rootTableIdValues;
 	}
@@ -597,7 +539,6 @@ public class JDBCSIPServiceSearchImpl implements IJDBCServiceSearchWithId<SIP, I
 		Map<String, List<IField>> mapTableToPKColumn = new java.util.Hashtable<String, List<IField>>();
 		UtilsTemplate<IField> utilities = new UtilsTemplate<IField>();
 
-		// TODO: Define the columns used to identify the primary key
 		//		  If a table doesn't have a primary key, don't add it to this map
 
 		// SIP.model()
@@ -607,13 +548,6 @@ public class JDBCSIPServiceSearchImpl implements IJDBCServiceSearchWithId<SIP, I
 			));
 
 
-        // Delete this line when you have verified the method
-		int throwNotImplemented = 1;
-		if(throwNotImplemented==1){
-		        throw new NotImplementedException("NotImplemented");
-		}
-		// Delete this line when you have verified the method
-        
         return mapTableToPKColumn;		
 	}
 	
@@ -675,17 +609,6 @@ public class JDBCSIPServiceSearchImpl implements IJDBCServiceSearchWithId<SIP, I
 
 		InUse inUse = new InUse();
 		inUse.setInUse(false);
-		
-		/* 
-		 * TODO: implement code that checks whether the object identified by the id parameter is used by other objects
-		*/
-		
-		// Delete this line when you have implemented the method
-		int throwNotImplemented = 1;
-		if(throwNotImplemented==1){
-		        throw new NotImplementedException("NotImplemented");
-		}
-		// Delete this line when you have implemented the method
 
         return inUse;
 
@@ -700,24 +623,9 @@ public class JDBCSIPServiceSearchImpl implements IJDBCServiceSearchWithId<SIP, I
 
 		ISQLQueryObject sqlQueryObjectGet = sqlQueryObject.newSQLQueryObject();
 
-		/* 
-		 * TODO: implement code that returns the object identified by the id
-		*/
-
-		// Delete this line when you have implemented the method
-		int throwNotImplemented = 1;
-		if(throwNotImplemented==1){
-		        throw new NotImplementedException("NotImplemented");
-		}
- 		// Delete this line when you have implemented the method                
-
 		// Object _sip
-		//TODO Implementare la ricerca dell'id
 		sqlQueryObjectGet.addFromTable(this.getSIPFieldConverter().toTable(SIP.model()));
-		// TODO select field for identify ObjectId
-		//sqlQueryObjectGet.addSelectField(this.getSIPFieldConverter().toColumn(SIP.model().NOME_COLONNA_1,true));
-		//...
-		//sqlQueryObjectGet.addSelectField(this.getSIPFieldConverter().toColumn(SIP.model().NOME_COLONNA_N,true));
+		sqlQueryObjectGet.addSelectField("id");
 		sqlQueryObjectGet.setANDLogicOperator(true);
 		sqlQueryObjectGet.addWhereCondition("id=?");
 
@@ -726,9 +634,7 @@ public class JDBCSIPServiceSearchImpl implements IJDBCServiceSearchWithId<SIP, I
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tableId,Long.class)
 		};
 		List<Class<?>> listaFieldIdReturnType_sip = new ArrayList<Class<?>>();
-		//listaFieldIdReturnType_sip.add(Id1.class);
-		//...
-		//listaFieldIdReturnType_sip.add(IdN.class);
+		listaFieldIdReturnType_sip.add(Long.class);
 		org.govmix.proxy.fatturapa.orm.IdSip id_sip = null;
 		List<Object> listaFieldId_sip = jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet.createSQLQuery(), jdbcProperties.isShowSql(),
 				listaFieldIdReturnType_sip, searchParams_sip);
@@ -740,9 +646,7 @@ public class JDBCSIPServiceSearchImpl implements IJDBCServiceSearchWithId<SIP, I
 		else{
 			// set _sip
 			id_sip = new org.govmix.proxy.fatturapa.orm.IdSip();
-			// id_sip.setId1(listaFieldId_sip.get(0));
-			// ...
-			// id_sip.setIdN(listaFieldId_sip.get(N-1));
+			id_sip.setId((Long)listaFieldId_sip.get(0));
 		}
 		
 		return id_sip;
@@ -773,34 +677,16 @@ public class JDBCSIPServiceSearchImpl implements IJDBCServiceSearchWithId<SIP, I
 
 		ISQLQueryObject sqlQueryObjectGet = sqlQueryObject.newSQLQueryObject();
 
-		/* 
-		 * TODO: implement code that returns the object identified by the id
-		*/
-
-		// Delete this line when you have implemented the method
-		int throwNotImplemented = 1;
-		if(throwNotImplemented==1){
-		        throw new NotImplementedException("NotImplemented");
-		}
- 		// Delete this line when you have implemented the method                
-
 		// Object _sip
-		//TODO Implementare la ricerca dell'id
 		sqlQueryObjectGet.addFromTable(this.getSIPFieldConverter().toTable(SIP.model()));
 		sqlQueryObjectGet.addSelectField("id");
-		// Devono essere mappati nella where condition i metodi dell'oggetto id.getXXX
 		sqlQueryObjectGet.setANDLogicOperator(true);
 		sqlQueryObjectGet.setSelectDistinct(true);
-		//sqlQueryObjectGet.addWhereCondition(this.getSIPFieldConverter().toColumn(SIP.model().NOME_COLONNA_1,true)+"=?");
-		// ...
-		//sqlQueryObjectGet.addWhereCondition(this.getSIPFieldConverter().toColumn(SIP.model().NOME_COLONNA_N,true)+"=?");
+		sqlQueryObjectGet.addWhereCondition("id=?");
 
 		// Recupero _sip
-		// TODO Aggiungere i valori dei parametri di ricerca sopra definiti recuperandoli con i metodi dell'oggetto id.getXXX
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject [] searchParams_sip = new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject [] { 
-			//new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(object,object.class),
-			//...
-			//new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(object,object.class)
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id.getIdSip(),Long.class),
 		};
 		Long id_sip = null;
 		try{
