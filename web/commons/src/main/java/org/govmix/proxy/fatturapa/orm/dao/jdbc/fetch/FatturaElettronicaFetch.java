@@ -58,6 +58,8 @@ public class FatturaElettronicaFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "formato_trasmissione", FatturaElettronica.model().FORMATO_TRASMISSIONE.getFieldType())+"");
 				setParameter(object, "setIdentificativoSdi", FatturaElettronica.model().IDENTIFICATIVO_SDI.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "identificativo_sdi", FatturaElettronica.model().IDENTIFICATIVO_SDI.getFieldType()));
+				setParameter(object, "setFatturazioneAttiva", FatturaElettronica.model().FATTURAZIONE_ATTIVA.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "fatturazione_attiva", FatturaElettronica.model().FATTURAZIONE_ATTIVA.getFieldType()));
 				setParameter(object, "setDataRicezione", FatturaElettronica.model().DATA_RICEZIONE.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "data_ricezione", FatturaElettronica.model().DATA_RICEZIONE.getFieldType()));
 				setParameter(object, "setNomeFile", FatturaElettronica.model().NOME_FILE.getFieldType(),
@@ -126,6 +128,8 @@ public class FatturaElettronicaFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "protocollo", FatturaElettronica.model().PROTOCOLLO.getFieldType()));
 				setParameter(object, "setXml", FatturaElettronica.model().XML.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "xml", FatturaElettronica.model().XML.getFieldType()));
+				setParameter(object, "set_value_statoConservazione", String.class,
+					jdbcParameterUtilities.readParameter(rs, "stato_conservazione", FatturaElettronica.model().STATO_CONSERVAZIONE.getFieldType())+"");
 				return object;
 			}
 			if(model.equals(FatturaElettronica.model().LOTTO_FATTURE)){
@@ -234,6 +238,8 @@ public class FatturaElettronicaFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"formatoTrasmissione"));
 				setParameter(object, "setIdentificativoSdi", FatturaElettronica.model().IDENTIFICATIVO_SDI.getFieldType(),
 					this.getObjectFromMap(map,"identificativoSdi"));
+				setParameter(object, "setFatturazioneAttiva", FatturaElettronica.model().FATTURAZIONE_ATTIVA.getFieldType(),
+					this.getObjectFromMap(map,"fatturazioneAttiva"));
 				setParameter(object, "setDataRicezione", FatturaElettronica.model().DATA_RICEZIONE.getFieldType(),
 					this.getObjectFromMap(map,"dataRicezione"));
 				setParameter(object, "setNomeFile", FatturaElettronica.model().NOME_FILE.getFieldType(),
@@ -302,6 +308,8 @@ public class FatturaElettronicaFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"protocollo"));
 				setParameter(object, "setXml", FatturaElettronica.model().XML.getFieldType(),
 					this.getObjectFromMap(map,"xml"));
+				setParameter(object, "set_value_statoConservazione", String.class,
+					this.getObjectFromMap(map,"statoConservazione"));
 				return object;
 			}
 			if(model.equals(FatturaElettronica.model().LOTTO_FATTURE)){

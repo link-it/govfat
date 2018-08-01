@@ -8,7 +8,6 @@ import java.util.Map;
 
 import javax.faces.event.ActionEvent;
 
-import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.form.FatturaForm;
 import org.govmix.proxy.fatturapa.web.console.util.ConsoleProperties;
@@ -20,7 +19,7 @@ public class FileUploadBean implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LoggerManager.getConsoleLogger();
+//	private static Logger log = LoggerManager.getConsoleLogger();
 	
 	private Map<String, UploadItem> mapElementiRicevuti = null;
 	private Map<String, String> mapChiaviElementi = null;

@@ -260,6 +260,10 @@ public class LoginMBean extends LoginBean{
 	public boolean isShowMenuItemRispedizioni(){
 		return this.loggedUtente.getRole().equals(UserRole.ADMIN);
 	}
+	
+	public boolean isShowMenuItemConservazione(){
+		return this.loggedUtente.getRole().equals(UserRole.ADMIN);
+	}
 
 	public void updateProtocollo() throws Exception{
 		try{

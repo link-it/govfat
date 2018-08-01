@@ -156,7 +156,12 @@ public abstract class AbstractSingleFileImporter<T> {
 					InputStream inputStream = null;
 					try {						
 						inputStream = zip.getInputStream(zipEntry);
-						byte[]fileAsByte = Utilities.getAsByteArray(inputStream);
+						byte[]fileAsByte = null;
+						try {
+							fileAsByte = Utilities.getAsByteArray(inputStream);
+						} catch(UtilsException e) {
+							fileAsByte = new byte[] {};
+						}
 						this.process(archivio, fileAsByte, rootDir, nome, tipo);
 					} finally {
 						if(inputStream != null) {

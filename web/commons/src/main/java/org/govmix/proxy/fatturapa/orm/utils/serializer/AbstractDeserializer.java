@@ -25,6 +25,7 @@ import org.openspcoop2.generic_project.exception.DeserializerException;
 import org.govmix.proxy.fatturapa.orm.PccScadenza;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.Protocollo;
+import org.govmix.proxy.fatturapa.orm.IdSip;
 import org.govmix.proxy.fatturapa.orm.IdScadenza;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
@@ -61,6 +62,7 @@ import org.govmix.proxy.fatturapa.orm.PccTraccia;
 import org.govmix.proxy.fatturapa.orm.IdRegistroProperty;
 import org.govmix.proxy.fatturapa.orm.IdDipartimentoProperty;
 import org.govmix.proxy.fatturapa.orm.Ente;
+import org.govmix.proxy.fatturapa.orm.SIP;
 import org.govmix.proxy.fatturapa.orm.UtenteDipartimento;
 import org.govmix.proxy.fatturapa.orm.PccPagamento;
 import org.govmix.proxy.fatturapa.orm.IdDocumento;
@@ -324,6 +326,69 @@ public abstract class AbstractDeserializer {
 	 */
 	public Protocollo readProtocolloFromString(String in) throws DeserializerException {
 		return (Protocollo) this.xmlToObj(in.getBytes(), Protocollo.class);
+	}	
+	
+	
+	
+	/*
+	 =================================================================================
+	 Object: id-sip
+	 =================================================================================
+	*/
+	
+	/**
+	 * Transform the xml in <var>fileName</var> in the object type {@link org.govmix.proxy.fatturapa.orm.IdSip}
+	 * 
+	 * @param fileName Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.IdSip}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.IdSip}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public IdSip readIdSip(String fileName) throws DeserializerException {
+		return (IdSip) this.xmlToObj(fileName, IdSip.class);
+	}
+	
+	/**
+	 * Transform the xml in <var>file</var> in the object type {@link org.govmix.proxy.fatturapa.orm.IdSip}
+	 * 
+	 * @param file Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.IdSip}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.IdSip}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public IdSip readIdSip(File file) throws DeserializerException {
+		return (IdSip) this.xmlToObj(file, IdSip.class);
+	}
+	
+	/**
+	 * Transform the input stream <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.IdSip}
+	 * 
+	 * @param in InputStream to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.IdSip}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.IdSip}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public IdSip readIdSip(InputStream in) throws DeserializerException {
+		return (IdSip) this.xmlToObj(in, IdSip.class);
+	}	
+	
+	/**
+	 * Transform the byte array <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.IdSip}
+	 * 
+	 * @param in Byte array to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.IdSip}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.IdSip}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public IdSip readIdSip(byte[] in) throws DeserializerException {
+		return (IdSip) this.xmlToObj(in, IdSip.class);
+	}	
+	
+	/**
+	 * Transform the String <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.IdSip}
+	 * 
+	 * @param in String to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.IdSip}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.IdSip}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public IdSip readIdSipFromString(String in) throws DeserializerException {
+		return (IdSip) this.xmlToObj(in.getBytes(), IdSip.class);
 	}	
 	
 	
@@ -2592,6 +2657,69 @@ public abstract class AbstractDeserializer {
 	 */
 	public Ente readEnteFromString(String in) throws DeserializerException {
 		return (Ente) this.xmlToObj(in.getBytes(), Ente.class);
+	}	
+	
+	
+	
+	/*
+	 =================================================================================
+	 Object: SIP
+	 =================================================================================
+	*/
+	
+	/**
+	 * Transform the xml in <var>fileName</var> in the object type {@link org.govmix.proxy.fatturapa.orm.SIP}
+	 * 
+	 * @param fileName Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.SIP}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.SIP}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public SIP readSIP(String fileName) throws DeserializerException {
+		return (SIP) this.xmlToObj(fileName, SIP.class);
+	}
+	
+	/**
+	 * Transform the xml in <var>file</var> in the object type {@link org.govmix.proxy.fatturapa.orm.SIP}
+	 * 
+	 * @param file Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.SIP}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.SIP}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public SIP readSIP(File file) throws DeserializerException {
+		return (SIP) this.xmlToObj(file, SIP.class);
+	}
+	
+	/**
+	 * Transform the input stream <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.SIP}
+	 * 
+	 * @param in InputStream to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.SIP}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.SIP}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public SIP readSIP(InputStream in) throws DeserializerException {
+		return (SIP) this.xmlToObj(in, SIP.class);
+	}	
+	
+	/**
+	 * Transform the byte array <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.SIP}
+	 * 
+	 * @param in Byte array to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.SIP}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.SIP}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public SIP readSIP(byte[] in) throws DeserializerException {
+		return (SIP) this.xmlToObj(in, SIP.class);
+	}	
+	
+	/**
+	 * Transform the String <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.SIP}
+	 * 
+	 * @param in String to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.SIP}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.SIP}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public SIP readSIPFromString(String in) throws DeserializerException {
+		return (SIP) this.xmlToObj(in.getBytes(), SIP.class);
 	}	
 	
 	

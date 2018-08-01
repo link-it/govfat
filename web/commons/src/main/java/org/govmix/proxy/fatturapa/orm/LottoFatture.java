@@ -82,6 +82,7 @@ import java.io.Serializable;
  * 			&lt;element name="statoProtocollazione" type="{http://www.govmix.org/proxy/fatturapa/orm}StatoProtocollazioneType" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="dataProtocollazione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="protocollo" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="idSIP" type="{http://www.govmix.org/proxy/fatturapa/orm}id-sip" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="id-egov" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="Dipartimento" type="{http://www.govmix.org/proxy/fatturapa/orm}Dipartimento" minOccurs="0" maxOccurs="1"/>
  * 		&lt;/sequence>
@@ -138,6 +139,7 @@ import java.io.Serializable;
   	"statoProtocollazione",
   	"dataProtocollazione",
   	"protocollo",
+  	"idSIP",
   	"idEgov",
   	"dipartimento"
   }
@@ -565,6 +567,14 @@ public class LottoFatture extends org.openspcoop2.utils.beans.BaseBean implement
     this.protocollo = protocollo;
   }
 
+  public IdSip getIdSIP() {
+    return this.idSIP;
+  }
+
+  public void setIdSIP(IdSip idSIP) {
+    this.idSIP = idSIP;
+  }
+
   public java.lang.String getIdEgov() {
     return this.idEgov;
   }
@@ -792,6 +802,9 @@ public class LottoFatture extends org.openspcoop2.utils.beans.BaseBean implement
   @javax.xml.bind.annotation.XmlSchemaType(name="string")
   @XmlElement(name="protocollo",required=false,nillable=false)
   protected java.lang.String protocollo;
+
+  @XmlElement(name="idSIP",required=false,nillable=false)
+  protected IdSip idSIP;
 
   @javax.xml.bind.annotation.XmlSchemaType(name="string")
   @XmlElement(name="id-egov",required=false,nillable=false)

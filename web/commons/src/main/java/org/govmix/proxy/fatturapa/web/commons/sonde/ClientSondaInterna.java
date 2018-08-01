@@ -27,16 +27,21 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.apache.soap.encoding.soapenc.Base64;
 import org.govmix.proxy.fatturapa.web.commons.sonde.RisultatoSonda.STATO;
 
 public class ClientSondaInterna {
 
 	private String url;
+	private String username;
+	private String password;
 	private String name;
 	private Logger log;
 
-	public ClientSondaInterna(String url, String name, Logger log) {
+	public ClientSondaInterna(String url, String username, String password, String name, Logger log) {
 		this.url = url;
+		this.username = username;
+		this.password = password;
 		this.name = name;
 		this.log = log;
 	}
@@ -45,6 +50,13 @@ public class ClientSondaInterna {
 		try {
 			this.log.info("Invocazione sonda per il servizio ["+this.name+"]");
 			HttpURLConnection conn = (HttpURLConnection) (new URL(this.url).openConnection());
+			if(this.username !=null && !this.username.isEmpty() && 
+					this.password !=null && !this.password.isEmpty() ) {
+				String auth =  this.username + ":" +  this.password; 
+				String authentication = "Basic " + Base64.encode(auth.getBytes());
+				conn.setRequestProperty("Authorization", authentication);
+			}
+
 			conn.setDoInput(true);
 			int rc = conn.getResponseCode();
 			this.log.info("Invocazione sonda per il servizio ["+this.name+"]. ResponseCode ["+rc+"]");

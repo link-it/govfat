@@ -19,6 +19,7 @@ import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoInserimentoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFattureAttiveBD;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException.CODICE;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoResponse.ESITO;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
@@ -40,7 +41,7 @@ public class InserimentoLotti {
 			connection = DAOFactory.getInstance().getConnection();
 
 			connection.setAutoCommit(false);
-			LottoBD lottoBD = new LottoBD(log, connection, false);
+			LottoFattureAttiveBD lottoBD = new LottoFattureAttiveBD(log, connection, false);
 			ConsegnaFattura consegnaFattura = new ConsegnaFattura(log, false, connection, false);
 			List<IdLotto> lstIdentificativoEfatt = new ArrayList<IdLotto>();
 			
@@ -64,7 +65,7 @@ public class InserimentoLotti {
 				lotto.setStatoElaborazioneInUscita(StatoElaborazioneType.PRESA_IN_CARICO);
 				
 				insertLotto(lotto, lottoBD, consegnaFattura);
-				IdLotto idLotto = new IdLotto();
+				IdLotto idLotto = new IdLotto(lotto.isFatturazioneAttiva());
 				idLotto.setIdentificativoSdi(lotto.getIdentificativoSdi());
 				lstIdentificativoEfatt.add(idLotto);
 			}
@@ -163,7 +164,7 @@ public class InserimentoLotti {
 			connection = DAOFactory.getInstance().getConnection();
 			connection.setAutoCommit(false);
 
-			LottoBD lottoBD = new LottoBD(log, connection, false);
+			LottoFattureAttiveBD lottoBD = new LottoFattureAttiveBD(log, connection, false);
 			ConsegnaFattura consegnaFattura = new ConsegnaFattura(log, false, connection, false);
 			List<IdLotto> lstIdentificativoEfatt = new ArrayList<IdLotto>();
 
@@ -182,7 +183,7 @@ public class InserimentoLotti {
 				lotto.setProtocollo(request.getNumeroProtocollo() + "/" + request.getAnnoProtocollo() + "/" + request.getRegistroProtocollo());
 				
 				insertLotto(lotto, lottoBD, consegnaFattura);
-				IdLotto idLotto = new IdLotto();
+				IdLotto idLotto = new IdLotto(lotto.isFatturazioneAttiva());
 				idLotto.setIdentificativoSdi(lotto.getIdentificativoSdi());
 				lstIdentificativoEfatt.add(idLotto);
 			}
@@ -209,7 +210,7 @@ public class InserimentoLotti {
 		return inserimentoLottoResponse;
 	}
 	
-	private LottoFatture getLotto(InserimentoLottoRequest req, LottoBD lottoBD, String type) throws Exception {
+	private LottoFatture getLotto(InserimentoLottoRequest req, LottoFattureAttiveBD lottoBD, String type) throws Exception {
 		
 		
 		ConsegnaFatturaParameters params = null;
@@ -218,11 +219,23 @@ public class InserimentoLotti {
 
 		try {
 
-			params = ConsegnaFatturaUtils.getParameters(identificativo, req.getNomeFile(),
-							type, null,
+			try {
+				params = ConsegnaFatturaUtils.getParameters(identificativo, req.getNomeFile(),
+								type, null,
+								messageId,
+								false,
+								req.getXml());
+			} catch(Exception e) {
+				if(req instanceof InserimentoLottoSoloConservazioneRequest) {
+					params = ConsegnaFatturaUtils.getParameters(identificativo, req.getNomeFile(),
+							"XML", null,
 							messageId,
 							false,
 							req.getXml());
+				} else {
+					throw e;
+				}
+			}
 			
 			params.validate(true);
 		} catch(Exception e) {
@@ -278,14 +291,14 @@ public class InserimentoLotti {
 		return lotto;
 	}
 
-	private static synchronized Integer generaIdentificativo(LottoBD lottoBD) throws Exception {
+	private static synchronized Integer generaIdentificativo(LottoFattureAttiveBD lottoBD) throws Exception {
 		
 		Integer idSdI = Math.abs(new BigInteger(UUID.randomUUID().toString().replaceAll("-", ""), 16).intValue());
-		IdLotto idLotto = new IdLotto();
+		IdLotto idLotto = lottoBD.newIdLotto();
 		idLotto.setIdentificativoSdi(idSdI);
 		while(lottoBD.exists(idLotto)) {
 			idSdI = Math.abs(new BigInteger(UUID.randomUUID().toString().replaceAll("-", ""), 16).intValue());
-			idLotto = new IdLotto();
+			idLotto = lottoBD.newIdLotto();
 			idLotto.setIdentificativoSdi(idSdI);
 		}
 		return idSdI;

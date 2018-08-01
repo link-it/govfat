@@ -174,7 +174,7 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 
 			consegnaFattura.consegnaFattura(params);//, fatturaString);
 		} catch(Exception e) {
-			this.log.error("riceviFattura completata con errore:"+ e.getMessage(), e);
+			this.log.error("riceviFattura completata con errore per il lotto["+lotto.getIdentificativoSdi()+"] posizione ["+posizione+"]:"+ e.getMessage(), e);
 			throw e;
 		}
 	}

@@ -34,7 +34,7 @@ public class FatturaAttivaFilter extends FatturaFilter {
 	public FatturaAttivaFilter(IExpressionConstructor expressionConstructor) {
 		super(expressionConstructor, true);
 	}
-
+	
 	@Override
 	public IExpression _toFatturaExpression() throws ServiceException {
 		try {

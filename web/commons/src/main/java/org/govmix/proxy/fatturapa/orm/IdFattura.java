@@ -38,6 +38,7 @@ import java.io.Serializable;
  * 		&lt;sequence>
  * 			&lt;element name="identificativoSdi" type="{http://www.govmix.org/proxy/fatturapa/orm}integer" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="posizione" type="{http://www.w3.org/2001/XMLSchema}positiveInteger" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="fatturazioneAttiva" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -53,16 +54,24 @@ import java.io.Serializable;
 @XmlType(name = "id-fattura", 
   propOrder = {
   	"_decimalWrapper_identificativoSdi",
-  	"posizione"
+  	"posizione",
+  	"fatturazioneAttiva"
   }
 )
 
 @XmlRootElement(name = "id-fattura")
 
 public class IdFattura extends org.openspcoop2.utils.beans.BaseBean implements Serializable , Cloneable {
-  public IdFattura() {
+  public IdFattura(boolean fatturazioneAttiva) {
+	this.fatturazioneAttiva = fatturazioneAttiva;
   }
 
+  private IdFattura() {
+  }
+
+  public static IdFattura newIdFattura() {
+	  return new IdFattura();
+  }
   public Long getId() {
     if(this.id!=null)
 		return this.id;
@@ -99,6 +108,18 @@ public class IdFattura extends org.openspcoop2.utils.beans.BaseBean implements S
     this.posizione = posizione;
   }
 
+  public boolean isFatturazioneAttiva() {
+    return this.fatturazioneAttiva;
+  }
+
+  public boolean getFatturazioneAttiva() {
+    return this.fatturazioneAttiva;
+  }
+
+  public void setFatturazioneAttiva(boolean fatturazioneAttiva) {
+    this.fatturazioneAttiva = fatturazioneAttiva;
+  }
+
   private static final long serialVersionUID = 1L;
 
   @XmlTransient
@@ -117,5 +138,9 @@ public class IdFattura extends org.openspcoop2.utils.beans.BaseBean implements S
   @javax.xml.bind.annotation.XmlSchemaType(name="positiveInteger")
   @XmlElement(name="posizione",required=true,nillable=false)
   protected java.lang.Integer posizione;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="boolean")
+  @XmlElement(name="fatturazioneAttiva",required=true,nillable=false)
+  protected boolean fatturazioneAttiva;
 
 }

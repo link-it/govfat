@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <!-- ************************************************************************** -->
+  <!--  -->
+  <xs:complexType  name="ECEsitoGeneraleType">
+    <xs:sequence>
+      <xs:element name="CodiceEsito" type="ECEsitoExtType"/>
+      <xs:element name="CodiceErrore" type="xs:string" minOccurs="0"/>
+      <xs:element name="MessaggioErrore" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!--  -->
+  <xs:complexType  name="ECErroriSecondariType" >
+    <xs:sequence>
+      <xs:element name="Errore" type="ECErroreType" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!--  -->
+  <xs:complexType  name="ECWarningSecondariType">
+    <xs:sequence>
+      <xs:element name="Warning" type="ECWarningType" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!--  -->
+  <xs:complexType name="ECErroreType">
+    <xs:sequence>
+      <xs:element name="CodiceErrore" type="xs:string" minOccurs="0"/>
+      <xs:element name="MessaggioErrore" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!--  -->
+  <xs:complexType name="ECWarningType">
+    <xs:sequence>
+      <xs:element name="CodiceWarning" type="xs:string" minOccurs="0"/>
+      <xs:element name="MessaggioWarning" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!--  -->
+  <xs:complexType  name="SCVersatoreType">
+    <xs:sequence>
+      <xs:element name="Ambiente" type="xs:string"/>
+      <xs:element name="Ente" type="xs:string"/>
+      <xs:element name="Struttura" type="xs:string"/>
+      <xs:element name="UserID" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!--  -->
+  <xs:complexType name="SCChiaveType">
+    <xs:sequence>
+      <xs:element name="Numero" type="xs:token"/>
+      <xs:element name="Anno" type="xs:token" nillable="true"/>
+      <xs:element name="TipoRegistro" type="xs:token" nillable="true"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- ************************************************************************** -->
+  <!--  -->
+  <xs:simpleType name="ECEsitoExtType">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="POSITIVO"/>
+      <xs:enumeration value="NEGATIVO"/>
+      <xs:enumeration value="WARNING"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- ************************************************************************** -->
+  <xs:complexType name="RapportoVersamentoType">
+    <xs:sequence>
+      <xs:element name="Versione" type="xs:string" minOccurs="0"/>
+      <xs:element name="URNRapportoVersamento" type="xs:string"/>
+      <xs:element name="DataRapportoVersamento" type="xs:dateTime"/>
+      <xs:element name="EsitoGenerale" type="ECEsitoGeneraleType"/>
+      <xs:element name="WarningUlteriori" type="ECWarningSecondariType" minOccurs="0"/>
+      <xs:element name="Versatore" type="SCVersatoreType" minOccurs="0"/>
+      <xs:element name="SIP" type="SIPType" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!--  -->
+  <xs:complexType name="SIPType">
+    <xs:sequence>
+      <xs:element name="URNIndiceSIP" type="xs:string" minOccurs="0"/>
+      <xs:element name="HashIndiceSIP" type="xs:string" minOccurs="0"/>
+      <xs:element name="AlgoritmoHashIndiceSIP" type="xs:token" minOccurs="0"/>
+      <xs:element name="EncodingHashIndiceSIP" type="xs:token" minOccurs="0"/>
+      <xs:element name="URNPISIP" type="xs:string" minOccurs="0"/>
+      <xs:element name="HashPISIP" type="xs:string" minOccurs="0"/>
+      <xs:element name="AlgoritmoHashPISIP" type="xs:token" minOccurs="0"/>
+      <xs:element name="EncodingHashPISIP" type="xs:token" minOccurs="0"/>
+      <xs:element name="DataVersamento" type="xs:dateTime" minOccurs="0"/>
+      <xs:element name="UnitaDocumentaria" type="UnitaDocumentariaSIPType" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!--  -->
+  <xs:complexType name="UnitaDocumentariaSIPType">
+    <xs:sequence>
+      <xs:element name="Chiave" type="SCChiaveType" minOccurs="0"/>
+      <xs:element name="TipologiaUnitaDocumentaria" type="xs:string" minOccurs="0"/>
+      <xs:element name="DocumentoPrincipale" type="DocumentoSIPType" minOccurs="0"/>
+      <xs:element name="Allegato" type="DocumentoSIPType" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element name="Annesso" type="DocumentoSIPType" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element name="Annotazione" type="DocumentoSIPType" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!--  -->
+  <xs:complexType name="DocumentoSIPType">
+    <xs:sequence>
+      <xs:element name="ChiaveDoc" type="xs:string"/>
+      <xs:element name="IDDocumento" type="xs:string" minOccurs="0"/>
+      <xs:element name="TipoDocumento" type="xs:string" minOccurs="0"/>
+      <xs:element name="FirmatoDigitalmente" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="Componenti" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Componente" type="ComponenteSIPType" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <!--  -->
+  <xs:complexType name="ComponenteSIPType">
+    <xs:sequence>
+      <xs:element name="URN" type="xs:string"/>
+      <xs:element name="Hash" type="xs:string"/>
+      <xs:element name="AlgoritmoHash" type="xs:token" minOccurs="0"/>
+      <xs:element name="Encoding" type="xs:token" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="RapportoVersamento" type="RapportoVersamentoType"/>
+</xs:schema>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

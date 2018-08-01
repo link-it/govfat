@@ -82,6 +82,13 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 				return "identificativo_sdi";
 			}
 		}
+		if(field.equals(FatturaElettronica.model().FATTURAZIONE_ATTIVA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".fatturazione_attiva";
+			}else{
+				return "fatturazione_attiva";
+			}
+		}
 		if(field.equals(FatturaElettronica.model().DATA_RICEZIONE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".data_ricezione";
@@ -327,6 +334,27 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 				return "identificativo_sdi";
 			}
 		}
+		if(field.equals(FatturaElettronica.model().ID_SIP.ID_SIP)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".id_sip";
+			}else{
+				return "id_sip";
+			}
+		}
+		if(field.equals(FatturaElettronica.model().ID_SIP.STATO_CONSEGNA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".stato_consegna";
+			}else{
+				return "stato_consegna";
+			}
+		}
+		if(field.equals(FatturaElettronica.model().ID_SIP.DATA_ULTIMA_CONSEGNA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".data_ultima_consegna";
+			}else{
+				return "data_ultima_consegna";
+			}
+		}
 		if(field.equals(FatturaElettronica.model().ID_ESITO_CONTABILIZZAZIONE.ID_TRASMISSIONE_ESITO)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".id_trasmissione_esito";
@@ -339,6 +367,13 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 				return this.toAliasTable(field)+".id_trasmissione_esito";
 			}else{
 				return "id_trasmissione_esito";
+			}
+		}
+		if(field.equals(FatturaElettronica.model().STATO_CONSERVAZIONE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".stato_conservazione";
+			}else{
+				return "stato_conservazione";
 			}
 		}
 		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.CODICE)){
@@ -712,6 +747,27 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 				return "protocollo";
 			}
 		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.ID_SIP.ID_SIP)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".id_sip";
+			}else{
+				return "id_sip";
+			}
+		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.ID_SIP.STATO_CONSEGNA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".stato_consegna";
+			}else{
+				return "stato_consegna";
+			}
+		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.ID_SIP.DATA_ULTIMA_CONSEGNA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".data_ultima_consegna";
+			}else{
+				return "data_ultima_consegna";
+			}
+		}
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.ID_EGOV)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".id_egov";
@@ -829,6 +885,9 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 		if(field.equals(FatturaElettronica.model().IDENTIFICATIVO_SDI)){
 			return this.toTable(FatturaElettronica.model(), returnAlias);
 		}
+		if(field.equals(FatturaElettronica.model().FATTURAZIONE_ATTIVA)){
+			return this.toTable(FatturaElettronica.model(), returnAlias);
+		}
 		if(field.equals(FatturaElettronica.model().DATA_RICEZIONE)){
 			return this.toTable(FatturaElettronica.model(), returnAlias);
 		}
@@ -934,11 +993,23 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 		if(field.equals(FatturaElettronica.model().ID_DECORRENZA_TERMINI.IDENTIFICATIVO_SDI)){
 			return this.toTable(FatturaElettronica.model().ID_DECORRENZA_TERMINI, returnAlias);
 		}
+		if(field.equals(FatturaElettronica.model().ID_SIP.ID_SIP)){
+			return this.toTable(FatturaElettronica.model().ID_SIP, returnAlias);
+		}
+		if(field.equals(FatturaElettronica.model().ID_SIP.STATO_CONSEGNA)){
+			return this.toTable(FatturaElettronica.model().ID_SIP, returnAlias);
+		}
+		if(field.equals(FatturaElettronica.model().ID_SIP.DATA_ULTIMA_CONSEGNA)){
+			return this.toTable(FatturaElettronica.model().ID_SIP, returnAlias);
+		}
 		if(field.equals(FatturaElettronica.model().ID_ESITO_CONTABILIZZAZIONE.ID_TRASMISSIONE_ESITO)){
 			return this.toTable(FatturaElettronica.model().ID_ESITO_CONTABILIZZAZIONE, returnAlias);
 		}
 		if(field.equals(FatturaElettronica.model().ID_ESITO_SCADENZA.ID_TRASMISSIONE_ESITO)){
 			return this.toTable(FatturaElettronica.model().ID_ESITO_SCADENZA, returnAlias);
+		}
+		if(field.equals(FatturaElettronica.model().STATO_CONSERVAZIONE)){
+			return this.toTable(FatturaElettronica.model(), returnAlias);
 		}
 		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.CODICE)){
 			return this.toTable(FatturaElettronica.model().DIPARTIMENTO, returnAlias);
@@ -1099,6 +1170,15 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.PROTOCOLLO)){
 			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE, returnAlias);
 		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.ID_SIP.ID_SIP)){
+			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE.ID_SIP, returnAlias);
+		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.ID_SIP.STATO_CONSEGNA)){
+			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE.ID_SIP, returnAlias);
+		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.ID_SIP.DATA_ULTIMA_CONSEGNA)){
+			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE.ID_SIP, returnAlias);
+		}
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.ID_EGOV)){
 			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE, returnAlias);
 		}
@@ -1160,6 +1240,9 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 		if(model.equals(FatturaElettronica.model().ID_DECORRENZA_TERMINI)){
 			return "decorrenza_termini";
 		}
+		if(model.equals(FatturaElettronica.model().ID_SIP)){
+			return "sip";
+		}
 		if(model.equals(FatturaElettronica.model().ID_ESITO_CONTABILIZZAZIONE)){
 			return "tracce_trasmissioni_esiti";
 		}
@@ -1186,6 +1269,9 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 		}
 		if(model.equals(FatturaElettronica.model().LOTTO_FATTURE)){
 			return "lotti";
+		}
+		if(model.equals(FatturaElettronica.model().LOTTO_FATTURE.ID_SIP)){
+			return "sip";
 		}
 		if(model.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO)){
 			return "dipartimenti";

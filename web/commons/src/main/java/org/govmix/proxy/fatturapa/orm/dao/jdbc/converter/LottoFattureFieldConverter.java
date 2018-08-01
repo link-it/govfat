@@ -348,6 +348,27 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 				return "protocollo";
 			}
 		}
+		if(field.equals(LottoFatture.model().ID_SIP.ID_SIP)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".id_sip";
+			}else{
+				return "id_sip";
+			}
+		}
+		if(field.equals(LottoFatture.model().ID_SIP.STATO_CONSEGNA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".stato_consegna";
+			}else{
+				return "stato_consegna";
+			}
+		}
+		if(field.equals(LottoFatture.model().ID_SIP.DATA_ULTIMA_CONSEGNA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".data_ultima_consegna";
+			}else{
+				return "data_ultima_consegna";
+			}
+		}
 		if(field.equals(LottoFatture.model().ID_EGOV)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".id_egov";
@@ -579,6 +600,15 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 		if(field.equals(LottoFatture.model().PROTOCOLLO)){
 			return this.toTable(LottoFatture.model(), returnAlias);
 		}
+		if(field.equals(LottoFatture.model().ID_SIP.ID_SIP)){
+			return this.toTable(LottoFatture.model().ID_SIP, returnAlias);
+		}
+		if(field.equals(LottoFatture.model().ID_SIP.STATO_CONSEGNA)){
+			return this.toTable(LottoFatture.model().ID_SIP, returnAlias);
+		}
+		if(field.equals(LottoFatture.model().ID_SIP.DATA_ULTIMA_CONSEGNA)){
+			return this.toTable(LottoFatture.model().ID_SIP, returnAlias);
+		}
 		if(field.equals(LottoFatture.model().ID_EGOV)){
 			return this.toTable(LottoFatture.model(), returnAlias);
 		}
@@ -636,6 +666,9 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 		
 		if(model.equals(LottoFatture.model())){
 			return "lotti";
+		}
+		if(model.equals(LottoFatture.model().ID_SIP)){
+			return "sip";
 		}
 		if(model.equals(LottoFatture.model().DIPARTIMENTO)){
 			return "dipartimenti";

@@ -227,7 +227,7 @@ public class PccWsClient {
 		try {
 
 			FatturaElettronica fattura = this.fatturaBD.getById(traccia.getIdFattura());
-			IdFattura idFattura = new IdFattura();
+			IdFattura idFattura = new IdFattura(fattura.isFatturazioneAttiva());
 			idFattura.setIdentificativoSdi(fattura.getIdentificativoSdi());
 			idFattura.setPosizione(fattura.getPosizione());
 
@@ -369,7 +369,7 @@ public class PccWsClient {
 			this.log.info("invoke : wSQueryOperazioneContabile per la traccia ["+traccia.getIdPaTransazione()+"]");
 
 			FatturaElettronica fattura = this.fatturaBD.getById(traccia.getIdFattura());
-			IdFattura idFattura = new IdFattura();
+			IdFattura idFattura = new IdFattura(fattura.isFatturazioneAttiva());
 			idFattura.setIdentificativoSdi(fattura.getIdentificativoSdi());
 			idFattura.setPosizione(fattura.getPosizione());
 
@@ -418,7 +418,7 @@ public class PccWsClient {
 			this.log.info("invoke : wSProxyDatiFattura per la traccia ["+traccia.getIdPaTransazione()+"]");
 
 			FatturaElettronica fattura = this.fatturaBD.getById(traccia.getIdFattura());
-			IdFattura idFattura = new IdFattura();
+			IdFattura idFattura = new IdFattura(fattura.isFatturazioneAttiva());
 			idFattura.setIdentificativoSdi(fattura.getIdentificativoSdi());
 			idFattura.setPosizione(fattura.getPosizione());
 			
@@ -620,7 +620,7 @@ public class PccWsClient {
 			this.log.info("invoke: wSProxyOperazioneContabile per la traccia ["+traccia.getIdPaTransazione()+"]");
 
 			FatturaElettronica fattura = this.fatturaBD.getById(traccia.getIdFattura());
-			IdFattura idFattura = new IdFattura();
+			IdFattura idFattura = new IdFattura(fattura.isFatturazioneAttiva());
 			idFattura.setIdentificativoSdi(fattura.getIdentificativoSdi());
 			idFattura.setPosizione(fattura.getPosizione());
 
@@ -718,7 +718,7 @@ public class PccWsClient {
 		try {
 			NomePccOperazioneType op = AuthorizationBeanFactory.getOperationName(proxyOperazioneContabileRichiestaTipo.getDatiRichiesta().getListaOperazione().getOperazione().getTipoOperazione());
 			FatturaElettronica fattura = this.fatturaBD.getById(beanResponse.getIdFattura());
-			IdFattura idFattura = new IdFattura();
+			IdFattura idFattura = new IdFattura(fattura.isFatturazioneAttiva());
 			idFattura.setIdentificativoSdi(fattura.getIdentificativoSdi());
 			idFattura.setPosizione(fattura.getPosizione());
 
@@ -1086,7 +1086,7 @@ public class PccWsClient {
 			this.log.info("invoke : wSQueryDatiFattura per la traccia ["+traccia.getIdPaTransazione()+"]");
 
 			FatturaElettronica fattura = this.fatturaBD.getById(traccia.getIdFattura());
-			IdFattura idFattura = new IdFattura();
+			IdFattura idFattura = new IdFattura(fattura.isFatturazioneAttiva());
 			idFattura.setIdentificativoSdi(fattura.getIdentificativoSdi());
 			idFattura.setPosizione(fattura.getPosizione());
 
@@ -1170,7 +1170,7 @@ public class PccWsClient {
 
 
 			FatturaElettronica fattura = this.fatturaBD.getById(traccia.getIdFattura());
-			IdFattura idFattura = new IdFattura();
+			IdFattura idFattura = new IdFattura(fattura.isFatturazioneAttiva());
 			idFattura.setIdentificativoSdi(fattura.getIdentificativoSdi());
 			idFattura.setPosizione(fattura.getPosizione());
 

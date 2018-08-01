@@ -38,6 +38,14 @@ public class PccProperties extends AbstractProperties {
 	private String urlWadlEndpointPdd;
 	private String urlWsdlFattureWS;
 	private String urlWsdlTracceWS;
+	private String userWadlEndpointEnte;
+	private String userWadlEndpointPdd;
+	private String userWsdlFattureWS;
+	private String userWsdlTracceWS;
+	private String passwordWadlEndpointEnte;
+	private String passwordWadlEndpointPdd;
+	private String passwordWsdlFattureWS;
+	private String passwordWsdlTracceWS;
 	private int maxTentativiRispedizione;
 	private int fattoreRispedizione;
 
@@ -62,10 +70,22 @@ public class PccProperties extends AbstractProperties {
 		try {
 			this.versioneApplicativa = this.getProperty("org.govmix.proxy.pcc.versioneApplicativa", true);
 			this.urlPCC = this.getProperty("org.govmix.proxy.pcc.url", true);
+			
 			this.urlWadlEndpointEnte = this.getProperty("org.govmix.proxy.wadl.endpoint.ente.url", true);
 			this.urlWadlEndpointPdd = this.getProperty("org.govmix.proxy.wadl.endpoint.pdd.url", true);
 			this.urlWsdlFattureWS= this.getProperty("org.govmix.proxy.wsdl.fattureWS.url", true);
 			this.urlWsdlTracceWS= this.getProperty("org.govmix.proxy.wsdl.tracceWS.url", true);
+			
+			this.userWadlEndpointEnte = this.getProperty("org.govmix.proxy.wadl.endpoint.ente.user", false);
+			this.userWadlEndpointPdd = this.getProperty("org.govmix.proxy.wadl.endpoint.pdd.user", false);
+			this.userWsdlFattureWS= this.getProperty("org.govmix.proxy.wsdl.fattureWS.user", false);
+			this.userWsdlTracceWS= this.getProperty("org.govmix.proxy.wsdl.tracceWS.user", false);
+			
+			this.passwordWadlEndpointEnte = this.getProperty("org.govmix.proxy.wadl.endpoint.ente.password", false);
+			this.passwordWadlEndpointPdd = this.getProperty("org.govmix.proxy.wadl.endpoint.pdd.password", false);
+			this.passwordWsdlFattureWS= this.getProperty("org.govmix.proxy.wsdl.fattureWS.password", false);
+			this.passwordWsdlTracceWS= this.getProperty("org.govmix.proxy.wsdl.tracceWS.password", false);
+			
 			this.usernamePCC = this.getProperty("org.govmix.proxy.pcc.username", true);
 			this.passwordPCC = this.getProperty("org.govmix.proxy.pcc.password", true);
 			this.idEgovRichiestaHeader = this.getProperty("org.govmix.proxy.pcc.idEgovRichiestaHeader", true);
@@ -141,5 +161,37 @@ public class PccProperties extends AbstractProperties {
 	public Integer getIntervalloSpedizioneEsito() {
 		return intervalloSpedizioneEsito;
 	}
+	public String getUserWadlEndpointEnte() {
+		return userWadlEndpointEnte;
+	}
+
+	public String getUserWadlEndpointPdd() {
+		return userWadlEndpointPdd;
+	}
+
+	public String getUserWsdlFattureWS() {
+		return userWsdlFattureWS;
+	}
+
+	public String getUserWsdlTracceWS() {
+		return userWsdlTracceWS;
+	}
+
+	public String getPasswordWadlEndpointEnte() {
+		return passwordWadlEndpointEnte;
+	}
+
+	public String getPasswordWadlEndpointPdd() {
+		return passwordWadlEndpointPdd;
+	}
+
+	public String getPasswordWsdlFattureWS() {
+		return passwordWsdlFattureWS;
+	}
+
+	public String getPasswordWsdlTracceWS() {
+		return passwordWsdlTracceWS;
+	}
+
 
 }

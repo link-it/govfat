@@ -506,7 +506,7 @@ public class JDBCPccScadenzaServiceSearchImpl implements IJDBCServiceSearchWithI
 			if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
 				id_pccScadenza_fatturaElettronica = ((JDBCFatturaElettronicaServiceSearch)(this.getServiceManager().getFatturaElettronicaServiceSearch())).findId(idFK_pccScadenza_fatturaElettronica, false);
 			}else{
-				id_pccScadenza_fatturaElettronica = new org.govmix.proxy.fatturapa.orm.IdFattura();
+				id_pccScadenza_fatturaElettronica = org.govmix.proxy.fatturapa.orm.IdFattura.newIdFattura();
 			}
 			id_pccScadenza_fatturaElettronica.setId(idFK_pccScadenza_fatturaElettronica);
 			pccScadenza.setIdFattura(id_pccScadenza_fatturaElettronica);

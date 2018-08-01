@@ -34,7 +34,7 @@ public class ServletSonda extends AbstractServletSonda {
 	 */
 	private static final long serialVersionUID = 1L;
  
-	public ServletSonda(List<String> urls) throws Exception {
+	public ServletSonda(List<InvocationUrlInfo> urls) throws Exception {
 		super(urls);
 	}
 

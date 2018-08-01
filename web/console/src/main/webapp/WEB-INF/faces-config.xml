@@ -305,6 +305,20 @@
 			<value>#{registroService}</value>
 		</managed-property>
 	</managed-bean>
+	
+	
+		<!-- Conservazione -->
+	<managed-bean>
+		<managed-bean-name>conservazioneDM</managed-bean-name>
+		<managed-bean-class>org.govmix.proxy.fatturapa.web.console.datamodel.ConservazioneDM</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>dataProvider</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.iservice.IConservazioneService</property-class>
+			<value>#{conservazioneService}</value>
+		</managed-property>
+	</managed-bean>
+	
 
 	<!-- Login -->
 	<navigation-rule>
@@ -605,6 +619,10 @@
 		<navigation-case>
 			<from-outcome>protocollo</from-outcome>
 			<to-view-id>/pages/anagrafica/protocolli/form/protocollo.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>listaConservazione</from-outcome>
+			<to-view-id>/pages/fattura/list/listaConservazione.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 

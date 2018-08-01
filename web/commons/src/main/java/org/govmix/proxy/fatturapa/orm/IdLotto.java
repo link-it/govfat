@@ -37,6 +37,7 @@ import java.io.Serializable;
  * &lt;complexType name="id-lotto">
  * 		&lt;sequence>
  * 			&lt;element name="identificativoSdi" type="{http://www.govmix.org/proxy/fatturapa/orm}integer" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="fatturazioneAttiva" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -51,14 +52,22 @@ import java.io.Serializable;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "id-lotto", 
   propOrder = {
-  	"_decimalWrapper_identificativoSdi"
+  	"_decimalWrapper_identificativoSdi",
+  	"fatturazioneAttiva"
   }
 )
 
 @XmlRootElement(name = "id-lotto")
 
 public class IdLotto extends org.openspcoop2.utils.beans.BaseBean implements Serializable , Cloneable {
-  public IdLotto() {
+  public IdLotto(boolean fatturazioneAttiva) {
+	this.fatturazioneAttiva = fatturazioneAttiva;
+  }
+
+  private IdLotto() {
+  }
+  public static IdLotto newIdLotto() {
+		return new IdLotto();
   }
 
   public Long getId() {
@@ -89,6 +98,18 @@ public class IdLotto extends org.openspcoop2.utils.beans.BaseBean implements Ser
 	}
   }
 
+  public boolean isFatturazioneAttiva() {
+    return this.fatturazioneAttiva;
+  }
+
+  public boolean getFatturazioneAttiva() {
+    return this.fatturazioneAttiva;
+  }
+
+  public void setFatturazioneAttiva(boolean fatturazioneAttiva) {
+    this.fatturazioneAttiva = fatturazioneAttiva;
+  }
+
   private static final long serialVersionUID = 1L;
 
   @XmlTransient
@@ -103,5 +124,10 @@ public class IdLotto extends org.openspcoop2.utils.beans.BaseBean implements Ser
 
   @XmlTransient
   protected java.lang.Integer identificativoSdi;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="boolean")
+  @XmlElement(name="fatturazioneAttiva",required=true,nillable=false)
+  protected boolean fatturazioneAttiva;
+
 
 }

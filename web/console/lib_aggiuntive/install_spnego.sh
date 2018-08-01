@@ -1,1 +1,1 @@
-mvn install:install-file -Dfile=spnego-r7.jar  -DgroupId=net.sourceforge -DartifactId=spnego -Dversion=r7  -Dpackaging=jar
+mvn install:install-file -Dfile=spnego-r9.jar  -DgroupId=net.sourceforge -DartifactId=spnego -Dversion=r9  -Dpackaging=jar

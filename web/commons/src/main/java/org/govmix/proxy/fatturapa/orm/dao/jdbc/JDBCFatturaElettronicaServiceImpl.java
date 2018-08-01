@@ -83,6 +83,23 @@ public class JDBCFatturaElettronicaServiceImpl extends JDBCFatturaElettronicaSer
 			}
 		}
 
+		// Object _sip
+		Long id_sip = null;
+		org.govmix.proxy.fatturapa.orm.IdSip idLogic_sip = null;
+		idLogic_sip = fatturaElettronica.getIdSIP();
+		if(idLogic_sip!=null){
+			if(idMappingResolutionBehaviour==null ||
+				(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour))){
+				id_sip = ((JDBCSIPServiceSearch)(this.getServiceManager().getSIPServiceSearch())).findTableId(idLogic_sip, false);
+			}
+			else if(org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour)){
+				id_sip = idLogic_sip.getId();
+				if(id_sip==null || id_sip<=0){
+					throw new Exception("Logic id not contains table id");
+				}
+			}
+		}
+
 		// Object _pccTracciaTrasmissioneEsito
 		Long id_pccTracciaTrasmissioneEsito = null;
 		org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito idLogic_pccTracciaTrasmissioneEsito = null;
@@ -122,6 +139,7 @@ public class JDBCFatturaElettronicaServiceImpl extends JDBCFatturaElettronicaSer
 		sqlQueryObjectInsert.addInsertTable(this.getFatturaElettronicaFieldConverter().toTable(FatturaElettronica.model()));
 		sqlQueryObjectInsert.addInsertField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().FORMATO_TRASMISSIONE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().IDENTIFICATIVO_SDI,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().FATTURAZIONE_ATTIVA,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DATA_RICEZIONE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().NOME_FILE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().MESSAGE_ID,false),"?");
@@ -156,7 +174,9 @@ public class JDBCFatturaElettronicaServiceImpl extends JDBCFatturaElettronicaSer
 		sqlQueryObjectInsert.addInsertField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DATA_PROTOCOLLAZIONE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().PROTOCOLLO,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().XML,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().STATO_CONSERVAZIONE,false),"?");
 		sqlQueryObjectInsert.addInsertField("id_notifica_decorrenza_termini","?");
+		sqlQueryObjectInsert.addInsertField("id_sip","?");
 		sqlQueryObjectInsert.addInsertField("id_contabilizzazione","?");
 		sqlQueryObjectInsert.addInsertField("id_scadenza","?");
 
@@ -165,6 +185,7 @@ public class JDBCFatturaElettronicaServiceImpl extends JDBCFatturaElettronicaSer
 		long id = jdbcUtilities.insertAndReturnGeneratedKey(sqlQueryObjectInsert, keyGenerator, jdbcProperties.isShowSql(),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(fatturaElettronica.getFormatoTrasmissione(),FatturaElettronica.model().FORMATO_TRASMISSIONE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(fatturaElettronica.getIdentificativoSdi(),FatturaElettronica.model().IDENTIFICATIVO_SDI.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(fatturaElettronica.getFatturazioneAttiva(),FatturaElettronica.model().FATTURAZIONE_ATTIVA.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(fatturaElettronica.getDataRicezione(),FatturaElettronica.model().DATA_RICEZIONE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(fatturaElettronica.getNomeFile(),FatturaElettronica.model().NOME_FILE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(fatturaElettronica.getMessageId(),FatturaElettronica.model().MESSAGE_ID.getFieldType()),
@@ -199,7 +220,9 @@ public class JDBCFatturaElettronicaServiceImpl extends JDBCFatturaElettronicaSer
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(fatturaElettronica.getDataProtocollazione(),FatturaElettronica.model().DATA_PROTOCOLLAZIONE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(fatturaElettronica.getProtocollo(),FatturaElettronica.model().PROTOCOLLO.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(fatturaElettronica.getXml(),FatturaElettronica.model().XML.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(fatturaElettronica.getStatoConservazione(),FatturaElettronica.model().STATO_CONSERVAZIONE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id_notificaDecorrenzaTermini,Long.class),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id_sip,Long.class),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id_pccTracciaTrasmissioneEsito,Long.class),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id_pccTracciaTrasmissioneEsitoInstance2,Long.class)
 		);
@@ -261,6 +284,23 @@ public class JDBCFatturaElettronicaServiceImpl extends JDBCFatturaElettronicaSer
 			}
 		}
 
+		// Object _fatturaElettronica_sip
+		Long id_fatturaElettronica_sip = null;
+		org.govmix.proxy.fatturapa.orm.IdSip idLogic_fatturaElettronica_sip = null;
+		idLogic_fatturaElettronica_sip = fatturaElettronica.getIdSIP();
+		if(idLogic_fatturaElettronica_sip!=null){
+			if(idMappingResolutionBehaviour==null ||
+				(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour))){
+				id_fatturaElettronica_sip = ((JDBCSIPServiceSearch)(this.getServiceManager().getSIPServiceSearch())).findTableId(idLogic_fatturaElettronica_sip, false);
+			}
+			else if(org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour)){
+				id_fatturaElettronica_sip = idLogic_fatturaElettronica_sip.getId();
+				if(id_fatturaElettronica_sip==null || id_fatturaElettronica_sip<=0){
+					throw new Exception("Logic id not contains table id");
+				}
+			}
+		}
+
 		// Object _fatturaElettronica_pccTracciaTrasmissioneEsito
 		Long id_fatturaElettronica_pccTracciaTrasmissioneEsito = null;
 		org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito idLogic_fatturaElettronica_pccTracciaTrasmissioneEsito = null;
@@ -305,6 +345,8 @@ public class JDBCFatturaElettronicaServiceImpl extends JDBCFatturaElettronicaSer
 		lstObjects_fatturaElettronica.add(new JDBCObject(fatturaElettronica.getFormatoTrasmissione(), FatturaElettronica.model().FORMATO_TRASMISSIONE.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().IDENTIFICATIVO_SDI,false), "?");
 		lstObjects_fatturaElettronica.add(new JDBCObject(fatturaElettronica.getIdentificativoSdi(), FatturaElettronica.model().IDENTIFICATIVO_SDI.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().FATTURAZIONE_ATTIVA,false), "?");
+		lstObjects_fatturaElettronica.add(new JDBCObject(fatturaElettronica.getFatturazioneAttiva(), FatturaElettronica.model().FATTURAZIONE_ATTIVA.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DATA_RICEZIONE,false), "?");
 		lstObjects_fatturaElettronica.add(new JDBCObject(fatturaElettronica.getDataRicezione(), FatturaElettronica.model().DATA_RICEZIONE.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().NOME_FILE,false), "?");
@@ -373,8 +415,13 @@ public class JDBCFatturaElettronicaServiceImpl extends JDBCFatturaElettronicaSer
 		lstObjects_fatturaElettronica.add(new JDBCObject(fatturaElettronica.getProtocollo(), FatturaElettronica.model().PROTOCOLLO.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().XML,false), "?");
 		lstObjects_fatturaElettronica.add(new JDBCObject(fatturaElettronica.getXml(), FatturaElettronica.model().XML.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().STATO_CONSERVAZIONE,false), "?");
+		lstObjects_fatturaElettronica.add(new JDBCObject(fatturaElettronica.getStatoConservazione(), FatturaElettronica.model().STATO_CONSERVAZIONE.getFieldType()));
 		if(setIdMappingResolutionBehaviour){
 			sqlQueryObjectUpdate.addUpdateField("id_notifica_decorrenza_termini","?");
+		}
+		if(setIdMappingResolutionBehaviour){
+			sqlQueryObjectUpdate.addUpdateField("id_sip","?");
 		}
 		if(setIdMappingResolutionBehaviour){
 			sqlQueryObjectUpdate.addUpdateField("id_contabilizzazione","?");
@@ -384,6 +431,9 @@ public class JDBCFatturaElettronicaServiceImpl extends JDBCFatturaElettronicaSer
 		}
 		if(setIdMappingResolutionBehaviour){
 			lstObjects_fatturaElettronica.add(new JDBCObject(id_fatturaElettronica_notificaDecorrenzaTermini, Long.class));
+		}
+		if(setIdMappingResolutionBehaviour){
+			lstObjects_fatturaElettronica.add(new JDBCObject(id_fatturaElettronica_sip, Long.class));
 		}
 		if(setIdMappingResolutionBehaviour){
 			lstObjects_fatturaElettronica.add(new JDBCObject(id_fatturaElettronica_pccTracciaTrasmissioneEsito, Long.class));
@@ -561,6 +611,14 @@ public class JDBCFatturaElettronicaServiceImpl extends JDBCFatturaElettronicaSer
 		
 		return new NonNegativeNumber(lst.size());
 	
+	}
+
+	public int nativeUpdate(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
+			String sql,Object ... param) throws ServiceException,NotFoundException,NotImplementedException,Exception{
+
+		return org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.nativeUpdate(jdbcProperties, log, connection, sqlQueryObject,
+				sql,param);
+
 	}
 
 

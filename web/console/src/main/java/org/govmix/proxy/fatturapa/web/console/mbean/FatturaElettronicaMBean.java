@@ -187,7 +187,7 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 
 		if(this.selectedElement != null){
 
-			this.selectedIdFattura = new IdFattura();
+			this.selectedIdFattura = new IdFattura(selectedElement.getDTO().isFatturazioneAttiva());
 			this.selectedIdFattura.setPosizione(this.selectedElement.getDTO().getPosizione());
 			this.selectedIdFattura.setIdentificativoSdi(this.selectedElement.getDTO().getIdentificativoSdi());
 			this.selectedIdFattura.setId(this.selectedElement.getDTO().getId()); 
@@ -511,7 +511,7 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 				if(this.notificaECService == null)
 					this.notificaECService = new NotificaECService();
 
-				IdFattura idFattura = new IdFattura();
+				IdFattura idFattura = new IdFattura(this.selectedElement.getDTO().isFatturazioneAttiva());
 				idFattura.setPosizione(this.selectedElement.getDTO().getPosizione());
 				idFattura.setIdentificativoSdi(this.selectedElement.getDTO().getIdentificativoSdi());
 

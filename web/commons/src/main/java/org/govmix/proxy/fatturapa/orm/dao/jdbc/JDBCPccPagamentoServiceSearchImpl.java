@@ -510,7 +510,7 @@ public class JDBCPccPagamentoServiceSearchImpl implements IJDBCServiceSearchWith
 			if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
 				id_pccPagamento_fatturaElettronica = ((JDBCFatturaElettronicaServiceSearch)(this.getServiceManager().getFatturaElettronicaServiceSearch())).findId(idFK_pccPagamento_fatturaElettronica, false);
 			}else{
-				id_pccPagamento_fatturaElettronica = new org.govmix.proxy.fatturapa.orm.IdFattura();
+				id_pccPagamento_fatturaElettronica = org.govmix.proxy.fatturapa.orm.IdFattura.newIdFattura();
 			}
 			id_pccPagamento_fatturaElettronica.setId(idFK_pccPagamento_fatturaElettronica);
 			pccPagamento.setIdFattura(id_pccPagamento_fatturaElettronica);

@@ -152,6 +152,13 @@ public class PccContabilizzazioneFieldConverter extends AbstractSQLFieldConverte
 				return "posizione";
 			}
 		}
+		if(field.equals(PccContabilizzazione.model().ID_FATTURA.FATTURAZIONE_ATTIVA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".fatturazione_attiva";
+			}else{
+				return "fatturazione_attiva";
+			}
+		}
 		if(field.equals(PccContabilizzazione.model().SISTEMA_RICHIEDENTE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".sistema_richiedente";
@@ -227,6 +234,9 @@ public class PccContabilizzazioneFieldConverter extends AbstractSQLFieldConverte
 			return this.toTable(PccContabilizzazione.model().ID_FATTURA, returnAlias);
 		}
 		if(field.equals(PccContabilizzazione.model().ID_FATTURA.POSIZIONE)){
+			return this.toTable(PccContabilizzazione.model().ID_FATTURA, returnAlias);
+		}
+		if(field.equals(PccContabilizzazione.model().ID_FATTURA.FATTURAZIONE_ATTIVA)){
 			return this.toTable(PccContabilizzazione.model().ID_FATTURA, returnAlias);
 		}
 		if(field.equals(PccContabilizzazione.model().SISTEMA_RICHIEDENTE)){

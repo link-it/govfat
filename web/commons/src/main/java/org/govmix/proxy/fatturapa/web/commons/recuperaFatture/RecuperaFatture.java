@@ -23,7 +23,6 @@ package org.govmix.proxy.fatturapa.web.commons.recuperaFatture;
 import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -66,6 +65,9 @@ public class RecuperaFatture {
 		this(Logger.getLogger(RecuperaFatture.class));
 	}
 	
+	public IdFattura newIdFattura() {
+		return this.fatturaPassivaBD.newIdFattura();
+	}
 	public RecuperaFatture(Logger log) throws Exception {
 		this.fatturaPassivaBD = new FatturaPassivaBD(log);
 		this.dipartimentoBD = new DipartimentoBD(log);
@@ -81,9 +83,10 @@ public class RecuperaFatture {
 		FatturaPassivaFilter filter = this.fatturaPassivaBD.newFilter();
 		filter.setUtente(utente);
 		filter.setModalitaPush(false);
+		filter.setStatiConsegna(Arrays.asList(StatoConsegnaType.NON_CONSEGNATA));
+		
 		filter.setOffset(0);
 		filter.setLimit(limit);
-		filter.setDataRicezioneMin(new Date());
 
 		List<FatturaElettronica> lst = this.fatturaPassivaBD.findAll(filter);
 		

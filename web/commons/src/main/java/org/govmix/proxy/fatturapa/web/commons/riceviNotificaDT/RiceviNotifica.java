@@ -59,7 +59,7 @@ public class RiceviNotifica {
 			Integer posizioneFattura = converter.getPosizioneFattura();
 			if(posizioneFattura != null) {
 				
-				IdFattura idFattura = new IdFattura();
+				IdFattura idFattura = fatturaElettronicaBD.newIdFattura();
 				idFattura.setIdentificativoSdi(notificaDecorrenzaTermini.getIdentificativoSdi());
 				idFattura.setPosizione(posizioneFattura);
 				

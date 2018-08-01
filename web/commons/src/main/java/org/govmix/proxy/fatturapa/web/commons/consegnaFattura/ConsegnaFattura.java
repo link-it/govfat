@@ -71,6 +71,7 @@ public class ConsegnaFattura {
 			}	
 		}
 		
+		fatturaElettronica.setFatturazioneAttiva(params.isFatturazioneAttiva());
 		this.fatturaBD.create(fatturaElettronica);
 
 		if(allegatiLst != null) {

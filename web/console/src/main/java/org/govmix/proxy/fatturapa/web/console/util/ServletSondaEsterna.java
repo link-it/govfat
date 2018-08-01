@@ -43,10 +43,11 @@ public class ServletSondaEsterna extends AbstractServletSonda {
 		super();
 		
 		this.lstSondeInterne = new ArrayList<ClientSondaInterna>();
-		this.lstSondeInterne.add(new ClientSondaInterna(ConsoleProperties.getInstance(this.log).getProxyPccSondaUrl(), "API_PCC", this.log));
-		this.lstSondeInterne.add(new ClientSondaInterna(ConsoleProperties.getInstance(this.log).getProxyFatturaPASondaUrl(), "API", this.log));
-		this.lstSondeInterne.add(new ClientSondaInterna(ConsoleProperties.getInstance(this.log).getTimersProxyPccSondaUrl(), "TIMERS_PCC", this.log));
-		this.lstSondeInterne.add(new ClientSondaInterna(ConsoleProperties.getInstance(this.log).getTimersProxyFatturaPASondaUrl(), "TIMERS", this.log));
+		ConsoleProperties props = ConsoleProperties.getInstance(this.log);
+		this.lstSondeInterne.add(new ClientSondaInterna(props.getProxyPccSondaUrl(),props.getProxyPccSondaUser(),props.getProxyPccSondaPassword(), "API_PCC", this.log));
+		this.lstSondeInterne.add(new ClientSondaInterna(props.getProxyFatturaPASondaUrl(),props.getProxyFatturaPASondaUser(),props.getProxyFatturaPASondaPassword(), "API", this.log));
+		this.lstSondeInterne.add(new ClientSondaInterna(props.getTimersProxyPccSondaUrl(), props.getTimersProxyPccSondaUser(), props.getTimersProxyPccSondaPassword(), "TIMERS_PCC", this.log));
+		this.lstSondeInterne.add(new ClientSondaInterna(props.getTimersProxyFatturaPASondaUrl(), props.getTimersProxyFatturaPASondaUser(), props.getTimersProxyFatturaPASondaPassword(), "TIMERS", this.log));
 	}
 
 	@Override
