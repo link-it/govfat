@@ -3,7 +3,6 @@ package org.govmix.proxy.fatturapa.web.commons.exporter;
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -29,6 +28,7 @@ public class RapportoVersamentoSingleFileExporter extends AbstractSingleFileExpo
 
 	public RapportoVersamentoSingleFileExporter(Logger log, Connection connection, boolean autocommit) throws ServiceException, NotImplementedException, Exception {
 		super(log, connection, autocommit);
+		this.sipDAO = DAOFactory.getInstance().getServiceManager().getSIPService();
 	}
 
 	@Override
@@ -69,17 +69,13 @@ public class RapportoVersamentoSingleFileExporter extends AbstractSingleFileExpo
 			SIP sip = this.sipDAO.get(object.getIdSIP());
 			return sip.getRapportoVersamento().getBytes();
 		} catch (ServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		} catch (NotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		} catch (MultipleResultException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		} catch (NotImplementedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		}
 		return null;
 	}
@@ -88,19 +84,17 @@ public class RapportoVersamentoSingleFileExporter extends AbstractSingleFileExpo
 	public String getRawName(FatturaElettronica object) {
 		try {
 			SIP sip = this.sipDAO.get(object.getIdSIP());
-			return "NUMERO + ANNO + REGISTRO + .xml" ; //TODO pintori
+			// formato "NUMERO + ANNO + REGISTRO"
+			String name =  sip.getNumero() + "_"  + sip.getAnno() +"_" + sip.getRegistro();
+			return name; 
 		} catch (ServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		} catch (NotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		} catch (MultipleResultException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		} catch (NotImplementedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		}
 		return null;
 	}
