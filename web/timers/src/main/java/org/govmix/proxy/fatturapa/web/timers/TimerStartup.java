@@ -206,6 +206,8 @@ public class TimerStartup {
 				timer = TimerStartup.createTimerProtocollazioneRicevuta(properties);
 			}else if(TimerSchedulingConservazione.ID_MODULO.equals(timerName)){
 				timer = TimerStartup.createTimerSchedulingConservazione(properties);
+			}else if(TimerReinvioConservazione.ID_MODULO.equals(timerName)){
+				timer = TimerStartup.createTimerReinvioConservazione(properties);
 			} else {
 				return null;
 			}
@@ -237,6 +239,8 @@ public class TimerStartup {
 				timer = new TimerProtocollazioneRicevutaThread();
 			}else if(TimerSchedulingConservazione.ID_MODULO.equals(timerName)){
 				timer = new TimerSchedulingConservazioneThread();
+			}else if(TimerReinvioConservazione.ID_MODULO.equals(timerName)){
+				timer = new TimerReinvioConservazioneThread();
 			} else {
 				return null;
 			}
@@ -471,6 +475,25 @@ public class TimerStartup {
 		TimerSchedulingConservazioneHome timerHome = 
 				(TimerSchedulingConservazioneHome) PortableRemoteObject.narrow(objref,TimerSchedulingConservazioneHome.class);
 		TimerSchedulingConservazione timerDiServizio = timerHome.create();	
+
+		return timerDiServizio;
+
+
+	}
+
+	private static TimerReinvioConservazione createTimerReinvioConservazione(BatchProperties properties) throws Exception {
+
+		GestoreJNDI jndi = null;
+		if(properties.getJndiContextTimerEJB()==null)
+			jndi = new GestoreJNDI();
+		else
+			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
+
+		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerReinvioConservazione.ID_MODULO);
+		Object objref = jndi.lookup(nomeJNDI);
+		TimerReinvioConservazioneHome timerHome = 
+				(TimerReinvioConservazioneHome) PortableRemoteObject.narrow(objref,TimerReinvioConservazioneHome.class);
+		TimerReinvioConservazione timerDiServizio = timerHome.create();	
 
 		return timerDiServizio;
 

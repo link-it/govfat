@@ -21,8 +21,10 @@
 package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 
 import org.apache.log4j.Logger;
+import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.Ente;
 import org.govmix.proxy.fatturapa.orm.IdEnte;
+import org.govmix.proxy.fatturapa.orm.dao.IDBEnteServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.IEnteService;
 import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
@@ -46,6 +48,25 @@ public class EnteBD extends BaseBD {
 	public Ente get(IdEnte id) throws Exception {
 		try {
 			return this.service.get(id);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la get: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotFoundException e) {
+			this.log.error("Errore durante la get: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (MultipleResultException e) {
+			this.log.error("Errore durante la get: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la get: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public Ente findByTableId(Long tableId) throws Exception {
+		try {
+			
+			return ((IDBEnteServiceSearch)this.service).get(tableId);
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la get: " + e.getMessage(), e);
 			throw new Exception(e);

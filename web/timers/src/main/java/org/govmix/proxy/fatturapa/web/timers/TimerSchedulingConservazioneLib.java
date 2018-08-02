@@ -31,7 +31,7 @@ import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.SIP;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.SIPBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
@@ -62,13 +62,15 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 		try {
 			connection = DAOFactory.getInstance().getConnection();
 
-			FatturaPassivaBD fatturaElettronicaBD = new FatturaPassivaBD(log, connection, false);
+			FatturaBD fatturaElettronicaBD = new FatturaBD(log, connection, false);
 			LottoBD lottoBD = new LottoBD(log, connection, false);
 			SIPBD sipBD = new SIPBD(log, connection, false);
 
 			FatturaFilter filter = fatturaElettronicaBD.newFilter();
 			filter.getStatiConservazione().add(StatoConservazioneType.PRESA_IN_CARICO);
 			filter.setIdSipNull(true);
+			filter.setOffset(0);
+			filter.setLimit(100);
 			List<FatturaElettronica> fatturePerAnno = fatturaElettronicaBD.findAll(filter);
 
 			while(fatturePerAnno != null && !fatturePerAnno.isEmpty()) {
@@ -77,7 +79,7 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 				for(FatturaElettronica fattura: fatturePerAnno) {
 
 					SIP sipFattura = new SIP();
-					ChiaveType chiaveFattura = getChiave(fattura);
+					ChiaveType chiaveFattura = ConservazioneUtils.getChiave(fattura);
 					sipFattura.setNumero(chiaveFattura.getNumero());
 					sipFattura.setAnno(chiaveFattura.getAnno());
 					sipFattura.setRegistro(chiaveFattura.getTipoRegistro());
@@ -86,11 +88,15 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 					sipBD.create(sipFattura);
 					fatturaElettronicaBD.assegnaIdSip(fattura,sipFattura.getId());
 
-
-					if(fattura.getLottoFatture().getIdSIP() == null) {
+ 
+					//controlli da fare per abilitare la spedizione del lotto:
+					// 1) fatturazione passiva
+					// 2) lotto di piu' fatture (si inserisce alla fattura con posizione 2 per evitare di inserirlo piu' volte)
+					// 3) il lotto no ndeve avere gia' associato il sip
+					if(!fattura.getFatturazioneAttiva() && fattura.getPosizione() == 2 && fattura.getLottoFatture().getIdSIP() == null) {
 
 						SIP sipLotto = new SIP();
-						ChiaveType chiaveLotto = getChiaveLotto(fattura);
+						ChiaveType chiaveLotto = ConservazioneUtils.getChiaveLotto(fattura);
 						sipLotto.setNumero(chiaveLotto.getNumero());
 						sipLotto.setAnno(chiaveLotto.getAnno());
 						sipLotto.setRegistro(chiaveLotto.getTipoRegistro());
@@ -116,22 +122,6 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 			}
 		}
 
-	}
-	
-	private ChiaveType getChiave(FatturaElettronica fattura) {
-		ChiaveType chiave = new ChiaveType();
-		chiave.setNumero(fattura.getNumero() + "_" + fattura.getCedentePrestatoreCodiceFiscale());
-		chiave.setAnno(fattura.getAnno());
-		chiave.setTipoRegistro("FATTURE PASSIVE");
-		return chiave;
-	}
-
-	private ChiaveType getChiaveLotto(FatturaElettronica fattura) {
-		ChiaveType chiave = new ChiaveType();
-		chiave.setNumero(""+fattura.getLottoFatture().getIdentificativoSdi());
-		chiave.setAnno(fattura.getAnno());
-		chiave.setTipoRegistro("LOTTI_FATTURE");
-		return chiave;
 	}
 
 
