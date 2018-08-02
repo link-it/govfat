@@ -515,5 +515,30 @@ public class FatturaBD extends BaseBD {
 	public FatturaFilter newFilter() {
 		return new FatturaFilter(this.service);
 	}
+	
+
+	public void assegnaIdSip(FatturaElettronica fattura, Long id) throws ServiceException {
+		try {
+			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase()); 
+			CustomField idSipCustomField = new CustomField("id_sip", Long.class, "id_sip", converter.toTable(FatturaElettronica.model()));
+			UpdateField sipUpdateField = new UpdateField(idSipCustomField, id);
+
+			((IDBFatturaElettronicaService)this.service).updateFields(fattura.getId(), sipUpdateField);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la assegnaIdSip: " + e.getMessage(), e);
+			throw new ServiceException(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la assegnaIdSip: " + e.getMessage(), e);
+			throw new ServiceException(e);
+		} catch (NotFoundException e) {
+			this.log.error("Errore durante la assegnaIdSip: " + e.getMessage(), e);
+			throw new ServiceException(e);
+		} catch (ExpressionException e) {
+			this.log.error("Errore durante la assegnaIdSip: " + e.getMessage(), e);
+			throw new ServiceException(e);
+		}
+	}
+
+
 
 }

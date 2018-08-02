@@ -68,31 +68,19 @@ public class SIPBD extends BaseBD {
 		}
 	}
 
-	public void update(IdSip idSip, String rapportoVersamento, boolean error, String numero, Integer anno, String registro) throws Exception {
+	public void update(IdSip idSip, String rapportoVersamento, StatoConsegnaType statoConsegna, String numero, Integer anno, String registro) throws Exception {
 		try {
 			
-			if(error) {
-				SIP sip = this.service.get(idSip);
-//				sip.setErroreParERList(error); //non registriamo piu' gli errori, solo nel rapporto di versamento
-				sip.setAnno(anno);
-				sip.setNumero(numero);
-				sip.setRegistro(registro);
-				sip.setRapportoVersamento(rapportoVersamento);
-				sip.setStatoConsegna(StatoConsegnaType.ERRORE_CONSEGNA);
-				sip.setDataUltimaConsegna(new Date());
-				
-				this.service.update(idSip, sip);
-			} else {
-				List<UpdateField> fields = new ArrayList<UpdateField>();
-				fields.add(new UpdateField(SIP.model().NUMERO, numero));
-				fields.add(new UpdateField(SIP.model().ANNO, anno));
-				fields.add(new UpdateField(SIP.model().REGISTRO, registro));
-				fields.add(new UpdateField(SIP.model().RAPPORTO_VERSAMENTO, rapportoVersamento));
-				fields.add(new UpdateField(SIP.model().STATO_CONSEGNA, StatoConsegnaType.CONSEGNATA));
-				fields.add(new UpdateField(SIP.model().DATA_ULTIMA_CONSEGNA, new Date()));
-				
-				this.service.updateFields(idSip, fields.toArray(new UpdateField[]{}));
-			}
+			List<UpdateField> fields = new ArrayList<UpdateField>();
+			fields.add(new UpdateField(SIP.model().NUMERO, numero));
+			fields.add(new UpdateField(SIP.model().ANNO, anno));
+			fields.add(new UpdateField(SIP.model().REGISTRO, registro));
+			fields.add(new UpdateField(SIP.model().RAPPORTO_VERSAMENTO, rapportoVersamento));
+			fields.add(new UpdateField(SIP.model().STATO_CONSEGNA, statoConsegna));
+			
+			fields.add(new UpdateField(SIP.model().DATA_ULTIMA_CONSEGNA, new Date()));
+			
+			this.service.updateFields(idSip, fields.toArray(new UpdateField[]{}));
 		} catch (ServiceException e) {
 			throw new Exception(e);
 		} catch (NotImplementedException e) {

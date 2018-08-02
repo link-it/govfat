@@ -46,11 +46,13 @@ public class LoggerManager {
 	private static Logger batchWorkFlowFatturaLogger = null;
 	private static Logger batchProtocollazioneRicevutaLogger = null;
 	private static Logger batchSpedizioneFatturaAttivaLogger = null;
+	private static Logger batchReinvioConservazioneLogger = null;
 	private static Logger batchSchedulingConservazioneLogger = null;
 	private static Logger batchSpedizioneEsitiLogger = null;
 	private static Logger batchSpedizioneNotificheLogger = null;
 	private static Logger batchRispedizioneMessaggiLogger = null;
 
+	private static Logger dumpLogger = null;
 	private static Logger daoLogger = null;
 	private static Logger consoleLogger = null;
 	private static Logger sondaLogger = null;
@@ -93,6 +95,9 @@ public class LoggerManager {
 		if(batchSchedulingConservazioneLogger == null)
 			batchSchedulingConservazioneLogger = Logger.getLogger("batch.schedulingConservazione");
 
+		if(batchReinvioConservazioneLogger == null)
+			batchReinvioConservazioneLogger = Logger.getLogger("batch.reinvioConservazione");
+
 		if(batchProtocollazioneRicevutaLogger == null)
 			batchProtocollazioneRicevutaLogger = Logger.getLogger("batch.protocollazioneRicevuta");
 
@@ -125,6 +130,9 @@ public class LoggerManager {
 
 		if(daoLogger == null)
 			daoLogger = Logger.getLogger("dao");
+
+		if(dumpLogger == null)
+			dumpLogger = Logger.getLogger("dump");
 
 		if(endpointEnteLogger == null)
 			endpointEnteLogger = Logger.getLogger("endpoint.ente");
@@ -253,6 +261,14 @@ public class LoggerManager {
 
 	public static Logger getBatchSchedulingConservazioneLogger() {
 		return batchSchedulingConservazioneLogger;
+	}
+
+	public static Logger getBatchReinvioConservazioneLogger() {
+		return batchReinvioConservazioneLogger;
+	}
+
+	public static Logger getDumpLogger() {
+		return dumpLogger;
 	}
 
 }
