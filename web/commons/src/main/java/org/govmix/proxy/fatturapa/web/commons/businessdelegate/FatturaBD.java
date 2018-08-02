@@ -464,10 +464,10 @@ public class FatturaBD extends BaseBD {
 		return this.getListAutocomplete(filter, FatturaElettronica.model().NUMERO);
 	}
 
-	public void inviaInConservazione(List<Long> ids) throws ServiceException {
+	public void inviaInConservazione(List<Long> ids, StatoConservazioneType statoConservazione) throws ServiceException {
 		this.log.info(String.format("invio in conservazione %d fatture", ids.size()));
 		
-		
+		// TODO Bussu agganciare gestione dello stato conservazione.
 		try {
 
 			StringBuffer update = new StringBuffer();

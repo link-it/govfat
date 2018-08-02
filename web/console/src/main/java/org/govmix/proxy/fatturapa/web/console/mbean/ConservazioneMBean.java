@@ -10,6 +10,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang.StringUtils;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdEnte;
@@ -25,6 +26,7 @@ import org.govmix.proxy.fatturapa.web.console.iservice.IConservazioneService;
 import org.govmix.proxy.fatturapa.web.console.search.ConservazioneSearchForm;
 import org.govmix.proxy.fatturapa.web.console.service.ConservazioneService;
 import org.govmix.proxy.fatturapa.web.console.util.ConservazioneThread;
+import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.DataModelListView;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.FiltraException;
@@ -103,9 +105,16 @@ IConservazioneService>{
 		this.selectedElement = null;
 
 		// Popolo le selectList Statiche
-		((SelectListImpl)this.search.getAnno()).setElencoSelectItems(this.getListaAnni());
+		List<SelectItem> listaAnni = this.getListaAnni(); 
+		((SelectListImpl)this.search.getAnno()).setElencoSelectItems(listaAnni);
 		((SelectListImpl)this.search.getTipoFattura()).setElencoSelectItems(this.getListaTipiFattura());
-		((SelectListImpl)this.search.getEnte()).setElencoSelectItems(this.getListaEnti());
+		
+		List<SelectItem> listaEnti = this.getListaEnti();
+		((SelectListImpl)this.search.getEnte()).setElencoSelectItems(listaEnti);
+		if(!listaEnti.isEmpty() && this.search.getEnte().getValue() == null) {
+			this.search.setDefaultEnte((org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem) listaEnti.get(0).getValue());
+		}
+		
 		((SelectListImpl)this.search.getStatoInvio()).setElencoSelectItems(this.getListaStatiInvio());
 		this.search.setmBean(this);
 	}
@@ -153,7 +162,7 @@ IConservazioneService>{
 			fatturazioneAttiva = Costanti.TIPO_FATTURA_ATTIVA_VALUE.equals(tipoFatturaSelezionata.getValue());
 		}
 		
-		this.listaEnti = _getEnti(true, fatturazioneAttiva);
+		this.listaEnti = _getEnti(false, fatturazioneAttiva);
 		
 		return listaEnti;
 	}
@@ -251,6 +260,13 @@ IConservazioneService>{
 			conservazioneThread.setIds(idFatture);
 			conservazioneThread.setFatturaBD(fatturaBD);
 			conservazioneThread.setFatturaFilter(fatturaFilter);
+			
+			// stato conservazione
+			if(search.getStatoInvio().getValue() != null &&
+					!StringUtils.isEmpty(search.getStatoInvio().getValue().getValue()) && !search.getStatoInvio().getValue().getValue().equals("*")){
+				StatoConservazioneType statoConservazioneType = StatoConservazioneType.toEnumConstant(search.getStatoInvio().getValue().getValue());
+				conservazioneThread.setStatoConservazione(statoConservazioneType);
+			}
 					
 			Thread t = new Thread(conservazioneThread);
 			t.start();
@@ -285,6 +301,13 @@ IConservazioneService>{
 			conservazioneThread.setIds(idFatture);
 			conservazioneThread.setFatturaBD(fatturaBD);
 			conservazioneThread.setFatturaFilter(fatturaFilter);
+			
+			// stato conservazione
+			if(search.getStatoInvio().getValue() != null &&
+					!StringUtils.isEmpty(search.getStatoInvio().getValue().getValue()) && !search.getStatoInvio().getValue().getValue().equals("*")){
+				StatoConservazioneType statoConservazioneType = StatoConservazioneType.toEnumConstant(search.getStatoInvio().getValue().getValue());
+				conservazioneThread.setStatoConservazione(statoConservazioneType);
+			}
 					
 			Thread t = new Thread(conservazioneThread);
 			t.start();
@@ -302,5 +325,45 @@ IConservazioneService>{
 		}
 
 		return null;
+	}
+	
+	
+	public String getMessaggioSelezioneTutteFatture() {
+		int sizeRicerca = this.search.getTotalCount() ; 
+		String key = sizeRicerca > 1 ? "conservazione.confermaInvioTutteFatture.multipla.label": "conservazione.confermaInvioTutteFatture.singola.label";
+		List<Object> params = new ArrayList<Object>();
+		
+		if(this.search.getAnno().getValue() != null)
+			params.add(this.search.getAnno().getValue().getLabel());
+		if(this.search.getEnte().getValue() != null)
+			params.add(this.search.getEnte().getValue().getLabel());
+		
+		if(sizeRicerca > 1)
+			params.add(0,sizeRicerca);
+		
+		return Utils.getInstance().getMessageWithParamsFromResourceBundle(key, params.toArray(new Object[params.size()])); 
+	}
+
+	public String getMessaggioSelezioneFattureMultipla() {
+		String key = "conservazione.confermaInvioTutteFatture.multipla.label" ; //: "conservazione.confermaInvioTutteFatture.singola.label";
+		return _getMessaggioSelezioneFatture(key,"@@numero@@"); 
+	}
+	public String getMessaggioSelezioneFattureSingola() {
+		String key = "conservazione.confermaInvioTutteFatture.singola.label";
+		return _getMessaggioSelezioneFatture(key,null); 
+	}
+	
+	private String _getMessaggioSelezioneFatture(String key,String numero) {
+		List<Object> params = new ArrayList<Object>();
+		
+		if(numero!=null)
+			params.add(numero);
+		
+		if(this.search.getAnno().getValue() != null)
+			params.add(this.search.getAnno().getValue().getLabel());
+		if(this.search.getEnte().getValue() != null)
+			params.add(this.search.getEnte().getValue().getLabel());
+		
+		return Utils.getInstance().getMessageWithParamsFromResourceBundle(key, params.toArray(new Object[params.size()]));
 	}
 }

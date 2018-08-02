@@ -70,7 +70,7 @@
 			</op2web:searchForm>	
 			<rich:spacer height="20"/>
 			
-			<op2web:managedPagedListView  value="#{conservazioneDM}" mBean="#{conservazioneMBean}" >
+			<op2web:managedPagedListView  value="#{conservazioneDM}" mBean="#{conservazioneMBean}" showSelectAll="#{conservazioneMBean.search.visualizzaTastiInvioConservazione}">
 			
 				<op2web:tableColumns nomiColonne="#{'tipoFattura'}" />
 				
@@ -141,7 +141,7 @@
 	                                                  jQuery("[id$='"+inputId+"_undoSelectAllLink']").hide();                         
 	                                          }
 	                                      }
-			                     	} 
+			                     	}
 			              		
 								jQuery(document).ready(function() {
 									
@@ -176,37 +176,80 @@
 				</rich:column>
 
 				<ui:define name="buttonsListView">
-					<a4j:jsFunction name="inviaFattureInConservazione" id="inviaFattureInConservazione" status="mainStatus" action="#{conservazioneMBean.inviaFattureInConservazione}">
-            		</a4j:jsFunction>
-				
-					<a4j:commandButton	id="inviaConservazione-iconLink"  onclick="if(checkSelection('conservazioneTable_dt')) { return inviaFattureInConservazione(); } else {return false;}"
-						styleClass="icon-fatturapa-up-green" status="mainStatus" value="#{msg['conservazione.button.inviaConservazione']}" style="padding: 4px 6px 4px 5px; line-height: 17px;">
+					<a4j:commandButton	id="inviaConservazione-iconLink" styleClass="icon-fatturapa-up-green" style="padding: 4px 6px 4px 5px;"
+						reRender="inviaFattureConfirmation,msgSelezione" value="#{msg['conservazione.button.inviaConservazione']}" status="mainStatus"
+						onclick="if(checkSelection('conservazioneTable_dt')) { setMessaggioUtente('conservazioneTable_dt'); #{rich:component('inviaFattureConfirmation')}.show(); } return false; " 
+						rendered="#{conservazioneMBean.search.visualizzaTastiInvioConservazione}">
 					</a4j:commandButton>
-					
+					<script type="text/javascript" >
+			                  	//<![CDATA[
+			                  		function setMessaggioUtente(containerId){
+									var inputId = containerId;
+									var tid = ":"+inputId+"_tbl";
+									var size = jQuery("table [id$='"+tid+"'] input:checkbox[id$='"+inputId+"_column_ckb']:checked").not("[id$='selectedAllChbx']").size();
+									 
+									var messaggioSingolo = "#{conservazioneMBean.messaggioSelezioneFattureSingola}";
+									var messaggioMultiplo = "#{conservazioneMBean.messaggioSelezioneFattureMultipla}".replace("@@numero@@", size);
+									
+									var testoMessaggio = size == 1 ? messaggioSingolo : messaggioMultiplo;
+									var msgSpanId = 'messaggioSelezioneUtente';
+									jQuery("#"+msgSpanId+"").text(testoMessaggio);
+								}
+			            //]]>
+	                </script>
 					<a4j:commandButton id="inviaConservazioneAll-iconLink" styleClass="icon-fatturapa-up-green" style="padding: 4px 6px 4px 5px;"
 						reRender="inviaTutteFattureConfirmation" value="#{msg['conservazione.button.inviaTutteConservazione']}" status="mainStatus"
+						rendered="#{conservazioneMBean.search.visualizzaTastiInvioConservazione}"
 						oncomplete="#{rich:component('inviaTutteFattureConfirmation')}.show()">
 					</a4j:commandButton>
 				</ui:define>
 			</op2web:managedPagedListView>
 			
-            <rich:modalPanel id="inviaTutteFattureConfirmation" width="400" height="160">
+			<rich:modalPanel id="inviaFattureConfirmation" width="400" height="160">
                  <f:facet name="header">
-                      <h:outputText value="#{msg['conservazione.confermaInvioTutteFatture.title']}" />
+                      <h:outputText value="#{msg['conservazione.confermaInvioFatture.title']}" />
                  </f:facet>
                  <h:form id="conservazioneForm" prependId="false">
 	                 <h:panelGrid>
                        <rich:spacer height="20px" />
                        <h:panelGrid columns="2" >
-	                       <h:graphicImage value="/images/001_11.png" alt="#{msg['conservazione.confermaInvioTutteFatture.label']}" style="margin-right: 10px;"/>
-	                       <h:outputText value="#{msg['conservazione.confermaInvioTutteFatture.label']}" style="font-weight: bold;" />
+	                       <h:graphicImage value="/images/001_11.png" alt="#{msg['conservazione.confermaInvioFatture.title']}" style="margin-right: 10px;"/>
+	                       <h:outputText value="#{msg['conservazione.confermaInvioFatture.default.label']}" style="font-weight: bold;" id="messaggioSelezioneUtente"/>
+	                    </h:panelGrid>
+	                    <h:panelGroup>
+	                       <rich:spacer height="20px" />
+	                       <div class="buttonrow" style="padding-left: 120px;">
+	                       		<a4j:commandButton 
+	                       			id="confermaInvioFattureBtn" status="mainStatus"
+	                       			styleClass="icon-fatturapa-up-green" style="padding: 4px 6px 4px 5px;"
+										value="#{msg['conservazione.confermaInvioFatture.ok']}" action="#{conservazioneMBean.inviaFattureInConservazione}"
+										oncomplete="Richfaces.hideModalPanel('inviaFattureConfirmation');" />
+	                             <input id="annullaInvioFattureBtn" type="button" value="#{msg['conservazione.confermaInvioFatture.ko']}" class="negative icon-delete"
+	                                    onclick="Richfaces.hideModalPanel('inviaFattureConfirmation');return false"  style="padding: 4px 6px 4px 5px;"/>
+	
+	                       </div>
+	                        </h:panelGroup>
+	                 </h:panelGrid>
+                 </h:form>
+           </rich:modalPanel>
+			
+            <rich:modalPanel id="inviaTutteFattureConfirmation" width="400" height="160">
+                 <f:facet name="header">
+                      <h:outputText value="#{msg['conservazione.confermaInvioTutteFatture.title']}" />
+                 </f:facet>
+                 <h:form id="conservazioneTutteFattureForm" prependId="false">
+	                 <h:panelGrid>
+                       <rich:spacer height="20px" />
+                       <h:panelGrid columns="2" >
+	                       <h:graphicImage value="/images/001_11.png" alt="#{msg['conservazione.confermaInvioTutteFatture.title']}" style="margin-right: 10px;"/>
+	                       <h:outputText value="#{conservazioneMBean.messaggioSelezioneTutteFatture}" style="font-weight: bold;" />
 	                    </h:panelGrid>
 	                    <h:panelGroup>
 	                       <rich:spacer height="20px" />
 	                       <div class="buttonrow" style="padding-left: 120px;">
 	                       		<a4j:commandButton 
 	                       			id="confermaInvioTutteFattureBtn" status="mainStatus"
-	                       			styleClass="icon-save positive" style="padding: 4px 6px 4px 5px;"
+	                       			styleClass="icon-fatturapa-up-green" style="padding: 4px 6px 4px 5px;"
 										value="#{msg['conservazione.confermaInvioTutteFatture.ok']}" action="#{conservazioneMBean.inviaTutteFattureInConservazione}"
 										oncomplete="Richfaces.hideModalPanel('inviaTutteFattureConfirmation');" />
 	                             <input id="annullaInvioTutteFattureBtn" type="button" value="#{msg['conservazione.confermaInvioTutteFatture.ko']}" class="negative icon-delete"

@@ -20,10 +20,16 @@
  */
 package org.govmix.proxy.fatturapa.web.console.search;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import javax.faces.event.ActionEvent;
 
+import org.apache.commons.lang.StringUtils;
+import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
 import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.mbean.ConservazioneMBean;
+import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.SearchForm;
 import org.openspcoop2.generic_project.web.impl.jsf1.form.BaseSearchForm;
@@ -60,7 +66,10 @@ public class ConservazioneSearchForm extends BaseSearchForm implements SearchFor
 		this.setClosable(false);
 		
 		// anno
-		this.anno = factory.getInputFieldFactory().createSelectList("anno","conservazione.search.anno",new SelectItem("2018", "2018"),false);
+		Calendar instance = Calendar.getInstance();
+		instance.setTime(new Date());
+		String valAnno = "" + instance.get(Calendar.YEAR);
+		this.anno = factory.getInputFieldFactory().createSelectList("anno","conservazione.search.anno",new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(valAnno,valAnno),false);
 		((SelectListImpl)this.anno).setCheckItemWidth(true); 
 		this.anno.setFontName("Arial"); //"Arial,Verdana,sans-serif" 
 		
@@ -77,7 +86,7 @@ public class ConservazioneSearchForm extends BaseSearchForm implements SearchFor
 		this.ente.setFontName("Arial"); //"Arial,Verdana,sans-serif" 
 		
 		// statoInvio
-		this.statoInvio = factory.getInputFieldFactory().createSelectList("statoInvio","conservazione.search.statoInvio",null,false);
+		this.statoInvio = factory.getInputFieldFactory().createSelectList("statoInvio","conservazione.search.statoInvio",new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi")),false);
 		((SelectListImpl)this.statoInvio).setCheckItemWidth(true); 
 		this.statoInvio.setFontName("Arial"); //"Arial,Verdana,sans-serif" 
 
@@ -112,6 +121,16 @@ public class ConservazioneSearchForm extends BaseSearchForm implements SearchFor
 
 	public void setAnno(SelectList<SelectItem> anno) {
 		this.anno = anno;
+	}
+	
+	public void setDefaultAnno(SelectItem anno) {
+		this.anno.setDefaultValue(anno);
+		this.anno.reset();
+	}
+	
+	public void setDefaultEnte(SelectItem ente) {
+		this.ente.setDefaultValue(ente);
+		this.ente.reset();
 	}
 
 	public SelectList<SelectItem> getTipoFattura() {
@@ -162,4 +181,29 @@ public class ConservazioneSearchForm extends BaseSearchForm implements SearchFor
 
 	public void setRicercaFattureAttive(boolean ricercaFattureAttive) {
 	}
+	
+	public boolean isVisualizzaTastiInvioConservazione() {
+		if(this.getStatoInvio().getValue() != null &&
+				!StringUtils.isEmpty(this.getStatoInvio().getValue().getValue()) && !this.getStatoInvio().getValue().getValue().equals("*")){
+			StatoConservazioneType statoConservazioneType = StatoConservazioneType.toEnumConstant(this.getStatoInvio().getValue().getValue());
+			
+			switch (statoConservazioneType) {
+			case CONSERVAZIONE_COMPLETATA:
+			case PRESA_IN_CARICO:
+			case IN_RICONSEGNA:
+				return false;
+				
+			case CONSERVAZIONE_FALLITA:
+			case ERRORE_CONSEGNA:
+			case NON_INVIATA:
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	public void setVisualizzaTastiInvioConservazione(boolean visualizzaTastiInvioConservazione) {
+	}
 }
+
