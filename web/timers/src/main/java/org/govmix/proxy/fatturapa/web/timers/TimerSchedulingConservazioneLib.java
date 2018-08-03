@@ -66,15 +66,17 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 			LottoBD lottoBD = new LottoBD(log, connection, false);
 			SIPBD sipBD = new SIPBD(log, connection, false);
 
+			int offset = 0;
+			int LIMIT_STEP = Math.min(this.limit, 500);
+			
 			FatturaFilter filter = fatturaElettronicaBD.newFilter();
 			filter.getStatiConservazione().add(StatoConservazioneType.PRESA_IN_CARICO);
 			filter.setIdSipNull(true);
-			filter.setOffset(0);
-			filter.setLimit(100);
+			filter.setOffset(offset);
+			filter.setLimit(LIMIT_STEP);
 			List<FatturaElettronica> fatturePerAnno = fatturaElettronicaBD.findAll(filter);
 
 			while(fatturePerAnno != null && !fatturePerAnno.isEmpty()) {
-
 
 				for(FatturaElettronica fattura: fatturePerAnno) {
 
@@ -107,6 +109,10 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 						lottoBD.assegnaIdSip(fattura.getLottoFatture(),sipLotto.getId());
 					}
 				}
+				
+				// sposto l'offset
+				offset += LIMIT_STEP;
+				filter.setOffset(offset);
 				fatturePerAnno = fatturaElettronicaBD.findAll(filter);
 			}
 

@@ -22,10 +22,9 @@ package org.govmix.proxy.fatturapa.web.timers;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.govmix.fatturapa.parer.beans.FatturaBean;
@@ -39,20 +38,26 @@ import org.govmix.fatturapa.parer.builder.LottoFattureUnitaDocumentariaBuilder;
 import org.govmix.fatturapa.parer.client.ParERClient;
 import org.govmix.fatturapa.parer.client.ParERResponse;
 import org.govmix.fatturapa.parer.client.ParERResponse.STATO;
-import org.govmix.fatturapa.parer.utils.ChiaveRapportoType;
 import org.govmix.fatturapa.parer.utils.ConservazioneProperties;
+import org.govmix.fatturapa.parer.versamento.request.ChiaveType;
+import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
-import org.govmix.proxy.fatturapa.orm.IdSip;
+import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
-import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
+import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.AllegatoFatturaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.NotificaDecorrenzaTerminiBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.NotificaEsitoCommittenteBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.SIPBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FilterSortWrapper;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
+import org.openspcoop2.generic_project.exception.NotFoundException;
+import org.openspcoop2.generic_project.exception.ServiceException;
+import org.openspcoop2.generic_project.expression.SortOrder;
 
 
 /**
@@ -92,97 +97,227 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 			FatturaPassivaMultiplaUnitaDocumentariaBuilder builderFatturaPassivaMultipla = new FatturaPassivaMultiplaUnitaDocumentariaBuilder(this.log);
 			FatturaAttivaSingolaUnitaDocumentariaBuilder builderFatturaAttivaSingola = new FatturaAttivaSingolaUnitaDocumentariaBuilder(this.log);
 			int offset = 0;
-			
 			int LIMIT_STEP = Math.min(this.limit, 500);
-			
-			List<LottoFatture> lottoList = null;//TODO lottoBD.getLottiDaConservare(new Date(), 0, LIMIT_STEP);
-			
-			for(LottoFatture lotto: lottoList) {
-				//TODO creare unita doc con builderLotto
-				
-				//find su db fatture con quell'identificativo sdi e fatturazione attiva
-				//foreach:
-				// creare unita doc con builderFatturaPassivaMultipla
-				//spedire
-				//aggiornare sip e fatture
+
+			List<LottoFatture> lottoList = lottoBD.getLottiDaConservare(new Date(), offset, LIMIT_STEP);
+
+			while(lottoList != null && !lottoList.isEmpty()) {
+				this.log.info("Trovati ["+lottoList.size()+"] lotti di fatture da conservare");
+
+				for(LottoFatture lotto: lottoList) {
+					boolean spedizione = true;
+					StatoConsegnaType statoConsegna = null;
+					String rapportoVersamento = null;
+					ChiaveType chiave = null;
+					UnitaDocumentariaLottoInput input = null;
+					UnitaDocumentariaBean request = null;
+
+					// 1. Creo Unita DOC
+					try {
+						input = this.getUnitaDocumentariaLotto(props, lotto, fatturaElettronicaBD, allegatoBD, notificaDecorrenzaTerminiBD, notificaEsitoCommittenteBD);
+						request = builderLotto.build(input);
+						chiave = request.getUnitaDocumentaria().getIntestazione().getChiave();
+						
+						this.log.debug("Numero Fatture presenti nel lotto ["+input.getFattureLst().size()+"] .");
+						if(input.getFattureLst().size() == 0) {
+							spedizione = false;
+							statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
+						}
+					}catch (ServiceException e) {
+						log.error("impossibile creare l'UnitaDocumentaria per il lotto ["+lotto.getIdentificativoSdi()+"].",e); 
+						statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
+						spedizione = false;
+					}
+
+					if(spedizione) {
+						// Spedizione verso parer
+						this.log.debug("Invio Lotto ["+lotto.getIdentificativoSdi()+"] in conservazione in corso...");
+						ParERResponse response = client.invia(request);
+						this.log.debug("Invio Lotto ["+lotto.getIdentificativoSdi()+"] in conservazione completata con esito ["+response.getStato()+"].");
 
 
-				
-				//spedire
-				//aggiornare sip
+						if(response.getStato().equals(STATO.OK)) {
+							statoConsegna = StatoConsegnaType.CONSEGNATA; 
+						} else {
+							statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
+							// TODO gestire riconsegna
+						}
+						rapportoVersamento = response.getRapportoVersamento();
+					}
+
+					// aggiornamento sip
+					sipBD.update(lotto.getIdSIP(), rapportoVersamento, statoConsegna, chiave.getNumero(), chiave.getAnno(), chiave.getTipoRegistro());
+
+					List<FatturaBean> fatturaList = input != null ? input.getFattureLst() : null;
+					while(fatturaList != null && !fatturaList.isEmpty()) {
+
+						for(FatturaBean fatturaBean: fatturaList) {
+							FatturaElettronica fattura = fatturaBean.getFattura();
+
+							String numero = null;
+							String registro = null;
+							Integer anno = null;
+							String rapportoVersamentoFat = null;
+							StatoConsegnaType statoConsegnaFat = null;
+							StatoConservazioneType statoConservazioneFat = null;
+							ChiaveType chiaveFat = null;
+							UnitaDocumentariaFatturaInput inputFat = null;
+							UnitaDocumentariaBean requestFat = null;
+
+							try {
+								// creare unita doc con builderFatturaPassivaMultipla
+								inputFat = this.getUnitaDocumentariaFatturaPassiva(props, fatturaBean); 
+								requestFat = builderFatturaPassivaMultipla.build(inputFat);
+								chiaveFat = request.getUnitaDocumentaria().getIntestazione().getChiave();
+							}catch (ServiceException e) {
+								log.error("impossibile creare l'UnitaDocumentaria per la fattura ["+fattura.getIdentificativoSdi()+"].",e); 
+								statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
+								statoConservazioneFat = StatoConservazioneType.ERRORE_CONSEGNA;
+								spedizione = false;
+							}
+
+							// informazioni sulla chiave
+							if(chiaveFat != null) {
+								numero = chiave.getNumero();
+								anno = chiave.getAnno();
+								registro = chiave.getTipoRegistro();
+							}
+
+							if(spedizione) {
+								ParERResponse responseFattura = client.invia(requestFat);
+								if(responseFattura.getStato().equals(STATO.OK)) {
+									statoConsegnaFat = StatoConsegnaType.CONSEGNATA; 
+									statoConservazioneFat = StatoConservazioneType.CONSERVAZIONE_COMPLETATA;
+								} else {
+									statoConsegnaFat = StatoConsegnaType.ERRORE_CONSEGNA;
+									statoConservazioneFat = StatoConservazioneType.CONSERVAZIONE_FALLITA;
+									// TODO gestire riconsegna
+								}
+
+								rapportoVersamentoFat = responseFattura.getRapportoVersamento();
+							}
+
+							//aggiornare sip e fattura in trnasazione
+							boolean oldAutoCommit = connection.getAutoCommit();
+							try {
+								connection.setAutoCommit(false);
+								sipBD.update(fattura.getIdSIP(), rapportoVersamentoFat, statoConsegnaFat, numero, anno, registro);
+								fatturaElettronicaBD.updateStatoConservazione(fattura, statoConservazioneFat);
+								connection.commit();
+							}catch(Exception e) {
+								log.error("impossibile creare aggiornare lo stato per la fattura ["+fattura.getIdentificativoSdi()+"].",e); 
+								connection.rollback();
+							} finally {
+								connection.setAutoCommit(oldAutoCommit);
+							}
+						}
+					}
+
+				}
+				// sposto l'offset
+				offset += LIMIT_STEP;
+				lottoList = lottoBD.getLottiDaConservare(new Date(), offset, LIMIT_STEP);
 			}
 
-			List<FatturaElettronica> fatturaList = null;//TODO search fatture da conservare (saranno sicuramente solo singole
-			
-			for(FatturaElettronica fattura: fatturaList) {
-				
-				//SOLO se attiva:
-				// se posizione > 2 mettere in stato ERRORE_CONSEGNA
-				// creare unita doc con builderFatturaAttivaSingola
+			offset = 0;
+			FatturaFilter filter = fatturaElettronicaBD.newFilter();
+			FilterSortWrapper fsw = new FilterSortWrapper();
+			fsw.setSortOrder(SortOrder.ASC);
+			fsw.setField(FatturaElettronica.model().DATA_RICEZIONE); 
+			filter.getFilterSortList().add(fsw );
+			filter.getStatiConservazione().add(StatoConservazioneType.PRESA_IN_CARICO);
+			filter.setOffset(offset);
+			filter.setLimit(LIMIT_STEP); 
+			List<FatturaElettronica> fatturaList = fatturaElettronicaBD.findAll(filter);
 
-				//SOLO se passiva:
-				// creare unita doc con builderFatturaPassivaSingola
-				
-				
-				//spedire
-				//aggiornare sip e fattura
+			while(fatturaList != null && !fatturaList.isEmpty()) {
 
+				for(FatturaElettronica fattura: fatturaList) {
+					boolean spedizione = true;
+					String numero = null;
+					String registro = null;
+					Integer anno = null;
+					String rapportoVersamento = null;
+					StatoConsegnaType statoConsegna = null;
+					StatoConservazioneType statoConservazione = null;
+					UnitaDocumentariaFatturaInput input = null;
+					UnitaDocumentariaBean request = null;
+					ChiaveType chiave = null;
+
+					if(fattura.isFatturazioneAttiva()) {
+						// creare unita doc con builderFatturaAttivaSingola
+						try {
+							input = this.getUnitaDocumentariaFatturaAttiva(props, fatturaElettronicaBD, allegatoBD, fattura);
+							request = builderFatturaAttivaSingola.build(input);
+							chiave = request.getUnitaDocumentaria().getIntestazione().getChiave();
+						}catch (ServiceException e) {
+							log.error("impossibile creare l'UnitaDocumentaria per la fattura ["+fattura.getIdentificativoSdi()+"].",e); 
+							statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
+							statoConservazione = StatoConservazioneType.ERRORE_CONSEGNA;
+							spedizione = false;
+						}
+
+						// se posizione > 2 mettere in stato ERRORE_CONSEGNA
+						if(fattura.getPosizione() > 1) {
+							statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
+							statoConservazione = StatoConservazioneType.ERRORE_CONSEGNA;
+							spedizione = false;
+						}
+					} else {
+						// creare unita doc con builderFatturaPassivaSingola
+						try {
+							input = this.getUnitaDocumentariaFatturaPassiva(props, toFatturaBean(fatturaElettronicaBD, allegatoBD, notificaDecorrenzaTerminiBD, notificaEsitoCommittenteBD, fattura));  
+							request = builderFatturaPassivaSingola.build(input);
+							chiave = request.getUnitaDocumentaria().getIntestazione().getChiave();
+						}catch (ServiceException e) {
+							log.error("impossibile creare l'UnitaDocumentaria per la fattura ["+fattura.getIdentificativoSdi()+"].",e); 
+							statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
+							statoConservazione = StatoConservazioneType.ERRORE_CONSEGNA;
+							spedizione = false;
+						}
+					}
+					// informazioni sulla chiave
+					if(chiave != null) {
+						numero = chiave.getNumero();
+						anno = chiave.getAnno();
+						registro = chiave.getTipoRegistro();
+					}
+
+					//spedire
+					if(spedizione) {
+						ParERResponse response = client.invia(request);
+						if(response.getStato().equals(STATO.OK)) {
+							statoConsegna = StatoConsegnaType.CONSEGNATA; 
+							statoConservazione = StatoConservazioneType.CONSERVAZIONE_COMPLETATA;
+						} else {
+							statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
+							statoConservazione = StatoConservazioneType.CONSERVAZIONE_FALLITA;
+							// TODO gestire riconsegna
+						}
+
+						rapportoVersamento = response.getRapportoVersamento();
+					}
+
+					//aggiornare sip e fattura in trnasazione
+					boolean oldAutoCommit = connection.getAutoCommit();
+					try {
+						connection.setAutoCommit(false);
+						sipBD.update(fattura.getIdSIP(), rapportoVersamento, statoConsegna, numero, anno, registro);
+						fatturaElettronicaBD.updateStatoConservazione(fattura, statoConservazione);
+						connection.commit();
+					}catch(Exception e) {
+						log.error("impossibile creare aggiornare lo stato per la fattura ["+fattura.getIdentificativoSdi()+"].",e); 
+						connection.rollback();
+					} finally {
+						connection.setAutoCommit(oldAutoCommit);
+					}
+				}
+
+				// sposto l'offset
+				offset += LIMIT_STEP;
+				filter.setOffset(offset);
+				fatturaList = fatturaElettronicaBD.findAll(filter);
 			}
-//			
-//			while(idFatturePassiveList != null && !idFatturePassiveList.isEmpty() && offset < this.limit) {
-//				this.log.info("Trovati ["+idFatturePassiveList.size()+"] lotti di fatture da conservare");
-//				for(LottoFatture id: idFatturePassiveList) {
-//					UnitaDocumentariaLottoInput input = this.getUnitaDocumentariaLotto(props, id);
-//					
-//					if(input.getFattureLst() == null || input.getFattureLst().isEmpty()) {
-//						throw new Exception("Errore durante la migrazione del lotto con identificativo SdI["+id.getIdentificativoSdi()+"]. Fatture non trovate");
-//					}
-//					
-//					if(input.getFattureLst().size() > 1) {
-//						UnitaDocumentariaBean build = builderLotto.build(input);
-//						ParERResponse inviaLottoResponse = client.invia(build);
-//						
-//						ChiaveRapportoType chiaveSIPLotto = getChiaveRapporto(builderLotto.getChiave(input), input.getLotto().getCodiceDestinatario());
-//						if(inviaLottoResponse.getStato().equals(STATO.OK)) {
-//							sipBD.update(input.getLotto().getIdSIP(), inviaLottoResponse.getRapportoVersamento(), StatoConsegnaType.CONSEGNATA, chiaveSIPLotto.getNumero(), chiaveSIPLotto.getAnno(), chiaveSIPLotto.getTipoRegistro());
-//						} else {
-//							sipBD.update(input.getLotto().getIdSIP(), inviaLottoResponse.getRapportoVersamento(), StatoConsegnaType.ERRORE_CONSEGNA, chiaveSIPLotto.getNumero(), chiaveSIPLotto.getAnno(), chiaveSIPLotto.getTipoRegistro());
-//						}
-//
-//						for(FatturaBean fattura: input.getFattureLst()) {
-//							if(fattura.getFattura().getEsito() == null || fattura.getFattura().getEsito().equals(EsitoType.INVIATA_ACCETTATO)) {	
-//								UnitaDocumentariaFatturaInput fatturaInput = this.getUnitaDocumentariaFattura(props, fattura, input.getLotto());
-//								UnitaDocumentariaBean build2 = builderFatturaPassivaMultipla.build(fatturaInput);
-//								ParERResponse response = client.invia(build2);
-//								
-//								ChiaveRapportoType chiaveSIP = getChiaveRapporto(builderFatturaPassivaMultipla.getChiave(fatturaInput), fatturaInput.getLotto().getCodiceDestinatario()));
-//								if(response.getStato().equals(STATO.OK)) {
-//									sipBD.update(fattura.getFattura().getIdSIP(), response.getRapportoVersamento(), StatoConsegnaType.CONSEGNATA, chiaveSIP.getNumero(), chiaveSIP.getAnno(), chiaveSIP.getTipoRegistro());
-//								} else {
-//									sipBD.update(fattura.getFattura().getIdSIP(), response.getRapportoVersamento(), StatoConsegnaType.ERRORE_CONSEGNA, chiaveSIP.getNumero(), chiaveSIP.getAnno(), chiaveSIP.getTipoRegistro());
-//								}
-//
-//							}
-//						}
-//						
-//					} else {
-//						FatturaBean fattura = input.getFattureLst().get(0);
-//						UnitaDocumentariaFatturaInput fatturaInput = this.getUnitaDocumentariaFattura(props, fattura, input.getLotto());
-//						UnitaDocumentariaBean build2 = builderFatturaPassivaSingola.build(fatturaInput);
-//						ParERResponse response = client.invia(build2);
-//						
-//						ChiaveRapportoType chiaveSIP = getChiaveRapporto(builderFatturaPassivaSingola.getChiave(fatturaInput), fatturaInput.getLotto().getCodiceDestinatario()));
-//						if(response.getStato().equals(STATO.OK)) {
-//							sipBD.update(fattura.getFattura().getIdSIP(), response.getRapportoVersamento(), StatoConsegnaType.CONSEGNATA, chiaveSIP.getNumero(), chiaveSIP.getAnno(), chiaveSIP.getTipoRegistro());
-//						} else {
-//							sipBD.update(fattura.getFattura().getIdSIP(), response.getRapportoVersamento(), StatoConsegnaType.ERRORE_CONSEGNA, chiaveSIP.getNumero(), chiaveSIP.getAnno(), chiaveSIP.getTipoRegistro());
-//						}
-//
-//					}
-//				}
-//				offset += idFatturePassiveList.size();
-//				idFatturePassiveList = lottoBD.getLottiDaConservare(new Date(), 0, LIMIT_STEP);
-//			}
 
 		}catch(Exception e){
 			this.log.error("Errore durante l'esecuzione del batch ReinvioConservazione: "+e.getMessage(), e);
@@ -198,13 +333,88 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 
 	}
 
-//	private void aggiornaStatoParER(SIPBD sipBD, IdSip id, ParERResponse response, ChiaveRapportoType chiaveSIP) throws Exception {
-//		if(response.getStato().equals(STATO.OK)) {
-//			sipBD.update(id, response.getRapportoVersamento(), StatoConsegnaType.CONSEGNATA, chiaveSIP.getNumero(), chiaveSIP.getAnno(), chiaveSIP.getTipoRegistro());
-//		} else {
-//			sipBD.update(id, response.getRapportoVersamento(), StatoConsegnaType.ERRORE_CONSEGNA, chiaveSIP.getNumero(), chiaveSIP.getAnno(), chiaveSIP.getTipoRegistro());
-//		}
-//	}
+	private UnitaDocumentariaFatturaInput getUnitaDocumentariaFatturaPassiva(ConservazioneProperties props, FatturaBean fatturaBean) throws Exception {
+
+		UnitaDocumentariaFatturaInput input = new UnitaDocumentariaFatturaInput();
+		input.setProperties(props);
+		FatturaElettronica fattura = fatturaBean.getFattura();
+		input.setFattura(fattura);
+		input.setLotto(fattura.getLottoFatture());
+		input.getAllegati().addAll(fatturaBean.getAllegati());
+		input.setNotificaDT(fatturaBean.getDecorrenzaTermini());
+		input.setNotificaEC(fatturaBean.getEsitoCommittente());
+
+		return input;
+
+	}
+
+
+
+	private UnitaDocumentariaLottoInput getUnitaDocumentariaLotto(ConservazioneProperties props, LottoFatture lotto, FatturaBD fatturaElettronicaBD, AllegatoFatturaBD allegatoBD, NotificaDecorrenzaTerminiBD notificaDecorrenzaTerminiBD,
+			NotificaEsitoCommittenteBD notificaEsitoCommittenteBD) throws Exception {
+		UnitaDocumentariaLottoInput input = new UnitaDocumentariaLottoInput();
+		input.setProperties(props);
+		input.setLotto(lotto);
+		FatturaFilter filter = fatturaElettronicaBD.newFilter();
+		filter.setIdentificativoSdi(lotto.getIdentificativoSdi());
+		filter.setFatturazioneAttiva(lotto.isFatturazioneAttiva());
+		FilterSortWrapper fsw = new FilterSortWrapper();
+		fsw.setSortOrder(SortOrder.ASC);
+		fsw.setField(FatturaElettronica.model().DATA_RICEZIONE); 
+		filter.getFilterSortList().add(fsw );
+		List<FatturaElettronica> findAllFattureByIdentificativoSdi = fatturaElettronicaBD.findAll(filter);
+		List<FatturaBean> fat = new ArrayList<FatturaBean>();
+
+		for(FatturaElettronica fattura: findAllFattureByIdentificativoSdi) {
+			FatturaBean bean = toFatturaBean(fatturaElettronicaBD, allegatoBD, notificaDecorrenzaTerminiBD,
+					notificaEsitoCommittenteBD, fattura);
+
+
+			fat.add(bean);
+		}
+
+		input.setFattureLst(fat);
+
+		return input;
+
+	}
+
+	private FatturaBean toFatturaBean(FatturaBD fatturaElettronicaBD, AllegatoFatturaBD allegatoBD,
+			NotificaDecorrenzaTerminiBD notificaDecorrenzaTerminiBD,
+			NotificaEsitoCommittenteBD notificaEsitoCommittenteBD, FatturaElettronica fattura) throws ServiceException {
+		FatturaBean bean = new FatturaBean();
+		bean.setFattura(fattura);
+		IdFattura idFattura = fatturaElettronicaBD.convertToId(fattura);
+		bean.setAllegati(allegatoBD.getAllegati(idFattura));
+
+		if(fattura.getIdDecorrenzaTermini() != null) {
+			try {
+				bean.setDecorrenzaTermini(notificaDecorrenzaTerminiBD.getNotificaDT(idFattura));
+			} catch (NotFoundException e) {
+				throw new ServiceException(e);
+			}
+		}
+
+		if(fattura.getEsito() != null) {
+			bean.setEsitoCommittente(notificaEsitoCommittenteBD.getNotificaEsitoCommittente(idFattura));
+		}
+		return bean;
+	}
+
+	private UnitaDocumentariaFatturaInput getUnitaDocumentariaFatturaAttiva(ConservazioneProperties props, FatturaBD fatturaElettronicaBD, AllegatoFatturaBD allegatoBD, FatturaElettronica fattura) throws Exception {
+
+		IdFattura idFattura = fatturaElettronicaBD.convertToId(fattura);
+		List<AllegatoFattura> allegati = allegatoBD.getAllegati(idFattura);
+
+		UnitaDocumentariaFatturaInput input = new UnitaDocumentariaFatturaInput();
+		input.setProperties(props);
+		input.setFattura(fattura);
+		input.setLotto(fattura.getLottoFatture());
+		input.getAllegati().addAll(allegati);
+		return input;
+
+	}
+
 
 
 }

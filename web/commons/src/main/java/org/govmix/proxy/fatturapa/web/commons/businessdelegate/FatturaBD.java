@@ -37,6 +37,7 @@ import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.dao.IDBFatturaElettronicaService;
 import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaService;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.FatturaElettronicaFieldConverter;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaAttivaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaPassivaFilter;
 import org.openspcoop2.generic_project.beans.CustomField;
@@ -467,7 +468,6 @@ public class FatturaBD extends BaseBD {
 	public void inviaInConservazione(List<Long> ids, StatoConservazioneType statoConservazione) throws ServiceException {
 		this.log.info(String.format("invio in conservazione %d fatture", ids.size()));
 		
-		// TODO Bussu agganciare gestione dello stato conservazione.
 		try {
 
 			StringBuffer update = new StringBuffer();
@@ -480,7 +480,6 @@ public class FatturaBD extends BaseBD {
 			update.append(converter.toColumn(FatturaElettronica.model().STATO_CONSERVAZIONE, false)).append(" = ? ");
 			
 			listObjects.add(StatoConservazioneType.PRESA_IN_CARICO.toString());
-			
 			
 			StringBuffer questionMarks = new StringBuffer();
 			for(Long id: ids) {
@@ -511,9 +510,14 @@ public class FatturaBD extends BaseBD {
 
 	}
 
-
 	public FatturaFilter newFilter() {
 		return new FatturaFilter(this.service);
+	}
+	public FatturaFilter newFatturaPassivaFilter() {
+		return new FatturaPassivaFilter(this.service);
+	}
+	public FatturaFilter newFatturaAttivaFilter() {
+		return new FatturaAttivaFilter(this.service);
 	}
 	
 
@@ -539,6 +543,17 @@ public class FatturaBD extends BaseBD {
 		}
 	}
 
-
+	public void updateStatoConservazione(FatturaElettronica fattura, StatoConservazioneType statoConsegna) throws Exception {
+		try {
+			List<UpdateField> fields = new ArrayList<UpdateField>();
+			fields.add(new UpdateField(FatturaElettronica.model().STATO_CONSERVAZIONE, statoConsegna));
+			IdFattura idFAttura = this.service.convertToId(fattura);
+			this.service.updateFields(idFAttura, fields.toArray(new UpdateField[]{}));
+		} catch (ServiceException e) {
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			throw new Exception(e);
+		}
+	}
 
 }

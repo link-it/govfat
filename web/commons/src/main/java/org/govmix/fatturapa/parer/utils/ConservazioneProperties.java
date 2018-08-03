@@ -32,14 +32,14 @@ public class ConservazioneProperties {
 		InputStream is = ConservazioneProperties.class.getResourceAsStream(PATH);
 		props.load(is);
 		
-		this.versioneServizio = getProperty(props, "it.link.conservazione.versioneServizio");
-		this.ambienteVersatore = getProperty(props, "it.link.conservazione.ambienteVersatore");
+		this.versioneServizio = getProperty(props, "org.govmix.proxy.fatturapa.conservazione.versioneServizio");
+		this.ambienteVersatore = getProperty(props, "org.govmix.proxy.fatturapa.conservazione.ambienteVersatore");
 
-		this.userIDVersatore = getProperty(props, "it.link.conservazione.userIDVersatore");
-		this.urlParER = getProperty(props, "it.link.conservazione.urlParER");
+		this.userIDVersatore = getProperty(props, "org.govmix.proxy.fatturapa.conservazione.userIDVersatore");
+		this.urlParER = getProperty(props, "org.govmix.proxy.fatturapa.conservazione.urlParER");
 		
-		this.username = getProperty(props, "it.link.conservazione.username");
-		this.password = getProperty(props, "it.link.conservazione.password");
+		this.username = getProperty(props, "org.govmix.proxy.fatturapa.conservazione.username");
+		this.password = getProperty(props, "org.govmix.proxy.fatturapa.conservazione.password");
 		
 	}
 	

@@ -19,7 +19,10 @@ public class ConservazioneUtils {
 		ChiaveType chiave = new ChiaveType();
 		chiave.setNumero(fattura.getNumero() + "_" + fattura.getCedentePrestatoreCodiceFiscale());
 		chiave.setAnno(fattura.getAnno());
-		chiave.setTipoRegistro("FATTURE PASSIVE");
+		if(fattura.isFatturazioneAttiva())
+			chiave.setTipoRegistro("FATTURE_ATTIVE");
+		else 
+			chiave.setTipoRegistro("FATTURE_PASSIVE");
 		return chiave;
 	}
 

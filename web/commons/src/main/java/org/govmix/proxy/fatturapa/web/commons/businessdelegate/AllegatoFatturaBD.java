@@ -21,12 +21,17 @@
 package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 
 import java.sql.Connection;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
+import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.dao.IAllegatoFatturaService;
+import org.openspcoop2.generic_project.exception.ExpressionException;
+import org.openspcoop2.generic_project.exception.ExpressionNotImplementedException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
+import org.openspcoop2.generic_project.expression.IPaginatedExpression;
 
 public class AllegatoFatturaBD extends BaseBD {
 
@@ -63,6 +68,22 @@ public class AllegatoFatturaBD extends BaseBD {
 			throw new Exception(e);
 		} catch (NotImplementedException e) {
 			throw new Exception(e);
+		}
+	}
+
+	public List<AllegatoFattura> getAllegati(IdFattura id) throws ServiceException {
+		try {
+			IPaginatedExpression exp = this.service.newPaginatedExpression();
+			exp.equals(AllegatoFattura.model().ID_FATTURA.IDENTIFICATIVO_SDI, id.getIdentificativoSdi());
+			exp.equals(AllegatoFattura.model().ID_FATTURA.POSIZIONE, id.getPosizione());
+			exp.equals(AllegatoFattura.model().ID_FATTURA.FATTURAZIONE_ATTIVA, id.getFatturazioneAttiva());
+			return this.service.findAll(exp);
+		} catch (NotImplementedException e) {
+			throw new ServiceException(e);
+		} catch (ExpressionNotImplementedException e) {
+			throw new ServiceException(e);
+		} catch (ExpressionException e) {
+			throw new ServiceException(e);
 		}
 	}
 }

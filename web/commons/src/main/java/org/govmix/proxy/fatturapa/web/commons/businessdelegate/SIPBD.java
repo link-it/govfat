@@ -72,12 +72,16 @@ public class SIPBD extends BaseBD {
 		try {
 			
 			List<UpdateField> fields = new ArrayList<UpdateField>();
-			fields.add(new UpdateField(SIP.model().NUMERO, numero));
-			fields.add(new UpdateField(SIP.model().ANNO, anno));
-			fields.add(new UpdateField(SIP.model().REGISTRO, registro));
-			fields.add(new UpdateField(SIP.model().RAPPORTO_VERSAMENTO, rapportoVersamento));
-			fields.add(new UpdateField(SIP.model().STATO_CONSEGNA, statoConsegna));
+			if(numero != null)
+				fields.add(new UpdateField(SIP.model().NUMERO, numero));
+			if(anno != null)
+				fields.add(new UpdateField(SIP.model().ANNO, anno));
+			if(registro != null)
+				fields.add(new UpdateField(SIP.model().REGISTRO, registro));
+			if(rapportoVersamento != null)			
+				fields.add(new UpdateField(SIP.model().RAPPORTO_VERSAMENTO, rapportoVersamento));
 			
+			fields.add(new UpdateField(SIP.model().STATO_CONSEGNA, statoConsegna));
 			fields.add(new UpdateField(SIP.model().DATA_ULTIMA_CONSEGNA, new Date()));
 			
 			this.service.updateFields(idSip, fields.toArray(new UpdateField[]{}));
@@ -152,6 +156,8 @@ public class SIPBD extends BaseBD {
 		}
 	}
 
-
+	public SIP findById (IdSip id) throws Exception {
+		return this.service.get(id);
+	}
 
 }
