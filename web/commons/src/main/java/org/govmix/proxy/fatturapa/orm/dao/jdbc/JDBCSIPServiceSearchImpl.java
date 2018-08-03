@@ -686,7 +686,7 @@ public class JDBCSIPServiceSearchImpl implements IJDBCServiceSearchWithId<SIP, I
 
 		// Recupero _sip
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject [] searchParams_sip = new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject [] { 
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id.getIdSip(),Long.class),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id.getId(),Long.class),
 		};
 		Long id_sip = null;
 		try{

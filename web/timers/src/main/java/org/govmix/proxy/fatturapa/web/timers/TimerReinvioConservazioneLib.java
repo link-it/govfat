@@ -313,7 +313,8 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 					//aggiornare sip e fattura in trnasazione
 					boolean oldAutoCommit = connection.getAutoCommit();
 					try {
-						this.log.debug("Aggiornamento entry SIP su db per la fattura ["+fattura.getIdentificativoSdi()+"] in corso...");
+						Long idSip = fattura.getIdSIP() != null ? fattura.getIdSIP().getId() : 0;
+						this.log.debug("Aggiornamento entry SIP ["+idSip+"] su db per la fattura ["+fattura.getIdentificativoSdi()+"] in corso...");
 						connection.setAutoCommit(false);
 						sipBD.update(fattura.getIdSIP(), rapportoVersamento, statoConsegna, numero, anno, registro);
 						fatturaElettronicaBD.updateStatoConservazione(fattura, statoConservazione);

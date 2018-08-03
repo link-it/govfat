@@ -2,9 +2,11 @@ package org.govmix.proxy.fatturapa.web.console.mbean;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -12,6 +14,7 @@ import javax.faces.model.SelectItem;
 
 import org.apache.commons.lang.StringUtils;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
+import org.govmix.proxy.fatturapa.orm.Ente;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdEnte;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
@@ -190,11 +193,34 @@ IConservazioneService>{
 					IdEnte ente = dipartimento.getEnte();
 					if(!listaAggiunti.contains(ente.getNome())){
 						listaAggiunti.add(ente.getNome());
-						listaDipartimenti.add(new SelectItem(
-							new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(ente.getNome(),ente.getNome())));
 					}
 				}
 			}
+		
+		List<String> entiSelezionati = new ArrayList<String>();
+		Map<String, Ente> mapEntiLoggedUtente = org.govmix.proxy.fatturapa.web.console.util.Utils.getMapEntiLoggedUtente();
+		for (String nomeEnte : listaAggiunti) {
+			if(mapEntiLoggedUtente.containsKey(nomeEnte)) {
+				Ente ente = mapEntiLoggedUtente.get(nomeEnte);
+			
+				if(ente.getEnteVersatore() != null && ente.getStrutturaVersatore() != null) {
+					entiSelezionati.add(nomeEnte);
+				}
+			}
+		}
+		
+		// ordino i risultati in ordine alfabetico
+		Collections.sort(entiSelezionati);
+		
+		for (String nomeEnte : entiSelezionati) {
+			if(mapEntiLoggedUtente.containsKey(nomeEnte)) {
+				Ente ente = mapEntiLoggedUtente.get(nomeEnte);
+			
+				if(ente.getEnteVersatore() != null && ente.getStrutturaVersatore() != null) {
+					listaDipartimenti.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(ente.getNome(),ente.getNome())));
+				}
+			}
+		}
 
 
 		return listaDipartimenti;
