@@ -1,6 +1,5 @@
 package org.govmix.fatturapa.parer.utils;
 
-import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -19,6 +18,9 @@ public class ConservazioneProperties extends AbstractProperties{
 	private String ambienteVersatore;
 	
 	private String userIDVersatore;
+	
+	private String trustStorePassword;
+	private String trustStorePath;
 	
 	private static final String PATH = "/conservazione.properties";
 	
@@ -68,6 +70,10 @@ public class ConservazioneProperties extends AbstractProperties{
 		this.username = getProperty( "org.govmix.proxy.fatturapa.conservazione.username",true);
 		this.password = getProperty( "org.govmix.proxy.fatturapa.conservazione.password",true);
 		
+		
+		this.trustStorePassword = getProperty( "org.govmix.proxy.fatturapa.conservazione.trustStorePassword",false);
+		this.trustStorePath = getProperty( "org.govmix.proxy.fatturapa.conservazione.trustStorePath",false);
+		
 	}
 	
 //	
@@ -108,5 +114,11 @@ public class ConservazioneProperties extends AbstractProperties{
 	}
 	public String getPassword() {
 		return password;
+	}
+	public String getTrustStorePassword() {
+		return trustStorePassword;
+	}
+	public String getTrustStorePath() {
+		return trustStorePath;
 	}
 }

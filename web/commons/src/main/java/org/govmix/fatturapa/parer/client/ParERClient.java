@@ -2,10 +2,14 @@ package org.govmix.fatturapa.parer.client;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.security.KeyStore;
 
+import javax.net.ssl.SSLContext;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -17,6 +21,9 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -24,6 +31,7 @@ import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.log4j.Logger;
 import org.govmix.fatturapa.parer.beans.UnitaDocumentariaBean;
 import org.govmix.fatturapa.parer.client.ParERResponse.STATO;
@@ -59,6 +67,7 @@ public class ParERClient {
 
 	}
 	
+	@SuppressWarnings("deprecation")
 	public ParERResponse invia(UnitaDocumentariaBean ud) {
 		try {
 			// crea una nuova istanza di HttpClient, predisponendo la chiamata del metodo POST
@@ -100,8 +109,35 @@ public class ParERClient {
 			this.logDump.info("Invio in conservazione l'UD con chiave " + chiaveString);
 			this.logDump.info("Request: " + out.toString());
 
+			
+			CloseableHttpClient client = null;
+			if(ud.getInput().getProperties().getTrustStorePath() != null) {
+				KeyStore trustStore  = KeyStore.getInstance(KeyStore.getDefaultType());
+		        FileInputStream instream = new FileInputStream(new File(ud.getInput().getProperties().getTrustStorePath()));
+		        try {
+		            trustStore.load(instream, ud.getInput().getProperties().getTrustStorePassword().toCharArray());
+		        } finally {
+		            instream.close();
+		        }
+
+		        // Trust own CA and all self-signed certs
+		        SSLContext sslcontext = SSLContexts.custom()
+		                .loadTrustMaterial(trustStore, new TrustSelfSignedStrategy())
+		                .build();
+		        // Allow TLSv1 protocol only
+		        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+		                sslcontext,
+		                new String[] { "TLSv1" },
+		                null,
+		                SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+		        client = HttpClients.custom()
+		                .setSSLSocketFactory(sslsf)
+		                .build();
+			} else {
+				client = HttpClientBuilder.create().build();
+			}
+			
 			//invoca il web service
-			CloseableHttpClient client = HttpClientBuilder.create().build();
 			HttpResponse response = client.execute(httppost);
 
 			
