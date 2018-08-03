@@ -39,7 +39,7 @@ import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 
 
 /**
- * Implementazione dell'interfaccia {@link TimerConsegnaFattura}.
+ * Implementazione dell'interfaccia {@link TimerSchedulingConservazione}.
  * 
  * 
  *  
@@ -57,7 +57,7 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 
 	@Override
 	public void execute() throws Exception {
-
+		this.log.info("Esecuzione Batch SchedulingConservazione in corso...");
 		Connection connection = null;
 		try {
 			connection = DAOFactory.getInstance().getConnection();
@@ -77,6 +77,7 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 			List<FatturaElettronica> fatturePerAnno = fatturaElettronicaBD.findAll(filter);
 
 			while(fatturePerAnno != null && !fatturePerAnno.isEmpty()) {
+				this.log.debug("Trovate ["+fatturePerAnno.size()+"] fatture da mandare in scheduling per la conservazione...");
 
 				for(FatturaElettronica fattura: fatturePerAnno) {
 
@@ -96,6 +97,7 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 					// 2) lotto di piu' fatture (si inserisce alla fattura con posizione 2 per evitare di inserirlo piu' volte)
 					// 3) il lotto no ndeve avere gia' associato il sip
 					if(!fattura.getFatturazioneAttiva() && fattura.getPosizione() == 2 && fattura.getLottoFatture().getIdSIP() == null) {
+						this.log.debug("Inserisco in scheduling il lotto della fattura passiva ["+fattura.getIdentificativoSdi()+"]...");
 
 						SIP sipLotto = new SIP();
 						ChiaveType chiaveLotto = ConservazioneUtils.getChiaveLotto(fattura);
@@ -108,6 +110,8 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 
 						lottoBD.assegnaIdSip(fattura.getLottoFatture(),sipLotto.getId());
 					}
+					
+					this.log.debug("Scheduling per la conservazione completato.");
 				}
 				
 				// sposto l'offset
@@ -115,9 +119,9 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 				filter.setOffset(offset);
 				fatturePerAnno = fatturaElettronicaBD.findAll(filter);
 			}
-
+			this.log.info("Esecuzione Batch SchedulingConservazione completata.");
 		}catch(Exception e){
-			this.log.error("Errore durante l'esecuzione del batch AccettazioneFattura: "+e.getMessage(), e);
+			this.log.error("Errore durante l'esecuzione del batch SchedulingConservazione: "+e.getMessage(), e);
 			connection.rollback();
 			throw e;
 		} finally {

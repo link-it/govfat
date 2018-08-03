@@ -61,7 +61,7 @@ import org.openspcoop2.generic_project.expression.SortOrder;
 
 
 /**
- * Implementazione dell'interfaccia {@link TimerConsegnaFattura}.
+ * Implementazione dell'interfaccia {@link TimerReinvioConservazione}.
  * 
  * 
  *  
@@ -79,7 +79,7 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 
 	@Override
 	public void execute() throws Exception {
-
+		this.log.info("Esecuzione Batch ReinvioConservazione in corso...");
 		Connection connection = null;
 		try {
 			connection = DAOFactory.getInstance().getConnection();
@@ -102,7 +102,7 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 			List<LottoFatture> lottoList = lottoBD.getLottiDaConservare(new Date(), offset, LIMIT_STEP);
 
 			while(lottoList != null && !lottoList.isEmpty()) {
-				this.log.info("Trovati ["+lottoList.size()+"] lotti di fatture da conservare");
+				this.log.debug("Trovati ["+lottoList.size()+"] lotti di fatture da conservare");
 
 				for(LottoFatture lotto: lottoList) {
 					boolean spedizione = true;
@@ -131,9 +131,9 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 
 					if(spedizione) {
 						// Spedizione verso parer
-						this.log.debug("Invio Lotto ["+lotto.getIdentificativoSdi()+"] in conservazione in corso...");
+						this.log.debug("Invio lotto ["+lotto.getIdentificativoSdi()+"] in conservazione in corso...");
 						ParERResponse response = client.invia(request);
-						this.log.debug("Invio Lotto ["+lotto.getIdentificativoSdi()+"] in conservazione completata con esito ["+response.getStato()+"].");
+						this.log.debug("Invio lotto ["+lotto.getIdentificativoSdi()+"] in conservazione completata con esito ["+response.getStato()+"].");
 
 
 						if(response.getStato().equals(STATO.OK)) {
@@ -146,11 +146,14 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 					}
 
 					// aggiornamento sip
+					this.log.debug("Aggiornamento entry SIP su db per il lotto ["+lotto.getIdentificativoSdi()+"] in corso...");
 					sipBD.update(lotto.getIdSIP(), rapportoVersamento, statoConsegna, chiave.getNumero(), chiave.getAnno(), chiave.getTipoRegistro());
+					this.log.debug("Aggiornamento entry SIP su db per il lotto ["+lotto.getIdentificativoSdi()+"] completata.");
 
 					List<FatturaBean> fatturaList = input != null ? input.getFattureLst() : null;
 					while(fatturaList != null && !fatturaList.isEmpty()) {
-
+						
+						this.log.debug("Invio in conservazione delle fatture associate al lotto ["+lotto.getIdentificativoSdi()+"] in corso...");
 						for(FatturaBean fatturaBean: fatturaList) {
 							FatturaElettronica fattura = fatturaBean.getFattura();
 
@@ -184,7 +187,10 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 							}
 
 							if(spedizione) {
+								this.log.debug("Invio fattura ["+fattura.getIdentificativoSdi()+"] in conservazione in corso...");
 								ParERResponse responseFattura = client.invia(requestFat);
+								this.log.debug("Invio fattura ["+fattura.getIdentificativoSdi()+"] in conservazione completata con esito ["+responseFattura.getStato()+"].");
+								
 								if(responseFattura.getStato().equals(STATO.OK)) {
 									statoConsegnaFat = StatoConsegnaType.CONSEGNATA; 
 									statoConservazioneFat = StatoConservazioneType.CONSERVAZIONE_COMPLETATA;
@@ -200,17 +206,21 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 							//aggiornare sip e fattura in trnasazione
 							boolean oldAutoCommit = connection.getAutoCommit();
 							try {
+								this.log.debug("Aggiornamento entry SIP su db per la fattura ["+fattura.getIdentificativoSdi()+"] in corso...");
 								connection.setAutoCommit(false);
 								sipBD.update(fattura.getIdSIP(), rapportoVersamentoFat, statoConsegnaFat, numero, anno, registro);
 								fatturaElettronicaBD.updateStatoConservazione(fattura, statoConservazioneFat);
 								connection.commit();
+								this.log.debug("Aggiornamento entry SIP su db per la fattura ["+fattura.getIdentificativoSdi()+"] completata.");
 							}catch(Exception e) {
-								log.error("impossibile creare aggiornare lo stato per la fattura ["+fattura.getIdentificativoSdi()+"].",e); 
+								log.error("impossibile aggiornare la entry SIP su db per la fattura ["+fattura.getIdentificativoSdi()+"].",e); 
 								connection.rollback();
 							} finally {
 								connection.setAutoCommit(oldAutoCommit);
 							}
 						}
+						
+						this.log.debug("Invio in conservazione delle fatture associate al lotto ["+lotto.getIdentificativoSdi()+"] completato.");
 					}
 
 				}
@@ -231,7 +241,8 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 			List<FatturaElettronica> fatturaList = fatturaElettronicaBD.findAll(filter);
 
 			while(fatturaList != null && !fatturaList.isEmpty()) {
-
+				this.log.debug("Trovate ["+fatturaList.size()+"] fatture da conservare");
+				
 				for(FatturaElettronica fattura: fatturaList) {
 					boolean spedizione = true;
 					String numero = null;
@@ -285,7 +296,9 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 
 					//spedire
 					if(spedizione) {
+						this.log.debug("Invio fattura ["+fattura.getIdentificativoSdi()+"] in conservazione in corso...");
 						ParERResponse response = client.invia(request);
+						this.log.debug("Invio fattura ["+fattura.getIdentificativoSdi()+"] in conservazione completata con esito ["+response.getStato()+"].");
 						if(response.getStato().equals(STATO.OK)) {
 							statoConsegna = StatoConsegnaType.CONSEGNATA; 
 							statoConservazione = StatoConservazioneType.CONSERVAZIONE_COMPLETATA;
@@ -301,12 +314,14 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 					//aggiornare sip e fattura in trnasazione
 					boolean oldAutoCommit = connection.getAutoCommit();
 					try {
+						this.log.debug("Aggiornamento entry SIP su db per la fattura ["+fattura.getIdentificativoSdi()+"] in corso...");
 						connection.setAutoCommit(false);
 						sipBD.update(fattura.getIdSIP(), rapportoVersamento, statoConsegna, numero, anno, registro);
 						fatturaElettronicaBD.updateStatoConservazione(fattura, statoConservazione);
 						connection.commit();
+						this.log.debug("Aggiornamento entry SIP su db per la fattura ["+fattura.getIdentificativoSdi()+"] completata.");
 					}catch(Exception e) {
-						log.error("impossibile creare aggiornare lo stato per la fattura ["+fattura.getIdentificativoSdi()+"].",e); 
+						log.error("impossibile aggiornare la entry SIP su db per la fattura ["+fattura.getIdentificativoSdi()+"].",e); 
 						connection.rollback();
 					} finally {
 						connection.setAutoCommit(oldAutoCommit);
@@ -318,7 +333,7 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 				filter.setOffset(offset);
 				fatturaList = fatturaElettronicaBD.findAll(filter);
 			}
-
+			this.log.info("Esecuzione Batch ReinvioConservazione completata.");
 		}catch(Exception e){
 			this.log.error("Errore durante l'esecuzione del batch ReinvioConservazione: "+e.getMessage(), e);
 			connection.rollback();
@@ -355,6 +370,9 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 		UnitaDocumentariaLottoInput input = new UnitaDocumentariaLottoInput();
 		input.setProperties(props);
 		input.setLotto(lotto);
+		
+		this.log.debug("Lettura fatture associate al lotto ["+lotto.getIdentificativoSdi() +"] in corso...");
+		
 		FatturaFilter filter = fatturaElettronicaBD.newFilter();
 		filter.setIdentificativoSdi(lotto.getIdentificativoSdi());
 		filter.setFatturazioneAttiva(lotto.isFatturazioneAttiva());
@@ -374,6 +392,8 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 		}
 
 		input.setFattureLst(fat);
+		
+		this.log.debug("Lettura fatture associate al lotto ["+lotto.getIdentificativoSdi() +"] completata");
 
 		return input;
 
