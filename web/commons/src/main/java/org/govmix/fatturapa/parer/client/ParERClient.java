@@ -15,6 +15,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
@@ -115,20 +116,28 @@ public class ParERClient {
 			
 			client.close();
 			return parerResp;
+		} catch(ClientProtocolException e) {
+			this.log.error("Errore durante l'invocazione del WS ParER: " + e.getMessage(), e);
+			ParERResponse parERResponse = new ParERResponse();
+			parERResponse.setStato(STATO.ERRORE_CONNESSIONE);
+			
+			return parERResponse;
+		} catch(IOException e) {
+			this.log.error("Errore durante l'invocazione del WS ParER: " + e.getMessage(), e);
+			ParERResponse parERResponse = new ParERResponse();
+			parERResponse.setStato(STATO.ERRORE_CONNESSIONE);
+			
+			return parERResponse;
 		} catch(Exception e) {
 			this.log.error("Errore durante l'invocazione del WS ParER: " + e.getMessage(), e);
-			return getParerResponse(e);
+			ParERResponse parERResponse = new ParERResponse();
+			parERResponse.setStato(STATO.KO);
+			
+			return parERResponse;
 		}
 
 	}
 	
-	private ParERResponse getParerResponse(Exception e) {
-		ParERResponse parERResponse = new ParERResponse();
-		parERResponse.setStato(STATO.KO);
-		
-		return parERResponse;
-	}
-
 	private ParERResponse getParerResponse(HttpResponse response, String chiave) throws Exception {
 		
 		this.log.info("Response code: " + response.getStatusLine().getStatusCode());

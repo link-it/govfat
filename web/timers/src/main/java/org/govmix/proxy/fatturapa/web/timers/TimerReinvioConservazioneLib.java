@@ -37,7 +37,6 @@ import org.govmix.fatturapa.parer.builder.FatturaPassivaSingolaUnitaDocumentaria
 import org.govmix.fatturapa.parer.builder.LottoFattureUnitaDocumentariaBuilder;
 import org.govmix.fatturapa.parer.client.ParERClient;
 import org.govmix.fatturapa.parer.client.ParERResponse;
-import org.govmix.fatturapa.parer.client.ParERResponse.STATO;
 import org.govmix.fatturapa.parer.utils.ConservazioneProperties;
 import org.govmix.fatturapa.parer.versamento.request.ChiaveType;
 import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
@@ -135,11 +134,15 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 						this.log.debug("Invio lotto ["+lotto.getIdentificativoSdi()+"] in conservazione completata con esito ["+response.getStato()+"].");
 
 
-						if(response.getStato().equals(STATO.OK)) {
-							statoConsegna = StatoConsegnaType.CONSEGNATA; 
-						} else {
+						switch(response.getStato()) {
+						case ERRORE_CONNESSIONE:
+						case KO:
 							statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
 							// TODO gestire riconsegna
+							break;
+						case OK:
+							statoConsegna = StatoConsegnaType.CONSEGNATA; 
+							break;
 						}
 						rapportoVersamento = response.getRapportoVersamento();
 					}
@@ -190,15 +193,23 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 								ParERResponse responseFattura = client.invia(requestFat);
 								this.log.debug("Invio fattura ["+fattura.getIdentificativoSdi()+"] in conservazione completata con esito ["+responseFattura.getStato()+"].");
 								
-								if(responseFattura.getStato().equals(STATO.OK)) {
-									statoConsegnaFat = StatoConsegnaType.CONSEGNATA; 
-									statoConservazioneFat = StatoConservazioneType.CONSERVAZIONE_COMPLETATA;
-								} else {
+								switch(responseFattura.getStato()) {
+								case ERRORE_CONNESSIONE:
+									statoConservazioneFat = StatoConservazioneType.ERRORE_CONSEGNA;
 									statoConsegnaFat = StatoConsegnaType.ERRORE_CONSEGNA;
-									statoConservazioneFat = StatoConservazioneType.CONSERVAZIONE_FALLITA;
 									// TODO gestire riconsegna
+									break;
+								case KO:
+									statoConservazioneFat = StatoConservazioneType.CONSERVAZIONE_FALLITA;
+									statoConsegnaFat = StatoConsegnaType.ERRORE_CONSEGNA;
+									// TODO gestire riconsegna
+									break;
+								case OK:
+									statoConservazioneFat = StatoConservazioneType.CONSERVAZIONE_COMPLETATA;
+									statoConsegnaFat = StatoConsegnaType.CONSEGNATA; 
+									break;
 								}
-
+								
 								rapportoVersamentoFat = responseFattura.getRapportoVersamento();
 							}
 
@@ -298,13 +309,22 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 						this.log.debug("Invio fattura ["+fattura.getIdentificativoSdi()+"] in conservazione in corso...");
 						ParERResponse response = client.invia(request);
 						this.log.debug("Invio fattura ["+fattura.getIdentificativoSdi()+"] in conservazione completata con esito ["+response.getStato()+"].");
-						if(response.getStato().equals(STATO.OK)) {
-							statoConsegna = StatoConsegnaType.CONSEGNATA; 
-							statoConservazione = StatoConservazioneType.CONSERVAZIONE_COMPLETATA;
-						} else {
+						
+						switch(response.getStato()) {
+						case ERRORE_CONNESSIONE:
+							statoConservazione = StatoConservazioneType.ERRORE_CONSEGNA;
 							statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
-							statoConservazione = StatoConservazioneType.CONSERVAZIONE_FALLITA;
 							// TODO gestire riconsegna
+							break;
+						case KO:
+							statoConservazione = StatoConservazioneType.CONSERVAZIONE_FALLITA;
+							statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
+							// TODO gestire riconsegna
+							break;
+						case OK:
+							statoConservazione = StatoConservazioneType.CONSERVAZIONE_COMPLETATA;
+							statoConsegna = StatoConsegnaType.CONSEGNATA; 
+							break;
 						}
 
 						rapportoVersamento = response.getRapportoVersamento();
