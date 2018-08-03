@@ -79,7 +79,6 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 
 	@Override
 	public void execute() throws Exception {
-		this.log.info("Esecuzione Batch ReinvioConservazione in corso...");
 		Connection connection = null;
 		try {
 			connection = DAOFactory.getInstance().getConnection();
@@ -333,7 +332,6 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 				filter.setOffset(offset);
 				fatturaList = fatturaElettronicaBD.findAll(filter);
 			}
-			this.log.info("Esecuzione Batch ReinvioConservazione completata.");
 		}catch(Exception e){
 			this.log.error("Errore durante l'esecuzione del batch ReinvioConservazione: "+e.getMessage(), e);
 			connection.rollback();

@@ -57,7 +57,6 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 
 	@Override
 	public void execute() throws Exception {
-		this.log.info("Esecuzione Batch SchedulingConservazione in corso...");
 		Connection connection = null;
 		try {
 			connection = DAOFactory.getInstance().getConnection();
@@ -119,7 +118,6 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 				filter.setOffset(offset);
 				fatturePerAnno = fatturaElettronicaBD.findAll(filter);
 			}
-			this.log.info("Esecuzione Batch SchedulingConservazione completata.");
 		}catch(Exception e){
 			this.log.error("Errore durante l'esecuzione del batch SchedulingConservazione: "+e.getMessage(), e);
 			connection.rollback();

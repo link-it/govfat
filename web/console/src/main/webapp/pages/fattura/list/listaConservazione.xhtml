@@ -176,6 +176,9 @@
 				</rich:column>
 
 				<ui:define name="buttonsListView">
+					<a4j:jsFunction name="inviaConservazione" id="inviaConservazione" action="#{conservazioneMBean.inviaFattureInConservazione}"  status="mainStatus">
+            		</a4j:jsFunction>
+				
 					<a4j:commandButton	id="inviaConservazione-iconLink" styleClass="icon-fatturapa-up-green" style="padding: 4px 6px 4px 5px;"
 						reRender="inviaFattureConfirmation,msgSelezione" value="#{msg['conservazione.button.inviaConservazione']}" status="mainStatus"
 						onclick="if(checkSelection('conservazioneTable_dt')) { setMessaggioUtente('conservazioneTable_dt'); #{rich:component('inviaFattureConfirmation')}.show(); } return false; " 
@@ -222,7 +225,7 @@
 	                       		<a4j:commandButton 
 	                       			id="confermaInvioFattureBtn" status="mainStatus"
 	                       			styleClass="icon-fatturapa-up-green" style="padding: 4px 6px 4px 5px;"
-										value="#{msg['conservazione.confermaInvioFatture.ok']}" action="#{conservazioneMBean.inviaFattureInConservazione}"
+										value="#{msg['conservazione.confermaInvioFatture.ok']}" onclick="inviaConservazione();"
 										oncomplete="Richfaces.hideModalPanel('inviaFattureConfirmation');" />
 	                             <input id="annullaInvioFattureBtn" type="button" value="#{msg['conservazione.confermaInvioFatture.ko']}" class="negative icon-delete"
 	                                    onclick="Richfaces.hideModalPanel('inviaFattureConfirmation');return false"  style="padding: 4px 6px 4px 5px;"/>
