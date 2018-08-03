@@ -95,7 +95,6 @@ public class FatturaAttivaFilter extends FatturaFilter {
 				statoElaborazioneList.add(StatoElaborazioneType.MANCATA_CONSEGNA);
 				statoElaborazioneList.add(StatoElaborazioneType.IMPOSSIBILITA_DI_RECAPITO);
 				statoElaborazioneList.add(StatoElaborazioneType.RICEVUTO_ESITO_CEDENTE_PRESTATORE_ACCETTAZIONE);
-				statoElaborazioneList.add(StatoElaborazioneType.RICEVUTO_ESITO_CEDENTE_PRESTATORE_RIFIUTO);
 				statoElaborazioneList.add(StatoElaborazioneType.RICEVUTA_DECORRENZA_TERMINI);
 				statoElaborazioneList.add(StatoElaborazioneType.SOLO_CONSERVAZIONE);
 				

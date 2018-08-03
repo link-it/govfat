@@ -22,6 +22,7 @@ package org.govmix.proxy.fatturapa.web.console.search;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.faces.event.ActionEvent;
 
@@ -173,6 +174,11 @@ public class ConservazioneSearchForm extends BaseSearchForm implements SearchFor
 				((SelectListImpl)this.getTipoFattura()).getValue();
 		if(tipoFatturaSelezionata != null) {
 			fatturazioneAttiva = Costanti.TIPO_FATTURA_ATTIVA_VALUE.equals(tipoFatturaSelezionata.getValue());
+		}
+		
+		List<javax.faces.model.SelectItem> listaEnti = this.mBean._getEnti(false, fatturazioneAttiva);
+		if(!listaEnti.isEmpty()) {
+			this.setDefaultEnte((org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem) listaEnti.get(0).getValue());
 		}
 		
 		return fatturazioneAttiva;
