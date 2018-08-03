@@ -97,7 +97,8 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 			int offset = 0;
 			int LIMIT_STEP = Math.min(this.limit, 500);
 
-			List<LottoFatture> lottoList = lottoBD.getLottiDaConservare(new Date(), offset, LIMIT_STEP);
+			Date dataLimiteRicerca = new Date();
+			List<LottoFatture> lottoList = lottoBD.getLottiDaConservare(dataLimiteRicerca, offset, LIMIT_STEP);
 
 			while(lottoList != null && !lottoList.isEmpty()) {
 				this.log.debug("Trovati ["+lottoList.size()+"] lotti di fatture da conservare");
@@ -236,19 +237,11 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 				}
 				// sposto l'offset
 				offset += LIMIT_STEP;
-				lottoList = lottoBD.getLottiDaConservare(new Date(), offset, LIMIT_STEP);
+				lottoList = lottoBD.getLottiDaConservare(dataLimiteRicerca, offset, LIMIT_STEP);
 			}
 
 			offset = 0;
-			FatturaFilter filter = fatturaElettronicaBD.newFilter();
-			FilterSortWrapper fsw = new FilterSortWrapper();
-			fsw.setSortOrder(SortOrder.ASC);
-			fsw.setField(FatturaElettronica.model().DATA_RICEZIONE); 
-			filter.getFilterSortList().add(fsw );
-			filter.getStatiConservazione().add(StatoConservazioneType.PRESA_IN_CARICO);
-			filter.setOffset(offset);
-			filter.setLimit(LIMIT_STEP); 
-			List<FatturaElettronica> fatturaList = fatturaElettronicaBD.findAll(filter);
+			List<FatturaElettronica> fatturaList = fatturaElettronicaBD.getFattureDaConservare(dataLimiteRicerca, offset, LIMIT_STEP);
 
 			while(fatturaList != null && !fatturaList.isEmpty()) {
 				this.log.debug("Trovate ["+fatturaList.size()+"] fatture da conservare");
@@ -350,8 +343,7 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 
 				// sposto l'offset
 				offset += LIMIT_STEP;
-				filter.setOffset(offset);
-				fatturaList = fatturaElettronicaBD.findAll(filter);
+				fatturaList = fatturaElettronicaBD.getFattureDaConservare(dataLimiteRicerca, offset, LIMIT_STEP);
 			}
 		}catch(Exception e){
 			this.log.error("Errore durante l'esecuzione del batch ReinvioConservazione: "+e.getMessage(), e);
