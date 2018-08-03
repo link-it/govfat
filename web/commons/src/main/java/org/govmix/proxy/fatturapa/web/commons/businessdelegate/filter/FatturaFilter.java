@@ -133,10 +133,12 @@ public class FatturaFilter extends AbstractFilter {
 			}
 			
 			if(this.idSipNull!= null) {
+				CustomField customField = new CustomField("id_sip", Long.class, "id_sip", this.getRootTable());
+				
 				if(this.idSipNull) {
-					expression.isNull(FatturaElettronica.model().ID_SIP.ID_SIP);
+					expression.isNull(customField);
 				} else {
-					expression.isNotNull(FatturaElettronica.model().ID_SIP.ID_SIP);
+					expression.isNotNull(customField);
 				}
 			}
 			
