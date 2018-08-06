@@ -693,14 +693,6 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 				new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE))
 			));
 
-
-        // Delete this line when you have verified the method
-		int throwNotImplemented = 1;
-		if(throwNotImplemented==1){
-		        throw new NotImplementedException("NotImplemented");
-		}
-		// Delete this line when you have verified the method
-        
         return mapTableToPKColumn;		
 	}
 	
