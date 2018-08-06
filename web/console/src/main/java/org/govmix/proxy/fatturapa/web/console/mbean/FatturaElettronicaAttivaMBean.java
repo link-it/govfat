@@ -602,6 +602,7 @@ IFatturaElettronicaAttivaService>{
 					InserimentoLottoSoloConservazioneRequest dto = new InserimentoLottoSoloConservazioneRequest();
 					dto.setNomeFile(nomeFattura);
 					dto.setDipartimento(codDip);
+					dto.setXml(xml);
 					requestList.add(dto);
 				}
 			}
