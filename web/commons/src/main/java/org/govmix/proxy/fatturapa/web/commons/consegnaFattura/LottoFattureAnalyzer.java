@@ -28,24 +28,24 @@ public class LottoFattureAnalyzer {
 	private boolean isP7M;
 	private boolean isFirmato;
 	private byte[] original;
-
+	private byte[] decoded;
+	
 	public LottoFattureAnalyzer(byte[] lottoFatture, Logger log) throws Exception {
 		this.original = lottoFatture;
-		byte[] decoded = null;
 		try {
 			P7MInfo info = new P7MInfo(lottoFatture, log);
-			decoded = info.getXmlDecoded();
+			this.decoded = info.getXmlDecoded();
 			this.isP7M = true;
 			this.isFirmato = true;
 		} catch(Throwable t) {
 			log.debug("Errore durante l'acquisizione del lotto P7M:" + t.getMessage() + ". Provo ad acquisire lotto XML");
 			this.isP7M = false;
 			try {
-				decoded = extractContentFromXadesSignedFile(lottoFatture);
-				if(decoded != null) {
+				this.decoded = extractContentFromXadesSignedFile(lottoFatture);
+				if(this.decoded != null) {
 					this.isFirmato = true;
 				} else {
-					decoded = lottoFatture;
+					this.decoded = lottoFatture;
 				}
 
 			} catch(Exception e) {
@@ -119,6 +119,14 @@ public class LottoFattureAnalyzer {
 
 	public void setOriginal(byte[] original) {
 		this.original = original;
+	}
+
+	public byte[] getDecoded() {
+		return decoded;
+	}
+
+	public void setDecoded(byte[] decoded) {
+		this.decoded = decoded;
 	}
 
 }
