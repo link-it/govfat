@@ -2,11 +2,13 @@ package org.govmix.proxy.fatturapa.web.commons.exporter;
 
 import java.io.OutputStream;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
+import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.orm.dao.IDBTracciaSDIServiceSearch;
@@ -55,14 +57,14 @@ public class TracciaSdISingleFileExporter extends AbstractSingleFileXMLExporter<
 		case RC:return TipoXSL.TRACCIA_RC;
 		case SE: throw new Exception("Usare classe: " + ScartoECSingleFileExporter.class.getName());
 		default: return null;
-		
+
 		}
 	}
 
 	@Override
 	public void export(TracciaSDI object, OutputStream out,
 			org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter.FORMAT format)
-			throws ExportException {
+					throws ExportException {
 		switch(format) {
 		case PDF: this.exportAsPdf(object, out);
 		break;
@@ -118,9 +120,18 @@ public class TracciaSdISingleFileExporter extends AbstractSingleFileXMLExporter<
 	protected List<IdFattura> findIdFattura(String[] ids, boolean isAll) throws ServiceException, NotFoundException {
 		try {
 			TracciaSDI traccia = this.convertToObject(ids[0]);
-			return this.getFatturaBD().findAllIdFatturaByIdentificativoSdi(traccia.getIdentificativoSdi());
+			List<IdFattura> lst = new ArrayList<IdFattura>();
+			IdLotto idLottoPassive = new IdLotto(false);
+			idLottoPassive.setIdentificativoSdi(traccia.getIdentificativoSdi());
+			lst.addAll(this.getFatturaBD().findAllIdFatturaByIdLotto(idLottoPassive));
+			IdLotto idLottoAttive = new IdLotto(true);
+			idLottoAttive.setIdentificativoSdi(traccia.getIdentificativoSdi());
+			lst.addAll(this.getFatturaBD().findAllIdFatturaByIdLotto(idLottoAttive));
+
+			return lst;
 		} catch (Exception e) {
 			throw new ServiceException(e);
-		}	}
+		}
+	}
 
 }

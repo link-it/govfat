@@ -108,7 +108,7 @@ public class LottoSingleFileExporter extends AbstractSingleFileExporter<LottoFat
 	protected List<IdFattura> findIdFattura(String[] ids, boolean isAll) throws ServiceException, NotFoundException {
 		try {
 			LottoFatture lotto = ((JDBCLottoFattureServiceSearch)this.lottoFattureSearchDAO).get(Long.parseLong(ids[0]));
-			return this.getFatturaBD().findAllIdFatturaByIdentificativoSdi(lotto.getIdentificativoSdi());
+			return this.getFatturaBD().findAllIdFatturaByIdLotto(this.lottoFattureSearchDAO.convertToId(lotto));
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}

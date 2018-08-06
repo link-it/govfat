@@ -28,6 +28,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
+import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.dao.INotificaDecorrenzaTerminiServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCNotificaDecorrenzaTerminiServiceSearch;
@@ -130,7 +131,9 @@ public class NotificaDTSingleFileExporter extends AbstractSingleFileXMLExporter<
 	protected List<IdFattura> findIdFattura(String[] ids, boolean isAll) throws ServiceException, NotFoundException {
 		try {
 			NotificaDecorrenzaTermini decorrenza = ((JDBCNotificaDecorrenzaTerminiServiceSearch)this.notificaDTSearchDAO).get(Long.parseLong(ids[0]));
-			return this.getFatturaBD().findAllIdFatturaByIdentificativoSdi(decorrenza.getIdentificativoSdi());
+			IdLotto idLotto = new IdLotto(false);
+			idLotto.setIdentificativoSdi(decorrenza.getIdentificativoSdi());
+			return this.getFatturaBD().findAllIdFatturaByIdLotto(idLotto);
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}
