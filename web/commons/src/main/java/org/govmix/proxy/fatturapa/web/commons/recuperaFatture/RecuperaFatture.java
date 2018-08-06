@@ -73,7 +73,7 @@ public class RecuperaFatture {
 		this.dipartimentoBD = new DipartimentoBD(log);
 		this.utenteBD = new UtenteBD(log);
 		
-		this.sfe = new FatturaSingleFileExporter(log, false);
+		this.sfe = new FatturaSingleFileExporter(log);
 
 	}
 	
