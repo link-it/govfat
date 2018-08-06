@@ -50,20 +50,17 @@ public class FatturaSingleFileExporter extends AbstractSingleFileXMLExporter<Fat
 	private NotificaECSingleFileExporter notificaECSFE;
 	private NotificaDTSingleFileExporter notificaDTSFE;
 	private LottoSingleFileExporter lottoSFE;
-	private boolean fatturaAttiva;
 
-	public FatturaSingleFileExporter(Logger log, boolean fatturaAttiva) throws ServiceException, NotImplementedException, Exception {
+	public FatturaSingleFileExporter(Logger log) throws ServiceException, NotImplementedException, Exception {
 		super(log);
-		this.fatturaAttiva = fatturaAttiva;
 		this.allegatoSFE = new AllegatoSingleFileExporter(log);
 		this.notificaECSFE = new NotificaECSingleFileExporter(log);
 		this.notificaDTSFE = new NotificaDTSingleFileExporter(log);
 		this.lottoSFE = new LottoSingleFileExporter(log);
 	}
 
-	public FatturaSingleFileExporter(Logger log, Connection connection, boolean autocommit, boolean fatturaAttiva) throws ServiceException, NotImplementedException, Exception {
+	public FatturaSingleFileExporter(Logger log, Connection connection, boolean autocommit) throws ServiceException, NotImplementedException, Exception {
 		super(log, connection, autocommit);
-		this.fatturaAttiva = fatturaAttiva;
 		this.allegatoSFE = new AllegatoSingleFileExporter(log, connection, autocommit);
 		this.notificaECSFE = new NotificaECSingleFileExporter(log, connection, autocommit);
 		this.notificaDTSFE = new NotificaDTSingleFileExporter(log, connection, autocommit);
@@ -162,7 +159,7 @@ public class FatturaSingleFileExporter extends AbstractSingleFileXMLExporter<Fat
 
 			if(exportLotto) {
 				try{
-					IdLotto id = new IdLotto(this.fatturaAttiva);
+					IdLotto id = new IdLotto(object.getFatturazioneAttiva());
 					id.setIdentificativoSdi(object.getIdentificativoSdi());
 					LottoFatture lotto = this.lottoSFE.convertToObject(id);
 					this.lottoSFE.exportAsZip(lotto, zip, fatturaDir);

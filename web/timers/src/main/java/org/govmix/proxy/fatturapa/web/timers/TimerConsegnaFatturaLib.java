@@ -77,7 +77,7 @@ public class TimerConsegnaFatturaLib extends AbstractTimerLib {
 		try {
 			connection = DAOFactory.getInstance().getConnection();
 			FatturaPassivaBD fatturaElettronicaBD = new FatturaPassivaBD(log, connection, false);
-			FatturaSingleFileExporter sfe = new FatturaSingleFileExporter(this.log, connection, false, false);
+			FatturaSingleFileExporter sfe = new FatturaSingleFileExporter(this.log, connection, false);
 
 			Date limitDate = new Date();
 			
