@@ -63,6 +63,8 @@ public class FatturaFilter extends AbstractFilter {
 	private Integer anno;
 	
 	private List<StatoConservazioneType> statiConservazione;
+	
+	protected Boolean filtroConservazione = null;
 
 	public FatturaFilter(IExpressionConstructor expressionConstructor, Boolean fatturazioneAttiva) {
 		super(expressionConstructor);
@@ -77,6 +79,10 @@ public class FatturaFilter extends AbstractFilter {
 	public IExpression _toExpression() throws ServiceException {
 		try {
 			IExpression expression = this._toFatturaExpression();
+			
+			IExpression conservazioneExpression = this._toConservazioneExpression();
+			if(this.filtroConservazione != null && this.filtroConservazione.booleanValue() && conservazioneExpression != null)
+				expression.and(conservazioneExpression);
 
 			if(this.id != null) {
 				expression.equals(new CustomField("id", Long.class, "id", this.getRootTable()), this.id);
@@ -127,10 +133,12 @@ public class FatturaFilter extends AbstractFilter {
 			}
 			
 			if(this.idSipNull!= null) {
+				CustomField customField = new CustomField("id_sip", Long.class, "id_sip", this.getRootTable());
+				
 				if(this.idSipNull) {
-					expression.isNull(FatturaElettronica.model().ID_SIP.ID_SIP);
+					expression.isNull(customField);
 				} else {
-					expression.isNotNull(FatturaElettronica.model().ID_SIP.ID_SIP);
+					expression.isNotNull(customField);
 				}
 			}
 			
@@ -216,6 +224,14 @@ public class FatturaFilter extends AbstractFilter {
 	}
 	
 	protected IExpression _toFatturaExpression() throws ServiceException {
+		try {
+			return this.newExpression();
+		} catch (NotImplementedException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	protected IExpression _toConservazioneExpression() throws ServiceException {
 		try {
 			return this.newExpression();
 		} catch (NotImplementedException e) {
@@ -420,4 +436,13 @@ public class FatturaFilter extends AbstractFilter {
 	public void setIdSipNull(Boolean idSipNull) {
 		this.idSipNull = idSipNull;
 	}
+
+	public Boolean getFiltroConservazione() {
+		return filtroConservazione;
+	}
+
+	public void setFiltroConservazione(Boolean filtroConservazione) {
+		this.filtroConservazione = filtroConservazione;
+	}
+	
 }

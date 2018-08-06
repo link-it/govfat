@@ -84,6 +84,31 @@ public class FatturaAttivaFilter extends FatturaFilter {
 			throw new ServiceException(e);
 		}
 	}
+	
+	protected IExpression _toConservazioneExpression() throws ServiceException {
+			try {
+				IExpression expression = this.newExpression();
+				
+				List<StatoElaborazioneType> statoElaborazioneList = new ArrayList<StatoElaborazioneType>();
+				statoElaborazioneList.add(StatoElaborazioneType.RICEVUTA_DALLO_SDI);
+				statoElaborazioneList.add(StatoElaborazioneType.RICEVUTA_DAL_DESTINATARIO);
+				statoElaborazioneList.add(StatoElaborazioneType.MANCATA_CONSEGNA);
+				statoElaborazioneList.add(StatoElaborazioneType.IMPOSSIBILITA_DI_RECAPITO);
+				statoElaborazioneList.add(StatoElaborazioneType.RICEVUTO_ESITO_CEDENTE_PRESTATORE_ACCETTAZIONE);
+				statoElaborazioneList.add(StatoElaborazioneType.RICEVUTA_DECORRENZA_TERMINI);
+				statoElaborazioneList.add(StatoElaborazioneType.SOLO_CONSERVAZIONE);
+				
+				expression.in(FatturaElettronica.model().LOTTO_FATTURE.STATO_ELABORAZIONE_IN_USCITA, statoElaborazioneList);
+				
+				return expression;
+			} catch (NotImplementedException e) {
+				throw new ServiceException(e);
+			} catch (ExpressionNotImplementedException e) {
+				throw new ServiceException(e);
+			} catch (ExpressionException e) {
+				throw new ServiceException(e);
+			}
+	}
 
 	public List<StatoElaborazioneType> getStatoElaborazioneList() {
 		if(this.statoElaborazioneList == null) this.statoElaborazioneList = new ArrayList<StatoElaborazioneType>();

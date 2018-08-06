@@ -223,7 +223,9 @@ public class ConservazioneService extends BaseService<ConservazioneSearchForm> i
 				attiva = Costanti.TIPO_FATTURA_ATTIVA_VALUE.equals(search.getTipoFattura().getValue().getValue());
 			}
 
-			filter = fatturaBD.newFilter(attiva);
+			filter = attiva ? fatturaBD.newFatturaAttivaFilter() : fatturaBD.newFatturaPassivaFilter();
+			// escludiamo dalla ricerca le rifiutate
+			filter.setFiltroConservazione(true);			
 
 			// anno
 			if(search.getAnno().getValue() != null && !StringUtils.isEmpty(search.getAnno().getValue().getValue())){

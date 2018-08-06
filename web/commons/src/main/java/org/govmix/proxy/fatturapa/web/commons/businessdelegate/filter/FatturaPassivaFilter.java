@@ -86,6 +86,28 @@ public class FatturaPassivaFilter extends FatturaFilter {
 			throw new ServiceException(e);
 		}
 	}
+	
+	protected IExpression _toConservazioneExpression() throws ServiceException {
+		try {
+			IExpression expression = this.newExpression();
+
+			IExpression exprEsitoNull = this.newExpression();
+			exprEsitoNull.isNull(FatturaElettronica.model().ESITO).and().isNotNull(new CustomField("id_notifica_decorrenza_termini", Long.class, "id_notifica_decorrenza_termini", this.getRootTable()));
+			
+			IExpression exprEsitoOK = this.newExpression();
+			exprEsitoOK.equals(FatturaElettronica.model().ESITO, EsitoType.INVIATA_ACCETTATO);
+			
+			expression.or(exprEsitoNull, exprEsitoOK);
+			
+			return expression;
+		} catch (NotImplementedException e) {
+			throw new ServiceException(e);
+		} catch (ExpressionNotImplementedException e) {
+			throw new ServiceException(e);
+		} catch (ExpressionException e) {
+			throw new ServiceException(e);
+		}
+	}
 
 	public Boolean getModalitaPush() {
 		return modalitaPush;

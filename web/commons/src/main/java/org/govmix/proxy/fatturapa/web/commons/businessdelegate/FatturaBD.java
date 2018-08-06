@@ -32,11 +32,13 @@ import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.Utente;
+import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.dao.IDBFatturaElettronicaService;
 import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaService;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.FatturaElettronicaFieldConverter;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaAttivaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaPassivaFilter;
 import org.openspcoop2.generic_project.beans.CustomField;
@@ -47,6 +49,9 @@ import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
+import org.openspcoop2.generic_project.expression.IExpression;
+import org.openspcoop2.generic_project.expression.IPaginatedExpression;
+import org.openspcoop2.generic_project.expression.SortOrder;
 
 public class FatturaBD extends BaseBD {
 
@@ -65,7 +70,7 @@ public class FatturaBD extends BaseBD {
 	public FatturaBD() throws Exception {
 		this(Logger.getLogger(FatturaBD.class));
 	}
-	
+
 	public FatturaFilter newFilter(Boolean fatturazioneAttiva) {
 		return new FatturaFilter(this.service,fatturazioneAttiva);
 	}
@@ -104,12 +109,12 @@ public class FatturaBD extends BaseBD {
 		}
 	}
 
-	
+
 	public FatturaElettronica get(IdFattura id) throws NotFoundException, ServiceException {
 		FatturaFilter filter = this.newFilter();
 		filter.setIdentificativoSdi(id.getIdentificativoSdi());
 		filter.setPosizione(id.getPosizione());
-		
+
 		if(this.count(filter) == 0) {
 			throw new NotFoundException();
 		}
@@ -123,13 +128,13 @@ public class FatturaBD extends BaseBD {
 			FatturaFilter filter = this.newFilter();
 			filter.setIdentificativoSdi(identificativoSdi);
 			filter.setNumero(numero);
-			
+
 			if(this.count(filter) == 0) {
 				throw new NotFoundException();
 			}
 
 			return this.findAll(filter).get(0);
-			
+
 		} catch (ServiceException e) {
 			throw new Exception(e);
 		}
@@ -142,7 +147,7 @@ public class FatturaBD extends BaseBD {
 	public FatturaElettronica findByIdFiscaleNumeroDataImporto(String idFiscaleFornitore, String numero, Date date, Double importo) throws ServiceException, NotFoundException {
 		try {
 
-			
+
 			String codNazione = null;
 			String idFiscale = null;
 
@@ -158,32 +163,32 @@ public class FatturaBD extends BaseBD {
 
 			filter.setCpCodiceFiscale(idFiscale);
 			filter.setNumero(numero);
-			
+
 			Calendar dataMin = Calendar.getInstance();
 			dataMin.setTimeInMillis(date.getTime());
 			dataMin.set(Calendar.HOUR, 0);
 			dataMin.set(Calendar.MINUTE, 0);
 			dataMin.set(Calendar.SECOND, 0);
-			
+
 			Calendar dataMax = Calendar.getInstance();
 			dataMax.setTimeInMillis(dataMin.getTimeInMillis());
 			dataMax.add(Calendar.DATE, 1);
-			
+
 			filter.setDataFatturaMin(dataMin.getTime());
 			filter.setDataFatturaMax(dataMax.getTime());
-			
+
 			if(importo != null)
 				filter.setImporto(importo);
 
 			List<FatturaElettronica> findAllIds = this.findAll(filter);
-			
+
 			if(findAllIds == null || findAllIds.isEmpty())
 				throw new NotFoundException();
 			if(findAllIds.size() > 1)
 				throw new MultipleResultException();
-			
+
 			return findAllIds.get(0);
-			
+
 		} catch (MultipleResultException e) {
 			throw new ServiceException(e);
 		}
@@ -192,7 +197,7 @@ public class FatturaBD extends BaseBD {
 	public FatturaElettronica findByIdPcc(String idPcc) throws Exception {
 		throw new NotImplementedException();
 	}
-	
+
 	public boolean exists(IdFattura id) throws ServiceException {
 		FatturaFilter filter = this.newFilter();
 		filter.setIdentificativoSdi(id.getIdentificativoSdi());
@@ -208,7 +213,7 @@ public class FatturaBD extends BaseBD {
 		for(FatturaElettronica fatt: findAll) {
 			findAllIds.add(this.convertToId(fatt));
 		}
-		
+
 		return findAllIds;
 	}
 
@@ -233,7 +238,7 @@ public class FatturaBD extends BaseBD {
 			throw new Exception(e);
 		}
 	}
-	
+
 	public void aggiornaProtocollo(IdFattura idFattura, String protocollo) throws Exception {
 		try {
 			this.service.updateFields(idFattura, new UpdateField(FatturaElettronica.model().PROTOCOLLO, protocollo));
@@ -249,10 +254,10 @@ public class FatturaBD extends BaseBD {
 	public List<IdFattura> getIdFattureByUtente(Utente utente) throws Exception {
 
 		try {
-			
+
 			FatturaFilter newFilter = newFilter();
 			newFilter.setUtente(utente);
-			
+
 			return this.service.findAllIds(newFilter.toPaginatedExpression());
 		} catch (NotImplementedException e) {
 			this.log.error("Errore durante la getIdFattureByUtente: " + e.getMessage(), e);
@@ -273,7 +278,7 @@ public class FatturaBD extends BaseBD {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	public List<FatturaElettronica> findAll(FatturaFilter filter)throws ServiceException {
 		try {
 			return this.service.findAll(filter.toPaginatedExpression());
@@ -281,7 +286,7 @@ public class FatturaBD extends BaseBD {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	public List<IdFattura> findAllIds(FatturaFilter filter)throws ServiceException {
 		try {
 			return this.service.findAllIds(filter.toPaginatedExpression());
@@ -289,7 +294,7 @@ public class FatturaBD extends BaseBD {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	public List<Long> findAllTableIds(FatturaFilter filter)throws ServiceException {
 		try {
 			return ((IDBFatturaElettronicaService)this.service).findAllTableIds(filter.toPaginatedExpression());
@@ -307,9 +312,9 @@ public class FatturaBD extends BaseBD {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	public List<String> getListAutocomplete(FatturaFilter filter, IField field) throws ServiceException {
-		
+
 		List<Map<String,Object>> select = null;
 		select = this.select(filter, field);
 		List<String> cpValues = new ArrayList<String>();
@@ -318,8 +323,8 @@ public class FatturaBD extends BaseBD {
 				cpValues.add((String)record.get(field.getFieldName()));
 			}
 		}
-		
-		
+
+
 		return cpValues;
 	}
 
@@ -331,18 +336,18 @@ public class FatturaBD extends BaseBD {
 			List<Object> listObjects = new ArrayList<Object>();
 
 			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase());
-			
+
 			update.append("update "+converter.toTable(FatturaElettronica.model())+" set ");
 			update.append(converter.toColumn(FatturaElettronica.model().IDENTIFICATIVO_SDI, false)).append(" = ? ");
 			listObjects.add(identificativoSDI);
-			
+
 			update.append(" where ").append(converter.toColumn(FatturaElettronica.model().IDENTIFICATIVO_SDI, false)).append(" = ? ");
 			update.append(" AND ").append(converter.toColumn(FatturaElettronica.model().FATTURAZIONE_ATTIVA, false)).append(" = ? ");
 			listObjects.add(idLotto.getIdentificativoSdi());
 			listObjects.add(idLotto.isFatturazioneAttiva());
-			
+
 			this.service.nativeUpdate(update.toString(), listObjects.toArray(new Object[]{}));
-			
+
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la assegnaIdentificativoSDIAInteroLotto: " + e.getMessage(), e);
 			throw new Exception(e);
@@ -361,7 +366,7 @@ public class FatturaBD extends BaseBD {
 			List<Object> listObjects = new ArrayList<Object>();
 
 			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase());
-			
+
 			update.append("update "+converter.toTable(FatturaElettronica.model())+" set ");
 			if(protocollo != null) {
 				update.append(converter.toColumn(FatturaElettronica.model().PROTOCOLLO, false)).append(" = ? , ");
@@ -370,19 +375,19 @@ public class FatturaBD extends BaseBD {
 
 			update.append(converter.toColumn(FatturaElettronica.model().STATO_PROTOCOLLAZIONE, false)).append(" = ? , ");
 			listObjects.add(protocollo != null ? StatoProtocollazioneType.PROTOCOLLATA : StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE);
-			
+
 			update.append(converter.toColumn(FatturaElettronica.model().DATA_PROTOCOLLAZIONE, false)).append(" = ? ");
 			listObjects.add(new Date());
-			
+
 			update.append(" where ")
 			.append(converter.toColumn(FatturaElettronica.model().IDENTIFICATIVO_SDI, false)).append(" = ? ")
 			.append(" AND ").append(converter.toColumn(FatturaElettronica.model().FATTURAZIONE_ATTIVA, false)).append(" = ? ");
-			
+
 			listObjects.add(idLotto.getIdentificativoSdi());
 			listObjects.add(idLotto.getFatturazioneAttiva());
-			
+
 			this.service.nativeUpdate(update.toString(), listObjects.toArray(new Object[]{}));
-			
+
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la updateProtocollo: " + e.getMessage(), e);
 			throw new Exception(e);
@@ -395,14 +400,14 @@ public class FatturaBD extends BaseBD {
 	public void erroreProtocolloAInteroLotto(IdLotto idLotto) throws Exception {
 		this.assegnaProtocolloAInteroLotto(idLotto, null);
 	}
-	
+
 	public Long getIdEsitoScadenza(long idFattura) throws ServiceException, NotFoundException {
 		try {
 			String idEsito = "id_scadenza";
 			CustomField esitoField = new CustomField(idEsito, Long.class, idEsito, this.getRootTable(this.service));
 			FatturaFilter newFilter = this.newFilter();
 			newFilter.setId(idFattura);
-			
+
 			List<Map<String,Object>> select = this.select(newFilter, esitoField);
 
 			if(select.size() > 1) {
@@ -429,7 +434,7 @@ public class FatturaBD extends BaseBD {
 			CustomField esitoField = new CustomField(idEsito, Long.class, idEsito, this.getRootTable(this.service));
 			FatturaFilter newFilter = this.newFilter();
 			newFilter.setId(idFattura);
-			
+
 			List<Map<String,Object>> select = this.select(newFilter, esitoField);
 
 			if(select.size() > 1) {
@@ -450,24 +455,23 @@ public class FatturaBD extends BaseBD {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 
 	public List<String> getAutocompletamentoCedentePrestatoreDenominazione(FatturaPassivaFilter filter) throws ServiceException {
 		return this.getListAutocomplete(filter, FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE);
 	}
-	
+
 	public List<String> getAutocompletamentoCessionarioCommittenteDenominazione(FatturaFilter filter) throws ServiceException {
 		return this.getListAutocomplete(filter, FatturaElettronica.model().CESSIONARIO_COMMITTENTE_DENOMINAZIONE);
 	}
-	
+
 	public List<String> getAutocompletamentoNumero(FatturaFilter filter) throws ServiceException {
 		return this.getListAutocomplete(filter, FatturaElettronica.model().NUMERO);
 	}
 
-	public void inviaInConservazione(List<Long> ids) throws ServiceException {
+	public void inviaInConservazione(List<Long> ids, StatoConservazioneType statoConservazione) throws ServiceException {
 		this.log.info(String.format("invio in conservazione %d fatture", ids.size()));
-		
-		
+
 		try {
 
 			StringBuffer update = new StringBuffer();
@@ -475,26 +479,25 @@ public class FatturaBD extends BaseBD {
 			List<Object> listObjects = new ArrayList<Object>();
 
 			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase());
-			
+
 			update.append("update ").append(converter.toTable(FatturaElettronica.model())).append(" set ");
 			update.append(converter.toColumn(FatturaElettronica.model().STATO_CONSERVAZIONE, false)).append(" = ? ");
-			
+
 			listObjects.add(StatoConservazioneType.PRESA_IN_CARICO.toString());
-			
-			
+
 			StringBuffer questionMarks = new StringBuffer();
 			for(Long id: ids) {
 				if(questionMarks.length() > 0) {
 					questionMarks.append(",");
 				}
 				questionMarks.append("?");
-				
+
 				listObjects.add(id);
 			}
 			update.append("where id in (").append(questionMarks.toString()).append(")");
-			
+
 			this.service.nativeUpdate(update.toString(), listObjects.toArray(new Object[]{}));
-			
+
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la inviaInConservazione: " + e.getMessage(), e);
 			throw e;
@@ -511,11 +514,16 @@ public class FatturaBD extends BaseBD {
 
 	}
 
-
 	public FatturaFilter newFilter() {
 		return new FatturaFilter(this.service);
 	}
-	
+	public FatturaFilter newFatturaPassivaFilter() {
+		return new FatturaPassivaFilter(this.service);
+	}
+	public FatturaFilter newFatturaAttivaFilter() {
+		return new FatturaAttivaFilter(this.service);
+	}
+
 
 	public void assegnaIdSip(FatturaElettronica fattura, Long id) throws ServiceException {
 		try {
@@ -539,6 +547,41 @@ public class FatturaBD extends BaseBD {
 		}
 	}
 
+	public void updateStatoConservazione(FatturaElettronica fattura, StatoConservazioneType statoConsegna) throws Exception {
+		try {
+			List<UpdateField> fields = new ArrayList<UpdateField>();
+			fields.add(new UpdateField(FatturaElettronica.model().STATO_CONSERVAZIONE, statoConsegna));
+			IdFattura idFAttura = this.service.convertToId(fattura);
+			this.service.updateFields(idFAttura, fields.toArray(new UpdateField[]{}));
+		} catch (ServiceException e) {
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			throw new Exception(e);
+		}
+	}
+	public List<FatturaElettronica> getFattureDaConservare(Date dataLimite, int offset, int limit) throws Exception {
+		try {
+			IPaginatedExpression expression = this.service.toPaginatedExpression(getFattureDaConservareExpression(dataLimite));
 
+			expression.sortOrder(SortOrder.ASC);
+			expression.addOrder(FatturaElettronica.model().DATA_RICEZIONE);
+
+			expression.offset(offset);
+			expression.limit(limit);
+
+			return this.service.findAll(expression);
+		} catch (ServiceException e) {
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			throw new Exception(e);
+		}
+	}
+
+	private IExpression getFattureDaConservareExpression(Date dataLimite) throws Exception {
+		IExpression expression = this.service.newExpression();
+		expression.equals(FatturaElettronica.model().ID_SIP.STATO_CONSEGNA, StatoConsegnaType.NON_CONSEGNATA);
+		expression.lessEquals(FatturaElettronica.model().ID_SIP.DATA_ULTIMA_CONSEGNA, dataLimite);
+		return expression;
+	}
 
 }

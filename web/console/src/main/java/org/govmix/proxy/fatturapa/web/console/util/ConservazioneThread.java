@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
+import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FilterSortWrapper;
@@ -18,6 +19,7 @@ public class ConservazioneThread implements Runnable{
 	private FatturaBD fatturaBD;
 	private FatturaFilter fatturaFilter;
 	private static Logger log = LoggerManager.getConsoleLogger();
+	private StatoConservazioneType statoConservazione;
 
 	public ConservazioneThread() {
 		ConservazioneThread.log.debug("Init Conservazione Thread completata.");
@@ -35,7 +37,7 @@ public class ConservazioneThread implements Runnable{
 				ids = getLstIdFattura(fatturaBD, fatturaFilter);
 			}
 
-			this.fatturaBD.inviaInConservazione(ids);
+			this.fatturaBD.inviaInConservazione(ids, this.statoConservazione);
 			
 			ConservazioneThread.log.debug("Conservazione Thread elaborazione completata");
 		} catch(Exception e) {
@@ -120,6 +122,12 @@ public class ConservazioneThread implements Runnable{
 		this.fatturaFilter = fatturaFilter;
 	}
 
+	public StatoConservazioneType getStatoConservazione() {
+		return statoConservazione;
+	}
 
+	public void setStatoConservazione(StatoConservazioneType statoConservazione) {
+		this.statoConservazione = statoConservazione;
+	}
 
 }

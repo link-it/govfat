@@ -22,8 +22,10 @@ package org.govmix.proxy.fatturapa.web.console.mbean;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -31,12 +33,12 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
 
-import net.sourceforge.spnego.SpnegoAuthenticator;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
+import org.govmix.proxy.fatturapa.orm.Ente;
 import org.govmix.proxy.fatturapa.orm.Evento;
+import org.govmix.proxy.fatturapa.orm.IdEnte;
 import org.govmix.proxy.fatturapa.orm.Protocollo;
 import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.constants.UserRole;
@@ -48,6 +50,8 @@ import org.govmix.proxy.fatturapa.web.console.util.ConsoleProperties;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.LoginBean;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils;
+
+import net.sourceforge.spnego.SpnegoAuthenticator;
 
 /**
  * LoginMBean bean di sessione per la gestione della sessione dell'utente.
@@ -65,6 +69,8 @@ public class LoginMBean extends LoginBean{
 	private Utente loggedUtente = null;
 
 	private List<Dipartimento> listDipartimenti;
+	
+	private Map<String,Ente> mapEnti;
 
 	//	private Ente ente = null;
 
@@ -231,6 +237,22 @@ public class LoginMBean extends LoginBean{
 
 
 		return this.listDipartimenti;
+	}
+	
+	public Map<String,Ente> getMapEnti(){
+		if(this.mapEnti == null || this.mapEnti.isEmpty() ) {
+			this.mapEnti = new HashMap<String, Ente>();
+			List<Dipartimento> listaDipartimenti = this.getListDipartimenti();
+			if(listaDipartimenti != null && listaDipartimenti.size() > 0)
+				for (Dipartimento dipartimento : listaDipartimenti) {
+					IdEnte ente = dipartimento.getEnte();
+					if(!this.mapEnti.containsKey(ente.getNome())){
+						this.mapEnti.put(ente.getNome(),((ILoginDao)this.getLoginDao()).getEnte(ente.getNome()));
+					}
+				}
+		}
+			
+		return this.mapEnti;
 	}
 
 	public void setListDipartimenti(List<Dipartimento> listDipartimenti) {
