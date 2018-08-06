@@ -375,7 +375,7 @@ public class ConsegnaFatturaUtils {
 				lotto.getTerzoIntermediarioOSoggettoEmittenteCodiceFiscale(), lotto.getTerzoIntermediarioOSoggettoEmittenteCodice(), lotto.getTerzoIntermediarioOSoggettoEmittentePaese(), lotto.getFatturazioneAttiva(), xml);
 		params.setPosizioneFatturaPA(posizione);
 		params.setProtocollo(lotto.getProtocollo());
-		
+		params.setFatturazioneAttiva(lotto.getFatturazioneAttiva());
 		return params;
 	}
 

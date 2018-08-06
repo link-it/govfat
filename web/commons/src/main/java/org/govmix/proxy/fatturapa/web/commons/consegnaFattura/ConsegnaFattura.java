@@ -59,6 +59,7 @@ public class ConsegnaFattura {
 		FatturaElettronica fatturaElettronica = converter.getFatturaElettronica();
 		List<AllegatoFattura> allegatiLst = converter.getAllegati();
 
+		fatturaElettronica.setFatturazioneAttiva(params.isFatturazioneAttiva());
 		IdFattura idFattura = this.fatturaBD.convertToId(fatturaElettronica);
 
 		if(this.validazioneDAOAbilitata) {
@@ -71,7 +72,6 @@ public class ConsegnaFattura {
 			}	
 		}
 		
-		fatturaElettronica.setFatturazioneAttiva(params.isFatturazioneAttiva());
 		this.fatturaBD.create(fatturaElettronica);
 
 		if(allegatiLst != null) {
