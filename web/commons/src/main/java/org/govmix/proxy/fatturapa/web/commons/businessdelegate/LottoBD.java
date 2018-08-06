@@ -167,7 +167,7 @@ public class LottoBD extends BaseBD {
 
 	private IExpression getLottiDaConservareExpression(Date dataLimite) throws Exception {
 		IExpression expression = this.service.newExpression();
-		expression.equals(LottoFatture.model().ID_SIP.STATO_CONSEGNA, StatoConsegnaType.NON_CONSEGNATA);
+		expression.in(LottoFatture.model().ID_SIP.STATO_CONSEGNA, StatoConsegnaType.NON_CONSEGNATA, StatoConsegnaType.IN_RICONSEGNA);
 		expression.lessEquals(LottoFatture.model().ID_SIP.DATA_ULTIMA_CONSEGNA, dataLimite);
 		return expression;
 	}

@@ -92,6 +92,21 @@ public class SIPBD extends BaseBD {
 		}
 	}
 
+	public void updateStatoConsegna(IdSip idSip, StatoConsegnaType statoConsegna) throws Exception {
+		try {
+			
+			List<UpdateField> fields = new ArrayList<UpdateField>();
+			
+			fields.add(new UpdateField(SIP.model().STATO_CONSEGNA, statoConsegna));
+			
+			this.service.updateFields(idSip, fields.toArray(new UpdateField[]{}));
+		} catch (ServiceException e) {
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			throw new Exception(e);
+		}
+	}
+
 	public IdSip convertToId(SIP sip) throws Exception {
 		try {
 			return this.service.convertToId(sip);

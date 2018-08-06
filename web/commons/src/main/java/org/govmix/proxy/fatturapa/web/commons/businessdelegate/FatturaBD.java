@@ -485,6 +485,14 @@ public class FatturaBD extends BaseBD {
 			update.append(converter.toColumn(FatturaElettronica.model().STATO_CONSERVAZIONE, false)).append(" = ? ");
 
 			StatoConservazioneType newStatoConservazione = StatoConservazioneType.PRESA_IN_CARICO;
+			switch (statoConservazione) {
+			case CONSERVAZIONE_COMPLETATA: throw new ServiceException("Operazione non valida");
+			case CONSERVAZIONE_FALLITA: newStatoConservazione= StatoConservazioneType.IN_RICONSEGNA; break;
+			case ERRORE_CONSEGNA: newStatoConservazione= StatoConservazioneType.IN_RICONSEGNA; break;
+			case IN_RICONSEGNA: throw new ServiceException("Operazione non valida");
+			case NON_INVIATA: newStatoConservazione= StatoConservazioneType.PRESA_IN_CARICO; break;
+			case PRESA_IN_CARICO: throw new ServiceException("Operazione non valida");
+			}
 			listObjects.add(newStatoConservazione .toString());
 
 			StringBuffer questionMarks = new StringBuffer();
@@ -581,7 +589,7 @@ public class FatturaBD extends BaseBD {
 
 	private IExpression getFattureDaConservareExpression(Date dataLimite) throws Exception {
 		IExpression expression = this.service.newExpression();
-		expression.equals(FatturaElettronica.model().ID_SIP.STATO_CONSEGNA, StatoConsegnaType.NON_CONSEGNATA);
+		expression.in(FatturaElettronica.model().ID_SIP.STATO_CONSEGNA, StatoConsegnaType.NON_CONSEGNATA, StatoConsegnaType.IN_RICONSEGNA);
 		expression.lessEquals(FatturaElettronica.model().ID_SIP.DATA_ULTIMA_CONSEGNA, dataLimite);
 		return expression;
 	}

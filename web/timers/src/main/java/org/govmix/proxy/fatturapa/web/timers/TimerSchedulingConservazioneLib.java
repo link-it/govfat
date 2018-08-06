@@ -67,7 +67,7 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 
 			int offset = 0;
 			int LIMIT_STEP = Math.min(this.limit, 500);
-			
+
 			FatturaFilter filter = fatturaElettronicaBD.newFilter();
 			filter.getStatiConservazione().add(StatoConservazioneType.PRESA_IN_CARICO);
 			filter.setIdSipNull(true);
@@ -90,7 +90,7 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 					sipBD.create(sipFattura);
 					fatturaElettronicaBD.assegnaIdSip(fattura,sipFattura.getId());
 
- 
+
 					//controlli da fare per abilitare la spedizione del lotto:
 					// 1) fatturazione passiva
 					// 2) lotto di piu' fatture (si inserisce alla fattura con posizione 2 per evitare di inserirlo piu' volte)
@@ -109,15 +109,48 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 
 						lottoBD.assegnaIdSip(fattura.getLottoFatture(),sipLotto.getId());
 					}
-					
-					this.log.debug("Scheduling per la conservazione completato.");
+
 				}
-				
+
 				// sposto l'offset
 				offset += LIMIT_STEP;
 				filter.setOffset(offset);
 				fatturePerAnno = fatturaElettronicaBD.findAll(filter);
 			}
+
+
+			FatturaFilter filter2 = fatturaElettronicaBD.newFilter();
+			filter2.getStatiConservazione().add(StatoConservazioneType.IN_RICONSEGNA);
+			filter2.setOffset(offset);
+			filter2.setLimit(LIMIT_STEP);
+			List<FatturaElettronica> fatturePerAnnoInRiconsegna = fatturaElettronicaBD.findAll(filter2);
+
+			while(fatturePerAnnoInRiconsegna != null && !fatturePerAnnoInRiconsegna.isEmpty()) {
+				this.log.debug("Trovate ["+fatturePerAnnoInRiconsegna.size()+"] fatture da reinviare in conservazione...");
+
+				for(FatturaElettronica fattura: fatturePerAnnoInRiconsegna) {
+
+					sipBD.updateStatoConsegna(fattura.getIdSIP(), StatoConsegnaType.IN_RICONSEGNA);
+
+
+					//controlli da fare per abilitare la spedizione del lotto:
+					// 1) fatturazione passiva
+					// 2) lotto di piu' fatture (si inserisce alla fattura con posizione 2 per evitare di inserirlo piu' volte)
+					// 3) il lotto no ndeve avere gia' associato il sip
+					if(!fattura.getFatturazioneAttiva() && fattura.getPosizione() == 2 && fattura.getLottoFatture().getIdSIP() == null) {
+						sipBD.updateStatoConsegna(fattura.getLottoFatture().getIdSIP(), StatoConsegnaType.IN_RICONSEGNA);
+					}
+
+				}
+
+				// sposto l'offset
+				offset += LIMIT_STEP;
+				filter2.setOffset(offset);
+				fatturePerAnnoInRiconsegna = fatturaElettronicaBD.findAll(filter2);
+
+
+			}
+
 		}catch(Exception e){
 			this.log.error("Errore durante l'esecuzione del batch SchedulingConservazione: "+e.getMessage(), e);
 			connection.rollback();
