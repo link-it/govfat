@@ -558,23 +558,25 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 		if(idMappingResolutionBehaviour==null ||
 			(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
 		){
-			// Object _lottoFatture_sip (recupero id)
-			ISQLQueryObject sqlQueryObjectGet_lottoFatture_sip_readFkId = sqlQueryObjectGet.newSQLQueryObject();
-			sqlQueryObjectGet_lottoFatture_sip_readFkId.addFromTable(this.getLottoFattureFieldConverter().toTable(org.govmix.proxy.fatturapa.orm.LottoFatture.model()));
-			sqlQueryObjectGet_lottoFatture_sip_readFkId.addSelectField("id_sip");
-			sqlQueryObjectGet_lottoFatture_sip_readFkId.addWhereCondition("id=?");
-			sqlQueryObjectGet_lottoFatture_sip_readFkId.setANDLogicOperator(true);
-			Long idFK_lottoFatture_sip = (Long) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_lottoFatture_sip_readFkId.createSQLQuery(), jdbcProperties.isShowSql(),Long.class,
-					new JDBCObject(lottoFatture.getId(),Long.class));
-			
-			org.govmix.proxy.fatturapa.orm.IdSip id_lottoFatture_sip = null;
-			if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
-				id_lottoFatture_sip = ((JDBCSIPServiceSearch)(this.getServiceManager().getSIPServiceSearch())).findId(idFK_lottoFatture_sip, false);
-			}else{
-				id_lottoFatture_sip = new org.govmix.proxy.fatturapa.orm.IdSip();
-			}
-			id_lottoFatture_sip.setId(idFK_lottoFatture_sip);
-			lottoFatture.setIdSIP(id_lottoFatture_sip);
+			try {
+				// Object _lottoFatture_sip (recupero id)
+				ISQLQueryObject sqlQueryObjectGet_lottoFatture_sip_readFkId = sqlQueryObjectGet.newSQLQueryObject();
+				sqlQueryObjectGet_lottoFatture_sip_readFkId.addFromTable(this.getLottoFattureFieldConverter().toTable(org.govmix.proxy.fatturapa.orm.LottoFatture.model()));
+				sqlQueryObjectGet_lottoFatture_sip_readFkId.addSelectField("id_sip");
+				sqlQueryObjectGet_lottoFatture_sip_readFkId.addWhereCondition("id=?");
+				sqlQueryObjectGet_lottoFatture_sip_readFkId.setANDLogicOperator(true);
+				Long idFK_lottoFatture_sip = (Long) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_lottoFatture_sip_readFkId.createSQLQuery(), jdbcProperties.isShowSql(),Long.class,
+						new JDBCObject(lottoFatture.getId(),Long.class));
+				
+				org.govmix.proxy.fatturapa.orm.IdSip id_lottoFatture_sip = null;
+				if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
+					id_lottoFatture_sip = ((JDBCSIPServiceSearch)(this.getServiceManager().getSIPServiceSearch())).findId(idFK_lottoFatture_sip, false);
+				}else{
+					id_lottoFatture_sip = new org.govmix.proxy.fatturapa.orm.IdSip();
+				}
+				id_lottoFatture_sip.setId(idFK_lottoFatture_sip);
+				lottoFatture.setIdSIP(id_lottoFatture_sip);
+			} catch(NotFoundException e) {}
 		}
 
 		

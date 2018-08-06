@@ -483,7 +483,8 @@ public class FatturaBD extends BaseBD {
 			update.append("update ").append(converter.toTable(FatturaElettronica.model())).append(" set ");
 			update.append(converter.toColumn(FatturaElettronica.model().STATO_CONSERVAZIONE, false)).append(" = ? ");
 
-			listObjects.add(StatoConservazioneType.PRESA_IN_CARICO.toString());
+			StatoConservazioneType newStatoConservazione = StatoConservazioneType.PRESA_IN_CARICO;
+			listObjects.add(newStatoConservazione .toString());
 
 			StringBuffer questionMarks = new StringBuffer();
 			for(Long id: ids) {
