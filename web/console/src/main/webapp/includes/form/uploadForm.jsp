@@ -28,6 +28,7 @@ Logger log = LoggerManager.getConsoleLogger();
 String tipiAccettati = ConsoleProperties.getInstance(log).getFatturaAttivaCaricamentoTipologieFileAccettati();
 int numeroMassimoFileAccettati = ConsoleProperties.getInstance(log).getFatturaAttivaCaricamentoMaxNumeroFile();
 String servletUrl = request.getContextPath() + FatturaElettronicaAttivaUploadServlet.FATTURA_ELETTRONICA_ATTIVA_UPLOAD_SERVLET_PATH;
+Long dimensioneMassimaFile = ConsoleProperties.getInstance(log).getFatturaAttivaCaricamentoDimensioneMassimaFile();
 
 LoginMBean lb = (LoginMBean) session.getAttribute("loginBean");
 Locale locale = lb.getCurrentLocal();
@@ -216,7 +217,9 @@ $(function () {
         disableImagePreview : true,
       	maxNumberOfFiles : <%=numeroMassimoFileAccettati %>,
         disableImageResize: true,
-        maxFileSize: 999000,
+        <% if(dimensioneMassimaFile != null){%>
+	        maxFileSize: <%= dimensioneMassimaFile %>,
+        <% } %>
         acceptFileTypes: /(\.|\/)(<%=tipiAccettati %>)$/i
     });
     
