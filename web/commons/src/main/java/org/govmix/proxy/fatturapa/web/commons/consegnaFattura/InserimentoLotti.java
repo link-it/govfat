@@ -46,21 +46,20 @@ public class InserimentoLotti {
 			List<IdLotto> lstIdentificativoEfatt = new ArrayList<IdLotto>();
 			
 			for(InserimentoLottoRequest request: requestList) {
-				String type = null;
-				if(request.getNomeFile().toLowerCase().endsWith("xml")) {
-					if(!this.getDipartimento(request.getNomeFile(), request.getDipartimento()).getFirmaAutomatica()){
-						throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
-					}
-					type= "XML";
-				} else if(request.getNomeFile().toLowerCase().endsWith("p7m")) {
+				
+				LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), log);
+				
+				if(analizer.isFirmato()) {
 					if(this.getDipartimento(request.getNomeFile(), request.getDipartimento()).getFirmaAutomatica()){
 						throw new InserimentoLottiException(CODICE.ERRORE_FILE_FIRMATO, request.getNomeFile(), request.getDipartimento());
 					}
-					type= "P7M";
 				} else {
-					throw new InserimentoLottiException(CODICE.ERRORE_FORMATO_FILE, request.getNomeFile());
+					if(!this.getDipartimento(request.getNomeFile(), request.getDipartimento()).getFirmaAutomatica()){
+						throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
+					}
 				}
 
+				String type = analizer.isP7M() ? "P7M" : "XML"; 
 				LottoFatture lotto = getLotto(request, lottoBD, type);
 				lotto.setStatoElaborazioneInUscita(StatoElaborazioneType.PRESA_IN_CARICO);
 				
@@ -119,42 +118,6 @@ public class InserimentoLotti {
 
 	}
 
-	public void checkLotto(List<InserimentoLottoRequest> requestList) throws InserimentoLottiException {
-		for(InserimentoLottoRequest request: requestList) {
-			Dipartimento dipartimento = null;
-			
-			dipartimento = this.getDipartimento(request.getNomeFile(), request.getDipartimento());
-			
-			if(!dipartimento.getFatturazioneAttiva()) {
-				throw new InserimentoLottiException(CODICE.ERRORE_DIPARTIMENTO_NON_ABILITATO);
-			}
-			
-			if(request.getNomeFile().toLowerCase().endsWith("xml")) {
-				if(!dipartimento.getFirmaAutomatica()){
-					throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
-				}
-			} else if(request.getNomeFile().toLowerCase().endsWith("p7m")) {
-				if(dipartimento.getFirmaAutomatica()){
-					throw new InserimentoLottiException(CODICE.ERRORE_FILE_FIRMATO, request.getNomeFile(), request.getDipartimento());
-				}
-			} else {
-				throw new InserimentoLottiException(CODICE.ERRORE_FORMATO_FILE, request.getNomeFile());
-			}
-		}
-	}
-
-	public void checkLottoSoloConservazione(List<InserimentoLottoSoloConservazioneRequest> requestList) throws InserimentoLottiException {
-		for(InserimentoLottoSoloConservazioneRequest request: requestList) {
-			if(request.getNomeFile().toLowerCase().endsWith("xml")) {
-				throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO_CONSERVAZIONE, request.getNomeFile());
-			} else if(request.getNomeFile().toLowerCase().endsWith("p7m")) {
-				this.getDipartimento(request.getNomeFile(), request.getDipartimento()); //check esistenza del dipartimento
-			} else {
-				throw new InserimentoLottiException(CODICE.ERRORE_FORMATO_FILE, request.getNomeFile());
-			}
-		}
-	}
-
 	public InserimentoLottoResponse inserisciLottoSoloConservazione(List<InserimentoLottoSoloConservazioneRequest> requestList) {
 		InserimentoLottoResponse inserimentoLottoResponse = new InserimentoLottoResponse();
 		
@@ -169,14 +132,16 @@ public class InserimentoLotti {
 			List<IdLotto> lstIdentificativoEfatt = new ArrayList<IdLotto>();
 
 			for(InserimentoLottoSoloConservazioneRequest request: requestList) {
-				String type = "P7M";
-				if(request.getNomeFile().toLowerCase().endsWith("xml")) {
-					throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO_CONSERVAZIONE, request.getNomeFile());
-				} else if(request.getNomeFile().toLowerCase().endsWith("p7m")) {
-					this.getDipartimento(request.getNomeFile(), request.getDipartimento()); //check esistenza del dipartimento
-				} else {
-					throw new InserimentoLottiException(CODICE.ERRORE_FORMATO_FILE, request.getNomeFile());
+
+				LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), log);
+				
+				if(analizer.isFirmato()) {
+					if(!this.getDipartimento(request.getNomeFile(), request.getDipartimento()).getFirmaAutomatica()){
+						throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
+					}
 				}
+
+				String type = analizer.isP7M() ? "P7M" : "XML"; 
 
 				LottoFatture lotto = getLotto(request, lottoBD, type);
 				lotto.setStatoElaborazioneInUscita(StatoElaborazioneType.SOLO_CONSERVAZIONE);
@@ -219,23 +184,11 @@ public class InserimentoLotti {
 
 		try {
 
-			try {
-				params = ConsegnaFatturaUtils.getParameters(identificativo, req.getNomeFile(),
-								type, null,
-								messageId,
-								true,
-								req.getXml());
-			} catch(Exception e) {
-				if(req instanceof InserimentoLottoSoloConservazioneRequest) {
-					params = ConsegnaFatturaUtils.getParameters(identificativo, req.getNomeFile(),
-							"XML", null,
+			params = ConsegnaFatturaUtils.getParameters(identificativo, req.getNomeFile(),
+							type, null,
 							messageId,
-							true,
+							false,
 							req.getXml());
-				} else {
-					throw e;
-				}
-			}
 			
 			params.validate(true);
 		} catch(Exception e) {
