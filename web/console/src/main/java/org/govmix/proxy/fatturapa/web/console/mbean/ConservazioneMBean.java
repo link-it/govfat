@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
 import org.apache.commons.lang.StringUtils;
@@ -56,6 +54,8 @@ IConservazioneService>{
 	
 	// Stato Invio
 	private List<SelectItem> listaStatiInvio = null;
+	
+	private String elencoID = null;
 	
 	public ConservazioneMBean(){
 		super(LoggerManager.getConsoleLogger());
@@ -265,14 +265,23 @@ IConservazioneService>{
 			// recupero lista diagnostici
 			List<Long> idFatture = new ArrayList<Long>();
 
-			Iterator<ConservazioneBean> it = this.selectedIds.keySet().iterator();
-			while (it.hasNext()) {
-				ConservazioneBean fatturaBean = it.next();
-				if (this.selectedIds.get(fatturaBean).booleanValue()) {
-					idFatture.add(fatturaBean.getDTO().getId());
-					it.remove();
-				}
-			}
+            // se nn sono in select all allore prendo solo quelle selezionate
+            if (this.elencoID != null && this.elencoID.length() > 0) {
+	            String [] split = this.elencoID.split(",");
+	
+	            // NOTA: Al massimo sono selezionate 25 report
+	            // NOTA2: i report esportate sono sempre ordinate per data
+	            List<Long> orderFix = new ArrayList<Long>();
+	
+	            // j_id170:tableReport_tbl:19:tableReport_column_ckb
+	            for (String idString : split) {
+	                    String tmpId = idString.substring(0, idString.lastIndexOf(":"));
+	                    tmpId = tmpId.substring(tmpId.lastIndexOf(":")+1);
+	                    orderFix.add(Long.parseLong(tmpId));
+	            }
+	
+	            idFatture.addAll(orderFix);
+            }
 			
 			if(idFatture.isEmpty()) {
 				MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("conservazione.invio.nessunaFatturaSelezionataError"));
@@ -304,12 +313,8 @@ IConservazioneService>{
 
 			// End of the method
 		} catch (Exception e) {
-			FacesContext.getCurrentInstance().responseComplete();
 			this.log.error(e, e);
-
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("conservazione.invio.genericError"),null));
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("conservazione.invio.genericError"));
 		}
 
 		return null;
@@ -342,12 +347,8 @@ IConservazioneService>{
 
 			// End of the method
 		} catch (Exception e) {
-			FacesContext.getCurrentInstance().responseComplete();
 			this.log.error(e, e);
-
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("conservazione.invio.genericError"),null));
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("conservazione.invio.genericError"));
 		}
 
 		return null;
@@ -370,15 +371,37 @@ IConservazioneService>{
 		return Utils.getInstance().getMessageWithParamsFromResourceBundle(key, params.toArray(new Object[params.size()])); 
 	}
 
-	public String getMessaggioSelezioneFattureMultipla() {
-		String key = "conservazione.confermaInvioTutteFatture.multipla.label" ; //: "conservazione.confermaInvioTutteFatture.singola.label";
-		return _getMessaggioSelezioneFatture(key,"@@numero@@"); 
+	public String getMessaggioSelezioneFatture() {
+		String key = "conservazione.confermaInvioFatture.multipla.label" ; //: "conservazione.confermaInvioTutteFatture.singola.label";
+		
+		 if (this.elencoID != null && this.elencoID.length() > 0) { 
+			 String [] split = this.elencoID.split(",");
+			  return _getMessaggioSelezioneFatture(key,""+ split.length);
+		 } else {
+			 key = "conservazione.confermaInvioFatture.singola.label";
+				return _getMessaggioSelezioneFatture(key,null);
+		 }
 	}
-	public String getMessaggioSelezioneFattureSingola() {
-		String key = "conservazione.confermaInvioTutteFatture.singola.label";
-		return _getMessaggioSelezioneFatture(key,null); 
-	}
+//	public String getMessaggioSelezioneFattureSingola() {
+//		String key = "conservazione.confermaInvioFatture.singola.label";
+//		return _getMessaggioSelezioneFatture(key,null); 
+//	} 
+// #{msg['conservazione.confermaInvioFatture.default.label']}
 	
+	/*
+			                  		function setMessaggioUtente(containerId){
+									var inputId = containerId;
+									var tid = ":"+inputId+"_tbl";
+									var size = jQuery("table [id$='"+tid+"'] input:checkbox[id$='"+inputId+"_column_ckb']:checked").not("[id$='selectedAllChbx']").size();
+									 
+									var messaggioSingolo = "#{conservazioneMBean.messaggioSelezioneFattureSingola}";
+									var messaggioMultiplo = "#{conservazioneMBean.messaggioSelezioneFattureMultipla}".replace("@@numero@@", size);
+									
+									var testoMessaggio = size == 1 ? messaggioSingolo : messaggioMultiplo;
+									var msgSpanId = 'messaggioSelezioneUtente';
+									jQuery("#"+msgSpanId+"").text(testoMessaggio);
+								}
+	*/
 	private String _getMessaggioSelezioneFatture(String key,String numero) {
 		List<Object> params = new ArrayList<Object>();
 		
@@ -392,4 +415,15 @@ IConservazioneService>{
 		
 		return Utils.getInstance().getMessageWithParamsFromResourceBundle(key, params.toArray(new Object[params.size()]));
 	}
+	
+    public String getElencoID() {
+	        return this.elencoID;
+	}
+	
+	public void setElencoID(String elencoID) {
+	        this.elencoID = elencoID;
+	}
+	
+	public void initConservazioneListener(ActionEvent ae){}
+
 }
