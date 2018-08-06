@@ -1,7 +1,10 @@
 package org.govmix.fatturapa.parer.builder;
 
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.govmix.fatturapa.parer.beans.DocumentoWrapper;
-import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaInput;
+import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaAttivaInput;
 import org.govmix.fatturapa.parer.versamento.request.ComponenteType;
 import org.govmix.fatturapa.parer.versamento.request.ConfigType;
 import org.govmix.fatturapa.parer.versamento.request.DocumentoCollegatoType;
@@ -11,10 +14,6 @@ import org.govmix.fatturapa.parer.versamento.request.StrutturaType.Componenti;
 import org.govmix.fatturapa.parer.versamento.request.TipoConservazioneType;
 import org.govmix.fatturapa.parer.versamento.request.TipoSupportoType;
 
-import java.util.List;
-
-import org.apache.log4j.Logger;
-
 public class FatturaAttivaSingolaUnitaDocumentariaBuilder extends AbstractFatturaAttivaUnitaDocumentariaBuilder {
 
 	public FatturaAttivaSingolaUnitaDocumentariaBuilder(Logger log) {
@@ -22,17 +21,17 @@ public class FatturaAttivaSingolaUnitaDocumentariaBuilder extends AbstractFattur
 	}
 
 	@Override
-	protected DocumentoCollegatoType getDocumentiCollegati(UnitaDocumentariaFatturaInput input) {
+	protected DocumentoCollegatoType getDocumentiCollegati(UnitaDocumentariaFatturaAttivaInput input) {
 		return null;
 	}
 
 	@Override
-	protected byte[] getRawDocumentoPrincipale(UnitaDocumentariaFatturaInput input) {
+	protected byte[] getRawDocumentoPrincipale(UnitaDocumentariaFatturaAttivaInput input) {
 		return input.getLotto().getXml();
 	}
 
 	@Override
-	protected DocumentoType getDocumentoPrincipale(UnitaDocumentariaFatturaInput input) {
+	protected DocumentoType getDocumentoPrincipale(UnitaDocumentariaFatturaAttivaInput input) {
 
 		DocumentoType documentoPricipale = new DocumentoType();
 		String idDocumento = input.getFattura().getNumero();
@@ -65,7 +64,7 @@ public class FatturaAttivaSingolaUnitaDocumentariaBuilder extends AbstractFattur
 	}
 	
 	@Override
-	protected List<DocumentoWrapper> getAnnessi(UnitaDocumentariaFatturaInput input) throws Exception {
+	protected List<DocumentoWrapper> getAnnessi(UnitaDocumentariaFatturaAttivaInput input) throws Exception {
 		List<DocumentoWrapper> annessi = super.getAnnessi(input);
 		
 		if(INCLUDE_METADATI) {
@@ -99,7 +98,7 @@ public class FatturaAttivaSingolaUnitaDocumentariaBuilder extends AbstractFattur
 	}
 
 	@Override
-	protected ConfigType getConfigurazione(UnitaDocumentariaFatturaInput input) {
+	protected ConfigType getConfigurazione(UnitaDocumentariaFatturaAttivaInput input) {
 		ConfigType  config = new ConfigType();
 		config.setTipoConservazione(TipoConservazioneType.FISCALE);
 		config.setForzaAccettazione(true);

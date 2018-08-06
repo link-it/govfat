@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.govmix.fatturapa.parer.beans.DocumentoWrapper;
-import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaInput;
+import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaPassivaInput;
 import org.govmix.fatturapa.parer.versamento.request.ComponenteType;
 import org.govmix.fatturapa.parer.versamento.request.DocumentoType;
 import org.govmix.fatturapa.parer.versamento.request.StrutturaType;
@@ -13,13 +13,13 @@ import org.govmix.fatturapa.parer.versamento.request.StrutturaType.Componenti;
 import org.govmix.fatturapa.parer.versamento.request.TipoSupportoType;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 
-public abstract class AbstractFatturaUnitaDocumentariaBuilder extends AbstractUnitaDocumentariaBuilder<UnitaDocumentariaFatturaInput> {
+public abstract class BaseAbstractFatturaPassivaUnitaDocumentariaBuilder extends AbstractUnitaDocumentariaBuilder<UnitaDocumentariaFatturaPassivaInput> {
 
-	public AbstractFatturaUnitaDocumentariaBuilder(Logger log) {
+	public BaseAbstractFatturaPassivaUnitaDocumentariaBuilder(Logger log) {
 		super(log);
 	}
 
-	protected String getTipoDocumento(UnitaDocumentariaFatturaInput input) {
+	protected String getTipoDocumento(UnitaDocumentariaFatturaPassivaInput input) {
 		switch(input.getFattura().getTipoDocumento()){
 		case TD01: return "FATTURA";
 		case TD02:return "ACCONTO/ANTICIPO SU FATTURA";
@@ -33,7 +33,7 @@ public abstract class AbstractFatturaUnitaDocumentariaBuilder extends AbstractUn
 	
 	
 	@Override
-	protected List<DocumentoWrapper> getAnnessi(UnitaDocumentariaFatturaInput input) throws Exception {
+	protected List<DocumentoWrapper> getAnnessi(UnitaDocumentariaFatturaPassivaInput input) throws Exception {
 
 
 		List<DocumentoWrapper> annessiLst = new ArrayList<DocumentoWrapper>();
@@ -137,7 +137,7 @@ public abstract class AbstractFatturaUnitaDocumentariaBuilder extends AbstractUn
 	}
 
 	@Override
-	protected List<DocumentoWrapper> getAllegati(UnitaDocumentariaFatturaInput input) throws Exception {
+	protected List<DocumentoWrapper> getAllegati(UnitaDocumentariaFatturaPassivaInput input) throws Exception {
 
 		return null;// allegati non vengon opiu' mandati in conservazione
 //		Tika tika = new Tika();

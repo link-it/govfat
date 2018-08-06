@@ -1,7 +1,7 @@
 package org.govmix.fatturapa.parer.builder;
 
 import org.govmix.fatturapa.parer.beans.DocumentoWrapper;
-import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaInput;
+import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaPassivaInput;
 import org.govmix.fatturapa.parer.versamento.request.ComponenteType;
 import org.govmix.fatturapa.parer.versamento.request.ConfigType;
 import org.govmix.fatturapa.parer.versamento.request.DocumentoCollegatoType;
@@ -23,17 +23,17 @@ public class FatturaPassivaSingolaUnitaDocumentariaBuilder extends
 	}
 
 	@Override
-	protected DocumentoCollegatoType getDocumentiCollegati(UnitaDocumentariaFatturaInput input) {
+	protected DocumentoCollegatoType getDocumentiCollegati(UnitaDocumentariaFatturaPassivaInput input) {
 		return null;
 	}
 
 	@Override
-	protected byte[] getRawDocumentoPrincipale(UnitaDocumentariaFatturaInput input) {
+	protected byte[] getRawDocumentoPrincipale(UnitaDocumentariaFatturaPassivaInput input) {
 		return input.getLotto().getXml();
 	}
 
 	@Override
-	protected DocumentoType getDocumentoPrincipale(UnitaDocumentariaFatturaInput input) {
+	protected DocumentoType getDocumentoPrincipale(UnitaDocumentariaFatturaPassivaInput input) {
 
 		DocumentoType documentoPricipale = new DocumentoType();
 		String idDocumento = input.getFattura().getIdentificativoSdi() + "_" + input.getFattura().getPosizione();
@@ -67,7 +67,7 @@ public class FatturaPassivaSingolaUnitaDocumentariaBuilder extends
 	}
 	
 	@Override
-	protected List<DocumentoWrapper> getAnnessi(UnitaDocumentariaFatturaInput input) throws Exception {
+	protected List<DocumentoWrapper> getAnnessi(UnitaDocumentariaFatturaPassivaInput input) throws Exception {
 		List<DocumentoWrapper> annessi = super.getAnnessi(input);
 		
 		if(INCLUDE_METADATI) {
@@ -101,7 +101,7 @@ public class FatturaPassivaSingolaUnitaDocumentariaBuilder extends
 	}
 
 	@Override
-	protected ConfigType getConfigurazione(UnitaDocumentariaFatturaInput input) {
+	protected ConfigType getConfigurazione(UnitaDocumentariaFatturaPassivaInput input) {
 		ConfigType  config = new ConfigType();
 		config.setTipoConservazione(TipoConservazioneType.FISCALE);
 		config.setForzaAccettazione(true);

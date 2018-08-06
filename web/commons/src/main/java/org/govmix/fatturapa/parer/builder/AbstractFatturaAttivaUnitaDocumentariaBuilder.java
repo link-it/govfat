@@ -6,24 +6,24 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.govmix.fatturapa.parer.beans.ParamWrapper;
-import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaInput;
+import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaAttivaInput;
 import org.govmix.fatturapa.parer.utils.CacheEnti;
 import org.govmix.fatturapa.parer.versamento.request.ChiaveType;
 import org.govmix.fatturapa.parer.versamento.request.ProfiloUnitaDocumentariaType;
 import org.govmix.proxy.fatturapa.orm.Ente;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 
-public abstract class AbstractFatturaAttivaUnitaDocumentariaBuilder extends AbstractFatturaUnitaDocumentariaBuilder{
+public abstract class AbstractFatturaAttivaUnitaDocumentariaBuilder extends BaseAbstractFatturaAttivaUnitaDocumentariaBuilder{
 
 	public AbstractFatturaAttivaUnitaDocumentariaBuilder(Logger log) {
 		super(log);
 	}
 
 	@Override
-	protected List<ParamWrapper> getParams(UnitaDocumentariaFatturaInput input) {
+	protected List<ParamWrapper> getParams(UnitaDocumentariaFatturaAttivaInput input) {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat(FORMAT);
-		
+			
 		List<ParamWrapper> param = new ArrayList<ParamWrapper>();
 		if(StatoConsegnaType.CONSEGNATA.equals(input.getFattura().getStatoConsegna()) && input.getFattura().getProtocollo() != null) {
 			param.add(new ParamWrapper("NumeroProtocollo", input.getFattura().getProtocollo()));
@@ -39,11 +39,11 @@ public abstract class AbstractFatturaAttivaUnitaDocumentariaBuilder extends Abst
 	}
 
 	@Override
-	protected String getTipologiaUnitaDocumentaria(UnitaDocumentariaFatturaInput input) {
+	protected String getTipologiaUnitaDocumentaria(UnitaDocumentariaFatturaAttivaInput input) {
 		return "FATTURA ATTIVA";
 	}
 
-	public ChiaveType getChiave(UnitaDocumentariaFatturaInput input) {
+	public ChiaveType getChiave(UnitaDocumentariaFatturaAttivaInput input) {
 		ChiaveType chiave = new ChiaveType();
 		chiave.setNumero(input.getFattura().getNumero());
 		chiave.setAnno(input.getFattura().getAnno());
@@ -52,7 +52,7 @@ public abstract class AbstractFatturaAttivaUnitaDocumentariaBuilder extends Abst
 	}
 
 	@Override
-	protected ProfiloUnitaDocumentariaType getProfiloUnitaDocumentaria(UnitaDocumentariaFatturaInput input) throws Exception {
+	protected ProfiloUnitaDocumentariaType getProfiloUnitaDocumentaria(UnitaDocumentariaFatturaAttivaInput input) throws Exception {
 		ProfiloUnitaDocumentariaType profiloUnitaDocumentaria = new ProfiloUnitaDocumentariaType();
 		
 		SimpleDateFormat sdf = new SimpleDateFormat(FORMAT);
@@ -63,7 +63,7 @@ public abstract class AbstractFatturaAttivaUnitaDocumentariaBuilder extends Abst
 	}
 
 	@Override
-	protected Ente getEnte(UnitaDocumentariaFatturaInput input) throws Exception {
+	protected Ente getEnte(UnitaDocumentariaFatturaAttivaInput input) throws Exception {
 		return new CacheEnti(log).getEnte(input.getFattura().getCodiceDestinatario());
 	}
 }

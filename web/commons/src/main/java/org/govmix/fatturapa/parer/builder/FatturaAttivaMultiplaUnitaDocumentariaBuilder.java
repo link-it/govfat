@@ -1,6 +1,7 @@
 package org.govmix.fatturapa.parer.builder;
 
-import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaInput;
+import org.apache.log4j.Logger;
+import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaAttivaInput;
 import org.govmix.fatturapa.parer.versamento.request.ChiaveType;
 import org.govmix.fatturapa.parer.versamento.request.ComponenteType;
 import org.govmix.fatturapa.parer.versamento.request.ConfigType;
@@ -11,8 +12,6 @@ import org.govmix.fatturapa.parer.versamento.request.StrutturaType;
 import org.govmix.fatturapa.parer.versamento.request.StrutturaType.Componenti;
 import org.govmix.fatturapa.parer.versamento.request.TipoConservazioneType;
 
-import org.apache.log4j.Logger;
-
 public class FatturaAttivaMultiplaUnitaDocumentariaBuilder extends
 		AbstractFatturaAttivaUnitaDocumentariaBuilder {
 
@@ -22,7 +21,7 @@ public class FatturaAttivaMultiplaUnitaDocumentariaBuilder extends
 
 	@Override
 	protected DocumentoCollegatoType getDocumentiCollegati(
-			UnitaDocumentariaFatturaInput input) {
+			UnitaDocumentariaFatturaAttivaInput input) {
 		DocumentoCollegatoType documentiCollegati = new DocumentoCollegatoType();
 		DocumentoCollegato collegamentoALotto = new DocumentoCollegato();
 		
@@ -38,12 +37,12 @@ public class FatturaAttivaMultiplaUnitaDocumentariaBuilder extends
 
 	@Override
 	protected byte[] getRawDocumentoPrincipale(
-			UnitaDocumentariaFatturaInput input) {
+			UnitaDocumentariaFatturaAttivaInput input) {
 		return input.getFattura().getXml();
 	}
 
 	@Override
-	protected DocumentoType getDocumentoPrincipale(UnitaDocumentariaFatturaInput input) {
+	protected DocumentoType getDocumentoPrincipale(UnitaDocumentariaFatturaAttivaInput input) {
 
 		DocumentoType documentoPricipale = new DocumentoType();
 		String idDocumento = input.getFattura().getNumero();
@@ -69,7 +68,7 @@ public class FatturaAttivaMultiplaUnitaDocumentariaBuilder extends
 	}
 
 	@Override
-	protected ConfigType getConfigurazione(UnitaDocumentariaFatturaInput input) {
+	protected ConfigType getConfigurazione(UnitaDocumentariaFatturaAttivaInput input) {
 		ConfigType  config = new ConfigType();
 		config.setTipoConservazione(TipoConservazioneType.FISCALE);
 		config.setForzaAccettazione(true);

@@ -172,11 +172,11 @@
 			<classifier>jdk15</classifier>
 		</dependency>
 		
-                <dependency>
-                        <groupId>org.jibx</groupId>
-                        <artifactId>jibx-run</artifactId>
-                        <version>1.2.6</version>
-                </dependency>
+        <dependency>
+                <groupId>org.jibx</groupId>
+                <artifactId>jibx-run</artifactId>
+                <version>1.2.6</version>
+        </dependency>
 
 		<dependency>
 			<groupId>org.jibx</groupId>
@@ -184,6 +184,11 @@
 			<version>1.2.6</version>
 		</dependency>
 				
+		<dependency>
+		    <groupId>org.apache.tika</groupId>
+		    <artifactId>tika-core</artifactId>
+		    <version>1.13</version>
+		</dependency>
 
 	</dependencies>
 	<repositories>

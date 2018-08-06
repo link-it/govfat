@@ -1,6 +1,6 @@
 package org.govmix.fatturapa.parer.builder;
 
-import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaInput;
+import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaPassivaInput;
 import org.govmix.fatturapa.parer.versamento.request.ChiaveType;
 import org.govmix.fatturapa.parer.versamento.request.ComponenteType;
 import org.govmix.fatturapa.parer.versamento.request.ConfigType;
@@ -22,7 +22,7 @@ public class FatturaPassivaMultiplaUnitaDocumentariaBuilder extends
 
 	@Override
 	protected DocumentoCollegatoType getDocumentiCollegati(
-			UnitaDocumentariaFatturaInput input) {
+			UnitaDocumentariaFatturaPassivaInput input) {
 		DocumentoCollegatoType documentiCollegati = new DocumentoCollegatoType();
 		DocumentoCollegato collegamentoALotto = new DocumentoCollegato();
 		
@@ -38,13 +38,13 @@ public class FatturaPassivaMultiplaUnitaDocumentariaBuilder extends
 
 	@Override
 	protected byte[] getRawDocumentoPrincipale(
-			UnitaDocumentariaFatturaInput input) {
+			UnitaDocumentariaFatturaPassivaInput input) {
 		return input.getFattura().getXml();
 	}
 
 	@Override
 	protected DocumentoType getDocumentoPrincipale(
-			UnitaDocumentariaFatturaInput input) {
+			UnitaDocumentariaFatturaPassivaInput input) {
 
 		DocumentoType documentoPricipale = new DocumentoType();
 		String idDocumento = input.getFattura().getIdentificativoSdi() + "_" + input.getFattura().getPosizione();
@@ -70,7 +70,7 @@ public class FatturaPassivaMultiplaUnitaDocumentariaBuilder extends
 	}
 
 	@Override
-	protected ConfigType getConfigurazione(UnitaDocumentariaFatturaInput input) {
+	protected ConfigType getConfigurazione(UnitaDocumentariaFatturaPassivaInput input) {
 		ConfigType  config = new ConfigType();
 		config.setTipoConservazione(TipoConservazioneType.FISCALE);
 		config.setForzaAccettazione(true);

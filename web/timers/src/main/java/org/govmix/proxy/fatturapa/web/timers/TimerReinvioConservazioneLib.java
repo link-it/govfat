@@ -29,7 +29,8 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.govmix.fatturapa.parer.beans.FatturaBean;
 import org.govmix.fatturapa.parer.beans.UnitaDocumentariaBean;
-import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaInput;
+import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaAttivaInput;
+import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaPassivaInput;
 import org.govmix.fatturapa.parer.beans.UnitaDocumentariaLottoInput;
 import org.govmix.fatturapa.parer.builder.FatturaAttivaSingolaUnitaDocumentariaBuilder;
 import org.govmix.fatturapa.parer.builder.FatturaPassivaMultiplaUnitaDocumentariaBuilder;
@@ -43,6 +44,7 @@ import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.AllegatoFatturaBD;
@@ -51,8 +53,10 @@ import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.NotificaDecorrenzaTerminiBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.NotificaEsitoCommittenteBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.SIPBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.TracciaSdIBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FilterSortWrapper;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.TracciaSdIFilter;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.ServiceException;
@@ -87,6 +91,7 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 			SIPBD sipBD = new SIPBD(log, connection, false);
 			NotificaEsitoCommittenteBD notificaEsitoCommittenteBD = new NotificaEsitoCommittenteBD(log, connection, false);
 			NotificaDecorrenzaTerminiBD notificaDecorrenzaTerminiBD = new NotificaDecorrenzaTerminiBD(log, connection, false);
+			TracciaSdIBD tracciaSdiBD = new TracciaSdIBD(log, connection, false);
 
 			ConservazioneProperties props = ConservazioneProperties.getInstance();
 			ParERClient client = new ParERClient(this.log, props);
@@ -167,7 +172,7 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 							StatoConsegnaType statoConsegnaFat = null;
 							StatoConservazioneType statoConservazioneFat = null;
 							ChiaveType chiaveFat = null;
-							UnitaDocumentariaFatturaInput inputFat = null;
+							UnitaDocumentariaFatturaPassivaInput inputFat = null;
 							UnitaDocumentariaBean requestFat = null;
 
 							try {
@@ -254,15 +259,16 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 					String rapportoVersamento = null;
 					StatoConsegnaType statoConsegna = null;
 					StatoConservazioneType statoConservazione = null;
-					UnitaDocumentariaFatturaInput input = null;
+					UnitaDocumentariaFatturaAttivaInput inputAttiva = null;
+					UnitaDocumentariaFatturaPassivaInput inputPassiva = null;
 					UnitaDocumentariaBean request = null;
 					ChiaveType chiave = null;
 
 					if(fattura.isFatturazioneAttiva()) {
 						// creare unita doc con builderFatturaAttivaSingola
 						try {
-							input = this.getUnitaDocumentariaFatturaAttiva(props, fatturaElettronicaBD, allegatoBD, fattura);
-							request = builderFatturaAttivaSingola.build(input);
+							inputAttiva = this.getUnitaDocumentariaFatturaAttiva(props, fatturaElettronicaBD, allegatoBD, tracciaSdiBD, fattura);
+							request = builderFatturaAttivaSingola.build(inputAttiva);
 							chiave = request.getUnitaDocumentaria().getIntestazione().getChiave();
 						}catch (ServiceException e) {
 							log.error("impossibile creare l'UnitaDocumentaria per la fattura ["+fattura.getIdentificativoSdi()+"].",e); 
@@ -280,8 +286,8 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 					} else {
 						// creare unita doc con builderFatturaPassivaSingola
 						try {
-							input = this.getUnitaDocumentariaFatturaPassiva(props, toFatturaBean(fatturaElettronicaBD, allegatoBD, notificaDecorrenzaTerminiBD, notificaEsitoCommittenteBD, fattura));  
-							request = builderFatturaPassivaSingola.build(input);
+							inputPassiva = this.getUnitaDocumentariaFatturaPassiva(props, toFatturaBean(fatturaElettronicaBD, allegatoBD, notificaDecorrenzaTerminiBD, notificaEsitoCommittenteBD,  fattura));  
+							request = builderFatturaPassivaSingola.build(inputPassiva);
 							chiave = request.getUnitaDocumentaria().getIntestazione().getChiave();
 						}catch (ServiceException e) {
 							log.error("impossibile creare l'UnitaDocumentaria per la fattura ["+fattura.getIdentificativoSdi()+"].",e); 
@@ -359,9 +365,9 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 
 	}
 
-	private UnitaDocumentariaFatturaInput getUnitaDocumentariaFatturaPassiva(ConservazioneProperties props, FatturaBean fatturaBean) throws Exception {
+	private UnitaDocumentariaFatturaPassivaInput getUnitaDocumentariaFatturaPassiva(ConservazioneProperties props, FatturaBean fatturaBean) throws Exception {
 
-		UnitaDocumentariaFatturaInput input = new UnitaDocumentariaFatturaInput();
+		UnitaDocumentariaFatturaPassivaInput input = new UnitaDocumentariaFatturaPassivaInput();
 		input.setProperties(props);
 		FatturaElettronica fattura = fatturaBean.getFattura();
 		input.setFattura(fattura);
@@ -432,16 +438,20 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 		return bean;
 	}
 
-	private UnitaDocumentariaFatturaInput getUnitaDocumentariaFatturaAttiva(ConservazioneProperties props, FatturaBD fatturaElettronicaBD, AllegatoFatturaBD allegatoBD, FatturaElettronica fattura) throws Exception {
+	private UnitaDocumentariaFatturaAttivaInput getUnitaDocumentariaFatturaAttiva(ConservazioneProperties props, FatturaBD fatturaElettronicaBD, AllegatoFatturaBD allegatoBD, TracciaSdIBD tracciaSdiBD, FatturaElettronica fattura) throws Exception {
 
 		IdFattura idFattura = fatturaElettronicaBD.convertToId(fattura);
 		List<AllegatoFattura> allegati = allegatoBD.getAllegati(idFattura);
+		TracciaSdIFilter tracciaFilter = tracciaSdiBD.newFilter();
+		tracciaFilter.setIdentificativoSdi(fattura.getIdentificativoSdi());
+		List<TracciaSDI> tracce = tracciaSdiBD.findAll(tracciaFilter );
 
-		UnitaDocumentariaFatturaInput input = new UnitaDocumentariaFatturaInput();
+		UnitaDocumentariaFatturaAttivaInput input = new UnitaDocumentariaFatturaAttivaInput();
 		input.setProperties(props);
 		input.setFattura(fattura);
 		input.setLotto(fattura.getLottoFatture());
 		input.getAllegati().addAll(allegati);
+		input.getTracce().addAll(tracce);
 		return input;
 
 	}
