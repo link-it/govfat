@@ -118,6 +118,51 @@ public class InserimentoLotti {
 
 	}
 
+	public void checkLotto(List<InserimentoLottoRequest> requestList) throws InserimentoLottiException {
+		for(InserimentoLottoRequest request: requestList) {
+			Dipartimento dipartimento = null;
+			
+			dipartimento = this.getDipartimento(request.getNomeFile(), request.getDipartimento());
+			
+			if(!dipartimento.getFatturazioneAttiva()) {
+				throw new InserimentoLottiException(CODICE.ERRORE_DIPARTIMENTO_NON_ABILITATO);
+			}
+
+			try {
+				LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), log);
+				
+				if(analizer.isFirmato()) {
+					if(this.getDipartimento(request.getNomeFile(), request.getDipartimento()).getFirmaAutomatica()){
+						throw new InserimentoLottiException(CODICE.ERRORE_FILE_FIRMATO, request.getNomeFile(), request.getDipartimento());
+					}
+				} else {
+					if(!this.getDipartimento(request.getNomeFile(), request.getDipartimento()).getFirmaAutomatica()){
+						throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
+					}
+				}
+			} catch(Exception e) {
+				throw new InserimentoLottiException(CODICE.ERRORE_FORMATO_FILE, request.getNomeFile());
+			}
+		}
+	}
+
+	public void checkLottoSoloConservazione(List<InserimentoLottoSoloConservazioneRequest> requestList) throws InserimentoLottiException {
+		for(InserimentoLottoSoloConservazioneRequest request: requestList) {
+
+			try {
+				LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), log);
+				
+				if(analizer.isFirmato()) {
+					if(!this.getDipartimento(request.getNomeFile(), request.getDipartimento()).getFirmaAutomatica()){
+						throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
+					}
+				}
+			} catch(Exception e) {
+				throw new InserimentoLottiException(CODICE.ERRORE_FORMATO_FILE, request.getNomeFile());
+			}
+		}
+	}
+
 	public InserimentoLottoResponse inserisciLottoSoloConservazione(List<InserimentoLottoSoloConservazioneRequest> requestList) {
 		InserimentoLottoResponse inserimentoLottoResponse = new InserimentoLottoResponse();
 		
