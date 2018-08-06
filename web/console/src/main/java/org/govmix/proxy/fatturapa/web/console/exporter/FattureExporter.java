@@ -594,7 +594,7 @@ public class FattureExporter  extends HttpServlet{
 	private AbstractSingleFileExporter<?, ?> getSingleFileExporter(String action) throws Exception {
 
 		if(action.equals(PARAMETRO_ACTION_FATTURA)) {
-			return new FatturaSingleFileExporter(log);
+			return new FatturaSingleFileExporter(log, false);
 		} else if(action.equals(PARAMETRO_ACTION_ALLEGATO)) { 
 			return new AllegatoSingleFileExporter(log);
 		} else if(action.equals(PARAMETRO_ACTION_NOTIFICA_EC)) {
@@ -606,7 +606,7 @@ public class FattureExporter  extends HttpServlet{
 		} else if(action.equals(PARAMETRO_ACTION_COMUNICAZIONE_AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO)) {
 			return new TracciaSdISingleFileExporter(log);
 		}  else if(action.equals(PARAMETRO_ACTION_COMUNICAZIONE_FATTURA_USCITA)) {
-			return new FatturaSingleFileExporter(log);
+			return new FatturaSingleFileExporter(log, true);
 		}  else if(action.equals(PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE)) {
 			return new TracciaSdISingleFileExporter(log);
 		}  else if(action.equals(PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_ESITO_COMMITTENTE)) {

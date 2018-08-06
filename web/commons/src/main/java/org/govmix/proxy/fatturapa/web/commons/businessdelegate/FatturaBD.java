@@ -205,9 +205,10 @@ public class FatturaBD extends BaseBD {
 		return this.count(filter) > 0;
 	}
 
-	public List<IdFattura> findAllIdFatturaByIdentificativoSdi(Integer identificativoSdi) throws ServiceException {
+	public List<IdFattura> findAllIdFatturaByIdLotto(IdLotto idLotto) throws ServiceException {
 		FatturaFilter filter = this.newFilter();
-		filter.setIdentificativoSdi(identificativoSdi);
+		filter.setIdentificativoSdi(idLotto.getIdentificativoSdi());
+		filter.setFatturazioneAttiva(idLotto.getFatturazioneAttiva());
 		List<FatturaElettronica> findAll = this.findAll(filter);
 		List<IdFattura> findAllIds = new ArrayList<IdFattura>();
 		for(FatturaElettronica fatt: findAll) {
