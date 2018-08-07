@@ -235,19 +235,13 @@ public class ParERClient {
 	} 
 	
 	private boolean getErrori(EsitoVersamentoType esito, String chiave) {
-
 		if(esito.getEsitoGenerale().getCodiceErrore() != null) {
-			
 			if("UD-002-001".equals(esito.getEsitoGenerale().getCodiceErrore())) { // Fattura gia' presente nel sistema, considero caso ok
 				this.log.warn("Fattura con chiave "+chiave+" gia' presente nel sistema");
 				return false;				
-			} 
-			
-			
-			if(esito.getErroriUlteriori() != null && esito.getErroriUlteriori().getErrore() != null && !esito.getErroriUlteriori().getErrore().isEmpty()) {
+			} else {
 				return true;
 			}
-			return false;
 		} else {
 			return false;	
 		}
