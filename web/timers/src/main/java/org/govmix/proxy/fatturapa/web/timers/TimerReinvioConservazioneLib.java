@@ -142,15 +142,18 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 
 						switch(response.getStato()) {
 						case ERRORE_CONNESSIONE:
+							statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
+							break;
 						case KO:
 							statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
-							// TODO gestire riconsegna
+							rapportoVersamento = response.getEsitoVersamento();
 							break;
 						case OK:
 							statoConsegna = StatoConsegnaType.CONSEGNATA; 
+							rapportoVersamento = response.getRapportoVersamento();
 							break;
 						}
-						rapportoVersamento = response.getRapportoVersamento();
+						
 					}
 
 					// aggiornamento sip
@@ -203,20 +206,20 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 								case ERRORE_CONNESSIONE:
 									statoConservazioneFat = StatoConservazioneType.ERRORE_CONSEGNA;
 									statoConsegnaFat = StatoConsegnaType.ERRORE_CONSEGNA;
-									// TODO gestire riconsegna
 									break;
 								case KO:
 									statoConservazioneFat = StatoConservazioneType.CONSERVAZIONE_FALLITA;
 									statoConsegnaFat = StatoConsegnaType.ERRORE_CONSEGNA;
-									// TODO gestire riconsegna
+									rapportoVersamentoFat = responseFattura.getEsitoVersamento();
 									break;
 								case OK:
 									statoConservazioneFat = StatoConservazioneType.CONSERVAZIONE_COMPLETATA;
 									statoConsegnaFat = StatoConsegnaType.CONSEGNATA; 
+									rapportoVersamentoFat = responseFattura.getRapportoVersamento();
 									break;
 								}
 								
-								rapportoVersamentoFat = responseFattura.getRapportoVersamento();
+								
 							}
 
 							//aggiornare sip e fattura in trnasazione
@@ -313,20 +316,20 @@ public class TimerReinvioConservazioneLib extends AbstractTimerLib {
 						case ERRORE_CONNESSIONE:
 							statoConservazione = StatoConservazioneType.ERRORE_CONSEGNA;
 							statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
-							// TODO gestire riconsegna
 							break;
 						case KO:
 							statoConservazione = StatoConservazioneType.CONSERVAZIONE_FALLITA;
 							statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
-							// TODO gestire riconsegna
+							rapportoVersamento = response.getEsitoVersamento();
 							break;
 						case OK:
 							statoConservazione = StatoConservazioneType.CONSERVAZIONE_COMPLETATA;
 							statoConsegna = StatoConsegnaType.CONSEGNATA; 
+							rapportoVersamento = response.getRapportoVersamento();
 							break;
 						}
 
-						rapportoVersamento = response.getRapportoVersamento();
+						
 					}
 
 					//aggiornare sip e fattura in trnasazione

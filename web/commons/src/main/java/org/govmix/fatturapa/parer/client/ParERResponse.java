@@ -6,6 +6,8 @@ public class ParERResponse {
 	
 	private STATO stato;
 	private String rapportoVersamento;
+	private String esitoVersamento;
+	
 	public String getRapportoVersamento() {
 		return rapportoVersamento;
 	}
@@ -17,5 +19,11 @@ public class ParERResponse {
 	}
 	public void setStato(STATO stato) {
 		this.stato = stato;
+	}
+	public String getEsitoVersamento() {
+		return esitoVersamento;
+	}
+	public void setEsitoVersamento(String esitoVersamento) {
+		this.esitoVersamento = esitoVersamento;
 	}
 }
