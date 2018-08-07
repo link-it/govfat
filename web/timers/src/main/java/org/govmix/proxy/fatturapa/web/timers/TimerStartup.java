@@ -206,7 +206,7 @@ public class TimerStartup {
 				timer = TimerStartup.createTimerProtocollazioneRicevuta(properties);
 			}else if(TimerSchedulingConservazione.ID_MODULO.equals(timerName)){
 				timer = TimerStartup.createTimerSchedulingConservazione(properties);
-			}else if(TimerReinvioConservazione.ID_MODULO.equals(timerName)){
+			}else if(TimerInvioConservazione.ID_MODULO.equals(timerName)){
 				timer = TimerStartup.createTimerReinvioConservazione(properties);
 			} else {
 				return null;
@@ -239,8 +239,8 @@ public class TimerStartup {
 				timer = new TimerProtocollazioneRicevutaThread();
 			}else if(TimerSchedulingConservazione.ID_MODULO.equals(timerName)){
 				timer = new TimerSchedulingConservazioneThread();
-			}else if(TimerReinvioConservazione.ID_MODULO.equals(timerName)){
-				timer = new TimerReinvioConservazioneThread();
+			}else if(TimerInvioConservazione.ID_MODULO.equals(timerName)){
+				timer = new TimerInvioConservazioneThread();
 			} else {
 				return null;
 			}
@@ -481,7 +481,7 @@ public class TimerStartup {
 
 	}
 
-	private static TimerReinvioConservazione createTimerReinvioConservazione(BatchProperties properties) throws Exception {
+	private static TimerInvioConservazione createTimerReinvioConservazione(BatchProperties properties) throws Exception {
 
 		GestoreJNDI jndi = null;
 		if(properties.getJndiContextTimerEJB()==null)
@@ -489,11 +489,11 @@ public class TimerStartup {
 		else
 			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
 
-		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerReinvioConservazione.ID_MODULO);
+		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerInvioConservazione.ID_MODULO);
 		Object objref = jndi.lookup(nomeJNDI);
-		TimerReinvioConservazioneHome timerHome = 
-				(TimerReinvioConservazioneHome) PortableRemoteObject.narrow(objref,TimerReinvioConservazioneHome.class);
-		TimerReinvioConservazione timerDiServizio = timerHome.create();	
+		TimerInvioConservazioneHome timerHome = 
+				(TimerInvioConservazioneHome) PortableRemoteObject.narrow(objref,TimerInvioConservazioneHome.class);
+		TimerInvioConservazione timerDiServizio = timerHome.create();	
 
 		return timerDiServizio;
 

@@ -20,32 +20,22 @@
  */
 package org.govmix.proxy.fatturapa.web.timers;
 
-import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
+
 
 /**
- * Implementazione dell'interfaccia {@link TimerAccettazioneFattura}.
+ * Interfaccia del thread che si occupa di accettare automaticamente le fatture ricevute da un ente configurato appositamente
  * 
- *  
- * @author Poli Andrea (apoli@link.it)
- * @author $Author: apoli $
+ * 
+ * @author Giovanni Bussu
+ * @author $Author: gbussu $
  * @version $Rev: 9747 $, $Date: 2014-03-10 11:47:43 +0100 (Mon, 10 Mar 2014) $
  */
 
-public class TimerReinvioConservazioneImpl extends AbstractTimerImpl {
+public interface TimerInvioConservazione extends IEJBTimer {
 
+    /* ********  F I E L D S  P R I V A T I   S T A T I C I  ******** */
+    
+    /** Variabile che indica il Nome del modulo rappresentato da questa classe */
+    public final static String ID_MODULO = "invioConservazione";
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6834216547362018351L;
-
-	@Override
-	public String getIdModulo() {
-		return TimerReinvioConservazione.ID_MODULO;
-	}
-
-	@Override
-	public AbstractTimerLib getTimerLib() throws Exception {
-		return new TimerReinvioConservazioneLib(this.limit,LoggerManager.getBatchReinvioConservazioneLogger(),this.logQuery);
-	}
 }

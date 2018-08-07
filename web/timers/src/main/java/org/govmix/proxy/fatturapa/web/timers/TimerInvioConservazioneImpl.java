@@ -20,26 +20,32 @@
  */
 package org.govmix.proxy.fatturapa.web.timers;
 
-import java.rmi.RemoteException;
-
-import javax.ejb.CreateException;
-import javax.ejb.EJBHome;
+import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 
 /**
- * Classe Home di {@link TimerAccettazioneFattura}
- *
- * @author Giovanni Bussu
- * @author $Author: gbussu $
+ * Implementazione dell'interfaccia {@link TimerAccettazioneFattura}.
+ * 
+ *  
+ * @author Poli Andrea (apoli@link.it)
+ * @author $Author: apoli $
+ * @version $Rev: 9747 $, $Date: 2014-03-10 11:47:43 +0100 (Mon, 10 Mar 2014) $
  */
 
-public interface TimerReinvioConservazioneHome extends EJBHome {	
-    
-    /**
-     * Crea un EJBean di tipo {@link TimerAccettazioneFattura}.
-     *
-     * @return un EJBean di tipo {@link TimerAccettazioneFattura}.
-     * 
-     */
-    public TimerReinvioConservazione create() throws CreateException, RemoteException;
+public class TimerInvioConservazioneImpl extends AbstractTimerImpl {
 
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6834216547362018351L;
+
+	@Override
+	public String getIdModulo() {
+		return TimerInvioConservazione.ID_MODULO;
+	}
+
+	@Override
+	public AbstractTimerLib getTimerLib() throws Exception {
+		return new TimerInvioConservazioneLib(this.limit,LoggerManager.getBatchInvioConservazioneLogger(),this.logQuery);
+	}
 }
