@@ -245,7 +245,7 @@ public class ConservazioneService extends BaseService<ConservazioneSearchForm> i
 				instance.setTime(new Date());
 				instance.add(Calendar.DAY_OF_MONTH, -giorniSoglia); 
 				
-				filter.setDataRicezioneMax(instance.getTime()); 
+				filter.setDataFatturaMax(instance.getTime()); 
 			}
 
 			// stato conservazione
