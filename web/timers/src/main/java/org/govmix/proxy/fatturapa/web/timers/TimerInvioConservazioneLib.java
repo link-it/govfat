@@ -356,7 +356,6 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 			}
 		}catch(Exception e){
 			this.log.error("Errore durante l'esecuzione del batch ReinvioConservazione: "+e.getMessage(), e);
-			connection.rollback();
 			throw e;
 		} finally {
 			if(connection != null) {
