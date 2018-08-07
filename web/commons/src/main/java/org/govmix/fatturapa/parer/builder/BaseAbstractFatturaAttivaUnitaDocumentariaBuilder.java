@@ -65,7 +65,16 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 				
 				if(add) {
 					DocumentoType annesso = new DocumentoType();
-					String idDocumentoAnnesso = traccia.getIdentificativoSdi() + "_" + traccia.getPosizione() + "_" + traccia.get_value_tipoComunicazione() +index;
+					StringBuilder sb = new StringBuilder();
+					sb.append(traccia.getIdentificativoSdi()).append("_");
+					
+					if(traccia.getPosizione() != null)
+						sb.append(traccia.getPosizione()).append("_");
+					
+					sb.append(traccia.get_value_tipoComunicazione()).append(index);
+					
+					String idDocumentoAnnesso = sb.toString();
+					
 					annesso.setIDDocumento(idDocumentoAnnesso);
 					annesso.setTipoDocumento(this.getTipoComunicazione(traccia.getTipoComunicazione()));
 					StrutturaType strutturaOriginale = new StrutturaType();

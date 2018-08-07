@@ -40,8 +40,8 @@ import org.govmix.fatturapa.parer.versamento.request.UnitaDocumentaria;
 import org.govmix.fatturapa.parer.versamento.response.ECEsitoExtType;
 import org.govmix.fatturapa.parer.versamento.response.EsitoVersamentoType;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
-import org.openspcoop2.utils.Utilities;
 
+@SuppressWarnings("deprecation")
 public class ParERClient {
 
 	private Logger log;
@@ -68,7 +68,6 @@ public class ParERClient {
 
 	}
 	
-	@SuppressWarnings("deprecation")
 	public ParERResponse invia(UnitaDocumentariaBean ud) {
 		try {
 			// crea una nuova istanza di HttpClient, predisponendo la chiamata del metodo POST
@@ -188,7 +187,9 @@ public class ParERClient {
 		
 		ParERResponse parERResponse = new ParERResponse();
 		
-		if(ECEsitoExtType.NEGATIVO.equals(esito.getEsitoGenerale().getCodiceEsito())) {
+		
+		ECEsitoExtType codiceEsito = esito.getEsitoGenerale().getCodiceEsito() != null ? esito.getEsitoGenerale().getCodiceEsito() : ECEsitoExtType.NEGATIVO;
+		if(ECEsitoExtType.NEGATIVO.toString().equals(codiceEsito.toString())) {
 
 			boolean errore = getErrori(esito, chiave);
 			if(errore) {
@@ -270,6 +271,7 @@ public class ParERClient {
         }
 	}
 	
+	@SuppressWarnings("unchecked")
 	private EsitoVersamentoType toEsito(byte content[], String chiave) throws JAXBException, IOException {
 		InputStream iss = null;
 		try {
