@@ -30,9 +30,6 @@ public class ConservazioneThread implements Runnable{
 		try {
 			ConservazioneThread.log.debug("Conservazione Thread inizio elaborazione");
 			
-			
-			Thread.sleep(5000); 
-			
 			if(isAll){
 				ids = getLstIdFattura(fatturaBD, fatturaFilter);
 			}

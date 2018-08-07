@@ -65,6 +65,8 @@ public class ConsoleProperties extends AbstractProperties {
 	private String fatturaAttivaCaricamentoTipologieFileAccettati;
 	private Long fatturaAttivaCaricamentoDimensioneMassimaFile;
 	
+	private Integer numeroGiorniAttesaPerInvioConservazione = null;
+	
 	private TreeMap<String, String> codiciErrorePCC = null;
 	
 	
@@ -140,6 +142,13 @@ public class ConsoleProperties extends AbstractProperties {
 				}
 			}
 		}
+		
+		
+		String numeroGiorniAttesaPerInvioConservazioneS = this.getProperty("org.govmix.proxy.fatturapa.conservazione.giorniIntervallo", true);
+		if(numeroGiorniAttesaPerInvioConservazioneS != null) {
+			this.numeroGiorniAttesaPerInvioConservazione = Integer.parseInt(numeroGiorniAttesaPerInvioConservazioneS);
+		}
+		
 	}
 
 	/* ********  P R O P E R T I E S  ******** */
@@ -250,6 +259,10 @@ public class ConsoleProperties extends AbstractProperties {
 
 	public Long getFatturaAttivaCaricamentoDimensioneMassimaFile() {
 		return fatturaAttivaCaricamentoDimensioneMassimaFile;
+	}
+
+	public Integer getNumeroGiorniAttesaPerInvioConservazione() {
+		return numeroGiorniAttesaPerInvioConservazione;
 	}
 	
 }

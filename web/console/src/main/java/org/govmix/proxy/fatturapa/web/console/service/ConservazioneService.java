@@ -21,6 +21,8 @@
 package org.govmix.proxy.fatturapa.web.console.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -36,6 +38,7 @@ import org.govmix.proxy.fatturapa.web.console.bean.ConservazioneBean;
 import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.iservice.IConservazioneService;
 import org.govmix.proxy.fatturapa.web.console.search.ConservazioneSearchForm;
+import org.govmix.proxy.fatturapa.web.console.util.ConsoleProperties;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.beans.IModel;
 import org.openspcoop2.generic_project.dao.IDBServiceUtilities;
@@ -232,6 +235,17 @@ public class ConservazioneService extends BaseService<ConservazioneSearchForm> i
 				String annoS = search.getAnno().getValue().getValue();
 				int anno = Integer.parseInt(annoS);
 				filter.setAnno(anno); 
+			}
+			
+			// filtro sui giorni che devono passare per l'invio in conservazione
+			Integer giorniSoglia = ConsoleProperties.getInstance(log).getNumeroGiorniAttesaPerInvioConservazione(); 
+			if(giorniSoglia != null) {
+				Calendar instance = Calendar.getInstance();
+				
+				instance.setTime(new Date());
+				instance.add(Calendar.DAY_OF_MONTH, -giorniSoglia); 
+				
+				filter.setDataRicezioneMax(instance.getTime()); 
 			}
 
 			// stato conservazione

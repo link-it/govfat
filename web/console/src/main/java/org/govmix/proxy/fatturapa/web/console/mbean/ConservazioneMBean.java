@@ -289,12 +289,11 @@ IConservazioneService>{
 			}
 			
 			FatturaBD fatturaBD = new FatturaBD(getLog());
-			FatturaFilter fatturaFilter = ((ConservazioneService)this.service).getFilterFromSearch(fatturaBD , this.search);
 			ConservazioneThread conservazioneThread = new ConservazioneThread();
 			conservazioneThread.setAll(false);
 			conservazioneThread.setIds(idFatture);
 			conservazioneThread.setFatturaBD(fatturaBD);
-			conservazioneThread.setFatturaFilter(fatturaFilter);
+			conservazioneThread.setFatturaFilter(null);
 			
 			// stato conservazione
 			if(search.getStatoInvio().getValue() != null &&
