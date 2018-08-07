@@ -16,6 +16,7 @@ import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoArchivioInvioFatturaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFattureAttiveBD;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.LottoFattureAnalyzer;
 import org.govmix.proxy.fatturapa.web.commons.utils.CostantiProtocollazione;
 import org.govmix.proxy.fatturapa.web.commons.utils.Endpoint;
 import org.govmix.proxy.fatturapa.web.commons.utils.EndpointSelector;
@@ -59,12 +60,14 @@ public class WorkFlow implements IWorkFlow<LottoFatture> {
 		
 		StatoElaborazioneType nextStatoOK = null;
 		StatoElaborazioneType nextStatoKO = null;
-		if(FormatoArchivioInvioFatturaType.XML.equals(lotto.getFormatoArchivioInvioFattura())) {
-			nextStatoOK = StatoElaborazioneType.IN_CORSO_DI_FIRMA;
-			nextStatoKO = StatoElaborazioneType.ERRORE_DI_FIRMA;
-		} else if(FormatoArchivioInvioFatturaType.P7M.equals(lotto.getFormatoArchivioInvioFattura())) {
+		
+		LottoFattureAnalyzer a = new LottoFattureAnalyzer(lotto.getXml(), this.log);
+		if(a.isFirmato()) {
 			nextStatoOK = StatoElaborazioneType.IN_CORSO_DI_PROTOCOLLAZIONE;
 			nextStatoKO = StatoElaborazioneType.ERRORE_DI_PROTOCOLLO;
+		} else {
+			nextStatoOK = StatoElaborazioneType.IN_CORSO_DI_FIRMA;
+			nextStatoKO = StatoElaborazioneType.ERRORE_DI_FIRMA;
 		}
 		
 		if(nextStatoOK!= null) {
