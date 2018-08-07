@@ -2,6 +2,7 @@ package org.govmix.proxy.fatturapa.web.commons.consegnaFattura;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class LottoFattureAnalyzer {
 	private boolean isFirmato;
 	private byte[] original;
 	private byte[] decoded;
-	
+
 	public LottoFattureAnalyzer(byte[] lottoFatture, Logger log) throws Exception {
 		this.original = lottoFatture;
 		try {
@@ -55,15 +56,27 @@ public class LottoFattureAnalyzer {
 		}
 	}
 
+	private static DocumentBuilderFactory dbf;
+	private static XPathFactory xPathfactory;
+	private static boolean init;
+
+	private static synchronized void init() {
+		if(!init) {
+			dbf = DocumentBuilderFactory.newInstance();
+			xPathfactory = XPathFactory.newInstance();
+		}
+		init = true;
+	}
+
 	private byte[] extractContentFromXadesSignedFile(byte[] xmlIn) throws Exception {
 		InputStream xadesIn = null;
-		
+		ByteArrayOutputStream bos = null;
 		try {
+			init();
 			xadesIn = new ByteArrayInputStream(xmlIn);
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			dbf.setNamespaceAware(true);
 			Document doc = dbf.newDocumentBuilder().parse(xadesIn);
-			XPathFactory xPathfactory = XPathFactory.newInstance();
+
 			XPath xpath = xPathfactory.newXPath();
 
 			Map<String, String> map = new HashMap<String, String>();
@@ -80,11 +93,11 @@ public class LottoFattureAnalyzer {
 					//TODO verificare firma?
 					referenceNode.getParentNode().removeChild(referenceNode);
 				}
-				
+
 				TransformerFactory transformerFactory = TransformerFactory.newInstance();
 				Transformer transformer = transformerFactory.newTransformer();
 
-				ByteArrayOutputStream bos=new ByteArrayOutputStream();
+				bos=new ByteArrayOutputStream();
 				StreamResult result=new StreamResult(bos);
 				transformer.transform(new DOMSource(doc), result);
 				return bos.toByteArray();
@@ -92,8 +105,8 @@ public class LottoFattureAnalyzer {
 				return null;
 			}
 		} finally {
-			if(xadesIn!=null)
-				xadesIn.close();                
+			if(xadesIn!=null) try {xadesIn.close();} catch(IOException e) {}                
+			if(bos!=null) try {bos.flush();bos.close();} catch(IOException e) {}                
 		}
 	}
 
