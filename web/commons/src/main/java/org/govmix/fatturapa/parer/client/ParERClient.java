@@ -40,6 +40,7 @@ import org.govmix.fatturapa.parer.versamento.request.UnitaDocumentaria;
 import org.govmix.fatturapa.parer.versamento.response.ECEsitoExtType;
 import org.govmix.fatturapa.parer.versamento.response.EsitoVersamentoType;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
+import org.openspcoop2.utils.Utilities;
 
 public class ParERClient {
 
@@ -181,7 +182,10 @@ public class ParERClient {
 		if(response.getStatusLine().getStatusCode() != 200) {
 			throw new Exception("Response code restituito ["+response.getStatusLine().getStatusCode()+"] diverso da [200]");
 		}
-		EsitoVersamentoType esito = toEsito(response.getEntity().getContent(), chiave);
+		
+		ByteArrayOutputStream baos = leggiBody(response);
+		EsitoVersamentoType esito = toEsito(baos.toByteArray(), chiave);
+		
 		ParERResponse parERResponse = new ParERResponse();
 		
 		if(ECEsitoExtType.NEGATIVO.equals(esito.getEsitoGenerale().getCodiceEsito())) {
@@ -189,6 +193,7 @@ public class ParERClient {
 			boolean errore = getErrori(esito, chiave);
 			if(errore) {
 				parERResponse.setStato(STATO.KO);
+				parERResponse.setEsitoVersamento(new String(baos.toByteArray())); 
 			} else {
 				parERResponse.setStato(STATO.OK);
 				if(esito.getRapportoVersamento() != null) {
@@ -205,6 +210,27 @@ public class ParERClient {
 		}
 		
 		return parERResponse;
+	}
+
+	private ByteArrayOutputStream leggiBody(HttpResponse response) throws IOException {
+		ByteArrayOutputStream baos = null;
+		InputStream is = null;
+		try {
+			is = response.getEntity().getContent();
+			baos = new ByteArrayOutputStream();
+			IOUtils.copy(is, baos);
+			return baos;
+		} finally {
+			if(baos!= null) {
+				try {
+					baos.flush();
+					baos.close();
+				} catch(Exception e) {}
+			}
+			if(is!= null) {
+				try{is.close();} catch(Exception e) {}
+			}
+		}
 	} 
 	
 	private boolean getErrori(EsitoVersamentoType esito, String chiave) {
@@ -244,26 +270,15 @@ public class ParERClient {
         }
 	}
 	
-	private EsitoVersamentoType toEsito(InputStream is, String chiave) throws JAXBException, IOException {
-		
-		ByteArrayOutputStream out = null;
+	private EsitoVersamentoType toEsito(byte content[], String chiave) throws JAXBException, IOException {
 		InputStream iss = null;
 		try {
-			out = new ByteArrayOutputStream();
-			IOUtils.copy(is, out);
 			this.logDump.info("Response con chiave "+chiave+":");
-			this.logDump.info(out.toString());
-	
-			iss = new ByteArrayInputStream(out.toByteArray());
+			this.logDump.info(new String(content));
+			iss = new ByteArrayInputStream(content);
 	    	JAXBElement<EsitoVersamentoType> unmarshal = (JAXBElement<EsitoVersamentoType>) this.evUnmarshaller.unmarshal(iss);
 			return unmarshal.getValue();
 		} finally {
-			if(out!= null) {
-				try {
-					out.flush();
-					out.close();
-				} catch(Exception e) {}
-			}
 			if(iss!= null) {
 				try{iss.close();} catch(Exception e) {}
 			}
