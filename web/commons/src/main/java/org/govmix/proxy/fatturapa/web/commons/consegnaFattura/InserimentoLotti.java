@@ -152,11 +152,12 @@ public class InserimentoLotti {
 			try {
 				LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), log);
 				
-				if(analizer.isFirmato()) {
-					if(!this.getDipartimento(request.getNomeFile(), request.getDipartimento()).getFirmaAutomatica()){
-						throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
-					}
+				if(!analizer.isFirmato()) {
+					throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
 				}
+				
+				this.getDipartimento(request.getNomeFile(), request.getDipartimento()); //check esistenza del dipartimento
+				
 			} catch(Exception e) {
 				throw new InserimentoLottiException(CODICE.ERRORE_FORMATO_FILE, request.getNomeFile());
 			}
@@ -180,11 +181,11 @@ public class InserimentoLotti {
 
 				LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), log);
 				
-				if(analizer.isFirmato()) {
-					if(!this.getDipartimento(request.getNomeFile(), request.getDipartimento()).getFirmaAutomatica()){
-						throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
-					}
+				if(!analizer.isFirmato()) {
+					throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
 				}
+
+				this.getDipartimento(request.getNomeFile(), request.getDipartimento()); //check esistenza del dipartimento
 
 				String type = analizer.isP7M() ? "P7M" : "XML"; 
 
