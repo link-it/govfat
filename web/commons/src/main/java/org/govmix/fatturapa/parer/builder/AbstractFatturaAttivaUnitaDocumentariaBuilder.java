@@ -11,7 +11,6 @@ import org.govmix.fatturapa.parer.utils.CacheEnti;
 import org.govmix.fatturapa.parer.versamento.request.ChiaveType;
 import org.govmix.fatturapa.parer.versamento.request.ProfiloUnitaDocumentariaType;
 import org.govmix.proxy.fatturapa.orm.Ente;
-import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 
 public abstract class AbstractFatturaAttivaUnitaDocumentariaBuilder extends BaseAbstractFatturaAttivaUnitaDocumentariaBuilder{
 
@@ -22,12 +21,10 @@ public abstract class AbstractFatturaAttivaUnitaDocumentariaBuilder extends Base
 	@Override
 	protected List<ParamWrapper> getParams(UnitaDocumentariaFatturaAttivaInput input) {
 		
-		SimpleDateFormat sdf = new SimpleDateFormat(FORMAT);
 			
 		List<ParamWrapper> param = new ArrayList<ParamWrapper>();
-		if(StatoConsegnaType.CONSEGNATA.equals(input.getFattura().getStatoConsegna()) && input.getFattura().getProtocollo() != null) {
+		if(input.getFattura().getProtocollo() != null && !input.getFattura().getProtocollo().startsWith("0/")) { //se il protocollo e'nella forma 0/* significa che non e' protocollata 
 			param.add(new ParamWrapper("NumeroProtocollo", input.getFattura().getProtocollo()));
-			param.add(new ParamWrapper("DataProtocollo", sdf.format(input.getFattura().getDataConsegna())));
 		}
 		
 		param.add(new ParamWrapper("NumeroEmissione", input.getFattura().getNumero()));
