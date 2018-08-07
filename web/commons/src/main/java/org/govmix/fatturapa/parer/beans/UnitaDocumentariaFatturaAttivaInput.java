@@ -32,6 +32,7 @@ public class UnitaDocumentariaFatturaAttivaInput extends AbstractUnitaDocumentar
 		this.lotto = lotto;
 	}
 	public List<TracciaSDI> getTracce() {
+		if(tracce == null) tracce = new ArrayList<TracciaSDI>();
 		return tracce;
 	}
 	public void setTracce(List<TracciaSDI> tracce) {
