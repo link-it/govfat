@@ -46,7 +46,7 @@ public class LoggerManager {
 	private static Logger batchWorkFlowFatturaLogger = null;
 	private static Logger batchProtocollazioneRicevutaLogger = null;
 	private static Logger batchSpedizioneFatturaAttivaLogger = null;
-	private static Logger batchReinvioConservazioneLogger = null;
+	private static Logger batchInvioConservazioneLogger = null;
 	private static Logger batchSchedulingConservazioneLogger = null;
 	private static Logger batchSpedizioneEsitiLogger = null;
 	private static Logger batchSpedizioneNotificheLogger = null;
@@ -95,8 +95,8 @@ public class LoggerManager {
 		if(batchSchedulingConservazioneLogger == null)
 			batchSchedulingConservazioneLogger = Logger.getLogger("batch.schedulingConservazione");
 
-		if(batchReinvioConservazioneLogger == null)
-			batchReinvioConservazioneLogger = Logger.getLogger("batch.reinvioConservazione");
+		if(batchInvioConservazioneLogger == null)
+			batchInvioConservazioneLogger = Logger.getLogger("batch.invioConservazione");
 
 		if(batchProtocollazioneRicevutaLogger == null)
 			batchProtocollazioneRicevutaLogger = Logger.getLogger("batch.protocollazioneRicevuta");
@@ -263,8 +263,8 @@ public class LoggerManager {
 		return batchSchedulingConservazioneLogger;
 	}
 
-	public static Logger getBatchReinvioConservazioneLogger() {
-		return batchReinvioConservazioneLogger;
+	public static Logger getBatchInvioConservazioneLogger() {
+		return batchInvioConservazioneLogger;
 	}
 
 	public static Logger getDumpLogger() {

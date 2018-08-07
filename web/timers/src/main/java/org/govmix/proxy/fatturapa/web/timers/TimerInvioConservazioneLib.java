@@ -64,7 +64,7 @@ import org.openspcoop2.generic_project.expression.SortOrder;
 
 
 /**
- * Implementazione dell'interfaccia {@link TimerReinvioConservazione}.
+ * Implementazione dell'interfaccia {@link TimerInvioConservazione}.
  * 
  * 
  *  
@@ -73,10 +73,10 @@ import org.openspcoop2.generic_project.expression.SortOrder;
  * @version $Rev: 9747 $, $Date: 2014-03-10 11:47:43 +0100 (Mon, 10 Mar 2014) $
  */
 
-public class TimerReinvioConservazioneLib extends AbstractTimerLib {
+public class TimerInvioConservazioneLib extends AbstractTimerLib {
 
 
-	public TimerReinvioConservazioneLib(int limit, Logger log, boolean logQuery) throws Exception{
+	public TimerInvioConservazioneLib(int limit, Logger log, boolean logQuery) throws Exception{
 		super(limit, log, logQuery);
 	}
 
