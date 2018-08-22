@@ -128,6 +128,8 @@ public class FatturaElettronicaFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "protocollo", FatturaElettronica.model().PROTOCOLLO.getFieldType()));
 				setParameter(object, "setXml", FatturaElettronica.model().XML.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "xml", FatturaElettronica.model().XML.getFieldType()));
+				setParameter(object, "set_value_statoConservazione", String.class,
+					jdbcParameterUtilities.readParameter(rs, "stato_conservazione", FatturaElettronica.model().STATO_CONSERVAZIONE.getFieldType())+"");
 				return object;
 			}
 			if(model.equals(FatturaElettronica.model().LOTTO_FATTURE)){
@@ -306,6 +308,8 @@ public class FatturaElettronicaFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"protocollo"));
 				setParameter(object, "setXml", FatturaElettronica.model().XML.getFieldType(),
 					this.getObjectFromMap(map,"xml"));
+				setParameter(object, "set_value_statoConservazione", String.class,
+					this.getObjectFromMap(map,"statoConservazione"));
 				return object;
 			}
 			if(model.equals(FatturaElettronica.model().LOTTO_FATTURE)){

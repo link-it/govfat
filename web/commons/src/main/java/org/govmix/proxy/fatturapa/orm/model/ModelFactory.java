@@ -52,6 +52,8 @@ public class ModelFactory {
 	
 	public static RegistroPropertyModel REGISTRO_PROPERTY = new RegistroPropertyModel();
 	
+	public static SIPModel SIP = new SIPModel();
+	
 	public static UtenteModel UTENTE = new UtenteModel();
 	
 	public static DipartimentoPropertyModel DIPARTIMENTO_PROPERTY = new DipartimentoPropertyModel();

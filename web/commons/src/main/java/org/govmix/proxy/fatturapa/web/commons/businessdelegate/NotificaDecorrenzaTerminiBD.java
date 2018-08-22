@@ -23,11 +23,17 @@ package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 import java.sql.Connection;
 
 import org.apache.log4j.Logger;
+import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.dao.INotificaDecorrenzaTerminiService;
+import org.openspcoop2.generic_project.exception.ExpressionException;
+import org.openspcoop2.generic_project.exception.ExpressionNotImplementedException;
+import org.openspcoop2.generic_project.exception.MultipleResultException;
+import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
+import org.openspcoop2.generic_project.expression.IExpression;
 
 public class NotificaDecorrenzaTerminiBD extends BaseBD {
 
@@ -35,12 +41,12 @@ public class NotificaDecorrenzaTerminiBD extends BaseBD {
 	public NotificaDecorrenzaTerminiBD() throws Exception {
 		this(Logger.getLogger(NotificaDecorrenzaTerminiBD.class));
 	}
-	
+
 	public NotificaDecorrenzaTerminiBD(Logger log) throws Exception {
 		super(log);
 		this.service = this.serviceManager.getNotificaDecorrenzaTerminiService();
 	}
-	
+
 	public NotificaDecorrenzaTerminiBD(Logger log, Connection connection, boolean autocommit) throws Exception {
 		super(log, connection, autocommit);
 		this.service = this.serviceManager.getNotificaDecorrenzaTerminiService();
@@ -48,7 +54,7 @@ public class NotificaDecorrenzaTerminiBD extends BaseBD {
 
 	public void create(NotificaDecorrenzaTermini notificaDecorrenzaTermini) throws Exception {
 		try {
-			
+
 			IdNotificaDecorrenzaTermini id = this.service.convertToId(notificaDecorrenzaTermini);
 			if(this.service.exists(id)) {
 				this.log.warn("Notifica Decorrenza Termini ["+id.toJson()+"] gia' inserita nel sistema. Non la inserisco nuovamente");
@@ -63,5 +69,21 @@ public class NotificaDecorrenzaTerminiBD extends BaseBD {
 			throw new Exception(e);
 		}
 	}
-	
+
+	public NotificaDecorrenzaTermini getNotificaDT(IdFattura idFattura) throws ServiceException, NotFoundException {
+		try {
+			IExpression exp = this.service.newExpression();
+			exp.equals(NotificaDecorrenzaTermini.model().IDENTIFICATIVO_SDI, idFattura.getIdentificativoSdi());
+
+			return this.service.find(exp);
+		} catch (NotImplementedException e) {
+			throw new ServiceException(e);
+		} catch (ExpressionNotImplementedException e) {
+			throw new ServiceException(e);
+		} catch (ExpressionException e) {
+			throw new ServiceException(e);
+		} catch (MultipleResultException e) {
+			throw new ServiceException(e);
+		}
+	}
 }

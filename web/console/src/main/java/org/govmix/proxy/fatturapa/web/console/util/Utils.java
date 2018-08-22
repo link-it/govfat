@@ -43,6 +43,7 @@ import org.apache.log4j.Logger;
 import org.govmix.pcc.fatture.FattureWS;
 import org.govmix.pcc.fatture.FattureWS_Service;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
+import org.govmix.proxy.fatturapa.orm.Ente;
 import org.govmix.proxy.fatturapa.orm.IdDipartimento;
 import org.govmix.proxy.fatturapa.orm.IdOperazione;
 import org.govmix.proxy.fatturapa.orm.IdProtocollo;
@@ -133,6 +134,19 @@ public class Utils extends org.openspcoop2.generic_project.web.impl.jsf1.utils.U
 
 			if(lb!= null && lb.getIsLoggedIn()){
 				return lb.getListDipartimenti();
+			}
+		}
+		return null;
+	}
+	
+	public static Map<String,Ente> getMapEntiLoggedUtente() {
+		FacesContext fc = FacesContext.getCurrentInstance();
+		if(fc!= null){
+			ExternalContext ec = fc.getExternalContext();
+			LoginMBean lb = (LoginMBean)ec.getSessionMap().get("loginBean");
+
+			if(lb!= null && lb.getIsLoggedIn()){
+				return lb.getMapEnti();
 			}
 		}
 		return null;

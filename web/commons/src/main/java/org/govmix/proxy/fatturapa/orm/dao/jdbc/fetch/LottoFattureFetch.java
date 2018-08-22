@@ -240,7 +240,7 @@ public class LottoFattureFetch extends AbstractJDBCFetch {
 				setParameter(object, "setProtocollo", LottoFatture.model().PROTOCOLLO.getFieldType(),
 					this.getObjectFromMap(map,"protocollo"));
 				setParameter(object, "setIdEgov", LottoFatture.model().ID_EGOV.getFieldType(),
-					this.getObjectFromMap(map,"id-egov"));
+						this.getObjectFromMap(map,"id-egov"));
 				return object;
 			}
 			

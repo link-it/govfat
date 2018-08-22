@@ -7,6 +7,7 @@ import java.util.List;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.UtenteDipartimento;
+import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.UserRole;
 import org.openspcoop2.generic_project.beans.CustomField;
 import org.openspcoop2.generic_project.dao.IExpressionConstructor;
@@ -56,10 +57,18 @@ public class FatturaFilter extends AbstractFilter {
 	
 	private String protocollo;
 	protected Boolean decorrenzaTermini;
+	private Boolean idSipNull;
+	
+	private String ente;
+	private Integer anno;
+	
+	private List<StatoConservazioneType> statiConservazione;
+	
+	protected Boolean filtroConservazione = null;
 
 	public FatturaFilter(IExpressionConstructor expressionConstructor, Boolean fatturazioneAttiva) {
 		super(expressionConstructor);
-		this.fatturazioneAttiva = fatturazioneAttiva;
+		this.setFatturazioneAttiva(fatturazioneAttiva);
 	}
 
 	public FatturaFilter(IExpressionConstructor expressionConstructor) {
@@ -70,6 +79,10 @@ public class FatturaFilter extends AbstractFilter {
 	public IExpression _toExpression() throws ServiceException {
 		try {
 			IExpression expression = this._toFatturaExpression();
+			
+			IExpression conservazioneExpression = this._toConservazioneExpression();
+			if(this.filtroConservazione != null && this.filtroConservazione.booleanValue() && conservazioneExpression != null)
+				expression.and(conservazioneExpression);
 
 			if(this.id != null) {
 				expression.equals(new CustomField("id", Long.class, "id", this.getRootTable()), this.id);
@@ -83,8 +96,8 @@ public class FatturaFilter extends AbstractFilter {
 				expression.equals(FatturaElettronica.model().POSIZIONE, this.posizione);
 			}
 
-			if(this.fatturazioneAttiva != null) {
-				expression.equals(FatturaElettronica.model().LOTTO_FATTURE.FATTURAZIONE_ATTIVA, this.fatturazioneAttiva);
+			if(this.getFatturazioneAttiva() != null) {
+				expression.equals(FatturaElettronica.model().LOTTO_FATTURE.FATTURAZIONE_ATTIVA, this.getFatturazioneAttiva());
 			}
 			
 			if(this.dataRicezioneMin != null) {
@@ -117,6 +130,16 @@ public class FatturaFilter extends AbstractFilter {
 			
 			if(this.protocollo != null) {
 				expression.ilike(FatturaElettronica.model().PROTOCOLLO, this.protocollo);
+			}
+			
+			if(this.idSipNull!= null) {
+				CustomField customField = new CustomField("id_sip", Long.class, "id_sip", this.getRootTable());
+				
+				if(this.idSipNull) {
+					expression.isNull(customField);
+				} else {
+					expression.isNotNull(customField);
+				}
 			}
 			
 			if(this.cpDenominazioneList != null) {
@@ -170,6 +193,26 @@ public class FatturaFilter extends AbstractFilter {
 				}
 				expression.in(FatturaElettronica.model().CODICE_DESTINATARIO, dipartimenti);
 			}
+			
+			
+			if(this.ente!= null) {
+				expression.equals(FatturaElettronica.model().DIPARTIMENTO.ENTE.NOME, this.ente);
+			}
+			
+			if(this.anno!= null) {
+				expression.equals(FatturaElettronica.model().ANNO, this.anno);
+			}
+			
+			if(this.statiConservazione != null && !this.statiConservazione.isEmpty()) {
+				IExpression expression2 = this.newExpression();
+
+				for(StatoConservazioneType stato: this.statiConservazione){
+					expression2.equals(FatturaElettronica.model().STATO_CONSERVAZIONE, stato);
+					expression2.or();
+				}
+				expression.and(expression2);
+			}
+			
 			return expression;
 		} catch (ExpressionNotImplementedException e) {
 			throw new ServiceException(e);
@@ -181,6 +224,14 @@ public class FatturaFilter extends AbstractFilter {
 	}
 	
 	protected IExpression _toFatturaExpression() throws ServiceException {
+		try {
+			return this.newExpression();
+		} catch (NotImplementedException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	protected IExpression _toConservazioneExpression() throws ServiceException {
 		try {
 			return this.newExpression();
 		} catch (NotImplementedException e) {
@@ -344,4 +395,54 @@ public class FatturaFilter extends AbstractFilter {
 		this.decorrenzaTermini = decorrenzaTermini;
 	}
 
+	public String getEnte() {
+		return ente;
+	}
+
+	public void setEnte(String ente) {
+		this.ente = ente;
+	}
+
+	public Integer getAnno() {
+		return anno;
+	}
+
+	public void setAnno(Integer anno) {
+		this.anno = anno;
+	}
+
+	public List<StatoConservazioneType> getStatiConservazione() {
+		if(this.statiConservazione == null) this.statiConservazione = new ArrayList<StatoConservazioneType>();
+		return statiConservazione;
+	}
+
+	public void setStatiConservazione(List<StatoConservazioneType> statiConservazione) {
+		this.statiConservazione = statiConservazione;
+	}
+
+	
+	public Boolean getFatturazioneAttiva() {
+		return fatturazioneAttiva;
+	}
+
+	public void setFatturazioneAttiva(Boolean fatturazioneAttiva) {
+		this.fatturazioneAttiva = fatturazioneAttiva;
+	}
+
+	public Boolean getIdSipNull() {
+		return idSipNull;
+	}
+
+	public void setIdSipNull(Boolean idSipNull) {
+		this.idSipNull = idSipNull;
+	}
+
+	public Boolean getFiltroConservazione() {
+		return filtroConservazione;
+	}
+
+	public void setFiltroConservazione(Boolean filtroConservazione) {
+		this.filtroConservazione = filtroConservazione;
+	}
+	
 }

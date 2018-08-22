@@ -440,6 +440,50 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 			return;
 		}
 		obj.setId(imgSaved.getId());
+		if(obj.getIdSIP()!=null && 
+				imgSaved.getIdSIP()!=null){
+			obj.getIdSIP().setId(imgSaved.getIdSIP().getId());
+		}
+		if(obj.getDipartimento()!=null && 
+				imgSaved.getDipartimento()!=null){
+			obj.getDipartimento().setId(imgSaved.getDipartimento().getId());
+			if(obj.getDipartimento().getEnte()!=null && 
+					imgSaved.getDipartimento().getEnte()!=null){
+				obj.getDipartimento().getEnte().setId(imgSaved.getDipartimento().getEnte().getId());
+			}
+			if(obj.getDipartimento().getRegistro()!=null && 
+					imgSaved.getDipartimento().getRegistro()!=null){
+				obj.getDipartimento().getRegistro().setId(imgSaved.getDipartimento().getRegistro().getId());
+			}
+			if(obj.getDipartimento().getDipartimentoPropertyValueList()!=null){
+				List<org.govmix.proxy.fatturapa.orm.DipartimentoPropertyValue> listObj_dipartimento = obj.getDipartimento().getDipartimentoPropertyValueList();
+				for(org.govmix.proxy.fatturapa.orm.DipartimentoPropertyValue itemObj_dipartimento : listObj_dipartimento){
+					org.govmix.proxy.fatturapa.orm.DipartimentoPropertyValue itemAlreadySaved_dipartimento = null;
+					if(imgSaved.getDipartimento().getDipartimentoPropertyValueList()!=null){
+						List<org.govmix.proxy.fatturapa.orm.DipartimentoPropertyValue> listImgSaved_dipartimento = imgSaved.getDipartimento().getDipartimentoPropertyValueList();
+						for(org.govmix.proxy.fatturapa.orm.DipartimentoPropertyValue itemImgSaved_dipartimento : listImgSaved_dipartimento){
+							boolean objEqualsToImgSaved_dipartimento = false;
+							objEqualsToImgSaved_dipartimento = org.openspcoop2.generic_project.utils.Utilities.equals(itemObj_dipartimento.getValore(),itemImgSaved_dipartimento.getValore());
+							if(objEqualsToImgSaved_dipartimento){
+								itemAlreadySaved_dipartimento=itemImgSaved_dipartimento;
+								break;
+							}
+						}
+					}
+					if(itemAlreadySaved_dipartimento!=null){
+						itemObj_dipartimento.setId(itemAlreadySaved_dipartimento.getId());
+						if(itemObj_dipartimento.getIdProperty()!=null && 
+								itemAlreadySaved_dipartimento.getIdProperty()!=null){
+							itemObj_dipartimento.getIdProperty().setId(itemAlreadySaved_dipartimento.getIdProperty().getId());
+							if(itemObj_dipartimento.getIdProperty().getIdEnte()!=null && 
+									itemAlreadySaved_dipartimento.getIdProperty().getIdEnte()!=null){
+								itemObj_dipartimento.getIdProperty().getIdEnte().setId(itemAlreadySaved_dipartimento.getIdProperty().getIdEnte().getId());
+							}
+						}
+					}
+				}
+			}
+		}
 
 	}
 	
@@ -511,6 +555,29 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 			new JDBCObject(tableId,Long.class));
 
 
+		if(idMappingResolutionBehaviour==null ||
+			(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
+		){
+			try {
+				// Object _lottoFatture_sip (recupero id)
+				ISQLQueryObject sqlQueryObjectGet_lottoFatture_sip_readFkId = sqlQueryObjectGet.newSQLQueryObject();
+				sqlQueryObjectGet_lottoFatture_sip_readFkId.addFromTable(this.getLottoFattureFieldConverter().toTable(org.govmix.proxy.fatturapa.orm.LottoFatture.model()));
+				sqlQueryObjectGet_lottoFatture_sip_readFkId.addSelectField("id_sip");
+				sqlQueryObjectGet_lottoFatture_sip_readFkId.addWhereCondition("id=?");
+				sqlQueryObjectGet_lottoFatture_sip_readFkId.setANDLogicOperator(true);
+				Long idFK_lottoFatture_sip = (Long) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_lottoFatture_sip_readFkId.createSQLQuery(), jdbcProperties.isShowSql(),Long.class,
+						new JDBCObject(lottoFatture.getId(),Long.class));
+				
+				org.govmix.proxy.fatturapa.orm.IdSip id_lottoFatture_sip = null;
+				if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
+					id_lottoFatture_sip = ((JDBCSIPServiceSearch)(this.getServiceManager().getSIPServiceSearch())).findId(idFK_lottoFatture_sip, false);
+				}else{
+					id_lottoFatture_sip = new org.govmix.proxy.fatturapa.orm.IdSip();
+				}
+				id_lottoFatture_sip.setId(idFK_lottoFatture_sip);
+				lottoFatture.setIdSIP(id_lottoFatture_sip);
+			} catch(NotFoundException e) {}
+		}
 
 		
         return lottoFatture;  
@@ -553,6 +620,12 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 			sqlQueryObject.addWhereCondition(tableName1+".codice_destinatario="+tableName2+".codice");
 		}
 
+		if(expression.inUseModel(LottoFatture.model().ID_SIP,false)){
+			String tableName1 = this.getLottoFattureFieldConverter().toAliasTable(LottoFatture.model());
+			String tableName2 = this.getLottoFattureFieldConverter().toAliasTable(LottoFatture.model().ID_SIP);
+			sqlQueryObject.addWhereCondition(tableName1+".id_sip="+tableName2+".id");
+		}
+
 	}
 	
 	protected java.util.List<Object> _getRootTablePrimaryKeyValues(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdLotto id) throws NotFoundException, ServiceException, NotImplementedException, Exception{
@@ -578,6 +651,47 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 				new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model()))
 			));
 
+		// LottoFatture.model().ID_SIP
+		mapTableToPKColumn.put(converter.toTable(LottoFatture.model().ID_SIP),
+			utilities.newList(
+				new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().ID_SIP))
+			));
+
+		// LottoFatture.model().DIPARTIMENTO
+		mapTableToPKColumn.put(converter.toTable(LottoFatture.model().DIPARTIMENTO),
+			utilities.newList(
+				new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().DIPARTIMENTO))
+			));
+
+		// LottoFatture.model().DIPARTIMENTO.ENTE
+		mapTableToPKColumn.put(converter.toTable(LottoFatture.model().DIPARTIMENTO.ENTE),
+			utilities.newList(
+				new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().DIPARTIMENTO.ENTE))
+			));
+
+		// LottoFatture.model().DIPARTIMENTO.REGISTRO
+		mapTableToPKColumn.put(converter.toTable(LottoFatture.model().DIPARTIMENTO.REGISTRO),
+			utilities.newList(
+				new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().DIPARTIMENTO.REGISTRO))
+			));
+
+		// LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE
+		mapTableToPKColumn.put(converter.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE),
+			utilities.newList(
+				new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE))
+			));
+
+		// LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY
+		mapTableToPKColumn.put(converter.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY),
+			utilities.newList(
+				new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY))
+			));
+
+		// LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE
+		mapTableToPKColumn.put(converter.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE),
+			utilities.newList(
+				new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE))
+			));
 
         return mapTableToPKColumn;		
 	}
@@ -641,17 +755,6 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 		InUse inUse = new InUse();
 		inUse.setInUse(false);
 		
-		/* 
-		 * TODO: implement code that checks whether the object identified by the id parameter is used by other objects
-		*/
-		
-		// Delete this line when you have implemented the method
-		int throwNotImplemented = 1;
-		if(throwNotImplemented==1){
-		        throw new NotImplementedException("NotImplemented");
-		}
-		// Delete this line when you have implemented the method
-
         return inUse;
 
 	}

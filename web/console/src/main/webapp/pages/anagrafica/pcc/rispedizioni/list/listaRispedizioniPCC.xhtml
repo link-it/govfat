@@ -57,7 +57,51 @@
 
 				<rich:column id="colRispedizioneAutomatica" style="text-align: center;">
 					<f:facet name="header">
-						<h:outputText id="outAbilitata" value="#{msg['rispedizione.rispedizioneAutomatica']}" />
+						<h:panelGroup>
+							<h:outputText id="outAbilitata" value="#{msg['rispedizione.rispedizioneAutomatica']}" />
+							<script type="text/javascript" >
+			                  	//<![CDATA[
+			                  		
+			              		function #{id}_checkAllCheckboxesInTable( inputId, state ){
+			                              var size = 0;
+			                              var tid = ":"+inputId+"_tbl";
+			                              if(state){
+			                                  size = jQuery("table [id$='"+tid+"'] input:checkbox[id$='#{id}_column_ckb']").not("[id$='selectedAllChbx']").attr("checked","on").size();
+			                              }else{
+			                                  jQuery("table [id$='"+tid+"'] input:checkbox[id$='#{id}_column_ckb']").removeAttr("checked");
+			                                  size=0;
+			                              }
+			
+			                              if(true){
+			                                  var _totRows = #{value.rowCount};
+			                                  var _rows = #{rowsToDisplay};
+			                                  if(state && _totRows>_rows ){
+			                                          var t1= formatMessage("#{commonsMsg['pagedDataTable.script.checkAllCheckboxesInTable.selezionati']}",{0:size,1:_totRows});
+			                                          jQuery("[id$='"+inputId+"_selectedInfoLbl']").show().text(t1);
+			                                          var t2= formatMessage("#{commonsMsg['pagedDataTable.script.checkAllCheckboxesInTable.selezionaTutti']}",{0:_totRows});
+			                                          jQuery("[id$='"+inputId+"_selectAllLink']").show().text(t2);
+	                                          }else{
+	                                                  jQuery("[id$='"+inputId+"_selectedInfoLbl']").hide();
+	                                                  jQuery("[id$='"+inputId+"_selectAllLink']").hide();
+	                                                  jQuery("[id$='"+inputId+"_undoSelectAllLink']").hide();                         
+	                                          }
+	                                      }
+			                     	}  
+			              		
+								jQuery(document).ready(function() {
+									
+									var iInputId = '#{id}';
+									var tiId = iInputId+"_deleteConfirmationContentTable";
+									
+									jQuery("table [id$='"+tiId+"'] tr td.rich-mpnl-body").css('padding-top','20px');
+									jQuery("table [id$='"+tiId+"'] tr td.rich-mpnl-body > table tbody tr td > table tbody tr td > img").css('margin-right','10px');
+									jQuery("table [id$='"+tiId+"'] tr td.rich-mpnl-body > table tbody tr td > div.buttonrow").css('padding-left','40px');
+									jQuery("table [id$='"+tiId+"'] tr td.rich-mpnl-body > table tbody tr td > div.buttonrow > input").css('padding','4px 6px 4px 5px');
+									
+								 });
+							//]]>
+			                </script>
+		                </h:panelGroup>
 					</f:facet>
 
 					<a4j:commandLink id="linkAbilitata" style="align: center;"

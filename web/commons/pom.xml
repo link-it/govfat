@@ -18,6 +18,17 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>4.5.2</version>
+		</dependency>
+	
+		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.5.5</version>
@@ -161,11 +172,11 @@
 			<classifier>jdk15</classifier>
 		</dependency>
 		
-                <dependency>
-                        <groupId>org.jibx</groupId>
-                        <artifactId>jibx-run</artifactId>
-                        <version>1.2.6</version>
-                </dependency>
+        <dependency>
+                <groupId>org.jibx</groupId>
+                <artifactId>jibx-run</artifactId>
+                <version>1.2.6</version>
+        </dependency>
 
 		<dependency>
 			<groupId>org.jibx</groupId>
@@ -173,6 +184,11 @@
 			<version>1.2.6</version>
 		</dependency>
 				
+		<dependency>
+		    <groupId>org.apache.tika</groupId>
+		    <artifactId>tika-core</artifactId>
+		    <version>1.13</version>
+		</dependency>
 
 	</dependencies>
 	<repositories>
@@ -246,6 +262,55 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxb2-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>xjc1</id>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+						<configuration>
+							<target>2.1</target>
+							<sources>
+								<source>src/main/resources/parer/WSRequestVersamento.xsd</source>
+							</sources>
+							<packageName>org.govmix.fatturapa.parer.versamento.request</packageName>
+							<clearOutputDir>false</clearOutputDir>
+						</configuration>
+					</execution>
+					<execution>
+						<id>xjc2</id>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+						<configuration>
+							<target>2.1</target>
+							<sources>
+								<source>src/main/resources/parer/WSResponseVersamento.xsd</source>
+							</sources>
+							<packageName>org.govmix.fatturapa.parer.versamento.response</packageName>
+							<clearOutputDir>false</clearOutputDir>
+						</configuration>
+					</execution>
+					<execution>
+						<id>xjc3</id>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+						<configuration>
+							<target>2.1</target>
+							<sources>
+								<source>src/main/resources/parer/WSRapportoVersamento.xsd</source>
+							</sources>
+							<packageName>org.govmix.fatturapa.parer.versamento.rapporto</packageName>
+							<clearOutputDir>false</clearOutputDir>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>templating-maven-plugin</artifactId>

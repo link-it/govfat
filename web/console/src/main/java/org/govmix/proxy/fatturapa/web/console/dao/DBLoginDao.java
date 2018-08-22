@@ -30,6 +30,7 @@ import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.Ente;
 import org.govmix.proxy.fatturapa.orm.Evento;
 import org.govmix.proxy.fatturapa.orm.IdDipartimento;
+import org.govmix.proxy.fatturapa.orm.IdEnte;
 import org.govmix.proxy.fatturapa.orm.IdRegistro;
 import org.govmix.proxy.fatturapa.orm.Protocollo;
 import org.govmix.proxy.fatturapa.orm.Registro;
@@ -255,7 +256,7 @@ public class DBLoginDao implements ILoginDao{
 				List<Map<String,Object>> select = this.dipartimentoDAO.select(pagExpr, true,
 						Dipartimento.model().CODICE,Dipartimento.model().DESCRIZIONE,
 						Dipartimento.model().ACCETTAZIONE_AUTOMATICA, Dipartimento.model().MODALITA_PUSH, Dipartimento.model().FATTURAZIONE_ATTIVA,
-						Dipartimento.model().FIRMA_AUTOMATICA, cf);
+						Dipartimento.model().FIRMA_AUTOMATICA,Dipartimento.model().ENTE.NOME, cf);
 
 				Map<Long, IdRegistro> registrimap = getRegistriMap();
 				if(select != null && select.size()  >0)
@@ -271,6 +272,9 @@ public class DBLoginDao implements ILoginDao{
 							
 							dipartimento.setRegistro(registrimap.get(idRegistro));
 						}
+						
+						IdEnte ente = (IdEnte) dipFetch.fetch(databaseType, Dipartimento.model().ENTE, dipMap);
+						dipartimento.setEnte(ente);
 						
 						listDipartimenti.add(dipartimento); 
 					}

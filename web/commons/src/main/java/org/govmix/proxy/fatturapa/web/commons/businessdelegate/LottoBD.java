@@ -21,17 +21,28 @@
 package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 
 import java.sql.Connection;
+import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
+import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
+import org.govmix.proxy.fatturapa.orm.dao.IDBLottoFattureService;
 import org.govmix.proxy.fatturapa.orm.dao.IDBLottoFattureServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.ILottoFattureService;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.LottoFattureFieldConverter;
+import org.openspcoop2.generic_project.beans.CustomField;
+import org.openspcoop2.generic_project.beans.UpdateField;
+import org.openspcoop2.generic_project.exception.ExpressionException;
+import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
+import org.openspcoop2.generic_project.expression.IPaginatedExpression;
+import org.openspcoop2.generic_project.expression.SortOrder;
 
-public abstract class LottoBD extends BaseBD {
+public class LottoBD extends BaseBD {
 
 	protected ILottoFattureService service;
 
@@ -110,6 +121,65 @@ public abstract class LottoBD extends BaseBD {
 			throw new Exception(e);
 		} catch (NotImplementedException e) {
 			this.log.error("Errore durante la exists: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public void assegnaIdSip(LottoFatture lottoFatture, Long id) throws ServiceException {
+		try {
+			LottoFattureFieldConverter converter = new LottoFattureFieldConverter(this.serviceManager.getJdbcProperties().getDatabase()); 
+			CustomField idSipCustomField = new CustomField("id_sip", Long.class, "id_sip", converter.toTable(LottoFatture.model()));
+			UpdateField sipUpdateField = new UpdateField(idSipCustomField, id);
+
+			((IDBLottoFattureService)this.service).updateFields(lottoFatture.getId(), sipUpdateField);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la assegnaIdSip: " + e.getMessage(), e);
+			throw new ServiceException(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la assegnaIdSip: " + e.getMessage(), e);
+			throw new ServiceException(e);
+		} catch (NotFoundException e) {
+			this.log.error("Errore durante la assegnaIdSip: " + e.getMessage(), e);
+			throw new ServiceException(e);
+		} catch (ExpressionException e) {
+			this.log.error("Errore durante la assegnaIdSip: " + e.getMessage(), e);
+			throw new ServiceException(e);
+		}
+	}
+
+	public List<LottoFatture> getLottiDaConservare(Date dataLimite, int offset, int limit) throws Exception {
+		try {
+			IPaginatedExpression expression = this.service.toPaginatedExpression(getLottiDaConservareExpression(dataLimite));
+
+			expression.sortOrder(SortOrder.ASC);
+			expression.addOrder(LottoFatture.model().DATA_RICEZIONE);
+
+			expression.offset(offset);
+			expression.limit(limit);
+
+			return this.service.findAll(expression);
+		} catch (ServiceException e) {
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			throw new Exception(e);
+		}
+	}
+
+	private IExpression getLottiDaConservareExpression(Date dataLimite) throws Exception {
+		IExpression expression = this.service.newExpression();
+		expression.in(LottoFatture.model().ID_SIP.STATO_CONSEGNA, StatoConsegnaType.NON_CONSEGNATA, StatoConsegnaType.IN_RICONSEGNA);
+		expression.lessEquals(LottoFatture.model().ID_SIP.DATA_ULTIMA_CONSEGNA, dataLimite);
+		return expression;
+	}
+
+	public long countLottiDaConservare(Date dataLimite) throws Exception {
+		try {
+			IExpression expression = getLottiDaConservareExpression(dataLimite);
+
+			return this.service.count(expression).longValue();
+		} catch (ServiceException e) {
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
 			throw new Exception(e);
 		}
 	}

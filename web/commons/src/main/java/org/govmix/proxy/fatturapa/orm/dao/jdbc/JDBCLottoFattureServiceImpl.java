@@ -66,6 +66,23 @@ public class JDBCLottoFattureServiceImpl extends JDBCLottoFattureServiceSearchIm
 		ISQLQueryObject sqlQueryObjectInsert = sqlQueryObject.newSQLQueryObject();
 				
 
+		// Object _sip
+		Long id_sip = null;
+		org.govmix.proxy.fatturapa.orm.IdSip idLogic_sip = null;
+		idLogic_sip = lottoFatture.getIdSIP();
+		if(idLogic_sip!=null){
+			if(idMappingResolutionBehaviour==null ||
+				(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour))){
+				id_sip = ((JDBCSIPServiceSearch)(this.getServiceManager().getSIPServiceSearch())).findTableId(idLogic_sip, false);
+			}
+			else if(org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour)){
+				id_sip = idLogic_sip.getId();
+				if(id_sip==null || id_sip<=0){
+					throw new Exception("Logic id not contains table id");
+				}
+			}
+		}
+
 
 		// Object lottoFatture
 		sqlQueryObjectInsert.addInsertTable(this.getLottoFattureFieldConverter().toTable(LottoFatture.model()));
@@ -110,6 +127,7 @@ public class JDBCLottoFattureServiceImpl extends JDBCLottoFattureServiceSearchIm
 		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_PROTOCOLLAZIONE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().PROTOCOLLO,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().ID_EGOV,false),"?");
+		sqlQueryObjectInsert.addInsertField("id_sip","?");
 
 		// Insert lottoFatture
 		org.openspcoop2.utils.jdbc.IKeyGeneratorObject keyGenerator = this.getLottoFattureFetch().getKeyGeneratorObject(LottoFatture.model());
@@ -154,7 +172,8 @@ public class JDBCLottoFattureServiceImpl extends JDBCLottoFattureServiceSearchIm
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getStatoProtocollazione(),LottoFatture.model().STATO_PROTOCOLLAZIONE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getDataProtocollazione(),LottoFatture.model().DATA_PROTOCOLLAZIONE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getProtocollo(),LottoFatture.model().PROTOCOLLO.getFieldType()),
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getIdEgov(),LottoFatture.model().ID_EGOV.getFieldType())
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getIdEgov(),LottoFatture.model().ID_EGOV.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id_sip,Long.class)
 		);
 		lottoFatture.setId(id);
 
@@ -191,6 +210,28 @@ public class JDBCLottoFattureServiceImpl extends JDBCLottoFattureServiceSearchIm
 		ISQLQueryObject sqlQueryObjectGet = sqlQueryObjectDelete.newSQLQueryObject();
 		ISQLQueryObject sqlQueryObjectUpdate = sqlQueryObjectGet.newSQLQueryObject();
 		
+		boolean setIdMappingResolutionBehaviour = 
+			(idMappingResolutionBehaviour==null) ||
+			org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) ||
+			org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour);
+			
+
+		// Object _lottoFatture_sip
+		Long id_lottoFatture_sip = null;
+		org.govmix.proxy.fatturapa.orm.IdSip idLogic_lottoFatture_sip = null;
+		idLogic_lottoFatture_sip = lottoFatture.getIdSIP();
+		if(idLogic_lottoFatture_sip!=null){
+			if(idMappingResolutionBehaviour==null ||
+				(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour))){
+				id_lottoFatture_sip = ((JDBCSIPServiceSearch)(this.getServiceManager().getSIPServiceSearch())).findTableId(idLogic_lottoFatture_sip, false);
+			}
+			else if(org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour)){
+				id_lottoFatture_sip = idLogic_lottoFatture_sip.getId();
+				if(id_lottoFatture_sip==null || id_lottoFatture_sip<=0){
+					throw new Exception("Logic id not contains table id");
+				}
+			}
+		}
 
 
 		// Object lottoFatture
@@ -280,6 +321,12 @@ public class JDBCLottoFattureServiceImpl extends JDBCLottoFattureServiceSearchIm
 		lstObjects_lottoFatture.add(new JDBCObject(lottoFatture.getProtocollo(), LottoFatture.model().PROTOCOLLO.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().ID_EGOV,false), "?");
 		lstObjects_lottoFatture.add(new JDBCObject(lottoFatture.getIdEgov(), LottoFatture.model().ID_EGOV.getFieldType()));
+		if(setIdMappingResolutionBehaviour){
+			sqlQueryObjectUpdate.addUpdateField("id_sip","?");
+		}
+		if(setIdMappingResolutionBehaviour){
+			lstObjects_lottoFatture.add(new JDBCObject(id_lottoFatture_sip, Long.class));
+		}
 		sqlQueryObjectUpdate.addWhereCondition("id=?");
 		lstObjects_lottoFatture.add(new JDBCObject(tableId, Long.class));
 

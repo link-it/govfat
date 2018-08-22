@@ -27,6 +27,7 @@ import java.util.List;
 import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
+import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters;
 
@@ -91,6 +92,7 @@ public abstract class AbstractFatturaConverter<T> {
 		fatturaElettronica.setImportoTotaleRiepilogo(this.getImportoTotaleRiepilogo());
 		fatturaElettronica.setStatoConsegna(StatoConsegnaType.NON_CONSEGNATA);
 		fatturaElettronica.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
+		fatturaElettronica.setStatoConservazione(StatoConservazioneType.NON_INVIATA);
 		
 		fatturaElettronica.setFatturazioneAttiva(this.params.isFatturazioneAttiva());		
 		fatturaElettronica.setTentativiConsegna(new Integer(0));

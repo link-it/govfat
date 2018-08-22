@@ -215,126 +215,6 @@
 			
 			<op2web:managedPagedListView  value="#{fatturaElettronicaAttivaDM}" mBean="#{fatturaElettronicaAttivaMBean}" >
 			
-            	<rich:column align="center" width="50px" id="ckbClmn_2" rendered="#{not empty mBean}">
-      	        	<f:facet name="header">
-		                <h:panelGroup style="width:50px;" layout="block">
-		                	<script type="text/javascript" >
-		                  	//<![CDATA[
-		                    	function #{id}_checkAllCheckboxesInTable_2( inputId, state ){
-		                              var size = 0;
-		                              var tid = ":"+inputId+"_tbl";
-		                              if(state){
-		                                  size = jQuery("table [id$='"+tid+"'] input:checkbox[id$='#{id}_column_ckb_2']").not("[id$='selectedAllChbx_2']").attr("checked","on").size();
-		                                  #{id}_disabilitaEsporta_2('carica-iconLink',true);
-		                              }else{
-		                                  jQuery("table [id$='"+tid+"'] input:checkbox[id$='#{id}_column_ckb_2']").removeAttr("checked");
-		                                  #{id}_disabilitaEsporta_2('carica-iconLink',false);
-		                                  size=0;
-		                              }
-		
-		                              if(true){
-		                                  var _totRows = #{value.rowCount};
-		                                  var _rows = #{rowsToDisplay};
-		                                  if(state && _totRows>_rows ){
-		                                          var t1= formatMessage("#{commonsMsg['pagedDataTable.script.checkAllCheckboxesInTable.selezionati']}",{0:size,1:_totRows});
-		                                          jQuery("[id$='"+inputId+"_selectedInfoLbl']").show().text(t1);
-		                                          var t2= formatMessage("#{commonsMsg['pagedDataTable.script.checkAllCheckboxesInTable.selezionaTutti']}",{0:_totRows});
-		                                          jQuery("[id$='"+inputId+"_selectAllLink']").show().text(t2);
-                                          }else{
-                                                  jQuery("[id$='"+inputId+"_selectedInfoLbl']").hide();
-                                                  jQuery("[id$='"+inputId+"_selectAllLink']").hide();
-                                                  jQuery("[id$='"+inputId+"_undoSelectAllLink']").hide();                         
-                                          }
-                                      }
-		                     	}
-                     			function #{id}_selectAllListener_2(inputId, selectAll){
-		                          	var _totRows = #{value.rowCount};
-		                          	var tid = ":"+inputId+"_tbl";
-	                                if(selectAll){
-	                                        jQuery("[id$='"+inputId+"_selectedAllChbx_2']").attr("checked","on");
-	                                        var t1 = formatMessage("#{commonsMsg['pagedDataTable.script.selectAllListener.selezionatiTutti']}",{0:_totRows});
-	                                        jQuery("[id$='"+inputId+"_selectedInfoLbl']").show().text(t1);
-	                                        jQuery("[id$='"+inputId+"_selectAllLink']").hide();
-	                                        jQuery("[id$='"+inputId+"_undoSelectAllLink']").show().text("#{commonsMsg['pagedDataTable.script.selectAllListener.annullaSelezione']}.");
-	                                }else{
-	                                        jQuery("[id$='"+inputId+"_selectedAllChbx_2']").removeAttr("checked");
-	                                        jQuery("[id$='"+inputId+"_selectedInfoLbl']").hide();
-                                          	jQuery("[id$='"+inputId+"_selectAllLink']").hide();
-                                         	 jQuery("[id$='"+inputId+"_undoSelectAllLink']").hide();
-                                         	 //jQuery("div [id$='"+inputId+"'] input:checkbox").removeAttr("checked");
-                                         	jQuery("table [id$='"+tid+"'] input:checkbox[id$='#{id}_column_ckb_2']").removeAttr("checked");
-                                          	jQuery("table [id$='"+tid+"'] input:checkbox[id$='#{id}_checkAll_2']").removeAttr("checked");
-                                   }
-		                              
-		                        }
-		                        function formatMessage(text,values){
-		                                    for(var v in values){
-		                                              text =text.replace('{' + v + '}', values[v]);
-		                                          }
-		                                          return text;
-                                }
-		                          
-		                        function #{id}_singleCheckboxListener_2( inputId, state , showSelectAll, _totRows , _rows ){
-		                              //var tid = ":"+inputId+"_tbl";
-		                              var tid = inputId+"_tbl";
-		
-		                              var allSize = jQuery("table [id$='"+tid+"'] input:checkbox[id$='"+inputId+"_column_ckb_2']").not("[id$='selectedAllChbx_2']").size();
-		                              var size = jQuery("table [id$='"+tid+"'] input:checkbox[id$='"+inputId+"_column_ckb_2']:checked").not("[id$='selectedAllChbx_2']").size();
-		                              
-		                              if(size > 0){
-		                            	  #{id}_disabilitaEsporta_2('carica-iconLink',true);
-		                              } else {
-		                            	  #{id}_disabilitaEsporta_2('carica-iconLink',false);
-		                              }
-		                              
-		                              
-		                              if(showSelectAll){
-			                             if(state && _totRows>_rows ){
-		                                     if(size >= allSize){
-	                                             jQuery("table [id$='"+tid+"'] input:checkbox[id$='"+inputId+"_checkAll_2']").attr("checked","on");
-	                                             var t1= formatMessage("#{commonsMsg['pagedDataTable.script.checkAllCheckboxesInTable.selezionati']}",{0:size,1:_totRows});
-	                                             jQuery("[id$='"+inputId+"_selectedInfoLbl']").show().text(t1);
-	                                             var t2= formatMessage("#{commonsMsg['pagedDataTable.script.checkAllCheckboxesInTable.selezionaTutti']}",{0:_totRows});
-		                                         jQuery("[id$='"+inputId+"_selectAllLink']").show().text(t2);
-		                                     }
-			                             }else{
-			                                     jQuery("[id$='"+inputId+"_selectedInfoLbl']").hide();
-			                                     jQuery("[id$='"+inputId+"_selectAllLink']").hide();
-			                                     jQuery("[id$='"+inputId+"_undoSelectAllLink']").hide();
-			                                     jQuery("[id$='"+inputId+"_selectedAllChbx_2']").removeAttr("checked");
-			                                     jQuery("table [id$='"+tid+"'] input:checkbox[id$='"+inputId+"_checkAll_2']").removeAttr("checked");
-			                                     
-			                             }
-			                         }
-			                     }
-		                     
-		                        function #{id}_disabilitaEsporta_2( inputId, abilita ){
-		                        	 jQuery("[id$='"+inputId+"']").attr('disabled',abilita);
-		                        }
-		                        
-		                        function checkSelection2(containerId){
-		                            var name = containerId + "_checkSelection";
-		                            var n = jQuery("div [id$='"+containerId+"_tbl'] input:checkbox[id$='column_ckb_2']:checked").length;
-		                                   if(n==0){
-		                                           Richfaces.showModalPanel(name);
-		                                           return false;
-		                                   }else{
-		                                           return true;
-		                                   }
-		                    	};
-
-		                     //]]>
-		                    </script>
-		                  	<h:selectBooleanCheckbox id="#{id}_checkAll_2" title="#{commonsMsg['pagedDataTable.component.selectAll']}" onclick="#{id}_checkAllCheckboxesInTable_2( '#{id}', this.checked );">
-		
-		                  	</h:selectBooleanCheckbox>
-		                  	<h:selectBooleanCheckbox id="#{id}_selectedAllChbx_2" value="#{mBean.selectedAll}" style="display:none"/>
-		                </h:panelGroup>
-	                </f:facet>
-                    <h:selectBooleanCheckbox id="#{id}_column_ckb_2" value="#{selectionMapTarget}" disabled="false" onclick="#{id}_singleCheckboxListener_2( '#{id}', this.checked , true ,#{value.rowCount} , #{rowsToDisplay} );"/>
-                </rich:column>
-
-				
 				<!-- Colonne mittente,destinatario,identificativoSDI, annonumero, data, dataricezione, importo -->
 				<op2web:tableColumns nomiColonne="#{'cessionarioCommittente,dipartimento,identificativoSdi,annoNumero,data,dataInvio'}" />
 				
@@ -382,7 +262,135 @@
 				<!-- PDF (Icona) -->
 				<rich:column style="text-align: center;">
 					<f:facet name="header">
-						<h:outputText value="#{itemMetadata.pdf.label}" />
+						<h:panelGroup layout="block">
+							<h:outputText value="#{itemMetadata.pdf.label}" />
+							<script type="text/javascript" >
+			                  	//<![CDATA[
+			                    	function #{id}_checkAllCheckboxesInTable( inputId, state ){
+			                              var size = 0;
+			                              var tid = ":"+inputId+"_tbl";
+			                              if(state){
+			                                  size = jQuery("table [id$='"+tid+"'] input:checkbox[id$='#{id}_column_ckb']").not("[id$='selectedAllChbx']").attr("checked","on").size();
+			                                  #{id}_disabilitaEsporta('carica-iconLink',true);
+			                              }else{
+			                                  jQuery("table [id$='"+tid+"'] input:checkbox[id$='#{id}_column_ckb']").removeAttr("checked");
+			                                  #{id}_disabilitaEsporta('carica-iconLink',false);
+			                                  size=0;
+			                              }
+			
+			                              if(true){
+			                                  var _totRows = #{value.rowCount};
+			                                  var _rows = #{rowsToDisplay};
+			                                  if(state && _totRows>_rows ){
+			                                          var t1= formatMessage("#{commonsMsg['pagedDataTable.script.checkAllCheckboxesInTable.selezionati']}",{0:size,1:_totRows});
+			                                          jQuery("[id$='"+inputId+"_selectedInfoLbl']").show().text(t1);
+			                                          var t2= formatMessage("#{commonsMsg['pagedDataTable.script.checkAllCheckboxesInTable.selezionaTutti']}",{0:_totRows});
+			                                          jQuery("[id$='"+inputId+"_selectAllLink']").show().text(t2);
+	                                          }else{
+	                                                  jQuery("[id$='"+inputId+"_selectedInfoLbl']").hide();
+	                                                  jQuery("[id$='"+inputId+"_selectAllLink']").hide();
+	                                                  jQuery("[id$='"+inputId+"_undoSelectAllLink']").hide();                         
+	                                          }
+	                                      }
+			                     	}
+	                     			function #{id}_selectAllListener(inputId, selectAll){
+			                          	var _totRows = #{value.rowCount};
+			                          	var tid = ":"+inputId+"_tbl";
+		                                if(selectAll){
+		                                        jQuery("[id$='"+inputId+"_selectedAllChbx']").attr("checked","on");
+		                                        var t1 = formatMessage("#{commonsMsg['pagedDataTable.script.selectAllListener.selezionatiTutti']}",{0:_totRows});
+		                                        jQuery("[id$='"+inputId+"_selectedInfoLbl']").show().text(t1);
+		                                        jQuery("[id$='"+inputId+"_selectAllLink']").hide();
+		                                        jQuery("[id$='"+inputId+"_undoSelectAllLink']").show().text("#{commonsMsg['pagedDataTable.script.selectAllListener.annullaSelezione']}.");
+		                                }else{
+		                                        jQuery("[id$='"+inputId+"_selectedAllChbx']").removeAttr("checked");
+		                                        jQuery("[id$='"+inputId+"_selectedInfoLbl']").hide();
+	                                          	jQuery("[id$='"+inputId+"_selectAllLink']").hide();
+	                                         	 jQuery("[id$='"+inputId+"_undoSelectAllLink']").hide();
+	                                         	 //jQuery("div [id$='"+inputId+"'] input:checkbox").removeAttr("checked");
+	                                         	jQuery("table [id$='"+tid+"'] input:checkbox[id$='#{id}_column_ckb']").removeAttr("checked");
+	                                          	jQuery("table [id$='"+tid+"'] input:checkbox[id$='#{id}_checkAll']").removeAttr("checked");
+	                                   }
+			                              
+			                        }
+			                        function formatMessage(text,values){
+			                                    for(var v in values){
+			                                              text =text.replace('{' + v + '}', values[v]);
+			                                          }
+			                                          return text;
+	                                }
+			                          
+			                        function #{id}_singleCheckboxListener( inputId, state , showSelectAll, _totRows , _rows ){
+			                              //var tid = ":"+inputId+"_tbl";
+			                              var tid = inputId+"_tbl";
+			
+			                              var allSize = jQuery("table [id$='"+tid+"'] input:checkbox[id$='"+inputId+"_column_ckb']").not("[id$='selectedAllChbx']").size();
+			                              var size = jQuery("table [id$='"+tid+"'] input:checkbox[id$='"+inputId+"_column_ckb']:checked").not("[id$='selectedAllChbx']").size();
+			                              
+			                              if(size > 0){
+			                            	  #{id}_disabilitaEsporta('carica-iconLink',true);
+			                              } else {
+			                            	  #{id}_disabilitaEsporta('carica-iconLink',false);
+			                              }
+			                              
+			                              
+			                              if(showSelectAll){
+				                             if(state && _totRows>_rows ){
+			                                     if(size >= allSize){
+		                                             jQuery("table [id$='"+tid+"'] input:checkbox[id$='"+inputId+"_checkAll']").attr("checked","on");
+		                                             var t1= formatMessage("#{commonsMsg['pagedDataTable.script.checkAllCheckboxesInTable.selezionati']}",{0:size,1:_totRows});
+		                                             jQuery("[id$='"+inputId+"_selectedInfoLbl']").show().text(t1);
+		                                             var t2= formatMessage("#{commonsMsg['pagedDataTable.script.checkAllCheckboxesInTable.selezionaTutti']}",{0:_totRows});
+			                                         jQuery("[id$='"+inputId+"_selectAllLink']").show().text(t2);
+			                                     }
+				                             }else{
+				                                     jQuery("[id$='"+inputId+"_selectedInfoLbl']").hide();
+				                                     jQuery("[id$='"+inputId+"_selectAllLink']").hide();
+				                                     jQuery("[id$='"+inputId+"_undoSelectAllLink']").hide();
+				                                     jQuery("[id$='"+inputId+"_selectedAllChbx']").removeAttr("checked");
+				                                     jQuery("table [id$='"+tid+"'] input:checkbox[id$='"+inputId+"_checkAll']").removeAttr("checked");
+				                                     
+				                             }
+				                         }
+				                     }
+			                     
+			                        function #{id}_disabilitaEsporta( inputId, abilita ){
+			                        	 jQuery("[id$='"+inputId+"']").attr('disabled',abilita);
+			                        }
+			                        
+			                        function checkSelection2(containerId){
+			                            var name = containerId + "_checkSelection";
+			                            var n = jQuery("div [id$='"+containerId+"_tbl'] input:checkbox[id$='column_ckb']:checked").length;
+			                                   if(n==0){
+			                                           Richfaces.showModalPanel(name);
+			                                           return false;
+			                                   }else{
+			                                           return true;
+			                                   }
+			                    	};
+	
+								jQuery(document).ready(function() {
+									
+									var iInputId = '#{id}';
+									var tiId = iInputId+"_tbl";
+									
+									jQuery("table [id$='"+tiId+"'] input:checkbox[id$='"+iInputId+"_column_ckb']").bind( "click", function() {
+										#{id}_singleCheckboxListener( iInputId, jQuery( this ).is(':checked') , true ,#{value.rowCount} , #{rowsToDisplay} );
+									});
+									
+									var tiId2 = iInputId+"_checkSelectionContentTable";
+									
+									jQuery("table [id$='"+tiId2+"'] tr td.rich-mpnl-body").css('padding-top','20px');
+									jQuery("table [id$='"+tiId2+"'] tr td.rich-mpnl-body > table tbody tr td > table tbody tr td > img").css('margin-right','10px');
+									jQuery("table [id$='"+tiId2+"'] tr td.rich-mpnl-body > table tbody tr td > div.buttonrow").css('padding-left','110px');
+									jQuery("table [id$='"+tiId2+"'] tr td.rich-mpnl-body > table tbody tr td > div.buttonrow > input").css('padding','4px 6px 4px 5px');
+									jQuery("table [id$='"+tiId2+"'] tr td.rich-mpnl-body > table tbody tr td > div.buttonrow > input").css('text-indent','0px');
+									
+								 });
+								
+								 //]]>
+							</script>
+							</h:panelGroup>
 					</f:facet>
 					 <h:panelGroup>
 					 	<h:commandLink id="visualizzaPdfLink" target="_blank" action="#{item.visualizzaPdf}" rendered="#{not empty item.pdf.href}">

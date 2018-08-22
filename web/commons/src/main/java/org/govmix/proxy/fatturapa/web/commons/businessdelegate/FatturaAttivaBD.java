@@ -44,7 +44,7 @@ public class FatturaAttivaBD extends FatturaBD {
 	public FatturaAttivaFilter newFilter() {
 		return new FatturaAttivaFilter(this.service);
 	}
-
+	
 	public IdFattura newIdFattura() {
 		return new IdFattura(true);
 	}

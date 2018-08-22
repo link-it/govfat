@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
+import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
@@ -70,7 +71,9 @@ public class RiceviNotifica {
 				lstIdFattura.add(idFattura);
 				
 			} else {
-				lstIdFattura.addAll(fatturaElettronicaBD.findAllIdFatturaByIdentificativoSdi(notificaDecorrenzaTermini.getIdentificativoSdi()));
+				IdLotto idLotto = new IdLotto(false);
+				idLotto.setIdentificativoSdi(notificaDecorrenzaTermini.getIdentificativoSdi());
+				lstIdFattura.addAll(fatturaElettronicaBD.findAllIdFatturaByIdLotto(idLotto));
 			}
 			
 			if(lstIdFattura.size() <= 0) {

@@ -82,6 +82,7 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 		this.STATO_PROTOCOLLAZIONE = new Field("statoProtocollazione",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.DATA_PROTOCOLLAZIONE = new Field("dataProtocollazione",java.util.Date.class,"LottoFatture",LottoFatture.class);
 		this.PROTOCOLLO = new Field("protocollo",java.lang.String.class,"LottoFatture",LottoFatture.class);
+		this.ID_SIP = new org.govmix.proxy.fatturapa.orm.model.IdSipModel(new Field("idSIP",org.govmix.proxy.fatturapa.orm.IdSip.class,"LottoFatture",LottoFatture.class));
 		this.ID_EGOV = new Field("id-egov",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.DIPARTIMENTO = new org.govmix.proxy.fatturapa.orm.model.DipartimentoModel(new Field("Dipartimento",org.govmix.proxy.fatturapa.orm.Dipartimento.class,"LottoFatture",LottoFatture.class));
 	
@@ -131,6 +132,7 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 		this.STATO_PROTOCOLLAZIONE = new ComplexField(father,"statoProtocollazione",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.DATA_PROTOCOLLAZIONE = new ComplexField(father,"dataProtocollazione",java.util.Date.class,"LottoFatture",LottoFatture.class);
 		this.PROTOCOLLO = new ComplexField(father,"protocollo",java.lang.String.class,"LottoFatture",LottoFatture.class);
+		this.ID_SIP = new org.govmix.proxy.fatturapa.orm.model.IdSipModel(new ComplexField(father,"idSIP",org.govmix.proxy.fatturapa.orm.IdSip.class,"LottoFatture",LottoFatture.class));
 		this.ID_EGOV = new ComplexField(father,"id-egov",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.DIPARTIMENTO = new org.govmix.proxy.fatturapa.orm.model.DipartimentoModel(new ComplexField(father,"Dipartimento",org.govmix.proxy.fatturapa.orm.Dipartimento.class,"LottoFatture",LottoFatture.class));
 	
@@ -217,6 +219,8 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 	public IField DATA_PROTOCOLLAZIONE = null;
 	 
 	public IField PROTOCOLLO = null;
+	 
+	public org.govmix.proxy.fatturapa.orm.model.IdSipModel ID_SIP = null;
 	 
 	public IField ID_EGOV = null;
 	 

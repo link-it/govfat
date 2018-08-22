@@ -1,0 +1,282 @@
+<!-- 
+  ProxyFatturaPA - Gestione del formato Fattura Elettronica 
+  http://www.gov4j.it/fatturapa
+  
+  Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+  Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+ 
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+ 
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<ui:composition template="/templates/defaultTemplate.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:rich="http://richfaces.org/rich" xmlns:op2web="http://www.openspcoop2.org/web/taglib/jsf">
+	<f:loadBundle var="msg" basename="messages" />
+	<a4j:loadScript src="resource://jquery.js" />
+
+	<ui:define name="pageTitle">#{msg['conservazione.listaConservazione.pageTitle']}</ui:define>
+	<ui:define name="pageHeader">#{msg['conservazione.listaConservazione.pageTitle']}</ui:define>
+	<ui:define name="navbar">
+		<ul>
+			<li><h:outputText value="/#{msg['menu.group.operazioni']}" /></li>
+			<li><h:outputText value="/#{msg['conservazione.listaConservazione.pageTitle']}" /></li>
+		</ul>
+	</ui:define>
+	<ui:define name="body">
+		<a4j:keepAlive beanName="conservazioneMBean" ajaxOnly="true" />
+		<style>
+			div.errorsSpacer {
+			    height: 4px;
+			}
+			.rich-mpnl-controls {
+				top: 6px;
+				right: 6px;
+			}
+			.selectionInfoItems { display:none; }
+		</style>
+		<rich:panel styleClass="noborder" id="pagina">
+		
+			<h:form id="formExportSelezioneConservazione">
+            <a4j:outputPanel layout="block" ajaxRendered="false">
+                    <a4j:jsFunction name="preparaFormModale" reRender="invioFattureConfirmationBody" actionListener="#{conservazioneMBean.initConservazioneListener}" limitToList="true">
+                    	<a4j:actionparam name="param1" assignTo="#{conservazioneMBean.elencoID}"  />
+           			</a4j:jsFunction>
+          		 </a4j:outputPanel>
+           </h:form>
+			
+		
+			<op2web:searchForm searchBean="#{conservazioneMBean.search}">
+		
+				<op2web:searchFields nomiFields="#{'anno,tipoFattura,ente,statoInvio'}"    />
+				
+				<ui:define name="buttons">
+					<a4j:commandButton id="filtraButton"
+						value="#{msg['commons.button.filtra']}" styleClass="icon-refresh"
+						reRender="conservazioneTable" status="mainStatus" action="#{conservazioneMBean.filtra}">
+					</a4j:commandButton>
+		
+					<a4j:commandButton id="pulisciButton"
+						value="#{msg['commons.button.reset']}" reRender="#{conservazioneMBean.search.id}_searchPnl,conservazioneTable"
+						status="mainStatus" styleClass="icon-delete" action="#{conservazioneMBean.reset}">
+					</a4j:commandButton>
+					
+				</ui:define>
+			</op2web:searchForm>	
+			<rich:spacer height="20"/>
+			
+			<op2web:managedPagedListView  value="#{conservazioneDM}" mBean="#{conservazioneMBean}" showSelectAll="#{conservazioneMBean.search.visualizzaTastiInvioConservazione}">
+			
+				<op2web:tableColumns nomiColonne="#{'tipoFattura'}" />
+				
+				<rich:column styleClass="#{itemMetadata.cedentePrestatore.tableColumnStyleClass}" rendered="#{not conservazioneMBean.search.ricercaFattureAttive}">
+					<f:facet name="header">
+						<h:outputText value="#{itemMetadata.cedentePrestatore.label}" rendered="#{not empty itemMetadata.cedentePrestatore.label}" styleClass="#{itemMetadata.cedentePrestatore.labelStyleClass}" />
+					</f:facet>
+			
+					<h:outputText id="#{itemMetadata.cedentePrestatore.name}Value" value="#{item.cedentePrestatore.value}" styleClass="#{itemMetadata.cedentePrestatore.valueStyleClass}"
+						rendered="#{not empty item.cedentePrestatore.value}"/>
+				</rich:column>
+				
+				<rich:column styleClass="#{itemMetadata.cessionarioCommittente.tableColumnStyleClass}" rendered="#{conservazioneMBean.search.ricercaFattureAttive}">
+					<f:facet name="header">
+						<h:outputText value="#{itemMetadata.cessionarioCommittente.label}" rendered="#{not empty itemMetadata.cessionarioCommittente.label}" styleClass="#{itemMetadata.cessionarioCommittente.labelStyleClass}" />
+					</f:facet>
+			
+					<h:outputText id="#{itemMetadata.cessionarioCommittente.name}Value" value="#{item.cessionarioCommittente.value}" styleClass="#{itemMetadata.cessionarioCommittente.valueStyleClass}"
+						rendered="#{not empty item.cessionarioCommittente.value}"/>
+				</rich:column>
+				
+				
+				<!-- Colonne destinatario,identificativoSDI, annonumero, dataInvio-->
+				<op2web:tableColumns nomiColonne="#{'dipartimento,identificativoSdi,annoNumero,dataInvio'}" />
+				
+				<!-- Stato Invio (Icona) -->
+				<rich:column style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{itemMetadata.statoInvio.label}" />
+					</f:facet>
+					 
+					<h:panelGroup>
+						<h:graphicImage value="#{item.statoInvio.image}" width="16" height="16"	title="#{item.statoInvio.title}"  alt="#{item.statoInvio.alt}"
+								 rendered="#{item.statoInvio.rendered == true}" />
+						<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{item.statoInvio.rendered == false}" />
+					</h:panelGroup>
+				</rich:column>
+					
+				<!-- XML (Icona) -->
+				<rich:column style="text-align: center;">
+					<f:facet name="header">
+		                <h:panelGroup layout="block">
+							<h:outputText value="#{itemMetadata.xml.label}" />
+							<script type="text/javascript" >
+			                  	//<![CDATA[
+			                  		
+			              		function #{id}_checkAllCheckboxesInTable( inputId, state ){
+			                              var size = 0;
+			                              var tid = ":"+inputId+"_tbl";
+			                              if(state){
+			                                  size = jQuery("table [id$='"+tid+"'] input:checkbox[id$='#{id}_column_ckb']").not("[id$='selectedAllChbx']").attr("checked","on").size();
+			                              }else{
+			                                  jQuery("table [id$='"+tid+"'] input:checkbox[id$='#{id}_column_ckb']").removeAttr("checked");
+			                                  size=0;
+			                              }
+			
+			                              if(true){
+			                                  var _totRows = #{value.rowCount};
+			                                  var _rows = #{rowsToDisplay};
+			                                  if(state && _totRows>_rows ){
+			                                          var t1= formatMessage("#{commonsMsg['pagedDataTable.script.checkAllCheckboxesInTable.selezionati']}",{0:size,1:_totRows});
+			                                          jQuery("[id$='"+inputId+"_selectedInfoLbl']").show().text(t1);
+			                                          var t2= formatMessage("#{commonsMsg['pagedDataTable.script.checkAllCheckboxesInTable.selezionaTutti']}",{0:_totRows});
+			                                          jQuery("[id$='"+inputId+"_selectAllLink']").show().text(t2);
+	                                          }else{
+	                                                  jQuery("[id$='"+inputId+"_selectedInfoLbl']").hide();
+	                                                  jQuery("[id$='"+inputId+"_selectAllLink']").hide();
+	                                                  jQuery("[id$='"+inputId+"_undoSelectAllLink']").hide();                         
+	                                          }
+	                                      }
+			                     	}
+			              		
+								jQuery(document).ready(function() {
+									
+									var iInputId = '#{id}';
+									var tiId = iInputId+"_checkSelectionContentTable";
+									
+									jQuery("table [id$='"+tiId+"'] tr td.rich-mpnl-body").css('padding-top','20px');
+									jQuery("table [id$='"+tiId+"'] tr td.rich-mpnl-body > table tbody tr td > table tbody tr td > img").css('margin-right','10px');
+									jQuery("table [id$='"+tiId+"'] tr td.rich-mpnl-body > table tbody tr td > div.buttonrow").css('padding-left','110px');
+									jQuery("table [id$='"+tiId+"'] tr td.rich-mpnl-body > table tbody tr td > div.buttonrow > input").css('padding','4px 6px 4px 5px');
+									jQuery("table [id$='"+tiId+"'] tr td.rich-mpnl-body > table tbody tr td > div.buttonrow > input").css('text-indent','0px');
+									
+									var abilita = !(#{value.rowCount} > 0); 
+									var inviaTutteId = 'inviaConservazioneAll-iconLink';
+									jQuery("[id$='"+inviaTutteId+"']").attr('disabled',abilita);
+									
+									var inviaFattureId = 'inviaConservazione-iconLink';
+									jQuery("[id$='"+inviaFattureId+"']").attr('disabled',abilita);
+									
+								 });
+							//]]>
+			                </script>
+		                </h:panelGroup>
+					</f:facet>
+					 
+					<h:panelGroup>
+					 	<h:commandLink id="visualizzaXmlLink" target="_blank" action="#{item.visualizzaXml}" rendered="#{not empty item.xml.href}">
+							<h:graphicImage value="#{item.xml.image}" width="16" alt="#{item.xml.alt}" height="16"	title="#{item.xml.title}" />
+						</h:commandLink>
+						<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{empty item.xml.href}" />
+					</h:panelGroup>
+				</rich:column>
+
+				<ui:define name="buttonsListView">
+					<a4j:jsFunction name="inviaConservazione" id="inviaConservazione" action="#{conservazioneMBean.inviaFattureInConservazione}"  status="mainStatus">
+            		</a4j:jsFunction>
+				
+					<a4j:commandButton	id="inviaConservazione-iconLink" styleClass="icon-fatturapa-up-green" style="padding: 4px 6px 4px 5px;"
+						reRender="inviaFattureConfirmation,msgSelezione" value="#{msg['conservazione.button.inviaConservazione']}" status="mainStatus"
+						onclick="if(checkSelection('conservazioneTable_dt')) { preparaFormModale(getSelectedRows('conservazioneTable_dt'));#{rich:component('inviaFattureConfirmation')}.show(); } return false; " 
+						rendered="#{conservazioneMBean.search.visualizzaTastiInvioConservazione}">
+					</a4j:commandButton>
+					<script type="text/javascript" >
+			                  	//<![CDATA[
+		                  		function getSelectedRows(inputId){
+		                  	        var tid = inputId+"_tbl";
+		                  	        var ids = jQuery("table [id$='"+tid+"'] input:checkbox[id$='"+inputId+"_column_ckb']:checked").not("[id$='selectedAllChbx']");
+
+		                  	        var toRet = '';
+		                  	        for (var i =0 ; i < ids.length ; i++) {
+		                  	                if(i > 0 ) toRet += ',';
+
+		                  	                toRet += ids[i].id;
+		                  	        }
+
+		                  	        return toRet;
+			                  	}
+	
+			            //]]>
+	                </script>
+					<a4j:commandButton id="inviaConservazioneAll-iconLink" styleClass="icon-fatturapa-up-green" style="padding: 4px 6px 4px 5px;"
+						reRender="inviaTutteFattureConfirmation" value="#{msg['conservazione.button.inviaTutteConservazione']}" status="mainStatus"
+						rendered="#{conservazioneMBean.search.visualizzaTastiInvioConservazione}"
+						oncomplete="#{rich:component('inviaTutteFattureConfirmation')}.show()">
+					</a4j:commandButton>
+				</ui:define>
+			</op2web:managedPagedListView>
+			
+			<rich:modalPanel id="inviaFattureConfirmation" width="400" height="160">
+                 <f:facet name="header">
+                      <h:outputText value="#{msg['conservazione.confermaInvioFatture.title']}" />
+                 </f:facet>
+                 <h:form id="conservazioneForm" prependId="false">
+	                 <h:panelGrid id="invioFattureConfirmationBody">
+                       <rich:spacer height="20px" />
+                       <h:panelGrid columns="2" >
+	                       <h:graphicImage value="/images/001_11.png" alt="#{msg['conservazione.confermaInvioFatture.title']}" style="margin-right: 10px;"/>
+	                       <h:outputText value="#{conservazioneMBean.messaggioSelezioneFatture}" style="font-weight: bold;" id="messaggioSelezioneUtente"/>
+	                    </h:panelGrid>
+	                    <h:panelGroup>
+	                    	<rich:spacer height="20px" />
+	                    	<div class="buttonrow" style="padding-left: 120px;">
+	                       		<a4j:commandButton 
+	                       			id="confermaInvioFattureBtn" status="mainStatus"
+	                       			styleClass="icon-fatturapa-up-green" style="padding: 4px 6px 4px 5px;"
+										value="#{msg['conservazione.confermaInvioFatture.ok']}" onclick="this.disabled=true;" action="#{conservazioneMBean.inviaFattureInConservazione}"
+										oncomplete="this.disabled=false; Richfaces.hideModalPanel('inviaFattureConfirmation');" >
+									<f:setPropertyActionListener value="#{conservazioneMBean.elencoID}" target="#{conservazioneMBean.elencoID}" />
+								</a4j:commandButton>
+	                             <input id="annullaInvioFattureBtn" type="button" value="#{msg['conservazione.confermaInvioFatture.ko']}" class="negative icon-delete"
+	                                    onclick="Richfaces.hideModalPanel('inviaFattureConfirmation');return false"  style="padding: 4px 6px 4px 5px;"/>
+	
+	                       </div>
+	                        </h:panelGroup>
+	                 </h:panelGrid>
+                 </h:form>
+           </rich:modalPanel>
+			
+            <rich:modalPanel id="inviaTutteFattureConfirmation" width="400" height="160">
+                 <f:facet name="header">
+                      <h:outputText value="#{msg['conservazione.confermaInvioTutteFatture.title']}" />
+                 </f:facet>
+                 <h:form id="conservazioneTutteFattureForm" prependId="false">
+	                 <h:panelGrid>
+                       <rich:spacer height="20px" />
+                       <h:panelGrid columns="2" >
+	                       <h:graphicImage value="/images/001_11.png" alt="#{msg['conservazione.confermaInvioTutteFatture.title']}" style="margin-right: 10px;"/>
+	                       <h:outputText value="#{conservazioneMBean.messaggioSelezioneTutteFatture}" style="font-weight: bold;" />
+	                    </h:panelGrid>
+	                    <h:panelGroup>
+	                       <rich:spacer height="20px" />
+	                       <div class="buttonrow" style="padding-left: 120px;">
+	                       		<a4j:commandButton  onclick="this.disabled=true"
+	                       			id="confermaInvioTutteFattureBtn" status="mainStatus"
+	                       			styleClass="icon-fatturapa-up-green" style="padding: 4px 6px 4px 5px;"
+										value="#{msg['conservazione.confermaInvioTutteFatture.ok']}" action="#{conservazioneMBean.inviaTutteFattureInConservazione}"
+										oncomplete="this.disabled=false; Richfaces.hideModalPanel('inviaTutteFattureConfirmation');" />
+	                             <input id="annullaInvioTutteFattureBtn" type="button" value="#{msg['conservazione.confermaInvioTutteFatture.ko']}" class="negative icon-delete"
+	                                    onclick="Richfaces.hideModalPanel('inviaTutteFattureConfirmation');return false"  style="padding: 4px 6px 4px 5px;"/>
+	
+	                       </div>
+	                        </h:panelGroup>
+	                 </h:panelGrid>
+                 </h:form>
+           </rich:modalPanel>
+			
+		</rich:panel>
+	</ui:define>
+</ui:composition>

@@ -75,4 +75,9 @@ public class Costanti {
 	
 	public static final String BROWSER_INFO_PARAMETER_NAME = "browser_info_efatt";
 	public static final String UUID_INFO_PARAMETER_NAME = "uuid_info";
+	
+	public static final String TIPO_FATTURA_ATTIVA_VALUE = "attiva";
+	public static final String TIPO_FATTURA_PASSIVA_VALUE = "passiva";
+	
+	
 }

@@ -191,8 +191,7 @@
                <param-value>1000000000</param-value>
        </init-param>
 	</servlet>
-
-
+	
 	<servlet-mapping>
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>*.jsf</url-pattern>
@@ -212,8 +211,7 @@
 		<servlet-name>FatturaAttivaUpload</servlet-name>
 		<url-pattern>/fatturaAttivaUpload</url-pattern>
 	</servlet-mapping>
-
-
+	
 	<!-- Session -->
 	<error-page>
 	    <exception-type>javax.faces.application.ViewExpiredException</exception-type>

@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
@@ -45,7 +46,7 @@ public class NotificaEsitoCommittenteBD extends BaseBD {
 		super(log);
 		this.service = this.serviceManager.getNotificaEsitoCommittenteService();
 	}
-	
+
 	public NotificaEsitoCommittenteBD(Logger log, Connection connection, boolean autocommit) throws Exception {
 		super(log, connection, autocommit);
 		this.service = this.serviceManager.getNotificaEsitoCommittenteService();
@@ -62,13 +63,13 @@ public class NotificaEsitoCommittenteBD extends BaseBD {
 			throw new Exception(e);
 		}
 	}
-	
+
 	public boolean existsNotificaEsitoCommittente(IdFattura idFattura) throws Exception {
 		try {
 			IExpression expression = this.service.newExpression();
 			expression.equals(NotificaEsitoCommittente.model().IDENTIFICATIVO_SDI, idFattura.getIdentificativoSdi());
 			expression.equals(NotificaEsitoCommittente.model().POSIZIONE, idFattura.getPosizione());
-			
+
 			return this.service.count(expression).longValue() > 0;
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la create: " + e.getMessage(), e);
@@ -78,15 +79,15 @@ public class NotificaEsitoCommittenteBD extends BaseBD {
 			throw new Exception(e);
 		}
 	}
-	
+
 	public boolean canNotificaEsitoCommittenteBeSent(IdFattura idFattura) throws Exception {
 		try {
 			IExpression expression = this.service.newExpression();
 			expression.equals(NotificaEsitoCommittente.model().IDENTIFICATIVO_SDI, idFattura.getIdentificativoSdi());
 			expression.equals(NotificaEsitoCommittente.model().POSIZIONE, idFattura.getPosizione());
 			expression.isNull(NotificaEsitoCommittente.model().SCARTO);
-//			expression.isNotNull(NotificaEsitoCommittente.model().DATA_INVIO_SDI);
-			
+			//			expression.isNotNull(NotificaEsitoCommittente.model().DATA_INVIO_SDI);
+
 			return this.service.count(expression).longValue() <= 0;
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la canNotificaEsitoCommittenteBeSent: " + e.getMessage(), e);
@@ -107,12 +108,12 @@ public class NotificaEsitoCommittenteBD extends BaseBD {
 			throw new Exception(e);
 		}
 	}
-	
+
 	public List<NotificaEsitoCommittente> findAllNotifiche(Date date, int offset, int limit) throws Exception {
 		try {
 			IExpression exp1 = this.service.newExpression();
 			exp1.equals(NotificaEsitoCommittente.model().STATO_CONSEGNA_SDI, StatoConsegnaType.NON_CONSEGNATA).or().equals(NotificaEsitoCommittente.model().STATO_CONSEGNA_SDI, StatoConsegnaType.IN_RICONSEGNA);
-			
+
 			IExpression exp2 = this.service.newExpression();
 			exp2.isNull(NotificaEsitoCommittente.model().DATA_PROSSIMA_CONSEGNA_SDI).or().lessEquals(NotificaEsitoCommittente.model().DATA_PROSSIMA_CONSEGNA_SDI, date);
 
@@ -137,13 +138,13 @@ public class NotificaEsitoCommittenteBD extends BaseBD {
 			throw new Exception(e);
 		}
 	}
-	
+
 	public long countNotifiche(Date date) throws Exception {
 		try {
-			
+
 			IExpression exp1 = this.service.newExpression();
 			exp1.equals(NotificaEsitoCommittente.model().STATO_CONSEGNA_SDI, StatoConsegnaType.NON_CONSEGNATA).or().equals(NotificaEsitoCommittente.model().STATO_CONSEGNA_SDI, StatoConsegnaType.IN_RICONSEGNA);
-			
+
 			IExpression exp2 = this.service.newExpression();
 			exp2.isNull(NotificaEsitoCommittente.model().DATA_PROSSIMA_CONSEGNA_SDI).or().lessEquals(NotificaEsitoCommittente.model().DATA_PROSSIMA_CONSEGNA_SDI, date);
 
@@ -175,13 +176,29 @@ public class NotificaEsitoCommittenteBD extends BaseBD {
 				this.service.update(notificaDaDB);
 			} else
 				throw new Exception("La notifica relativa alla fattura ["+notifica.getIdFattura().toJson()+"] non puo' essere forzata in riconsegna perche' il suo stato attuale e' ["+notificaDaDB.getStatoConsegnaSdi()+"]");
-			
+
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la forzaRispedizioneFattura: " + e.getMessage(), e);
 			throw new Exception(e);
 		} catch (NotImplementedException e) {
 			this.log.error("Errore durante la forzaRispedizioneFattura: " + e.getMessage(), e);
 			throw new Exception(e);
+		}
+	}
+
+	public List<NotificaEsitoCommittente> getNotificaEsitoCommittente(IdFattura idFattura) throws ServiceException {
+		try {
+			IPaginatedExpression expression = this.service.newPaginatedExpression();
+			expression.equals(NotificaEsitoCommittente.model().IDENTIFICATIVO_SDI, idFattura.getIdentificativoSdi());
+			expression.equals(NotificaEsitoCommittente.model().POSIZIONE, idFattura.getPosizione());
+			expression.equals(NotificaEsitoCommittente.model().ID_FATTURA.FATTURAZIONE_ATTIVA, idFattura.getFatturazioneAttiva());
+			return this.service.findAll(expression);
+		} catch (NotImplementedException e) {
+			throw new ServiceException(e);
+		} catch (ExpressionNotImplementedException e) {
+			throw new ServiceException(e);
+		} catch (ExpressionException e) {
+			throw new ServiceException(e);
 		}
 	}
 }

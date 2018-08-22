@@ -21,8 +21,11 @@
 package org.govmix.proxy.fatturapa.orm.dao;
 
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
-import org.openspcoop2.generic_project.dao.IServiceWithId;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
+import org.openspcoop2.generic_project.dao.IServiceWithId;
+import org.openspcoop2.generic_project.exception.NotFoundException;
+import org.openspcoop2.generic_project.exception.NotImplementedException;
+import org.openspcoop2.generic_project.exception.ServiceException;
 
 /**     
  * Service can be used both for research that will make persistent objects on the backend of type org.govmix.proxy.fatturapa.orm.FatturaElettronica 
@@ -34,5 +37,5 @@ import org.govmix.proxy.fatturapa.orm.IdFattura;
  */
 
 public interface IFatturaElettronicaService extends IServiceWithId<FatturaElettronica, IdFattura> {
-
+	public int nativeUpdate(String sql,Object ... param) throws ServiceException,NotFoundException,NotImplementedException;
 }

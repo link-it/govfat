@@ -159,7 +159,7 @@ public class FatturaSingleFileExporter extends AbstractSingleFileXMLExporter<Fat
 
 			if(exportLotto) {
 				try{
-					IdLotto id = new IdLotto(object.isFatturazioneAttiva());
+					IdLotto id = new IdLotto(object.getFatturazioneAttiva());
 					id.setIdentificativoSdi(object.getIdentificativoSdi());
 					LottoFatture lotto = this.lottoSFE.convertToObject(id);
 					this.lottoSFE.exportAsZip(lotto, zip, fatturaDir);
