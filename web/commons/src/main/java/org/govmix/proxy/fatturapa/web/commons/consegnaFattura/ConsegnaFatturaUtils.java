@@ -20,13 +20,6 @@
  */
 package org.govmix.proxy.fatturapa.web.commons.consegnaFattura;
 
-import it.gov.fatturapa.sdi.fatturapa.v1_0.AnagraficaType;
-import it.gov.fatturapa.sdi.fatturapa.v1_0.DatiAnagraficiCedenteType;
-import it.gov.fatturapa.sdi.fatturapa.v1_0.DatiAnagraficiCessionarioType;
-import it.gov.fatturapa.sdi.fatturapa.v1_0.DatiAnagraficiTerzoIntermediarioType;
-import it.gov.fatturapa.sdi.fatturapa.v1_0.IdFiscaleType;
-import it.gov.fatturapa.sdi.fatturapa.v1_0.utils.serializer.JaxbDeserializer;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,6 +36,16 @@ import org.openspcoop2.protocol.sdi.constants.SDICostanti;
 import org.openspcoop2.protocol.sdi.utils.P7MInfo;
 import org.openspcoop2.protocol.sdi.utils.SDILottoUtils;
 import org.openspcoop2.utils.Utilities;
+
+import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.DatiPagamentoType;
+import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.DettaglioPagamentoType;
+import it.gov.fatturapa.sdi.fatturapa.v1_0.AnagraficaType;
+import it.gov.fatturapa.sdi.fatturapa.v1_0.DatiAnagraficiCedenteType;
+import it.gov.fatturapa.sdi.fatturapa.v1_0.DatiAnagraficiCessionarioType;
+import it.gov.fatturapa.sdi.fatturapa.v1_0.DatiAnagraficiTerzoIntermediarioType;
+import it.gov.fatturapa.sdi.fatturapa.v1_0.IdFiscaleType;
+import it.gov.fatturapa.sdi.fatturapa.v1_0.utils.serializer.JaxbDeserializer;
+import it.gov.fatturapa.sdi.fatturapa.v1_1.FatturaElettronicaBodyType;
 
 public class ConsegnaFatturaUtils {
 
@@ -68,6 +71,7 @@ public class ConsegnaFatturaUtils {
 			String terzoIntermediarioOSoggettoEmittenteIdCodice,
 			String terzoIntermediarioOSoggettoEmittenteIdPaese,
 			boolean fatturazioneAttiva,
+			boolean pagoPA,
 			InputStream fatturaStream) throws Exception, IOException {
 		
 		boolean isBase64 = false;
@@ -84,7 +88,7 @@ public class ConsegnaFatturaUtils {
 				cedentePrestatoreDenominazione, cedentePrestatoreNome, cedentePrestatoreCognome, cedentePrestatoreCodiceFiscale, cedentePrestatoreIdCodice, cedentePrestatoreIdPaese, 
 				cessionarioCommittenteDenominazione, cessionarioCommittenteNome, cessionarioCommittenteCognome, cessionarioCommittenteCodiceFiscale, cessionarioCommittenteIdCodice, cessionarioCommittenteIdPaese, 
 				terzoIntermediarioOSoggettoEmittenteDenominazione, terzoIntermediarioOSoggettoEmittenteNome, terzoIntermediarioOSoggettoEmittenteCognome, terzoIntermediarioOSoggettoEmittenteCodiceFiscale, 
-				terzoIntermediarioOSoggettoEmittenteIdCodice, terzoIntermediarioOSoggettoEmittenteIdPaese, fatturazioneAttiva, getXmlBytes(fatturaStream, isBase64));
+				terzoIntermediarioOSoggettoEmittenteIdCodice, terzoIntermediarioOSoggettoEmittenteIdPaese, fatturazioneAttiva, pagoPA, getXmlBytes(fatturaStream, isBase64));
 	}
 	
 
@@ -109,6 +113,7 @@ public class ConsegnaFatturaUtils {
 			String terzoIntermediarioOSoggettoEmittenteIdCodice,
 			String terzoIntermediarioOSoggettoEmittenteIdPaese,
 			boolean fatturazioneAttiva,
+			boolean pagoPA,
 			byte[] xml) throws Exception, IOException {
 		ConsegnaFatturaParameters params = new ConsegnaFatturaParameters();
 
@@ -169,6 +174,7 @@ public class ConsegnaFatturaUtils {
 			params.setTerzoIntermediarioOSoggettoEmittente(terzoIntermediarioOSoggettoEmittente);
 		}
 		params.setFatturazioneAttiva(fatturazioneAttiva);
+		params.setPagoPA(pagoPA);
 
 		return params;
 	}
@@ -248,13 +254,15 @@ public class ConsegnaFatturaUtils {
 				idFiscaleTI = new IdFiscaleType();
 			}
 			
+			boolean pagoPA = isPagoPA(fattura);
+			
 			params = getParameters(formatoFatturaPA, identificativoSDI, nomeFile, formatoArchivioInvioFatturaString, formatoArchivioBase64, messageId, fattura.getFatturaElettronicaHeader().getDatiTrasmissione().getCodiceDestinatario(), 
 					 anagraficaCP.getDenominazione(), anagraficaCP.getNome(), anagraficaCP.getCognome(),
 					 datiAnagraficiCP.getCodiceFiscale(), idFiscaleCP.getIdCodice(), idFiscaleCP.getIdPaese(),
 					 anagraficaCC.getDenominazione(), anagraficaCC.getNome(), anagraficaCC.getCognome(), 
 					 datiAnagraficiCC.getCodiceFiscale(), idFiscaleCC.getIdCodice(), idFiscaleCC.getIdPaese(),
 					 anagraficaTI.getDenominazione(), anagraficaTI.getNome(), anagraficaTI.getCognome(),
-					 datiAnagraficiTI.getCodiceFiscale(), idFiscaleTI.getIdCodice(), idFiscaleTI.getIdPaese(), fatturazioneAttiva, xml);
+					 datiAnagraficiTI.getCodiceFiscale(), idFiscaleTI.getIdCodice(), idFiscaleTI.getIdPaese(), fatturazioneAttiva, pagoPA, xml);
 		} else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.equals(formatoFatturaPA)) {
 			it.gov.fatturapa.sdi.fatturapa.v1_1.utils.serializer.JaxbDeserializer deserializer11 = new it.gov.fatturapa.sdi.fatturapa.v1_1.utils.serializer.JaxbDeserializer();
 			it.gov.fatturapa.sdi.fatturapa.v1_1.FatturaElettronicaType fattura = deserializer11.readFatturaElettronicaType(xmlDecoded);
@@ -287,13 +295,15 @@ public class ConsegnaFatturaUtils {
 				idFiscaleTI = new it.gov.fatturapa.sdi.fatturapa.v1_1.IdFiscaleType();
 			}
 			
+			boolean pagoPA = isPagoPA(fattura);
+
 			params = getParameters(formatoFatturaPA, identificativoSDI, nomeFile, formatoArchivioInvioFatturaString, formatoArchivioBase64, messageId, fattura.getFatturaElettronicaHeader().getDatiTrasmissione().getCodiceDestinatario(), 
 					 anagraficaCP.getDenominazione(), anagraficaCP.getNome(), anagraficaCP.getCognome(),
 					 datiAnagraficiCP.getCodiceFiscale(), idFiscaleCP.getIdCodice(), idFiscaleCP.getIdPaese(),
 					 anagraficaCC.getDenominazione(), anagraficaCC.getNome(), anagraficaCC.getCognome(), 
 					 datiAnagraficiCC.getCodiceFiscale(), idFiscaleCC.getIdCodice(), idFiscaleCC.getIdPaese(),
 					 anagraficaTI.getDenominazione(), anagraficaTI.getNome(), anagraficaTI.getCognome(),
-					 datiAnagraficiTI.getCodiceFiscale(), idFiscaleTI.getIdCodice(), idFiscaleTI.getIdPaese(), fatturazioneAttiva, xml);
+					 datiAnagraficiTI.getCodiceFiscale(), idFiscaleTI.getIdCodice(), idFiscaleTI.getIdPaese(), fatturazioneAttiva, pagoPA, xml);
 		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.equals(formatoFatturaPA) || 
 				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.equals(formatoFatturaPA)) {
 			it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.utils.serializer.JaxbDeserializer deserializer12 = new it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.utils.serializer.JaxbDeserializer();
@@ -327,19 +337,73 @@ public class ConsegnaFatturaUtils {
 				idFiscaleTI = new it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.IdFiscaleType();
 			}
 			
+			boolean pagoPA = isPagoPA(fattura);
+
 			params = getParameters(formatoFatturaPA, identificativoSDI, nomeFile, formatoArchivioInvioFatturaString, formatoArchivioBase64, messageId, fattura.getFatturaElettronicaHeader().getDatiTrasmissione().getCodiceDestinatario(), 
 					 anagraficaCP.getDenominazione(), anagraficaCP.getNome(), anagraficaCP.getCognome(),
 					 datiAnagraficiCP.getCodiceFiscale(), idFiscaleCP.getIdCodice(), idFiscaleCP.getIdPaese(),
 					 anagraficaCC.getDenominazione(), anagraficaCC.getNome(), anagraficaCC.getCognome(), 
 					 datiAnagraficiCC.getCodiceFiscale(), idFiscaleCC.getIdCodice(), idFiscaleCC.getIdPaese(),
 					 anagraficaTI.getDenominazione(), anagraficaTI.getNome(), anagraficaTI.getCognome(),
-					 datiAnagraficiTI.getCodiceFiscale(), idFiscaleTI.getIdCodice(), idFiscaleTI.getIdPaese(), fatturazioneAttiva, xml);
+					 datiAnagraficiTI.getCodiceFiscale(), idFiscaleTI.getIdCodice(), idFiscaleTI.getIdPaese(), fatturazioneAttiva, pagoPA, xml);
 		} else {
 			throw new Exception("Formato FatturaPA ["+formatoFatturaPA+"] non riconosciuto");
 		}
 
 		return params;
 	}
+
+	private static boolean isPagoPA(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.FatturaElettronicaType fattura) {
+		List<String> lst = new ArrayList<String>();
+		
+		for(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.FatturaElettronicaBodyType body: fattura.getFatturaElettronicaBodyList()) {
+			for(DatiPagamentoType datiPagamento: body.getDatiPagamentoList()) {
+				for(DettaglioPagamentoType dettaglio: datiPagamento.getDettaglioPagamentoList()) {
+					if(dettaglio.getCodicePagamento() != null)
+						lst.add(dettaglio.getCodicePagamento());	
+				}
+			}
+		}
+		
+		return isPagoPA(lst);
+	}
+
+	private static boolean isPagoPA(List<String> lst) {
+		// TODO identificare pattern iuv, e capire come comportarsi in caso di codici pagamento multipli
+		return !lst.isEmpty();
+	}
+
+
+	private static boolean isPagoPA(it.gov.fatturapa.sdi.fatturapa.v1_1.FatturaElettronicaType fattura) {
+		List<String> lst = new ArrayList<String>();
+		
+		for(FatturaElettronicaBodyType body: fattura.getFatturaElettronicaBodyList()) {
+			for(it.gov.fatturapa.sdi.fatturapa.v1_1.DatiPagamentoType datiPagamento: body.getDatiPagamentoList()) {
+				for(it.gov.fatturapa.sdi.fatturapa.v1_1.DettaglioPagamentoType dettaglio: datiPagamento.getDettaglioPagamentoList()) {
+					if(dettaglio.getCodicePagamento() != null)
+						lst.add(dettaglio.getCodicePagamento());	
+				}
+			}
+		}
+		
+		return isPagoPA(lst);
+	}
+
+	private static boolean isPagoPA(it.gov.fatturapa.sdi.fatturapa.v1_0.FatturaElettronicaType fattura) {
+		List<String> lst = new ArrayList<String>();
+		
+		for(it.gov.fatturapa.sdi.fatturapa.v1_0.FatturaElettronicaBodyType body: fattura.getFatturaElettronicaBodyList()) {
+			for(it.gov.fatturapa.sdi.fatturapa.v1_0.DatiPagamentoType datiPagamento: body.getDatiPagamentoList()) {
+				for(it.gov.fatturapa.sdi.fatturapa.v1_0.DettaglioPagamentoType dettaglio: datiPagamento.getDettaglioPagamentoList()) {
+					if(dettaglio.getCodicePagamento() != null)
+						lst.add(dettaglio.getCodicePagamento());	
+				}
+			}
+		}
+		
+		return isPagoPA(lst);
+	}
+
 
 	public static ConsegnaFatturaParameters getParameters(String formatoFatturaPA,
 			Integer identificativoSDI, String nomeFile,
@@ -372,7 +436,7 @@ public class ConsegnaFatturaUtils {
 				lotto.getCessionarioCommittenteDenominazione(), lotto.getCessionarioCommittenteNome(), lotto.getCessionarioCommittenteCognome(), lotto.getCessionarioCommittenteCodiceFiscale(), 
 				lotto.getCessionarioCommittenteCodice(), lotto.getCessionarioCommittentePaese(), 
 				lotto.getTerzoIntermediarioOSoggettoEmittenteDenominazione(), lotto.getTerzoIntermediarioOSoggettoEmittenteNome(), lotto.getTerzoIntermediarioOSoggettoEmittenteCognome(), 
-				lotto.getTerzoIntermediarioOSoggettoEmittenteCodiceFiscale(), lotto.getTerzoIntermediarioOSoggettoEmittenteCodice(), lotto.getTerzoIntermediarioOSoggettoEmittentePaese(), lotto.getFatturazioneAttiva(), xml);
+				lotto.getTerzoIntermediarioOSoggettoEmittenteCodiceFiscale(), lotto.getTerzoIntermediarioOSoggettoEmittenteCodice(), lotto.getTerzoIntermediarioOSoggettoEmittentePaese(), lotto.getFatturazioneAttiva(), lotto.getPagoPA(), xml);
 		params.setPosizioneFatturaPA(posizione);
 		params.setProtocollo(lotto.getProtocollo());
 		params.setFatturazioneAttiva(lotto.getFatturazioneAttiva());

@@ -44,6 +44,7 @@ public class ConsegnaFatturaParameters {
 	private boolean fatturazioneAttiva;
 	private String protocollo;
 	private Date dataRicezione;
+	private boolean pagoPA;
 	
 	public String getFormatoFatturaPA() {
 		return formatoFatturaPA;
@@ -327,6 +328,14 @@ public class ConsegnaFatturaParameters {
 
 	public void setProtocollo(String protocollo) {
 		this.protocollo = protocollo;
+	}
+
+	public boolean isPagoPA() {
+		return pagoPA;
+	}
+
+	public void setPagoPA(boolean pagoPA) {
+		this.pagoPA = pagoPA;
 	}
 
 }

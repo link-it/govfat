@@ -97,7 +97,7 @@ public class FatturaDeserializerUtils {
 	}
 	
 	public static ConsegnaFatturaParameters getParameters(LottoFatture lotto,
-			int posizione, String nomeFile, boolean fatturazioneAttiva, byte[] xml) throws Exception {
+			int posizione, String nomeFile, boolean fatturazioneAttiva, boolean pagoPA, byte[] xml) throws Exception {
 
 		ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(lotto.getFormatoTrasmissione().toString(), lotto.getIdentificativoSdi(), nomeFile, lotto.getFormatoArchivioInvioFattura().toString(), null, 
 				lotto.getMessageId(), lotto.getCodiceDestinatario(), lotto.getCedentePrestatoreDenominazione(), lotto.getCedentePrestatoreNome(), lotto.getCedentePrestatoreCognome(), lotto.getCedentePrestatoreCodiceFiscale(),
@@ -105,7 +105,7 @@ public class FatturaDeserializerUtils {
 				lotto.getCessionarioCommittenteDenominazione(), lotto.getCessionarioCommittenteNome(), lotto.getCessionarioCommittenteCognome(), lotto.getCessionarioCommittenteCodiceFiscale(), 
 				lotto.getCessionarioCommittenteCodice(), lotto.getCessionarioCommittentePaese(), 
 				lotto.getTerzoIntermediarioOSoggettoEmittenteDenominazione(), lotto.getTerzoIntermediarioOSoggettoEmittenteNome(), lotto.getTerzoIntermediarioOSoggettoEmittenteCognome(), 
-				lotto.getTerzoIntermediarioOSoggettoEmittenteCodiceFiscale(), lotto.getTerzoIntermediarioOSoggettoEmittenteCodice(), lotto.getTerzoIntermediarioOSoggettoEmittentePaese(), fatturazioneAttiva, xml);
+				lotto.getTerzoIntermediarioOSoggettoEmittenteCodiceFiscale(), lotto.getTerzoIntermediarioOSoggettoEmittenteCodice(), lotto.getTerzoIntermediarioOSoggettoEmittentePaese(), fatturazioneAttiva, pagoPA, xml);
 		params.setPosizioneFatturaPA(posizione);
 		
 		return params;
