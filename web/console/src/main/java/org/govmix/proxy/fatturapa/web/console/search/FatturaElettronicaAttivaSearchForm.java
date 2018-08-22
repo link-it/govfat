@@ -64,6 +64,7 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 	private SelectList<SelectItem> statoElaborazione = null;
 	private SelectList<SelectItem> notificaDecorrenzaTermini = null;
 	private BooleanCheckBox conservazione = null;
+	private Boolean soloConservazione = null;
 
 	public FatturaElettronicaAttivaSearchForm()throws Exception{
 		this.init();
@@ -438,4 +439,17 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 	public void setConservazione(BooleanCheckBox conservazione) {
 		this.conservazione = conservazione;
 	}
+
+	public Boolean getSoloConservazione() {
+		return soloConservazione;
+	}
+
+	public void setSoloConservazione(Boolean soloConservazione) {
+		this.soloConservazione = soloConservazione;
+		
+		if(this.soloConservazione != null && this.soloConservazione.booleanValue())
+			this.setNomeForm("fatturaAttiva.label.ricercaFattureAttiveSoloConservazione");
+	}
+	
+	
 }

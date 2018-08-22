@@ -34,7 +34,9 @@
 	<!-- FatturaElettronica Attiva -->
 	<bean id="fatturaElettronicaAttivaSearchForm"
 		class="org.govmix.proxy.fatturapa.web.console.search.FatturaElettronicaAttivaSearchForm"
-		scope="session" />
+		scope="session" >
+		<property name="soloConservazione" value="false" />
+	</bean>
 		
 	<bean id="fileUploadBean" class="org.govmix.proxy.fatturapa.web.console.mbean.FileUploadBean" scope="session" />
 
@@ -58,6 +60,24 @@
 		<property name="form" ref="fatturaElettronicaAttivaForm" />
 	</bean>
 	
+	<!-- FatturaElettronica Attiva (Solo Conservazione) -->
+	<bean id="fatturaElettronicaAttivaSoloConservazioneSearchForm" class="org.govmix.proxy.fatturapa.web.console.search.FatturaElettronicaAttivaSearchForm" scope="session" >
+		<property name="soloConservazione" value="true" />
+	</bean>
+		
+	<bean id="fatturaElettronicaAttivaSoloConservazioneService" class="org.govmix.proxy.fatturapa.web.console.service.FatturaElettronicaAttivaService" scope="request">
+		<property name="form" ref="fatturaElettronicaAttivaSoloConservazioneSearchForm" />
+	</bean>
+	
+	<bean id="fatturaElettronicaAttivaSoloConservazioneForm" class="org.govmix.proxy.fatturapa.web.console.form.FatturaForm" scope="request" >
+		<property name="fatturaFile" ref="fileUploadBean" />
+	</bean>
+
+	<bean id="fatturaElettronicaAttivaSoloConservazioneMBean" class="org.govmix.proxy.fatturapa.web.console.mbean.FatturaElettronicaAttivaMBean" scope="request">
+		<property name="service" ref="fatturaElettronicaAttivaSoloConservazioneService" />
+		<property name="search" ref="fatturaElettronicaAttivaSoloConservazioneSearchForm" />
+		<property name="form" ref="fatturaElettronicaAttivaSoloConservazioneForm" />
+	</bean>
 	
 
 	<!-- Sezione PCC -->

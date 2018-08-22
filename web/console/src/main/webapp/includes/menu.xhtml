@@ -39,11 +39,12 @@
 						<rich:panelMenuItem id="menuLinkRispedizioni" label="#{msg['menu.group.anagrafica.rispedizioni']}" action="#{rispedizioneMBean.menuAction}" rendered="#{loginBean.showMenuItemRispedizioni}"/>
 					</rich:panelMenuGroup>
 					<rich:panelMenuGroup label="#{msg['menu.group.operazioni']}" expanded="true">
-						<rich:panelMenuItem id="menuLink1" label="#{msg['menu.group.operazioni.listaFatture']}" action="#{fatturaElettronicaMBean.menuAction}" />
-						<rich:panelMenuItem id="menuLink3" label="#{msg['menu.group.operazioni.listaFattureAttive']}" action="#{fatturaElettronicaAttivaMBean.menuAction}" />
-						<rich:panelMenuItem id="menuLink2" label="#{msg['menu.group.operazioni.listaOperazioni']}" action="#{operazioneMBean.menuAction}" rendered="#{loginBean.showMenuItemOperazioniPCC}" actionListener="#{operazioneSearchForm.initSearchListener}">
+						<rich:panelMenuItem id="menuLinkFatturaPassiva" label="#{msg['menu.group.operazioni.listaFatture']}" action="#{fatturaElettronicaMBean.menuAction}" />
+						<rich:panelMenuItem id="menuLinkFatturaAttiva" label="#{msg['menu.group.operazioni.listaFattureAttive']}" action="#{fatturaElettronicaAttivaMBean.menuAction}" />
+						<rich:panelMenuItem id="menuLinkFatturaAttivaSoloConservazione" label="#{msg['menu.group.operazioni.listaFattureAttiveSoloConservazione']}" action="#{fatturaElettronicaAttivaSoloConservazioneMBean.menuAction}" />
+						<rich:panelMenuItem id="menuLinkOperazioniPCC" label="#{msg['menu.group.operazioni.listaOperazioni']}" action="#{operazioneMBean.menuAction}" rendered="#{loginBean.showMenuItemOperazioniPCC}" actionListener="#{operazioneSearchForm.initSearchListener}">
 						</rich:panelMenuItem>
-						<rich:panelMenuItem id="menuLink4" label="#{msg['menu.group.operazioni.listaConservazione']}" action="#{conservazioneMBean.menuAction}" 
+						<rich:panelMenuItem id="menuLinkConservazione" label="#{msg['menu.group.operazioni.listaConservazione']}" action="#{conservazioneMBean.menuAction}" 
 								rendered="#{loginBean.showMenuItemConservazione}" />
 					</rich:panelMenuGroup>
 				</rich:panelMenu>

@@ -35,16 +35,16 @@
 		<ul>
 			<li><h:outputText value="/#{msg['menu.group.operazioni']}" /></li>
 			<li><a4j:htmlCommandLink
-					action="#{fatturaElettronicaAttivaMBean.restoreSearch}"
-					value="/#{msg['fatturaAttiva.listaFattureAttive.pageTitle']}">
+					action="#{fatturaElettronicaAttivaSoloConservazioneMBean.restoreSearch}"
+					value="/#{msg['fatturaAttiva.listaFattureAttiveSoloConservazione.pageTitle']}">
 				</a4j:htmlCommandLink></li>
 			<li><h:outputText
-					value="/#{msg['fatturaAttiva.dettaglio.pageTitle']} (#{fatturaElettronicaAttivaMBean.selectedElement.cedentePrestatore.value} #{fatturaElettronicaAttivaMBean.selectedElement.numero.value}/#{fatturaElettronicaAttivaMBean.selectedElement.anno.value})" /></li>
+					value="/#{msg['fatturaAttiva.dettaglio.pageTitle']} (#{fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement.cedentePrestatore.value} #{fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement.numero.value}/#{fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement.anno.value})" /></li>
 		</ul>
 	</ui:define>
 	<ui:define name="body">
 
-		<a4j:keepAlive beanName="fatturaElettronicaAttivaMBean"  />
+		<a4j:keepAlive beanName="fatturaElettronicaAttivaSoloConservazioneMBean"  />
 		<script type="text/javascript">
 				 jQuery(document).ready(function() {
 					_force_get = true;
@@ -55,26 +55,27 @@
 			headerClass="outpanelHeader" styleClass="noborder">
 			<h:outputText id="outNoDettaglio"
 				value="#{msg['fatturaAttiva.dettaglio.nodata']}"
-				rendered="#{empty fatturaElettronicaAttivaMBean.selectedElement}" />
+				rendered="#{empty fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement}" />
 
 			<rich:panel id="panelDettaglio1" bodyClass="inpanelBody"
-				rendered="#{not empty fatturaElettronicaAttivaMBean.selectedElement}">
+				rendered="#{not empty fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement}">
 				<f:facet name="header">
 					<h:outputText id="outHeaderFattura1"
-						value="#{msg['fatturaAttiva.dettaglio.pageTitle']} (#{fatturaElettronicaAttivaMBean.selectedElement.cedentePrestatore.value} #{fatturaElettronicaAttivaMBean.selectedElement.numero.value}/#{fatturaElettronicaAttivaMBean.selectedElement.anno.value})"
-						rendered="#{not empty fatturaElettronicaAttivaMBean.selectedElement}" />
+						value="#{msg['fatturaAttiva.dettaglio.pageTitle']} (#{fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement.cedentePrestatore.value} #{fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement.numero.value}/#{fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement.anno.value})"
+						rendered="#{not empty fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement}" />
 				</f:facet>
 
 				<ui:include src="/includes/form/dettaglioFatturaAttiva.xhtml">
-					<ui:param name="mbean" value="#{fatturaElettronicaAttivaMBean}" />
-					<ui:param name="fatturaSelezionata" value="#{fatturaElettronicaAttivaMBean.selectedElement}" />
+					<ui:param name="mbean" value="#{fatturaElettronicaAttivaSoloConservazioneMBean}" />
+					<ui:param name="fatturaSelezionata"
+						value="#{fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement}" />
 				</ui:include>
 
 				<div class="buttonrow" style="padding: 10px;">
 					<h:form>
 						<!-- Visualizza XML -->
 						<c:set var="linkXml"
-							value="#{fatturaElettronicaAttivaMBean.selectedElement.xml}" />
+							value="#{fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement.xml}" />
 
 						<h:outputLink styleClass="icon-fatturapa-xml buttonNoRed"
 							id="visualizzaXml-iconLink" target="_blank"
@@ -85,7 +86,7 @@
 
 						<!-- Visualizza PDF -->
 						<c:set var="linkPdf"
-							value="#{fatturaElettronicaAttivaMBean.selectedElement.pdf}" />
+							value="#{fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement.pdf}" />
 
 						<h:outputLink styleClass="icon-fatturapa-pdf buttonNoRed"
 							id="visualizzaPdf-iconLink" target="_blank"
@@ -96,7 +97,7 @@
 
 						<!-- Scarica Tutto -->
 						<c:set var="linkZip"
-							value="#{fatturaElettronicaAttivaMBean.selectedElement.zip}" />
+							value="#{fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement.zip}" />
 						<h:outputLink id="scarica-iconLink" target="_blank"
 							styleClass="icon-compress buttonNoRed" value="#{linkZip.href}"
 							rendered="#{not empty linkZip.href}">

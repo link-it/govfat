@@ -397,9 +397,13 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 				}
 			}
 			
-			if(search.getConservazione().getValue() != null) {
-				boolean conseravazione = (search.getConservazione().getValue() ? true : false);
-				filter.setSoloConservazione(conseravazione); //ricevi sempre true o false
+			if(search.getSoloConservazione() != null) {
+				filter.setSoloConservazione(search.getSoloConservazione().booleanValue());
+			} else {
+				if(search.getConservazione().getValue() != null) {
+					boolean conseravazione = (search.getConservazione().getValue() ? true : false);
+					filter.setSoloConservazione(conseravazione); //ricevi sempre true o false
+				}
 			}
 		}catch(Exception e){
 			FatturaElettronicaAttivaService.log.error("Si e' verificato un errore durante la conversione del filtro di ricerca: " + e.getMessage(), e);

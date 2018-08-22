@@ -192,6 +192,14 @@ IFatturaElettronicaAttivaService>{
 		((SelectListImpl)this.search.getDipartimento()).setElencoSelectItems(this.getDipartimenti());
 		((SelectListImpl)this.search.getStatoElaborazione()).setElencoSelectItems(this.getListaStatoElaborazione()); 
 		this.search.setmBean(this);
+		
+		if(this.search.getSoloConservazione() != null && this.search.getSoloConservazione().booleanValue()) {
+			this.table.setHeaderText("fatturaAttiva.label.ricercaFattureAttiveSoloConservazione.tabellaRisultati");
+			this.getNavigationManager().setFiltraOutcome("listaFattureAttiveSoloConservazione?faces-redirect=true");
+			this.getNavigationManager().setMenuActionOutcome("listaFattureAttiveSoloConservazione");
+			this.getNavigationManager().setResetOutcome("listaFattureAttiveSoloConservazione?faces-redirect=true");
+			this.getNavigationManager().setRestoreSearchOutcome("listaFattureAttiveSoloConservazione");
+		}
 	}
 
 	
@@ -714,7 +722,7 @@ IFatturaElettronicaAttivaService>{
 					String msgCod = "fattura.salvaFattura." + codEccezione.name();
 					Object[] msgParams = salvaFatture.getEccezione().getParams();
 					
-					if(msgParams != null && msgParams.length > 0) {
+					if(codEccezione.equals(CODICE.ERRORE_GENERICO) && msgParams != null && msgParams.length > 0) {
 						msgCod +=".parametri";
 						this.checkFormFatturaMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle(msgCod, msgParams);
 					} else {
@@ -809,7 +817,7 @@ IFatturaElettronicaAttivaService>{
 					String msgCod = "fattura.salvaFatturaSoloConservazione." + codEccezione.name();
 					Object[] msgParams = salvaFattureSoloConservazione.getEccezione().getParams();
 					
-					if(msgParams != null && msgParams.length > 0) {
+					if(!codEccezione.equals(CODICE.ERRORE_GENERICO) && msgParams != null && msgParams.length > 0) {
 						msgCod +=".parametri";
 						this.checkFormConservazioneMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle(msgCod, msgParams);
 					} else {

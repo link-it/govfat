@@ -39,6 +39,18 @@
 		</managed-property>
 	</managed-bean>
 	
+	<!-- FatturaelettronicaAttiva (Solo Conservazione)-->
+	<managed-bean>
+		<managed-bean-name>fatturaElettronicaAttivaSoloConservazioneDM</managed-bean-name>
+		<managed-bean-class>org.govmix.proxy.fatturapa.web.console.datamodel.FatturaElettronicaAttivaDM</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>dataProvider</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.iservice.IFatturaElettronicaAttivaService</property-class>
+			<value>#{fatturaElettronicaAttivaSoloConservazioneService}</value>
+		</managed-property>
+	</managed-bean>
+	
 			<!-- Scadenze -->
 	<managed-bean>
 		<managed-bean-name>scadenzaMBean</managed-bean-name>
@@ -576,6 +588,24 @@
 			<to-view-id>/pages/fattura/list/listaFattureAttive.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
+	
+	<!-- Navigazione dalla pagina listaFattureAttive (Solo Conservazione)-->
+	<navigation-rule>
+		<from-view-id>/pages/fattura/list/listaFattureAttiveSoloConservazione.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>dettaglioAttivaSoloConservazione</from-outcome>
+			<to-view-id>/pages/fattura/form/dettaglioFatturaAttivaSoloConservazione.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<!-- Navigazione dalla pagina dettaglioFatturaAttiva (Solo Conservazione) -->
+	<navigation-rule>
+		<from-view-id>/pages/fattura/form/dettaglioFatturaAttivaSoloConservazione.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>listaFattureAttiveSoloConservazione</from-outcome>
+			<to-view-id>/pages/fattura/list/listaFattureAttiveSoloConservazione.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
 
 	<!-- Regole globali -->
 	<navigation-rule>
@@ -599,6 +629,10 @@
 		<navigation-case>
 			<from-outcome>listaFattureAttive</from-outcome>
 			<to-view-id>/pages/fattura/list/listaFattureAttive.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>listaFattureAttiveSoloConservazione</from-outcome>
+			<to-view-id>/pages/fattura/list/listaFattureAttiveSoloConservazione.xhtml</to-view-id>
 		</navigation-case>
 		<navigation-case>
 			<from-outcome>listaOperazioni</from-outcome>
