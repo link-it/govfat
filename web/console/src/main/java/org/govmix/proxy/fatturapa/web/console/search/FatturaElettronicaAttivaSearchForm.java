@@ -65,6 +65,7 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 	private SelectList<SelectItem> notificaDecorrenzaTermini = null;
 	private BooleanCheckBox conservazione = null;
 	private Boolean soloConservazione = null;
+	private SelectList<SelectItem> dominio = null;
 
 	public FatturaElettronicaAttivaSearchForm()throws Exception{
 		this.init();
@@ -127,6 +128,8 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		
 		this.conservazione = factory.getInputFieldFactory().createBooleanCheckBox("consSearch","fattura.search.conservazione",false,false);
 		
+		this.dominio = factory.getInputFieldFactory().createSelectList( "dominio","fattura.search.dominio",null,false);
+		
 		
 		this.setField(this.cessionarioCommittente);
 		this.setField(this.dipartimento);
@@ -142,6 +145,8 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		this.setField(this.notificaDecorrenzaTermini); 
 		this.setField(this.tipoComunicazione); 
 		this.setField(this.conservazione);
+		
+		this.setField(this.dominio);
 		
 		this.reset();
 	}
@@ -174,7 +179,7 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		this.notificaDecorrenzaTermini.reset();
 		this.statoElaborazione.reset();
 		this.identificativoProtocollo.reset();
-
+		this.dominio.reset();
 	}
 
 	
@@ -449,6 +454,14 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		
 		if(this.soloConservazione != null && this.soloConservazione.booleanValue())
 			this.setNomeForm("fatturaAttiva.label.ricercaFattureAttiveSoloConservazione");
+	}
+
+	public SelectList<SelectItem> getDominio() {
+		return dominio;
+	}
+
+	public void setDominio(SelectList<SelectItem> dominio) {
+		this.dominio = dominio;
 	}
 	
 	
