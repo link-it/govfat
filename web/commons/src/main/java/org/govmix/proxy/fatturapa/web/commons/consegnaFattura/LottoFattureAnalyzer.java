@@ -70,7 +70,7 @@ public class LottoFattureAnalyzer {
 			}
 		}
 		String type = this.isP7M ? "P7M" : "XML"; 
-		this.lotto  = getLotto(this.decoded, nomeFile, identificativo, type, codiceDipartimento, log);
+		this.lotto  = getLotto(this.original, nomeFile, identificativo, type, codiceDipartimento, log);
 	}
 
 	private static DocumentBuilderFactory dbf;
