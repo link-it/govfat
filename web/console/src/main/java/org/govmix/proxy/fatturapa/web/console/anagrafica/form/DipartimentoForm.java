@@ -103,6 +103,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 	private BooleanCheckBox fatturazioneAttiva= null;
 	private BooleanCheckBox firmaAutomatica= null;
 	private FormField<String> codiceProcedimento = null;
+	private FormField<String> codiceProcedimentoB2B = null;
 
 	private List<DipartimentoProperty> listaNomiProperties = null;
 
@@ -183,6 +184,8 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 			this.fatturazioneAttiva.setForm(this); 
 			this.firmaAutomatica = inputFieldFactory.createBooleanCheckBox("firmaAutomatica","dipartimento.form.firmaAutomatica",null,false);
 			this.codiceProcedimento = inputFieldFactory.createText("codiceProcedimento","dipartimento.form.codiceProcedimento",null,false);
+			this.codiceProcedimentoB2B = inputFieldFactory.createText("codiceProcedimentoB2B","dipartimento.form.codiceProcedimentoB2B",null,false);
+
 			
 			this._setModalitaPush();
 			this._setFatturazioneAttiva();
@@ -218,7 +221,8 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 			this.setField(this.fatturazioneAttiva);
 			this.setField(this.firmaAutomatica);
 			this.setField(this.codiceProcedimento);
-
+			this.setField(this.codiceProcedimentoB2B);
+			
 			this.properties = new ArrayList<Text>();
 
 		}catch(FactoryException e){
@@ -244,6 +248,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		this.fatturazioneAttiva.reset();
 		this.firmaAutomatica.reset();
 		this.codiceProcedimento.reset();
+		this.codiceProcedimentoB2B.reset();
 		
 		this._setFatturazioneAttiva();
 		this._abilitaRegistro();
@@ -334,7 +339,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 				this.fatturazioneAttiva.setDefaultValue(bean.getDTO().isFatturazioneAttiva());
 				this.firmaAutomatica.setDefaultValue(bean.getDTO().isFirmaAutomatica());
 				this.codiceProcedimento.setDefaultValue(bean.getDTO().getIdProcedimento()); 
-
+				this.codiceProcedimentoB2B.setDefaultValue(bean.getDTO().getIdProcedimentoB2B()); 
 
 				// prelevo le properties abilitate
 				listaProprietaAbilitate = bean.getListaProprietaAbilitate();
@@ -372,6 +377,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 				this.fatturazioneAttiva.setDefaultValue(false);
 				this.firmaAutomatica.setDefaultValue(false);
 				this.codiceProcedimento.setDefaultValue(null); 
+				this.codiceProcedimentoB2B.setDefaultValue(null); 
 
 				// tutte le properties false
 				Utils.impostaValoreProprietaPCCDipartimentoForm(this.listaProprietaConsentiteAiDipartimenti, listaProprietaAbilitate, NomePccOperazioneType.PAGAMENTO_IVA, this.pagamentoIVA,true);
@@ -621,14 +627,14 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		
 		// fatturazione attiva
 		
-		
-		if(fattAttiva)  {
-			
-			
-			// [TODO] codice procedimento non obbligatorio ma validare pattern 
+		// se fatturazione attiva e modalita' push allora devo controllare il contenuto dei codici procedimento.
+		if(fattAttiva && mod)  {
+			String _codiceProcedimentoB2B = this.codiceProcedimentoB2B.getValue();
 			String _codiceProcedimento = this.codiceProcedimento.getValue();
-			if(StringUtils.isNotEmpty(_codiceProcedimento)) {
-				
+			
+			// almeno uno tra codiceProcedimento e codiceProcedimentoB2B deve essere indicato
+			if(StringUtils.isEmpty(_codiceProcedimento) && StringUtils.isEmpty(_codiceProcedimentoB2B)) {
+				return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("dipartimento.form.codiceProcedimentoVuoto");
 			}
 		}
 		
@@ -717,10 +723,12 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		boolean _fatturazioneAttiva = this.fatturazioneAttiva.getValue() != null ? (this.fatturazioneAttiva.getValue() ? true : false) : false;
 		boolean _firmaAutomatica = this.firmaAutomatica.getValue() != null ? (this.firmaAutomatica.getValue() ? true : false) : false;
 		String _codiceProcedimento = this.codiceProcedimento.getValue();
+		String _codiceProcedimentoB2B = this.codiceProcedimentoB2B.getValue();
 		
 		dipartimento.setFatturazioneAttiva(_fatturazioneAttiva);
 		dipartimento.setFirmaAutomatica(_firmaAutomatica);
 		dipartimento.setIdProcedimento(_codiceProcedimento); 
+		dipartimento.setIdProcedimentoB2B(_codiceProcedimentoB2B); 
 
 		return dipartimento;
 	}
@@ -1073,6 +1081,20 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		this.codiceProcedimento = codiceProcedimento;
 	}
 	
+	public FormField<String> getCodiceProcedimentoB2B() {
+		this.codiceProcedimentoB2B.setRendered(false);
+		boolean mod = this.fatturazioneAttiva.getValue() != null ? (this.fatturazioneAttiva.getValue() ? true : false) : false;
+
+		if(mod)
+			this.codiceProcedimentoB2B.setRendered(true);
+
+		return this.codiceProcedimentoB2B;
+	}
+
+	public void setCodiceProcedimentoB2B(FormField<String> codiceProcedimentoB2B) {
+		this.codiceProcedimentoB2B = codiceProcedimentoB2B;
+	}
+
 	public void fatturazioneAttivaOnChangeListener(ActionEvent ae){
 		this._setFatturazioneAttiva();
 		this._abilitaRegistro();
@@ -1081,12 +1103,14 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 	private void _setFatturazioneAttiva() {
 		this.codiceProcedimento.setRendered(false);
 		this.firmaAutomatica.setRendered(false);
+		this.codiceProcedimentoB2B.setRendered(false);
 
 		boolean mod = this.fatturazioneAttiva.getValue() != null ? (this.fatturazioneAttiva.getValue() ? true : false) : false;
 
 		if(mod){
 			this.codiceProcedimento.setRendered(true);
 			this.firmaAutomatica.setRendered(true);
+			this.codiceProcedimentoB2B.setRendered(true);
 		}
 
 	}

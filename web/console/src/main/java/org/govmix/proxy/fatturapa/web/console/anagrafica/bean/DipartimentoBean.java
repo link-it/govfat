@@ -22,6 +22,7 @@ package org.govmix.proxy.fatturapa.web.console.anagrafica.bean;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.DipartimentoProperty;
 import org.govmix.proxy.fatturapa.orm.DipartimentoPropertyValue;
@@ -69,6 +70,7 @@ public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IB
 	private Text fatturazioneAttiva = null;
 	private Text firmaAutomatica = null;
 	private Text codiceProcedimento = null;
+	private Text codiceProcedimentoB2B = null;
 
 	// Gruppo Informazioni Dati Genareli
 	private OutputGroup fieldsDatiGenerali = null;
@@ -127,6 +129,7 @@ public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IB
 		this.fatturazioneAttiva = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("fatturazioneAttiva","dipartimento.fatturazioneAttiva");
 		this.firmaAutomatica = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("firmaAutomatica","dipartimento.firmaAutomatica");
 		this.codiceProcedimento = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("codiceProcedimento","dipartimento.codiceProcedimento");
+		this.codiceProcedimentoB2B = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("codiceProcedimentoB2B","dipartimento.codiceProcedimentoB2B");
 
 		this.setField(this.codice);
 		this.setField(this.descrizione);
@@ -155,6 +158,7 @@ public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IB
 		this.setField(this.fatturazioneAttiva);
 		this.setField(this.firmaAutomatica);
 		this.setField(this.codiceProcedimento);
+		this.setField(this.codiceProcedimentoB2B);
 		
 		this.fieldsDatiGenerali = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
 		this.fieldsDatiGenerali.addField(this.codice);
@@ -167,6 +171,7 @@ public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IB
 		this.fieldsDatiGenerali.addField(this.fatturazioneAttiva);
 		this.fieldsDatiGenerali.addField(this.firmaAutomatica);
 		this.fieldsDatiGenerali.addField(this.codiceProcedimento);
+		this.fieldsDatiGenerali.addField(this.codiceProcedimentoB2B);
 		
 		this.fieldsDatiGenerali.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
 		this.fieldsDatiGenerali.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE);
@@ -228,6 +233,9 @@ public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IB
 		this.fatturazioneAttiva.setValue(Utils.getBooleanAsLabel(this.getDTO().isFatturazioneAttiva(),"commons.label.si", "commons.label.no"));
 		this.firmaAutomatica.setValue(Utils.getBooleanAsLabel(this.getDTO().isFirmaAutomatica(),"commons.label.si", "commons.label.no"));
 		this.codiceProcedimento.setValue(this.getDTO().getIdProcedimento());
+		this.codiceProcedimento.setRendered(this.getDTO().isFatturazioneAttiva() && StringUtils.isNotEmpty(this.getDTO().getIdProcedimento()));
+		this.codiceProcedimentoB2B.setValue(this.getDTO().getIdProcedimentoB2B());
+		this.codiceProcedimentoB2B.setRendered(this.getDTO().isFatturazioneAttiva() && StringUtils.isNotEmpty(this.getDTO().getIdProcedimentoB2B()));
 	}
 	
 	public void setProprietaPCC(List<PccOperazione> listaProprietaConsentiteAiDipartimenti, List<PccDipartimentoOperazione> listaProprietaAbilitate){
@@ -555,6 +563,14 @@ public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IB
 
 	public void setCodiceProcedimento(Text codiceProcedimento) {
 		this.codiceProcedimento = codiceProcedimento;
+	}
+
+	public Text getCodiceProcedimentoB2B() {
+		return codiceProcedimentoB2B;
+	}
+
+	public void setCodiceProcedimentoB2B(Text codiceProcedimentoB2B) {
+		this.codiceProcedimentoB2B = codiceProcedimentoB2B;
 	}
 
 }
