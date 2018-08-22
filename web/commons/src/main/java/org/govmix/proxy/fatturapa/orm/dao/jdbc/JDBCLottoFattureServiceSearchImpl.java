@@ -545,6 +545,9 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_CONSEGNA,true));
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DETTAGLIO_CONSEGNA,true));
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().STATO_PROTOCOLLAZIONE,true));
+		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DOMINIO,true));
+		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().SOTTODOMINIO,true));
+		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().PAGO_PA,true));
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_PROTOCOLLAZIONE,true));
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().PROTOCOLLO,true));
 		sqlQueryObjectGet_lottoFatture.addSelectField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().ID_EGOV,true));

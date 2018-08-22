@@ -190,6 +190,9 @@
     <value name="dataConsegna" field="dataConsegna" usage="optional"/>
     <value name="dettaglioConsegna" field="dettaglioConsegna" usage="optional"/>
     <value name="statoProtocollazione" field="statoProtocollazione" usage="required" enum-value-method="toString"/>
+    <value name="dominio" field="dominio" usage="required" enum-value-method="toString"/>
+    <value name="sottodominio" field="sottodominio" usage="optional" enum-value-method="toString"/>
+    <value name="pagoPA" field="pagoPA" usage="required"/>
     <value name="dataProtocollazione" field="dataProtocollazione" usage="optional"/>
     <value name="protocollo" field="protocollo" usage="optional"/>
     <structure name="idSIP" field="idSIP" usage="optional" map-as="_IdSip_Type"/>
@@ -237,6 +240,9 @@
     <value name="dataConsegna" field="dataConsegna" usage="optional"/>
     <value name="dettaglioConsegna" field="dettaglioConsegna" usage="optional"/>
     <value name="statoProtocollazione" field="statoProtocollazione" usage="required" enum-value-method="toString"/>
+    <value name="dominio" field="dominio" usage="required" enum-value-method="toString"/>
+    <value name="sottodominio" field="sottodominio" usage="optional" enum-value-method="toString"/>
+    <value name="pagoPA" field="pagoPA" usage="required"/>
     <value name="dataProtocollazione" field="dataProtocollazione" usage="optional"/>
     <value name="protocollo" field="protocollo" usage="optional"/>
     <structure name="idSIP" field="idSIP" usage="optional" map-as="_IdSip_Type"/>
@@ -419,6 +425,7 @@
     <value name="descrizione" field="descrizione" usage="required"/>
     <value name="fatturazioneAttiva" field="fatturazioneAttiva" default="false" usage="required"/>
     <value name="idProcedimento" field="idProcedimento" usage="optional"/>
+    <value name="idProcedimentoB2B" field="idProcedimentoB2B" usage="optional"/>
     <value name="firmaAutomatica" field="firmaAutomatica" default="false" usage="required"/>
     <value name="accettazioneAutomatica" field="accettazioneAutomatica" default="false" usage="required"/>
     <value name="modalitaPush" field="modalitaPush" default="true" usage="required"/>
@@ -436,6 +443,7 @@
     <value name="descrizione" field="descrizione" usage="required"/>
     <value name="fatturazioneAttiva" field="fatturazioneAttiva" default="false" usage="required"/>
     <value name="idProcedimento" field="idProcedimento" usage="optional"/>
+    <value name="idProcedimentoB2B" field="idProcedimentoB2B" usage="optional"/>
     <value name="firmaAutomatica" field="firmaAutomatica" default="false" usage="required"/>
     <value name="accettazioneAutomatica" field="accettazioneAutomatica" default="false" usage="required"/>
     <value name="modalitaPush" field="modalitaPush" default="true" usage="required"/>

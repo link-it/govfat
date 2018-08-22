@@ -411,6 +411,13 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 				return "id_procedimento";
 			}
 		}
+		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.ID_PROCEDIMENTO_B2B)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".id_procedimento_b2b";
+			}else{
+				return "id_procedimento_b2b";
+			}
+		}
 		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.FIRMA_AUTOMATICA)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".firma_automatica";
@@ -733,6 +740,27 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 				return "stato_protocollazione";
 			}
 		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DOMINIO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".dominio";
+			}else{
+				return "dominio";
+			}
+		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.SOTTODOMINIO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".sottodominio";
+			}else{
+				return "sottodominio";
+			}
+		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.PAGO_PA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".pago_pa";
+			}else{
+				return "pago_pa";
+			}
+		}
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DATA_PROTOCOLLAZIONE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".data_protocollazione";
@@ -808,6 +836,13 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 				return this.toAliasTable(field)+".id_procedimento";
 			}else{
 				return "id_procedimento";
+			}
+		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.ID_PROCEDIMENTO_B2B)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".id_procedimento_b2b";
+			}else{
+				return "id_procedimento_b2b";
 			}
 		}
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.FIRMA_AUTOMATICA)){
@@ -1026,6 +1061,9 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.ID_PROCEDIMENTO)){
 			return this.toTable(FatturaElettronica.model().DIPARTIMENTO, returnAlias);
 		}
+		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.ID_PROCEDIMENTO_B2B)){
+			return this.toTable(FatturaElettronica.model().DIPARTIMENTO, returnAlias);
+		}
 		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.FIRMA_AUTOMATICA)){
 			return this.toTable(FatturaElettronica.model().DIPARTIMENTO, returnAlias);
 		}
@@ -1164,6 +1202,15 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.STATO_PROTOCOLLAZIONE)){
 			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE, returnAlias);
 		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DOMINIO)){
+			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE, returnAlias);
+		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.SOTTODOMINIO)){
+			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE, returnAlias);
+		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.PAGO_PA)){
+			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE, returnAlias);
+		}
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DATA_PROTOCOLLAZIONE)){
 			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE, returnAlias);
 		}
@@ -1195,6 +1242,9 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO, returnAlias);
 		}
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.ID_PROCEDIMENTO)){
+			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO, returnAlias);
+		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.ID_PROCEDIMENTO_B2B)){
 			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO, returnAlias);
 		}
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.FIRMA_AUTOMATICA)){

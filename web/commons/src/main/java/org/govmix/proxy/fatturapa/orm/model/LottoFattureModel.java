@@ -80,6 +80,9 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 		this.DATA_CONSEGNA = new Field("dataConsegna",java.util.Date.class,"LottoFatture",LottoFatture.class);
 		this.DETTAGLIO_CONSEGNA = new Field("dettaglioConsegna",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.STATO_PROTOCOLLAZIONE = new Field("statoProtocollazione",java.lang.String.class,"LottoFatture",LottoFatture.class);
+		this.DOMINIO = new Field("dominio",java.lang.String.class,"LottoFatture",LottoFatture.class);
+		this.SOTTODOMINIO = new Field("sottodominio",java.lang.String.class,"LottoFatture",LottoFatture.class);
+		this.PAGO_PA = new Field("pagoPA",boolean.class,"LottoFatture",LottoFatture.class);
 		this.DATA_PROTOCOLLAZIONE = new Field("dataProtocollazione",java.util.Date.class,"LottoFatture",LottoFatture.class);
 		this.PROTOCOLLO = new Field("protocollo",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.ID_SIP = new org.govmix.proxy.fatturapa.orm.model.IdSipModel(new Field("idSIP",org.govmix.proxy.fatturapa.orm.IdSip.class,"LottoFatture",LottoFatture.class));
@@ -130,6 +133,9 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 		this.DATA_CONSEGNA = new ComplexField(father,"dataConsegna",java.util.Date.class,"LottoFatture",LottoFatture.class);
 		this.DETTAGLIO_CONSEGNA = new ComplexField(father,"dettaglioConsegna",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.STATO_PROTOCOLLAZIONE = new ComplexField(father,"statoProtocollazione",java.lang.String.class,"LottoFatture",LottoFatture.class);
+		this.DOMINIO = new ComplexField(father,"dominio",java.lang.String.class,"LottoFatture",LottoFatture.class);
+		this.SOTTODOMINIO = new ComplexField(father,"sottodominio",java.lang.String.class,"LottoFatture",LottoFatture.class);
+		this.PAGO_PA = new ComplexField(father,"pagoPA",boolean.class,"LottoFatture",LottoFatture.class);
 		this.DATA_PROTOCOLLAZIONE = new ComplexField(father,"dataProtocollazione",java.util.Date.class,"LottoFatture",LottoFatture.class);
 		this.PROTOCOLLO = new ComplexField(father,"protocollo",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.ID_SIP = new org.govmix.proxy.fatturapa.orm.model.IdSipModel(new ComplexField(father,"idSIP",org.govmix.proxy.fatturapa.orm.IdSip.class,"LottoFatture",LottoFatture.class));
@@ -215,6 +221,12 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 	public IField DETTAGLIO_CONSEGNA = null;
 	 
 	public IField STATO_PROTOCOLLAZIONE = null;
+	 
+	public IField DOMINIO = null;
+	 
+	public IField SOTTODOMINIO = null;
+	 
+	public IField PAGO_PA = null;
 	 
 	public IField DATA_PROTOCOLLAZIONE = null;
 	 

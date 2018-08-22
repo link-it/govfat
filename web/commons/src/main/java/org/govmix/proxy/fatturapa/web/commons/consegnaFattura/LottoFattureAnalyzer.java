@@ -19,6 +19,8 @@ import javax.xml.xpath.XPathFactory;
 
 import org.apache.cxf.helpers.MapNamespaceContext;
 import org.apache.log4j.Logger;
+import org.govmix.proxy.fatturapa.orm.constants.DominioType;
+import org.govmix.proxy.fatturapa.orm.constants.SottodominioType;
 import org.openspcoop2.protocol.sdi.utils.P7MInfo;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -30,6 +32,9 @@ public class LottoFattureAnalyzer {
 	private boolean isFirmato;
 	private byte[] original;
 	private byte[] decoded;
+	private DominioType dominio;
+	private SottodominioType sottodominio;
+	private boolean pagoPA;
 
 	public LottoFattureAnalyzer(byte[] lottoFatture, Logger log) throws Exception {
 		this.original = lottoFatture;
@@ -141,6 +146,58 @@ public class LottoFattureAnalyzer {
 	public void setDecoded(byte[] decoded) {
 		this.decoded = decoded;
 	}
+	
+	public DominioType getDominio() {
+		return dominio;
+	}
 
+	public void setDominio(DominioType dominio) {
+		this.dominio = dominio;
+	}
+
+	public SottodominioType getSottodominio() {
+		return sottodominio;
+	}
+
+	public void setSottodominio(SottodominioType sottodominio) {
+		this.sottodominio = sottodominio;
+	}
+
+	public boolean isPagoPA() {
+		return pagoPA;
+	}
+
+	public void setPagoPA(boolean pagoPA) {
+		this.pagoPA = pagoPA;
+	}
+
+	private static DominioType getDominio(String codiceDipartimento) throws Exception {
+		if(codiceDipartimento==null)
+			throw new Exception("Impossibile determinare il dominio. Codice dipartimento null");
+		if(codiceDipartimento.length() == 6)
+			return DominioType.PA;
+		if(codiceDipartimento.length() == 7)
+			return DominioType.B2B;
+		
+		throw new Exception("Lunghezza del codice dipartimento ["+codiceDipartimento.length()+"]. Impossibile determinare il dominio");
+	}
+	
+	private static SottodominioType getSottodominio(String codiceDipartimento) throws Exception {
+		
+		DominioType dominio = getDominio(codiceDipartimento);
+		if(dominio.toString().equals(DominioType.B2B.toString())) {
+			if("XXXXXXX".equals(codiceDipartimento)) {
+				return SottodominioType.ESTERO;
+			} else if("0000000".equals(codiceDipartimento)) {
+				return SottodominioType.PEC;
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+
+	}
+	
 }
 

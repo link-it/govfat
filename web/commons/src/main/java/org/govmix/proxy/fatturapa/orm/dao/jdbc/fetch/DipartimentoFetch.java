@@ -64,6 +64,8 @@ public class DipartimentoFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "fatturazione_attiva", Dipartimento.model().FATTURAZIONE_ATTIVA.getFieldType()));
 				setParameter(object, "setIdProcedimento", Dipartimento.model().ID_PROCEDIMENTO.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "id_procedimento", Dipartimento.model().ID_PROCEDIMENTO.getFieldType()));
+				setParameter(object, "setIdProcedimentoB2B", Dipartimento.model().ID_PROCEDIMENTO_B2B.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "id_procedimento_b2b", Dipartimento.model().ID_PROCEDIMENTO_B2B.getFieldType()));
 				setParameter(object, "setFirmaAutomatica", Dipartimento.model().FIRMA_AUTOMATICA.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "firma_automatica", Dipartimento.model().FIRMA_AUTOMATICA.getFieldType()));
 				setParameter(object, "setAccettazioneAutomatica", Dipartimento.model().ACCETTAZIONE_AUTOMATICA.getFieldType(),
@@ -122,6 +124,8 @@ public class DipartimentoFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"fatturazioneAttiva"));
 				setParameter(object, "setIdProcedimento", Dipartimento.model().ID_PROCEDIMENTO.getFieldType(),
 					this.getObjectFromMap(map,"idProcedimento"));
+				setParameter(object, "setIdProcedimentoB2B", Dipartimento.model().ID_PROCEDIMENTO_B2B.getFieldType(),
+					this.getObjectFromMap(map,"idProcedimentoB2B"));
 				setParameter(object, "setFirmaAutomatica", Dipartimento.model().FIRMA_AUTOMATICA.getFieldType(),
 					this.getObjectFromMap(map,"firmaAutomatica"));
 				setParameter(object, "setAccettazioneAutomatica", Dipartimento.model().ACCETTAZIONE_AUTOMATICA.getFieldType(),

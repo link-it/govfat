@@ -251,9 +251,11 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.DATA_PROTOCOLLAZIONE, lottoTable));
 			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.PROTOCOLLO, lottoTable));
 			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.ID_EGOV, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.PAGO_PA, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.DOMINIO, lottoTable));
+			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.SOTTODOMINIO, lottoTable));
 			String idSipLottoField = lottoTable+".id_sip";
 //			fields.add(new CustomField(idSipLottoField, Long.class, idSipLottoField, this.getFatturaElettronicaFieldConverter().toTable(FatturaElettronica.model().LOTTO_FATTURE), "l_id"));
-
 
 			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));
 

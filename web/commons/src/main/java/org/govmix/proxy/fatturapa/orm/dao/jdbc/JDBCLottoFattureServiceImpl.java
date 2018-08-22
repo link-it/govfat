@@ -124,6 +124,9 @@ public class JDBCLottoFattureServiceImpl extends JDBCLottoFattureServiceSearchIm
 		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_CONSEGNA,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DETTAGLIO_CONSEGNA,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().STATO_PROTOCOLLAZIONE,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DOMINIO,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().SOTTODOMINIO,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().PAGO_PA,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_PROTOCOLLAZIONE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().PROTOCOLLO,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().ID_EGOV,false),"?");
@@ -170,6 +173,9 @@ public class JDBCLottoFattureServiceImpl extends JDBCLottoFattureServiceSearchIm
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getDataConsegna(),LottoFatture.model().DATA_CONSEGNA.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getDettaglioConsegna(),LottoFatture.model().DETTAGLIO_CONSEGNA.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getStatoProtocollazione(),LottoFatture.model().STATO_PROTOCOLLAZIONE.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getDominio(),LottoFatture.model().DOMINIO.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getSottodominio(),LottoFatture.model().SOTTODOMINIO.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getPagoPA(),LottoFatture.model().PAGO_PA.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getDataProtocollazione(),LottoFatture.model().DATA_PROTOCOLLAZIONE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getProtocollo(),LottoFatture.model().PROTOCOLLO.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(lottoFatture.getIdEgov(),LottoFatture.model().ID_EGOV.getFieldType()),
@@ -315,6 +321,12 @@ public class JDBCLottoFattureServiceImpl extends JDBCLottoFattureServiceSearchIm
 		lstObjects_lottoFatture.add(new JDBCObject(lottoFatture.getDettaglioConsegna(), LottoFatture.model().DETTAGLIO_CONSEGNA.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().STATO_PROTOCOLLAZIONE,false), "?");
 		lstObjects_lottoFatture.add(new JDBCObject(lottoFatture.getStatoProtocollazione(), LottoFatture.model().STATO_PROTOCOLLAZIONE.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DOMINIO,false), "?");
+		lstObjects_lottoFatture.add(new JDBCObject(lottoFatture.getDominio(), LottoFatture.model().DOMINIO.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().SOTTODOMINIO,false), "?");
+		lstObjects_lottoFatture.add(new JDBCObject(lottoFatture.getSottodominio(), LottoFatture.model().SOTTODOMINIO.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().PAGO_PA,false), "?");
+		lstObjects_lottoFatture.add(new JDBCObject(lottoFatture.getPagoPA(), LottoFatture.model().PAGO_PA.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().DATA_PROTOCOLLAZIONE,false), "?");
 		lstObjects_lottoFatture.add(new JDBCObject(lottoFatture.getDataProtocollazione(), LottoFatture.model().DATA_PROTOCOLLAZIONE.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getLottoFattureFieldConverter().toColumn(LottoFatture.model().PROTOCOLLO,false), "?");

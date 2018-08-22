@@ -30,6 +30,7 @@ import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.DipartimentoPropertyValue;
 import org.govmix.proxy.fatturapa.orm.IdDipartimento;
 import org.govmix.proxy.fatturapa.orm.IdEnte;
+import org.govmix.proxy.fatturapa.orm.IdRegistro;
 import org.govmix.proxy.fatturapa.orm.dao.IDBDipartimentoPropertyServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.DipartimentoFieldConverter;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.DipartimentoFetch;
@@ -169,7 +170,9 @@ public class JDBCDipartimentoServiceSearchImpl implements IJDBCDipartimentoServi
 			fields.add(Dipartimento.model().FATTURAZIONE_ATTIVA);
 			fields.add(Dipartimento.model().FIRMA_AUTOMATICA);
 			fields.add(Dipartimento.model().ID_PROCEDIMENTO);
+			fields.add(Dipartimento.model().ID_PROCEDIMENTO_B2B);
 			fields.add(Dipartimento.model().ENTE.NOME);
+			fields.add(Dipartimento.model().REGISTRO.NOME);
 
 			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));
 			
@@ -177,6 +180,7 @@ public class JDBCDipartimentoServiceSearchImpl implements IJDBCDipartimentoServi
 				
 				Dipartimento dipartimento = (Dipartimento)this.getDipartimentoFetch().fetch(jdbcProperties.getDatabase(), Dipartimento.model(), map);
 				dipartimento.setEnte((IdEnte)this.getDipartimentoFetch().fetch(jdbcProperties.getDatabase(), Dipartimento.model().ENTE, map));
+				dipartimento.setRegistro((IdRegistro)this.getDipartimentoFetch().fetch(jdbcProperties.getDatabase(), Dipartimento.model().REGISTRO, map));
 				if(fetchChildren) {
 					org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 
 							new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
@@ -545,125 +549,22 @@ public class JDBCDipartimentoServiceSearchImpl implements IJDBCDipartimentoServi
 
 	private Dipartimento _get(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, Long tableId, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotFoundException, MultipleResultException, NotImplementedException, ServiceException, Exception {
 
-		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 
-				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
-
-		ISQLQueryObject sqlQueryObjectGet = sqlQueryObject.newSQLQueryObject();
-
-		Dipartimento dipartimento = new Dipartimento();
-
-
-		// Object dipartimento
-		ISQLQueryObject sqlQueryObjectGet_dipartimento = sqlQueryObjectGet.newSQLQueryObject();
-		sqlQueryObjectGet_dipartimento.setANDLogicOperator(true);
-		sqlQueryObjectGet_dipartimento.addFromTable(this.getDipartimentoFieldConverter().toTable(Dipartimento.model()));
-		sqlQueryObjectGet_dipartimento.addSelectField("id");
-		sqlQueryObjectGet_dipartimento.addSelectField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().CODICE,true));
-		sqlQueryObjectGet_dipartimento.addSelectField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().DESCRIZIONE,true));
-		sqlQueryObjectGet_dipartimento.addSelectField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().ACCETTAZIONE_AUTOMATICA,true));
-		sqlQueryObjectGet_dipartimento.addSelectField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().MODALITA_PUSH,true));
-		sqlQueryObjectGet_dipartimento.addSelectField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().LISTA_EMAIL_NOTIFICHE,true));
-		sqlQueryObjectGet_dipartimento.addSelectField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().FATTURAZIONE_ATTIVA,true));
-		sqlQueryObjectGet_dipartimento.addSelectField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().FIRMA_AUTOMATICA,true));
-		sqlQueryObjectGet_dipartimento.addSelectField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().ID_PROCEDIMENTO,true));
-		sqlQueryObjectGet_dipartimento.addWhereCondition("id=?");
-
-		// Get dipartimento
-		dipartimento = (Dipartimento) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_dipartimento.createSQLQuery(), jdbcProperties.isShowSql(), Dipartimento.model(), this.getDipartimentoFetch(),
-				new JDBCObject(tableId,Long.class));
-
-
-		if(idMappingResolutionBehaviour==null ||
-				(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
-				){
-			// Object _dipartimento_ente (recupero id)
-			ISQLQueryObject sqlQueryObjectGet_dipartimento_ente_readFkId = sqlQueryObjectGet.newSQLQueryObject();
-			sqlQueryObjectGet_dipartimento_ente_readFkId.addFromTable(this.getDipartimentoFieldConverter().toTable(org.govmix.proxy.fatturapa.orm.Dipartimento.model()));
-			sqlQueryObjectGet_dipartimento_ente_readFkId.addSelectField("id_ente");
-			sqlQueryObjectGet_dipartimento_ente_readFkId.addWhereCondition("id=?");
-			sqlQueryObjectGet_dipartimento_ente_readFkId.setANDLogicOperator(true);
-			Long idFK_dipartimento_ente = (Long) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_dipartimento_ente_readFkId.createSQLQuery(), jdbcProperties.isShowSql(),Long.class,
-					new JDBCObject(dipartimento.getId(),Long.class));
-
-			org.govmix.proxy.fatturapa.orm.IdEnte id_dipartimento_ente = null;
-			if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
-				id_dipartimento_ente = ((JDBCEnteServiceSearch)(this.getServiceManager().getEnteServiceSearch())).findId(idFK_dipartimento_ente, false);
-			}else{
-				id_dipartimento_ente = new org.govmix.proxy.fatturapa.orm.IdEnte();
-			}
-			id_dipartimento_ente.setId(idFK_dipartimento_ente);
-			dipartimento.setEnte(id_dipartimento_ente);
+		JDBCPaginatedExpression expression = this.newPaginatedExpression(log);
+		CustomField idField = new CustomField("id", Long.class, "id", this.getFieldConverter().toTable(Dipartimento.model()));
+		expression.equals(idField, tableId);
+		expression.offset(0);
+		expression.limit(2);
+		
+		expression.addOrder(idField, org.openspcoop2.generic_project.expression.SortOrder.ASC);
+		List<Dipartimento> lst = this.findAll(jdbcProperties, log, connection, sqlQueryObject, expression, true, idMappingResolutionBehaviour);
+		
+		if(lst == null || lst.size() == 0) {
+			throw new NotFoundException();
+		} else if(lst.size() > 1) {
+			throw new MultipleResultException();
+		} else {
+			return lst.get(0);
 		}
-
-		if(idMappingResolutionBehaviour==null ||
-				(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
-				){
-			try {
-				// Object _dipartimento_registro (recupero id)
-				ISQLQueryObject sqlQueryObjectGet_dipartimento_registro_readFkId = sqlQueryObjectGet.newSQLQueryObject();
-				sqlQueryObjectGet_dipartimento_registro_readFkId.addFromTable(this.getDipartimentoFieldConverter().toTable(org.govmix.proxy.fatturapa.orm.Dipartimento.model()));
-				sqlQueryObjectGet_dipartimento_registro_readFkId.addSelectField("id_registro");
-				sqlQueryObjectGet_dipartimento_registro_readFkId.addWhereCondition("id=?");
-				sqlQueryObjectGet_dipartimento_registro_readFkId.setANDLogicOperator(true);
-				Long idFK_dipartimento_registro = (Long) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_dipartimento_registro_readFkId.createSQLQuery(), jdbcProperties.isShowSql(),Long.class,
-						new JDBCObject(dipartimento.getId(),Long.class));
-	
-				org.govmix.proxy.fatturapa.orm.IdRegistro id_dipartimento_registro = null;
-				if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
-					id_dipartimento_registro = ((JDBCRegistroServiceSearch)(this.getServiceManager().getRegistroServiceSearch())).findId(idFK_dipartimento_registro, false);
-				}else{
-					id_dipartimento_registro = new org.govmix.proxy.fatturapa.orm.IdRegistro();
-				}
-				id_dipartimento_registro.setId(idFK_dipartimento_registro);
-				dipartimento.setRegistro(id_dipartimento_registro);
-			} catch(NotFoundException e) {}
-		}
-
-
-		// Object dipartimento_dipartimentoPropertyValue
-		ISQLQueryObject sqlQueryObjectGet_dipartimento_dipartimentoPropertyValue = sqlQueryObjectGet.newSQLQueryObject();
-		sqlQueryObjectGet_dipartimento_dipartimentoPropertyValue.setANDLogicOperator(true);
-		sqlQueryObjectGet_dipartimento_dipartimentoPropertyValue.addFromTable(this.getDipartimentoFieldConverter().toTable(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE));
-		sqlQueryObjectGet_dipartimento_dipartimentoPropertyValue.addSelectField("id");
-		sqlQueryObjectGet_dipartimento_dipartimentoPropertyValue.addSelectField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.VALORE,true));
-		sqlQueryObjectGet_dipartimento_dipartimentoPropertyValue.addWhereCondition("id_dipartimento=?");
-
-		// Get dipartimento_dipartimentoPropertyValue
-		java.util.List<Object> dipartimento_dipartimentoPropertyValue_list = (java.util.List<Object>) jdbcUtilities.executeQuery(sqlQueryObjectGet_dipartimento_dipartimentoPropertyValue.createSQLQuery(), jdbcProperties.isShowSql(), Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE, this.getDipartimentoFetch(),
-				new JDBCObject(dipartimento.getId(),Long.class));
-
-		if(dipartimento_dipartimentoPropertyValue_list != null) {
-			for (Object dipartimento_dipartimentoPropertyValue_object: dipartimento_dipartimentoPropertyValue_list) {
-				DipartimentoPropertyValue dipartimento_dipartimentoPropertyValue = (DipartimentoPropertyValue) dipartimento_dipartimentoPropertyValue_object;
-
-
-				if(idMappingResolutionBehaviour==null ||
-						(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
-						){
-					// Object _dipartimento_dipartimentoPropertyValue_dipartimentoProperty (recupero id)
-					ISQLQueryObject sqlQueryObjectGet_dipartimento_dipartimentoPropertyValue_dipartimentoProperty_readFkId = sqlQueryObjectGet.newSQLQueryObject();
-					sqlQueryObjectGet_dipartimento_dipartimentoPropertyValue_dipartimentoProperty_readFkId.addFromTable(this.getDipartimentoFieldConverter().toTable(org.govmix.proxy.fatturapa.orm.Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE));
-					sqlQueryObjectGet_dipartimento_dipartimentoPropertyValue_dipartimentoProperty_readFkId.addSelectField("id_dipartimento_property");
-					sqlQueryObjectGet_dipartimento_dipartimentoPropertyValue_dipartimentoProperty_readFkId.addWhereCondition("id=?");
-					sqlQueryObjectGet_dipartimento_dipartimentoPropertyValue_dipartimentoProperty_readFkId.setANDLogicOperator(true);
-					Long idFK_dipartimento_dipartimentoPropertyValue_dipartimentoProperty = (Long) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_dipartimento_dipartimentoPropertyValue_dipartimentoProperty_readFkId.createSQLQuery(), jdbcProperties.isShowSql(),Long.class,
-							new JDBCObject(dipartimento_dipartimentoPropertyValue.getId(),Long.class));
-
-					org.govmix.proxy.fatturapa.orm.IdDipartimentoProperty id_dipartimento_dipartimentoPropertyValue_dipartimentoProperty = null;
-					if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
-						id_dipartimento_dipartimentoPropertyValue_dipartimentoProperty = ((JDBCDipartimentoPropertyServiceSearch)(this.getServiceManager().getDipartimentoPropertyServiceSearch())).findId(idFK_dipartimento_dipartimentoPropertyValue_dipartimentoProperty, false);
-					}else{
-						id_dipartimento_dipartimentoPropertyValue_dipartimentoProperty = new org.govmix.proxy.fatturapa.orm.IdDipartimentoProperty();
-					}
-					id_dipartimento_dipartimentoPropertyValue_dipartimentoProperty.setId(idFK_dipartimento_dipartimentoPropertyValue_dipartimentoProperty);
-					dipartimento_dipartimentoPropertyValue.setIdProperty(id_dipartimento_dipartimentoPropertyValue_dipartimentoProperty);
-				}
-
-				dipartimento.addDipartimentoPropertyValue(dipartimento_dipartimentoPropertyValue);
-			}
-		}
-
-		return dipartimento;  
 
 	} 
 

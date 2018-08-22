@@ -43,6 +43,7 @@ import java.util.List;
  * 			&lt;element name="descrizione" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="fatturazioneAttiva" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1" default="false"/>
  * 			&lt;element name="idProcedimento" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="idProcedimentoB2B" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="firmaAutomatica" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1" default="false"/>
  * 			&lt;element name="accettazioneAutomatica" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1" default="false"/>
  * 			&lt;element name="modalitaPush" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1" default="true"/>
@@ -68,6 +69,7 @@ import java.util.List;
   	"descrizione",
   	"fatturazioneAttiva",
   	"idProcedimento",
+  	"idProcedimentoB2B",
   	"firmaAutomatica",
   	"accettazioneAutomatica",
   	"modalitaPush",
@@ -139,6 +141,14 @@ public class Dipartimento extends org.openspcoop2.utils.beans.BaseBean implement
 
   public void setIdProcedimento(java.lang.String idProcedimento) {
     this.idProcedimento = idProcedimento;
+  }
+
+  public java.lang.String getIdProcedimentoB2B() {
+    return this.idProcedimentoB2B;
+  }
+
+  public void setIdProcedimentoB2B(java.lang.String idProcedimentoB2B) {
+    this.idProcedimentoB2B = idProcedimentoB2B;
   }
 
   public boolean isFirmaAutomatica() {
@@ -254,6 +264,10 @@ public class Dipartimento extends org.openspcoop2.utils.beans.BaseBean implement
   @javax.xml.bind.annotation.XmlSchemaType(name="string")
   @XmlElement(name="idProcedimento",required=false,nillable=false)
   protected java.lang.String idProcedimento;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @XmlElement(name="idProcedimentoB2B",required=false,nillable=false)
+  protected java.lang.String idProcedimentoB2B;
 
   @javax.xml.bind.annotation.XmlSchemaType(name="boolean")
   @XmlElement(name="firmaAutomatica",required=true,nillable=false,defaultValue="false")

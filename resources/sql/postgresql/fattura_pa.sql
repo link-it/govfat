@@ -1,3 +1,24 @@
+CREATE SEQUENCE seq_sip start 1 increment 1 maxvalue 9223372036854775807 minvalue 1 cache 1 NO CYCLE;
+
+CREATE TABLE sip
+(
+	registro VARCHAR(255),
+	anno INT,
+	numero VARCHAR(255),
+	stato_consegna VARCHAR(255) NOT NULL DEFAULT 'NON_CONSEGNATA',
+	data_ultima_consegna TIMESTAMP,
+	rapporto_versamento TEXT,
+	-- fk/pk columns
+	id BIGINT DEFAULT nextval('seq_sip') NOT NULL,
+	-- check constraints
+	CONSTRAINT chk_sip_1 CHECK (stato_consegna IN ('NON_CONSEGNATA','IN_RICONSEGNA','ERRORE_CONSEGNA','CONSEGNATA')),
+	-- fk/pk keys constraints
+	CONSTRAINT pk_sip PRIMARY KEY (id)
+);
+
+
+
+
 CREATE SEQUENCE seq_lotti start 1 increment 1 maxvalue 9223372036854775807 minvalue 1 cache 1 NO CYCLE;
 
 CREATE TABLE lotti
@@ -40,11 +61,15 @@ CREATE TABLE lotti
 	data_consegna TIMESTAMP,
 	dettaglio_consegna VARCHAR(255),
 	stato_protocollazione VARCHAR(255) NOT NULL,
+	dominio VARCHAR(255) NOT NULL,
+	sottodominio VARCHAR(255),
+	pago_pa BOOLEAN NOT NULL,
 	data_protocollazione TIMESTAMP,
 	protocollo TEXT,
 	id_egov VARCHAR(255),
 	-- fk/pk columns
 	id BIGINT DEFAULT nextval('seq_lotti') NOT NULL,
+	id_sip BIGINT,
 	-- check constraints
 	CONSTRAINT chk_lotti_1 CHECK (formato_trasmissione IN ('FPA12','FPR12','SDI11','SDI10')),
 	CONSTRAINT chk_lotti_2 CHECK (formato_archivio_invio_fattura IN ('XML','P7M')),
@@ -52,9 +77,12 @@ CREATE TABLE lotti
 	CONSTRAINT chk_lotti_4 CHECK (stato_inserimento IN ('NON_INSERITO','ERRORE_INSERIMENTO','INSERITO')),
 	CONSTRAINT chk_lotti_5 CHECK (stato_consegna IN ('NON_CONSEGNATA','IN_RICONSEGNA','ERRORE_CONSEGNA','CONSEGNATA')),
 	CONSTRAINT chk_lotti_6 CHECK (stato_protocollazione IN ('NON_PROTOCOLLATA','PROTOCOLLATA_IN_ELABORAZIONE','ERRORE_PROTOCOLLAZIONE','PROTOCOLLATA')),
+	CONSTRAINT chk_lotti_7 CHECK (dominio IN ('PA','B2B')),
+	CONSTRAINT chk_lotti_8 CHECK (sottodominio IN ('ESTERO','PEC')),
 	-- unique constraints
 	CONSTRAINT unique_lotti_1 UNIQUE (identificativo_sdi,fatturazione_attiva),
 	-- fk/pk keys constraints
+	CONSTRAINT fk_lotti_1 FOREIGN KEY (id_sip) REFERENCES sip(id),
 	CONSTRAINT pk_lotti PRIMARY KEY (id)
 );
 
@@ -237,9 +265,11 @@ CREATE TABLE fatture
 	data_protocollazione TIMESTAMP,
 	protocollo VARCHAR(255),
 	xml BYTEA NOT NULL,
+	stato_conservazione VARCHAR(255) NOT NULL,
 	-- fk/pk columns
 	id BIGINT DEFAULT nextval('seq_fatture') NOT NULL,
 	id_notifica_decorrenza_termini BIGINT,
+	id_sip BIGINT,
 	id_contabilizzazione BIGINT,
 	id_scadenza BIGINT,
 	-- check constraints
@@ -248,12 +278,14 @@ CREATE TABLE fatture
 	CONSTRAINT chk_fatture_3 CHECK (esito IN ('IN_ELABORAZIONE_ACCETTATO','IN_ELABORAZIONE_RIFIUTATO','INVIATA_ACCETTATO','INVIATA_RIFIUTATO','SCARTATA_ACCETTATO','SCARTATA_RIFIUTATO')),
 	CONSTRAINT chk_fatture_4 CHECK (stato_consegna IN ('NON_CONSEGNATA','IN_RICONSEGNA','ERRORE_CONSEGNA','CONSEGNATA')),
 	CONSTRAINT chk_fatture_5 CHECK (stato_protocollazione IN ('NON_PROTOCOLLATA','PROTOCOLLATA_IN_ELABORAZIONE','ERRORE_PROTOCOLLAZIONE','PROTOCOLLATA')),
+	CONSTRAINT chk_fatture_6 CHECK (stato_conservazione IN ('NON_INVIATA','PRESA_IN_CARICO','IN_RICONSEGNA','ERRORE_CONSEGNA','CONSERVAZIONE_COMPLETATA','CONSERVAZIONE_FALLITA')),
 	-- unique constraints
 	CONSTRAINT unique_fatture_1 UNIQUE (identificativo_sdi,posizione,fatturazione_attiva),
 	-- fk/pk keys constraints
 	CONSTRAINT fk_fatture_1 FOREIGN KEY (id_notifica_decorrenza_termini) REFERENCES decorrenza_termini(id) ON DELETE CASCADE,
-	CONSTRAINT fk_fatture_2 FOREIGN KEY (id_contabilizzazione) REFERENCES tracce_trasmissioni_esiti(id),
-	CONSTRAINT fk_fatture_3 FOREIGN KEY (id_scadenza) REFERENCES tracce_trasmissioni_esiti(id),
+	CONSTRAINT fk_fatture_2 FOREIGN KEY (id_sip) REFERENCES sip(id),
+	CONSTRAINT fk_fatture_3 FOREIGN KEY (id_contabilizzazione) REFERENCES tracce_trasmissioni_esiti(id),
+	CONSTRAINT fk_fatture_4 FOREIGN KEY (id_scadenza) REFERENCES tracce_trasmissioni_esiti(id),
 	CONSTRAINT pk_fatture PRIMARY KEY (id)
 );
 
@@ -499,6 +531,7 @@ CREATE TABLE dipartimenti
 	descrizione VARCHAR(255) NOT NULL,
 	fatturazione_attiva BOOLEAN NOT NULL DEFAULT false,
 	id_procedimento VARCHAR(255),
+	id_procedimento_b2b VARCHAR(255),
 	firma_automatica BOOLEAN NOT NULL DEFAULT false,
 	accettazione_automatica BOOLEAN NOT NULL DEFAULT false,
 	modalita_push BOOLEAN NOT NULL DEFAULT true,

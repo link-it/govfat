@@ -131,6 +131,12 @@ public class LottoFattureFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "dettaglio_consegna", LottoFatture.model().DETTAGLIO_CONSEGNA.getFieldType()));
 				setParameter(object, "set_value_statoProtocollazione", String.class,
 					jdbcParameterUtilities.readParameter(rs, "stato_protocollazione", LottoFatture.model().STATO_PROTOCOLLAZIONE.getFieldType())+"");
+				setParameter(object, "set_value_dominio", String.class,
+					jdbcParameterUtilities.readParameter(rs, "dominio", LottoFatture.model().DOMINIO.getFieldType())+"");
+				setParameter(object, "set_value_sottodominio", String.class,
+					jdbcParameterUtilities.readParameter(rs, "sottodominio", LottoFatture.model().SOTTODOMINIO.getFieldType())+"");
+				setParameter(object, "setPagoPA", LottoFatture.model().PAGO_PA.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "pago_pa", LottoFatture.model().PAGO_PA.getFieldType()));
 				setParameter(object, "setDataProtocollazione", LottoFatture.model().DATA_PROTOCOLLAZIONE.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "data_protocollazione", LottoFatture.model().DATA_PROTOCOLLAZIONE.getFieldType()));
 				setParameter(object, "setProtocollo", LottoFatture.model().PROTOCOLLO.getFieldType(),
@@ -235,12 +241,18 @@ public class LottoFattureFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"dettaglioConsegna"));
 				setParameter(object, "set_value_statoProtocollazione", String.class,
 					this.getObjectFromMap(map,"statoProtocollazione"));
+				setParameter(object, "set_value_dominio", String.class,
+					this.getObjectFromMap(map,"dominio"));
+				setParameter(object, "set_value_sottodominio", String.class,
+					this.getObjectFromMap(map,"sottodominio"));
+				setParameter(object, "setPagoPA", LottoFatture.model().PAGO_PA.getFieldType(),
+					this.getObjectFromMap(map,"pagoPA"));
 				setParameter(object, "setDataProtocollazione", LottoFatture.model().DATA_PROTOCOLLAZIONE.getFieldType(),
 					this.getObjectFromMap(map,"dataProtocollazione"));
 				setParameter(object, "setProtocollo", LottoFatture.model().PROTOCOLLO.getFieldType(),
 					this.getObjectFromMap(map,"protocollo"));
 				setParameter(object, "setIdEgov", LottoFatture.model().ID_EGOV.getFieldType(),
-						this.getObjectFromMap(map,"id-egov"));
+					this.getObjectFromMap(map,"id-egov"));
 				return object;
 			}
 			

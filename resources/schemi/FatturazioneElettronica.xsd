@@ -113,7 +113,29 @@
 			<xsd:pattern value="[A-Z0-9]{6,7}" />
 		</xsd:restriction>
 	</xsd:simpleType>
-
+	
+	<xsd:simpleType name="DominioType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="PA">
+				<xsd:annotation>
+					<xsd:documentation>Fattura PA</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="B2B">
+				<xsd:annotation>
+					<xsd:documentation>Fattura B2B</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="SottodominioType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="ESTERO"/>
+			<xsd:enumeration value="PEC"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
 	<xsd:simpleType name="TipoDocumentoType">
 		<xsd:restriction base="xsd:string">
 			<xsd:length value="4" />
@@ -860,6 +882,9 @@
 			<xsd:element name="dataConsegna" type="xsd:dateTime" minOccurs="0" />
 			<xsd:element name="dettaglioConsegna" type="xsd:string" minOccurs="0" />
 			<xsd:element name="statoProtocollazione" type="StatoProtocollazioneType" />
+			<xsd:element name="dominio" type="DominioType" />
+			<xsd:element name="sottodominio" type="SottodominioType" minOccurs="0" />
+			<xsd:element name="pagoPA" type="xsd:boolean" />
 			<xsd:element name="dataProtocollazione" type="xsd:dateTime" minOccurs="0" />
 			<xsd:element name="protocollo" type="xsd:string" minOccurs="0">
 				<xsd:annotation>
@@ -1323,7 +1348,6 @@
 		</xsd:sequence>
 	</xsd:complexType>
 	
-	
 	<xsd:element name="Registro" type="Registro" />
 	<xsd:complexType name="Registro">
 		<xsd:annotation>
@@ -1529,6 +1553,7 @@
 			<xsd:element name="fatturazioneAttiva" type="xsd:boolean"
 				default="false" />
 			<xsd:element name="idProcedimento" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="idProcedimentoB2B" type="xsd:string" minOccurs="0"/>
 			<xsd:element name="firmaAutomatica" type="xsd:boolean"
 				default="false" />
 			<xsd:element name="accettazioneAutomatica" type="xsd:boolean"

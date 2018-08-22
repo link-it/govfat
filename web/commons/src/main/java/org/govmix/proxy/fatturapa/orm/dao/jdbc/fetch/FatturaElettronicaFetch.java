@@ -212,6 +212,12 @@ public class FatturaElettronicaFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "protocollo", FatturaElettronica.model().LOTTO_FATTURE.PROTOCOLLO.getFieldType()));
 				setParameter(object, "setIdEgov", FatturaElettronica.model().LOTTO_FATTURE.ID_EGOV.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "id_egov", FatturaElettronica.model().LOTTO_FATTURE.ID_EGOV.getFieldType()));
+				setParameter(object, "set_value_dominio", String.class,
+					jdbcParameterUtilities.readParameter(rs, "dominio", LottoFatture.model().DOMINIO.getFieldType())+"");
+				setParameter(object, "set_value_sottodominio", String.class,
+					jdbcParameterUtilities.readParameter(rs, "sottodominio", LottoFatture.model().SOTTODOMINIO.getFieldType())+"");
+				setParameter(object, "setPagoPA", LottoFatture.model().PAGO_PA.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "pago_pa", LottoFatture.model().PAGO_PA.getFieldType()));
 				return object;
 			}
 			
@@ -371,7 +377,7 @@ public class FatturaElettronicaFetch extends AbstractJDBCFetch {
 				setParameter(object, "set_value_statoElaborazioneInUscita", String.class,
 					this.getObjectFromMap(map,"LottoFatture.statoElaborazioneInUscita"));
 				setParameter(object, "setTentativiConsegna", LottoFatture.model().TENTATIVI_CONSEGNA.getFieldType(),
-						this.getObjectFromMap(map,"tentativiConsegna"));
+						this.getObjectFromMap(map,"LottoFatture.tentativiConsegna"));
 				setParameter(object, "setDataRicezione", FatturaElettronica.model().LOTTO_FATTURE.DATA_RICEZIONE.getFieldType(),
 					this.getObjectFromMap(map,"LottoFatture.dataRicezione"));
 				setParameter(object, "set_value_statoInserimento", String.class,
@@ -390,6 +396,12 @@ public class FatturaElettronicaFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"LottoFatture.protocollo"));
 				setParameter(object, "setIdEgov", FatturaElettronica.model().LOTTO_FATTURE.ID_EGOV.getFieldType(),
 					this.getObjectFromMap(map,"LottoFatture.id-egov"));
+				setParameter(object, "set_value_dominio", String.class,
+					this.getObjectFromMap(map,"LottoFatture.dominio"));
+				setParameter(object, "set_value_sottodominio", String.class,
+					this.getObjectFromMap(map,"LottoFatture.sottodominio"));
+				setParameter(object, "setPagoPA", LottoFatture.model().PAGO_PA.getFieldType(),
+					this.getObjectFromMap(map,"LottoFatture.pagoPA"));
 				return object;
 			}
 			

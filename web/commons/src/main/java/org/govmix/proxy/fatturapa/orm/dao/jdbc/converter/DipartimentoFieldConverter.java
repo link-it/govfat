@@ -103,6 +103,13 @@ public class DipartimentoFieldConverter extends AbstractSQLFieldConverter {
 				return "id_procedimento";
 			}
 		}
+		if(field.equals(Dipartimento.model().ID_PROCEDIMENTO_B2B)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".id_procedimento_b2b";
+			}else{
+				return "id_procedimento_b2b";
+			}
+		}
 		if(field.equals(Dipartimento.model().FIRMA_AUTOMATICA)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".firma_automatica";
@@ -185,6 +192,9 @@ public class DipartimentoFieldConverter extends AbstractSQLFieldConverter {
 			return this.toTable(Dipartimento.model(), returnAlias);
 		}
 		if(field.equals(Dipartimento.model().ID_PROCEDIMENTO)){
+			return this.toTable(Dipartimento.model(), returnAlias);
+		}
+		if(field.equals(Dipartimento.model().ID_PROCEDIMENTO_B2B)){
 			return this.toTable(Dipartimento.model(), returnAlias);
 		}
 		if(field.equals(Dipartimento.model().FIRMA_AUTOMATICA)){

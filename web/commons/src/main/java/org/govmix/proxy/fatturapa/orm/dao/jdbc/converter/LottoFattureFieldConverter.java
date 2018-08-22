@@ -334,6 +334,27 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 				return "stato_protocollazione";
 			}
 		}
+		if(field.equals(LottoFatture.model().DOMINIO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".dominio";
+			}else{
+				return "dominio";
+			}
+		}
+		if(field.equals(LottoFatture.model().SOTTODOMINIO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".sottodominio";
+			}else{
+				return "sottodominio";
+			}
+		}
+		if(field.equals(LottoFatture.model().PAGO_PA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".pago_pa";
+			}else{
+				return "pago_pa";
+			}
+		}
 		if(field.equals(LottoFatture.model().DATA_PROTOCOLLAZIONE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".data_protocollazione";
@@ -409,6 +430,13 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 				return this.toAliasTable(field)+".id_procedimento";
 			}else{
 				return "id_procedimento";
+			}
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.ID_PROCEDIMENTO_B2B)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".id_procedimento_b2b";
+			}else{
+				return "id_procedimento_b2b";
 			}
 		}
 		if(field.equals(LottoFatture.model().DIPARTIMENTO.FIRMA_AUTOMATICA)){
@@ -594,6 +622,15 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 		if(field.equals(LottoFatture.model().STATO_PROTOCOLLAZIONE)){
 			return this.toTable(LottoFatture.model(), returnAlias);
 		}
+		if(field.equals(LottoFatture.model().DOMINIO)){
+			return this.toTable(LottoFatture.model(), returnAlias);
+		}
+		if(field.equals(LottoFatture.model().SOTTODOMINIO)){
+			return this.toTable(LottoFatture.model(), returnAlias);
+		}
+		if(field.equals(LottoFatture.model().PAGO_PA)){
+			return this.toTable(LottoFatture.model(), returnAlias);
+		}
 		if(field.equals(LottoFatture.model().DATA_PROTOCOLLAZIONE)){
 			return this.toTable(LottoFatture.model(), returnAlias);
 		}
@@ -625,6 +662,9 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 			return this.toTable(LottoFatture.model().DIPARTIMENTO, returnAlias);
 		}
 		if(field.equals(LottoFatture.model().DIPARTIMENTO.ID_PROCEDIMENTO)){
+			return this.toTable(LottoFatture.model().DIPARTIMENTO, returnAlias);
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.ID_PROCEDIMENTO_B2B)){
 			return this.toTable(LottoFatture.model().DIPARTIMENTO, returnAlias);
 		}
 		if(field.equals(LottoFatture.model().DIPARTIMENTO.FIRMA_AUTOMATICA)){

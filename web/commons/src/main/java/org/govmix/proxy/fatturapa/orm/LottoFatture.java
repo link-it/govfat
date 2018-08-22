@@ -26,8 +26,10 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
+import org.govmix.proxy.fatturapa.orm.constants.DominioType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoArchivioInvioFatturaType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
+import org.govmix.proxy.fatturapa.orm.constants.SottodominioType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoInserimentoType;
@@ -80,6 +82,9 @@ import java.io.Serializable;
  * 			&lt;element name="dataConsegna" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="dettaglioConsegna" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="statoProtocollazione" type="{http://www.govmix.org/proxy/fatturapa/orm}StatoProtocollazioneType" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="dominio" type="{http://www.govmix.org/proxy/fatturapa/orm}DominioType" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="sottodominio" type="{http://www.govmix.org/proxy/fatturapa/orm}SottodominioType" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="pagoPA" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="dataProtocollazione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="protocollo" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="idSIP" type="{http://www.govmix.org/proxy/fatturapa/orm}id-sip" minOccurs="0" maxOccurs="1"/>
@@ -137,6 +142,9 @@ import java.io.Serializable;
   	"dataConsegna",
   	"dettaglioConsegna",
   	"statoProtocollazione",
+  	"dominio",
+  	"sottodominio",
+  	"pagoPA",
   	"dataProtocollazione",
   	"protocollo",
   	"idSIP",
@@ -551,6 +559,58 @@ public class LottoFatture extends org.openspcoop2.utils.beans.BaseBean implement
     this.statoProtocollazione = statoProtocollazione;
   }
 
+  public void set_value_dominio(String value) {
+    this.dominio = (DominioType) DominioType.toEnumConstantFromString(value);
+  }
+
+  public String get_value_dominio() {
+    if(this.dominio == null){
+    	return null;
+    }else{
+    	return this.dominio.toString();
+    }
+  }
+
+  public org.govmix.proxy.fatturapa.orm.constants.DominioType getDominio() {
+    return this.dominio;
+  }
+
+  public void setDominio(org.govmix.proxy.fatturapa.orm.constants.DominioType dominio) {
+    this.dominio = dominio;
+  }
+
+  public void set_value_sottodominio(String value) {
+    this.sottodominio = (SottodominioType) SottodominioType.toEnumConstantFromString(value);
+  }
+
+  public String get_value_sottodominio() {
+    if(this.sottodominio == null){
+    	return null;
+    }else{
+    	return this.sottodominio.toString();
+    }
+  }
+
+  public org.govmix.proxy.fatturapa.orm.constants.SottodominioType getSottodominio() {
+    return this.sottodominio;
+  }
+
+  public void setSottodominio(org.govmix.proxy.fatturapa.orm.constants.SottodominioType sottodominio) {
+    this.sottodominio = sottodominio;
+  }
+
+  public boolean isPagoPA() {
+    return this.pagoPA;
+  }
+
+  public boolean getPagoPA() {
+    return this.pagoPA;
+  }
+
+  public void setPagoPA(boolean pagoPA) {
+    this.pagoPA = pagoPA;
+  }
+
   public java.util.Date getDataProtocollazione() {
     return this.dataProtocollazione;
   }
@@ -793,6 +853,22 @@ public class LottoFatture extends org.openspcoop2.utils.beans.BaseBean implement
 
   @XmlElement(name="statoProtocollazione",required=true,nillable=false)
   protected StatoProtocollazioneType statoProtocollazione;
+
+  @XmlTransient
+  protected java.lang.String _value_dominio;
+
+  @XmlElement(name="dominio",required=true,nillable=false)
+  protected DominioType dominio;
+
+  @XmlTransient
+  protected java.lang.String _value_sottodominio;
+
+  @XmlElement(name="sottodominio",required=false,nillable=false)
+  protected SottodominioType sottodominio;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="boolean")
+  @XmlElement(name="pagoPA",required=true,nillable=false)
+  protected boolean pagoPA;
 
   @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.DateTime2String.class)
   @javax.xml.bind.annotation.XmlSchemaType(name="dateTime")

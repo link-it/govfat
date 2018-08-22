@@ -41,27 +41,37 @@ public class InserimentoLotti {
 			connection = DAOFactory.getInstance().getConnection();
 
 			connection.setAutoCommit(false);
-			LottoFattureAttiveBD lottoBD = new LottoFattureAttiveBD(log, connection, false);
-			ConsegnaFattura consegnaFattura = new ConsegnaFattura(log, false, connection, false);
+			LottoFattureAttiveBD lottoBD = new LottoFattureAttiveBD(this.log, connection, false);
+			ConsegnaFattura consegnaFattura = new ConsegnaFattura(this.log, false, connection, false);
 			List<IdLotto> lstIdentificativoEfatt = new ArrayList<IdLotto>();
 			
 			for(InserimentoLottoRequest request: requestList) {
 				
-				LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), log);
+				LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), this.log);
+				
+				Dipartimento dipartimento = this.getDipartimento(request.getNomeFile(), request.getDipartimento());
 				
 				if(analizer.isFirmato()) {
-					if(this.getDipartimento(request.getNomeFile(), request.getDipartimento()).getFirmaAutomatica()){
+					if(dipartimento.getFirmaAutomatica()){
 						throw new InserimentoLottiException(CODICE.ERRORE_FILE_FIRMATO, request.getNomeFile(), request.getDipartimento());
 					}
 				} else {
-					if(!this.getDipartimento(request.getNomeFile(), request.getDipartimento()).getFirmaAutomatica()){
+					if(!dipartimento.getFirmaAutomatica()){
 						throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
 					}
 				}
 
 				String type = analizer.isP7M() ? "P7M" : "XML"; 
 				LottoFatture lotto = getLotto(request, lottoBD, type);
-				lotto.setStatoElaborazioneInUscita(StatoElaborazioneType.PRESA_IN_CARICO);
+				if(dipartimento.getModalitaPush()) {
+					lotto.setStatoElaborazioneInUscita(StatoElaborazioneType.PRESA_IN_CARICO);
+				} else {
+					if(!analizer.isFirmato()) {
+						throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
+					}
+					
+					lotto.setStatoElaborazioneInUscita(StatoElaborazioneType.PROTOCOLLATA);
+				}
 				
 				insertLotto(lotto, lottoBD, consegnaFattura);
 				IdLotto idLotto = new IdLotto(lotto.isFatturazioneAttiva());

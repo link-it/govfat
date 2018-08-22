@@ -446,6 +446,27 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 				return "stato_protocollazione";
 			}
 		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DOMINIO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".dominio";
+			}else{
+				return "dominio";
+			}
+		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.SOTTODOMINIO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".sottodominio";
+			}else{
+				return "sottodominio";
+			}
+		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.PAGO_PA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".pago_pa";
+			}else{
+				return "pago_pa";
+			}
+		}
 		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DATA_PROTOCOLLAZIONE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".data_protocollazione";
@@ -521,6 +542,13 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 				return this.toAliasTable(field)+".id_procedimento";
 			}else{
 				return "id_procedimento";
+			}
+		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.ID_PROCEDIMENTO_B2B)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".id_procedimento_b2b";
+			}else{
+				return "id_procedimento_b2b";
 			}
 		}
 		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.FIRMA_AUTOMATICA)){
@@ -754,6 +782,15 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.STATO_PROTOCOLLAZIONE)){
 			return this.toTable(TracciaSDI.model().LOTTO_FATTURE, returnAlias);
 		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DOMINIO)){
+			return this.toTable(TracciaSDI.model().LOTTO_FATTURE, returnAlias);
+		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.SOTTODOMINIO)){
+			return this.toTable(TracciaSDI.model().LOTTO_FATTURE, returnAlias);
+		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.PAGO_PA)){
+			return this.toTable(TracciaSDI.model().LOTTO_FATTURE, returnAlias);
+		}
 		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DATA_PROTOCOLLAZIONE)){
 			return this.toTable(TracciaSDI.model().LOTTO_FATTURE, returnAlias);
 		}
@@ -785,6 +822,9 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 			return this.toTable(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO, returnAlias);
 		}
 		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.ID_PROCEDIMENTO)){
+			return this.toTable(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO, returnAlias);
+		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.ID_PROCEDIMENTO_B2B)){
 			return this.toTable(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO, returnAlias);
 		}
 		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.FIRMA_AUTOMATICA)){

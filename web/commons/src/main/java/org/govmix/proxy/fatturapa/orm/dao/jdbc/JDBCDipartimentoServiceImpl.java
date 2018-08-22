@@ -108,6 +108,7 @@ public class JDBCDipartimentoServiceImpl extends JDBCDipartimentoServiceSearchIm
 		sqlQueryObjectInsert.addInsertField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().DESCRIZIONE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().FATTURAZIONE_ATTIVA,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().ID_PROCEDIMENTO,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().ID_PROCEDIMENTO_B2B,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().FIRMA_AUTOMATICA,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().ACCETTAZIONE_AUTOMATICA,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().MODALITA_PUSH,false),"?");
@@ -122,6 +123,7 @@ public class JDBCDipartimentoServiceImpl extends JDBCDipartimentoServiceSearchIm
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(dipartimento.getDescrizione(),Dipartimento.model().DESCRIZIONE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(dipartimento.getFatturazioneAttiva(),Dipartimento.model().FATTURAZIONE_ATTIVA.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(dipartimento.getIdProcedimento(),Dipartimento.model().ID_PROCEDIMENTO.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(dipartimento.getIdProcedimentoB2B(),Dipartimento.model().ID_PROCEDIMENTO_B2B.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(dipartimento.getFirmaAutomatica(),Dipartimento.model().FIRMA_AUTOMATICA.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(dipartimento.getAccettazioneAutomatica(),Dipartimento.model().ACCETTAZIONE_AUTOMATICA.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(dipartimento.getModalitaPush(),Dipartimento.model().MODALITA_PUSH.getFieldType()),
@@ -256,6 +258,8 @@ public class JDBCDipartimentoServiceImpl extends JDBCDipartimentoServiceSearchIm
 		lstObjects_dipartimento.add(new JDBCObject(dipartimento.getFatturazioneAttiva(), Dipartimento.model().FATTURAZIONE_ATTIVA.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().ID_PROCEDIMENTO,false), "?");
 		lstObjects_dipartimento.add(new JDBCObject(dipartimento.getIdProcedimento(), Dipartimento.model().ID_PROCEDIMENTO.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().ID_PROCEDIMENTO_B2B,false), "?");
+		lstObjects_dipartimento.add(new JDBCObject(dipartimento.getIdProcedimentoB2B(), Dipartimento.model().ID_PROCEDIMENTO_B2B.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().FIRMA_AUTOMATICA,false), "?");
 		lstObjects_dipartimento.add(new JDBCObject(dipartimento.getFirmaAutomatica(), Dipartimento.model().FIRMA_AUTOMATICA.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().ACCETTAZIONE_AUTOMATICA,false), "?");
