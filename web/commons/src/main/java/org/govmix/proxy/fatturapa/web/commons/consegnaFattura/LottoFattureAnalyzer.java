@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,8 +20,14 @@ import javax.xml.xpath.XPathFactory;
 
 import org.apache.cxf.helpers.MapNamespaceContext;
 import org.apache.log4j.Logger;
+import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.constants.DominioType;
+import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.SottodominioType;
+import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
+import org.govmix.proxy.fatturapa.orm.constants.StatoInserimentoType;
+import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException.CODICE;
 import org.openspcoop2.protocol.sdi.utils.P7MInfo;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -32,11 +39,14 @@ public class LottoFattureAnalyzer {
 	private boolean isFirmato;
 	private byte[] original;
 	private byte[] decoded;
-	private DominioType dominio;
-	private SottodominioType sottodominio;
-	private boolean pagoPA;
+	private LottoFatture lotto;
 
-	public LottoFattureAnalyzer(byte[] lottoFatture, Logger log) throws Exception {
+
+	public LottoFattureAnalyzer(LottoFatture lotto, Logger log) throws Exception {
+		this(lotto.getXml(), lotto.getNomeFile(), lotto.getIdentificativoSdi(), lotto.getCodiceDestinatario(), log);
+	}
+	
+	public LottoFattureAnalyzer(byte[] lottoFatture, String nomeFile, Integer identificativo, String codiceDipartimento, Logger log) throws Exception {
 		this.original = lottoFatture;
 		try {
 			P7MInfo info = new P7MInfo(lottoFatture, log);
@@ -59,6 +69,8 @@ public class LottoFattureAnalyzer {
 				throw e;
 			}
 		}
+		String type = this.isP7M ? "P7M" : "XML"; 
+		this.lotto  = getLotto(this.decoded, nomeFile, identificativo, type, codiceDipartimento, log);
 	}
 
 	private static DocumentBuilderFactory dbf;
@@ -146,30 +158,6 @@ public class LottoFattureAnalyzer {
 	public void setDecoded(byte[] decoded) {
 		this.decoded = decoded;
 	}
-	
-	public DominioType getDominio() {
-		return dominio;
-	}
-
-	public void setDominio(DominioType dominio) {
-		this.dominio = dominio;
-	}
-
-	public SottodominioType getSottodominio() {
-		return sottodominio;
-	}
-
-	public void setSottodominio(SottodominioType sottodominio) {
-		this.sottodominio = sottodominio;
-	}
-
-	public boolean isPagoPA() {
-		return pagoPA;
-	}
-
-	public void setPagoPA(boolean pagoPA) {
-		this.pagoPA = pagoPA;
-	}
 
 	private static DominioType getDominio(String codiceDipartimento) throws Exception {
 		if(codiceDipartimento==null)
@@ -181,6 +169,7 @@ public class LottoFattureAnalyzer {
 		
 		throw new Exception("Lunghezza del codice dipartimento ["+codiceDipartimento.length()+"]. Impossibile determinare il dominio");
 	}
+	
 	
 	private static SottodominioType getSottodominio(String codiceDipartimento) throws Exception {
 		
@@ -198,6 +187,86 @@ public class LottoFattureAnalyzer {
 		}
 
 	}
+	
+	private LottoFatture getLotto(byte[] xml, String nomeFile, Integer identificativo, String type, String codiceDipartimento, Logger log) throws Exception {
+		
+		
+		ConsegnaFatturaParameters params = null;
+		String messageId = identificativo + "";
+
+		try {
+
+			params = ConsegnaFatturaUtils.getParameters(identificativo, nomeFile,
+							type, null,
+							messageId,
+							false,
+							xml);
+			
+			params.validate(true);
+		} catch(Exception e) {
+			log.error("Errore durante il caricamento del lotto con nome file ["+nomeFile+"]: " + e.getMessage(), e);
+			throw new InserimentoLottiException(CODICE.PARAMETRI_NON_VALIDI, nomeFile);
+		}
+
+		LottoFatture lotto = new LottoFatture();
+
+		lotto.setFormatoArchivioInvioFattura(params.getFormatoArchivioInvioFattura());
+		lotto.setCedentePrestatoreCodice(params.getCedentePrestatore().getIdCodice());
+		lotto.setCedentePrestatorePaese(params.getCedentePrestatore().getIdPaese());
+		lotto.setCedentePrestatoreCodiceFiscale(params.getCedentePrestatore().getCodiceFiscale());
+		lotto.setCedentePrestatoreCognome(params.getCedentePrestatore().getCognome());
+		lotto.setCedentePrestatoreNome(params.getCedentePrestatore().getNome());
+		lotto.setCedentePrestatoreDenominazione(params.getCedentePrestatore().getDenominazione());
+
+		lotto.setCessionarioCommittenteCodice(params.getCessionarioCommittente().getIdCodice());
+		lotto.setCessionarioCommittentePaese(params.getCessionarioCommittente().getIdPaese());
+		lotto.setCessionarioCommittenteCodiceFiscale(params.getCessionarioCommittente().getCodiceFiscale());
+		lotto.setCessionarioCommittenteCognome(params.getCessionarioCommittente().getCognome());
+		lotto.setCessionarioCommittenteNome(params.getCessionarioCommittente().getNome());
+		lotto.setCessionarioCommittenteDenominazione(params.getCessionarioCommittente().getDenominazione());
+
+		if(params.getTerzoIntermediarioOSoggettoEmittente() != null) {
+			lotto.setTerzoIntermediarioOSoggettoEmittenteCodice(params.getTerzoIntermediarioOSoggettoEmittente().getIdCodice());
+			lotto.setTerzoIntermediarioOSoggettoEmittentePaese(params.getTerzoIntermediarioOSoggettoEmittente().getIdPaese());
+			lotto.setTerzoIntermediarioOSoggettoEmittenteCodiceFiscale(params.getTerzoIntermediarioOSoggettoEmittente().getCodiceFiscale());
+			lotto.setTerzoIntermediarioOSoggettoEmittenteCognome(params.getTerzoIntermediarioOSoggettoEmittente().getCognome());
+			lotto.setTerzoIntermediarioOSoggettoEmittenteNome(params.getTerzoIntermediarioOSoggettoEmittente().getNome());
+			lotto.setTerzoIntermediarioOSoggettoEmittenteDenominazione(params.getTerzoIntermediarioOSoggettoEmittente().getDenominazione());
+		}
+
+		lotto.setIdentificativoSdi(params.getIdentificativoSdI());
+
+		lotto.setCodiceDestinatario(codiceDipartimento);
+		lotto.setFormatoTrasmissione(FormatoTrasmissioneType.valueOf(params.getFormatoFatturaPA()));
+
+		lotto.setNomeFile(params.getNomeFile());
+		lotto.setMessageId(params.getMessageId());
+
+		lotto.setXml(params.getXml());
+		lotto.setFatturazioneAttiva(true);
+		
+		lotto.setDataRicezione(new Date());
+		lotto.setStatoConsegna(StatoConsegnaType.NON_CONSEGNATA);
+		lotto.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
+		lotto.setStatoInserimento(StatoInserimentoType.NON_INSERITO);
+		lotto.setDataUltimaElaborazione(new Date());
+		lotto.setDataProssimaElaborazione(new Date());
+		lotto.setTentativiConsegna(0);
+		lotto.setDominio(getDominio(params.getCodiceDestinatario()));
+		lotto.setSottodominio(getSottodominio(params.getCodiceDestinatario()));
+		lotto.setPagoPA(params.isPagoPA());
+		
+		return lotto;
+	}
+
+	public LottoFatture getLotto() {
+		return lotto;
+	}
+
+	public void setLotto(LottoFatture lotto) {
+		this.lotto = lotto;
+	}
+
 	
 }
 
