@@ -29,6 +29,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
+import org.govmix.proxy.fatturapa.orm.constants.DominioType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
@@ -405,6 +406,14 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 					filter.setSoloConservazione(conseravazione); //ricevi sempre true o false
 				}
 			}
+			
+			// Dominio
+			if(search.getDominio().getValue() != null &&
+					!StringUtils.isEmpty(search.getDominio().getValue().getValue()) && !search.getDominio().getValue().getValue().equals("*")){
+				DominioType dominioType = DominioType.toEnumConstant(search.getDominio().getValue().getValue());
+				filter.setDominio(dominioType);
+			}
+			
 		}catch(Exception e){
 			FatturaElettronicaAttivaService.log.error("Si e' verificato un errore durante la conversione del filtro di ricerca: " + e.getMessage(), e);
 			throw e;

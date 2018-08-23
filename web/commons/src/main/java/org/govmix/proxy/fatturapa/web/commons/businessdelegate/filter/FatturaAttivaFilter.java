@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
+import org.govmix.proxy.fatturapa.orm.constants.DominioType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.openspcoop2.generic_project.dao.IExpressionConstructor;
@@ -22,6 +23,7 @@ public class FatturaAttivaFilter extends FatturaFilter {
 	private Date dataUltimaElaborazioneMin;
 	private Date dataUltimaElaborazioneMax;
 	private Boolean soloConservazione;
+	private DominioType dominio;
 
 	public Boolean getSoloConservazione() {
 		return soloConservazione;
@@ -73,7 +75,11 @@ public class FatturaAttivaFilter extends FatturaFilter {
 					expression.equals(FatturaElettronica.model().LOTTO_FATTURE.STATO_ELABORAZIONE_IN_USCITA, StatoElaborazioneType.SOLO_CONSERVAZIONE.toString());
 				else
 					expression.notEquals(FatturaElettronica.model().LOTTO_FATTURE.STATO_ELABORAZIONE_IN_USCITA, StatoElaborazioneType.SOLO_CONSERVAZIONE.toString());
-			}			
+			}	
+			
+			if(this.dominio != null) {
+				expression.equals(FatturaElettronica.model().LOTTO_FATTURE.DOMINIO, dominio.toString());
+			}
 			
 			return expression;
 		} catch (NotImplementedException e) {
@@ -141,6 +147,14 @@ public class FatturaAttivaFilter extends FatturaFilter {
 
 	public void setTipoComunicazione(TipoComunicazioneType tipoComunicazione) {
 		this.tipoComunicazione = tipoComunicazione;
+	}
+
+	public DominioType getDominio() {
+		return dominio;
+	}
+
+	public void setDominio(DominioType dominio) {
+		this.dominio = dominio;
 	}
 	
 	
