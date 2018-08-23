@@ -143,7 +143,7 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 		case NE:
 			return "NOTIFICA DI ESITO";
 		case AT:
-			return "ATTESTAZIONE IMPOSSIBILITA DI RECAPITO";
+			return "ATTESTAZIONE IMPOSSIBILITA' DI RECAPITO";
 		case DT:
 			return "NOTIFICA DI DECORRENZA DEI TERMINI";
 		
