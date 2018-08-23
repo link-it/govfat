@@ -143,7 +143,7 @@ public abstract class AbstractUnitaDocumentariaBuilder <T extends AbstractUnitaD
 	}
 	private JAXBElement<DatiSpecificiType> getDatiSpecificiJAXB(T input) {
 		DatiSpecificiType datiSpecifici = new DatiSpecificiType();
-		datiSpecifici.setVersioneDatiSpecifici("1.0");
+		datiSpecifici.setVersioneDatiSpecifici("2.0");
 		
 		List<ParamWrapper> param = this.getParams(input);
 		

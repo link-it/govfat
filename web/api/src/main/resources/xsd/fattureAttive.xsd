@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.govmix.org/fatturaPA/" xmlns:tns="http://www.govmix.org/fatturaPA/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
+
+    <xs:element name="inviaFatturaRichiestaTipo" type="tns:inviaFatturaRichiestaTipo"/>
+    <xs:element name="riceviNotificheRichiestaTipo" type="tns:riceviNotificheRichiestaTipo"/>
+    <xs:element name="riceviNotificheRispostaTipo" type="tns:riceviNotificheRispostaTipo"/>
+	<xs:element name="authorizationFault" type="tns:authorizationFault"/>
+	<xs:element name="genericFault" type="tns:genericFault"/>
+	<xs:complexType name="genericFault">
+		<xs:sequence>
+			<xs:element name="detail" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+    <xs:complexType name="authorizationFault">
+		<xs:sequence>
+			<xs:element name="detail" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+    <xs:complexType name="inviaFatturaRichiestaTipo">
+		<xs:sequence>
+		    <xs:element name="codiceUO" type="xs:string"/>
+		    <xs:element name="nomeFileFattura" type="xs:string"/>
+		    <xs:element name="refFileFattura" type="xs:base64Binary"/>
+		</xs:sequence>
+	</xs:complexType>
+    <xs:complexType name="riceviNotificheRichiestaTipo">
+        <xs:sequence>
+            <xs:choice>
+                <xs:element name="identificativoSDI" type="tns:identificativoSDITipo"/>
+                <xs:element name="identificativoUO" type="tns:identificativoUOTipo"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="riceviNotificheRispostaTipo">
+		<xs:sequence>
+		    <xs:choice>
+		        <xs:element name="identificativoSDI" type="tns:identificativoSDITipo"/>
+		        <xs:element name="identificativoUO" type="tns:identificativoUOTipo"/>
+		    </xs:choice>
+		    <xs:element name="protocollo" type="tns:protocolloTipo"/>
+		    <xs:element name="notifiche" type="tns:notificheTipo"/>
+		</xs:sequence>
+	</xs:complexType>
+    
+    <xs:complexType name="identificativoSDITipo">
+        <xs:sequence>
+            <xs:element name="idSDI" type="xs:decimal"/>
+            <xs:element name="posizione" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="identificativoUOTipo">
+        <xs:sequence>
+            <xs:element name="codiceUO" type="xs:string"/>
+            <xs:element name="numeroFattura" type="tns:String20Tipo"/>
+            <xs:element name="dataFattura" type="xs:date"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="protocolloTipo">
+        <xs:sequence>
+            <xs:element name="anno" type="xs:int"/>
+            <xs:element name="registro" type="xs:string"/>
+            <xs:element name="numero" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="notificheTipo">
+        <xs:sequence>
+            <xs:element name="ricevutaConsegna" type="xs:base64Binary" minOccurs="0"/>
+            <xs:element name="notificaMancataConsegna" type="xs:base64Binary" minOccurs="0"/>
+            <xs:element name="notificaScarto" type="xs:base64Binary" minOccurs="0"/>
+            <xs:element name="notificaEsito" type="xs:base64Binary" minOccurs="0"/>
+            <xs:element name="notificaDecorrenzaTermini" type="xs:base64Binary" minOccurs="0"/>
+            <xs:element name="attestazioneTrasmissioneFattura" type="xs:base64Binary" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="String20Tipo">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="20"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+</xs:schema>
