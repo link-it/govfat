@@ -83,7 +83,6 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 					componente.setID(idDocumentoAnnesso);
 					componente.setOrdinePresentazione(index);
 					componente.setTipoComponente("Contenuto");
-					componente.setTipoRappresentazioneComponente(this.getTipoRappresentazioneComponente(traccia.getTipoComunicazione()));
 					componente.setTipoSupportoComponente(TipoSupportoType.FILE);
 					componente.setNomeComponente(traccia.getNomeFile());
 					String formato = tika.detect(traccia.getRawData());
