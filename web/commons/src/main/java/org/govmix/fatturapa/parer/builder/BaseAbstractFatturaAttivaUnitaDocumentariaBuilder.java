@@ -180,7 +180,7 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 					ComponenteType componente = new ComponenteType();
 					componente.setID(idDocumentoAllegato);
 					componente.setOrdinePresentazione(index);
-					componente.setTipoRappresentazioneComponente("Allegato generico alla fattura");
+//					componente.setTipoRappresentazioneComponente("Allegato generico alla fattura");
 					componente.setNomeComponente(allegatoInput.getNomeAttachment());
 					
 					String formato = tika.detect(allegatoInput.getAttachment());
