@@ -107,30 +107,6 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 			return null;
 	}
 	
-	private String getTipoRappresentazioneComponente(TipoComunicazioneType tipoComunicazioneType) {
-		switch (tipoComunicazioneType) {
-		case NS:
-			return "File Notifica di Scarto";
-		case RC:
-			return "File Ricevuta di Consegna";
-		case MC:
-			return "File Notifica di Mancata Consegna";
-		case NE:
-			return "File Notifica di Esito";
-		case AT:
-			return "File Attestazione Impossibilita di Recapito";
-		case DT:
-			return "File Notifica di Decorrenza Termini";
-		case EC:
-		case FAT_IN:
-		case FAT_OUT:
-		case MT:
-		case SE:
-		default:
-			return null;
-		}
-	}
-
 	private String getTipoComunicazione(TipoComunicazioneType tipoComunicazioneType) {
 		switch (tipoComunicazioneType) {
 		case NS:
