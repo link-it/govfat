@@ -34,6 +34,7 @@ public class LoggerManager {
 	private static Logger endpointTrasmittenteLogger = null;
 	private static Logger endpointGetTracceLogger = null;
 	private static Logger endpointProxyPccLogger = null;
+	private static Logger endpointFattureAttiveLogger = null;
 
 	private static Logger batchStartupLogger = null;
 	private static Logger batchConsegnaFatturaLogger = null;
@@ -148,6 +149,9 @@ public class LoggerManager {
 
 		if(endpointProxyPccLogger == null)
 			endpointProxyPccLogger = Logger.getLogger("endpoint.proxyPcc");
+
+		if(endpointFattureAttiveLogger == null)
+			endpointFattureAttiveLogger = Logger.getLogger("endpoint.fattureAttive");
 
 		initialized = true;
 	}
@@ -269,6 +273,10 @@ public class LoggerManager {
 
 	public static Logger getDumpLogger() {
 		return dumpLogger;
+	}
+
+	public static Logger getEndpointFattureAttiveLogger() {
+		return endpointFattureAttiveLogger;
 	}
 
 }

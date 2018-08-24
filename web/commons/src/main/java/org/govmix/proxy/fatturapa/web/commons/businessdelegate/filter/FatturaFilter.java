@@ -41,6 +41,8 @@ public class FatturaFilter extends AbstractFilter {
 	private Date dataFatturaMin;
 	private Date dataFatturaMax;
 
+	private Date dataFattura;
+
 	private String codiceDestinatario;
 
 	private String numero;
@@ -114,6 +116,10 @@ public class FatturaFilter extends AbstractFilter {
 			
 			if(this.dataFatturaMax != null) {
 				expression.lessEquals(FatturaElettronica.model().DATA, this.dataFatturaMax);
+			}
+			
+			if(this.dataFattura != null) {
+				expression.equals(FatturaElettronica.model().DATA, this.dataFattura);
 			}
 			
 			if(this.numero != null) {
@@ -443,6 +449,14 @@ public class FatturaFilter extends AbstractFilter {
 
 	public void setFiltroConservazione(Boolean filtroConservazione) {
 		this.filtroConservazione = filtroConservazione;
+	}
+
+	public Date getDataFattura() {
+		return dataFattura;
+	}
+
+	public void setDataFattura(Date dataFattura) {
+		this.dataFattura = dataFattura;
 	}
 	
 }

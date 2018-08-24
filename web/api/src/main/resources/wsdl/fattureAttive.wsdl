@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:wsp1_2="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:tns="http://www.govmix.org/fatturaPA/" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.govmix.org/fatturaPA/" name="FattureAttive">
+	<wsdl:types>
+		<xs:schema>
+		    <xs:import namespace="http://www.govmix.org/fatturaPA/" schemaLocation="../xsd/fattureAttive.xsd"/>
+		</xs:schema>
+	</wsdl:types>
+    <wsdl:message name="inviaFatturaRichiesta">
+        <wsdl:part name="inviaFatturaRichiestaTipo" element="tns:inviaFatturaRichiestaTipo"/>
+    </wsdl:message>
+    <wsdl:message name="inviaFatturaRisposta" />
+    <wsdl:message name="riceviNotificheRichiesta">
+        <wsdl:part name="riceviNotificheRichiestaTipo" element="tns:riceviNotificheRichiestaTipo"/>
+    </wsdl:message>
+    <wsdl:message name="riceviNotificheRisposta">
+        <wsdl:part name="riceviNotificheRispostaTipo" element="tns:riceviNotificheRispostaTipo"/>
+    </wsdl:message>
+    <wsdl:message name="authorizationFault">
+		<wsdl:part name="authorizationFault" element="tns:authorizationFault"/>
+	</wsdl:message>
+    <wsdl:message name="genericFault">
+		<wsdl:part name="genericFault" element="tns:genericFault"/>
+	</wsdl:message>
+	<wsdl:portType name="fattureAttive">
+	    <wsdl:operation name="inviaFattura">
+	        <wsdl:input message="tns:inviaFatturaRichiesta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/inviaFatturaRichiesta"/>
+	        <wsdl:output message="tns:inviaFatturaRisposta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/inviaFatturaRisposta"/>
+	        <wsdl:fault name="authorizationFault" message="tns:authorizationFault" />
+	        <wsdl:fault name="genericFault" message="tns:genericFault" />
+	    </wsdl:operation>
+	    <wsdl:operation name="riceviNotifiche">
+	        <wsdl:input message="tns:riceviNotificheRichiesta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/riceviNotificheRichiesta"/>
+	        <wsdl:output message="tns:riceviNotificheRisposta" wsam:Action="http://www.govmix.org/pcc/fatture/fattureWS/riceviNotificheRisposta"/>
+	        <wsdl:fault name="authorizationFault" message="tns:authorizationFault" />
+	        <wsdl:fault name="genericFault" message="tns:genericFault" />
+	    </wsdl:operation>
+	</wsdl:portType>
+    <wsdl:binding name="FattureAttiveSOAP11PortBinding" type="tns:fattureAttive">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsp:PolicyReference URI="#FattureWSSOAP11PortBinding_MTOM_Policy"/>
+	    <wsdl:operation name="inviaFattura">
+	        <soap:operation/>
+	        <wsdl:input>
+	            <soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+	        </wsdl:input>
+	        <wsdl:output>
+	            <soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+	        </wsdl:output>
+	        <wsdl:fault name="authorizationFault">
+	            <soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="authorizationFault"/>
+	        </wsdl:fault>
+	        <wsdl:fault name="genericFault">
+	            <soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="genericFault"/>
+	        </wsdl:fault>
+	    </wsdl:operation>
+	    <wsdl:operation name="riceviNotifiche">
+	        <soap:operation/>
+	        <wsdl:input>
+	            <soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+	        </wsdl:input>
+	        <wsdl:output>
+	            <soap:body use="literal" namespace="http://www.govmix.org/pcc/fatture"/>
+	        </wsdl:output>
+	        <wsdl:fault name="authorizationFault">
+	            <soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="authorizationFault"/>
+	        </wsdl:fault>
+	        <wsdl:fault name="genericFault">
+	            <soap:fault use="literal" namespace="http://www.govmix.org/pcc/fatture" name="genericFault"/>
+	        </wsdl:fault>
+	    </wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="FattureAttive">
+	    <wsdl:port name="FattureAttiveSOAP11Port" binding="tns:FattureAttiveSOAP11PortBinding">
+	        <soap:address location="http://localhost:8080/proxyFatturaPA/FattureAttive"/>
+		</wsdl:port>
+	</wsdl:service>
+    <wsp:Policy wsu:Id="FattureAttiveSOAP11PortBinding_MTOM_Policy">
+		<ns1:OptimizedMimeSerialization xmlns:ns1="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization" wsp:Optional="true"/>
+	</wsp:Policy>
+</wsdl:definitions>

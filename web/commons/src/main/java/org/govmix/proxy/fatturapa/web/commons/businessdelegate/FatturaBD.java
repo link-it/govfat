@@ -41,6 +41,7 @@ import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.FatturaElettronicaField
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaAttivaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaPassivaFilter;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FilterSortWrapper;
 import org.openspcoop2.generic_project.beans.CustomField;
 import org.openspcoop2.generic_project.beans.IField;
 import org.openspcoop2.generic_project.beans.UpdateField;
@@ -129,6 +130,30 @@ public class FatturaBD extends BaseBD {
 			filter.setIdentificativoSdi(identificativoSdi);
 			filter.setNumero(numero);
 
+			if(this.count(filter) == 0) {
+				throw new NotFoundException();
+			}
+
+			return this.findAll(filter).get(0);
+
+		} catch (ServiceException e) {
+			throw new Exception(e);
+		}
+	}
+
+	public FatturaElettronica findByCodDipartimentoNumeroData(String codiceDipartimento, String numero, Date dataFattura) throws Exception {
+		try {
+
+			FatturaFilter filter = this.newFilter();
+			filter.setCodiceDestinatario(codiceDipartimento);
+			filter.setNumero(numero);
+			filter.setDataFattura(dataFattura);
+
+			FilterSortWrapper sort = new FilterSortWrapper();
+			sort.setField(FatturaElettronica.model().DATA);
+			sort.setSortOrder(SortOrder.DESC);
+			filter.getFilterSortList().add(sort);
+			
 			if(this.count(filter) == 0) {
 				throw new NotFoundException();
 			}
