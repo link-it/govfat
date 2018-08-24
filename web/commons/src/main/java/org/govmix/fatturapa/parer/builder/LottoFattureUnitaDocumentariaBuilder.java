@@ -185,5 +185,11 @@ public class LottoFattureUnitaDocumentariaBuilder extends AbstractUnitaDocumenta
 		return config;
 
 	}
+	
+	
+	protected String getVersioneDatiSpecifici(UnitaDocumentariaLottoInput input) {
+		return "1.0";
+	}
+
 
 }

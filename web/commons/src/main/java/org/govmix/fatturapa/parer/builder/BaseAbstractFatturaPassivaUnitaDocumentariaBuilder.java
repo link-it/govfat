@@ -191,29 +191,9 @@ public abstract class BaseAbstractFatturaPassivaUnitaDocumentariaBuilder extends
 
 
 	}
-
-//	private String getFormato(String nomeAttachment, String formatoAttachment, String formatoCompressione) {
-//		
-//		if(formatoCompressione != null) {
-//			return formatoCompressione.replace(".", "");
-//		}
-//		
-//		if(formatoAttachment != null) {
-//			return formatoAttachment.replace(".", "");
-//		}
-//		
-//		int idx = nomeAttachment.lastIndexOf('.');
-//		String ext = nomeAttachment.substring(idx + 1);
-//		
-//		if("p7m".equalsIgnoreCase(ext)) {
-//			
-//			int idxReal = nomeAttachment.substring(0, idx).lastIndexOf('.');
-//			return nomeAttachment.substring(idxReal + 1);
-//		} else {
-//			return ext;
-//		}
-//
-//	}
-//	
+	
+	protected String getVersioneDatiSpecifici(UnitaDocumentariaFatturaPassivaInput input) {
+		return "1.0";
+	}
 
 }

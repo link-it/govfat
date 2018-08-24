@@ -211,6 +211,11 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 
 
 	}
+	
+	protected String getVersioneDatiSpecifici(UnitaDocumentariaFatturaAttivaInput input) {
+		return "2.0";
+	}
+
 
 //	private String getFormato(String nomeAttachment, String formatoAttachment, String formatoCompressione) {
 //		

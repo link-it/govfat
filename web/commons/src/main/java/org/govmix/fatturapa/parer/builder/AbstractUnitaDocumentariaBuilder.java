@@ -143,7 +143,7 @@ public abstract class AbstractUnitaDocumentariaBuilder <T extends AbstractUnitaD
 	}
 	private JAXBElement<DatiSpecificiType> getDatiSpecificiJAXB(T input) {
 		DatiSpecificiType datiSpecifici = new DatiSpecificiType();
-		datiSpecifici.setVersioneDatiSpecifici("2.0");
+		datiSpecifici.setVersioneDatiSpecifici(getVersioneDatiSpecifici(input));
 		
 		List<ParamWrapper> param = this.getParams(input);
 		
@@ -225,6 +225,7 @@ public abstract class AbstractUnitaDocumentariaBuilder <T extends AbstractUnitaD
 	protected abstract List<ParamWrapper> getParams(T input);
 	protected abstract ProfiloUnitaDocumentariaType getProfiloUnitaDocumentaria(T input) throws Exception;
 	public abstract ChiaveType getChiave(T input);
+	protected abstract String getVersioneDatiSpecifici(T input);
 	
 	
 }
