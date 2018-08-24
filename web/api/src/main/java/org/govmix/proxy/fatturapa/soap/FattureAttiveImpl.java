@@ -3,8 +3,15 @@
  */
 package org.govmix.proxy.fatturapa.soap;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import javax.activation.DataHandler;
+import javax.annotation.Resource;
+import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.handler.MessageContext;
 
 import org.apache.log4j.Logger;
 import org.govmix.fatturapa.AuthorizationFault_Exception;
@@ -28,15 +35,30 @@ import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoRe
 import org.govmix.proxy.fatturapa.web.commons.fatturaattiva.EsitoInvioFattura.ESITO;
 import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
+import org.openspcoop2.utils.resources.FileSystemUtilities;
 
 public class FattureAttiveImpl implements FattureAttive {
+
+	@Resource 
+	private WebServiceContext wsContext;
+
+	private String getPrincipal() throws Exception {
+		List<String> principals = ((Map<Object, List<String>>)wsContext.getMessageContext().get(MessageContext.HTTP_REQUEST_HEADERS)).get("PRINCIPAL_PROXY");
+		
+		if(principals != null && principals.size() > 0) {
+			
+			return principals.get(0);
+		} else {
+			throw new Exception("Principal utente non trovato");
+		}
+
+	}
 
 	private Logger log;
 
 	public FattureAttiveImpl() throws Exception {
-		this.log.info("Init fattureAttive Service.... Info versione: " + CommonsProperties.getInstance(log).getInfoVersione());
 		this.log = LoggerManager.getEndpointFattureAttiveLogger();
-		this.log.info("Init fattureAttive Service completato. Info versione: " + CommonsProperties.getInstance(log).getInfoVersione());
+		this.log.info("Init fattureAttive Service completato. Info versione: " + CommonsProperties.getInstance(this.log).getInfoVersione());
 	}
 
 	@Override
@@ -45,16 +67,21 @@ public class FattureAttiveImpl implements FattureAttive {
 
 		this.log.info("Invoke inviaFattura...");
 
+		ByteArrayOutputStream baos = null;
 		try {
 			InserimentoLotti inserimento = new InserimentoLotti(this.log);
 
-			inserimento.setDipartimenti(new DipartimentoBD(log).findAll());
+			inserimento.setDipartimenti(new DipartimentoBD(this.log).getListaDipartimentiUtente(getPrincipal()));
 			List<InserimentoLottoRequest> requestList = new ArrayList<InserimentoLottoRequest>();
 			InserimentoLottoRequest request = new InserimentoLottoRequest();
 
 			request.setDipartimento(inviaFatturaRichiestaTipo.getCodiceUO());
 			request.setNomeFile(inviaFatturaRichiestaTipo.getNomeFileFattura());
-			request.setXml(inviaFatturaRichiestaTipo.getRefFileFattura());
+			
+			baos = new ByteArrayOutputStream();
+			FileSystemUtilities.copy(inviaFatturaRichiestaTipo.getRefFileFattura().getInputStream(), baos);
+			
+			request.setXml(baos.toByteArray());
 
 			requestList.add(request);
 			InserimentoLottoResponse inserisciLotto = inserimento.inserisciLotto(requestList);
@@ -68,6 +95,13 @@ public class FattureAttiveImpl implements FattureAttive {
 		} catch(Exception e) {
 			this.log.error("inviaFattura completata con errore: "  + e.getMessage(), e);
 			throw new GenericFault_Exception(e.getMessage(), e);
+		} finally {
+			if(baos != null) {
+				try {
+					baos.flush();
+					baos.close();
+				} catch(Exception e) {}
+			}
 		}
 	}
 
@@ -82,7 +116,7 @@ public class FattureAttiveImpl implements FattureAttive {
 			risposta.setIdentificativoSDI(richiesta.getIdentificativoSDI());
 			risposta.setIdentificativoUO(richiesta.getIdentificativoUO());
 			
-			FatturaAttivaBD fatturaBD = new FatturaAttivaBD(log);
+			FatturaAttivaBD fatturaBD = new FatturaAttivaBD(this.log);
 			
 			FatturaElettronica fattura = null;
 			if(richiesta.getIdentificativoSDI()!=null) {
@@ -108,7 +142,7 @@ public class FattureAttiveImpl implements FattureAttive {
 				risposta.setProtocollo(protocollo);
 			}
 			
-			TracciaSdIBD tracciaBD = new TracciaSdIBD(log);
+			TracciaSdIBD tracciaBD = new TracciaSdIBD(this.log);
 			
 			TracciaSdIFilter filter = tracciaBD.newFilter();
 			filter.setIdentificativoSdi(fattura.getIdentificativoSdi());
@@ -119,10 +153,10 @@ public class FattureAttiveImpl implements FattureAttive {
 				for(TracciaSDI traccia: tracce) {
 					switch(traccia.getTipoComunicazione()) {
 					case AT:
-						notifiche.setAttestazioneTrasmissioneFattura(traccia.getRawData());
+						notifiche.setAttestazioneTrasmissioneFattura(new DataHandler(traccia.getRawData(), traccia.getContentType()));
 						break;
 					case DT:
-						notifiche.setNotificaDecorrenzaTermini(traccia.getRawData());
+						notifiche.setNotificaDecorrenzaTermini(new DataHandler(traccia.getRawData(), traccia.getContentType()));
 						break;
 					case EC: //Solo fatturazione passiva
 						break;
@@ -131,20 +165,20 @@ public class FattureAttiveImpl implements FattureAttive {
 					case FAT_OUT: //traccia della fattura
 						break;
 					case MC:
-						notifiche.setNotificaMancataConsegna(traccia.getRawData());
+						notifiche.setNotificaMancataConsegna(new DataHandler(traccia.getRawData(), traccia.getContentType()));
 						break;
 					case MT: //Metadati non gestiti
 						break;
 					case NE:
 						if(traccia.getPosizione()==null || traccia.getPosizione().equals(fattura.getPosizione())) { // la posizione e' opzionale
-							notifiche.setNotificaEsito(traccia.getRawData());
+							notifiche.setNotificaEsito(new DataHandler(traccia.getRawData(), traccia.getContentType()));
 						}
 						break;
 					case NS:
-						notifiche.setNotificaScarto(traccia.getRawData());
+						notifiche.setNotificaScarto(new DataHandler(traccia.getRawData(), traccia.getContentType()));
 						break;
 					case RC:
-						notifiche.setRicevutaConsegna(traccia.getRawData());
+						notifiche.setRicevutaConsegna(new DataHandler(traccia.getRawData(), traccia.getContentType()));
 						break;
 					case SE: //Solo fatturazione passiva
 						break;
