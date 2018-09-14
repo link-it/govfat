@@ -3,10 +3,13 @@
  */
 package org.govmix.proxy.fatturapa.soap;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.activation.DataHandler;
 import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
@@ -34,6 +37,7 @@ import org.govmix.proxy.fatturapa.web.commons.fatturaattiva.EsitoInvioFattura.ES
 import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.openspcoop2.generic_project.exception.NotFoundException;
+import org.openspcoop2.utils.resources.FileSystemUtilities;
 
 public class FattureAttiveImpl implements FattureAttive {
 
@@ -74,7 +78,7 @@ public class FattureAttiveImpl implements FattureAttive {
 
 			request.setDipartimento(inviaFatturaRichiestaTipo.getCodiceUO());
 			request.setNomeFile(inviaFatturaRichiestaTipo.getNomeFileFattura());
-			request.setXml(getBytes(inviaFatturaRichiestaTipo.getRefFileFattura()));
+			request.setXml(getBytes(inviaFatturaRichiestaTipo.getFileFattura()));
 
 			requestList.add(request);
 			InserimentoLottoResponse inserisciLotto = inserimento.inserisciLotto(requestList);
@@ -197,34 +201,34 @@ public class FattureAttiveImpl implements FattureAttive {
 		}
 	}
 	
-	private byte[] getBytes(byte[] bytes) {
-		return bytes;
-	}
-
-//	private byte[] getBytes(DataHandler dataHandler) throws IOException {
-//		ByteArrayOutputStream baos = null;
-//		try {
-//			baos = new ByteArrayOutputStream();
-//			FileSystemUtilities.copy(dataHandler.getInputStream(), baos);
-//			
-//			return baos.toByteArray();
-//		} finally {
-//			if(baos != null) {
-//				try {
-//					baos.flush();
-//					baos.close();
-//				} catch(Exception e) {}
-//			}
-//		}
-//
+//	private byte[] getBytes(byte[] bytes) {
+//		return bytes;
 //	}
 
-	private static byte[] getRaw(byte[] bytes, String contentType) {
-		return bytes;
+	private byte[] getBytes(DataHandler dataHandler) throws IOException {
+		ByteArrayOutputStream baos = null;
+		try {
+			baos = new ByteArrayOutputStream();
+			FileSystemUtilities.copy(dataHandler.getInputStream(), baos);
+			
+			return baos.toByteArray();
+		} finally {
+			if(baos != null) {
+				try {
+					baos.flush();
+					baos.close();
+				} catch(Exception e) {}
+			}
+		}
+
 	}
+
+//	private static byte[] getRaw(byte[] bytes, String contentType) {
+//		return bytes;
+//	}
 	
-//	private static DataHandler getRaw(byte[] bytes, String contentType) {
-//		return new DataHandler(bytes, contentType);
-//	}
+	private static DataHandler getRaw(byte[] bytes, String contentType) {
+		return new DataHandler(bytes, contentType);
+	}
 
 }

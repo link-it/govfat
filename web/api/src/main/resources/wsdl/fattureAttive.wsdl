@@ -37,7 +37,6 @@
 	</wsdl:portType>
     <wsdl:binding name="FattureAttiveSOAP11PortBinding" type="tns:fattureAttive">
 		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
-    	<wsp:PolicyReference URI="#FattureAttiveSOAP11PortBinding_MTOM_Policy"/>
 	    <wsdl:operation name="inviaFattura">
 	        <soap:operation/>
 	        <wsdl:input>
@@ -74,7 +73,4 @@
 	        <soap:address location="http://localhost:8080/proxyFatturaPA/fattureAttive"/>
 		</wsdl:port>
 	</wsdl:service>
-    <wsp:Policy wsu:Id="FattureAttiveSOAP11PortBinding_MTOM_Policy">
-		<ns1:OptimizedMimeSerialization xmlns:ns1="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization" wsp:Optional="true"/>
-	</wsp:Policy>
 </wsdl:definitions>
