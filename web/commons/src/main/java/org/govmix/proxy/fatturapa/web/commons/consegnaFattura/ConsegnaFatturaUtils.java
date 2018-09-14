@@ -369,8 +369,11 @@ public class ConsegnaFatturaUtils {
 	}
 
 	private static boolean isPagoPA(List<String> lst) {
-		// TODO identificare pattern iuv, e capire come comportarsi in caso di codici pagamento multipli
-		return !lst.isEmpty();
+		for(String codice: lst) {
+			if(codice.startsWith("PagoPA-"))
+				return true;
+		}
+		return false;
 	}
 
 
