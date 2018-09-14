@@ -57,7 +57,7 @@ import org.openspcoop2.utils.TipiDatabase;
 public class DipartimentoBD extends BaseBD {
 
 
-	private IDipartimentoService service;
+	protected IDipartimentoService service;
 	private IRegistroService registroService;
 	private IUtenteService utenteService;
 

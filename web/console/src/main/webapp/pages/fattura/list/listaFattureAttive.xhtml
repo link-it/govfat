@@ -47,6 +47,7 @@
 				top: 6px;
 				right: 6px;
 			}
+			.selectionInfoItems { display:none; }
 		</style>
 		<script type="text/javascript">
 		//<![CDATA[
@@ -329,9 +330,10 @@
 			                              
 			                              
 			                              if(showSelectAll){
-				                             if(state && _totRows>_rows ){
-			                                     if(size >= allSize){
-		                                             jQuery("table [id$='"+tid+"'] input:checkbox[id$='"+inputId+"_checkAll']").attr("checked","on");
+                   		                       if(state && size >= allSize){
+	                                             jQuery("table [id$='"+tid+"'] input:checkbox[id$='"+inputId+"_checkAll']").attr("checked","on");
+	                                             jQuery("[id$='"+inputId+"_selectedAllChbx']").attr("checked","on");
+	                                             if(_totRows>_rows ){   
 		                                             var t1= formatMessage("#{commonsMsg['pagedDataTable.script.checkAllCheckboxesInTable.selezionati']}",{0:size,1:_totRows});
 		                                             jQuery("[id$='"+inputId+"_selectedInfoLbl']").show().text(t1);
 		                                             var t2= formatMessage("#{commonsMsg['pagedDataTable.script.checkAllCheckboxesInTable.selezionaTutti']}",{0:_totRows});

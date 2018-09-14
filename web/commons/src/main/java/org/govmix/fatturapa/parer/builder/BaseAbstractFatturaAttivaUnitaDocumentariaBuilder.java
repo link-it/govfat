@@ -83,7 +83,6 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 					componente.setID(idDocumentoAnnesso);
 					componente.setOrdinePresentazione(index);
 					componente.setTipoComponente("Contenuto");
-					componente.setTipoRappresentazioneComponente(this.getTipoRappresentazioneComponente(traccia.getTipoComunicazione()));
 					componente.setTipoSupportoComponente(TipoSupportoType.FILE);
 					componente.setNomeComponente(traccia.getNomeFile());
 					String formato = tika.detect(traccia.getRawData());
@@ -108,30 +107,6 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 			return null;
 	}
 	
-	private String getTipoRappresentazioneComponente(TipoComunicazioneType tipoComunicazioneType) {
-		switch (tipoComunicazioneType) {
-		case NS:
-			return "File Notifica di Scarto";
-		case RC:
-			return "File Ricevuta di Consegna";
-		case MC:
-			return "File Notifica di Mancata Consegna";
-		case NE:
-			return "File Notifica di Esito";
-		case AT:
-			return "File Attestazione Impossibilita di Recapito";
-		case DT:
-			return "File Notifica di Decorrenza Termini";
-		case EC:
-		case FAT_IN:
-		case FAT_OUT:
-		case MT:
-		case SE:
-		default:
-			return null;
-		}
-	}
-
 	private String getTipoComunicazione(TipoComunicazioneType tipoComunicazioneType) {
 		switch (tipoComunicazioneType) {
 		case NS:
@@ -180,7 +155,7 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 					ComponenteType componente = new ComponenteType();
 					componente.setID(idDocumentoAllegato);
 					componente.setOrdinePresentazione(index);
-					componente.setTipoRappresentazioneComponente("Allegato generico alla fattura");
+//					componente.setTipoRappresentazioneComponente("Allegato generico alla fattura");
 					componente.setNomeComponente(allegatoInput.getNomeAttachment());
 					
 					String formato = tika.detect(allegatoInput.getAttachment());
@@ -211,6 +186,11 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 
 
 	}
+	
+	protected String getVersioneDatiSpecifici(UnitaDocumentariaFatturaAttivaInput input) {
+		return "2.0";
+	}
+
 
 //	private String getFormato(String nomeAttachment, String formatoAttachment, String formatoCompressione) {
 //		

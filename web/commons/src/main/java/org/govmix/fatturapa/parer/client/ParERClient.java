@@ -179,7 +179,7 @@ public class ParERClient {
 		this.log.info("Response code: " + response.getStatusLine().getStatusCode());
 		
 		if(response.getStatusLine().getStatusCode() != 200) {
-			throw new Exception("Response code restituito ["+response.getStatusLine().getStatusCode()+"] diverso da [200]");
+			throw new IOException("Response code restituito ["+response.getStatusLine().getStatusCode()+"] diverso da [200]");
 		}
 		
 		ByteArrayOutputStream baos = leggiBody(response);

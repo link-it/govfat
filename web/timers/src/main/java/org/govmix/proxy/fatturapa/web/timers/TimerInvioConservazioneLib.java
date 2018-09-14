@@ -395,6 +395,7 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 		FatturaFilter filter = fatturaElettronicaBD.newFilter();
 		filter.setIdentificativoSdi(lotto.getIdentificativoSdi());
 		filter.setFatturazioneAttiva(lotto.isFatturazioneAttiva());
+		filter.setIdSipNull(false);
 		FilterSortWrapper fsw = new FilterSortWrapper();
 		fsw.setSortOrder(SortOrder.ASC);
 		fsw.setField(FatturaElettronica.model().DATA_RICEZIONE); 

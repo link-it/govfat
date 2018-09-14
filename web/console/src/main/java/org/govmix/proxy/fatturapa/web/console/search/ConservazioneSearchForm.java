@@ -170,9 +170,12 @@ public class ConservazioneSearchForm extends BaseSearchForm implements SearchFor
 		
 		List<javax.faces.model.SelectItem> listaEnti = this.mBean._getEnti(false, fatturazioneAttiva);
 		if(!listaEnti.isEmpty()) {
-			this.setDefaultEnte((org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem) listaEnti.get(0).getValue());
+//			this.setDefaultEnte((org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem) listaEnti.get(0).getValue());
 			this.getEnte().setValue((org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem) listaEnti.get(0).getValue()); 
 		}
+		
+		((SelectListImpl)this.getEnte()).setElencoSelectItems(listaEnti);
+		
 	}
 	
 	public boolean isRicercaFattureAttive() {

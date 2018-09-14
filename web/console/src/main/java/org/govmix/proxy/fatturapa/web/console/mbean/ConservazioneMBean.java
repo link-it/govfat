@@ -32,6 +32,7 @@ import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.DataModelListView;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.FiltraException;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.MenuActionException;
+import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.ResetException;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.MessageUtils;
 
 public class ConservazioneMBean extends DataModelListView<ConservazioneBean, Long,
@@ -115,7 +116,8 @@ IConservazioneService>{
 		List<SelectItem> listaEnti = this.getListaEnti();
 		((SelectListImpl)this.search.getEnte()).setElencoSelectItems(listaEnti);
 		if(!listaEnti.isEmpty() && this.search.getEnte().getValue() == null) {
-			this.search.setDefaultEnte((org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem) listaEnti.get(0).getValue());
+			this.search.getEnte().setValue((org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem) listaEnti.get(0).getValue()); 
+//			this.search.setDefaultEnte((org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem) listaEnti.get(0).getValue());
 		}
 		
 		((SelectListImpl)this.search.getStatoInvio()).setElencoSelectItems(this.getListaStatiInvio());
@@ -257,6 +259,19 @@ IConservazioneService>{
 	protected String _menuAction() throws MenuActionException {
 		this.search.setRestoreSearch(true);
 		return super._menuAction();
+	}
+	
+	@Override
+	protected String _reset() throws ResetException {
+		String superValue = super._reset();
+		List<SelectItem> listaEnti = this.getListaEnti();
+		((SelectListImpl)this.search.getEnte()).setElencoSelectItems(listaEnti);
+		if(!listaEnti.isEmpty() && this.search.getEnte().getValue() == null) {
+			this.search.getEnte().setValue((org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem) listaEnti.get(0).getValue()); 
+//			this.search.setDefaultEnte((org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem) listaEnti.get(0).getValue());
+		}
+		
+		return superValue;
 	}
 	
 	public String inviaFattureInConservazione() {
