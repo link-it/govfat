@@ -35,7 +35,7 @@ import org.openspcoop2.generic_project.exception.ServiceException;
 public class DipartimentoBD extends BaseBD {
 
 
-	private IDipartimentoService service;
+	protected IDipartimentoService service;
 
 	public DipartimentoBD() throws Exception {
 		this(Logger.getLogger(DipartimentoBD.class));

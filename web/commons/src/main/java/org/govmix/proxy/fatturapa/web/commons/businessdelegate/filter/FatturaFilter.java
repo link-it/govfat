@@ -59,6 +59,8 @@ public class FatturaFilter extends AbstractFilter {
 	protected Boolean decorrenzaTermini;
 	private Boolean idSipNull;
 	
+	private String formatoArchivioInvioFattura;
+	private String formatoTrasmissione;
 	private String ente;
 	private Integer anno;
 	
@@ -128,6 +130,14 @@ public class FatturaFilter extends AbstractFilter {
 				expression.equals(FatturaElettronica.model().TIPO_DOCUMENTO, this.tipoDocumento);
 			}
 			
+			if(this.formatoArchivioInvioFattura != null) {
+				expression.equals(FatturaElettronica.model().LOTTO_FATTURE.FORMATO_ARCHIVIO_INVIO_FATTURA, this.formatoArchivioInvioFattura);
+			}
+			
+			if(this.formatoTrasmissione != null) {
+				expression.equals(FatturaElettronica.model().FORMATO_TRASMISSIONE, this.formatoTrasmissione);
+			}
+			
 			if(this.protocollo != null) {
 				expression.ilike(FatturaElettronica.model().PROTOCOLLO, this.protocollo);
 			}
@@ -141,6 +151,8 @@ public class FatturaFilter extends AbstractFilter {
 					expression.isNotNull(customField);
 				}
 			}
+			
+			
 			
 			if(this.cpDenominazioneList != null) {
 				if(cpDenominazioneList.size() == 1) {
@@ -443,6 +455,22 @@ public class FatturaFilter extends AbstractFilter {
 
 	public void setFiltroConservazione(Boolean filtroConservazione) {
 		this.filtroConservazione = filtroConservazione;
+	}
+
+	public String getFormatoArchivioInvioFattura() {
+		return formatoArchivioInvioFattura;
+	}
+
+	public void setFormatoArchivioInvioFattura(String formatoArchivioInvioFattura) {
+		this.formatoArchivioInvioFattura = formatoArchivioInvioFattura;
+	}
+
+	public String getFormatoTrasmissione() {
+		return formatoTrasmissione;
+	}
+
+	public void setFormatoTrasmissione(String formatoTrasmissione) {
+		this.formatoTrasmissione = formatoTrasmissione;
 	}
 	
 }

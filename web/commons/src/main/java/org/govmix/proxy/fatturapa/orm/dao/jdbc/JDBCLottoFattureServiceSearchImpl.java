@@ -73,7 +73,7 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 	public ISQLFieldConverter getFieldConverter() {
 		return this.getLottoFattureFieldConverter();
 	}
-	
+
 	private LottoFattureFetch lottoFattureFetch = new LottoFattureFetch();
 	public LottoFattureFetch getLottoFattureFetch() {
 		return this.lottoFattureFetch;
@@ -82,159 +82,229 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 	public IJDBCFetch getFetch() {
 		return getLottoFattureFetch();
 	}
-	
-	
+
+
 	private JDBCServiceManager jdbcServiceManager = null;
 
 	@Override
 	public void setServiceManager(JDBCServiceManager serviceManager) throws ServiceException{
 		this.jdbcServiceManager = serviceManager;
 	}
-	
+
 	@Override
 	public JDBCServiceManager getServiceManager() throws ServiceException{
 		return this.jdbcServiceManager;
 	}
-	
+
 
 	@Override
 	public IdLotto convertToId(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, LottoFatture lottoFatture) throws NotImplementedException, ServiceException, Exception{
-        IdLotto idLottoFatture = new IdLotto(lottoFatture.isFatturazioneAttiva());
-        idLottoFatture.setIdentificativoSdi(lottoFatture.getIdentificativoSdi());
-        return idLottoFatture;
+		IdLotto idLottoFatture = new IdLotto(lottoFatture.isFatturazioneAttiva());
+		idLottoFatture.setIdentificativoSdi(lottoFatture.getIdentificativoSdi());
+		return idLottoFatture;
 	}
-	
+
 	@Override
 	public LottoFatture get(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdLotto id, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotFoundException, MultipleResultException, NotImplementedException, ServiceException,Exception {
 		Long id_lottoFatture = ( (id!=null && id.getId()!=null && id.getId()>0) ? id.getId() : this.findIdLottoFatture(jdbcProperties, log, connection, sqlQueryObject, id, true));
 		return this._get(jdbcProperties, log, connection, sqlQueryObject, id_lottoFatture,idMappingResolutionBehaviour);
-		
-		
+
+
 	}
-	
+
 	@Override
 	public boolean exists(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdLotto id) throws MultipleResultException, NotImplementedException, ServiceException,Exception {
 
 		Long id_lottoFatture = this.findIdLottoFatture(jdbcProperties, log, connection, sqlQueryObject, id, false);
 		return id_lottoFatture != null && id_lottoFatture > 0;
-		
+
 	}
-	
+
 	@Override
 	public List<IdLotto> findAllIds(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, JDBCPaginatedExpression expression, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotImplementedException, ServiceException,Exception {
 
 		List<IdLotto> list = new ArrayList<IdLotto>();
 
-		// TODO: implementazione non efficente. 
-		// Per ottenere una implementazione efficente:
-		// 1. Usare metodo select di questa classe indirizzando esattamente i field necessari a create l'ID logico
-		// 2. Usare metodo getLottoFattureFetch() sul risultato della select per ottenere un oggetto LottoFatture
-		//	  La fetch con la map inserirà nell'oggetto solo i valori estratti 
-		// 3. Usare metodo convertToId per ottenere l'id
+		try {
+			List<IField> fields = new ArrayList<IField>();
 
-        List<Long> ids = this.findAllTableIds(jdbcProperties, log, connection, sqlQueryObject, expression);
-        
-        for(Long id: ids) {
-        	LottoFatture lottoFatture = this.get(jdbcProperties, log, connection, sqlQueryObject, id, idMappingResolutionBehaviour);
-			IdLotto idLottoFatture = this.convertToId(jdbcProperties,log,connection,sqlQueryObject,lottoFatture);
-        	list.add(idLottoFatture);
-        }
+			String id = "id";
+			fields.add(new CustomField(id, Long.class, id, this.getFieldConverter().toTable(LottoFatture.model())));
+			fields.add(LottoFatture.model().IDENTIFICATIVO_SDI);
+			fields.add(LottoFatture.model().FATTURAZIONE_ATTIVA);
 
-        return list;
-		
+			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));
+
+			for(Map<String, Object> map: returnMap) {
+
+				IdLotto idLotto = this.convertToId(jdbcProperties, log, connection, sqlQueryObject, (LottoFatture)this.getFetch().fetch(jdbcProperties.getDatabase(), LottoFatture.model(), map));
+				list.add(idLotto);
+			}
+
+		} catch(NotFoundException e) {}
+		return list;
+
+
 	}
-	
+
 	@Override
 	public List<LottoFatture> findAll(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, JDBCPaginatedExpression expression, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotImplementedException, ServiceException,Exception {
 
-        List<LottoFatture> list = new ArrayList<LottoFatture>();
-        
-        // TODO: implementazione non efficente. 
-		// Per ottenere una implementazione efficente:
-		// 1. Usare metodo select di questa classe indirizzando esattamente i field necessari
-		// 2. Usare metodo getLottoFattureFetch() sul risultato della select per ottenere un oggetto LottoFatture
-		//	  La fetch con la map inserirà nell'oggetto solo i valori estratti 
+		List<LottoFatture> list = new ArrayList<LottoFatture>();
 
-        List<Long> ids = this.findAllTableIds(jdbcProperties, log, connection, sqlQueryObject, expression);
-        
-        for(Long id: ids) {
-        	list.add(this.get(jdbcProperties, log, connection, sqlQueryObject, id, idMappingResolutionBehaviour));
-        }
+		try {
+			List<IField> fields = new ArrayList<IField>();
 
-        return list;      
-		
+			String id = "id";
+			fields.add(new CustomField(id, Long.class, id, this.getFieldConverter().toTable(LottoFatture.model())));
+			fields.add(LottoFatture.model().FORMATO_TRASMISSIONE);
+			fields.add(LottoFatture.model().IDENTIFICATIVO_SDI);
+			fields.add(LottoFatture.model().NOME_FILE);
+			fields.add(LottoFatture.model().FORMATO_ARCHIVIO_INVIO_FATTURA);
+			fields.add(LottoFatture.model().MESSAGE_ID);
+			fields.add(LottoFatture.model().CEDENTE_PRESTATORE_DENOMINAZIONE);
+			fields.add(LottoFatture.model().CEDENTE_PRESTATORE_NOME);
+			fields.add(LottoFatture.model().CEDENTE_PRESTATORE_COGNOME);
+			fields.add(LottoFatture.model().CEDENTE_PRESTATORE_CODICE);
+			fields.add(LottoFatture.model().CEDENTE_PRESTATORE_PAESE);
+			fields.add(LottoFatture.model().CEDENTE_PRESTATORE_CODICE_FISCALE);
+			fields.add(LottoFatture.model().CESSIONARIO_COMMITTENTE_DENOMINAZIONE);
+			fields.add(LottoFatture.model().CESSIONARIO_COMMITTENTE_NOME);
+			fields.add(LottoFatture.model().CESSIONARIO_COMMITTENTE_COGNOME);
+			fields.add(LottoFatture.model().CESSIONARIO_COMMITTENTE_CODICE);
+			fields.add(LottoFatture.model().CESSIONARIO_COMMITTENTE_PAESE);
+			fields.add(LottoFatture.model().CESSIONARIO_COMMITTENTE_CODICE_FISCALE);
+			fields.add(LottoFatture.model().TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_DENOMINAZIONE);
+			fields.add(LottoFatture.model().TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_NOME);
+			fields.add(LottoFatture.model().TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_COGNOME);
+			fields.add(LottoFatture.model().TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE);
+			fields.add(LottoFatture.model().TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_PAESE);
+			fields.add(LottoFatture.model().TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE_FISCALE);
+			fields.add(LottoFatture.model().CODICE_DESTINATARIO);
+			fields.add(LottoFatture.model().XML);
+			fields.add(LottoFatture.model().FATTURAZIONE_ATTIVA);
+			fields.add(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA);
+			fields.add(LottoFatture.model().TIPI_COMUNICAZIONE);
+			fields.add(LottoFatture.model().DATA_ULTIMA_ELABORAZIONE);
+			fields.add(LottoFatture.model().DETTAGLIO_ELABORAZIONE);
+			fields.add(LottoFatture.model().DATA_PROSSIMA_ELABORAZIONE);
+			fields.add(LottoFatture.model().TENTATIVI_CONSEGNA);
+			fields.add(LottoFatture.model().DATA_RICEZIONE);
+			fields.add(LottoFatture.model().STATO_INSERIMENTO);
+			fields.add(LottoFatture.model().STATO_CONSEGNA);
+			fields.add(LottoFatture.model().DATA_CONSEGNA);
+			fields.add(LottoFatture.model().DETTAGLIO_CONSEGNA);
+			fields.add(LottoFatture.model().STATO_PROTOCOLLAZIONE);
+			fields.add(LottoFatture.model().DATA_PROTOCOLLAZIONE);
+			fields.add(LottoFatture.model().PROTOCOLLO);
+			fields.add(LottoFatture.model().ID_EGOV);
+			String idSipField = "id_sip";
+			fields.add(new CustomField(idSipField, Long.class, idSipField, this.getFieldConverter().toTable(LottoFatture.model())));
+
+			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));
+
+			for(Map<String, Object> map: returnMap) {
+				Object idFK_sipOBJ = map.remove(idSipField);
+
+				LottoFatture lottoFatture = (LottoFatture)this.getFetch().fetch(jdbcProperties.getDatabase(), LottoFatture.model(), map);
+
+				if(idFK_sipOBJ != null && idFK_sipOBJ instanceof Long) {
+					if(idMappingResolutionBehaviour==null ||
+							(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
+							){
+						try {
+							Long idFK_fatturaElettronica_sip = (Long) idFK_sipOBJ;
+
+							org.govmix.proxy.fatturapa.orm.IdSip id_fatturaElettronica_sip = null;
+							if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
+								id_fatturaElettronica_sip = ((JDBCSIPServiceSearch)(this.getServiceManager().getSIPServiceSearch())).findId(idFK_fatturaElettronica_sip, false);
+							}else{
+								id_fatturaElettronica_sip = new org.govmix.proxy.fatturapa.orm.IdSip();
+							}
+							id_fatturaElettronica_sip.setId(idFK_fatturaElettronica_sip);
+							lottoFatture.setIdSIP(id_fatturaElettronica_sip);
+						}catch(NotFoundException e) {}
+					}
+				}
+
+				list.add(lottoFatture);
+			}
+
+		} catch(NotFoundException e) {}
+		return list;
+
 	}
-	
+
 	@Override
 	public LottoFatture find(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, JDBCExpression expression, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) 
-		throws NotFoundException, MultipleResultException, NotImplementedException, ServiceException,Exception {
+			throws NotFoundException, MultipleResultException, NotImplementedException, ServiceException,Exception {
 
-        long id = this.findTableId(jdbcProperties, log, connection, sqlQueryObject, expression);
-        if(id>0){
-        	return this.get(jdbcProperties, log, connection, sqlQueryObject, id, idMappingResolutionBehaviour);
-        }else{
-        	throw new NotFoundException("Entry with id["+id+"] not found");
-        }
-		
+		long id = this.findTableId(jdbcProperties, log, connection, sqlQueryObject, expression);
+		if(id>0){
+			return this.get(jdbcProperties, log, connection, sqlQueryObject, id, idMappingResolutionBehaviour);
+		}else{
+			throw new NotFoundException("Entry with id["+id+"] not found");
+		}
+
 	}
-	
+
 	@Override
 	public NonNegativeNumber count(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, JDBCExpression expression) throws NotImplementedException, ServiceException,Exception {
-		
+
 		List<Object> listaQuery = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareCount(jdbcProperties, log, connection, sqlQueryObject, expression,
-												this.getLottoFattureFieldConverter(), LottoFatture.model());
-		
+				this.getLottoFattureFieldConverter(), LottoFatture.model());
+
 		sqlQueryObject.addSelectCountField(this.getLottoFattureFieldConverter().toTable(LottoFatture.model())+".id","tot",true);
-		
+
 		_join(expression,sqlQueryObject);
-		
+
 		return org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.count(jdbcProperties, log, connection, sqlQueryObject, expression,
-																			this.getLottoFattureFieldConverter(), LottoFatture.model(),listaQuery);
+				this.getLottoFattureFieldConverter(), LottoFatture.model(),listaQuery);
 	}
 
 	@Override
 	public InUse inUse(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdLotto id) throws NotFoundException, NotImplementedException, ServiceException,Exception {
-		
+
 		Long id_lottoFatture = this.findIdLottoFatture(jdbcProperties, log, connection, sqlQueryObject, id, true);
-        return this._inUse(jdbcProperties, log, connection, sqlQueryObject, id_lottoFatture);
-		
+		return this._inUse(jdbcProperties, log, connection, sqlQueryObject, id_lottoFatture);
+
 	}
 
 	@Override
 	public List<Object> select(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-													JDBCPaginatedExpression paginatedExpression, IField field) throws ServiceException,NotFoundException,NotImplementedException,Exception {
+			JDBCPaginatedExpression paginatedExpression, IField field) throws ServiceException,NotFoundException,NotImplementedException,Exception {
 		return this.select(jdbcProperties, log, connection, sqlQueryObject,
-								paginatedExpression, false, field);
+				paginatedExpression, false, field);
 	}
-	
+
 	@Override
 	public List<Object> select(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-													JDBCPaginatedExpression paginatedExpression, boolean distinct, IField field) throws ServiceException,NotFoundException,NotImplementedException,Exception {
+			JDBCPaginatedExpression paginatedExpression, boolean distinct, IField field) throws ServiceException,NotFoundException,NotImplementedException,Exception {
 		List<Map<String,Object>> map = 
-			this.select(jdbcProperties, log, connection, sqlQueryObject, paginatedExpression, distinct, new IField[]{field});
+				this.select(jdbcProperties, log, connection, sqlQueryObject, paginatedExpression, distinct, new IField[]{field});
 		return org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.selectSingleObject(map);
 	}
-	
+
 	@Override
 	public List<Map<String,Object>> select(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-													JDBCPaginatedExpression paginatedExpression, IField ... field) throws ServiceException,NotFoundException,NotImplementedException,Exception {
+			JDBCPaginatedExpression paginatedExpression, IField ... field) throws ServiceException,NotFoundException,NotImplementedException,Exception {
 		return this.select(jdbcProperties, log, connection, sqlQueryObject,
-								paginatedExpression, false, field);
+				paginatedExpression, false, field);
 	}
-	
+
 	@Override
 	public List<Map<String,Object>> select(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-													JDBCPaginatedExpression paginatedExpression, boolean distinct, IField ... field) throws ServiceException,NotFoundException,NotImplementedException,Exception {
-		
+			JDBCPaginatedExpression paginatedExpression, boolean distinct, IField ... field) throws ServiceException,NotFoundException,NotImplementedException,Exception {
+
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.setFields(sqlQueryObject,paginatedExpression,field);
 		try{
-		
+
 			ISQLQueryObject sqlQueryObjectDistinct = 
-						org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareSqlQueryObjectForSelectDistinct(distinct,sqlQueryObject, paginatedExpression, log,
-												this.getLottoFattureFieldConverter(), field);
+					org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareSqlQueryObjectForSelectDistinct(distinct,sqlQueryObject, paginatedExpression, log,
+							this.getLottoFattureFieldConverter(), field);
 
 			return _select(jdbcProperties, log, connection, sqlQueryObject, paginatedExpression, sqlQueryObjectDistinct);
-			
+
 		}finally{
 			org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.removeFields(sqlQueryObject,paginatedExpression,field);
 		}
@@ -242,16 +312,16 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 
 	@Override
 	public Object aggregate(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-													JDBCExpression expression, FunctionField functionField) throws ServiceException,NotFoundException,NotImplementedException,Exception {
+			JDBCExpression expression, FunctionField functionField) throws ServiceException,NotFoundException,NotImplementedException,Exception {
 		Map<String,Object> map = 
-			this.aggregate(jdbcProperties, log, connection, sqlQueryObject, expression, new FunctionField[]{functionField});
+				this.aggregate(jdbcProperties, log, connection, sqlQueryObject, expression, new FunctionField[]{functionField});
 		return org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.selectAggregateObject(map,functionField);
 	}
-	
+
 	@Override
 	public Map<String,Object> aggregate(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-													JDBCExpression expression, FunctionField ... functionField) throws ServiceException,NotFoundException,NotImplementedException,Exception {													
-		
+			JDBCExpression expression, FunctionField ... functionField) throws ServiceException,NotFoundException,NotImplementedException,Exception {													
+
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.setFields(sqlQueryObject,expression,functionField);
 		try{
 			List<Map<String,Object>> list = _select(jdbcProperties, log, connection, sqlQueryObject, expression);
@@ -263,12 +333,12 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 
 	@Override
 	public List<Map<String,Object>> groupBy(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-													JDBCExpression expression, FunctionField ... functionField) throws ServiceException,NotFoundException,NotImplementedException,Exception {
-		
+			JDBCExpression expression, FunctionField ... functionField) throws ServiceException,NotFoundException,NotImplementedException,Exception {
+
 		if(expression.getGroupByFields().size()<=0){
 			throw new ServiceException("GroupBy conditions not found in expression");
 		}
-		
+
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.setFields(sqlQueryObject,expression,functionField);
 		try{
 			return _select(jdbcProperties, log, connection, sqlQueryObject, expression);
@@ -276,16 +346,16 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 			org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.removeFields(sqlQueryObject,expression,functionField);
 		}
 	}
-	
+
 
 	@Override
 	public List<Map<String,Object>> groupBy(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-													JDBCPaginatedExpression paginatedExpression, FunctionField ... functionField) throws ServiceException,NotFoundException,NotImplementedException,Exception {
-		
+			JDBCPaginatedExpression paginatedExpression, FunctionField ... functionField) throws ServiceException,NotFoundException,NotImplementedException,Exception {
+
 		if(paginatedExpression.getGroupByFields().size()<=0){
 			throw new ServiceException("GroupBy conditions not found in expression");
 		}
-		
+
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.setFields(sqlQueryObject,paginatedExpression,functionField);
 		try{
 			return _select(jdbcProperties, log, connection, sqlQueryObject, paginatedExpression);
@@ -293,26 +363,26 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 			org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.removeFields(sqlQueryObject,paginatedExpression,functionField);
 		}
 	}
-	
+
 	protected List<Map<String,Object>> _select(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-												IExpression expression) throws ServiceException,NotFoundException,NotImplementedException,Exception {
+			IExpression expression) throws ServiceException,NotFoundException,NotImplementedException,Exception {
 		return _select(jdbcProperties, log, connection, sqlQueryObject, expression, null);
 	}
 	protected List<Map<String,Object>> _select(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-												IExpression expression, ISQLQueryObject sqlQueryObjectDistinct) throws ServiceException,NotFoundException,NotImplementedException,Exception {
-		
+			IExpression expression, ISQLQueryObject sqlQueryObjectDistinct) throws ServiceException,NotFoundException,NotImplementedException,Exception {
+
 		List<Object> listaQuery = new ArrayList<Object>();
 		List<JDBCObject> listaParams = new ArrayList<JDBCObject>();
 		List<Object> returnField = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareSelect(jdbcProperties, log, connection, sqlQueryObject, 
-        						expression, this.getLottoFattureFieldConverter(), LottoFatture.model(), 
-        						listaQuery,listaParams);
-		
+				expression, this.getLottoFattureFieldConverter(), LottoFatture.model(), 
+				listaQuery,listaParams);
+
 		_join(expression,sqlQueryObject);
-        
-        List<Map<String,Object>> list = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.select(jdbcProperties, log, connection,
-        								org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareSqlQueryObjectForSelectDistinct(sqlQueryObject,sqlQueryObjectDistinct), 
-        								expression, this.getLottoFattureFieldConverter(), LottoFatture.model(),
-        								listaQuery,listaParams,returnField);
+
+		List<Map<String,Object>> list = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.select(jdbcProperties, log, connection,
+				org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareSqlQueryObjectForSelectDistinct(sqlQueryObject,sqlQueryObjectDistinct), 
+				expression, this.getLottoFattureFieldConverter(), LottoFatture.model(),
+				listaQuery,listaParams,returnField);
 		if(list!=null && list.size()>0){
 			return list;
 		}
@@ -320,17 +390,17 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 			throw new NotFoundException("Not Found");
 		}
 	}
-	
+
 	@Override
 	public List<Map<String,Object>> union(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-												Union union, UnionExpression ... unionExpression) throws ServiceException,NotFoundException,NotImplementedException,Exception {		
-		
+			Union union, UnionExpression ... unionExpression) throws ServiceException,NotFoundException,NotImplementedException,Exception {		
+
 		List<ISQLQueryObject> sqlQueryObjectInnerList = new ArrayList<ISQLQueryObject>();
 		List<JDBCObject> jdbcObjects = new ArrayList<JDBCObject>();
 		List<Class<?>> returnClassTypes = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareUnion(jdbcProperties, log, connection, sqlQueryObject, 
-        						this.getLottoFattureFieldConverter(), LottoFatture.model(), 
-        						sqlQueryObjectInnerList, jdbcObjects, union, unionExpression);
-		
+				this.getLottoFattureFieldConverter(), LottoFatture.model(), 
+				sqlQueryObjectInnerList, jdbcObjects, union, unionExpression);
+
 		if(unionExpression!=null){
 			for (int i = 0; i < unionExpression.length; i++) {
 				UnionExpression ue = unionExpression[i];
@@ -338,28 +408,28 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 				_join(expression,sqlQueryObjectInnerList.get(i));
 			}
 		}
-        
-        List<Map<String,Object>> list = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.union(jdbcProperties, log, connection, sqlQueryObject, 
-        								this.getLottoFattureFieldConverter(), LottoFatture.model(), 
-        								sqlQueryObjectInnerList, jdbcObjects, returnClassTypes, union, unionExpression);
-        if(list!=null && list.size()>0){
+
+		List<Map<String,Object>> list = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.union(jdbcProperties, log, connection, sqlQueryObject, 
+				this.getLottoFattureFieldConverter(), LottoFatture.model(), 
+				sqlQueryObjectInnerList, jdbcObjects, returnClassTypes, union, unionExpression);
+		if(list!=null && list.size()>0){
 			return list;
 		}
 		else{
 			throw new NotFoundException("Not Found");
 		}								
 	}
-	
+
 	@Override
 	public NonNegativeNumber unionCount(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-												Union union, UnionExpression ... unionExpression) throws ServiceException,NotFoundException,NotImplementedException,Exception {		
-		
+			Union union, UnionExpression ... unionExpression) throws ServiceException,NotFoundException,NotImplementedException,Exception {		
+
 		List<ISQLQueryObject> sqlQueryObjectInnerList = new ArrayList<ISQLQueryObject>();
 		List<JDBCObject> jdbcObjects = new ArrayList<JDBCObject>();
 		List<Class<?>> returnClassTypes = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareUnionCount(jdbcProperties, log, connection, sqlQueryObject, 
-        						this.getLottoFattureFieldConverter(), LottoFatture.model(), 
-        						sqlQueryObjectInnerList, jdbcObjects, union, unionExpression);
-		
+				this.getLottoFattureFieldConverter(), LottoFatture.model(), 
+				sqlQueryObjectInnerList, jdbcObjects, union, unionExpression);
+
 		if(unionExpression!=null){
 			for (int i = 0; i < unionExpression.length; i++) {
 				UnionExpression ue = unionExpression[i];
@@ -367,11 +437,11 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 				_join(expression,sqlQueryObjectInnerList.get(i));
 			}
 		}
-        
-        NonNegativeNumber number = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.unionCount(jdbcProperties, log, connection, sqlQueryObject, 
-        								this.getLottoFattureFieldConverter(), LottoFatture.model(), 
-        								sqlQueryObjectInnerList, jdbcObjects, returnClassTypes, union, unionExpression);
-        if(number!=null && number.longValue()>=0){
+
+		NonNegativeNumber number = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.unionCount(jdbcProperties, log, connection, sqlQueryObject, 
+				this.getLottoFattureFieldConverter(), LottoFatture.model(), 
+				sqlQueryObjectInnerList, jdbcObjects, returnClassTypes, union, unionExpression);
+		if(number!=null && number.longValue()>=0){
 			return number;
 		}
 		else{
@@ -401,7 +471,7 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public JDBCExpression toExpression(JDBCPaginatedExpression paginatedExpression, Logger log) throws NotImplementedException, ServiceException {
 		try{
@@ -419,9 +489,9 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 			throw new ServiceException(e);
 		}
 	}
-	
-	
-	
+
+
+
 	// -- DB
 
 	@Override
@@ -429,7 +499,7 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 		_mappingTableIds(jdbcProperties,log,connection,sqlQueryObject,obj,
 				this.get(jdbcProperties,log,connection,sqlQueryObject,id,null));
 	}
-	
+
 	@Override
 	public void mappingTableIds(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, long tableId, LottoFatture obj) throws NotFoundException,NotImplementedException,ServiceException,Exception{
 		_mappingTableIds(jdbcProperties,log,connection,sqlQueryObject,obj,
@@ -486,21 +556,21 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 		}
 
 	}
-	
+
 	@Override
 	public LottoFatture get(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, long tableId, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotFoundException, MultipleResultException, NotImplementedException, ServiceException, Exception {
 		return this._get(jdbcProperties, log, connection, sqlQueryObject, Long.valueOf(tableId), idMappingResolutionBehaviour);
 	}
-	
+
 	private LottoFatture _get(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, Long tableId, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotFoundException, MultipleResultException, NotImplementedException, ServiceException, Exception {
-	
+
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 
-					new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
-		
+				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
+
 		ISQLQueryObject sqlQueryObjectGet = sqlQueryObject.newSQLQueryObject();
-				
+
 		LottoFatture lottoFatture = new LottoFatture();
-		
+
 
 		// Object lottoFatture
 		ISQLQueryObject sqlQueryObjectGet_lottoFatture = sqlQueryObjectGet.newSQLQueryObject();
@@ -552,12 +622,12 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 
 		// Get lottoFatture
 		lottoFatture = (LottoFatture) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_lottoFatture.createSQLQuery(), jdbcProperties.isShowSql(), LottoFatture.model(), this.getLottoFattureFetch(),
-			new JDBCObject(tableId,Long.class));
+				new JDBCObject(tableId,Long.class));
 
 
 		if(idMappingResolutionBehaviour==null ||
-			(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
-		){
+				(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
+				){
 			try {
 				// Object _lottoFatture_sip (recupero id)
 				ISQLQueryObject sqlQueryObjectGet_lottoFatture_sip_readFkId = sqlQueryObjectGet.newSQLQueryObject();
@@ -567,7 +637,7 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 				sqlQueryObjectGet_lottoFatture_sip_readFkId.setANDLogicOperator(true);
 				Long idFK_lottoFatture_sip = (Long) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_lottoFatture_sip_readFkId.createSQLQuery(), jdbcProperties.isShowSql(),Long.class,
 						new JDBCObject(lottoFatture.getId(),Long.class));
-				
+
 				org.govmix.proxy.fatturapa.orm.IdSip id_lottoFatture_sip = null;
 				if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
 					id_lottoFatture_sip = ((JDBCSIPServiceSearch)(this.getServiceManager().getSIPServiceSearch())).findId(idFK_lottoFatture_sip, false);
@@ -579,21 +649,21 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 			} catch(NotFoundException e) {}
 		}
 
-		
-        return lottoFatture;  
-	
+
+		return lottoFatture;  
+
 	} 
-	
+
 	@Override
 	public boolean exists(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, long tableId) throws MultipleResultException, NotImplementedException, ServiceException, Exception {
 		return this._exists(jdbcProperties, log, connection, sqlQueryObject, Long.valueOf(tableId));
 	}
-	
+
 	private boolean _exists(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, Long tableId) throws MultipleResultException, NotImplementedException, ServiceException, Exception {
-	
+
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 
-					new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
-				
+				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
+
 		boolean existsLottoFatture = false;
 
 		sqlQueryObject = sqlQueryObject.newSQLQueryObject();
@@ -606,13 +676,13 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 
 		// Exists lottoFatture
 		existsLottoFatture = jdbcUtilities.exists(sqlQueryObject.createSQLQuery(), jdbcProperties.isShowSql(),
-			new JDBCObject(tableId,Long.class));
+				new JDBCObject(tableId,Long.class));
 
-		
-        return existsLottoFatture;
-	
+
+		return existsLottoFatture;
+
 	}
-	
+
 	private void _join(IExpression expression, ISQLQueryObject sqlQueryObject) throws NotImplementedException, ServiceException, Exception{
 		if(expression.inUseModel(LottoFatture.model().DIPARTIMENTO,false)){
 			String tableName1 = this.getLottoFattureFieldConverter().toAliasTable(LottoFatture.model());
@@ -627,18 +697,18 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 		}
 
 	}
-	
+
 	protected java.util.List<Object> _getRootTablePrimaryKeyValues(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdLotto id) throws NotFoundException, ServiceException, NotImplementedException, Exception{
-	    // Identificativi
-        java.util.List<Object> rootTableIdValues = new java.util.ArrayList<Object>();
+		// Identificativi
+		java.util.List<Object> rootTableIdValues = new java.util.ArrayList<Object>();
 		Long longId = this.findIdLottoFatture(jdbcProperties, log, connection, sqlQueryObject.newSQLQueryObject(), id, true);
 		rootTableIdValues.add(longId);
-        
-        return rootTableIdValues;
+
+		return rootTableIdValues;
 	}
-	
+
 	protected Map<String, List<IField>> _getMapTableToPKColumn() throws NotImplementedException, Exception{
-	
+
 		LottoFattureFieldConverter converter = this.getLottoFattureFieldConverter();
 		Map<String, List<IField>> mapTableToPKColumn = new java.util.Hashtable<String, List<IField>>();
 		UtilsTemplate<IField> utilities = new UtilsTemplate<IField>();
@@ -647,102 +717,102 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 
 		// LottoFatture.model()
 		mapTableToPKColumn.put(converter.toTable(LottoFatture.model()),
-			utilities.newList(
-				new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model()))
-			));
+				utilities.newList(
+						new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model()))
+						));
 
 		// LottoFatture.model().ID_SIP
 		mapTableToPKColumn.put(converter.toTable(LottoFatture.model().ID_SIP),
-			utilities.newList(
-				new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().ID_SIP))
-			));
+				utilities.newList(
+						new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().ID_SIP))
+						));
 
 		// LottoFatture.model().DIPARTIMENTO
 		mapTableToPKColumn.put(converter.toTable(LottoFatture.model().DIPARTIMENTO),
-			utilities.newList(
-				new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().DIPARTIMENTO))
-			));
+				utilities.newList(
+						new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().DIPARTIMENTO))
+						));
 
 		// LottoFatture.model().DIPARTIMENTO.ENTE
 		mapTableToPKColumn.put(converter.toTable(LottoFatture.model().DIPARTIMENTO.ENTE),
-			utilities.newList(
-				new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().DIPARTIMENTO.ENTE))
-			));
+				utilities.newList(
+						new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().DIPARTIMENTO.ENTE))
+						));
 
 		// LottoFatture.model().DIPARTIMENTO.REGISTRO
 		mapTableToPKColumn.put(converter.toTable(LottoFatture.model().DIPARTIMENTO.REGISTRO),
-			utilities.newList(
-				new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().DIPARTIMENTO.REGISTRO))
-			));
+				utilities.newList(
+						new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().DIPARTIMENTO.REGISTRO))
+						));
 
 		// LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE
 		mapTableToPKColumn.put(converter.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE),
-			utilities.newList(
-				new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE))
-			));
+				utilities.newList(
+						new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE))
+						));
 
 		// LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY
 		mapTableToPKColumn.put(converter.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY),
-			utilities.newList(
-				new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY))
-			));
+				utilities.newList(
+						new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY))
+						));
 
 		// LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE
 		mapTableToPKColumn.put(converter.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE),
-			utilities.newList(
-				new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE))
-			));
+				utilities.newList(
+						new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE))
+						));
 
-        return mapTableToPKColumn;		
+		return mapTableToPKColumn;		
 	}
-	
+
 	@Override
 	public List<Long> findAllTableIds(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, JDBCPaginatedExpression paginatedExpression) throws ServiceException, NotImplementedException, Exception {
-		
+
 		List<Long> list = new ArrayList<Long>();
 
 		sqlQueryObject.setSelectDistinct(true);
 		sqlQueryObject.setANDLogicOperator(true);
 		sqlQueryObject.addSelectField(this.getLottoFattureFieldConverter().toTable(LottoFatture.model())+".id");
 		Class<?> objectIdClass = Long.class;
-		
+
 		List<Object> listaQuery = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareFindAll(jdbcProperties, log, connection, sqlQueryObject, paginatedExpression,
-												this.getLottoFattureFieldConverter(), LottoFatture.model());
-		
+				this.getLottoFattureFieldConverter(), LottoFatture.model());
+
 		_join(paginatedExpression,sqlQueryObject);
-		
+
 		List<Object> listObjects = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.findAll(jdbcProperties, log, connection, sqlQueryObject, paginatedExpression,
-																			this.getLottoFattureFieldConverter(), LottoFatture.model(), objectIdClass, listaQuery);
+				this.getLottoFattureFieldConverter(), LottoFatture.model(), objectIdClass, listaQuery);
 		for(Object object: listObjects) {
 			list.add((Long)object);
 		}
 
-        return list;
-		
+		return list;
+
 	}
-	
+
 	@Override
 	public long findTableId(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, JDBCExpression expression) throws ServiceException, NotFoundException, MultipleResultException, NotImplementedException, Exception {
-	
+
 		sqlQueryObject.setSelectDistinct(true);
 		sqlQueryObject.setANDLogicOperator(true);
 		sqlQueryObject.addSelectField(this.getLottoFattureFieldConverter().toTable(LottoFatture.model())+".id");
 		Class<?> objectIdClass = Long.class;
-		
+
 		List<Object> listaQuery = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.prepareFind(jdbcProperties, log, connection, sqlQueryObject, expression,
-												this.getLottoFattureFieldConverter(), LottoFatture.model());
-		
+				this.getLottoFattureFieldConverter(), LottoFatture.model());
+
 		_join(expression,sqlQueryObject);
 
 		Object res = org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.find(jdbcProperties, log, connection, sqlQueryObject, expression,
-														this.getLottoFattureFieldConverter(), LottoFatture.model(), objectIdClass, listaQuery);
+				this.getLottoFattureFieldConverter(), LottoFatture.model(), objectIdClass, listaQuery);
 		if(res!=null && (((Long) res).longValue()>0) ){
 			return ((Long) res).longValue();
 		}
 		else{
 			throw new NotFoundException("Not Found");
 		}
-		
+
 	}
 
 	@Override
@@ -754,17 +824,17 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 
 		InUse inUse = new InUse();
 		inUse.setInUse(false);
-		
-        return inUse;
+
+		return inUse;
 
 	}
-	
+
 	@Override
 	public IdLotto findId(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, long tableId, boolean throwNotFound)
 			throws NotFoundException, ServiceException, NotImplementedException, Exception {
-		
+
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
+				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
 
 		ISQLQueryObject sqlQueryObjectGet = sqlQueryObject.newSQLQueryObject();
 
@@ -777,7 +847,7 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 
 		// Recupero _lottoFatture
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject [] searchParams_lottoFatture = new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject [] { 
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tableId,Long.class)
+				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tableId,Long.class)
 		};
 		List<Class<?>> listaFieldIdReturnType_lottoFatture = new ArrayList<Class<?>>();
 		listaFieldIdReturnType_lottoFatture.add(LottoFatture.model().IDENTIFICATIVO_SDI.getFieldType());
@@ -796,32 +866,32 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 			id_lottoFatture = new org.govmix.proxy.fatturapa.orm.IdLotto((Boolean)listaFieldId_lottoFatture.get(1));
 			id_lottoFatture.setIdentificativoSdi((Integer)listaFieldId_lottoFatture.get(0));
 		}
-		
+
 		return id_lottoFatture;
-		
+
 	}
 
 	@Override
 	public Long findTableId(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdLotto id, boolean throwNotFound)
 			throws NotFoundException, ServiceException, NotImplementedException, Exception {
-	
+
 		return this.findIdLottoFatture(jdbcProperties,log,connection,sqlQueryObject,id,throwNotFound);
-			
+
 	}
-	
+
 	@Override
 	public List<List<Object>> nativeQuery(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, 
-											String sql,List<Class<?>> returnClassTypes,Object ... param) throws ServiceException,NotFoundException,NotImplementedException,Exception{
-		
+			String sql,List<Class<?>> returnClassTypes,Object ... param) throws ServiceException,NotFoundException,NotImplementedException,Exception{
+
 		return org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities.nativeQuery(jdbcProperties, log, connection, sqlQueryObject,
-																							sql,returnClassTypes,param);
-														
+				sql,returnClassTypes,param);
+
 	}
-	
+
 	protected Long findIdLottoFatture(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdLotto id, boolean throwNotFound) throws NotFoundException, ServiceException, NotImplementedException, Exception {
 
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
+				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
 
 		ISQLQueryObject sqlQueryObjectGet = sqlQueryObject.newSQLQueryObject();
 
@@ -836,13 +906,13 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 
 		// Recupero _lottoFatture
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject [] searchParams_lottoFatture = new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject [] { 
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id.getIdentificativoSdi(),LottoFatture.model().IDENTIFICATIVO_SDI.getFieldType()),
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id.getFatturazioneAttiva(),LottoFatture.model().FATTURAZIONE_ATTIVA.getFieldType())
+				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id.getIdentificativoSdi(),LottoFatture.model().IDENTIFICATIVO_SDI.getFieldType()),
+				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id.getFatturazioneAttiva(),LottoFatture.model().FATTURAZIONE_ATTIVA.getFieldType())
 		};
 		Long id_lottoFatture = null;
 		try{
 			id_lottoFatture = (Long) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet.createSQLQuery(), jdbcProperties.isShowSql(),
-						Long.class, searchParams_lottoFatture);
+					Long.class, searchParams_lottoFatture);
 		}catch(NotFoundException notFound){
 			if(throwNotFound){
 				throw new NotFoundException(notFound);
@@ -853,7 +923,7 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 				throw new NotFoundException("Not Found");
 			}
 		}
-		
+
 		return id_lottoFatture;
 	}
 }

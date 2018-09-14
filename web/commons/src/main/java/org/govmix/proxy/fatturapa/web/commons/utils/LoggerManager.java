@@ -248,26 +248,32 @@ public class LoggerManager {
 	}
 
 	public static Logger getBatchWorkFlowFatturaLogger() {
+		init();
 		return batchWorkFlowFatturaLogger;
 	}
 
 	public static Logger getBatchSpedizioneFatturaAttivaLogger() {
+		init();
 		return batchSpedizioneFatturaAttivaLogger;
 	}
 
 	public static Logger getBatchProtocollazioneRicevutaLogger() {
+		init();
 		return batchProtocollazioneRicevutaLogger;
 	}
 
 	public static Logger getBatchSchedulingConservazioneLogger() {
+		init();
 		return batchSchedulingConservazioneLogger;
 	}
 
 	public static Logger getBatchInvioConservazioneLogger() {
+		init();
 		return batchInvioConservazioneLogger;
 	}
 
 	public static Logger getDumpLogger() {
+		init();
 		return dumpLogger;
 	}
 
