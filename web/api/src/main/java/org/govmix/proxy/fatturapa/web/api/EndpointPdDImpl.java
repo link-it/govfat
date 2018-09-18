@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
+import org.govmix.proxy.fatturapa.orm.constants.DominioType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoInserimentoType;
@@ -179,6 +180,9 @@ public class EndpointPdDImpl implements EndpointPdD {
 				lotto.setStatoInserimento(StatoInserimentoType.NON_INSERITO);
 				lotto.setTentativiConsegna(0);
 				
+				//Gestiti solo per la fatturazione attiva
+				lotto.setPagoPA(false);
+				lotto.setDominio(DominioType.PA);
 				this.log.info("Inserimento del Lotto con identificativo SdI ["+lotto.getIdentificativoSdi()+"]...");
 				this.lottoBD.create(lotto);	
 				this.log.info("Inserimento del Lotto con identificativo SdI ["+lotto.getIdentificativoSdi()+"] completato");
