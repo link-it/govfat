@@ -21,6 +21,7 @@
 package org.govmix.proxy.fatturapa.web.commons.authorization;
 
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -44,7 +45,7 @@ public class PrincipalAuthorizationInterceptor extends AbstractPhaseInterceptor<
 	
 	public PrincipalAuthorizationInterceptor() throws Exception {
 		super(Phase.UNMARSHAL);
-		this.log = LoggerManager.getEndpointProxyPccLogger();
+		this.log = LoggerManager.getBatchStartupLogger();
 		this.utenteBD = new UtenteBD(this.log);
 	}
 
@@ -59,6 +60,12 @@ public class PrincipalAuthorizationInterceptor extends AbstractPhaseInterceptor<
 			message.put(Message.PROTOCOL_HEADERS, headers);
 		}
 		HttpServletRequest req = (HttpServletRequest) message.get("HTTP.REQUEST");
+		
+		Enumeration<String> headerNames = req.getHeaderNames();
+		while(headerNames.hasMoreElements()) {
+			String k = headerNames.nextElement();
+			this.log.debug("Header ["+k+"] ["+req.getHeader(k)+"]");
+		}
 		Identity identity = new Identity(req);
 		
 		try {
