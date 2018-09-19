@@ -12,8 +12,6 @@ import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
-import org.govmix.proxy.fatturapa.orm.constants.DominioType;
-import org.govmix.proxy.fatturapa.orm.constants.SottodominioType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFattureAttiveBD;
@@ -55,7 +53,7 @@ public class InserimentoLotti {
 						throw new InserimentoLottiException(CODICE.ERRORE_FILE_FIRMATO, request.getNomeFile(), request.getDipartimento());
 					}
 				} else {
-					if(!dipartimento.getFirmaAutomatica()){
+					if(!dipartimento.getFirmaAutomatica() && analizer.isFirmaNecessaria()){
 						throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
 					}
 				}
@@ -64,14 +62,13 @@ public class InserimentoLotti {
 				if(dipartimento.getModalitaPush()) {
 					lotto.setStatoElaborazioneInUscita(StatoElaborazioneType.PRESA_IN_CARICO);
 				} else {
-					if(!analizer.isFirmato()) {
+					if(!analizer.isFirmato()  && analizer.isFirmaNecessaria()) {
 						throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
 					}
 					
 					lotto.setStatoElaborazioneInUscita(StatoElaborazioneType.PROTOCOLLATA);
 				}
-				checkCodiceProcedimento(analizer, dipartimento);
-				
+
 				insertLotto(lotto, lottoBD, consegnaFattura);
 				IdLotto idLotto = new IdLotto(lotto.isFatturazioneAttiva());
 				idLotto.setIdentificativoSdi(lotto.getIdentificativoSdi());
@@ -101,29 +98,6 @@ public class InserimentoLotti {
 
 		return inserimentoLottoResponse;
 	}
-	
-	private void checkCodiceProcedimento(LottoFattureAnalyzer analizer, Dipartimento dipartimento) throws InserimentoLottiException {
-		if(analizer.isFirmato()) {
-			return; //TODO
-		}
-		
-		LottoFatture lotto = analizer.getLotto();
-		if(lotto.getDominio().toString().equals(DominioType.PA.toString()) || (lotto.getSottodominio()!= null && lotto.getSottodominio().toString().equals(SottodominioType.ESTERO.toString()))) {
-			if(dipartimento.getIdProcedimento() == null)
-				throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO);
-			
-			return;
-		} else if(lotto.getDominio().toString().equals(DominioType.B2B.toString()) && (lotto.getSottodominio()== null || !lotto.getSottodominio().toString().equals(SottodominioType.ESTERO.toString()))) {
-			if(dipartimento.getIdProcedimentoB2B() == null)
-				return;
-			else 
-				return;
-		} else {
-			throw new InserimentoLottiException(CODICE.ERRORE_IDENTIFICAZIONE_CODICE_PROCEDIMENTO);
-		}
-					
-	}
-
 
 	private void insertLotto(LottoFatture lotto, LottoBD lottoBD, ConsegnaFattura consegnaFattura) throws Exception {
 		this.log.info("Inserimento del Lotto con identificativo ["+lotto.getIdentificativoSdi()+"]...");
@@ -169,13 +143,11 @@ public class InserimentoLotti {
 						throw new InserimentoLottiException(CODICE.ERRORE_FILE_FIRMATO, request.getNomeFile(), request.getDipartimento());
 					}
 				} else {
-					if(!this.getDipartimento(request.getNomeFile(), request.getDipartimento()).getFirmaAutomatica()){
+					if(!this.getDipartimento(request.getNomeFile(), request.getDipartimento()).getFirmaAutomatica() && analizer.isFirmaNecessaria()){
 						throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
 					}
 				}
 				
-				checkCodiceProcedimento(analizer, dipartimento);
-
 			} catch(Exception e) {
 				throw new InserimentoLottiException(CODICE.ERRORE_FORMATO_FILE, request.getNomeFile());
 			}
@@ -188,13 +160,10 @@ public class InserimentoLotti {
 			try {
 				LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), request.getNomeFile(), 1, request.getDipartimento(), this.log);
 				
-				if(!analizer.isFirmato()) {
+				if(!analizer.isFirmato() && analizer.isFirmaNecessaria()) {
 					throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
 				}
 				
-				Dipartimento dipartimento = this.getDipartimento(request.getNomeFile(), request.getDipartimento()); //check esistenza del dipartimento
-				checkCodiceProcedimento(analizer, dipartimento);
-
 			} catch(Exception e) {
 				throw new InserimentoLottiException(CODICE.ERRORE_FORMATO_FILE, request.getNomeFile());
 			}
@@ -220,18 +189,15 @@ public class InserimentoLotti {
 
 				LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), request.getNomeFile(), identificativo, request.getDipartimento(), this.log);
 				
-				if(!analizer.isFirmato()) {
+				if(!analizer.isFirmato() && analizer.isFirmaNecessaria()) {
 					throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
 				}
 
-				Dipartimento dipartimento = this.getDipartimento(request.getNomeFile(), request.getDipartimento()); //check esistenza del dipartimento
 
 				LottoFatture lotto = analizer.getLotto();
 				lotto.setStatoElaborazioneInUscita(StatoElaborazioneType.SOLO_CONSERVAZIONE);
 				lotto.setProtocollo(request.getNumeroProtocollo() + "/" + request.getAnnoProtocollo() + "/" + request.getRegistroProtocollo());
 				
-				checkCodiceProcedimento(analizer, dipartimento);
-
 				insertLotto(lotto, lottoBD, consegnaFattura);
 				IdLotto idLotto = new IdLotto(lotto.isFatturazioneAttiva());
 				idLotto.setIdentificativoSdi(lotto.getIdentificativoSdi());

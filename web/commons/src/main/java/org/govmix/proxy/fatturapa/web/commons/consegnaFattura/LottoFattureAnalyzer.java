@@ -266,6 +266,10 @@ public class LottoFattureAnalyzer {
 	public void setLotto(LottoFatture lotto) {
 		this.lotto = lotto;
 	}
+	
+	public boolean isFirmaNecessaria() {
+		return this.lotto.getDominio().toString().equals(DominioType.PA) || (this.getLotto().getSottodominio() != null && this.getLotto().getSottodominio().toString().equals(SottodominioType.ESTERO));
+	}
 
 	
 }
