@@ -138,6 +138,13 @@ public class DipartimentoFieldConverter extends AbstractSQLFieldConverter {
 				return "nome";
 			}
 		}
+		if(field.equals(Dipartimento.model().REGISTRO.USERNAME)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".username";
+			}else{
+				return "username";
+			}
+		}
 		if(field.equals(Dipartimento.model().LISTA_EMAIL_NOTIFICHE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".lista_email_notifiche";
@@ -207,6 +214,9 @@ public class DipartimentoFieldConverter extends AbstractSQLFieldConverter {
 			return this.toTable(Dipartimento.model(), returnAlias);
 		}
 		if(field.equals(Dipartimento.model().REGISTRO.NOME)){
+			return this.toTable(Dipartimento.model().REGISTRO, returnAlias);
+		}
+		if(field.equals(Dipartimento.model().REGISTRO.USERNAME)){
 			return this.toTable(Dipartimento.model().REGISTRO, returnAlias);
 		}
 		if(field.equals(Dipartimento.model().LISTA_EMAIL_NOTIFICHE)){

@@ -147,13 +147,13 @@ public class DipartimentoFetch extends AbstractJDBCFetch {
 			if(model.equals(Dipartimento.model().ENTE)){
 				IdEnte object = new IdEnte();
 				setParameter(object, "setNome", Dipartimento.model().ENTE.NOME.getFieldType(),
-					this.getObjectFromMap(map,"ente.nome"));
+						this.getObjectFromMap(map,"ente.nome"));
 				return object;
 			}
 			if(model.equals(Dipartimento.model().REGISTRO)){
 				IdRegistro object = new IdRegistro();
 				setParameter(object, "setNome", Dipartimento.model().REGISTRO.NOME.getFieldType(),
-					this.getObjectFromMap(map,"registro.nome"));
+					this.getObjectFromMap(map,"registro_nome"));
 				return object;
 			}
 			

@@ -43,6 +43,7 @@ public class IdRegistroModel extends AbstractModel<IdRegistro> {
 		super();
 	
 		this.NOME = new Field("nome",java.lang.String.class,"id-registro",IdRegistro.class);
+		this.USERNAME = new Field("username",java.lang.String.class,"id-registro",IdRegistro.class);
 	
 	}
 	
@@ -51,12 +52,15 @@ public class IdRegistroModel extends AbstractModel<IdRegistro> {
 		super(father);
 	
 		this.NOME = new ComplexField(father,"nome",java.lang.String.class,"id-registro",IdRegistro.class);
+		this.USERNAME = new ComplexField(father,"username",java.lang.String.class,"id-registro",IdRegistro.class);
 	
 	}
 	
 	
 
 	public IField NOME = null;
+	 
+	public IField USERNAME = null;
 	 
 
 	@Override

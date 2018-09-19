@@ -34,6 +34,7 @@ import org.govmix.proxy.fatturapa.orm.IdRegistro;
 import org.govmix.proxy.fatturapa.orm.dao.IDBDipartimentoPropertyServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.DipartimentoFieldConverter;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.DipartimentoFetch;
+import org.openspcoop2.generic_project.beans.AliasField;
 import org.openspcoop2.generic_project.beans.CustomField;
 import org.openspcoop2.generic_project.beans.FunctionField;
 import org.openspcoop2.generic_project.beans.IField;
@@ -172,7 +173,8 @@ public class JDBCDipartimentoServiceSearchImpl implements IJDBCDipartimentoServi
 			fields.add(Dipartimento.model().ID_PROCEDIMENTO);
 			fields.add(Dipartimento.model().ID_PROCEDIMENTO_B2B);
 			fields.add(Dipartimento.model().ENTE.NOME);
-			fields.add(Dipartimento.model().REGISTRO.NOME);
+			fields.add(Dipartimento.model().REGISTRO.USERNAME);
+			fields.add(new AliasField(new CustomField("nome", String.class, "nome", this.getFieldConverter().toTable(Dipartimento.model().REGISTRO.NOME)), "registro_nome"));
 
 			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));
 			
