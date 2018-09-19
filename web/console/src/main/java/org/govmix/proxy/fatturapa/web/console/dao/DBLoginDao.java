@@ -256,6 +256,7 @@ public class DBLoginDao implements ILoginDao{
 				List<Map<String,Object>> select = this.dipartimentoDAO.select(pagExpr, true,
 						Dipartimento.model().CODICE,Dipartimento.model().DESCRIZIONE,
 						Dipartimento.model().ACCETTAZIONE_AUTOMATICA, Dipartimento.model().MODALITA_PUSH, Dipartimento.model().FATTURAZIONE_ATTIVA,
+						Dipartimento.model().ID_PROCEDIMENTO,Dipartimento.model().ID_PROCEDIMENTO_B2B,
 						Dipartimento.model().FIRMA_AUTOMATICA,Dipartimento.model().ENTE.NOME, cf);
 
 				Map<Long, IdRegistro> registrimap = getRegistriMap();
