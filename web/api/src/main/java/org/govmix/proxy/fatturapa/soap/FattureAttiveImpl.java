@@ -80,9 +80,6 @@ public class FattureAttiveImpl implements FattureAttive {
 			request.setNomeFile(inviaFatturaRichiestaTipo.getNomeFileFattura());
 			request.setXml(getBytes(inviaFatturaRichiestaTipo.getFileFattura()));
 			
-			FileSystemUtilities.writeFile("/tmp/"+inviaFatturaRichiestaTipo.getNomeFileFattura(), request.getXml());
-			this.log.debug("File scritto in /tmp/"+inviaFatturaRichiestaTipo.getNomeFileFattura());
-
 			requestList.add(request);
 			InserimentoLottoResponse inserisciLotto = inserimento.inserisciLotto(requestList);
 

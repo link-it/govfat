@@ -70,7 +70,7 @@ public class InserimentoLotti {
 					
 					lotto.setStatoElaborazioneInUscita(StatoElaborazioneType.PROTOCOLLATA);
 				}
-				checkCodiceProcedimento(lotto, dipartimento);
+				checkCodiceProcedimento(analizer, dipartimento);
 				
 				insertLotto(lotto, lottoBD, consegnaFattura);
 				IdLotto idLotto = new IdLotto(lotto.isFatturazioneAttiva());
@@ -102,7 +102,12 @@ public class InserimentoLotti {
 		return inserimentoLottoResponse;
 	}
 	
-	private void checkCodiceProcedimento(LottoFatture lotto, Dipartimento dipartimento) throws InserimentoLottiException {
+	private void checkCodiceProcedimento(LottoFattureAnalyzer analizer, Dipartimento dipartimento) throws InserimentoLottiException {
+		if(analizer.isFirmato()) {
+			return; //TODO
+		}
+		
+		LottoFatture lotto = analizer.getLotto();
 		if(lotto.getDominio().toString().equals(DominioType.PA.toString()) || (lotto.getSottodominio()!= null && lotto.getSottodominio().toString().equals(SottodominioType.ESTERO.toString()))) {
 			if(dipartimento.getIdProcedimento() == null)
 				throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO);
@@ -169,7 +174,7 @@ public class InserimentoLotti {
 					}
 				}
 				
-				checkCodiceProcedimento(analizer.getLotto(), dipartimento);
+				checkCodiceProcedimento(analizer, dipartimento);
 
 			} catch(Exception e) {
 				throw new InserimentoLottiException(CODICE.ERRORE_FORMATO_FILE, request.getNomeFile());
@@ -188,7 +193,7 @@ public class InserimentoLotti {
 				}
 				
 				Dipartimento dipartimento = this.getDipartimento(request.getNomeFile(), request.getDipartimento()); //check esistenza del dipartimento
-				checkCodiceProcedimento(analizer.getLotto(), dipartimento);
+				checkCodiceProcedimento(analizer, dipartimento);
 
 			} catch(Exception e) {
 				throw new InserimentoLottiException(CODICE.ERRORE_FORMATO_FILE, request.getNomeFile());
@@ -225,7 +230,7 @@ public class InserimentoLotti {
 				lotto.setStatoElaborazioneInUscita(StatoElaborazioneType.SOLO_CONSERVAZIONE);
 				lotto.setProtocollo(request.getNumeroProtocollo() + "/" + request.getAnnoProtocollo() + "/" + request.getRegistroProtocollo());
 				
-				checkCodiceProcedimento(analizer.getLotto(), dipartimento);
+				checkCodiceProcedimento(analizer, dipartimento);
 
 				insertLotto(lotto, lottoBD, consegnaFattura);
 				IdLotto idLotto = new IdLotto(lotto.isFatturazioneAttiva());
