@@ -158,47 +158,5 @@ public class EndpointEnteImpl implements EndpointEnte {
 	}
 
 
-	@Override
-	public Response postRiceviFatturaAttiva(String fileName, String dipartimento, InputStream fatturaStream) {
-		try {
-			this.log.info("Invoke riceviFatturaAttiva");
-			
-			if(fileName == null) {
-				throw new Exception("Il parametro fileName non puo' essere null");
-			}
-			
-			if(dipartimento == null) {
-				throw new Exception("Il parametro dipartimento non puo' essere null");
-			}
-			
-			if(fatturaStream == null) {
-				throw new Exception("Il parametro fatturaStream non puo' essere null");
-			}
-			
-			InserimentoLotti inserimento = new InserimentoLotti(this.log);
-
-			inserimento.setDipartimenti(new DipartimentoBD(log).findAll());
-			List<InserimentoLottoRequest> requestList = new ArrayList<InserimentoLottoRequest>();
-			InserimentoLottoRequest request = new InserimentoLottoRequest();
-
-			request.setDipartimento(dipartimento);
-			request.setNomeFile(fileName);
-			request.setXml(IOUtils.toByteArray(fatturaStream));
-			
-			requestList.add(request);
-			InserimentoLottoResponse inserisciLotto = inserimento.inserisciLotto(requestList);
-			
-			if(ESITO.OK.toString().equals(inserisciLotto.getEsito().toString())) {
-				this.log.info("riceviFatturaAttiva completata con successo");
-				return Response.ok(inserisciLotto.getLstIdentificativoEfatt().get(0).getIdentificativoSdi()).build();
-			} else {
-				throw inserisciLotto.getEccezione();
-			}
-		} catch(Exception e) {
-			this.log.info("riceviFatturaAttiva completata con errore: "+ e.getMessage(), e);
-			return Response.status(500).build();
-		}
-	}
-
 
 }
