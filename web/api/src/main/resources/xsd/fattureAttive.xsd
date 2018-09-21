@@ -40,7 +40,7 @@
 		        <xs:element name="identificativoSDI" type="tns:identificativoSDITipo"/>
 		        <xs:element name="identificativoUO" type="tns:identificativoUOTipo"/>
 		    </xs:choice>
-		    <xs:element name="protocollo" type="tns:protocolloTipo"/>
+		    <xs:element name="protocollo" type="tns:protocolloTipo" minOccurs="0"/>
 		    <xs:element name="notifiche" type="tns:notificheTipo" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>

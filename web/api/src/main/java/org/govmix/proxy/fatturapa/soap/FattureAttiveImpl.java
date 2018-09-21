@@ -126,7 +126,7 @@ public class FattureAttiveImpl implements FattureAttive {
 			}
 
 
-			if(fattura.getProtocollo()!=null) { //TODO stato fattura
+			if(fattura.getProtocollo()!=null) {
 				String[] split = fattura.getProtocollo().split("/");
 				if(split.length == 3) {
 					ProtocolloTipo protocollo = new ProtocolloTipo();
