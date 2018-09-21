@@ -126,19 +126,16 @@ public class FattureAttiveImpl implements FattureAttive {
 			}
 
 
-			if(fattura.getProtocollo()!=null) {
+			if(fattura.getProtocollo()!=null) { //TODO stato fattura
 				String[] split = fattura.getProtocollo().split("/");
-				if(split.length != 3) {
-					throw new Exception("Protocollo non valido, atteso formato numero / anno / registro");
+				if(split.length == 3) {
+					ProtocolloTipo protocollo = new ProtocolloTipo();
+					protocollo.setNumero(Integer.parseInt(split[0].trim()));
+					protocollo.setAnno(Integer.parseInt(split[1].trim()));
+					protocollo.setRegistro(split[2].trim());
+					risposta.setProtocollo(protocollo);
 				}
-				
-				ProtocolloTipo protocollo = new ProtocolloTipo();
-				protocollo.setNumero(Integer.parseInt(split[0].trim()));
-				protocollo.setAnno(Integer.parseInt(split[1].trim()));
-				protocollo.setRegistro(split[2].trim());
-				risposta.setProtocollo(protocollo);
 			}
-			
 			TracciaSdIBD tracciaBD = new TracciaSdIBD(this.log);
 			
 			TracciaSdIFilter filter = tracciaBD.newFilter();
