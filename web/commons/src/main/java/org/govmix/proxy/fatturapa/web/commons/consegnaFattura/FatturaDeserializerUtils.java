@@ -257,6 +257,17 @@ public class FatturaDeserializerUtils {
 		return converter.getFatturaElettronica();
 	}
 
+	public static AbstractFatturaConverter<?> getConverter(Logger log, byte[] raw, Integer identificativo, int posizione, String messageId,
+			String nomeFile, String type, boolean fatturazioneAttiva, String dipartimento) throws Exception {
+		LottoFatture lotto = getLotto(getParams(raw, identificativo, messageId, nomeFile, fatturazioneAttiva, type), dipartimento);
+		
+		byte[] lottoXml = ConsegnaFatturaUtils.getLottoXml(lotto, log);
+		List<byte[]> fattureLst =ConsegnaFatturaUtils.getXmlWithSDIUtils(lottoXml);
+
+		ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(lotto, posizione, nomeFile, fattureLst.get(posizione-1));
+		return ConsegnaFattura.getConverter(params);
+	}
+
 
 	
 }
