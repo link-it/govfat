@@ -38,6 +38,7 @@ import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.utils.resources.FileSystemUtilities;
+import org.openspcoop2.utils.resources.InputStreamDataSource;
 
 public class FattureAttiveImpl implements FattureAttive {
 
@@ -148,11 +149,11 @@ public class FattureAttiveImpl implements FattureAttive {
 				for(TracciaSDI traccia: tracce) {
 					switch(traccia.getTipoComunicazione()) {
 					case AT:
-						notifiche.setAttestazioneTrasmissioneFattura(getRaw(traccia.getRawData(), traccia.getContentType()));
+						notifiche.setAttestazioneTrasmissioneFattura(getRaw(traccia));
 						add = true;
 						break;
 					case DT:
-						notifiche.setNotificaDecorrenzaTermini(getRaw(traccia.getRawData(), traccia.getContentType()));
+						notifiche.setNotificaDecorrenzaTermini(getRaw(traccia));
 						add = true;
 						break;
 					case EC: //Solo fatturazione passiva
@@ -162,23 +163,23 @@ public class FattureAttiveImpl implements FattureAttive {
 					case FAT_OUT: //traccia della fattura
 						break;
 					case MC:
-						notifiche.setNotificaMancataConsegna(getRaw(traccia.getRawData(), traccia.getContentType()));
+						notifiche.setNotificaMancataConsegna(getRaw(traccia));
 						add = true;
 						break;
 					case MT: //Metadati non gestiti
 						break;
 					case NE:
 						if(traccia.getPosizione()==null || traccia.getPosizione().equals(fattura.getPosizione())) { // la posizione e' opzionale
-							notifiche.setNotificaEsito(getRaw(traccia.getRawData(), traccia.getContentType()));
+							notifiche.setNotificaEsito(getRaw(traccia));
 							add = true;
 						}
 						break;
 					case NS:
-						notifiche.setNotificaScarto(getRaw(traccia.getRawData(), traccia.getContentType()));
+						notifiche.setNotificaScarto(getRaw(traccia));
 						add = true;
 						break;
 					case RC:
-						notifiche.setRicevutaConsegna(getRaw(traccia.getRawData(), traccia.getContentType()));
+						notifiche.setRicevutaConsegna(getRaw(traccia));
 						add = true;
 						break;
 					case SE: //Solo fatturazione passiva
@@ -220,12 +221,13 @@ public class FattureAttiveImpl implements FattureAttive {
 
 	}
 
-//	private static byte[] getRaw(byte[] bytes, String contentType) {
-//		return bytes;
+//	private static byte[] getRaw(TracciaSDI traccia) {
+//		return traccia.getRawData();
 //	}
-	
-	private static DataHandler getRaw(byte[] bytes, String contentType) {
-		return new DataHandler(bytes, contentType);
+
+	private static DataHandler getRaw(TracciaSDI traccia) throws IOException {
+		InputStreamDataSource isds = new InputStreamDataSource(traccia.getNomeFile(), traccia.getContentType(), traccia.getRawData());
+		return new DataHandler(isds);
 	}
 
 }
