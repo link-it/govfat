@@ -20,6 +20,9 @@
  */
 package org.govmix.proxy.fatturapa.web.console.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
@@ -67,6 +70,9 @@ public class ConsoleProperties extends AbstractProperties {
 	private Integer numeroGiorniAttesaPerInvioConservazione = null;
 	
 	private TreeMap<String, String> codiciErrorePCC = null;
+	
+	
+	private List<String> listaNomiPropertiesDipartimentoObbligatorie = null;
 	
 	
 	private static final String propertiesPath = "/fatturapa.properties";
@@ -146,6 +152,13 @@ public class ConsoleProperties extends AbstractProperties {
 		String numeroGiorniAttesaPerInvioConservazioneS = this.getProperty("org.govmix.proxy.fatturapa.conservazione.giorniIntervallo", true);
 		if(numeroGiorniAttesaPerInvioConservazioneS != null) {
 			this.numeroGiorniAttesaPerInvioConservazione = Integer.parseInt(numeroGiorniAttesaPerInvioConservazioneS);
+		}
+		
+		String listaNomiPropertiesDipartimentoObbligatorieS = this.getProperty("org.govmix.proxy.fatturapa.dipartimenti.propertiesObbligatorie", false);
+		if(listaNomiPropertiesDipartimentoObbligatorieS != null) {
+			String[] split = listaNomiPropertiesDipartimentoObbligatorieS.split(",");
+			if(split != null && split.length > 0)
+				this.listaNomiPropertiesDipartimentoObbligatorie = Arrays.asList(split);
 		}
 		
 	}
@@ -262,6 +275,13 @@ public class ConsoleProperties extends AbstractProperties {
 
 	public Integer getNumeroGiorniAttesaPerInvioConservazione() {
 		return numeroGiorniAttesaPerInvioConservazione;
+	}
+
+	public List<String> getListaNomiPropertiesDipartimentoObbligatorie() {
+		if(this.listaNomiPropertiesDipartimentoObbligatorie == null)
+			this.listaNomiPropertiesDipartimentoObbligatorie = new ArrayList<String>();
+		
+		return listaNomiPropertiesDipartimentoObbligatorie;
 	}
 	
 }

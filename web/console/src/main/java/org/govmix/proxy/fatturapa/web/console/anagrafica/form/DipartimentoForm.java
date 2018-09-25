@@ -43,10 +43,10 @@ import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.bean.DipartimentoBean;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.bean.EnteBean;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.mbean.DipartimentoMBean;
+import org.govmix.proxy.fatturapa.web.console.util.ConsoleProperties;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.govmix.proxy.fatturapa.web.console.util.input.FatturaPAFactory;
 import org.govmix.proxy.fatturapa.web.console.util.input.factory.FatturaPAInputFactoryImpl;
-import org.openspcoop2.generic_project.web.factory.FactoryException;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
 import org.openspcoop2.generic_project.web.form.Form;
@@ -120,6 +120,8 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 	private List<PccOperazione> listaProprietaConsentiteAiDipartimenti;
 
 	private DipartimentoMBean mbean = null;
+	
+	private List<String> nomiPropertiesObbligatorie = null;
 
 	public DipartimentoForm (){
 		this.dipartimentoPattern = Pattern.compile(DipartimentoForm.DIPARTIMENTO_PATTERN);
@@ -224,8 +226,10 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 			this.setField(this.codiceProcedimentoB2B);
 			
 			this.properties = new ArrayList<Text>();
+			
+			this.nomiPropertiesObbligatorie = ConsoleProperties.getInstance(LoggerManager.getConsoleLogger()).getListaNomiPropertiesDipartimentoObbligatorie();
 
-		}catch(FactoryException e){
+		}catch(Exception e){
 
 		}
 	}
@@ -325,7 +329,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 				for (DipartimentoPropertyValue prop : bean.getDTO().getDipartimentoPropertyValueList()) {
 					proprieta = factory.getInputFieldFactory().createText();
 
-					proprieta.setRequired(mod);
+					proprieta.setRequired(mod && this.nomiPropertiesObbligatorie.contains(prop.getIdProperty().getNome())); 
 					proprieta.setLabel(prop.getIdProperty().getNome());
 					proprieta.setName("prop_" + prop.getIdProperty().getNome());
 					proprieta.setDefaultValue(prop.getValore());
@@ -573,7 +577,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 
 			for (FormField<String> prop : this.properties) {
 				String _valore = prop.getValue();
-				if(StringUtils.isEmpty(_valore))
+				if(prop.isRequired() && StringUtils.isEmpty(_valore))
 					return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromCommonsResourceBundle(CostantiForm.FIELD_NON_PUO_ESSERE_VUOTO, prop.getLabel());	
 			}
 			//			String _endpoint = this.endpoint.getValue();
@@ -773,9 +777,11 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		boolean mod = this.modalitaPush.getValue() != null ? (this.getModalitaPush().getValue() ? true : false) : false;
 
 		for (FormField<String> proprieta : this.properties) {
-			proprieta.setRequired(mod);
+			String nomeProp = proprieta.getName();
+			nomeProp = nomeProp.substring(nomeProp.lastIndexOf("prop_")+"prop_".length());
+			boolean req = mod && this.nomiPropertiesObbligatorie.contains(nomeProp);
+			proprieta.setRequired(req);
 		}
-
 
 		return this.properties;
 	}
@@ -833,16 +839,25 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		this.endpoint.setRendered(false);
 		this.password.setRendered(false);
 		this.username.setRendered(false);
+		
+		if(this.properties != null) {
+			for (FormField<String> proprieta : this.properties) {
+				proprieta.setRequired(false);
+			}
+		}
 
 		boolean mod = this.modalitaPush.getValue() != null ? (this.getModalitaPush().getValue() ? true : false) : false;
-
+		
 		if(mod){
 			this.endpoint.setRendered(true);
 			this.password.setRendered(true);
 			this.username.setRendered(true);
 
 			for (FormField<String> proprieta : this.properties) {
-				proprieta.setRequired(mod);
+				String nomeProp = proprieta.getName();
+				nomeProp = nomeProp.substring(nomeProp.lastIndexOf("prop_")+"prop_".length());
+				boolean req = mod && this.nomiPropertiesObbligatorie.contains(nomeProp);
+				proprieta.setRequired(req);
 			}
 		}
 
