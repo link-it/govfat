@@ -21,11 +21,13 @@
 package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
@@ -147,7 +149,12 @@ public class FatturaBD extends BaseBD {
 			FatturaFilter filter = this.newFilter();
 			filter.setCodiceDestinatario(codiceDipartimento);
 			filter.setNumero(numero);
-			filter.setDataFattura(dataFattura);
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			sdf.setTimeZone(TimeZone.getTimeZone("CET"));
+			sdf.setLenient(false);
+
+			filter.setDataFattura(sdf.parse(sdf.format(dataFattura)));
 
 			FilterSortWrapper sort = new FilterSortWrapper();
 			sort.setField(FatturaElettronica.model().DATA);
