@@ -54,7 +54,7 @@ public class LottoFattureAnalyzer {
 			this.isP7M = true;
 			this.isFirmato = true;
 		} catch(Throwable t) {
-			log.debug("Errore durante l'acquisizione del lotto P7M:" + t.getMessage() + ". Provo ad acquisire lotto XML");
+			log.debug("Acquisizione lotto P7M non riuscita...provo ad acquisire lotto XML. Motivo della mancata acuisizione:" + t.getMessage());
 			this.isP7M = false;
 			try {
 				this.decoded = extractContentFromXadesSignedFile(lottoFatture);
