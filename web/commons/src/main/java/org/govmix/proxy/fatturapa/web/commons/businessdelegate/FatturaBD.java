@@ -150,11 +150,7 @@ public class FatturaBD extends BaseBD {
 			filter.setCodiceDestinatario(codiceDipartimento);
 			filter.setNumero(numero);
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			sdf.setTimeZone(TimeZone.getTimeZone("CET"));
-			sdf.setLenient(false);
-
-			filter.setDataFattura(sdf.parse(sdf.format(dataFattura)));
+			filter.setDataFattura(dataFattura);
 
 			FilterSortWrapper sort = new FilterSortWrapper();
 			sort.setField(FatturaElettronica.model().DATA);
