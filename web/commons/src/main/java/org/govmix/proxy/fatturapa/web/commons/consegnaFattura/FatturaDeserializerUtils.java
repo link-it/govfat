@@ -229,6 +229,22 @@ public class FatturaDeserializerUtils {
 		}
 	}
 
+	public static String getPartitaIVAMittenteFromFattura(FatturaElettronica fattura) throws Exception {
+		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+			FatturaV10Converter converter = new FatturaV10Converter(fattura.getXml(), null);
+			return converter.getFattura().getFatturaElettronicaHeader().getCedentePrestatore().getDatiAnagrafici().getIdFiscaleIVA().getIdCodice();
+		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+			FatturaV11Converter converter = new FatturaV11Converter(fattura.getXml(), null);
+			return converter.getFattura().getFatturaElettronicaHeader().getCedentePrestatore().getDatiAnagrafici().getIdFiscaleIVA().getIdCodice();
+		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.getValue().equals(fattura.getFormatoTrasmissione().getValue()) || 
+				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+			FPA12Converter converter = new FPA12Converter(fattura.getXml(), null);
+			return converter.getFattura().getFatturaElettronicaHeader().getCedentePrestatore().getDatiAnagrafici().getIdFiscaleIVA().getIdCodice();
+		} else {
+			throw new Exception("Formato FatturaPA ["+fattura.getFormatoTrasmissione()+"] non riconosciuto");
+		}
+	}
+
 	public static String getCodiceFiscaleDestinatarioFromFattura(FatturaElettronica fattura) throws Exception {
 		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
 			FatturaV10Converter converter = new FatturaV10Converter(fattura.getXml(), null);
