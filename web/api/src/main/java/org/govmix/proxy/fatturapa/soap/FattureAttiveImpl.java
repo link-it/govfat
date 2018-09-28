@@ -3,13 +3,10 @@
  */
 package org.govmix.proxy.fatturapa.soap;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.activation.DataHandler;
 import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
@@ -37,8 +34,6 @@ import org.govmix.proxy.fatturapa.web.commons.fatturaattiva.EsitoInvioFattura.ES
 import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.openspcoop2.generic_project.exception.NotFoundException;
-import org.openspcoop2.utils.resources.FileSystemUtilities;
-import org.openspcoop2.utils.resources.InputStreamDataSource;
 
 public class FattureAttiveImpl implements FattureAttive {
 
@@ -199,35 +194,35 @@ public class FattureAttiveImpl implements FattureAttive {
 		}
 	}
 	
-//	private byte[] getBytes(byte[] bytes) {
-//		return bytes;
-//	}
-
-	private byte[] getBytes(DataHandler dataHandler) throws IOException {
-		ByteArrayOutputStream baos = null;
-		try {
-			baos = new ByteArrayOutputStream();
-			FileSystemUtilities.copy(dataHandler.getInputStream(), baos);
-			
-			return baos.toByteArray();
-		} finally {
-			if(baos != null) {
-				try {
-					baos.flush();
-					baos.close();
-				} catch(Exception e) {}
-			}
-		}
-
+	private byte[] getBytes(byte[] bytes) {
+		return bytes;
 	}
 
-//	private static byte[] getRaw(TracciaSDI traccia) {
-//		return traccia.getRawData();
+//	private byte[] getBytes(DataHandler dataHandler) throws IOException {
+//		ByteArrayOutputStream baos = null;
+//		try {
+//			baos = new ByteArrayOutputStream();
+//			FileSystemUtilities.copy(dataHandler.getInputStream(), baos);
+//			
+//			return baos.toByteArray();
+//		} finally {
+//			if(baos != null) {
+//				try {
+//					baos.flush();
+//					baos.close();
+//				} catch(Exception e) {}
+//			}
+//		}
+//
 //	}
 
-	private static DataHandler getRaw(TracciaSDI traccia) throws IOException {
-		InputStreamDataSource isds = new InputStreamDataSource(traccia.getNomeFile(), traccia.getContentType(), traccia.getRawData());
-		return new DataHandler(isds);
+	private static byte[] getRaw(TracciaSDI traccia) {
+		return traccia.getRawData();
 	}
+
+//	private static DataHandler getRaw(TracciaSDI traccia) throws IOException {
+//		InputStreamDataSource isds = new InputStreamDataSource(traccia.getNomeFile(), traccia.getContentType(), traccia.getRawData());
+//		return new DataHandler(isds);
+//	}
 
 }

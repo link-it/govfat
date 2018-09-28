@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema targetNamespace="http://www.govmix.org/fatturaPA/" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:tns="http://www.govmix.org/fatturaPA/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wsi="http://ws-i.org/profiles/basic/1.1/xsd" version="1.0">
-
-<xs:import namespace="http://ws-i.org/profiles/basic/1.1/xsd"
-                schemaLocation="./swaref.xsd"/>
+<xs:schema targetNamespace="http://www.govmix.org/fatturaPA/" xmlns:tns="http://www.govmix.org/fatturaPA/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
 
     <xs:element name="inviaFatturaRichiestaTipo" type="tns:inviaFatturaRichiestaTipo"/>
     <xs:element name="riceviNotificheRichiestaTipo" type="tns:riceviNotificheRichiestaTipo"/>
@@ -23,7 +20,7 @@
 		<xs:sequence>
 		    <xs:element name="codiceUO" type="xs:string"/>
 		    <xs:element name="nomeFileFattura" type="xs:string"/>
-		    <xs:element name="fileFattura"  type="wsi:swaRef"/>
+		    <xs:element name="fileFattura"  type="xs:base64Binary"/>
 		</xs:sequence>
 	</xs:complexType>
     <xs:complexType name="riceviNotificheRichiestaTipo">
@@ -67,12 +64,12 @@
     </xs:complexType>
     <xs:complexType name="notificheTipo">
         <xs:sequence>
-            <xs:element name="ricevutaConsegna" type="wsi:swaRef" minOccurs="0"/>
-            <xs:element name="notificaMancataConsegna" type="wsi:swaRef" minOccurs="0"/>
-            <xs:element name="notificaScarto" type="wsi:swaRef" minOccurs="0"/>
-            <xs:element name="notificaEsito" type="wsi:swaRef" minOccurs="0"/>
-            <xs:element name="notificaDecorrenzaTermini" type="wsi:swaRef" minOccurs="0"/>
-            <xs:element name="attestazioneTrasmissioneFattura" type="wsi:swaRef" minOccurs="0"/>
+            <xs:element name="ricevutaConsegna" type="xs:base64Binary" minOccurs="0"/>
+            <xs:element name="notificaMancataConsegna" type="xs:base64Binary" minOccurs="0"/>
+            <xs:element name="notificaScarto" type="xs:base64Binary" minOccurs="0"/>
+            <xs:element name="notificaEsito" type="xs:base64Binary" minOccurs="0"/>
+            <xs:element name="notificaDecorrenzaTermini" type="xs:base64Binary" minOccurs="0"/>
+            <xs:element name="attestazioneTrasmissioneFattura" type="xs:base64Binary" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
     <xs:simpleType name="String20Tipo">
