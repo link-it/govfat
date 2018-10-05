@@ -162,87 +162,85 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 					this.log.debug("Aggiornamento entry SIP su db per il lotto ["+lotto.getIdentificativoSdi()+"] completata.");
 
 					List<FatturaBean> fatturaList = input != null ? input.getFattureLst() : null;
-					while(fatturaList != null && !fatturaList.isEmpty()) {
 						
-						this.log.debug("Invio in conservazione delle fatture associate al lotto ["+lotto.getIdentificativoSdi()+"] in corso...");
-						for(FatturaBean fatturaBean: fatturaList) {
-							FatturaElettronica fattura = fatturaBean.getFattura();
+					this.log.debug("Invio in conservazione delle fatture associate al lotto ["+lotto.getIdentificativoSdi()+"] in corso...");
+					for(FatturaBean fatturaBean: fatturaList) {
+						FatturaElettronica fattura = fatturaBean.getFattura();
 
-							String numero = null;
-							String registro = null;
-							Integer anno = null;
-							String rapportoVersamentoFat = null;
-							StatoConsegnaType statoConsegnaFat = null;
-							StatoConservazioneType statoConservazioneFat = null;
-							ChiaveType chiaveFat = null;
-							UnitaDocumentariaFatturaPassivaInput inputFat = null;
-							UnitaDocumentariaBean requestFat = null;
+						String numero = null;
+						String registro = null;
+						Integer anno = null;
+						String rapportoVersamentoFat = null;
+						StatoConsegnaType statoConsegnaFat = null;
+						StatoConservazioneType statoConservazioneFat = null;
+						ChiaveType chiaveFat = null;
+						UnitaDocumentariaFatturaPassivaInput inputFat = null;
+						UnitaDocumentariaBean requestFat = null;
 
-							try {
-								// creare unita doc con builderFatturaPassivaMultipla
-								inputFat = this.getUnitaDocumentariaFatturaPassiva(props, fatturaBean); 
-								requestFat = builderFatturaPassivaMultipla.build(inputFat);
-								chiaveFat = request.getUnitaDocumentaria().getIntestazione().getChiave();
-							}catch (ServiceException e) {
-								log.error("impossibile creare l'UnitaDocumentaria per la fattura ["+fattura.getIdentificativoSdi()+"].",e); 
-								statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
-								statoConservazioneFat = StatoConservazioneType.ERRORE_CONSEGNA;
-								spedizione = false;
-							}
-
-							// informazioni sulla chiave
-							if(chiaveFat != null) {
-								numero = chiave.getNumero();
-								anno = chiave.getAnno();
-								registro = chiave.getTipoRegistro();
-							}
-
-							if(spedizione) {
-								this.log.debug("Invio fattura ["+fattura.getIdentificativoSdi()+"] in conservazione in corso...");
-								ParERResponse responseFattura = client.invia(requestFat);
-								this.log.debug("Invio fattura ["+fattura.getIdentificativoSdi()+"] in conservazione completata con esito ["+responseFattura.getStato()+"].");
-								
-								switch(responseFattura.getStato()) {
-								case ERRORE_CONNESSIONE:
-									statoConservazioneFat = StatoConservazioneType.ERRORE_CONSEGNA;
-									statoConsegnaFat = StatoConsegnaType.ERRORE_CONSEGNA;
-									break;
-								case KO:
-									statoConservazioneFat = StatoConservazioneType.CONSERVAZIONE_FALLITA;
-									statoConsegnaFat = StatoConsegnaType.ERRORE_CONSEGNA;
-									rapportoVersamentoFat = responseFattura.getEsitoVersamento();
-									break;
-								case OK:
-									statoConservazioneFat = StatoConservazioneType.CONSERVAZIONE_COMPLETATA;
-									statoConsegnaFat = StatoConsegnaType.CONSEGNATA; 
-									rapportoVersamentoFat = responseFattura.getRapportoVersamento();
-									break;
-								}
-								
-								
-							}
-
-							//aggiornare sip e fattura in trnasazione
-							boolean oldAutoCommit = connection.getAutoCommit();
-							try {
-								this.log.debug("Aggiornamento entry SIP su db per la fattura ["+fattura.getIdentificativoSdi()+"] in corso...");
-								connection.setAutoCommit(false);
-								sipBD.update(fattura.getIdSIP(), rapportoVersamentoFat, statoConsegnaFat, numero, anno, registro);
-								fatturaElettronicaBD.updateStatoConservazione(fattura, statoConservazioneFat);
-								connection.commit();
-								this.log.debug("Aggiornamento entry SIP su db per la fattura ["+fattura.getIdentificativoSdi()+"] completata.");
-							}catch(Exception e) {
-								log.error("impossibile aggiornare la entry SIP su db per la fattura ["+fattura.getIdentificativoSdi()+"].",e); 
-								connection.rollback();
-							} finally {
-								connection.setAutoCommit(oldAutoCommit);
-							}
+						try {
+							// creare unita doc con builderFatturaPassivaMultipla
+							inputFat = this.getUnitaDocumentariaFatturaPassiva(props, fatturaBean); 
+							requestFat = builderFatturaPassivaMultipla.build(inputFat);
+							chiaveFat = request.getUnitaDocumentaria().getIntestazione().getChiave();
+						}catch (ServiceException e) {
+							log.error("impossibile creare l'UnitaDocumentaria per la fattura ["+fattura.getIdentificativoSdi()+"].",e); 
+							statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
+							statoConservazioneFat = StatoConservazioneType.ERRORE_CONSEGNA;
+							spedizione = false;
 						}
-						
-						this.log.debug("Invio in conservazione delle fatture associate al lotto ["+lotto.getIdentificativoSdi()+"] completato.");
-					}
 
+						// informazioni sulla chiave
+						if(chiaveFat != null) {
+							numero = chiave.getNumero();
+							anno = chiave.getAnno();
+							registro = chiave.getTipoRegistro();
+						}
+
+						if(spedizione) {
+							this.log.debug("Invio fattura ["+fattura.getIdentificativoSdi()+"] in conservazione in corso...");
+							ParERResponse responseFattura = client.invia(requestFat);
+							this.log.debug("Invio fattura ["+fattura.getIdentificativoSdi()+"] in conservazione completata con esito ["+responseFattura.getStato()+"].");
+							
+							switch(responseFattura.getStato()) {
+							case ERRORE_CONNESSIONE:
+								statoConservazioneFat = StatoConservazioneType.ERRORE_CONSEGNA;
+								statoConsegnaFat = StatoConsegnaType.ERRORE_CONSEGNA;
+								break;
+							case KO:
+								statoConservazioneFat = StatoConservazioneType.CONSERVAZIONE_FALLITA;
+								statoConsegnaFat = StatoConsegnaType.ERRORE_CONSEGNA;
+								rapportoVersamentoFat = responseFattura.getEsitoVersamento();
+								break;
+							case OK:
+								statoConservazioneFat = StatoConservazioneType.CONSERVAZIONE_COMPLETATA;
+								statoConsegnaFat = StatoConsegnaType.CONSEGNATA; 
+								rapportoVersamentoFat = responseFattura.getRapportoVersamento();
+								break;
+							}
+							
+							
+						}
+
+						//aggiornare sip e fattura in trnasazione
+						boolean oldAutoCommit = connection.getAutoCommit();
+						try {
+							this.log.debug("Aggiornamento entry SIP su db per la fattura ["+fattura.getIdentificativoSdi()+"] in corso...");
+							connection.setAutoCommit(false);
+							sipBD.update(fattura.getIdSIP(), rapportoVersamentoFat, statoConsegnaFat, numero, anno, registro);
+							fatturaElettronicaBD.updateStatoConservazione(fattura, statoConservazioneFat);
+							connection.commit();
+							this.log.debug("Aggiornamento entry SIP su db per la fattura ["+fattura.getIdentificativoSdi()+"] completata.");
+						}catch(Exception e) {
+							log.error("impossibile aggiornare la entry SIP su db per la fattura ["+fattura.getIdentificativoSdi()+"].",e); 
+							connection.rollback();
+						} finally {
+							connection.setAutoCommit(oldAutoCommit);
+						}
+					}
+					
+					this.log.debug("Invio in conservazione delle fatture associate al lotto ["+lotto.getIdentificativoSdi()+"] completato.");
 				}
+
 				// sposto l'offset
 				offset += LIMIT_STEP;
 				lottoList = lottoBD.getLottiDaConservare(dataLimiteRicerca, offset, LIMIT_STEP);
