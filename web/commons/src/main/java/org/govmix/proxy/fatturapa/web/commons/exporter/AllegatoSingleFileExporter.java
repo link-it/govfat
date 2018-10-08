@@ -158,9 +158,9 @@ public class AllegatoSingleFileExporter extends	AbstractSingleFileExporter<Alleg
 		}
 		
 		if(this.isNameCoherent(object)) {
-			return this.getRawName(object);
+			return object.getNomeAttachment();
 		} else {
-			return this.getRawName(object) + "." +  this.getRawExtension(object);
+			return object.getNomeAttachment() + "." +  this.getRawExtension(object);
 		}
 	}
 
