@@ -32,7 +32,6 @@ import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.constants.DominioType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
-import org.govmix.proxy.fatturapa.orm.constants.SottodominioType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.FatturaDeserializerUtils;
@@ -99,8 +98,8 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 	private Text formatoTrasmissione = null;
 	private DateTime dataProssimaConsegna = null;
 	private Text dataScadenzaAssente = null;
-	private Text dominio = null;
-	private Text sottoDominio = null;
+//	private Text dominio = null;
+//	private Text sottoDominio = null;
 	private Text cuDestinatario = null;
 	
 	
@@ -167,7 +166,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.terzoIntermediarioOSoggettoEmittente = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("terzoIntermediarioOSoggettoEmittente","fattura.terzoIntermediarioOSoggettoEmittente");
 		this.terzoIntermediarioOSoggettoEmittentePaese = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("terzoIntermediarioOSoggettoEmittentePaese","fattura.terzoIntermediarioOSoggettoEmittentePaese");
 		this.terzoIntermediarioOSoggettoEmittenteCF = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("terzoIntermediarioOSoggettoEmittenteCF","fattura.terzoIntermediarioOSoggettoEmittenteCF");
-		this.codiceDestinatario = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("codiceDestinatario","fattura.dipartimento");
+		this.codiceDestinatario = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("codiceDestinatario","fattura.codiceDestinatario");
 		this.tipoDocumento = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("tipoDocumento","fattura.tipoDocumento");
 		this.nomeFile = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("nomeFile","fattura.nomeFile");
 		this.messageId = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("messageId","fattura.messageId");
@@ -188,8 +187,8 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		//this.dataScadenza = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataScadenza","fattura.dataScadenza","dd/M/yyyy");
 		this.dataScadenzaAssente = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("dataScadenzaAssente","fattura.dataScadenzaAssente");
 		
-		this.dominio = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("dominio","fattura.dominio");
-		this.sottoDominio = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("sottoDominio","fattura.sottoDominio");
+//		this.dominio = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("dominio","fattura.dominio");
+//		this.sottoDominio = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("sottoDominio","fattura.sottoDominio");
 		this.cuDestinatario = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("cuDestinatario","fattura.cuDestinatario");
 
 		this.setField(this.cedentePrestatore);
@@ -229,8 +228,8 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.setField(this.formatoTrasmissione);
 		this.setField(this.dataProssimaConsegna);
 		this.setField(this.dataScadenzaAssente);
-		this.setField(this.dominio);
-		this.setField(this.sottoDominio);
+//		this.setField(this.dominio);
+//		this.setField(this.sottoDominio);
 		this.setField(this.cuDestinatario);
 
 		this.datiIntestazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiIntestazione",6);
@@ -273,15 +272,13 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 
 		this.contenutoFattura = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("contenutoFattura",4);
 		this.contenutoFattura.setRendered(true);
-		this.contenutoFattura.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE_CONTENUTO_FATTURA); 
+		this.contenutoFattura.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
 		this.contenutoFattura.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_QUATTRO_COLONNE);
 
 		this.contenutoFattura.addField(this.divisa);
 		this.contenutoFattura.addField(this.importo);
 		this.contenutoFattura.addField(this.data);
 		this.contenutoFattura.addField(this.numero);
-		this.contenutoFattura.addField(this.dominio);
-		this.contenutoFattura.addField(this.sottoDominio);
 		this.contenutoFattura.addField(this.cuDestinatario);
 
 		this.causaleFattura = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("causaleFattura",2);
@@ -334,22 +331,15 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 			this.contenutoFattura.addField(this.divisa);
 			this.contenutoFattura.addField(this.importo);
 			this.contenutoFattura.addField(this.data);
-			
 			this.contenutoFattura.addField(this.importoRiepilogo);
-			
 			this.contenutoFattura.addField(this.numero);
-			this.contenutoFattura.addField(this.dominio);
-			this.contenutoFattura.addField(this.sottoDominio);
 			this.contenutoFattura.addField(this.cuDestinatario);
 		}else {
 			this.contenutoFattura.getFields().clear();
 			this.contenutoFattura.addField(this.divisa);
 			this.contenutoFattura.addField(this.importo);
 			this.contenutoFattura.addField(this.data);
-			
 			this.contenutoFattura.addField(this.numero);
-			this.contenutoFattura.addField(this.dominio);
-			this.contenutoFattura.addField(this.sottoDominio);
 			this.contenutoFattura.addField(this.cuDestinatario);
 		}
 
@@ -403,8 +393,10 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 			case FPA12:
 				this.formatoTrasmissione.setValue("fattura.formatoTrasmissione.fpa12");
 				break;
+			case FPR12:
+				this.formatoTrasmissione.setValue("fattura.formatoTrasmissione.fpr12");
+				break;
 			case SDI10:
-			default:
 				this.formatoTrasmissione.setValue("fattura.formatoTrasmissione.sdi10");
 				break;
 			}
@@ -529,13 +521,13 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 			}
 		}
 		
-		DominioType _dominio = this.getDTO().getLottoFatture().getDominio();
-		String dominioValue = _dominio != null ? "fattura.dominio."+_dominio.getValue() : null;
-		this.dominio.setValue(dominioValue);
-		SottodominioType _sottodominio = this.getDTO().getLottoFatture().getSottodominio();
-		String sottoDominioValue = _sottodominio != null ? "fattura.sottoDominio."+_sottodominio.getValue() : null; 
-		this.sottoDominio.setValue(sottoDominioValue);
-		this.sottoDominio.setRendered(_sottodominio != null); 
+//		DominioType _dominio = this.getDTO().getLottoFatture().getDominio();
+//		String dominioValue = _dominio != null ? "fattura.dominio."+_dominio.getValue() : null;
+//		this.dominio.setValue(dominioValue);
+//		SottodominioType _sottodominio = this.getDTO().getLottoFatture().getSottodominio();
+//		String sottoDominioValue = _sottodominio != null ? "fattura.sottoDominio."+_sottodominio.getValue() : null; 
+//		this.sottoDominio.setValue(sottoDominioValue);
+//		this.sottoDominio.setRendered(_sottodominio != null); 
 		try {
 			this.cuDestinatario.setValue(FatturaDeserializerUtils.getCodiceDestinatarioFromFattura(this.getDTO()));
 			this.cuDestinatario.setRendered(true);
@@ -1031,21 +1023,21 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.statoElaborazioneDettaglio = statoElaborazioneDettaglio;
 	}
 
-	public Text getDominio() {
-		return dominio;
-	}
-
-	public void setDominio(Text dominio) {
-		this.dominio = dominio;
-	}
-
-	public Text getSottoDominio() {
-		return sottoDominio;
-	}
-
-	public void setSottoDominio(Text sottoDominio) {
-		this.sottoDominio = sottoDominio;
-	}
+//	public Text getDominio() {
+//		return dominio;
+//	}
+//
+//	public void setDominio(Text dominio) {
+//		this.dominio = dominio;
+//	}
+//
+//	public Text getSottoDominio() {
+//		return sottoDominio;
+//	}
+//
+//	public void setSottoDominio(Text sottoDominio) {
+//		this.sottoDominio = sottoDominio;
+//	}
 
 	public Text getCuDestinatario() {
 		return cuDestinatario;

@@ -331,6 +331,7 @@ label.insideLeftProp{
 	text-align: right;
 	position: relative;
 	width:  auto !important; 
+	padding-top: 3px;
 }
 
 label.insideRightProp{
@@ -340,7 +341,8 @@ label.insideRightProp{
 	float: left;
 	text-align: right;
 	position: relative;
-	width:  auto !important; 
+	width:  auto !important;
+	padding-top: 3px; 
 }
 
 .rich-shuttle-control-disabled{ 
@@ -364,5 +366,9 @@ textarea[type="textarea"][disabled], input[type="text"][disabled], input[type="p
     .keepMargin {
        margin-left: 190px;
     }
+}
+
+.labelPaddingTop {
+	padding-top: 3px;
 }
 

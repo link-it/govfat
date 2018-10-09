@@ -65,7 +65,7 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 	private SelectList<SelectItem> notificaDecorrenzaTermini = null;
 	private BooleanCheckBox conservazione = null;
 	private Boolean soloConservazione = null;
-	private SelectList<SelectItem> dominio = null;
+	private SelectList<SelectItem> formatoTrasmissione = null;
 
 	public FatturaElettronicaAttivaSearchForm()throws Exception{
 		this.init();
@@ -128,7 +128,7 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		
 		this.conservazione = factory.getInputFieldFactory().createBooleanCheckBox("consSearch","fattura.search.conservazione",false,false);
 		
-		this.dominio = factory.getInputFieldFactory().createSelectList( "dominio","fattura.search.dominio",null,false);
+		this.formatoTrasmissione = factory.getInputFieldFactory().createSelectList( "formatoTrasmissione","fattura.search.formatoTrasmissione",null,false);
 		
 		
 		this.setField(this.cessionarioCommittente);
@@ -146,7 +146,7 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		this.setField(this.tipoComunicazione); 
 		this.setField(this.conservazione);
 		
-		this.setField(this.dominio);
+		this.setField(this.formatoTrasmissione);
 		
 		this.reset();
 	}
@@ -179,12 +179,17 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		this.notificaDecorrenzaTermini.reset();
 		this.statoElaborazione.reset();
 		this.identificativoProtocollo.reset();
-		this.dominio.reset();
+		this.formatoTrasmissione.reset();
 	}
 
 	
 	
 	public DateTime getDataEsatta() {
+		if(this.hasSoloConservazione()) {
+			boolean rendered = (this.getDataInvioPeriodo().getValue() != null && this.getDataInvioPeriodo().getValue().getValue()
+					.equals(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_ESATTA)); //Utils.getMessageFromResourceBundle("fattura.search.dataInvio.personalizzato")));
+			this.dataEsatta.setRendered(rendered);
+		}
 		return this.dataEsatta;
 	}
 
@@ -314,7 +319,9 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		today.set(Calendar.MINUTE, 59);
 		today.clear(Calendar.SECOND);
 		today.clear(Calendar.MILLISECOND);
-
+		
+		Date dataEsatta = null;
+		
 		//ultima settimana
 		if (org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_PERIODO_ULTIMA_SETTIMANA.equals(periodo)) {
 			Calendar lastWeek = (Calendar) today.clone();
@@ -344,8 +351,12 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 			lastyear.set(Calendar.MINUTE, 0);
 			lastyear.add(Calendar.DATE, -90);
 			dataInizio = lastyear.getTime();
+		} else if (org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_ESATTA.equals( periodo)) {
+			// se e' data esatta non setto niente lascio la data come quella personalizzata la gestisco nel search form
+			dataInizio = this.getDataInvio().getValue();
+			dataFine = this.getDataInvio().getValue2();
+			dataEsatta = Calendar.getInstance().getTime();
 		} else {
-		
 			// personalizzato
 			dataInizio = this.getDataInvio().getValue();
 			dataFine = this.getDataInvio().getValue2();
@@ -354,6 +365,10 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		//aggiorno i valori del campo
 		this.getDataInvio().setValue(dataInizio);
 		this.getDataInvio().setValue2(dataFine);
+		
+		if(this.hasSoloConservazione()) {
+			this.dataEsatta.setValue(dataEsatta); 
+		}
 	}
 
 	@Override
@@ -444,6 +459,10 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 	public void setConservazione(BooleanCheckBox conservazione) {
 		this.conservazione = conservazione;
 	}
+	
+	public boolean hasSoloConservazione() {
+		return soloConservazione != null ? soloConservazione.booleanValue() : false;
+	}
 
 	public Boolean getSoloConservazione() {
 		return soloConservazione;
@@ -452,17 +471,19 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 	public void setSoloConservazione(Boolean soloConservazione) {
 		this.soloConservazione = soloConservazione;
 		
-		if(this.soloConservazione != null && this.soloConservazione.booleanValue())
+		if(this.soloConservazione != null && this.soloConservazione.booleanValue()) {
 			this.setNomeForm("fatturaAttiva.label.ricercaFattureAttiveSoloConservazione");
+			this.getDataInvioPeriodo().setLabel("fattura.search.dataEsatta");
+			this.getDataEsatta().setLabel("fattura.search.dataEsatta.valore");
+		}
 	}
 
-	public SelectList<SelectItem> getDominio() {
-		return dominio;
+	public SelectList<SelectItem> getFormatoTrasmissione() {
+		return formatoTrasmissione;
 	}
 
-	public void setDominio(SelectList<SelectItem> dominio) {
-		this.dominio = dominio;
+	public void setFormatoTrasmissione(SelectList<SelectItem> formatoTrasmissione) {
+		this.formatoTrasmissione = formatoTrasmissione;
 	}
-	
 	
 }

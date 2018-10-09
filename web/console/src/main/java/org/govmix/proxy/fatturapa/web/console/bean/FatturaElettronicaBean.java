@@ -466,8 +466,10 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 			case FPA12:
 				this.formatoTrasmissione.setValue("fattura.formatoTrasmissione.fpa12");
 				break;
+			case FPR12:
+				this.formatoTrasmissione.setValue("fattura.formatoTrasmissione.fpr12");
+				break;
 			case SDI10:
-			default:
 				this.formatoTrasmissione.setValue("fattura.formatoTrasmissione.sdi10");
 				break;
 			}
