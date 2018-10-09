@@ -136,7 +136,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 	private void init() throws FactoryException{
 		this.cedentePrestatore = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("cedentePrestatore","fattura.cedentePrestatoreDenominazione");
 		this.cedentePrestatorePaese = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("cedentePrestatorePaese","fattura.cedentePrestatorePaese");
-		this.dipartimento = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("dipartimento","fattura.dipartimento");
+		this.dipartimento = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("dipartimento","fattura.uoMittente");
 		this.annoNumero = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("annoNumero","fattura.annoNumero");
 		this.dataInvio = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataRicezione","fattura.dataInvio",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY);
 
@@ -166,7 +166,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.terzoIntermediarioOSoggettoEmittente = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("terzoIntermediarioOSoggettoEmittente","fattura.terzoIntermediarioOSoggettoEmittente");
 		this.terzoIntermediarioOSoggettoEmittentePaese = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("terzoIntermediarioOSoggettoEmittentePaese","fattura.terzoIntermediarioOSoggettoEmittentePaese");
 		this.terzoIntermediarioOSoggettoEmittenteCF = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("terzoIntermediarioOSoggettoEmittenteCF","fattura.terzoIntermediarioOSoggettoEmittenteCF");
-		this.codiceDestinatario = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("codiceDestinatario","fattura.codiceDestinatario");
+		this.codiceDestinatario = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("codiceDestinatario","fattura.codiceMittente");
 		this.tipoDocumento = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("tipoDocumento","fattura.tipoDocumento");
 		this.nomeFile = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("nomeFile","fattura.nomeFile");
 		this.messageId = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("messageId","fattura.messageId");
@@ -269,17 +269,18 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		this.datiTrasmissione1.addField(this.statoElaborazione);
 		this.datiTrasmissione1.addField(this.statoElaborazioneDettaglio);
 		this.datiTrasmissione1.addField(this.protocollo);
+		this.datiTrasmissione1.addField(this.cuDestinatario);
 
 		this.contenutoFattura = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("contenutoFattura",4);
 		this.contenutoFattura.setRendered(true);
-		this.contenutoFattura.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
+		this.contenutoFattura.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE_CONTENUTO_FATTURA); 
 		this.contenutoFattura.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_QUATTRO_COLONNE);
 
 		this.contenutoFattura.addField(this.divisa);
 		this.contenutoFattura.addField(this.importo);
 		this.contenutoFattura.addField(this.data);
 		this.contenutoFattura.addField(this.numero);
-		this.contenutoFattura.addField(this.cuDestinatario);
+		
 
 		this.causaleFattura = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("causaleFattura",2);
 		this.causaleFattura.setRendered(true);
@@ -333,14 +334,12 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 			this.contenutoFattura.addField(this.data);
 			this.contenutoFattura.addField(this.importoRiepilogo);
 			this.contenutoFattura.addField(this.numero);
-			this.contenutoFattura.addField(this.cuDestinatario);
 		}else {
 			this.contenutoFattura.getFields().clear();
 			this.contenutoFattura.addField(this.divisa);
 			this.contenutoFattura.addField(this.importo);
 			this.contenutoFattura.addField(this.data);
 			this.contenutoFattura.addField(this.numero);
-			this.contenutoFattura.addField(this.cuDestinatario);
 		}
 
 		this.prepareUrls();
