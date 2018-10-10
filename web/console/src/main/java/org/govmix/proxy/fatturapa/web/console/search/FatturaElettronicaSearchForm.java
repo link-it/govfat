@@ -88,7 +88,7 @@ public class FatturaElettronicaSearchForm extends BaseSearchForm implements Sear
 		this.cedentePrestatore.setFieldsToUpdate(this.getId () + "_searchPnl");
 		this.cedentePrestatore.setForm(this);
 
-		this.dipartimento = factory.getInputFieldFactory().createSelectList("dipartimento","fattura.search.dipartimento",null,false);
+		this.dipartimento = factory.getInputFieldFactory().createSelectList("dipartimento","fattura.search.uoDestinataria",null,false);
 		((SelectListImpl)this.dipartimento).setCheckItemWidth(true); 
 		this.dipartimento.setFontName("Arial"); //"Arial,Verdana,sans-serif" 
 

@@ -88,7 +88,7 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		this.cessionarioCommittente.setFieldsToUpdate(this.getId () + "_searchPnl");
 		this.cessionarioCommittente.setForm(this);
 
-		this.dipartimento = factory.getInputFieldFactory().createSelectList("dipartimento","fattura.search.dipartimento",null,false);
+		this.dipartimento = factory.getInputFieldFactory().createSelectList("dipartimento","fattura.search.uoMittente",null,false);
 		((SelectListImpl)this.dipartimento).setCheckItemWidth(true); 
 		this.dipartimento.setFontName("Arial"); //"Arial,Verdana,sans-serif" 
 
