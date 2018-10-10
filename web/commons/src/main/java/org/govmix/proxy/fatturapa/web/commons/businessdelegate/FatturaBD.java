@@ -45,7 +45,10 @@ import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FilterSort
 import org.openspcoop2.generic_project.beans.CustomField;
 import org.openspcoop2.generic_project.beans.IField;
 import org.openspcoop2.generic_project.beans.UpdateField;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
+import org.openspcoop2.generic_project.dao.jdbc.utils.JDBC_SQLObjectFactory;
 import org.openspcoop2.generic_project.exception.ExpressionException;
+import org.openspcoop2.generic_project.exception.ExpressionNotImplementedException;
 import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
@@ -53,6 +56,8 @@ import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
 import org.openspcoop2.generic_project.expression.IPaginatedExpression;
 import org.openspcoop2.generic_project.expression.SortOrder;
+import org.openspcoop2.utils.sql.ISQLQueryObject;
+import org.openspcoop2.utils.sql.SQLQueryObjectException;
 
 public class FatturaBD extends BaseBD {
 
@@ -496,6 +501,75 @@ public class FatturaBD extends BaseBD {
 		return this.getListAutocomplete(filter, FatturaElettronica.model().NUMERO);
 	}
 
+	public void inviaInConservazione(FatturaFilter filter, StatoConservazioneType statoConservazione) throws ServiceException {
+		this.log.info("invio in conservazione fatture");
+
+		try {
+
+			StatoConservazioneType newStatoConservazione = StatoConservazioneType.PRESA_IN_CARICO;
+			switch (statoConservazione) {
+			case CONSERVAZIONE_COMPLETATA: throw new ServiceException("Operazione non valida");
+			case CONSERVAZIONE_FALLITA: newStatoConservazione= StatoConservazioneType.IN_RICONSEGNA; break;
+			case ERRORE_CONSEGNA: newStatoConservazione= StatoConservazioneType.IN_RICONSEGNA; break;
+			case IN_RICONSEGNA: throw new ServiceException("Operazione non valida");
+			case NON_INVIATA: newStatoConservazione= StatoConservazioneType.PRESA_IN_CARICO; break;
+			case PRESA_IN_CARICO: throw new ServiceException("Operazione non valida");
+			}
+
+			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase());
+
+			ArrayList<Object> params = new ArrayList<Object>();
+
+			ISQLQueryObject sqlQueryObject = new JDBC_SQLObjectFactory().createSQLQueryObject(this.serviceManager.getJdbcProperties().getDatabase());
+
+			String fatturaTable = converter.toTable(FatturaElettronica.model());
+			String lottiTable = converter.toTable(FatturaElettronica.model().LOTTO_FATTURE);
+			String dipartimentiTable = converter.toTable(FatturaElettronica.model().DIPARTIMENTO);
+			String entiTable = converter.toTable(FatturaElettronica.model().DIPARTIMENTO.ENTE);
+			((JDBCExpression)filter._toExpression()).toSqlForPreparedStatementWithFromCondition(sqlQueryObject, params, fatturaTable);
+			sqlQueryObject.addSelectField(fatturaTable+".id");
+			sqlQueryObject.addWhereCondition(fatturaTable+".identificativo_sdi = "+lottiTable+".identificativo_sdi and "+fatturaTable+".fatturazione_attiva = "+lottiTable+".fatturazione_attiva");
+
+			sqlQueryObject.addFromTable(dipartimentiTable);
+			
+			sqlQueryObject.setANDLogicOperator(true);
+			sqlQueryObject.addWhereCondition(fatturaTable+".codice_destinatario="+dipartimentiTable+".codice");
+			
+			sqlQueryObject.addWhereCondition(entiTable+".id="+dipartimentiTable+".id_ente");
+			
+			ISQLQueryObject sqlQueryObjectUpdate = sqlQueryObject.newSQLQueryObject();
+			
+			sqlQueryObjectUpdate.addUpdateTable(fatturaTable);
+			sqlQueryObjectUpdate.addUpdateField(converter.toColumn(FatturaElettronica.model().STATO_CONSERVAZIONE, false), "?");
+			
+			sqlQueryObjectUpdate.setANDLogicOperator(true);
+			sqlQueryObjectUpdate.addWhereINSelectSQLCondition(false, "id", sqlQueryObject);
+
+			ArrayList<Object> realParams = new ArrayList<Object>();
+			realParams.add(newStatoConservazione.toString());
+			realParams.addAll(params);
+			this.service.nativeUpdate(sqlQueryObjectUpdate.createSQLUpdate(), realParams.toArray());
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la inviaInConservazione: " + e.getMessage(), e);
+			throw e;
+		} catch (ExpressionException e) {
+			this.log.error("Errore durante la inviaInConservazione: " + e.getMessage(), e);
+			throw new ServiceException(e);
+		} catch (SQLQueryObjectException e) {
+			this.log.error("Errore durante la inviaInConservazione: " + e.getMessage(), e);
+			throw new ServiceException(e);
+		} catch (NotFoundException e) {
+			this.log.error("Errore durante la inviaInConservazione: " + e.getMessage(), e);
+			throw new ServiceException(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la inviaInConservazione: " + e.getMessage(), e);
+			throw new ServiceException(e);
+		} catch (ExpressionNotImplementedException e) {
+			this.log.error("Errore durante la inviaInConservazione: " + e.getMessage(), e);
+			throw new ServiceException(e);
+		}
+	}
+	
 	public void inviaInConservazione(List<Long> ids, StatoConservazioneType statoConservazione) throws ServiceException {
 		this.log.info(String.format("invio in conservazione %d fatture", ids.size()));
 
