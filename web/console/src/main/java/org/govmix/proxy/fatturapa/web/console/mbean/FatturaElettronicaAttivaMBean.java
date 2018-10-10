@@ -42,6 +42,7 @@ import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.IdRegistro;
 import org.govmix.proxy.fatturapa.orm.constants.DominioType;
+import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
@@ -111,7 +112,7 @@ IFatturaElettronicaAttivaService>{
 	private List<SelectItem> listaStatoElaborazione = null;
 	
 	// Dominio
-	private List<SelectItem> listaDomini = null;
+	private List<SelectItem> listaFormatiTrasmissione = null;
 
 	// supporto per il caricamento dal db del dettaglio (Allegati, NotificheEC, NotificheDT)
 	private IAllegatiService allegatiService = null;
@@ -195,7 +196,7 @@ IFatturaElettronicaAttivaService>{
 		((SelectListImpl)this.search.getDataInvioPeriodo()).setElencoSelectItems(this.getListaPeriodoTemporale());
 		((SelectListImpl)this.search.getDipartimento()).setElencoSelectItems(this.getDipartimenti());
 		((SelectListImpl)this.search.getStatoElaborazione()).setElencoSelectItems(this.getListaStatoElaborazione());
-		((SelectListImpl)this.search.getDominio()).setElencoSelectItems(this.getListaDomini()); 
+		((SelectListImpl)this.search.getFormatoTrasmissione()).setElencoSelectItems(this.getListaFormatiTrasmissione());  
 		this.search.setmBean(this);
 		
 		if(this.search.getSoloConservazione() != null && this.search.getSoloConservazione().booleanValue()) {
@@ -308,6 +309,10 @@ IFatturaElettronicaAttivaService>{
 			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_PERIODO_ULTIMI_TRE_MESI, ("fattura.search.dataRicezione.ultimiTreMesi"))));
 			this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_PERIODO_PERSONALIZZATO, ("fattura.search.dataRicezione.personalizzato"))));
 
+			if(this.search.hasSoloConservazione()) {
+				this.listaPeriodoTemporale.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_ESATTA, ("fattura.search.dataRicezione.esatta"))));
+
+			}
 		}
 
 		return this.listaPeriodoTemporale;
@@ -350,16 +355,16 @@ IFatturaElettronicaAttivaService>{
 		return this.listaStatoElaborazione;
 	}
 	
-	public List<SelectItem> getListaDomini() {
-		if (this.listaDomini == null) {
-			this.listaDomini = new ArrayList<SelectItem>();
+	public List<SelectItem> getListaFormatiTrasmissione() {
+		if (this.listaFormatiTrasmissione == null) {
+			this.listaFormatiTrasmissione = new ArrayList<SelectItem>();
 			
-			this.listaDomini.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi"))));
-			this.listaDomini.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(DominioType.PA.getValue(),  ("fattura.dominio."+DominioType.PA.getValue()))));
-			this.listaDomini.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(DominioType.B2B.getValue(),  ("fattura.dominio."+DominioType.B2B.getValue()))));
+			this.listaFormatiTrasmissione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi"))));
+			this.listaFormatiTrasmissione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(FormatoTrasmissioneType.FPA12.getValue(),  ("fattura.formatoTrasmissione.fpa12"))));
+			this.listaFormatiTrasmissione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(FormatoTrasmissioneType.FPR12.getValue(),  ("fattura.formatoTrasmissione.fpr12"))));
 			
 		}
-		return listaDomini;
+		return listaFormatiTrasmissione;
 	}
 
 	public List<SelectItem> getDipartimenti() {

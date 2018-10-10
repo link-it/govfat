@@ -29,7 +29,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
-import org.govmix.proxy.fatturapa.orm.constants.DominioType;
+import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
@@ -74,8 +74,8 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 
 	private FatturaAttivaBD fatturaAttivaBD= null;
 	private InserimentoLotti inserimentoLotti = null;
-	
-	
+
+
 	public FatturaElettronicaAttivaService(){
 		try{
 			this.fatturaAttivaBD = new FatturaAttivaBD(log);
@@ -94,12 +94,12 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 
 
 		try {
-			
+
 			FatturaAttivaFilter filter = this.fatturaAttivaBD.newFilter();
-			
+
 			filter.setUtente(Utils.getLoggedUtente());
 			filter.getCcDenominazioneList().add(val.toLowerCase());
-			
+
 			listaMittenti = this.fatturaAttivaBD.getAutocompletamentoCessionarioCommittenteDenominazione(filter);
 
 		}  catch(ServiceException e) {
@@ -123,14 +123,12 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 				FatturaAttivaFilter filter = (FatturaAttivaFilter) this.getFilterFromSearch(fatturaAttivaBD, this.form);
 
 				//order by
-				FilterSortWrapper fsw = new FilterSortWrapper();
-				fsw.setSortOrder(SortOrder.DESC);
-				fsw.setField(FatturaElettronica.model().DATA_RICEZIONE);
-				filter.getFilterSortList().add(fsw);
+				List<FilterSortWrapper> listaOrderBy  = this.getOrderByFromSearch(fatturaAttivaBD, this.form);
+				filter.getFilterSortList().addAll(listaOrderBy);
 
 				filter.setOffset(arg0);
 				filter.setLimit(arg1);
-				
+
 				List<FatturaElettronica> findAll = this.fatturaAttivaBD.findAll(filter);
 
 				if(findAll != null && findAll.size() > 0){
@@ -203,10 +201,8 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 				FatturaAttivaFilter filter = (FatturaAttivaFilter) this.getFilterFromSearch(fatturaAttivaBD, this.form);
 
 				//order by
-				FilterSortWrapper fsw = new FilterSortWrapper();
-				fsw.setSortOrder(SortOrder.DESC);
-				fsw.setField(FatturaElettronica.model().DATA_RICEZIONE);
-				filter.getFilterSortList().add(fsw);
+				List<FilterSortWrapper> listaOrderBy  = this.getOrderByFromSearch(fatturaAttivaBD, this.form);
+				filter.getFilterSortList().addAll(listaOrderBy);
 
 				List<FatturaElettronica> findAll = this.fatturaAttivaBD.findAll(filter);
 
@@ -253,42 +249,42 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 
 	@Override
 	public void store(FatturaElettronicaAttivaBean arg0) throws ServiceException {}
-	
+
 	@Override
 	public InserimentoLottoResponse salvaFatture(List<InserimentoLottoRequest> listaFatture) throws ServiceException {
 		String methodName = "salvaFatture(listaFatture)";
-		
+
 		FatturaElettronicaAttivaService.log.debug("Esecuzione ["+methodName+"] in corso...");
-		
+
 		InserimentoLottoResponse inserimentoLottoResponse = this.inserimentoLotti.inserisciLotto(listaFatture);
-		
+
 		FatturaElettronicaAttivaService.log.debug("Esecuzione ["+methodName+"] completato.");
-		
+
 		return inserimentoLottoResponse;
 	}
-	
+
 	@Override
 	public InserimentoLottoResponse salvaFattureSoloConservazione(
 			List<InserimentoLottoSoloConservazioneRequest> listaFatture) throws ServiceException {
 		String methodName = "store(salvaFattureSoloConservazione)";
-		
+
 		FatturaElettronicaAttivaService.log.debug("Esecuzione ["+methodName+"] in corso...");
-		
+
 		InserimentoLottoResponse inserimentoLottoResponse = this.inserimentoLotti.inserisciLottoSoloConservazione(listaFatture);
-		
+
 		FatturaElettronicaAttivaService.log.debug("Esecuzione ["+methodName+"] completato.");
-		
+
 		return inserimentoLottoResponse;
 	}
-	
+
 	@Override
 	public void checkLotto(List<InserimentoLottoRequest> requestList) throws InserimentoLottiException {
 		String methodName = "checkLotto";
-		
+
 		FatturaElettronicaAttivaService.log.debug("Esecuzione ["+methodName+"] in corso...");
-		
+
 		this.inserimentoLotti.checkLotto(requestList);
-		
+
 		FatturaElettronicaAttivaService.log.debug("Esecuzione ["+methodName+"] completato.");
 	}
 
@@ -296,14 +292,14 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 	public void checkLottoSoloConservazione(List<InserimentoLottoSoloConservazioneRequest> requestList)
 			throws InserimentoLottiException {
 		String methodName = "checkLottoSoloConservazione";
-		
+
 		FatturaElettronicaAttivaService.log.debug("Esecuzione ["+methodName+"] in corso...");
-		
+
 		this.inserimentoLotti.checkLottoSoloConservazione(requestList);
-		
+
 		FatturaElettronicaAttivaService.log.debug("Esecuzione ["+methodName+"] completato.");
 	}
-	
+
 	public FatturaFilter getFilterFromSearch(FatturaBD fatturaBD, FatturaElettronicaAttivaSearchForm search) throws Exception{
 		FatturaAttivaFilter filter = (FatturaAttivaFilter) this.getFilterDateFromSearch(fatturaBD, search);
 
@@ -314,7 +310,7 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 				List<SelectItem> cedPrestVals = this.form.getCessCommSelList();
 				String trimSelCedPrest = search.getCessionarioCommittente().getValue().trim();
 
-//				log.debug("Confronto TRIM["+trimSelCedPrest+"]");
+				//				log.debug("Confronto TRIM["+trimSelCedPrest+"]");
 				List<String> valoriCedPret = new ArrayList<String>();
 				for (SelectItem selectItem : cedPrestVals) {
 					String val = selectItem.getValue();
@@ -324,7 +320,7 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 						noSpaceRes = noSpaceRes.replace("  ", " ");
 					}
 
-//					log.debug("Confronto NSRES["+noSpaceRes+"]");
+					//					log.debug("Confronto NSRES["+noSpaceRes+"]");
 					// Se il valore trimmato selezionato dall'utente corrisponde ad uno dei valori nella lista allora li uso per fare il confronto
 					if(noSpaceRes.equals(trimSelCedPrest)){
 						valoriCedPret.add(val);
@@ -333,7 +329,7 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 
 				if(valoriCedPret.size() == 0) {
 					filter.getCcDenominazioneList().add(search.getCessionarioCommittente().getValue());
-					
+
 				}else {
 					filter.getCcDenominazioneList().addAll(valoriCedPret);
 				}
@@ -378,7 +374,7 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 				StatoElaborazioneType statoElaborazioneType = StatoElaborazioneType.toEnumConstant(search.getStatoElaborazione().getValue().getValue());
 				filter.getStatoElaborazioneList().add(statoElaborazioneType);
 			}
-			
+
 			// tipo comunicazione
 			if(search.getTipoComunicazione().getValue() != null &&
 					!StringUtils.isEmpty(search.getTipoComunicazione().getValue().getValue()) && !search.getTipoComunicazione().getValue().getValue().equals("*")){
@@ -387,7 +383,7 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 					throw new Exception("Valore ["+search.getTipoComunicazione().getValue().getValue()+"] non ammesso per il tipoComunicazione");
 				filter.setTipoComunicazione(tipoComunicazioneType);
 			}
-			
+
 			// Decorrenza Termini
 			if(search.getNotificaDecorrenzaTermini().getValue() != null &&
 					!StringUtils.isEmpty(search.getNotificaDecorrenzaTermini().getValue().getValue()) && !search.getNotificaDecorrenzaTermini().getValue().getValue().equals("*")){
@@ -397,7 +393,7 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 					filter.setDecorrenzaTermini(false);
 				}
 			}
-			
+
 			if(search.getSoloConservazione() != null) {
 				filter.setSoloConservazione(search.getSoloConservazione().booleanValue());
 			} else {
@@ -406,14 +402,14 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 					filter.setSoloConservazione(conseravazione); //ricevi sempre true o false
 				}
 			}
-			
+
 			// Dominio
-			if(search.getDominio().getValue() != null &&
-					!StringUtils.isEmpty(search.getDominio().getValue().getValue()) && !search.getDominio().getValue().getValue().equals("*")){
-				DominioType dominioType = DominioType.toEnumConstant(search.getDominio().getValue().getValue());
-				filter.setDominio(dominioType);
+			if(search.getFormatoTrasmissione().getValue() != null &&
+					!StringUtils.isEmpty(search.getFormatoTrasmissione().getValue().getValue()) && !search.getFormatoTrasmissione().getValue().getValue().equals("*")){
+				FormatoTrasmissioneType formatoTrasmissioneType = FormatoTrasmissioneType.toEnumConstant(search.getFormatoTrasmissione().getValue().getValue());
+				filter.setFormatoTrasmissione(formatoTrasmissioneType.getValue());
 			}
-			
+
 		}catch(Exception e){
 			FatturaElettronicaAttivaService.log.error("Si e' verificato un errore durante la conversione del filtro di ricerca: " + e.getMessage(), e);
 			throw e;
@@ -426,12 +422,13 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 		FatturaAttivaFilter filter = this.fatturaAttivaBD.newFilter();
 
 		try{
+			boolean soloConservazione = search.getSoloConservazione() != null ? search.getSoloConservazione().booleanValue() : false;
+
 			SelectList<SelectItem> dataRicezionePeriodo = search.getDataInvioPeriodo();
 			DateTime dataRicezione = search.getDataInvio();
 
 			Date dataInizio = dataRicezione.getValue();
 			Date dataFine = dataRicezione.getValue2();
-
 			String periodo = dataRicezionePeriodo.getValue() != null ? dataRicezionePeriodo.getValue().getValue() : org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_PERIODO_ULTIMA_SETTIMANA;
 
 			Calendar today = Calendar.getInstance();
@@ -472,7 +469,11 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 				lastyear.add(Calendar.DATE, -90);
 				dataInizio = lastyear.getTime();
 
-			}  else {
+			} else if ( org.govmix.proxy.fatturapa.web.console.costanti.Costanti.DATA_INVIO_ESATTA.equals( periodo)) {
+				dataFine = null;
+				dataInizio = null;
+				// gestito nell'altro filtro
+			} else {
 				// personalizzato
 				dataInizio = dataRicezione.getValue();
 				dataFine = dataRicezione.getValue2();
@@ -487,13 +488,22 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 				dataFine = calendarFine.getTime();
 			}
 
-
-			if(dataInizio != null){
-				filter.setDataRicezioneMin(dataInizio);
-			}
-
-			if(dataFine != null){
-				filter.setDataRicezioneMax(dataFine);
+			if(!soloConservazione) {
+				if(dataInizio != null){
+					filter.setDataRicezioneMin(dataInizio);
+				}
+	
+				if(dataFine != null){
+					filter.setDataRicezioneMax(dataFine);
+				}
+			} else {
+				if(dataInizio != null){
+					filter.setDataFatturaMin(dataInizio);
+				}
+	
+				if(dataFine != null){
+					filter.setDataFatturaMax(dataFine);
+				}			
 			}
 
 		}catch(Exception e){
@@ -504,6 +514,28 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 		return filter;
 	}
 
+	public List<FilterSortWrapper> getOrderByFromSearch(FatturaBD fatturaBD, FatturaElettronicaAttivaSearchForm search) throws Exception{
+		List<FilterSortWrapper> listaOrderBy = new ArrayList<FilterSortWrapper>();
+
+		boolean soloConservazione = search.getSoloConservazione() != null ? search.getSoloConservazione().booleanValue() : false;
+
+		if(soloConservazione) {
+			FilterSortWrapper fsw = new FilterSortWrapper();
+			fsw.setSortOrder(SortOrder.DESC);
+			fsw.setField(FatturaElettronica.model().DATA);
+			listaOrderBy.add(fsw);
+		}
+		else {
+			FilterSortWrapper fsw = new FilterSortWrapper();
+			fsw.setSortOrder(SortOrder.DESC);
+			fsw.setField(FatturaElettronica.model().DATA_RICEZIONE);
+			listaOrderBy.add(fsw);
+		}
+
+
+		return listaOrderBy;
+	}
+
 	@Override
 	public List<String> getNumeroAutoComplete(String val)
 			throws ServiceException {
@@ -512,12 +544,12 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 
 
 		try {
-			
+
 			FatturaAttivaFilter filter = this.fatturaAttivaBD.newFilter();
-			
+
 			filter.setUtente(Utils.getLoggedUtente());
 			filter.setNumeroLike(val.toLowerCase());
-			
+
 			listaID = this.fatturaAttivaBD.getAutocompletamentoNumero(filter);
 
 		}  catch(ServiceException e) {
@@ -545,15 +577,15 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 		return converter.toTable(model);
 	}
 
-//	@Override
-//	public Date getDataUltimaOperazioneByIdFattura(IdFattura idFattura) throws ServiceException {
-//		String methodName = "getDataUltimaOperazioneByIdFattura()";
-//
-//		try{
-//			return this.operazioneContabileBD.getDataUltimaOperazioneByIdFattura(idFattura);
-//		}catch(Exception e){
-//			FatturaElettronicaAttivaService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
-//			throw new ServiceException(e);
-//		}
-//	}
+	//	@Override
+	//	public Date getDataUltimaOperazioneByIdFattura(IdFattura idFattura) throws ServiceException {
+	//		String methodName = "getDataUltimaOperazioneByIdFattura()";
+	//
+	//		try{
+	//			return this.operazioneContabileBD.getDataUltimaOperazioneByIdFattura(idFattura);
+	//		}catch(Exception e){
+	//			FatturaElettronicaAttivaService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
+	//			throw new ServiceException(e);
+	//		}
+	//	}
 }

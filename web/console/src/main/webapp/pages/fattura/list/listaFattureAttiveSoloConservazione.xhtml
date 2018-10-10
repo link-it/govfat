@@ -132,10 +132,14 @@
 			
 			<op2web:searchForm searchBean="#{fatturaElettronicaAttivaSoloConservazioneMBean.search}">
 		
-				<op2web:fieldset legend="#{msg['fattura.search.datiTrasmissione']}" rendered="#{true}" collapsible="false" closed="false">
-					<op2web:searchFields nomiFields="#{'cessionarioCommittente,identificativoLotto,dipartimento,dataInvioPeriodo'}"    />
+				<op2web:fieldset legend="#{msg['fattura.search.datiFattura']}" rendered="#{true}" collapsible="false" closed="false">
+					<op2web:searchFields nomiFields="#{'cessionarioCommittente,dipartimento'}"    />
+					
+					<op2web:formField field="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.numero}" />
+					
+					<op2web:formField field="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataInvioPeriodo}" />
 
-					<op2web:inlineProp labelEsterna="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataInvio.label}"
+					<op2web:inlineProp labelEsterna="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataInvio.label}" styleClassEsterna="labelPaddingTop"
 						rendered="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataInvio.rendered}">
 
 						<ui:define name="prop1">
@@ -160,28 +164,17 @@
 							</op2web:prop>
 						</ui:define>
 					</op2web:inlineProp>
-					
-					<op2web:formField field="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.statoElaborazione}" />
-					
-					<op2web:formField field="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.notificaDecorrenzaTermini}" />
-					
-				</op2web:fieldset>
-					
-				<op2web:fieldset legend="#{msg['fattura.search.datiFattura']}" rendered="#{true}" collapsible="false" closed="false">
-					<op2web:formField field="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.numero}" />
 						
-					<op2web:prop label="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataEsatta.label}" rendered="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataEsatta.rendered}">
+					<op2web:prop label="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataEsatta.label}" rendered="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataEsatta.rendered}" styleClass="labelPaddingTop">
 						<rich:calendar id="input_#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataEsatta.name}" value="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataEsatta.value}"  disabled="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataEsatta.disabled}"
 		 					style="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataEsatta.style}" datePattern="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataEsatta.pattern}" defaultTime="00:00" 
 		 					validatorMessage="#{msg['fattura.search.dataEsatta.formatoNonValido']}" converter="dateEmptyConverter"
 									enableManualInput="true" validator="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataEsattaValidator}" />
 					</op2web:prop>
 					
-					<op2web:formField
-						field="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.tipoDocumento}" />
+					<op2web:formField field="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.tipoDocumento}" />
 						
-					<op2web:formField
-						field="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dominio}" />
+					<op2web:formField field="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.formatoTrasmissione}" />
 						
 					<op2web:formField
 						field="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.tipoComunicazione}" />
@@ -209,36 +202,9 @@
 			
 			<op2web:managedPagedListView  value="#{fatturaElettronicaAttivaSoloConservazioneDM}" mBean="#{fatturaElettronicaAttivaSoloConservazioneMBean}" >
 			
-				<!-- Colonne mittente,destinatario,identificativoSDI, annonumero, data, dataricezione, importo -->
-				<op2web:tableColumns nomiColonne="#{'cessionarioCommittente,dipartimento,identificativoSdi,annoNumero,data,dataInvio'}" />
+				<op2web:tableColumns nomiColonne="#{'cessionarioCommittente,dipartimento,annoNumero,data,dataInvio'}" />
 				
-				<!-- Colonne mittente,destinatario,identificativoSDI, annonumero, data, dataricezione, importo -->
 				<op2web:tableColumns nomiColonne="#{'importo'}" />
-				
-				<!-- Esito Elaborazione (Icona) -->
-				<rich:column style="text-align: center;">
-					<f:facet name="header">
-						<h:outputText value="#{itemMetadata.esitoElaborazione.label}" />
-					</f:facet>
-					 
-					<h:panelGroup>
-						<h:graphicImage value="#{item.esitoElaborazione.image}" width="16" height="16"	title="#{item.esitoElaborazione.title}"  alt="#{item.esitoElaborazione.alt}"
-								 rendered="#{item.esitoElaborazione.rendered == true}" />
-						<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{item.esitoElaborazione.rendered == false}" />
-					</h:panelGroup>
-				</rich:column>
-					
-				<!-- Notifica DT (Icona) -->
-				<rich:column style="text-align: center;">
-					<f:facet name="header">
-						<h:outputText value="#{itemMetadata.notificaDT.label}" />
-					</f:facet>
-					 
-					<h:panelGroup>
-						<h:graphicImage value="#{item.notificaDT.image}" width="16" alt="#{item.notificaDT.alt}" height="16"	title="#{item.notificaDT.title}" rendered="#{item.notificaDT.rendered == true}" />
-						<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{item.notificaDT.rendered == false}" />
-					</h:panelGroup>
-				</rich:column>
 				
 				<!-- XML (Icona) -->
 				<rich:column style="text-align: center;">

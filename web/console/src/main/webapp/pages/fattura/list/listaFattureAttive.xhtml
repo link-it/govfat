@@ -136,7 +136,7 @@
 				<op2web:fieldset legend="#{msg['fattura.search.datiTrasmissione']}" rendered="#{true}" collapsible="false" closed="false">
 					<op2web:searchFields nomiFields="#{'cessionarioCommittente,identificativoLotto,dipartimento,dataInvioPeriodo'}"    />
 
-					<op2web:inlineProp labelEsterna="#{fatturaElettronicaAttivaMBean.search.dataInvio.label}"
+					<op2web:inlineProp labelEsterna="#{fatturaElettronicaAttivaMBean.search.dataInvio.label}"  styleClassEsterna="labelPaddingTop"
 						rendered="#{fatturaElettronicaAttivaMBean.search.dataInvio.rendered}">
 
 						<ui:define name="prop1">
@@ -166,12 +166,14 @@
 					
 					<op2web:formField field="#{fatturaElettronicaAttivaMBean.search.notificaDecorrenzaTermini}" />
 					
+					<op2web:formField field="#{fatturaElettronicaAttivaMBean.search.formatoTrasmissione}" />
+					
 				</op2web:fieldset>
 					
 				<op2web:fieldset legend="#{msg['fattura.search.datiFattura']}" rendered="#{true}" collapsible="false" closed="false">
 					<op2web:formField field="#{fatturaElettronicaAttivaMBean.search.numero}" />
 						
-					<op2web:prop label="#{fatturaElettronicaAttivaMBean.search.dataEsatta.label}" rendered="#{fatturaElettronicaAttivaMBean.search.dataEsatta.rendered}">
+					<op2web:prop label="#{fatturaElettronicaAttivaMBean.search.dataEsatta.label}" rendered="#{fatturaElettronicaAttivaMBean.search.dataEsatta.rendered}" styleClass="labelPaddingTop">
 						<rich:calendar id="input_#{fatturaElettronicaAttivaMBean.search.dataEsatta.name}" value="#{fatturaElettronicaAttivaMBean.search.dataEsatta.value}"  disabled="#{fatturaElettronicaAttivaMBean.search.dataEsatta.disabled}"
 		 					style="#{fatturaElettronicaAttivaMBean.search.dataEsatta.style}" datePattern="#{fatturaElettronicaAttivaMBean.search.dataEsatta.pattern}" defaultTime="00:00" 
 		 					validatorMessage="#{msg['fattura.search.dataEsatta.formatoNonValido']}" converter="dateEmptyConverter"
@@ -180,9 +182,6 @@
 					
 					<op2web:formField
 						field="#{fatturaElettronicaAttivaMBean.search.tipoDocumento}" />
-						
-					<op2web:formField
-						field="#{fatturaElettronicaAttivaMBean.search.dominio}" />
 						
 					<op2web:formField
 						field="#{fatturaElettronicaAttivaMBean.search.tipoComunicazione}" />

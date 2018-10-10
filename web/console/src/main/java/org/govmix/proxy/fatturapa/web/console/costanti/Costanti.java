@@ -52,6 +52,7 @@ public class Costanti {
 	
 	/** Costanti select list data invio */
 	
+	public static final String DATA_INVIO_ESATTA = "4";
 	public static final String DATA_INVIO_PERIODO_PERSONALIZZATO = "3";
 	public static final String DATA_INVIO_PERIODO_ULTIMI_TRE_MESI = "2";
 	public static final String DATA_INVIO_PERIODO_ULTIMO_MESE = "1";

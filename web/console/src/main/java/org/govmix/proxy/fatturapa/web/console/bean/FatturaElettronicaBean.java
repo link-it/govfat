@@ -140,7 +140,7 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 	private void init() throws FactoryException{
 		this.cedentePrestatore = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("cedentePrestatore","fattura.cedentePrestatoreDenominazione");
 		this.cedentePrestatorePaese = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("cedentePrestatorePaese","fattura.cedentePrestatorePaese");
-		this.dipartimento = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("dipartimento","fattura.dipartimento");
+		this.dipartimento = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("dipartimento","fattura.uoDestinataria");
 		this.annoNumero = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("annoNumero","fattura.annoNumero");
 		this.dataRicezione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataRicezione","fattura.dataRicezione",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY);
 
@@ -466,8 +466,10 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 			case FPA12:
 				this.formatoTrasmissione.setValue("fattura.formatoTrasmissione.fpa12");
 				break;
+			case FPR12:
+				this.formatoTrasmissione.setValue("fattura.formatoTrasmissione.fpr12");
+				break;
 			case SDI10:
-			default:
 				this.formatoTrasmissione.setValue("fattura.formatoTrasmissione.sdi10");
 				break;
 			}

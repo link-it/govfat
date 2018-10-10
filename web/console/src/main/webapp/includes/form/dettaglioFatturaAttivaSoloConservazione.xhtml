@@ -29,39 +29,22 @@
 							columnClasses="#{datiTrasmissione1.columnClasses}" 
 							rendered="#{datiTrasmissione1.rendered}" columns="#{datiTrasmissione1.columns}">
 					
-							<op2web:output field="#{mbean.selectedElement.identificativoSdi}" insideGroup="true" />
-							<op2web:output field="#{mbean.selectedElement.posizione}" insideGroup="true" />
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
-							
 							<op2web:output field="#{mbean.selectedElement.nomeFile}" insideGroup="true" />
 							<op2web:output field="#{mbean.selectedElement.formatoTrasmissione}" insideGroup="true" />
 							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
 							
 							<op2web:output field="#{mbean.selectedElement.tipoDocumento}" insideGroup="true" />
-							<op2web:output field="#{mbean.selectedElement.messageId}" insideGroup="true" />
+							<op2web:output field="#{mbean.selectedElement.protocollo}" insideGroup="true" />
 							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
 							
 							<op2web:output field="#{mbean.selectedElement.dipartimento}" insideGroup="true" />
 							<op2web:output field="#{mbean.selectedElement.codiceDestinatario}" insideGroup="true" />
 							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
 							
-							<op2web:output field="#{mbean.selectedElement.dataInvio}" insideGroup="true" />
-							<op2web:output field="#{mbean.selectedElement.statoElaborazioneDettaglio}" insideGroup="true" />
-							<h:panelGroup>
-								<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{mbean.selectedElement.visualizzaLinkRiconsegna == false}"/>
-								<h:form id="formRiconsegna" rendered="#{mbean.selectedElement.visualizzaLinkRiconsegna}">
-									<a4j:commandLink id="ritentaRiconsegna-Link"  
-										action="#{mbean.ritentaConsegna}"
-										reRender="panelDettaglio2"
-										styleClass="buttonNoRed" ajaxSingle="true">
-										<h:outputText value="#{msg['fattura.ritentaConsegna']}" />
-									</a4j:commandLink>
-								</h:form>
-							</h:panelGroup>
-							
 							<op2web:output field="#{mbean.selectedElement.cuDestinatario}" insideGroup="true" />
-							<op2web:output field="#{mbean.selectedElement.protocollo}" insideGroup="true" />
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{true}" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
 						</h:panelGrid>
 					</op2web:fieldset>
 
@@ -100,53 +83,6 @@
 							</rich:column>
 						</op2web:simpleListView>
 					</op2web:fieldset>
-
-					<!-- Comunicazioni sdi-->
-					<op2web:fieldset legend="#{msg['fattura.label.comunicazioniSdi']}" collapsible="false" closed="false" rendered="#{true}">
-						<c:set var="metadataComunicazione" value="#{fatturaSelezionata.metadataComunicazione}" />
-
-						<c:set var="listaComunicazioni" value="#{fatturaSelezionata.listaComunicazioni}" />
-
-						<h:outputText id="outNoListaComunicazioni" value="#{msg['fattura.label.comunicazioniSdi.nodata']}" rendered="#{empty listaComunicazioni}" />
-
-						<op2web:simpleListView id="tabellaComunicazioni" value="#{listaComunicazioni}" rendered="#{not empty listaComunicazioni}" itemMetadata="#{metadataComunicazione}">
-						
-							<!-- Data, Nome File, identificativoSdi -->
-							<op2web:tableColumns nomiColonne="#{'tipoComunicazione,data,nomeFile,idEgov,statoProtocollazione'}" />
-
-							<!-- XML (Icona) -->
-							<rich:column style="text-align: center;">
-								<f:facet name="header">
-									<h:outputText value="#{metadataComunicazione.xml.label}" />
-								</f:facet>
-
-								<h:panelGroup>
-									<h:outputLink value="#{item.xml.href}" target="_blank" rendered="#{not empty item.xml.href}">
-										<h:graphicImage value="#{item.xml.image}" width="16" height="16" title="#{item.xml.title}" />
-									</h:outputLink>
-								</h:panelGroup>
-							</rich:column>
-							
-							<!-- PDF (Icona) -->
-							<rich:column style="text-align: center;">
-								<f:facet name="header">
-									<h:outputText value="#{metadataComunicazione.pdf.label}" />
-								</f:facet>
-
-								<h:panelGroup>
-									<h:outputLink value="#{item.pdf.href}"  target="_blank" rendered="#{not empty item.pdf.href}">
-										<h:graphicImage value="#{item.pdf.image}" width="16" height="16" title="#{item.pdf.title}" />
-									</h:outputLink>
-								</h:panelGroup>
-							</rich:column>
-							
-						</op2web:simpleListView>
-					</op2web:fieldset>
-
 				</h:panelGrid>
- 
- 
- 
- 
  
     </ui:composition>

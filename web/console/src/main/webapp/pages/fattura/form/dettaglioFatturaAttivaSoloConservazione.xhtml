@@ -29,8 +29,8 @@
 	xmlns:op2web="http://www.openspcoop2.org/web/taglib/jsf">
 	<f:loadBundle var="msg" basename="messages" />
 
-	<ui:define name="pageTitle">#{msg['fatturaAttiva.dettaglio.pageTitle']}</ui:define>
-	<ui:define name="pageHeader">#{msg['fatturaAttiva.dettaglio.pageTitle']}</ui:define>
+	<ui:define name="pageTitle">#{msg['fatturaAttivaSoloConservazione.dettaglio.pageTitle']}</ui:define>
+	<ui:define name="pageHeader">#{msg['fatturaAttivaSoloConservazione.dettaglio.pageTitle']}</ui:define>
 	<ui:define name="navbar">
 		<ul>
 			<li><h:outputText value="/#{msg['menu.group.operazioni']}" /></li>
@@ -39,7 +39,7 @@
 					value="/#{msg['fatturaAttiva.listaFattureAttiveSoloConservazione.pageTitle']}">
 				</a4j:htmlCommandLink></li>
 			<li><h:outputText
-					value="/#{msg['fatturaAttiva.dettaglio.pageTitle']} (#{fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement.cedentePrestatore.value} #{fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement.numero.value}/#{fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement.anno.value})" /></li>
+					value="/#{msg['fatturaAttivaSoloConservazione.dettaglio.pageTitle']} (#{fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement.cedentePrestatore.value} #{fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement.numero.value}/#{fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement.anno.value})" /></li>
 		</ul>
 	</ui:define>
 	<ui:define name="body">
@@ -54,18 +54,18 @@
 		<rich:panel id="panelContainer1" style="padding:0"
 			headerClass="outpanelHeader" styleClass="noborder">
 			<h:outputText id="outNoDettaglio"
-				value="#{msg['fatturaAttiva.dettaglio.nodata']}"
+				value="#{msg['fatturaAttivaSoloConservazione.dettaglio.nodata']}"
 				rendered="#{empty fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement}" />
 
 			<rich:panel id="panelDettaglio1" bodyClass="inpanelBody"
 				rendered="#{not empty fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement}">
 				<f:facet name="header">
 					<h:outputText id="outHeaderFattura1"
-						value="#{msg['fatturaAttiva.dettaglio.pageTitle']} (#{fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement.cedentePrestatore.value} #{fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement.numero.value}/#{fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement.anno.value})"
+						value="#{msg['fatturaAttivaSoloConservazione.dettaglio.pageTitle']} (#{fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement.cedentePrestatore.value} #{fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement.numero.value}/#{fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement.anno.value})"
 						rendered="#{not empty fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement}" />
 				</f:facet>
 
-				<ui:include src="/includes/form/dettaglioFatturaAttiva.xhtml">
+				<ui:include src="/includes/form/dettaglioFatturaAttivaSoloConservazione.xhtml">
 					<ui:param name="mbean" value="#{fatturaElettronicaAttivaSoloConservazioneMBean}" />
 					<ui:param name="fatturaSelezionata"
 						value="#{fatturaElettronicaAttivaSoloConservazioneMBean.selectedElement}" />
