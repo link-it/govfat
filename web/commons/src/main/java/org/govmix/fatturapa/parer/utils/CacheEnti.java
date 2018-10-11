@@ -11,9 +11,11 @@ public class CacheEnti {
 
 	private DipartimentoBD dipartimentoBD;
 	private EnteBD enteBD;
+	private Logger log;
 	public CacheEnti(Logger log) throws Exception {
 		this.enteBD = new EnteBD(log);
 		this.dipartimentoBD = new DipartimentoBD(log);
+		this.log = log;
 	}
 	
 	public Ente getEnte(String codiceDipartimento) throws Exception {
@@ -21,7 +23,11 @@ public class CacheEnti {
 		IdDipartimento idDipartimento = new IdDipartimento();
 		idDipartimento.setCodice(codiceDipartimento);
 		Dipartimento dipartimento = this.dipartimentoBD.get(idDipartimento);
-		return this.enteBD.get(dipartimento.getEnte());
+		this.log.debug("Cerco ente per codice dipartimento ["+codiceDipartimento+"], ente ["+dipartimento.getEnte().getNome()+"]");
+		Ente ente = this.enteBD.get(dipartimento.getEnte());
+		this.log.debug("Trovato ente ["+ente.getNome()+"] per codice dipartimento ["+codiceDipartimento+"]");
+
+		return ente;
 	}
 
 }
