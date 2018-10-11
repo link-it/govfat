@@ -22,6 +22,7 @@ public class CacheEnti {
 		
 		IdDipartimento idDipartimento = new IdDipartimento();
 		idDipartimento.setCodice(codiceDipartimento);
+		this.log.debug("Cerco ente per codice dipartimento ["+codiceDipartimento+"]");
 		Dipartimento dipartimento = this.dipartimentoBD.get(idDipartimento);
 		this.log.debug("Cerco ente per codice dipartimento ["+codiceDipartimento+"], ente ["+dipartimento.getEnte().getNome()+"]");
 		Ente ente = this.enteBD.get(dipartimento.getEnte());
