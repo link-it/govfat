@@ -202,7 +202,7 @@ public class JDBCDipartimentoServiceSearchImpl implements IJDBCDipartimentoServi
 						org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 
 								new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
 
-						idRegistro = (IdRegistro) jdbcUtilities.executeQuery(sqlQueryObjectGet_dipartimento_registro.createSQLQuery(), jdbcProperties.isShowSql(), Dipartimento.model().REGISTRO, this.getDipartimentoFetch(), 
+						idRegistro = (IdRegistro) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_dipartimento_registro.createSQLQuery(), jdbcProperties.isShowSql(), Dipartimento.model().REGISTRO, this.getDipartimentoFetch(), 
 								new JDBCObject(idRegistroLong,Long.class));
 
 						
