@@ -12,6 +12,8 @@ import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
+import org.govmix.proxy.fatturapa.orm.constants.DominioType;
+import org.govmix.proxy.fatturapa.orm.constants.SottodominioType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFattureAttiveBD;
@@ -48,6 +50,8 @@ public class InserimentoLotti {
 				
 				Dipartimento dipartimento = this.getDipartimento(request.getNomeFile(), request.getDipartimento());
 				
+				this.checkCodiceProcedimento(analizer.getLotto(), dipartimento);
+
 				if(analizer.isFirmato()) {
 					if(dipartimento.getFirmaAutomatica()){
 						throw new InserimentoLottiException(CODICE.ERRORE_FILE_FIRMATO, request.getNomeFile(), request.getDipartimento());
@@ -124,6 +128,19 @@ public class InserimentoLotti {
 
 	}
 
+	private boolean checkCodiceProcedimento(LottoFatture lotto, Dipartimento dipartimento) {
+		if(!dipartimento.isModalitaPush())
+			return true; //senza modalita push i codici procedimento sono ininfluenti
+		
+		if(lotto.getDominio().toString().equals(DominioType.PA.toString()) || (lotto.getSottodominio()!= null && lotto.getSottodominio().toString().equals(SottodominioType.ESTERO.toString()))) {
+			return dipartimento.getIdProcedimento() != null;
+		} else {
+			return dipartimento.getIdProcedimentoB2B() != null;
+		}
+					
+	}
+
+
 	public void checkLotto(List<InserimentoLottoRequest> requestList) throws InserimentoLottiException {
 		for(InserimentoLottoRequest request: requestList) {
 			Dipartimento dipartimento = null;
@@ -137,6 +154,8 @@ public class InserimentoLotti {
 			try {
 				
 				LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), request.getNomeFile(), 1, request.getDipartimento(), this.log);
+				
+				this.checkCodiceProcedimento(analizer.getLotto(), this.getDipartimento(request.getNomeFile(), request.getDipartimento()));
 				
 				if(analizer.isFirmato()) {
 					if(this.getDipartimento(request.getNomeFile(), request.getDipartimento()).getFirmaAutomatica()){
