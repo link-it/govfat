@@ -34,7 +34,6 @@ import org.govmix.proxy.fatturapa.orm.IdRegistro;
 import org.govmix.proxy.fatturapa.orm.dao.IDBDipartimentoPropertyServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.DipartimentoFieldConverter;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.DipartimentoFetch;
-import org.openspcoop2.generic_project.beans.AliasField;
 import org.openspcoop2.generic_project.beans.CustomField;
 import org.openspcoop2.generic_project.beans.FunctionField;
 import org.openspcoop2.generic_project.beans.IField;
@@ -173,8 +172,7 @@ public class JDBCDipartimentoServiceSearchImpl implements IJDBCDipartimentoServi
 			fields.add(Dipartimento.model().ID_PROCEDIMENTO);
 			fields.add(Dipartimento.model().ID_PROCEDIMENTO_B2B);
 			fields.add(Dipartimento.model().ENTE.NOME);
-			fields.add(Dipartimento.model().REGISTRO.USERNAME);
-			fields.add(new AliasField(new CustomField("nome", String.class, "nome", this.getFieldConverter().toTable(Dipartimento.model().REGISTRO.NOME)), "registro_nome"));
+			fields.add(new CustomField("id_registro", Long.class, "id_registro", this.getDipartimentoFieldConverter().toTable(Dipartimento.model())));
 
 			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));
 			
@@ -182,8 +180,40 @@ public class JDBCDipartimentoServiceSearchImpl implements IJDBCDipartimentoServi
 				
 				Dipartimento dipartimento = (Dipartimento)this.getDipartimentoFetch().fetch(jdbcProperties.getDatabase(), Dipartimento.model(), map);
 				dipartimento.setEnte((IdEnte)this.getDipartimentoFetch().fetch(jdbcProperties.getDatabase(), Dipartimento.model().ENTE, map));
-				dipartimento.setRegistro((IdRegistro)this.getDipartimentoFetch().fetch(jdbcProperties.getDatabase(), Dipartimento.model().REGISTRO, map));
+				
+				Object idRegistroObject = map.remove("id_registro");
+
+				if(idRegistroObject instanceof Long) {
+					Long idRegistroLong = (Long) idRegistroObject;
+					IdRegistro idRegistro = new IdRegistro();
+					idRegistro.setId(idRegistroLong);
+					
+					if(fetchChildren) {
+						ISQLQueryObject sqlQueryObjectGet = sqlQueryObject.newSQLQueryObject();
+						
+						// Object dipartimento_dipartimentoPropertyValue
+						ISQLQueryObject sqlQueryObjectGet_dipartimento_registro = sqlQueryObjectGet.newSQLQueryObject();
+						sqlQueryObjectGet_dipartimento_registro.setANDLogicOperator(true);
+						sqlQueryObjectGet_dipartimento_registro.addFromTable(this.getDipartimentoFieldConverter().toTable(Dipartimento.model().REGISTRO));
+						sqlQueryObjectGet_dipartimento_registro.addSelectField("id");
+						sqlQueryObjectGet_dipartimento_registro.addSelectField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().REGISTRO.NOME,true));
+						sqlQueryObjectGet_dipartimento_registro.addWhereCondition("id=?");
+
+						org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 
+								new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
+
+						idRegistro = (IdRegistro) jdbcUtilities.executeQuery(sqlQueryObjectGet_dipartimento_registro.createSQLQuery(), jdbcProperties.isShowSql(), Dipartimento.model().REGISTRO, this.getDipartimentoFetch(), 
+								new JDBCObject(idRegistroLong,Long.class));
+
+						
+					}
+					
+					dipartimento.setRegistro(idRegistro);
+
+				}
+
 				if(fetchChildren) {
+
 					org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 
 							new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
 						
