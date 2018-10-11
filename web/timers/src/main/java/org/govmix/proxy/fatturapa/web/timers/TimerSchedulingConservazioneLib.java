@@ -95,7 +95,12 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 					// 1) fatturazione passiva
 					// 2) lotto di piu' fatture (si inserisce alla fattura con posizione 2 per evitare di inserirlo piu' volte)
 					// 3) il lotto no ndeve avere gia' associato il sip
-					if(!fattura.getFatturazioneAttiva() && fattura.getPosizione() == 2 && fattura.getLottoFatture().getIdSIP() == null) {
+					
+					FatturaFilter idSdiFilter = fatturaElettronicaBD.newFilter();
+					idSdiFilter.setIdentificativoSdi(fattura.getIdentificativoSdi());
+					long count = fatturaElettronicaBD.count(idSdiFilter);
+					
+					if(!fattura.getFatturazioneAttiva() && count > 1 && fattura.getLottoFatture().getIdSIP() == null) {
 						this.log.debug("Inserisco in scheduling il lotto della fattura passiva ["+fattura.getIdentificativoSdi()+"]...");
 
 						SIP sipLotto = new SIP();
@@ -132,12 +137,12 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 
 					sipBD.updateStatoConsegna(fattura.getIdSIP(), StatoConsegnaType.IN_RICONSEGNA);
 
+					
 
-					//controlli da fare per abilitare la spedizione del lotto:
+					//controlli da fare per abilitare la rispedizione del lotto:
 					// 1) fatturazione passiva
-					// 2) lotto di piu' fatture (si inserisce alla fattura con posizione 2 per evitare di inserirlo piu' volte)
-					// 3) il lotto no ndeve avere gia' associato il sip
-					if(!fattura.getFatturazioneAttiva() && fattura.getPosizione() == 2 && fattura.getLottoFatture().getIdSIP() == null) {
+					// 2) il lotto deve avere associato il sip
+					if(!fattura.getFatturazioneAttiva() && fattura.getLottoFatture().getIdSIP() != null) {
 						sipBD.updateStatoConsegna(fattura.getLottoFatture().getIdSIP(), StatoConsegnaType.IN_RICONSEGNA);
 					}
 
