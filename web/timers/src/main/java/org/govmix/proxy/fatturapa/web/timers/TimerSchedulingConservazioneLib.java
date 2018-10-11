@@ -142,6 +142,9 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 					//controlli da fare per abilitare la rispedizione del lotto:
 					// 1) fatturazione passiva
 					// 2) il lotto deve avere associato il sip
+					
+					this.log.debug("Identificativo sdi ["+fattura.getIdentificativoSdi()+"] posizione ["+fattura.getPosizione()+"] id sip lotto ["+fattura.getLottoFatture().getIdSIP()+"]");
+					
 					if(!fattura.getFatturazioneAttiva() && fattura.getLottoFatture().getIdSIP() != null) {
 						sipBD.updateStatoConsegna(fattura.getLottoFatture().getIdSIP(), StatoConsegnaType.IN_RICONSEGNA);
 					}
