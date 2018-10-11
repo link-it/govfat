@@ -106,6 +106,7 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
         IdFattura idFatturaElettronica = new IdFattura(fatturaElettronica.isFatturazioneAttiva());
         idFatturaElettronica.setIdentificativoSdi(fatturaElettronica.getIdentificativoSdi());
         idFatturaElettronica.setPosizione(fatturaElettronica.getPosizione());
+        idFatturaElettronica.setFatturazioneAttiva(fatturaElettronica.isFatturazioneAttiva());
         
         return idFatturaElettronica;
 	}
@@ -251,8 +252,7 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.PROTOCOLLO, lottoTable));
 			fields.add(this.getCustomField(FatturaElettronica.model().LOTTO_FATTURE.ID_EGOV, lottoTable));
 			String idSipLottoField = lottoTable+".id_sip";
-//			fields.add(new CustomField(idSipLottoField, Long.class, idSipLottoField, this.getFatturaElettronicaFieldConverter().toTable(FatturaElettronica.model().LOTTO_FATTURE), "l_id"));
-
+			fields.add(new AliasField(new CustomField(idSipLottoField, Long.class, "id_sip", this.getFatturaElettronicaFieldConverter().toTable(FatturaElettronica.model().LOTTO_FATTURE)), "l_id_sip"));
 
 			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));
 

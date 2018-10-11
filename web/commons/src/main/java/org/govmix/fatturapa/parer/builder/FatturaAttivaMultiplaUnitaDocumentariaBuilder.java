@@ -22,17 +22,18 @@ public class FatturaAttivaMultiplaUnitaDocumentariaBuilder extends
 	@Override
 	protected DocumentoCollegatoType getDocumentiCollegati(
 			UnitaDocumentariaFatturaAttivaInput input) {
-		DocumentoCollegatoType documentiCollegati = new DocumentoCollegatoType();
-		DocumentoCollegato collegamentoALotto = new DocumentoCollegato();
-		
-		ChiaveType chiaveCollegamentoALotto = new ChiaveType();
-		chiaveCollegamentoALotto.setAnno(input.getFattura().getAnno());
-		chiaveCollegamentoALotto.setNumero(""+input.getLotto().getIdentificativoSdi());
-		chiaveCollegamentoALotto.setTipoRegistro("LOTTI_FATTURE");
-		collegamentoALotto.setChiaveCollegamento(chiaveCollegamentoALotto);
-		collegamentoALotto.setDescrizioneCollegamento("Appartenenza a Lotto");
-		documentiCollegati.getDocumentoCollegato().add(collegamentoALotto);
-		return documentiCollegati;
+//		DocumentoCollegatoType documentiCollegati = new DocumentoCollegatoType();
+//		DocumentoCollegato collegamentoALotto = new DocumentoCollegato();
+//		
+//		ChiaveType chiaveCollegamentoALotto = new ChiaveType();
+//		chiaveCollegamentoALotto.setAnno(input.getFattura().getAnno());
+//		chiaveCollegamentoALotto.setNumero(""+input.getLotto().getIdentificativoSdi());
+//		chiaveCollegamentoALotto.setTipoRegistro("LOTTI_FATTURE");
+//		collegamentoALotto.setChiaveCollegamento(chiaveCollegamentoALotto);
+//		collegamentoALotto.setDescrizioneCollegamento("Appartenenza a Lotto");
+//		documentiCollegati.getDocumentoCollegato().add(collegamentoALotto);
+//		return documentiCollegati;
+		return null; //11-10-2018 non si aggiunge piu' il collegamento da fattura a lotto
 	}
 
 	@Override
