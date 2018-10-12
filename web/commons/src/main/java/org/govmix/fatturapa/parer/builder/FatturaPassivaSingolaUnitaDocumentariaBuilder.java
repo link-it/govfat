@@ -101,7 +101,7 @@ public class FatturaPassivaSingolaUnitaDocumentariaBuilder extends
 	}
 
 	@Override
-	protected ConfigType getConfigurazione(UnitaDocumentariaFatturaPassivaInput input) {
+	public ConfigType getConfigurazione(UnitaDocumentariaFatturaPassivaInput input) {
 		ConfigType  config = new ConfigType();
 		config.setTipoConservazione(TipoConservazioneType.FISCALE);
 		config.setForzaAccettazione(true);

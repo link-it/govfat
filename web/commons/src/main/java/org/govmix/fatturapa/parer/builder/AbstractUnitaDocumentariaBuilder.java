@@ -196,7 +196,7 @@ public abstract class AbstractUnitaDocumentariaBuilder <T extends AbstractUnitaD
 		return toXML(metadati);
 	}
 	
-	protected IntestazioneType getIntestazione(T input) throws Exception {
+	public IntestazioneType getIntestazione(T input) throws Exception {
 		IntestazioneType intestazione = new IntestazioneType();
 		intestazione.setVersione(input.getProperties().getVersioneServizio());
 		VersatoreType versatore = new VersatoreType();

@@ -17,8 +17,10 @@ import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaPar
 
 public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaType> {
 
+	private FormatoTrasmissioneType formato;
 	public FPA12Converter(byte[] fattura, ConsegnaFatturaParameters params) throws Exception {
 		super(deserializer.readFatturaElettronicaType(fattura), fattura, params);
+		formato = FormatoTrasmissioneType.toEnumConstant(params.getFormatoFatturaPA());
 	}
 	private static JaxbDeserializer deserializer;
 	
@@ -52,7 +54,7 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 		
 		fatturaElettronica.setTipoDocumento(tipoDoc);
 		
-		fatturaElettronica.setFormatoTrasmissione(FormatoTrasmissioneType.FPA12);
+		fatturaElettronica.setFormatoTrasmissione(this.formato);
 		fatturaElettronica.setDivisa(fatturaBody.getDatiGenerali().getDatiGeneraliDocumento().getDivisa());
 		fatturaElettronica.setData(fatturaBody.getDatiGenerali().getDatiGeneraliDocumento().getData());
 		fatturaElettronica.setNumero(fatturaBody.getDatiGenerali().getDatiGeneraliDocumento().getNumero());
