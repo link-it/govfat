@@ -339,7 +339,7 @@ public class ConsegnaFatturaUtils {
 			
 			boolean pagoPA = isPagoPA(fattura);
 
-			params = getParameters(fattura.getVersione().toString(), identificativoSDI, nomeFile, formatoArchivioInvioFatturaString, formatoArchivioBase64, messageId, fattura.getFatturaElettronicaHeader().getDatiTrasmissione().getCodiceDestinatario(), 
+			params = getParameters(fattura.getFatturaElettronicaHeader().getDatiTrasmissione().getFormatoTrasmissione().toString(), identificativoSDI, nomeFile, formatoArchivioInvioFatturaString, formatoArchivioBase64, messageId, fattura.getFatturaElettronicaHeader().getDatiTrasmissione().getCodiceDestinatario(), 
 					 anagraficaCP.getDenominazione(), anagraficaCP.getNome(), anagraficaCP.getCognome(),
 					 datiAnagraficiCP.getCodiceFiscale(), idFiscaleCP.getIdCodice(), idFiscaleCP.getIdPaese(),
 					 anagraficaCC.getDenominazione(), anagraficaCC.getNome(), anagraficaCC.getCognome(), 
