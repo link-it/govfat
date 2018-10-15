@@ -39,6 +39,7 @@ import org.openspcoop2.utils.Utilities;
 
 import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.DatiPagamentoType;
 import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.DettaglioPagamentoType;
+import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType;
 import it.gov.fatturapa.sdi.fatturapa.v1_0.AnagraficaType;
 import it.gov.fatturapa.sdi.fatturapa.v1_0.DatiAnagraficiCedenteType;
 import it.gov.fatturapa.sdi.fatturapa.v1_0.DatiAnagraficiCessionarioType;
@@ -339,6 +340,12 @@ public class ConsegnaFatturaUtils {
 			
 			boolean pagoPA = isPagoPA(fattura);
 
+			FormatoTrasmissioneType formatoTrasmissione = fattura.getFatturaElettronicaHeader().getDatiTrasmissione().getFormatoTrasmissione();
+			
+			if(formatoTrasmissione == null || (!formatoTrasmissione.equals(FormatoTrasmissioneType.FPA12) || !formatoTrasmissione.equals(FormatoTrasmissioneType.FPR12))) {
+				throw new Exception("Formato FatturaPA non riconosciuto");
+			}
+			
 			params = getParameters(fattura.getFatturaElettronicaHeader().getDatiTrasmissione().getFormatoTrasmissione().toString(), identificativoSDI, nomeFile, formatoArchivioInvioFatturaString, formatoArchivioBase64, messageId, fattura.getFatturaElettronicaHeader().getDatiTrasmissione().getCodiceDestinatario(), 
 					 anagraficaCP.getDenominazione(), anagraficaCP.getNome(), anagraficaCP.getCognome(),
 					 datiAnagraficiCP.getCodiceFiscale(), idFiscaleCP.getIdCodice(), idFiscaleCP.getIdPaese(),
