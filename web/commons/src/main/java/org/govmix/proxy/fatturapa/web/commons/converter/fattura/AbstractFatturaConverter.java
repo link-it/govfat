@@ -26,7 +26,7 @@ import java.util.List;
 
 import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
-import org.govmix.proxy.fatturapa.orm.LottoFatture;
+import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
@@ -83,6 +83,7 @@ public abstract class AbstractFatturaConverter<T> {
 	private FatturaElettronica getDatiComuni() throws Exception {
 		FatturaElettronica fatturaElettronica = new FatturaElettronica();
 
+		fatturaElettronica.setFormatoTrasmissione(FormatoTrasmissioneType.toEnumConstant(this.params.getFormatoFatturaPA()));
 		fatturaElettronica.setIdentificativoSdi(this.params.getIdentificativoSdI());
 		fatturaElettronica.setPosizione(this.params.getPosizioneFatturaPA());
 		fatturaElettronica.setNomeFile(this.params.getNomeFile());

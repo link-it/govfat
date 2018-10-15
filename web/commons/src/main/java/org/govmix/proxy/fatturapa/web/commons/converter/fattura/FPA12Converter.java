@@ -1,26 +1,23 @@
 package org.govmix.proxy.fatturapa.web.commons.converter.fattura;
 
-import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.FatturaElettronicaType;
-import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.AllegatiType;
-import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.DatiRiepilogoType;
-import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.FatturaElettronicaBodyType;
-import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.utils.serializer.JaxbDeserializer;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
-import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters;
 
+import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.AllegatiType;
+import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.DatiRiepilogoType;
+import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.FatturaElettronicaBodyType;
+import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.FatturaElettronicaType;
+import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.utils.serializer.JaxbDeserializer;
+
 public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaType> {
 
-	private FormatoTrasmissioneType formato;
 	public FPA12Converter(byte[] fattura, ConsegnaFatturaParameters params) throws Exception {
 		super(deserializer.readFatturaElettronicaType(fattura), fattura, params);
-		formato = FormatoTrasmissioneType.toEnumConstant(params.getFormatoFatturaPA());
 	}
 	private static JaxbDeserializer deserializer;
 	
@@ -54,7 +51,6 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 		
 		fatturaElettronica.setTipoDocumento(tipoDoc);
 		
-		fatturaElettronica.setFormatoTrasmissione(this.formato);
 		fatturaElettronica.setDivisa(fatturaBody.getDatiGenerali().getDatiGeneraliDocumento().getDivisa());
 		fatturaElettronica.setData(fatturaBody.getDatiGenerali().getDatiGeneraliDocumento().getData());
 		fatturaElettronica.setNumero(fatturaBody.getDatiGenerali().getDatiGeneraliDocumento().getNumero());
