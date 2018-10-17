@@ -342,8 +342,10 @@ public class ConsegnaFatturaUtils {
 
 			FormatoTrasmissioneType formatoTrasmissione = fattura.getFatturaElettronicaHeader().getDatiTrasmissione().getFormatoTrasmissione();
 			
-			if(formatoTrasmissione == null || (!formatoTrasmissione.toString().equals(FormatoTrasmissioneType.FPA12.toString()) || !formatoTrasmissione.toString().equals(FormatoTrasmissioneType.FPR12.toString()))) {
-				throw new Exception("Formato FatturaPA non riconosciuto");
+			if(formatoTrasmissione!=null && (formatoTrasmissione.toString().equals(FormatoTrasmissioneType.FPA12.toString()) || formatoTrasmissione.toString().equals(FormatoTrasmissioneType.FPR12.toString()))) {
+				
+			} else {
+				throw new Exception("Formato FatturaPA non riconosciuto. Atteso FPA12 o FPR12, trovato ["+formatoTrasmissione+"]");
 			}
 			
 			params = getParameters(fattura.getFatturaElettronicaHeader().getDatiTrasmissione().getFormatoTrasmissione().toString(), identificativoSDI, nomeFile, formatoArchivioInvioFatturaString, formatoArchivioBase64, messageId, fattura.getFatturaElettronicaHeader().getDatiTrasmissione().getCodiceDestinatario(), 
