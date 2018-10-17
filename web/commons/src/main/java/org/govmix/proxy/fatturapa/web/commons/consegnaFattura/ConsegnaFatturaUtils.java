@@ -342,7 +342,7 @@ public class ConsegnaFatturaUtils {
 
 			FormatoTrasmissioneType formatoTrasmissione = fattura.getFatturaElettronicaHeader().getDatiTrasmissione().getFormatoTrasmissione();
 			
-			if(formatoTrasmissione == null || (!formatoTrasmissione.equals(FormatoTrasmissioneType.FPA12) || !formatoTrasmissione.equals(FormatoTrasmissioneType.FPR12))) {
+			if(formatoTrasmissione == null || (!formatoTrasmissione.toString().equals(FormatoTrasmissioneType.FPA12.toString()) || !formatoTrasmissione.toString().equals(FormatoTrasmissioneType.FPR12.toString()))) {
 				throw new Exception("Formato FatturaPA non riconosciuto");
 			}
 			

@@ -14,6 +14,7 @@ import org.govmix.fatturapa.parer.versamento.request.StrutturaType.Componenti;
 import org.govmix.fatturapa.parer.versamento.request.TipoSupportoType;
 import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
+import org.openspcoop2.utils.resources.MimeTypes;
 
 public abstract class BaseAbstractFatturaPassivaUnitaDocumentariaBuilder extends AbstractUnitaDocumentariaBuilder<UnitaDocumentariaFatturaPassivaInput> {
 
@@ -137,7 +138,7 @@ public abstract class BaseAbstractFatturaPassivaUnitaDocumentariaBuilder extends
 		else 
 			return null;
 	}
-
+	
 	@Override
 	protected List<DocumentoWrapper> getAllegati(UnitaDocumentariaFatturaPassivaInput input) throws Exception {
 
@@ -164,7 +165,13 @@ public abstract class BaseAbstractFatturaPassivaUnitaDocumentariaBuilder extends
 					componente.setNomeComponente(allegatoInput.getNomeAttachment());
 					
 					String formato = tika.detect(allegatoInput.getAttachment());
-					componente.setFormatoFileVersato(formato);
+					
+					if("text/plain".equals(formato)) {
+						String ext = MimeTypes.getInstance().getExtension(formato);
+						componente.setFormatoFileVersato(ext);
+					} else {
+						componente.setFormatoFileVersato(formato);
+					}
 	
 					componente.setUtilizzoDataFirmaPerRifTemp(false);
 					componente.setRiferimentoTemporale(toXMLGC(input.getFattura().getData()));
