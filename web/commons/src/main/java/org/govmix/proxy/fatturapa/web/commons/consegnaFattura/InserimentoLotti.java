@@ -72,7 +72,7 @@ public class InserimentoLotti {
 						throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
 					}
 					
-					lotto.setStatoElaborazioneInUscita(StatoElaborazioneType.PROTOCOLLATA);
+					lotto.setStatoElaborazioneInUscita(StatoElaborazioneType.DA_INVIARE_ALLO_SDI);
 				}
 
 				insertLotto(lotto, lottoBD, consegnaFattura);
@@ -145,14 +145,8 @@ public class InserimentoLotti {
 
 	public void checkLotto(List<InserimentoLottoRequest> requestList) throws InserimentoLottiException {
 		for(InserimentoLottoRequest request: requestList) {
-			Dipartimento dipartimento = null;
+			this.getDipartimento(request.getNomeFile(), request.getDipartimento());
 			
-			dipartimento = this.getDipartimento(request.getNomeFile(), request.getDipartimento());
-			
-			if(!dipartimento.getFatturazioneAttiva()) {
-				throw new InserimentoLottiException(CODICE.ERRORE_DIPARTIMENTO_NON_ABILITATO);
-			}
-
 			try {
 				
 				LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), request.getNomeFile(), 1, request.getDipartimento(), this.log);
@@ -265,7 +259,11 @@ public class InserimentoLotti {
 	
 	private Dipartimento getDipartimento(String nomeFile, String codice) throws InserimentoLottiException {
 		if(this.dipartimenti != null && this.dipartimenti.containsKey(codice)) {
-			return this.dipartimenti.get(codice);
+			Dipartimento dipartimento = this.dipartimenti.get(codice);
+			if(!dipartimento.getFatturazioneAttiva())
+				throw new InserimentoLottiException(CODICE.ERRORE_DIPARTIMENTO_NON_ABILITATO, nomeFile, codice);
+			
+			return dipartimento;
 		}
 		throw new InserimentoLottiException(CODICE.ERRORE_DIPARTIMENTO_NON_TROVATO, nomeFile, codice);
 	}

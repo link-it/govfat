@@ -434,7 +434,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 				valorePosizione = this.getDTO().getPosizione() + "";
 				this.statoElaborazioneDettaglio.setValue("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
 				break;
-			case PROTOCOLLATA:
+			case DA_INVIARE_ALLO_SDI:
 			case ERRORE_DI_SPEDIZIONE:
 			case SOLO_CONSERVAZIONE:
 				valoreProtocollo = this.getDTO().getProtocollo();
@@ -466,7 +466,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		}else {
 			switch (_statoElaborazione) {
 			case PRESA_IN_CARICO:
-			case PROTOCOLLATA:
+			case DA_INVIARE_ALLO_SDI:
 			case IN_CORSO_DI_FIRMA:
 			case IN_CORSO_DI_PROTOCOLLAZIONE:
 			case SOLO_CONSERVAZIONE:

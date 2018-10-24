@@ -44,8 +44,8 @@ public enum StatoElaborazioneType implements IEnumeration , Serializable , Clone
 	IN_CORSO_DI_PROTOCOLLAZIONE ("IN_CORSO_DI_PROTOCOLLAZIONE"),
 	@javax.xml.bind.annotation.XmlEnumValue("IN_CORSO_DI_FIRMA")
 	IN_CORSO_DI_FIRMA ("IN_CORSO_DI_FIRMA"),
-	@javax.xml.bind.annotation.XmlEnumValue("PROTOCOLLATA")
-	PROTOCOLLATA ("PROTOCOLLATA"),
+	@javax.xml.bind.annotation.XmlEnumValue("DA_INVIARE_ALLO_SDI")
+	DA_INVIARE_ALLO_SDI ("DA_INVIARE_ALLO_SDI"),
 	@javax.xml.bind.annotation.XmlEnumValue("ERRORE_DI_FIRMA")
 	ERRORE_DI_FIRMA ("ERRORE_DI_FIRMA"),
 	@javax.xml.bind.annotation.XmlEnumValue("ERRORE_DI_PROTOCOLLO")

@@ -92,7 +92,7 @@ public class SpedizioneFattureAttive implements IWorkFlow<LottoFatture> {
 			
 			long offset = policy.getOffsetRispedizione();
 
-			StatoElaborazioneType nextStato = policy.isRispedizioneAbilitata() ? StatoElaborazioneType.PROTOCOLLATA : StatoElaborazioneType.ERRORE_DI_SPEDIZIONE;
+			StatoElaborazioneType nextStato = policy.isRispedizioneAbilitata() ? StatoElaborazioneType.DA_INVIARE_ALLO_SDI : StatoElaborazioneType.ERRORE_DI_SPEDIZIONE;
 
 			this.lottoFattureAttiveBD.updateStatoElaborazioneInUscitaKO(this.lottoFattureAttiveBD.convertToId(lotto), nextStato, new Date(now+offset), null, lotto.getTentativiConsegna() + 1);
 			

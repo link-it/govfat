@@ -455,7 +455,7 @@
 			<xsd:enumeration value="PRESA_IN_CARICO" />
 			<xsd:enumeration value="IN_CORSO_DI_PROTOCOLLAZIONE" />
 			<xsd:enumeration value="IN_CORSO_DI_FIRMA" />
-			<xsd:enumeration value="PROTOCOLLATA" />
+			<xsd:enumeration value="DA_INVIARE_ALLO_SDI" />
 			<xsd:enumeration value="ERRORE_DI_FIRMA" />
 			<xsd:enumeration value="ERRORE_DI_PROTOCOLLO" />
 			<xsd:enumeration value="ERRORE_DI_SPEDIZIONE" />

@@ -41,7 +41,6 @@ import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.IdRegistro;
-import org.govmix.proxy.fatturapa.orm.constants.DominioType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
@@ -642,7 +641,7 @@ IFatturaElettronicaAttivaService>{
 		}catch(InserimentoLottiException e) {
 			this.checkFormFattura = false;
 			CODICE codEccezione = e.getCodice() != null ? e.getCodice() : CODICE.ERRORE_GENERICO;
-			String msgCod = "fattura.salvaFattura." + codEccezione.name();
+			String msgCod = "fattura.salvaFatturaSoloConservazione." + codEccezione.name();
 			Object[] msgParams = e.getParams();
 			
 			if(msgParams != null && msgParams.length > 0) {

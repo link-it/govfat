@@ -69,7 +69,7 @@ public class LottoFattureAttiveBD extends LottoBD {
 			throws ServiceException, NotImplementedException, ExpressionNotImplementedException, ExpressionException {
 		IExpression expression = this.service.newExpression();
 		expression.lessEquals(LottoFatture.model().DATA_PROSSIMA_ELABORAZIONE, dataRicezione);
-		expression.equals(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA, StatoElaborazioneType.PROTOCOLLATA);
+		expression.equals(LottoFatture.model().STATO_ELABORAZIONE_IN_USCITA, StatoElaborazioneType.DA_INVIARE_ALLO_SDI);
 		expression.equals(LottoFatture.model().FATTURAZIONE_ATTIVA, true);
 		return expression;
 	}
@@ -196,7 +196,7 @@ public class LottoFattureAttiveBD extends LottoBD {
 				break;
 			case ERRORE_DI_PROTOCOLLO:  nuovoStato = StatoElaborazioneType.PRESA_IN_CARICO;
 				break;
-			case ERRORE_DI_SPEDIZIONE: nuovoStato = StatoElaborazioneType.PROTOCOLLATA;
+			case ERRORE_DI_SPEDIZIONE: nuovoStato = StatoElaborazioneType.DA_INVIARE_ALLO_SDI;
 				break;
 			default: throw new Exception("Lo stato elaborazione ["+lottoDaDB.getStatoElaborazioneInUscita()+"] non prevede una rispedizione");
 			
