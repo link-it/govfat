@@ -743,7 +743,7 @@ IFatturaElettronicaAttivaService>{
 					String msgCod = "fattura.salvaFattura." + codEccezione.name();
 					Object[] msgParams = salvaFatture.getEccezione().getParams();
 					
-					if(codEccezione.equals(CODICE.ERRORE_GENERICO) && msgParams != null && msgParams.length > 0) {
+					if(!codEccezione.equals(CODICE.ERRORE_GENERICO) && msgParams != null && msgParams.length > 0) {
 						msgCod +=".parametri";
 						this.checkFormFatturaMessage = org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle(msgCod, msgParams);
 					} else {
