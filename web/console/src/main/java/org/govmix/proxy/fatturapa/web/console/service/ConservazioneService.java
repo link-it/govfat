@@ -30,6 +30,7 @@ import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.FatturaElettronicaFieldConverter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FilterSortWrapper;
@@ -40,6 +41,9 @@ import org.govmix.proxy.fatturapa.web.console.iservice.IConservazioneService;
 import org.govmix.proxy.fatturapa.web.console.search.ConservazioneSearchForm;
 import org.govmix.proxy.fatturapa.web.console.util.ConsoleProperties;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
+import org.openspcoop2.generic_project.beans.AliasField;
+import org.openspcoop2.generic_project.beans.CustomField;
+import org.openspcoop2.generic_project.beans.IField;
 import org.openspcoop2.generic_project.beans.IModel;
 import org.openspcoop2.generic_project.dao.IDBServiceUtilities;
 import org.openspcoop2.generic_project.dao.IExpressionConstructor;
@@ -94,7 +98,7 @@ public class ConservazioneService extends BaseService<ConservazioneSearchForm> i
 				filter.setOffset(arg0);
 				filter.setLimit(arg1);
 
-				List<FatturaElettronica> findAll = this.fatturaBD.findAll(filter);
+				List<FatturaElettronica> findAll = this.fatturaBD.fatturaElettronicaSelect(filter, this.getFieldsConservazione());
 
 				if(findAll != null && findAll.size() > 0){
 					for (FatturaElettronica fatturaElettronica : findAll) {
@@ -171,7 +175,7 @@ public class ConservazioneService extends BaseService<ConservazioneSearchForm> i
 				fsw.setField(FatturaElettronica.model().DATA_RICEZIONE);
 				filter.getFilterSortList().add(fsw);
 
-				List<FatturaElettronica> findAll = this.fatturaBD.findAll(filter);
+				List<FatturaElettronica> findAll = this.fatturaBD.fatturaElettronicaSelect(filter, this.getFieldsConservazione());
 
 				if(findAll != null && findAll.size() > 0){
 					for (FatturaElettronica fatturaElettronica : findAll) {
@@ -236,15 +240,15 @@ public class ConservazioneService extends BaseService<ConservazioneSearchForm> i
 				int anno = Integer.parseInt(annoS);
 				filter.setAnno(anno); 
 			}
-			
+
 			// filtro sui giorni che devono passare per l'invio in conservazione
 			Integer giorniSoglia = ConsoleProperties.getInstance(log).getNumeroGiorniAttesaPerInvioConservazione(); 
 			if(giorniSoglia != null) {
 				Calendar instance = Calendar.getInstance();
-				
+
 				instance.setTime(new Date());
 				instance.add(Calendar.DAY_OF_MONTH, -giorniSoglia); 
-				
+
 				filter.setDataFatturaMax(instance.getTime()); 
 			}
 
@@ -285,5 +289,41 @@ public class ConservazioneService extends BaseService<ConservazioneSearchForm> i
 		ISQLFieldConverter converter = ((IDBServiceUtilities<?>)expressionConstructor).getFieldConverter();
 		IModel<?> model = converter.getRootModel();
 		return converter.toTable(model);
+	}
+
+	private IField[] getFieldsConservazione() throws ServiceException {
+		List<IField> fields = new ArrayList<IField>();
+
+		FatturaElettronicaFieldConverter fieldConverter = new FatturaElettronicaFieldConverter(this.fatturaBD.getDatabaseType());
+
+		String id = "id";
+		try {
+			fields.add(new CustomField(id, Long.class, id, fieldConverter.toTable(FatturaElettronica.model())));
+			fields.add(FatturaElettronica.model().IDENTIFICATIVO_SDI);
+			fields.add(FatturaElettronica.model().POSIZIONE);
+			fields.add(FatturaElettronica.model().FATTURAZIONE_ATTIVA);
+			fields.add(FatturaElettronica.model().CEDENTE_PRESTATORE_DENOMINAZIONE);
+			fields.add(FatturaElettronica.model().CODICE_DESTINATARIO);
+			fields.add(FatturaElettronica.model().ANNO);
+			fields.add(FatturaElettronica.model().NUMERO);
+			fields.add(FatturaElettronica.model().DATA_RICEZIONE);
+			fields.add(FatturaElettronica.model().DATA);
+			fields.add(FatturaElettronica.model().CESSIONARIO_COMMITTENTE_DENOMINAZIONE);
+			fields.add(FatturaElettronica.model().STATO_CONSERVAZIONE);
+			
+			String idSipField = "id_sip";
+			fields.add(new CustomField(idSipField, Long.class, idSipField, fieldConverter.toTable(FatturaElettronica.model())));
+			
+			String lottoTable = "LottoFatture";
+			String lottoId = lottoTable + ".id";
+			fields.add(new AliasField(new CustomField(lottoId, Long.class, "id", fieldConverter.toTable(FatturaElettronica.model().LOTTO_FATTURE)), "l_id"));
+			String idSipLottoField = lottoTable+".id_sip";
+			fields.add(new AliasField(new CustomField(idSipLottoField, Long.class, "id_sip", fieldConverter.toTable(FatturaElettronica.model().LOTTO_FATTURE)), "l_id_sip"));
+			
+		} catch (ExpressionException e) {
+			throw new ServiceException(e);
+		}
+
+		return fields.toArray(new IField[1]);
 	}
 }

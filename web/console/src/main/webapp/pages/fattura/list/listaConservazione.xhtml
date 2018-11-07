@@ -217,6 +217,22 @@
 						<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{empty item.xml.href}" />
 					</h:panelGroup>
 				</rich:column>
+				
+				<!-- XML Lotto (Icona) -->
+				<rich:column style="text-align: center;">
+					<f:facet name="header">
+		                <h:panelGroup layout="block">
+							<h:outputText value="#{itemMetadata.xmlLotto.label}" />
+							</h:panelGroup>
+					</f:facet>
+					 
+					<h:panelGroup>
+					 	<h:commandLink id="visualizzaXmlLottoLink" target="_blank" action="#{item.visualizzaXmlLotto}" rendered="#{not empty item.xml.href}">
+							<h:graphicImage value="#{item.xmlLotto.image}" width="16" alt="#{item.xmlLotto.alt}" height="16"	title="#{item.xmlLotto.title}" />
+						</h:commandLink>
+						<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{empty item.xmlLotto.href}" />
+					</h:panelGroup>
+				</rich:column>
 
 				<ui:define name="buttonsListView">
 					<a4j:jsFunction name="inviaConservazione" id="inviaConservazione" action="#{conservazioneMBean.inviaFattureInConservazione}"  status="mainStatus">

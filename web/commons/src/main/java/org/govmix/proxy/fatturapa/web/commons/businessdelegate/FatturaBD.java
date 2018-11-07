@@ -31,6 +31,7 @@ import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
+import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
@@ -38,6 +39,7 @@ import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.dao.IDBFatturaElettronicaService;
 import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaService;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.FatturaElettronicaFieldConverter;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.FatturaElettronicaFetch;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaAttivaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaPassivaFilter;
@@ -56,6 +58,7 @@ import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
 import org.openspcoop2.generic_project.expression.IPaginatedExpression;
 import org.openspcoop2.generic_project.expression.SortOrder;
+import org.openspcoop2.utils.TipiDatabase;
 import org.openspcoop2.utils.sql.ISQLQueryObject;
 import org.openspcoop2.utils.sql.SQLQueryObjectException;
 
@@ -344,6 +347,25 @@ public class FatturaBD extends BaseBD {
 			throw new ServiceException(e);
 		}
 	}
+	
+	public List<FatturaElettronica> fatturaElettronicaSelect(FatturaFilter filter, IField... fields) throws ServiceException {
+		List<FatturaElettronica> fatLst = new ArrayList<FatturaElettronica>();
+			
+		List<Map<String,Object>> select = this.select(filter, fields);
+		FatturaElettronicaFetch fetch = new FatturaElettronicaFetch();
+		for(Map<String, Object> map: select) {
+			FatturaElettronica fatturaElettronica = (FatturaElettronica)fetch.fetch(getDatabaseType(), FatturaElettronica.model(), map);
+			LottoFatture lottoFatture = (LottoFatture)fetch.fetch(getDatabaseType(), FatturaElettronica.model().LOTTO_FATTURE, map);
+			fatturaElettronica.setLottoFatture(lottoFatture);
+			fatLst.add(fatturaElettronica);
+		}
+
+		return fatLst;
+	}
+
+	public TipiDatabase getDatabaseType() throws ServiceException {
+		return this.serviceManager.getJdbcProperties().getDatabase();
+	}
 
 	public List<String> getListAutocomplete(FatturaFilter filter, IField field) throws ServiceException {
 
@@ -367,7 +389,7 @@ public class FatturaBD extends BaseBD {
 
 			List<Object> listObjects = new ArrayList<Object>();
 
-			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase());
+			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(getDatabaseType());
 
 			update.append("update "+converter.toTable(FatturaElettronica.model())+" set ");
 			update.append(converter.toColumn(FatturaElettronica.model().IDENTIFICATIVO_SDI, false)).append(" = ? ");
@@ -397,7 +419,7 @@ public class FatturaBD extends BaseBD {
 
 			List<Object> listObjects = new ArrayList<Object>();
 
-			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase());
+			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(getDatabaseType());
 
 			update.append("update "+converter.toTable(FatturaElettronica.model())+" set ");
 			if(protocollo != null) {
@@ -516,11 +538,11 @@ public class FatturaBD extends BaseBD {
 			case PRESA_IN_CARICO: throw new ServiceException("Operazione non valida");
 			}
 
-			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase());
+			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(getDatabaseType());
 
 			ArrayList<Object> params = new ArrayList<Object>();
 
-			ISQLQueryObject sqlQueryObject = new JDBC_SQLObjectFactory().createSQLQueryObject(this.serviceManager.getJdbcProperties().getDatabase());
+			ISQLQueryObject sqlQueryObject = new JDBC_SQLObjectFactory().createSQLQueryObject(getDatabaseType());
 
 			String fatturaTable = converter.toTable(FatturaElettronica.model());
 			String lottiTable = converter.toTable(FatturaElettronica.model().LOTTO_FATTURE);
@@ -579,7 +601,7 @@ public class FatturaBD extends BaseBD {
 
 			List<Object> listObjects = new ArrayList<Object>();
 
-			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase());
+			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(getDatabaseType());
 
 			update.append("update ").append(converter.toTable(FatturaElettronica.model())).append(" set ");
 			update.append(converter.toColumn(FatturaElettronica.model().STATO_CONSERVAZIONE, false)).append(" = ? ");
@@ -637,7 +659,7 @@ public class FatturaBD extends BaseBD {
 
 	public void assegnaIdSip(FatturaElettronica fattura, Long id) throws ServiceException {
 		try {
-			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(this.serviceManager.getJdbcProperties().getDatabase()); 
+			FatturaElettronicaFieldConverter converter = new FatturaElettronicaFieldConverter(getDatabaseType()); 
 			CustomField idSipCustomField = new CustomField("id_sip", Long.class, "id_sip", converter.toTable(FatturaElettronica.model()));
 			UpdateField sipUpdateField = new UpdateField(idSipCustomField, id);
 

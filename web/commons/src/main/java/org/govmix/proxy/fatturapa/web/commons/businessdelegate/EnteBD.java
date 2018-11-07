@@ -21,7 +21,6 @@
 package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 
 import org.apache.log4j.Logger;
-import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.Ente;
 import org.govmix.proxy.fatturapa.orm.IdEnte;
 import org.govmix.proxy.fatturapa.orm.dao.IDBEnteServiceSearch;
