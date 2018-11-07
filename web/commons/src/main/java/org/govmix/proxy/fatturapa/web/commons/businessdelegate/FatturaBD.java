@@ -31,6 +31,7 @@ import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
+import org.govmix.proxy.fatturapa.orm.IdSip;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
@@ -354,9 +355,25 @@ public class FatturaBD extends BaseBD {
 		List<Map<String,Object>> select = this.select(filter, fields);
 		FatturaElettronicaFetch fetch = new FatturaElettronicaFetch();
 		for(Map<String, Object> map: select) {
+			Object idFK_fatturaElettronica_sipOBJ = map.remove("id_sip");
+			Object idFK_fatturaElettronica_LottosipOBJ = map.remove("l_id_sip");
+
 			FatturaElettronica fatturaElettronica = (FatturaElettronica)fetch.fetch(getDatabaseType(), FatturaElettronica.model(), map);
 			LottoFatture lottoFatture = (LottoFatture)fetch.fetch(getDatabaseType(), FatturaElettronica.model().LOTTO_FATTURE, map);
+
+			if(idFK_fatturaElettronica_LottosipOBJ instanceof Long) {
+				IdSip idSIP = new IdSip();
+				idSIP.setIdSip((Long) idFK_fatturaElettronica_LottosipOBJ);
+				lottoFatture.setIdSIP(idSIP);
+			}
 			fatturaElettronica.setLottoFatture(lottoFatture);
+
+			if(idFK_fatturaElettronica_sipOBJ instanceof Long) {
+				IdSip idSIP = new IdSip();
+				idSIP.setIdSip((Long) idFK_fatturaElettronica_sipOBJ);
+				fatturaElettronica.setIdSIP(idSIP);
+			}
+
 			fatLst.add(fatturaElettronica);
 		}
 
