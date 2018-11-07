@@ -44,12 +44,12 @@ import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 @SuppressWarnings("deprecation")
 public class ParERClient {
 
-	private Logger log;
-	private Logger logDump;
+	protected Logger log;
+	protected Logger logDump;
 
-	private Marshaller marshaller;
-	private Unmarshaller evUnmarshaller;
-	private ConservazioneProperties props;
+	protected Marshaller marshaller;
+	protected Unmarshaller evUnmarshaller;
+	protected ConservazioneProperties props;
 	
 	public ParERClient(Logger log, ConservazioneProperties props) throws Exception {
 		this(log, LoggerManager.getDumpLogger(), props);
