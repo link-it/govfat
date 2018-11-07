@@ -189,38 +189,32 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 											if(scarto.getNote() != null && scarto.getNote().contains(properties.getMsgNotificaGiaPervenuta())) {
 												// 1) Notifica gia' pervenuta al sistema di interscambio: significa che la notifica e' arrivata allo SdI
 												// ma il proxy non e' riuscito a riceverne comunicazione.
-												this.log.info("Risposta dallo SdI con Scarto Note["+scarto.getNote()+"]. Numero tentativi di consegna["+notifica.getTentativiConsegnaSdi()+"].");
+												this.log.info("Risposta dallo SdI con Scarto Note["+scarto.getNote()+"]. Considero il precedente tentativo di invio come andato a buon fine. Inserisco l'esito");
 
-												if(notifica.getTentativiConsegnaSdi() > 0) {
-													// Se risulta gia' essere stato fatto un tentativo di invio, si considera il precedente invio come buono e si aggiorna la notifica come inviata.
-													// Altrimenti si segna lo scarto
-
-													this.log.info("Considero il precedente tentativo di invio come andato a buon fine. Inserisco l'esito");
-
-													switch(esito) {
-													case EC01: esitoFattura = EsitoType.INVIATA_ACCETTATO;
-													break;
-													case EC02: esitoFattura = EsitoType.INVIATA_RIFIUTATO;
-													break;
-													default: esitoFattura = EsitoType.INVIATA_ACCETTATO;
-													break;
-													}
-												} else {
-													this.log.info("Inserisco lo scarto nonostante il messaggio di Scarto Note ["+scarto.getNote()+"] in quanto non avevo ancora effettuato un tentativo di consegna");
-													notifica.setScarto(scartoT);
-													notifica.setScartoNote(scarto.getNote());
-													notifica.setScartoXml(invioNotifica.getScartoXML());
-
-													switch(esito) {
-													case EC01: esitoFattura = EsitoType.SCARTATA_ACCETTATO;
-													break;
-													case EC02: esitoFattura = EsitoType.SCARTATA_RIFIUTATO;
-													break;
-													default: esitoFattura = EsitoType.SCARTATA_ACCETTATO;
-													break;
-
-													}
+												switch(esito) {
+												case EC01: esitoFattura = EsitoType.INVIATA_ACCETTATO;
+												break;
+												case EC02: esitoFattura = EsitoType.INVIATA_RIFIUTATO;
+												break;
+												default: esitoFattura = EsitoType.INVIATA_ACCETTATO;
+												break;
 												}
+//												} else {
+//													this.log.info("Inserisco lo scarto nonostante il messaggio di Scarto Note ["+scarto.getNote()+"] in quanto non avevo ancora effettuato un tentativo di consegna");
+//													notifica.setScarto(scartoT);
+//													notifica.setScartoNote(scarto.getNote());
+//													notifica.setScartoXml(invioNotifica.getScartoXML());
+//
+//													switch(esito) {
+//													case EC01: esitoFattura = EsitoType.SCARTATA_ACCETTATO;
+//													break;
+//													case EC02: esitoFattura = EsitoType.SCARTATA_RIFIUTATO;
+//													break;
+//													default: esitoFattura = EsitoType.SCARTATA_ACCETTATO;
+//													break;
+//
+//													}
+//												}
 											} else if(scarto.getNote() != null && scarto.getNote().contains(properties.getMsgAvvenutaRicezioneNonNotificata())) {
 												// 2) Notifica arrivata allo SdI prima che il committente ricevesse comunicazione dell'avvenuta ricezione della fattura: 
 												// si ritenta la rispedizione dopo 24 ore per dare il tempo allo SdI di inviare la comunicazione al committente
