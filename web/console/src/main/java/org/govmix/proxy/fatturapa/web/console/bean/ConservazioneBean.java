@@ -237,8 +237,7 @@ public class ConservazioneBean extends BaseBean<FatturaElettronica, Long> implem
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_RAPPORTO_VERSAMENTO;
 
-//		this.xml.setHref(this.getDTO().getXml() != null ?  url : null);
-		this.xml.setHref(url);
+		this.xml.setHref((this.getDTO().getIdSIP() != null && this.getDTO().getIdSIP().getIdSip() > 0) ?  url : null);
 
 		String urlLotto = context.getExternalContext().getRequestContextPath() 
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
@@ -246,7 +245,7 @@ public class ConservazioneBean extends BaseBean<FatturaElettronica, Long> implem
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_RAPPORTO_VERSAMENTO_LOTTO;
 
-		this.xmlLotto.setHref(urlLotto);
+		this.xmlLotto.setHref((this.getDTO().getLottoFatture().getIdSIP() != null && this.getDTO().getLottoFatture().getIdSIP().getIdSip() > 0) ?  urlLotto : null);
 	}
 
 	public String visualizzaXml() {
