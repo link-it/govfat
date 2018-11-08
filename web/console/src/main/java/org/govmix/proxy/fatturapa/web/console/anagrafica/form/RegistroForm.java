@@ -28,7 +28,9 @@ import org.govmix.proxy.fatturapa.orm.IdRegistroProperty;
 import org.govmix.proxy.fatturapa.orm.Registro;
 import org.govmix.proxy.fatturapa.orm.RegistroProperty;
 import org.govmix.proxy.fatturapa.orm.RegistroPropertyValue;
+import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.bean.RegistroBean;
+import org.govmix.proxy.fatturapa.web.console.util.ConsoleProperties;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
 import org.openspcoop2.generic_project.web.form.Form;
@@ -47,6 +49,7 @@ public class RegistroForm extends BaseForm implements Form{
 	private List<Text> properties = null;
 
 	private List<RegistroProperty> listaNomiProperties = null;
+	private List<String> nomiPropertiesObbligatorie = null;
 
 	public RegistroForm() throws Exception{
 		this.init();
@@ -67,6 +70,8 @@ public class RegistroForm extends BaseForm implements Form{
 		this.setField(this.username);
 		
 		this.properties = new ArrayList<Text>();
+		this.nomiPropertiesObbligatorie = ConsoleProperties.getInstance(LoggerManager.getConsoleLogger()).getListaNomiPropertiesRegistroObbligatorie();
+
 	}
 
 	@Override
@@ -94,7 +99,7 @@ public class RegistroForm extends BaseForm implements Form{
 				WebGenericProjectFactory factory = this.getWebGenericProjectFactory();
 				for (RegistroPropertyValue prop : bean.getDTO().getRegistroPropertyValueList()) {
 					proprieta = factory.getInputFieldFactory().createText();
-					proprieta.setRequired(true);
+					proprieta.setRequired(this.nomiPropertiesObbligatorie.contains(prop.getIdProperty().getNome()));
 					proprieta.setLabel(prop.getIdProperty().getNome());
 					proprieta.setName("prop_" + prop.getIdProperty().getNome());
 					proprieta.setDefaultValue(prop.getValore());
@@ -128,7 +133,7 @@ public class RegistroForm extends BaseForm implements Form{
 					
 					for (RegistroProperty registroProperty : this.listaNomiProperties) {
 						proprieta = factory.getInputFieldFactory().createText();
-						proprieta.setRequired(true);
+						proprieta.setRequired(this.nomiPropertiesObbligatorie.contains(registroProperty.getNome()));
 						proprieta.setLabel(registroProperty.getLabel());
 						proprieta.setName(namePrefix + registroProperty.getNome());
 						proprieta.setDefaultValue(null);
@@ -150,7 +155,7 @@ public class RegistroForm extends BaseForm implements Form{
 
 						if(!found){
 							Text proprieta = factory.getInputFieldFactory().createText();
-							proprieta.setRequired(true);
+							proprieta.setRequired(this.nomiPropertiesObbligatorie.contains(registroProperty.getNome()));
 							proprieta.setLabel(registroProperty.getLabel());
 							proprieta.setName(namePrefix + registroProperty.getNome());
 							proprieta.setDefaultValue(null);
@@ -201,7 +206,7 @@ public class RegistroForm extends BaseForm implements Form{
 
 		for (Text prop : this.properties) {
 			String _valore = prop.getValue();
-			if(StringUtils.isEmpty(_valore))
+			if(prop.isRequired() &&  StringUtils.isEmpty(_valore))
 				return Utils.getInstance().getMessageWithParamsFromCommonsResourceBundle(CostantiForm.FIELD_NON_PUO_ESSERE_VUOTO, prop.getLabel());	
 		}
 

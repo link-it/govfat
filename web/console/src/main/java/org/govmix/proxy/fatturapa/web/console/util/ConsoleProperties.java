@@ -73,6 +73,7 @@ public class ConsoleProperties extends AbstractProperties {
 	
 	
 	private List<String> listaNomiPropertiesDipartimentoObbligatorie = null;
+	private List<String> listaNomiPropertiesRegistroObbligatorie = null;
 	
 	
 	private static final String propertiesPath = "/fatturapa.properties";
@@ -159,6 +160,13 @@ public class ConsoleProperties extends AbstractProperties {
 			String[] split = listaNomiPropertiesDipartimentoObbligatorieS.split(",");
 			if(split != null && split.length > 0)
 				this.listaNomiPropertiesDipartimentoObbligatorie = Arrays.asList(split);
+		}
+		
+		String listaNomiPropertiesRegistroObbligatorieS = this.getProperty("org.govmix.proxy.fatturapa.registri.propertiesObbligatorie", false);
+		if(listaNomiPropertiesRegistroObbligatorieS != null) {
+			String[] split = listaNomiPropertiesRegistroObbligatorieS.split(",");
+			if(split != null && split.length > 0)
+				this.listaNomiPropertiesRegistroObbligatorie = Arrays.asList(split);
 		}
 		
 	}
@@ -284,4 +292,10 @@ public class ConsoleProperties extends AbstractProperties {
 		return listaNomiPropertiesDipartimentoObbligatorie;
 	}
 	
+	public List<String> getListaNomiPropertiesRegistroObbligatorie() {
+		if(this.listaNomiPropertiesRegistroObbligatorie == null)
+			this.listaNomiPropertiesRegistroObbligatorie = new ArrayList<String>();
+		
+		return listaNomiPropertiesRegistroObbligatorie;
+	}
 }
