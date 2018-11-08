@@ -33,6 +33,7 @@ public class ConservazioneBean extends BaseBean<FatturaElettronica, Long> implem
 	private DateTime dataInvio = null;
 	private Image statoInvio = null;
 	private Button xml = null;
+	private Button xmlLotto = null;
 	private Text cessionarioCommittente = null;
 
 	public ConservazioneBean(){
@@ -51,6 +52,9 @@ public class ConservazioneBean extends BaseBean<FatturaElettronica, Long> implem
 
 		this.xml = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("xml","conservazione.rapportoVersamento",
 				null,org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_XML,"conservazione.rapportoVersamento.iconTitle","conservazione.rapportoVersamento.iconTitle");
+		
+		this.xmlLotto = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("xmlLotto","conservazione.rapportoVersamentoLotto",
+				null,org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_XML,"conservazione.rapportoVersamentoLotto.iconTitle","conservazione.rapportoVersamentoLotto.iconTitle");
 
 		this.identificativoSdi = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("identificativoSdi","fattura.identificativoSdi");
 		this.cessionarioCommittente = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("cessionarioCommittente","fattura.cessionarioCommittenteDenominazione");
@@ -62,6 +66,7 @@ public class ConservazioneBean extends BaseBean<FatturaElettronica, Long> implem
 		this.setField(this.annoNumero);
 		this.setField(this.dataInvio);
 		this.setField(this.xml);
+		this.setField(this.xmlLotto);
 		this.setField(this.identificativoSdi);
 		this.setField(this.cessionarioCommittente);
 		this.setField(this.statoInvio);
@@ -207,6 +212,14 @@ public class ConservazioneBean extends BaseBean<FatturaElettronica, Long> implem
 		this.xml = xml;
 	}
 
+	public Button getXmlLotto() {
+		return xmlLotto;
+	}
+
+	public void setXmlLotto(Button xmlLotto) {
+		this.xmlLotto = xmlLotto;
+	}
+
 	public Text getCessionarioCommittente() {
 		return cessionarioCommittente;
 	}
@@ -224,8 +237,15 @@ public class ConservazioneBean extends BaseBean<FatturaElettronica, Long> implem
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_RAPPORTO_VERSAMENTO;
 
-		this.xml.setHref(this.getDTO().getXml() != null ?  url : null);
+		this.xml.setHref((this.getDTO().getIdSIP() != null && this.getDTO().getIdSIP().getIdSip() > 0) ?  url : null);
 
+		String urlLotto = context.getExternalContext().getRequestContextPath() 
+				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
+				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getId()
+				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
+				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_RAPPORTO_VERSAMENTO_LOTTO;
+
+		this.xmlLotto.setHref((this.getDTO().getLottoFatture().getIdSIP() != null && this.getDTO().getLottoFatture().getIdSIP().getIdSip() > 0) ?  urlLotto : null);
 	}
 
 	public String visualizzaXml() {
@@ -250,6 +270,42 @@ public class ConservazioneBean extends BaseBean<FatturaElettronica, Long> implem
 					+ StringUtils.join(idFatture, ",")
 					+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
 					+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_RAPPORTO_VERSAMENTO);
+
+			context.responseComplete();
+
+			// End of the method
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().responseComplete();
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.export.genericError"),null));
+		}
+
+		return null;
+	}
+	
+	public String visualizzaXmlLotto() {
+		try {
+
+			// recupero lista diagnostici
+			List<Long> idFatture = new ArrayList<Long>();
+
+			idFatture.add(this.getDTO().getId());
+
+			// We must get first our context
+			FacesContext context = FacesContext.getCurrentInstance();
+
+			// Then we have to get the Response where to write our file
+			HttpServletResponse response = (HttpServletResponse) context
+					.getExternalContext().getResponse();
+
+			response.sendRedirect(context.getExternalContext()
+					.getRequestContextPath()
+					+"/" + FattureExporter.FATTURE_EXPORTER+"?"
+					+ FattureExporter.PARAMETRO_IDS+"="
+					+ StringUtils.join(idFatture, ",")
+					+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
+					+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_RAPPORTO_VERSAMENTO_LOTTO);
 
 			context.responseComplete();
 

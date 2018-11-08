@@ -92,12 +92,12 @@ public class FatturaPassivaFilter extends FatturaFilter {
 			IExpression expression = this.newExpression();
 
 			IExpression exprEsitoNull = this.newExpression();
-			exprEsitoNull.isNull(FatturaElettronica.model().ESITO).and().isNotNull(new CustomField("id_notifica_decorrenza_termini", Long.class, "id_notifica_decorrenza_termini", this.getRootTable()));
+			exprEsitoNull.isNull(FatturaElettronica.model().ESITO);
 			
-			IExpression exprEsitoOK = this.newExpression();
-			exprEsitoOK.equals(FatturaElettronica.model().ESITO, EsitoType.INVIATA_ACCETTATO);
+			IExpression exprEsitoNotRifiutato = this.newExpression();
+			exprEsitoNotRifiutato.not().in(FatturaElettronica.model().ESITO, EsitoType.INVIATA_RIFIUTATO,EsitoType.SCARTATA_RIFIUTATO);
 			
-			expression.or(exprEsitoNull, exprEsitoOK);
+			expression.or(exprEsitoNull, exprEsitoNotRifiutato);
 			
 			return expression;
 		} catch (NotImplementedException e) {

@@ -63,6 +63,7 @@ public abstract class AbstractSingleFileExporter<T, K> {
 	public static final String PARAMETRO_ACTION_SCARTO = "sc";
     public static final String PARAMETRO_ACTION_PCC_RIALLINEAMENTO = "pccDf";
     public static final String PARAMETRO_ACTION_RAPPORTO_VERSAMENTO = "rv";
+    public static final String PARAMETRO_ACTION_RAPPORTO_VERSAMENTO_LOTTO = "rvl";
     public static final String PARAMETRO_ACTION_COMUNICAZIONE_FATTURA_USCITA = "com_"+ TipoComunicazioneType.FAT_OUT.toString();
     public static final String PARAMETRO_ACTION_COMUNICAZIONE_RICEVUTA_CONSEGNA = "com_"+ TipoComunicazioneType.RC.toString();
     public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_SCARTO = "com_"+ TipoComunicazioneType.NS.toString();
