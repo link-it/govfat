@@ -20,6 +20,8 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContexts;
@@ -130,11 +132,12 @@ public class ParERClient {
 		                new String[] { "TLSv1" },
 		                null,
 		                SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
-		        client = HttpClients.custom()
-		                .setSSLSocketFactory(sslsf)
+		        client = HttpClients.custom().setSSLSocketFactory(sslsf).setDefaultRequestConfig(RequestConfig.custom()
+		                .setCookieSpec(CookieSpecs.STANDARD).build())
 		                .build();
 			} else {
-				client = HttpClientBuilder.create().build();
+				client = HttpClientBuilder.create().setDefaultRequestConfig(RequestConfig.custom()
+		                .setCookieSpec(CookieSpecs.STANDARD).build()).build();
 			}
 			
 			//invoca il web service
