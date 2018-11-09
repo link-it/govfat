@@ -230,14 +230,16 @@ public class RegistroForm extends BaseForm implements Form{
 				RegistroPropertyValue value = new RegistroPropertyValue();
 				value.setValore(valore);
 				boolean found = false;
-				for (RegistroProperty nomeProprieta : this.listaNomiProperties) {
-					if(nomeProprieta.getNome().equals(nomeProp)){
-						IdRegistroProperty idProperty = new IdRegistroProperty();
-						idProperty.setIdProtocollo(nomeProprieta.getIdProtocollo());
-						idProperty.setNome(nomeProprieta.getNome());
-						value.setIdProperty(idProperty);
-						found = true;
-						break;
+				if(StringUtils.isNotEmpty(valore)) {
+					for (RegistroProperty nomeProprieta : this.listaNomiProperties) {
+						if(nomeProprieta.getNome().equals(nomeProp)){
+							IdRegistroProperty idProperty = new IdRegistroProperty();
+							idProperty.setIdProtocollo(nomeProprieta.getIdProtocollo());
+							idProperty.setNome(nomeProprieta.getNome());
+							value.setIdProperty(idProperty);
+							found = true;
+							break;
+						}
 					}
 				}
 
