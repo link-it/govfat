@@ -104,6 +104,7 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 
 		try {
 			String idSipField = "id_sip";
+			fields.add(FatturaElettronica.model().DATA_RICEZIONE);
 			fields.add(new CustomField(idSipField, Long.class, idSipField, fieldConverter.toTable(FatturaElettronica.model())));
 			
 			String lottoTable = "LottoFatture";
@@ -195,7 +196,7 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 			filter2.getStatiConservazione().add(StatoConservazioneType.IN_RICONSEGNA);
 			filter2.setOffset(offset);
 			filter2.setLimit(LIMIT_STEP);
-			List<FatturaElettronica> fatturePerAnnoInRiconsegna = fatturaElettronicaBD.fatturaElettronicaSelect(filter, this.getFieldsRiconsegna(fatturaElettronicaBD));
+			List<FatturaElettronica> fatturePerAnnoInRiconsegna = fatturaElettronicaBD.fatturaElettronicaSelect(filter2, this.getFieldsRiconsegna(fatturaElettronicaBD));
 
 			while(fatturePerAnnoInRiconsegna != null && !fatturePerAnnoInRiconsegna.isEmpty()) {
 				this.log.debug("Trovate ["+fatturePerAnnoInRiconsegna.size()+"] fatture da reinviare in conservazione...");
@@ -221,7 +222,7 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 				// sposto l'offset
 				offset += LIMIT_STEP;
 				filter2.setOffset(offset);
-				fatturePerAnnoInRiconsegna = fatturaElettronicaBD.fatturaElettronicaSelect(filter, this.getFieldsRiconsegna(fatturaElettronicaBD));
+				fatturePerAnnoInRiconsegna = fatturaElettronicaBD.fatturaElettronicaSelect(filter2, this.getFieldsRiconsegna(fatturaElettronicaBD));
 
 
 			}
