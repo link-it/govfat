@@ -80,7 +80,7 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 			fields.add(FatturaElettronica.model().DATA_RICEZIONE);
 			fields.add(FatturaElettronica.model().DATA);
 			fields.add(FatturaElettronica.model().STATO_CONSERVAZIONE);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.IDENTIFICATIVO_SDI);
+			fields.add(FatturaElettronica.model().LOTTO_FATTURE.STATO_ELABORAZIONE_IN_USCITA);
 			
 			String idSipField = "id_sip";
 			fields.add(new CustomField(idSipField, Long.class, idSipField, fieldConverter.toTable(FatturaElettronica.model())));
@@ -106,7 +106,7 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 		try {
 			String idSipField = "id_sip";
 			fields.add(FatturaElettronica.model().DATA_RICEZIONE);
-			fields.add(FatturaElettronica.model().LOTTO_FATTURE.IDENTIFICATIVO_SDI);
+			fields.add(FatturaElettronica.model().LOTTO_FATTURE.STATO_ELABORAZIONE_IN_USCITA);
 			fields.add(new CustomField(idSipField, Long.class, idSipField, fieldConverter.toTable(FatturaElettronica.model())));
 			
 			String lottoTable = "LottoFatture";
@@ -231,7 +231,6 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 
 		}catch(Exception e){
 			this.log.error("Errore durante l'esecuzione del batch SchedulingConservazione: "+e.getMessage(), e);
-			connection.rollback();
 			throw e;
 		} finally {
 			if(connection != null) {
