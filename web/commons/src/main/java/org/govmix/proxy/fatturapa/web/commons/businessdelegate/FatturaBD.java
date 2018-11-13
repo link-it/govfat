@@ -33,6 +33,7 @@ import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.IdSip;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
+import org.govmix.proxy.fatturapa.orm.SIP;
 import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
@@ -40,6 +41,7 @@ import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.dao.IDBFatturaElettronicaService;
 import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaService;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.FatturaElettronicaFieldConverter;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.SIPFieldConverter;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.FatturaElettronicaFetch;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaAttivaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
@@ -373,6 +375,17 @@ public class FatturaBD extends BaseBD {
 			if(idFK_fatturaElettronica_sipOBJ instanceof Long) {
 				IdSip idSIP = new IdSip();
 				idSIP.setIdSip((Long) idFK_fatturaElettronica_sipOBJ);
+//				if(StatoConservazioneType.CONSERVAZIONE_COMPLETATA.equals(fatturaElettronica.getStatoConservazione())) {
+					try {
+						IPaginatedExpression expSIP = this.serviceManager.getSIPServiceSearch().newPaginatedExpression();
+						expSIP.equals(new CustomField("id", Long.class, "id", new SIPFieldConverter(this.serviceManager.getJdbcProperties().getDatabase()).toAliasTable(SIP.model())), idSIP.getId());
+						List<Object> selectDataConsegna = this.serviceManager.getSIPServiceSearch().select(expSIP, SIP.model().DATA_ULTIMA_CONSEGNA);
+						
+						if(selectDataConsegna !=null && !selectDataConsegna.isEmpty() && selectDataConsegna.get(0) != null)
+							idSIP.setDataUltimaConsegna((Date) selectDataConsegna.get(0));
+						
+					} catch(Exception e) {}
+//				}
 				fatturaElettronica.setIdSIP(idSIP);
 			}
 			
