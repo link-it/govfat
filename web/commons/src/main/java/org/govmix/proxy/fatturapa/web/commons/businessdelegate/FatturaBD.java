@@ -40,6 +40,7 @@ import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.dao.IDBFatturaElettronicaService;
 import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaService;
+import org.govmix.proxy.fatturapa.orm.dao.ISIPServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.FatturaElettronicaFieldConverter;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.SIPFieldConverter;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.FatturaElettronicaFetch;
@@ -352,6 +353,14 @@ public class FatturaBD extends BaseBD {
 	}
 	
 	public List<FatturaElettronica> fatturaElettronicaSelect(FatturaFilter filter, IField... fields) throws ServiceException {
+
+		ISIPServiceSearch sipServiceSearch = null;
+		try {
+			this.serviceManager.getSIPServiceSearch();
+		} catch(NotImplementedException e) {
+			throw new ServiceException(e);
+		}
+
 		List<FatturaElettronica> fatLst = new ArrayList<FatturaElettronica>();
 			
 		List<Map<String,Object>> select = this.select(filter, fields);
@@ -377,9 +386,9 @@ public class FatturaBD extends BaseBD {
 				idSIP.setIdSip((Long) idFK_fatturaElettronica_sipOBJ);
 //				if(StatoConservazioneType.CONSERVAZIONE_COMPLETATA.equals(fatturaElettronica.getStatoConservazione())) {
 					try {
-						IPaginatedExpression expSIP = this.serviceManager.getSIPServiceSearch().newPaginatedExpression();
+						IPaginatedExpression expSIP = sipServiceSearch.newPaginatedExpression();
 						expSIP.equals(new CustomField("id", Long.class, "id", new SIPFieldConverter(this.serviceManager.getJdbcProperties().getDatabase()).toAliasTable(SIP.model())), idSIP.getIdSip());
-						List<Object> selectDataConsegna = this.serviceManager.getSIPServiceSearch().select(expSIP, SIP.model().DATA_ULTIMA_CONSEGNA);
+						List<Object> selectDataConsegna = sipServiceSearch.select(expSIP, SIP.model().DATA_ULTIMA_CONSEGNA);
 						
 						if(selectDataConsegna !=null && !selectDataConsegna.isEmpty() && selectDataConsegna.get(0) != null)
 							idSIP.setDataUltimaConsegna((Date) selectDataConsegna.get(0));
