@@ -378,13 +378,15 @@ public class FatturaBD extends BaseBD {
 //				if(StatoConservazioneType.CONSERVAZIONE_COMPLETATA.equals(fatturaElettronica.getStatoConservazione())) {
 					try {
 						IPaginatedExpression expSIP = this.serviceManager.getSIPServiceSearch().newPaginatedExpression();
-						expSIP.equals(new CustomField("id", Long.class, "id", new SIPFieldConverter(this.serviceManager.getJdbcProperties().getDatabase()).toAliasTable(SIP.model())), idSIP.getId());
+						expSIP.equals(new CustomField("id", Long.class, "id", new SIPFieldConverter(this.serviceManager.getJdbcProperties().getDatabase()).toAliasTable(SIP.model())), idSIP.getIdSip());
 						List<Object> selectDataConsegna = this.serviceManager.getSIPServiceSearch().select(expSIP, SIP.model().DATA_ULTIMA_CONSEGNA);
 						
 						if(selectDataConsegna !=null && !selectDataConsegna.isEmpty() && selectDataConsegna.get(0) != null)
 							idSIP.setDataUltimaConsegna((Date) selectDataConsegna.get(0));
 						
-					} catch(Exception e) {}
+					} catch(Exception e) {
+						this.log.error("Errore durante il recupero della data ultima consegna per id sip ["+idFK_fatturaElettronica_sipOBJ+"]:" + e.getMessage(),e);
+					}
 //				}
 				fatturaElettronica.setIdSIP(idSIP);
 			}
