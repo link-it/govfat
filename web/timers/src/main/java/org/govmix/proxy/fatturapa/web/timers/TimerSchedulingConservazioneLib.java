@@ -22,6 +22,7 @@ package org.govmix.proxy.fatturapa.web.timers;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,11 +32,17 @@ import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.SIP;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.FatturaElettronicaFieldConverter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.SIPBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
+import org.openspcoop2.generic_project.beans.AliasField;
+import org.openspcoop2.generic_project.beans.CustomField;
+import org.openspcoop2.generic_project.beans.IField;
+import org.openspcoop2.generic_project.exception.ExpressionException;
+import org.openspcoop2.generic_project.exception.ServiceException;
 
 
 /**
@@ -55,15 +62,70 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 		super(limit, log, logQuery);
 	}
 
+	private IField[] getFieldsConservazione(FatturaBD fatturaBD) throws ServiceException {
+		List<IField> fields = new ArrayList<IField>();
+
+		FatturaElettronicaFieldConverter fieldConverter = new FatturaElettronicaFieldConverter(fatturaBD.getDatabaseType());
+
+		String id = "id";
+		try {
+			fields.add(new CustomField(id, Long.class, id, fieldConverter.toTable(FatturaElettronica.model())));
+			fields.add(FatturaElettronica.model().IDENTIFICATIVO_SDI);
+			fields.add(FatturaElettronica.model().POSIZIONE);
+			fields.add(FatturaElettronica.model().FATTURAZIONE_ATTIVA);
+			fields.add(FatturaElettronica.model().CEDENTE_PRESTATORE_CODICE_FISCALE);
+			fields.add(FatturaElettronica.model().CODICE_DESTINATARIO);
+			fields.add(FatturaElettronica.model().ANNO);
+			fields.add(FatturaElettronica.model().NUMERO);
+			fields.add(FatturaElettronica.model().DATA_RICEZIONE);
+			fields.add(FatturaElettronica.model().DATA);
+			fields.add(FatturaElettronica.model().STATO_CONSERVAZIONE);
+			
+			String idSipField = "id_sip";
+			fields.add(new CustomField(idSipField, Long.class, idSipField, fieldConverter.toTable(FatturaElettronica.model())));
+			
+			String lottoTable = "LottoFatture";
+			String lottoId = lottoTable + ".id";
+			fields.add(new AliasField(new CustomField(lottoId, Long.class, "id", fieldConverter.toTable(FatturaElettronica.model().LOTTO_FATTURE)), "l_id"));
+			String idSipLottoField = lottoTable+".id_sip";
+			fields.add(new AliasField(new CustomField(idSipLottoField, Long.class, "id_sip", fieldConverter.toTable(FatturaElettronica.model().LOTTO_FATTURE)), "l_id_sip"));
+			
+		} catch (ExpressionException e) {
+			throw new ServiceException(e);
+		}
+
+		return fields.toArray(new IField[]{});
+	}
+
+	private IField[] getFieldsRiconsegna(FatturaBD fatturaBD) throws ServiceException {
+		List<IField> fields = new ArrayList<IField>();
+
+		FatturaElettronicaFieldConverter fieldConverter = new FatturaElettronicaFieldConverter(fatturaBD.getDatabaseType());
+
+		try {
+			String idSipField = "id_sip";
+			fields.add(new CustomField(idSipField, Long.class, idSipField, fieldConverter.toTable(FatturaElettronica.model())));
+			
+			String lottoTable = "LottoFatture";
+			String idSipLottoField = lottoTable+".id_sip";
+			fields.add(new AliasField(new CustomField(idSipLottoField, Long.class, "id_sip", fieldConverter.toTable(FatturaElettronica.model().LOTTO_FATTURE)), "l_id_sip"));
+			
+		} catch (ExpressionException e) {
+			throw new ServiceException(e);
+		}
+
+		return fields.toArray(new IField[]{});
+	}
+
 	@Override
 	public void execute() throws Exception {
 		Connection connection = null;
 		try {
 			connection = DAOFactory.getInstance().getConnection();
 
-			FatturaBD fatturaElettronicaBD = new FatturaBD(log, connection, false);
-			LottoBD lottoBD = new LottoBD(log, connection, false);
-			SIPBD sipBD = new SIPBD(log, connection, false);
+			FatturaBD fatturaElettronicaBD = new FatturaBD(log, connection, true);
+			LottoBD lottoBD = new LottoBD(log, connection, true);
+			SIPBD sipBD = new SIPBD(log, connection, true);
 
 			int offset = 0;
 			int LIMIT_STEP = Math.min(this.limit, 500);
@@ -73,12 +135,14 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 			filter.setIdSipNull(true);
 			filter.setOffset(offset);
 			filter.setLimit(LIMIT_STEP);
-			List<FatturaElettronica> fatturePerAnno = fatturaElettronicaBD.findAll(filter);
+//			List<FatturaElettronica> fattureDaSchedulare = fatturaElettronicaBD.findAll(filter);
+			
+			List<FatturaElettronica> fattureDaSchedulare = fatturaElettronicaBD.fatturaElettronicaSelect(filter, this.getFieldsConservazione(fatturaElettronicaBD));
 
-			while(fatturePerAnno != null && !fatturePerAnno.isEmpty()) {
-				this.log.debug("Trovate ["+fatturePerAnno.size()+"] fatture da mandare in scheduling per la conservazione...");
+			while(fattureDaSchedulare != null && !fattureDaSchedulare.isEmpty()) {
+				this.log.debug("Trovate ["+fattureDaSchedulare.size()+"] fatture da mandare in scheduling per la conservazione...");
 
-				for(FatturaElettronica fattura: fatturePerAnno) {
+				for(FatturaElettronica fattura: fattureDaSchedulare) {
 
 					SIP sipFattura = new SIP();
 					ChiaveType chiaveFattura = ConservazioneUtils.getChiave(fattura);
@@ -94,12 +158,13 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 					
 					FatturaFilter idSdiFilter = fatturaElettronicaBD.newFilter();
 					idSdiFilter.setIdentificativoSdi(fattura.getIdentificativoSdi());
+					idSdiFilter.setFatturazioneAttiva(fattura.getFatturazioneAttiva());
 					long count = fatturaElettronicaBD.count(idSdiFilter);
 					
 					//controlli da fare per abilitare la spedizione del lotto:
 					// 1) fatturazione passiva
 					// 2) lotto di piu' fatture
-					// 3) il lotto no ndeve avere gia' associato il sip (verificato dalla exist)
+					// 3) il lotto no ndeve avere gia' associato il sip (verificato dalla sipBD.exist)
 					if(!fattura.getFatturazioneAttiva() && count > 1) {
 						this.log.debug("Inserisco in scheduling il lotto della fattura passiva ["+fattura.getIdentificativoSdi()+"]...");
 						ChiaveType chiaveLotto = ConservazioneUtils.getChiaveLotto(fattura);
@@ -121,15 +186,16 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 				// sposto l'offset
 				offset += LIMIT_STEP;
 				filter.setOffset(offset);
-				fatturePerAnno = fatturaElettronicaBD.findAll(filter);
+				fattureDaSchedulare = fatturaElettronicaBD.fatturaElettronicaSelect(filter, this.getFieldsConservazione(fatturaElettronicaBD));
 			}
 
 
+			offset = 0;
 			FatturaFilter filter2 = fatturaElettronicaBD.newFilter();
 			filter2.getStatiConservazione().add(StatoConservazioneType.IN_RICONSEGNA);
 			filter2.setOffset(offset);
 			filter2.setLimit(LIMIT_STEP);
-			List<FatturaElettronica> fatturePerAnnoInRiconsegna = fatturaElettronicaBD.findAll(filter2);
+			List<FatturaElettronica> fatturePerAnnoInRiconsegna = fatturaElettronicaBD.fatturaElettronicaSelect(filter, this.getFieldsRiconsegna(fatturaElettronicaBD));
 
 			while(fatturePerAnnoInRiconsegna != null && !fatturePerAnnoInRiconsegna.isEmpty()) {
 				this.log.debug("Trovate ["+fatturePerAnnoInRiconsegna.size()+"] fatture da reinviare in conservazione...");
@@ -155,7 +221,7 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 				// sposto l'offset
 				offset += LIMIT_STEP;
 				filter2.setOffset(offset);
-				fatturePerAnnoInRiconsegna = fatturaElettronicaBD.findAll(filter2);
+				fatturePerAnnoInRiconsegna = fatturaElettronicaBD.fatturaElettronicaSelect(filter, this.getFieldsRiconsegna(fatturaElettronicaBD));
 
 
 			}

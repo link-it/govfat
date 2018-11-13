@@ -335,6 +335,8 @@ public class FatturaBD extends BaseBD {
 			FatturaElettronica fatturaElettronica = (FatturaElettronica)fetch.fetch(getDatabaseType(), FatturaElettronica.model(), map);
 			LottoFatture lottoFatture = (LottoFatture)fetch.fetch(getDatabaseType(), FatturaElettronica.model().LOTTO_FATTURE, map);
 
+			lottoFatture.setIdentificativoSdi(fatturaElettronica.getIdentificativoSdi());
+			lottoFatture.setFatturazioneAttiva(fatturaElettronica.getFatturazioneAttiva());
 			if(idFK_fatturaElettronica_LottosipOBJ instanceof Long) {
 				IdSip idSIP = new IdSip();
 				idSIP.setIdSip((Long) idFK_fatturaElettronica_LottosipOBJ);
@@ -347,7 +349,7 @@ public class FatturaBD extends BaseBD {
 				idSIP.setIdSip((Long) idFK_fatturaElettronica_sipOBJ);
 				fatturaElettronica.setIdSIP(idSIP);
 			}
-
+			
 			fatLst.add(fatturaElettronica);
 		}
 
