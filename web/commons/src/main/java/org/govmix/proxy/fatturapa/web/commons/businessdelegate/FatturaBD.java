@@ -330,7 +330,7 @@ public class FatturaBD extends BaseBD {
 
 		ISIPServiceSearch sipServiceSearch = null;
 		try {
-			this.serviceManager.getSIPServiceSearch();
+			sipServiceSearch = this.serviceManager.getSIPServiceSearch();
 		} catch(NotImplementedException e) {
 			throw new ServiceException(e);
 		}
