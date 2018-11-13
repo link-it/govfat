@@ -89,7 +89,10 @@ public class ConservazioneBean extends BaseBean<FatturaElettronica, Long> implem
 		}
 
 		this.annoNumero.setValue(this.getDTO().getNumero());
-		this.dataInvio.setValue(this.getDTO().getDataRicezione());
+		
+		if(this.getDTO().getIdSIP()!=null && this.getDTO().getIdSIP().getDataUltimaConsegna()!=null)
+			this.dataInvio.setValue(this.getDTO().getIdSIP().getDataUltimaConsegna());
+		
 		this.tipoFattura.setValue(this.getDTO().isFatturazioneAttiva() ? "fattura.tipoFattura.attiva" : "fattura.tipoFattura.passiva");
 		
 
