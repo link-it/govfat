@@ -36,6 +36,10 @@ import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FPA12Converter;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FatturaV10Converter;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FatturaV11Converter;
 
+import it.gov.fatturapa.sdi.fatturapa.v1_0.DatiPagamentoType;
+import it.gov.fatturapa.sdi.fatturapa.v1_0.DettaglioPagamentoType;
+import it.gov.fatturapa.sdi.fatturapa.v1_0.FatturaElettronicaBodyType;
+
 public class FatturaDeserializerUtils {
 
 	public static LottoFatture getLotto(ConsegnaFatturaParameters params, String dipartimento) throws Exception {
@@ -243,6 +247,50 @@ public class FatturaDeserializerUtils {
 		} else {
 			throw new Exception("Formato FatturaPA ["+fattura.getFormatoTrasmissione()+"] non riconosciuto");
 		}
+	}
+
+	public static String getNappFromFattura(FatturaElettronica fattura) throws Exception {
+		
+		String napp = null;
+		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+			FatturaV10Converter converter = new FatturaV10Converter(fattura.getXml(), null);
+			for(FatturaElettronicaBodyType body: converter.getFattura().getFatturaElettronicaBodyList()) {
+				for(DatiPagamentoType datiPagamento: body.getDatiPagamentoList()) {
+					for(DettaglioPagamentoType dettagliPagamento: datiPagamento.getDettaglioPagamentoList()) {
+						if(dettagliPagamento.getCodicePagamento()!= null && dettagliPagamento.getCodicePagamento().startsWith("PagoPA-")) {
+							napp = dettagliPagamento.getCodicePagamento();
+						}
+					}
+				}
+			}
+		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+			FatturaV11Converter converter = new FatturaV11Converter(fattura.getXml(), null);
+			for(it.gov.fatturapa.sdi.fatturapa.v1_1.FatturaElettronicaBodyType body: converter.getFattura().getFatturaElettronicaBodyList()) {
+				for(it.gov.fatturapa.sdi.fatturapa.v1_1.DatiPagamentoType datiPagamento: body.getDatiPagamentoList()) {
+					for(it.gov.fatturapa.sdi.fatturapa.v1_1.DettaglioPagamentoType dettagliPagamento: datiPagamento.getDettaglioPagamentoList()) {
+						if(dettagliPagamento.getCodicePagamento()!= null && dettagliPagamento.getCodicePagamento().startsWith("PagoPA-")) {
+							napp = dettagliPagamento.getCodicePagamento();
+						}
+					}
+				}
+			}
+		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.getValue().equals(fattura.getFormatoTrasmissione().getValue()) || 
+				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+			FPA12Converter converter = new FPA12Converter(fattura.getXml(), null);
+			for(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.FatturaElettronicaBodyType body: converter.getFattura().getFatturaElettronicaBodyList()) {
+				for(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.DatiPagamentoType datiPagamento: body.getDatiPagamentoList()) {
+					for(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.DettaglioPagamentoType dettagliPagamento: datiPagamento.getDettaglioPagamentoList()) {
+						if(dettagliPagamento.getCodicePagamento()!= null && dettagliPagamento.getCodicePagamento().startsWith("PagoPA-")) {
+							napp = dettagliPagamento.getCodicePagamento();
+						}
+					}
+				}
+			}
+		} else {
+			throw new Exception("Formato FatturaPA ["+fattura.getFormatoTrasmissione()+"] non riconosciuto");
+		}
+		
+		return napp;
 	}
 
 	public static String getCodiceFiscaleDestinatarioFromFattura(FatturaElettronica fattura) throws Exception {

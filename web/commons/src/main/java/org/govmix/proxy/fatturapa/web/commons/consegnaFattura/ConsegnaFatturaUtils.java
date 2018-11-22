@@ -362,14 +362,14 @@ public class ConsegnaFatturaUtils {
 		return params;
 	}
 
-	private static boolean isPagoPA(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.FatturaElettronicaType fattura) {
+	private static boolean isPagoPA(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.FatturaElettronicaType fattura) throws Exception {
 		List<String> lst = new ArrayList<String>();
 		
 		for(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.FatturaElettronicaBodyType body: fattura.getFatturaElettronicaBodyList()) {
 			for(DatiPagamentoType datiPagamento: body.getDatiPagamentoList()) {
 				for(DettaglioPagamentoType dettaglio: datiPagamento.getDettaglioPagamentoList()) {
 					if(dettaglio.getCodicePagamento() != null)
-						lst.add(dettaglio.getCodicePagamento());	
+						lst.add(dettaglio.getCodicePagamento());
 				}
 			}
 		}
@@ -377,16 +377,21 @@ public class ConsegnaFatturaUtils {
 		return isPagoPA(lst);
 	}
 
-	private static boolean isPagoPA(List<String> lst) {
+	private static boolean isPagoPA(List<String> lst) throws Exception {
+		int size = 0;
 		for(String codice: lst) {
 			if(codice.startsWith("PagoPA-"))
-				return true;
+				size++;
 		}
-		return false;
+		
+		if(size > 1)
+			throw new Exception("Trovati ["+size+"] codiciPagamento di tipo PagoPa-. Atteso al piu' uno");
+
+		return size == 1;
 	}
 
 
-	private static boolean isPagoPA(it.gov.fatturapa.sdi.fatturapa.v1_1.FatturaElettronicaType fattura) {
+	private static boolean isPagoPA(it.gov.fatturapa.sdi.fatturapa.v1_1.FatturaElettronicaType fattura) throws Exception {
 		List<String> lst = new ArrayList<String>();
 		
 		for(FatturaElettronicaBodyType body: fattura.getFatturaElettronicaBodyList()) {
@@ -401,7 +406,7 @@ public class ConsegnaFatturaUtils {
 		return isPagoPA(lst);
 	}
 
-	private static boolean isPagoPA(it.gov.fatturapa.sdi.fatturapa.v1_0.FatturaElettronicaType fattura) {
+	private static boolean isPagoPA(it.gov.fatturapa.sdi.fatturapa.v1_0.FatturaElettronicaType fattura) throws Exception {
 		List<String> lst = new ArrayList<String>();
 		
 		for(it.gov.fatturapa.sdi.fatturapa.v1_0.FatturaElettronicaBodyType body: fattura.getFatturaElettronicaBodyList()) {
