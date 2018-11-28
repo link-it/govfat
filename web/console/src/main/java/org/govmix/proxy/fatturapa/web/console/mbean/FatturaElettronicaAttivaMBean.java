@@ -361,6 +361,8 @@ IFatturaElettronicaAttivaService>{
 			this.listaFormatiTrasmissione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi"))));
 			this.listaFormatiTrasmissione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(FormatoTrasmissioneType.FPA12.getValue(),  ("fattura.formatoTrasmissione.fpa12"))));
 			this.listaFormatiTrasmissione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(FormatoTrasmissioneType.FPR12.getValue(),  ("fattura.formatoTrasmissione.fpr12"))));
+			this.listaFormatiTrasmissione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(FormatoTrasmissioneType.SDI10.getValue(),  ("fattura.formatoTrasmissione.sdi10"))));
+			this.listaFormatiTrasmissione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(FormatoTrasmissioneType.SDI11.getValue(),  ("fattura.formatoTrasmissione.sdi11"))));
 			
 		}
 		return listaFormatiTrasmissione;

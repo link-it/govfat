@@ -413,10 +413,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		}
 
 		
-		// [TODO] Ripristinare dopo test
-		//String valoreProtocollo = null;
-		
-		String valoreProtocollo = this.getDTO().getProtocollo();
+		String valoreProtocollo = null;
 		String valoreIdentificavoSDI = null;
 		String valorePosizione = null;
 		if(_statoElaborazione != null) {
