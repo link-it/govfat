@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -21,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.costanti.Costanti;
 import org.govmix.proxy.fatturapa.web.console.mbean.FileUploadBean;
+import org.govmix.proxy.fatturapa.web.console.mbean.LoginMBean;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.richfaces.model.UploadItem;
 import org.springframework.context.ApplicationContext;
@@ -59,6 +61,9 @@ public class FatturaElettronicaAttivaUploadServlet extends HttpServlet {
 		String idRichiesta = (String) req.getAttribute(Costanti.UUID_INFO_PARAMETER_NAME);
 		FatturaElettronicaAttivaUploadServlet.log.debug("["+idRichiesta+"] DoPost!");
 		resp.setHeader("Access-Control-Allow-Origin", "*");
+		
+		HttpSession sessione = req.getSession(); 
+		LoginMBean lb = (LoginMBean) sessione.getAttribute("loginBean");
 
 		ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
 		FileUploadBean fileUploadBean = (FileUploadBean)context.getBean("fileUploadBean");
@@ -108,11 +113,11 @@ public class FatturaElettronicaAttivaUploadServlet extends HttpServlet {
 						} else {
 							// duplicato
 							FatturaElettronicaAttivaUploadServlet.log.debug("["+idRichiesta+"] File ["+fileName+"] gia' presente, segnalo duplicato.");
-							respBodyItem = getUploadKoResponseItem(fileName, dimensione, "File duplicato");
+							respBodyItem = getUploadKoResponseItem(fileName, dimensione, Utils.getInstance().getMessageFromResourceBundle("fattura.form.errore.fileDuplicato",lb.getCurrentLocal()));
 						}
 					}catch(Exception e) {
 						FatturaElettronicaAttivaUploadServlet.log.error("["+idRichiesta+"] Errore durante l'elaborazione del file ["+fileName+"]: " +e.getMessage(), e);
-						respBodyItem = getUploadKoResponseItem(fileName, dimensione, "ERRORE");
+						respBodyItem = getUploadKoResponseItem(fileName, dimensione, Utils.getInstance().getMessageFromResourceBundle("fattura.form.errore.erroreGenerico",lb.getCurrentLocal()));
 					}
 
 					itemResp.add(respBodyItem);

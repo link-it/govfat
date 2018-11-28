@@ -42,6 +42,12 @@ String erroreLabel = Utils.getInstance().getMessageFromResourceBundle("fileUploa
 String processingLabel = Utils.getInstance().getMessageFromResourceBundle("fileUpload.processingLabel",locale);
 %>
 
+<style type="text/css">
+.toggle{
+vertical-align: middle; margin-top: 0px !important;
+}
+
+</style>
 </head>
 <body>
 
@@ -96,14 +102,16 @@ String processingLabel = Utils.getInstance().getMessageFromResourceBundle("fileU
 {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-upload fade">
         <td >
-            <p class="name">{%=file.name%}</p>
-			<p class="size"><%=processingLabel %></p>
+			<div>
+            	<p class="name">{%=file.name%}</p>
+				<p class="size"><%=processingLabel %></p>
+			</div>
+			<div>
+				<strong class="error text-danger"></strong>
+            	<div style="display: none;" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+			</div>
         </td>
-		 <td style="width: 25%">
-			<strong class="error text-danger"></strong>
-            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
-        </td>
-        <td style="width: 26%">
+        <td style="width: 27%">
             {% if (!i && !o.options.autoUpload) { %}
 				<div style="display: none;">
                 <button class="btn icon-start-upload start" disabled>
@@ -125,20 +133,20 @@ String processingLabel = Utils.getInstance().getMessageFromResourceBundle("fileU
 {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-download fade">
         <td >
-            <p class="name">
-                <span>{%=file.name%}</span>
-				{% if (!file.error) { %}
-					<span class="iconCaricamentoOk icon-ok"></span>
-				{% } %}
-            </p>
-			<span class="size">{%=o.formatFileSize(file.size)%}</span>
-        </td>
-        <td style="width: 25%">
+			<div>
+            	<p class="name">
+                	<span>{%=file.name%}</span>
+					{% if (!file.error) { %}
+						<span class="iconCaricamentoOk icon-ok"></span>
+					{% } %}
+        	    </p>
+				<span class="size">{%=o.formatFileSize(file.size)%}</span>
+			</div>
             {% if (file.error) { %}
                 <div><span class="label label-danger"><%=erroreLabel %></span> {%=file.error%}</div>
             {% } %}
         </td>
-        <td style="width: 26%">
+        <td style="width: 27%">
             {% if (file.deleteUrl) { %}
 				<div>
                 	<button class="btn icon-delete delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
