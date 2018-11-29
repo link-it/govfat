@@ -220,6 +220,12 @@ public class DipartimentoFieldConverter extends AbstractSQLFieldConverter {
 		if(field.equals(Dipartimento.model().ENTE.NOME)){
 			return this.toTable(Dipartimento.model().ENTE, returnAlias);
 		}
+		if(field.equals(Dipartimento.model().ENTE.NODO_CODICE_PAGAMENTO)){
+			return this.toTable(Dipartimento.model().ENTE, returnAlias);
+		}
+		if(field.equals(Dipartimento.model().ENTE.PREFISSO_CODICE_PAGAMENTO)){
+			return this.toTable(Dipartimento.model().ENTE, returnAlias);
+		}
 		if(field.equals(Dipartimento.model().DESCRIZIONE)){
 			return this.toTable(Dipartimento.model(), returnAlias);
 		}
