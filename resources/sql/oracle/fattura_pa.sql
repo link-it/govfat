@@ -500,6 +500,10 @@ CREATE TABLE enti
 	id_pcc_amministrazione VARCHAR(255),
 	cf_auth VARCHAR(255),
 	descrizione VARCHAR(255),
+	ente_versatore VARCHAR(255 CHAR),
+	struttura_versatore VARCHAR(255 CHAR),
+	nodo_codice_pagamento VARCHAR(255 CHAR),
+	prefisso_codice_pagamento VARCHAR(255 CHAR),
 	-- fk/pk columns
 	id NUMBER NOT NULL,
 	-- unique constraints

@@ -258,8 +258,15 @@ public class LottoFattureAnalyzer {
 		lotto.setDominio(getDominio(params.getCodiceDestinatario()));
 		lotto.setSottodominio(getSottodominio(params.getCodiceDestinatario()));
 		
-		if(dipartimento!=null && dipartimento.getEnte().getNodoCodicePagamento()!=null && dipartimento.getEnte().getPrefissoCodicePagamento() != null)
-			lotto.setPagoPA(getPagoPA(params.getXml(), dipartimento.getEnte().getNodoCodicePagamento(), dipartimento.getEnte().getPrefissoCodicePagamento()));
+		
+		if(dipartimento!=null) {
+			if(dipartimento.getEnte().getNodoCodicePagamento()!=null && dipartimento.getEnte().getPrefissoCodicePagamento() != null) {
+				log.debug("Dipartimento ["+dipartimento.getCodice()+"]. Nodo ["+dipartimento.getEnte().getNodoCodicePagamento()+"]. Prefisso ["+dipartimento.getEnte().getPrefissoCodicePagamento()+"]");
+				lotto.setPagoPA(this.getPagoPA(params.getXml(), dipartimento.getEnte().getNodoCodicePagamento(), dipartimento.getEnte().getPrefissoCodicePagamento()));
+			} else {
+				log.debug("Ente ["+dipartimento.getEnte().getNome()+"] non abilitato a invio PagoPA");
+			}
+		}
 		
 		return lotto;
 	}
@@ -276,12 +283,12 @@ public class LottoFattureAnalyzer {
 		return this.lotto.getDominio().toString().equals(DominioType.PA.toString()) || (this.getLotto().getSottodominio() != null && this.getLotto().getSottodominio().toString().equals(SottodominioType.ESTERO.toString()));
 	}
 
-	public static String getPagoPA(byte[] xml, String xPath, String prefix) throws Exception {
+	public String getPagoPA(byte[] xml, String xPath, String prefix) throws Exception {
 
 		ByteArrayInputStream is = null;
 		try {
 			is = new ByteArrayInputStream(xml);
-			XPath xpath = XPathFactory.newInstance().newXPath();
+			XPath xpath = xPathfactory.newXPath();
 
 			try {
 				XPathExpression expr = xpath.compile(xPath);

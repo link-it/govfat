@@ -369,6 +369,10 @@ CREATE TABLE enti
 	id_pcc_amministrazione VARCHAR(255),
 	cf_auth VARCHAR(255),
 	descrizione VARCHAR(255),
+	ente_versatore VARCHAR(255),
+	struttura_versatore VARCHAR(255),
+	nodo_codice_pagamento VARCHAR(255),
+	prefisso_codice_pagamento VARCHAR(255),
 	-- fk/pk columns
 	id BIGINT DEFAULT nextval('seq_enti') NOT NULL,
 	-- unique constraints
