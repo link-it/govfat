@@ -82,6 +82,7 @@
   <mapping name="registro" class="org.govmix.proxy.fatturapa.orm.IdRegistro">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
     <value name="nome" field="nome" usage="required"/>
+    <value name="username" field="username" usage="optional"/>
   </mapping>
   <mapping name="idOperazione" class="org.govmix.proxy.fatturapa.orm.IdOperazione" abstract="false">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
@@ -367,6 +368,8 @@
     <value name="descrizione" field="descrizione" usage="optional"/>
     <value name="enteVersatore" field="enteVersatore" usage="optional"/>
     <value name="strutturaVersatore" field="strutturaVersatore" usage="optional"/>
+    <value name="nodoCodicePagamento" field="nodoCodicePagamento" usage="optional"/>
+    <value name="prefissoCodicePagamento" field="prefissoCodicePagamento" usage="optional"/>
   </mapping>
   <mapping name="Protocollo" class="org.govmix.proxy.fatturapa.orm.Protocollo">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>

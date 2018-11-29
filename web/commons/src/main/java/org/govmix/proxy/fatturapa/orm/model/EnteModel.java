@@ -48,6 +48,8 @@ public class EnteModel extends AbstractModel<Ente> {
 		this.DESCRIZIONE = new Field("descrizione",java.lang.String.class,"Ente",Ente.class);
 		this.ENTE_VERSATORE = new Field("enteVersatore",java.lang.String.class,"Ente",Ente.class);
 		this.STRUTTURA_VERSATORE = new Field("strutturaVersatore",java.lang.String.class,"Ente",Ente.class);
+		this.NODO_CODICE_PAGAMENTO = new Field("nodoCodicePagamento",java.lang.String.class,"Ente",Ente.class);
+		this.PREFISSO_CODICE_PAGAMENTO = new Field("prefissoCodicePagamento",java.lang.String.class,"Ente",Ente.class);
 	
 	}
 	
@@ -61,6 +63,8 @@ public class EnteModel extends AbstractModel<Ente> {
 		this.DESCRIZIONE = new ComplexField(father,"descrizione",java.lang.String.class,"Ente",Ente.class);
 		this.ENTE_VERSATORE = new ComplexField(father,"enteVersatore",java.lang.String.class,"Ente",Ente.class);
 		this.STRUTTURA_VERSATORE = new ComplexField(father,"strutturaVersatore",java.lang.String.class,"Ente",Ente.class);
+		this.NODO_CODICE_PAGAMENTO = new ComplexField(father,"nodoCodicePagamento",java.lang.String.class,"Ente",Ente.class);
+		this.PREFISSO_CODICE_PAGAMENTO = new ComplexField(father,"prefissoCodicePagamento",java.lang.String.class,"Ente",Ente.class);
 	
 	}
 	
@@ -77,6 +81,10 @@ public class EnteModel extends AbstractModel<Ente> {
 	public IField ENTE_VERSATORE = null;
 	 
 	public IField STRUTTURA_VERSATORE = null;
+	 
+	public IField NODO_CODICE_PAGAMENTO = null;
+	 
+	public IField PREFISSO_CODICE_PAGAMENTO = null;
 	 
 
 	@Override

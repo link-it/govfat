@@ -525,6 +525,8 @@
 	<xsd:complexType name="id-ente">
 		<xsd:sequence>
 			<xsd:element name="nome" type="xsd:string" />
+			<xsd:element name="nodoCodicePagamento" type="xsd:string" minOccurs="0" />
+			<xsd:element name="prefissoCodicePagamento" type="xsd:string" minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
 	
@@ -885,7 +887,7 @@
 			<xsd:element name="statoProtocollazione" type="StatoProtocollazioneType" />
 			<xsd:element name="dominio" type="DominioType" />
 			<xsd:element name="sottodominio" type="SottodominioType" minOccurs="0" />
-			<xsd:element name="pagoPA" type="xsd:boolean" />
+			<xsd:element name="pagoPA" type="xsd:string" minOccurs="0"/>
 			<xsd:element name="dataProtocollazione" type="xsd:dateTime" minOccurs="0" />
 			<xsd:element name="protocollo" type="xsd:string" minOccurs="0">
 				<xsd:annotation>
@@ -1324,6 +1326,8 @@
 			<xsd:element name="descrizione" type="xsd:string" minOccurs="0" />
 			<xsd:element name="enteVersatore" type="xsd:string" minOccurs="0" />
 			<xsd:element name="strutturaVersatore" type="xsd:string" minOccurs="0" />
+			<xsd:element name="nodoCodicePagamento" type="xsd:string" minOccurs="0" />
+			<xsd:element name="prefissoCodicePagamento" type="xsd:string" minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
 	

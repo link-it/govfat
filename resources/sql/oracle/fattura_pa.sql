@@ -77,7 +77,7 @@ CREATE TABLE lotti
 	stato_protocollazione VARCHAR(255) NOT NULL,
 	dominio VARCHAR(255) NOT NULL,
 	sottodominio VARCHAR(255),
-	pago_pa NUMBER NOT NULL,
+	pago_pa VARCHAR(255 CHAR),
 	data_protocollazione TIMESTAMP,
 	protocollo CLOB,
 	id_egov VARCHAR(255),

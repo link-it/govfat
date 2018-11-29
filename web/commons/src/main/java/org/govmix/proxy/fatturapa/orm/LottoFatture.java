@@ -84,7 +84,7 @@ import java.io.Serializable;
  * 			&lt;element name="statoProtocollazione" type="{http://www.govmix.org/proxy/fatturapa/orm}StatoProtocollazioneType" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="dominio" type="{http://www.govmix.org/proxy/fatturapa/orm}DominioType" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="sottodominio" type="{http://www.govmix.org/proxy/fatturapa/orm}SottodominioType" minOccurs="0" maxOccurs="1"/>
- * 			&lt;element name="pagoPA" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="pagoPA" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="dataProtocollazione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="protocollo" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="idSIP" type="{http://www.govmix.org/proxy/fatturapa/orm}id-sip" minOccurs="0" maxOccurs="1"/>
@@ -599,15 +599,11 @@ public class LottoFatture extends org.openspcoop2.utils.beans.BaseBean implement
     this.sottodominio = sottodominio;
   }
 
-  public boolean isPagoPA() {
+  public java.lang.String getPagoPA() {
     return this.pagoPA;
   }
 
-  public boolean getPagoPA() {
-    return this.pagoPA;
-  }
-
-  public void setPagoPA(boolean pagoPA) {
+  public void setPagoPA(java.lang.String pagoPA) {
     this.pagoPA = pagoPA;
   }
 
@@ -866,9 +862,9 @@ public class LottoFatture extends org.openspcoop2.utils.beans.BaseBean implement
   @XmlElement(name="sottodominio",required=false,nillable=false)
   protected SottodominioType sottodominio;
 
-  @javax.xml.bind.annotation.XmlSchemaType(name="boolean")
-  @XmlElement(name="pagoPA",required=true,nillable=false)
-  protected boolean pagoPA;
+  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @XmlElement(name="pagoPA",required=false,nillable=false)
+  protected java.lang.String pagoPA;
 
   @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.DateTime2String.class)
   @javax.xml.bind.annotation.XmlSchemaType(name="dateTime")

@@ -446,6 +446,13 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 				return "nome";
 			}
 		}
+		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.REGISTRO.USERNAME)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".username";
+			}else{
+				return "username";
+			}
+		}
 		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.LISTA_EMAIL_NOTIFICHE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".lista_email_notifiche";
@@ -873,6 +880,13 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 				return "nome";
 			}
 		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.REGISTRO.USERNAME)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".username";
+			}else{
+				return "username";
+			}
+		}
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.LISTA_EMAIL_NOTIFICHE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".lista_email_notifiche";
@@ -1076,6 +1090,9 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.REGISTRO.NOME)){
 			return this.toTable(FatturaElettronica.model().DIPARTIMENTO.REGISTRO, returnAlias);
 		}
+		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.REGISTRO.USERNAME)){
+			return this.toTable(FatturaElettronica.model().DIPARTIMENTO.REGISTRO, returnAlias);
+		}
 		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.LISTA_EMAIL_NOTIFICHE)){
 			return this.toTable(FatturaElettronica.model().DIPARTIMENTO, returnAlias);
 		}
@@ -1257,6 +1274,9 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO, returnAlias);
 		}
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.REGISTRO.NOME)){
+			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.REGISTRO, returnAlias);
+		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.REGISTRO.USERNAME)){
 			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.REGISTRO, returnAlias);
 		}
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.LISTA_EMAIL_NOTIFICHE)){

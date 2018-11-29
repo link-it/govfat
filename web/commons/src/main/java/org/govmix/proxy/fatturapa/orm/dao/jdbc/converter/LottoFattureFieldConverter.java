@@ -467,6 +467,13 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 				return "nome";
 			}
 		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.REGISTRO.USERNAME)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".username";
+			}else{
+				return "username";
+			}
+		}
 		if(field.equals(LottoFatture.model().DIPARTIMENTO.LISTA_EMAIL_NOTIFICHE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".lista_email_notifiche";
@@ -677,6 +684,9 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 			return this.toTable(LottoFatture.model().DIPARTIMENTO, returnAlias);
 		}
 		if(field.equals(LottoFatture.model().DIPARTIMENTO.REGISTRO.NOME)){
+			return this.toTable(LottoFatture.model().DIPARTIMENTO.REGISTRO, returnAlias);
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.REGISTRO.USERNAME)){
 			return this.toTable(LottoFatture.model().DIPARTIMENTO.REGISTRO, returnAlias);
 		}
 		if(field.equals(LottoFatture.model().DIPARTIMENTO.LISTA_EMAIL_NOTIFICHE)){

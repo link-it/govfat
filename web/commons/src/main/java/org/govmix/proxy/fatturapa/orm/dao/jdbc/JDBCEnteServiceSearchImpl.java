@@ -477,6 +477,8 @@ public class JDBCEnteServiceSearchImpl implements IJDBCServiceSearchWithId<Ente,
 		sqlQueryObjectGet_ente.addSelectField(this.getEnteFieldConverter().toColumn(Ente.model().DESCRIZIONE,true));
 		sqlQueryObjectGet_ente.addSelectField(this.getEnteFieldConverter().toColumn(Ente.model().ENTE_VERSATORE,true));
 		sqlQueryObjectGet_ente.addSelectField(this.getEnteFieldConverter().toColumn(Ente.model().STRUTTURA_VERSATORE,true));
+		sqlQueryObjectGet_ente.addSelectField(this.getEnteFieldConverter().toColumn(Ente.model().NODO_CODICE_PAGAMENTO,true));
+		sqlQueryObjectGet_ente.addSelectField(this.getEnteFieldConverter().toColumn(Ente.model().PREFISSO_CODICE_PAGAMENTO,true));
 		sqlQueryObjectGet_ente.addWhereCondition("id=?");
 
 		// Get ente

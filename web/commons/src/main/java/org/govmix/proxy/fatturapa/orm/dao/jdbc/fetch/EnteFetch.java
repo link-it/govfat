@@ -67,6 +67,10 @@ public class EnteFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "ente_versatore", Ente.model().ENTE_VERSATORE.getFieldType()));
 				setParameter(object, "setStrutturaVersatore", Ente.model().STRUTTURA_VERSATORE.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "struttura_versatore", Ente.model().STRUTTURA_VERSATORE.getFieldType()));
+				setParameter(object, "setNodoCodicePagamento", Ente.model().NODO_CODICE_PAGAMENTO.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "nodo_codice_pagamento", Ente.model().NODO_CODICE_PAGAMENTO.getFieldType()));
+				setParameter(object, "setPrefissoCodicePagamento", Ente.model().PREFISSO_CODICE_PAGAMENTO.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "prefisso_codice_pagamento", Ente.model().PREFISSO_CODICE_PAGAMENTO.getFieldType()));
 				return object;
 			}
 			
@@ -101,6 +105,10 @@ public class EnteFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"enteVersatore"));
 				setParameter(object, "setStrutturaVersatore", Ente.model().STRUTTURA_VERSATORE.getFieldType(),
 					this.getObjectFromMap(map,"strutturaVersatore"));
+				setParameter(object, "setNodoCodicePagamento", Ente.model().NODO_CODICE_PAGAMENTO.getFieldType(),
+					this.getObjectFromMap(map,"nodoCodicePagamento"));
+				setParameter(object, "setPrefissoCodicePagamento", Ente.model().PREFISSO_CODICE_PAGAMENTO.getFieldType(),
+					this.getObjectFromMap(map,"prefissoCodicePagamento"));
 				return object;
 			}
 			

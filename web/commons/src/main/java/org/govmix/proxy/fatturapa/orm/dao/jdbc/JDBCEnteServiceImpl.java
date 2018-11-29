@@ -75,6 +75,8 @@ public class JDBCEnteServiceImpl extends JDBCEnteServiceSearchImpl
 		sqlQueryObjectInsert.addInsertField(this.getEnteFieldConverter().toColumn(Ente.model().DESCRIZIONE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getEnteFieldConverter().toColumn(Ente.model().ENTE_VERSATORE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getEnteFieldConverter().toColumn(Ente.model().STRUTTURA_VERSATORE,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getEnteFieldConverter().toColumn(Ente.model().NODO_CODICE_PAGAMENTO,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getEnteFieldConverter().toColumn(Ente.model().PREFISSO_CODICE_PAGAMENTO,false),"?");
 
 		// Insert ente
 		org.openspcoop2.utils.jdbc.IKeyGeneratorObject keyGenerator = this.getEnteFetch().getKeyGeneratorObject(Ente.model());
@@ -84,7 +86,9 @@ public class JDBCEnteServiceImpl extends JDBCEnteServiceSearchImpl
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(ente.getCfAuth(),Ente.model().CF_AUTH.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(ente.getDescrizione(),Ente.model().DESCRIZIONE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(ente.getEnteVersatore(),Ente.model().ENTE_VERSATORE.getFieldType()),
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(ente.getStrutturaVersatore(),Ente.model().STRUTTURA_VERSATORE.getFieldType())
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(ente.getStrutturaVersatore(),Ente.model().STRUTTURA_VERSATORE.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(ente.getNodoCodicePagamento(),Ente.model().NODO_CODICE_PAGAMENTO.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(ente.getPrefissoCodicePagamento(),Ente.model().PREFISSO_CODICE_PAGAMENTO.getFieldType())
 		);
 		ente.setId(id);
 
@@ -145,6 +149,10 @@ public class JDBCEnteServiceImpl extends JDBCEnteServiceSearchImpl
 		lstObjects_ente.add(new JDBCObject(ente.getEnteVersatore(), Ente.model().ENTE_VERSATORE.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getEnteFieldConverter().toColumn(Ente.model().STRUTTURA_VERSATORE,false), "?");
 		lstObjects_ente.add(new JDBCObject(ente.getStrutturaVersatore(), Ente.model().STRUTTURA_VERSATORE.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getEnteFieldConverter().toColumn(Ente.model().NODO_CODICE_PAGAMENTO,false), "?");
+		lstObjects_ente.add(new JDBCObject(ente.getNodoCodicePagamento(), Ente.model().NODO_CODICE_PAGAMENTO.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getEnteFieldConverter().toColumn(Ente.model().PREFISSO_CODICE_PAGAMENTO,false), "?");
+		lstObjects_ente.add(new JDBCObject(ente.getPrefissoCodicePagamento(), Ente.model().PREFISSO_CODICE_PAGAMENTO.getFieldType()));
 		sqlQueryObjectUpdate.addWhereCondition("id=?");
 		lstObjects_ente.add(new JDBCObject(tableId, Long.class));
 

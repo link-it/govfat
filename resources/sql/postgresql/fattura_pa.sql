@@ -63,7 +63,7 @@ CREATE TABLE lotti
 	stato_protocollazione VARCHAR(255) NOT NULL,
 	dominio VARCHAR(255) NOT NULL,
 	sottodominio VARCHAR(255),
-	pago_pa BOOLEAN NOT NULL,
+	pago_pa VARCHAR(255),
 	data_protocollazione TIMESTAMP,
 	protocollo TEXT,
 	id_egov VARCHAR(255),

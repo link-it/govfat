@@ -110,6 +110,20 @@ public class EnteFieldConverter extends AbstractSQLFieldConverter {
 				return "struttura_versatore";
 			}
 		}
+		if(field.equals(Ente.model().NODO_CODICE_PAGAMENTO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".nodo_codice_pagamento";
+			}else{
+				return "nodo_codice_pagamento";
+			}
+		}
+		if(field.equals(Ente.model().PREFISSO_CODICE_PAGAMENTO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".prefisso_codice_pagamento";
+			}else{
+				return "prefisso_codice_pagamento";
+			}
+		}
 
 
 		return super.toColumn(field,returnAlias,appendTablePrefix);
@@ -139,6 +153,12 @@ public class EnteFieldConverter extends AbstractSQLFieldConverter {
 			return this.toTable(Ente.model(), returnAlias);
 		}
 		if(field.equals(Ente.model().STRUTTURA_VERSATORE)){
+			return this.toTable(Ente.model(), returnAlias);
+		}
+		if(field.equals(Ente.model().NODO_CODICE_PAGAMENTO)){
+			return this.toTable(Ente.model(), returnAlias);
+		}
+		if(field.equals(Ente.model().PREFISSO_CODICE_PAGAMENTO)){
 			return this.toTable(Ente.model(), returnAlias);
 		}
 

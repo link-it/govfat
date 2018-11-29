@@ -43,6 +43,8 @@ public class IdEnteModel extends AbstractModel<IdEnte> {
 		super();
 	
 		this.NOME = new Field("nome",java.lang.String.class,"id-ente",IdEnte.class);
+		this.NODO_CODICE_PAGAMENTO = new Field("nodoCodicePagamento",java.lang.String.class,"id-ente",IdEnte.class);
+		this.PREFISSO_CODICE_PAGAMENTO = new Field("prefissoCodicePagamento",java.lang.String.class,"id-ente",IdEnte.class);
 	
 	}
 	
@@ -51,12 +53,18 @@ public class IdEnteModel extends AbstractModel<IdEnte> {
 		super(father);
 	
 		this.NOME = new ComplexField(father,"nome",java.lang.String.class,"id-ente",IdEnte.class);
+		this.NODO_CODICE_PAGAMENTO = new ComplexField(father,"nodoCodicePagamento",java.lang.String.class,"id-ente",IdEnte.class);
+		this.PREFISSO_CODICE_PAGAMENTO = new ComplexField(father,"prefissoCodicePagamento",java.lang.String.class,"id-ente",IdEnte.class);
 	
 	}
 	
 	
 
 	public IField NOME = null;
+	 
+	public IField NODO_CODICE_PAGAMENTO = null;
+	 
+	public IField PREFISSO_CODICE_PAGAMENTO = null;
 	 
 
 	@Override

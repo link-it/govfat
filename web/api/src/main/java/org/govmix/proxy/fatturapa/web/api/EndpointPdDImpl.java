@@ -180,8 +180,6 @@ public class EndpointPdDImpl implements EndpointPdD {
 				lotto.setStatoInserimento(StatoInserimentoType.NON_INSERITO);
 				lotto.setTentativiConsegna(0);
 				
-				//Gestiti solo per la fatturazione attiva
-				lotto.setPagoPA(false);
 				lotto.setDominio(DominioType.PA);
 				this.log.info("Inserimento del Lotto con identificativo SdI ["+lotto.getIdentificativoSdi()+"]...");
 				this.lottoBD.create(lotto);	

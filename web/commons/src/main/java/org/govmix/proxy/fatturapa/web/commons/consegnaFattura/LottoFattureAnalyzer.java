@@ -16,10 +16,12 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.cxf.helpers.MapNamespaceContext;
 import org.apache.log4j.Logger;
+import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.constants.DominioType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
@@ -29,9 +31,11 @@ import org.govmix.proxy.fatturapa.orm.constants.StatoInserimentoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException.CODICE;
 import org.openspcoop2.protocol.sdi.utils.P7MInfo;
+import org.openspcoop2.utils.resources.FileSystemUtilities;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 public class LottoFattureAnalyzer {
 
@@ -42,11 +46,11 @@ public class LottoFattureAnalyzer {
 	private LottoFatture lotto;
 
 
-	public LottoFattureAnalyzer(LottoFatture lotto, Logger log) throws Exception {
-		this(lotto.getXml(), lotto.getNomeFile(), lotto.getIdentificativoSdi(), lotto.getCodiceDestinatario(), log);
+	public LottoFattureAnalyzer(LottoFatture lotto, Dipartimento dipartimento, String codiceDipartimento, Logger log) throws Exception {
+		this(lotto.getXml(), lotto.getNomeFile(), lotto.getIdentificativoSdi(), dipartimento, codiceDipartimento, log);
 	}
 	
-	public LottoFattureAnalyzer(byte[] lottoFatture, String nomeFile, Integer identificativo, String codiceDipartimento, Logger log) throws Exception {
+	public LottoFattureAnalyzer(byte[] lottoFatture, String nomeFile, Integer identificativo, Dipartimento dipartimento, String codiceDipartimento, Logger log) throws Exception {
 		this.original = lottoFatture;
 		try {
 			P7MInfo info = new P7MInfo(lottoFatture, log);
@@ -70,7 +74,7 @@ public class LottoFattureAnalyzer {
 			}
 		}
 		String type = this.isP7M ? "P7M" : "XML"; 
-		this.lotto  = getLotto(this.original, nomeFile, identificativo, type, codiceDipartimento, log);
+		this.lotto  = getLotto(this.original, nomeFile, identificativo, type, dipartimento, codiceDipartimento, log);
 	}
 
 	private static DocumentBuilderFactory dbf;
@@ -107,7 +111,6 @@ public class LottoFattureAnalyzer {
 			if(referenceNodes.getLength() > 0) {
 				for(int i=0;i<referenceNodes.getLength();i++){
 					Node referenceNode = referenceNodes.item(i);
-					//TODO verificare firma?
 					referenceNode.getParentNode().removeChild(referenceNode);
 				}
 
@@ -188,7 +191,7 @@ public class LottoFattureAnalyzer {
 
 	}
 	
-	private LottoFatture getLotto(byte[] xml, String nomeFile, Integer identificativo, String type, String codiceDipartimento, Logger log) throws Exception {
+	private LottoFatture getLotto(byte[] xml, String nomeFile, Integer identificativo, String type, Dipartimento dipartimento, String codiceDipartimento, Logger log) throws Exception {
 		
 		
 		ConsegnaFatturaParameters params = null;
@@ -254,7 +257,9 @@ public class LottoFattureAnalyzer {
 		lotto.setTentativiConsegna(0);
 		lotto.setDominio(getDominio(params.getCodiceDestinatario()));
 		lotto.setSottodominio(getSottodominio(params.getCodiceDestinatario()));
-		lotto.setPagoPA(params.isPagoPA());
+		
+		if(dipartimento!=null && dipartimento.getEnte().getNodoCodicePagamento()!=null && dipartimento.getEnte().getPrefissoCodicePagamento() != null)
+			lotto.setPagoPA(getPagoPA(params.getXml(), dipartimento.getEnte().getNodoCodicePagamento(), dipartimento.getEnte().getPrefissoCodicePagamento()));
 		
 		return lotto;
 	}
@@ -271,6 +276,42 @@ public class LottoFattureAnalyzer {
 		return this.lotto.getDominio().toString().equals(DominioType.PA.toString()) || (this.getLotto().getSottodominio() != null && this.getLotto().getSottodominio().toString().equals(SottodominioType.ESTERO.toString()));
 	}
 
-	
+	public static String getPagoPA(byte[] xml, String xPath, String prefix) throws Exception {
+
+		ByteArrayInputStream is = null;
+		try {
+			is = new ByteArrayInputStream(xml);
+			XPath xpath = XPathFactory.newInstance().newXPath();
+
+			try {
+				XPathExpression expr = xpath.compile(xPath);
+				NodeList nodeset = (NodeList) expr.evaluate(new InputSource(is), XPathConstants.NODESET);
+
+
+				int size = 0;
+				String napp = null;
+				for(int i =0; i < nodeset.getLength(); i++) {
+					Node item = nodeset.item(i);
+
+					if(item.getTextContent().startsWith(prefix)) {
+						napp = item.getTextContent().substring(prefix.length());
+						size++;
+					}
+				}
+
+				if(size > 1)
+					throw new Exception("Trovati ["+size+"] numero avviso PagoPA. Atteso al piu' uno");
+
+				return napp;
+			} catch(XPathExpressionException e) {
+				throw new Exception("L'xPath ["+xPath+"] fornito per l'identificazione del numero avviso PagoPA non e' sintatticamente valido");
+			}
+
+		} finally {
+			if(is != null)
+				try {is.close();} catch (IOException e) {}
+		}
+
+	}
 }
 

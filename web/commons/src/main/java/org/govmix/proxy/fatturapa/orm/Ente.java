@@ -42,6 +42,8 @@ import java.io.Serializable;
  * 			&lt;element name="descrizione" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="enteVersatore" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="strutturaVersatore" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="nodoCodicePagamento" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="prefissoCodicePagamento" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -61,7 +63,9 @@ import java.io.Serializable;
   	"cfAuth",
   	"descrizione",
   	"enteVersatore",
-  	"strutturaVersatore"
+  	"strutturaVersatore",
+  	"nodoCodicePagamento",
+  	"prefissoCodicePagamento"
   }
 )
 
@@ -133,6 +137,22 @@ public class Ente extends org.openspcoop2.utils.beans.BaseBean implements Serial
     this.strutturaVersatore = strutturaVersatore;
   }
 
+  public java.lang.String getNodoCodicePagamento() {
+    return this.nodoCodicePagamento;
+  }
+
+  public void setNodoCodicePagamento(java.lang.String nodoCodicePagamento) {
+    this.nodoCodicePagamento = nodoCodicePagamento;
+  }
+
+  public java.lang.String getPrefissoCodicePagamento() {
+    return this.prefissoCodicePagamento;
+  }
+
+  public void setPrefissoCodicePagamento(java.lang.String prefissoCodicePagamento) {
+    this.prefissoCodicePagamento = prefissoCodicePagamento;
+  }
+
   private static final long serialVersionUID = 1L;
 
   @XmlTransient
@@ -175,5 +195,13 @@ public class Ente extends org.openspcoop2.utils.beans.BaseBean implements Serial
   @javax.xml.bind.annotation.XmlSchemaType(name="string")
   @XmlElement(name="strutturaVersatore",required=false,nillable=false)
   protected java.lang.String strutturaVersatore;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @XmlElement(name="nodoCodicePagamento",required=false,nillable=false)
+  protected java.lang.String nodoCodicePagamento;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @XmlElement(name="prefissoCodicePagamento",required=false,nillable=false)
+  protected java.lang.String prefissoCodicePagamento;
 
 }

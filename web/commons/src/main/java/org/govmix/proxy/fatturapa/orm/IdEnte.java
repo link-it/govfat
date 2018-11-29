@@ -37,6 +37,8 @@ import java.io.Serializable;
  * &lt;complexType name="id-ente">
  * 		&lt;sequence>
  * 			&lt;element name="nome" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="nodoCodicePagamento" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="prefissoCodicePagamento" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -51,7 +53,9 @@ import java.io.Serializable;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "id-ente", 
   propOrder = {
-  	"nome"
+  	"nome",
+  	"nodoCodicePagamento",
+  	"prefissoCodicePagamento"
   }
 )
 
@@ -83,6 +87,22 @@ public class IdEnte extends org.openspcoop2.utils.beans.BaseBean implements Seri
     this.nome = nome;
   }
 
+  public java.lang.String getNodoCodicePagamento() {
+    return this.nodoCodicePagamento;
+  }
+
+  public void setNodoCodicePagamento(java.lang.String nodoCodicePagamento) {
+    this.nodoCodicePagamento = nodoCodicePagamento;
+  }
+
+  public java.lang.String getPrefissoCodicePagamento() {
+    return this.prefissoCodicePagamento;
+  }
+
+  public void setPrefissoCodicePagamento(java.lang.String prefissoCodicePagamento) {
+    this.prefissoCodicePagamento = prefissoCodicePagamento;
+  }
+
   private static final long serialVersionUID = 1L;
 
   @XmlTransient
@@ -93,5 +113,13 @@ public class IdEnte extends org.openspcoop2.utils.beans.BaseBean implements Seri
   @javax.xml.bind.annotation.XmlSchemaType(name="string")
   @XmlElement(name="nome",required=true,nillable=false)
   protected java.lang.String nome;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @XmlElement(name="nodoCodicePagamento",required=false,nillable=false)
+  protected java.lang.String nodoCodicePagamento;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @XmlElement(name="prefissoCodicePagamento",required=false,nillable=false)
+  protected java.lang.String prefissoCodicePagamento;
 
 }
