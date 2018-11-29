@@ -82,6 +82,20 @@ public class DipartimentoFieldConverter extends AbstractSQLFieldConverter {
 				return "nome";
 			}
 		}
+		if(field.equals(Dipartimento.model().ENTE.NODO_CODICE_PAGAMENTO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".nodo_codice_pagamento";
+			}else{
+				return "nodo_codice_pagamento";
+			}
+		}
+		if(field.equals(Dipartimento.model().ENTE.PREFISSO_CODICE_PAGAMENTO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".prefisso_codice_pagamento";
+			}else{
+				return "prefisso_codice_pagamento";
+			}
+		}
 		if(field.equals(Dipartimento.model().DESCRIZIONE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".descrizione";
@@ -173,6 +187,20 @@ public class DipartimentoFieldConverter extends AbstractSQLFieldConverter {
 				return "nome";
 			}
 		}
+		if(field.equals(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE.NODO_CODICE_PAGAMENTO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".nodo_codice_pagamento";
+			}else{
+				return "nodo_codice_pagamento";
+			}
+		}
+		if(field.equals(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE.PREFISSO_CODICE_PAGAMENTO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".prefisso_codice_pagamento";
+			}else{
+				return "prefisso_codice_pagamento";
+			}
+		}
 
 
 		return super.toColumn(field,returnAlias,appendTablePrefix);
@@ -229,6 +257,12 @@ public class DipartimentoFieldConverter extends AbstractSQLFieldConverter {
 			return this.toTable(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY, returnAlias);
 		}
 		if(field.equals(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE.NOME)){
+			return this.toTable(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE, returnAlias);
+		}
+		if(field.equals(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE.NODO_CODICE_PAGAMENTO)){
+			return this.toTable(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE, returnAlias);
+		}
+		if(field.equals(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE.PREFISSO_CODICE_PAGAMENTO)){
 			return this.toTable(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE, returnAlias);
 		}
 
