@@ -129,6 +129,13 @@
             		</a4j:jsFunction>
            		</a4j:outputPanel>
        		</h:form>
+       		
+       		<h:form id="formInitCaricaFattura">
+            	<a4j:outputPanel layout="block" ajaxRendered="false">
+					<a4j:jsFunction name="initCaricaFattura" reRender="formCaricaFattura_formPnl" limitToList="true" status="mainStatus" actionListener="#{fatturaElettronicaAttivaSoloConservazioneMBean.nuovaFatturaListener}">
+            		</a4j:jsFunction>
+           		</a4j:outputPanel>
+       		</h:form>
 			
 			<op2web:searchForm searchBean="#{fatturaElettronicaAttivaSoloConservazioneMBean.search}">
 		
@@ -378,12 +385,11 @@
 						<h:outputText value="#{msg['commons.button.esporta']}" />
 					</h:commandLink>
 					
-					<a4j:commandButton id="carica-iconLink" styleClass="icon-carica-fattura" style="padding: 4px 6px 4px 5px;"
-						reRender="fileUploadModalPnl" value="#{msg['fattura.button.carica']}"
-						actionListener="#{fatturaElettronicaAttivaSoloConservazioneMBean.nuovaFatturaListener}"
-						rendered="#{fatturaElettronicaAttivaSoloConservazioneMBean.visualizzaTastoCaricaFattura}"
-						oncomplete="#{rich:component('fileUploadModalPnl')}.show()">
-					</a4j:commandButton>
+					<h:commandLink id="carica-iconLink" styleClass="icon-carica-fattura" onclick="initCaricaFattura(); Richfaces.showModalPanel('fileUploadModalPnl'); return false;"  
+						rendered="#{fatturaElettronicaAttivaSoloConservazioneMBean.visualizzaTastoCaricaFattura}" style="color: #dd2c0d;">
+                                    <h:outputText value="#{msg['fattura.button.carica']}" />
+                    </h:commandLink>
+					
 				</ui:define>
 			</op2web:managedPagedListView>
 		</rich:panel>
