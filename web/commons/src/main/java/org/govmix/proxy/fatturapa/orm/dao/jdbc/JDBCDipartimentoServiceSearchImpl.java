@@ -172,6 +172,9 @@ public class JDBCDipartimentoServiceSearchImpl implements IJDBCDipartimentoServi
 			fields.add(Dipartimento.model().ID_PROCEDIMENTO);
 			fields.add(Dipartimento.model().ID_PROCEDIMENTO_B2B);
 			fields.add(Dipartimento.model().ENTE.NOME);
+			fields.add(Dipartimento.model().ENTE.NODO_CODICE_PAGAMENTO);
+			fields.add(Dipartimento.model().ENTE.PREFISSO_CODICE_PAGAMENTO);
+
 			fields.add(new CustomField("id_registro", Long.class, "id_registro", this.getDipartimentoFieldConverter().toTable(Dipartimento.model())));
 
 			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));
