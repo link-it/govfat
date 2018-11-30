@@ -289,6 +289,7 @@ public class LottoFattureAnalyzer {
 
 		ByteArrayInputStream is = null;
 		try {
+			init();
 			is = new ByteArrayInputStream(xml);
 			XPath xpath = xPathfactory.newXPath();
 
