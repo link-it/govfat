@@ -34,7 +34,6 @@ import org.openspcoop2.protocol.sdi.utils.P7MInfo;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 
 public class LottoFattureAnalyzer {
 
@@ -291,44 +290,48 @@ public class LottoFattureAnalyzer {
 		try {
 			init();
 			is = new ByteArrayInputStream(xml);
+			dbf.setNamespaceAware(true);
+
 			XPath xpath = xPathfactory.newXPath();
 
+			XPathExpression expr = null; 
 			try {
-				
 				this.log.debug("Compilazione dell'espressione ["+xPathExpression+"]...");
-				XPathExpression expr = xpath.compile(xPathExpression);
+				expr = xpath.compile(xPathExpression);
 				this.log.debug("Compilazione dell'espressione ["+xPathExpression+"] completata con successo");
-				
-				this.log.debug("Valutazione dell'espressione ["+xPathExpression+"]...");
-				NodeList nodeset = (NodeList) expr.evaluate(new InputSource(is), XPathConstants.NODESET);
-				this.log.debug("Valutazione dell'espressione ["+xPathExpression+"] completata. Trovati ["+nodeset.getLength()+"] risultati");
-
-
-				int size = 0;
-				String napp = null;
-				for(int i =0; i < nodeset.getLength(); i++) {
-					Node item = nodeset.item(i);
-
-					if(item.getTextContent().startsWith(prefix)) {
-						this.log.debug("MATCH risultato ["+i+"]:" + item.getTextContent());
-						napp = item.getTextContent().substring(prefix.length());
-						size++;
-					} else {
-						this.log.debug("NO MATCH risultato ["+i+"]:" + item.getTextContent());
-					}
-				}
-
-				if(size > 1) {
-					this.log.error("Trovato ["+size+"] numero avviso con prefisso ["+prefix+"]");
-					throw new InserimentoLottiException(CODICE.ERRORE_IDENTIFICAZIONE_PAGOPA, nomeFile, size, prefix);
-				}
-
-				return napp;
 			} catch(XPathExpressionException e) {
 				this.log.error("Errore durante la valutazione dell'xPath:" + e.getMessage(), e);
 				throw new InserimentoLottiException(CODICE.ERRORE_NODO_PAGOPA_NON_VALIDO, nomeFile, xPathExpression);
+			}				
+			Document doc = dbf.newDocumentBuilder().parse(is);
+			this.log.debug("Valutazione dell'espressione ["+xPathExpression+"]...");
+			NodeList nodeset = (NodeList) expr.evaluate(doc.getDocumentElement(), XPathConstants.NODESET);
+			this.log.debug("Valutazione dell'espressione ["+xPathExpression+"] completata. Trovati ["+nodeset.getLength()+"] risultati");
+
+
+			int size = 0;
+			String napp = null;
+			for(int i =0; i < nodeset.getLength(); i++) {
+				Node item = nodeset.item(i);
+
+				if(item.getTextContent().startsWith(prefix)) {
+					this.log.debug("MATCH risultato ["+i+"]:" + item.getTextContent());
+					napp = item.getTextContent().substring(prefix.length());
+					size++;
+				} else {
+					this.log.debug("NO MATCH risultato ["+i+"]:" + item.getTextContent());
+				}
 			}
 
+			if(size > 1) {
+				this.log.error("Trovato ["+size+"] numero avviso con prefisso ["+prefix+"]");
+				throw new InserimentoLottiException(CODICE.ERRORE_IDENTIFICAZIONE_PAGOPA, nomeFile, size, prefix);
+			}
+
+			return napp;
+		} catch (Exception e) {
+			this.log.error("Errore durante la valutazione dell'xPath:" + e.getMessage(), e);
+			throw new InserimentoLottiException(CODICE.ERRORE_GENERICO);
 		} finally {
 			if(is != null)
 				try {is.close();} catch (IOException e) {}
