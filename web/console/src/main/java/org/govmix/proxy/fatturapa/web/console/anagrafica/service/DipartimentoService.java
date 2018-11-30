@@ -407,13 +407,18 @@ public class DipartimentoService extends BaseService<DipartimentoSearchForm> imp
 	public DipartimentoBean findDipartimentoByCodice(String codiceDipartimento)
 			throws ServiceException {
 		String methodName = "findDipartimentoByCodice("+codiceDipartimento+")";
-		IExpression expr = null;
+		IPaginatedExpression expr = null;
 
 		try{
-			expr = this.dipartimentoSearchDao.newExpression();
+			expr = this.dipartimentoSearchDao.newPaginatedExpression();
 			expr.equals(Dipartimento.model().CODICE, codiceDipartimento);
-
-			Dipartimento d = this.dipartimentoSearchDao.find(expr);
+			expr.offset(0);
+			expr.limit(1);
+			List<Dipartimento> lst = this.dipartimentoSearchDao.findAll(expr);
+			if(lst.size() <=0)
+				throw new NotFoundException();
+			
+			Dipartimento d = lst.get(0);
 			DipartimentoBean dip = new DipartimentoBean();
 			dip.setDTO(d);
 
