@@ -414,6 +414,7 @@ public class DipartimentoService extends BaseService<DipartimentoSearchForm> imp
 			expr.equals(Dipartimento.model().CODICE, codiceDipartimento);
 			expr.offset(0);
 			expr.limit(1);
+			expr.sortOrder(SortOrder.ASC);
 			expr.addOrder(Dipartimento.model().CODICE);
 			List<Dipartimento> lst = this.dipartimentoSearchDao.findAll(expr);
 			if(lst.size() <=0)
