@@ -56,11 +56,11 @@ public class InserimentoLotti {
 
 				if(analizer.isFirmato()) {
 					if(dipartimento.getFirmaAutomatica()){
-						throw new InserimentoLottiException(CODICE.ERRORE_FILE_FIRMATO, request.getNomeFile(), request.getDipartimento());
+						throw new InserimentoLottiException(analizer.getCodiceErroreFirmato(), request.getNomeFile(), request.getDipartimento());
 					}
 				} else {
 					if(!dipartimento.getFirmaAutomatica() && analizer.isFirmaNecessaria()){
-						throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
+						throw new InserimentoLottiException(analizer.getCodiceErroreNonFirmato(), request.getNomeFile(), request.getDipartimento());
 					}
 				}
 
@@ -69,7 +69,7 @@ public class InserimentoLotti {
 					lotto.setStatoElaborazioneInUscita(StatoElaborazioneType.PRESA_IN_CARICO);
 				} else {
 					if(!analizer.isFirmato()  && analizer.isFirmaNecessaria()) {
-						throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
+						throw new InserimentoLottiException(analizer.getCodiceErroreNonFirmato(), request.getNomeFile(), request.getDipartimento());
 					}
 					
 					lotto.setStatoElaborazioneInUscita(StatoElaborazioneType.DA_INVIARE_ALLO_SDI);
@@ -157,11 +157,11 @@ public class InserimentoLotti {
 				
 				if(analizer.isFirmato()) {
 					if(this.getDipartimento(request.getNomeFile(), request.getDipartimento()).getFirmaAutomatica()){
-						throw new InserimentoLottiException(CODICE.ERRORE_FILE_FIRMATO, request.getNomeFile(), request.getDipartimento());
+						throw new InserimentoLottiException(analizer.getCodiceErroreFirmato(), request.getNomeFile(), request.getDipartimento());
 					}
 				} else {
 					if(!this.getDipartimento(request.getNomeFile(), request.getDipartimento()).getFirmaAutomatica() && analizer.isFirmaNecessaria()){
-						throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
+						throw new InserimentoLottiException(analizer.getCodiceErroreNonFirmato(), request.getNomeFile(), request.getDipartimento());
 					}
 				}
 				
@@ -178,7 +178,7 @@ public class InserimentoLotti {
 				LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), request.getNomeFile(), 1, null, request.getDipartimento(), this.log);
 				
 				if(!analizer.isFirmato() && analizer.isFirmaNecessaria()) {
-					throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
+					throw new InserimentoLottiException(analizer.getCodiceErroreNonFirmato(), request.getNomeFile(), request.getDipartimento());
 				}
 				
 			} catch(Exception e) {
@@ -206,7 +206,7 @@ public class InserimentoLotti {
 				LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), request.getNomeFile(), identificativo, null, request.getDipartimento(), this.log);
 				
 				if(!analizer.isFirmato() && analizer.isFirmaNecessaria()) {
-					throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO, request.getNomeFile(), request.getDipartimento());
+					throw new InserimentoLottiException(analizer.getCodiceErroreNonFirmato(), request.getNomeFile(), request.getDipartimento());
 				}
 
 

@@ -43,21 +43,22 @@ public class LottoFattureAnalyzer {
 	private byte[] original;
 	private byte[] decoded;
 	private LottoFatture lotto;
-
+	private Logger log;
 
 	public LottoFattureAnalyzer(LottoFatture lotto, Dipartimento dipartimento, String codiceDipartimento, Logger log) throws Exception {
 		this(lotto.getXml(), lotto.getNomeFile(), lotto.getIdentificativoSdi(), dipartimento, codiceDipartimento, log);
 	}
 	
 	public LottoFattureAnalyzer(byte[] lottoFatture, String nomeFile, Integer identificativo, Dipartimento dipartimento, String codiceDipartimento, Logger log) throws Exception {
+		this.log = log;
 		this.original = lottoFatture;
 		try {
-			P7MInfo info = new P7MInfo(lottoFatture, log);
+			P7MInfo info = new P7MInfo(lottoFatture, this.log);
 			this.decoded = info.getXmlDecoded();
 			this.isP7M = true;
 			this.isFirmato = true;
 		} catch(Throwable t) {
-			log.debug("Acquisizione lotto P7M non riuscita...provo ad acquisire lotto XML. Motivo della mancata acquisizione:" + t.getMessage());
+			this.log.debug("Acquisizione lotto P7M non riuscita...provo ad acquisire lotto XML. Motivo della mancata acquisizione:" + t.getMessage());
 			this.isP7M = false;
 			try {
 				this.decoded = extractContentFromXadesSignedFile(lottoFatture);
@@ -68,12 +69,12 @@ public class LottoFattureAnalyzer {
 				}
 
 			} catch(Exception e) {
-				log.error("Errore durante l'acquisizione del lotto xml:" + e.getMessage(), e);
+				this.log.error("Errore durante l'acquisizione del lotto xml:" + e.getMessage(), e);
 				throw e;
 			}
 		}
 		String type = this.isP7M ? "P7M" : "XML"; 
-		this.lotto  = getLotto(this.original, nomeFile, identificativo, type, dipartimento, codiceDipartimento, log);
+		this.lotto  = getLotto(this.original, nomeFile, identificativo, type, dipartimento, codiceDipartimento);
 	}
 
 	private static DocumentBuilderFactory dbf;
@@ -190,7 +191,7 @@ public class LottoFattureAnalyzer {
 
 	}
 	
-	private LottoFatture getLotto(byte[] xml, String nomeFile, Integer identificativo, String type, Dipartimento dipartimento, String codiceDipartimento, Logger log) throws Exception {
+	private LottoFatture getLotto(byte[] xml, String nomeFile, Integer identificativo, String type, Dipartimento dipartimento, String codiceDipartimento) throws Exception {
 		
 		
 		ConsegnaFatturaParameters params = null;
@@ -206,7 +207,7 @@ public class LottoFattureAnalyzer {
 			
 			params.validate(true);
 		} catch(Exception e) {
-			log.error("Errore durante il caricamento del lotto con nome file ["+nomeFile+"]: " + e.getMessage(), e);
+			this.log.error("Errore durante il caricamento del lotto con nome file ["+nomeFile+"]: " + e.getMessage(), e);
 			throw new InserimentoLottiException(CODICE.PARAMETRI_NON_VALIDI, nomeFile);
 		}
 
@@ -260,11 +261,13 @@ public class LottoFattureAnalyzer {
 		
 		if(dipartimento!=null) {
 			if(dipartimento.getEnte().getNodoCodicePagamento()!=null && dipartimento.getEnte().getPrefissoCodicePagamento() != null) {
-				log.debug("Dipartimento ["+dipartimento.getCodice()+"]. Nodo ["+dipartimento.getEnte().getNodoCodicePagamento()+"]. Prefisso ["+dipartimento.getEnte().getPrefissoCodicePagamento()+"]");
-				lotto.setPagoPA(this.getPagoPA(params.getXml(), dipartimento.getEnte().getNodoCodicePagamento(), dipartimento.getEnte().getPrefissoCodicePagamento()));
+				this.log.debug("Dipartimento ["+dipartimento.getCodice()+"]. Nodo ["+dipartimento.getEnte().getNodoCodicePagamento()+"]. Prefisso ["+dipartimento.getEnte().getPrefissoCodicePagamento()+"]");
+				lotto.setPagoPA(this.getPagoPA(params.getXml(), dipartimento.getEnte().getNodoCodicePagamento(), dipartimento.getEnte().getPrefissoCodicePagamento(), lotto.getNomeFile()));
 			} else {
-				log.debug("Ente ["+dipartimento.getEnte().getNome()+"] non abilitato a invio PagoPA");
+				this.log.debug("Ente ["+dipartimento.getEnte().getNome()+"] non abilitato a invio PagoPA");
 			}
+		} else {
+			this.log.debug("Dipartimento non valorizzato. Non cerco numero avviso PagoPA"); 
 		}
 		
 		return lotto;
@@ -282,7 +285,7 @@ public class LottoFattureAnalyzer {
 		return this.lotto.getDominio().toString().equals(DominioType.PA.toString()) || (this.getLotto().getSottodominio() != null && this.getLotto().getSottodominio().toString().equals(SottodominioType.ESTERO.toString()));
 	}
 
-	public String getPagoPA(byte[] xml, String xPath, String prefix) throws Exception {
+	public String getPagoPA(byte[] xml, String xPathExpression, String prefix, String nomeFile) throws InserimentoLottiException {
 
 		ByteArrayInputStream is = null;
 		try {
@@ -290,8 +293,14 @@ public class LottoFattureAnalyzer {
 			XPath xpath = xPathfactory.newXPath();
 
 			try {
-				XPathExpression expr = xpath.compile(xPath);
+				
+				this.log.debug("Compilazione dell'espressione ["+xPathExpression+"]...");
+				XPathExpression expr = xpath.compile(xPathExpression);
+				this.log.debug("Compilazione dell'espressione ["+xPathExpression+"] completata con successo");
+				
+				this.log.debug("Valutazione dell'espressione ["+xPathExpression+"]...");
 				NodeList nodeset = (NodeList) expr.evaluate(new InputSource(is), XPathConstants.NODESET);
+				this.log.debug("Valutazione dell'espressione ["+xPathExpression+"] completata. Trovati ["+nodeset.getLength()+"] risultati");
 
 
 				int size = 0;
@@ -300,17 +309,23 @@ public class LottoFattureAnalyzer {
 					Node item = nodeset.item(i);
 
 					if(item.getTextContent().startsWith(prefix)) {
+						this.log.debug("MATCH risultato ["+i+"]:" + item.getTextContent());
 						napp = item.getTextContent().substring(prefix.length());
 						size++;
+					} else {
+						this.log.debug("NO MATCH risultato ["+i+"]:" + item.getTextContent());
 					}
 				}
 
-				if(size > 1)
-					throw new Exception("Trovati ["+size+"] numero avviso PagoPA. Atteso al piu' uno");
+				if(size > 1) {
+					this.log.error("Trovato ["+size+"] numero avviso con prefisso ["+prefix+"]");
+					throw new InserimentoLottiException(CODICE.ERRORE_IDENTIFICAZIONE_PAGOPA, nomeFile, size, prefix);
+				}
 
 				return napp;
 			} catch(XPathExpressionException e) {
-				throw new Exception("L'xPath ["+xPath+"] fornito per l'identificazione del numero avviso PagoPA non e' sintatticamente valido");
+				this.log.error("Errore durante la valutazione dell'xPath:" + e.getMessage(), e);
+				throw new InserimentoLottiException(CODICE.ERRORE_NODO_PAGOPA_NON_VALIDO, nomeFile, xPathExpression);
 			}
 
 		} finally {
@@ -319,5 +334,17 @@ public class LottoFattureAnalyzer {
 		}
 
 	}
+	
+	public CODICE getCodiceErroreNonFirmato() {
+		if(this.lotto.getSottodominio() != null && this.lotto.getSottodominio().equals(SottodominioType.ESTERO)) {
+			return CODICE.ERRORE_FILE_ESTERO_NON_FIRMATO;				
+		}
+		return CODICE.ERRORE_FILE_NON_FIRMATO;
+	}
+
+	public CODICE getCodiceErroreFirmato() {
+		return CODICE.ERRORE_FILE_FIRMATO;
+	}
+
 }
 
