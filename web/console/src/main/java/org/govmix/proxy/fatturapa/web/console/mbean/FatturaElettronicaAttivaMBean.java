@@ -193,7 +193,8 @@ IFatturaElettronicaAttivaService>{
 		((SelectListImpl)this.search.getTipoComunicazione()).setElencoSelectItems(this.getListaTipoComunicazione());
 		((SelectListImpl)this.search.getNotificaDecorrenzaTermini()).setElencoSelectItems(this.getListaNotificaDT());
 		((SelectListImpl)this.search.getDataInvioPeriodo()).setElencoSelectItems(this.getListaPeriodoTemporale());
-		((SelectListImpl)this.search.getDipartimento()).setElencoSelectItems(this.getDipartimenti());
+		List<SelectItem> dipartimenti = this.getDipartimenti(); 
+		((SelectListImpl)this.search.getDipartimento()).setElencoSelectItems(dipartimenti);
 		((SelectListImpl)this.search.getStatoElaborazione()).setElencoSelectItems(this.getListaStatoElaborazione());
 		((SelectListImpl)this.search.getFormatoTrasmissione()).setElencoSelectItems(this.getListaFormatiTrasmissione());  
 		this.search.setmBean(this);
@@ -214,8 +215,12 @@ IFatturaElettronicaAttivaService>{
 		if(this.form != null) {
 			this.form.setmBean(this); 
 			this.form.setRendered(true);
-			((SelectListImpl)this.form.getDipartimento()).setElencoSelectItems(this._getDipartimenti(false,true));
+			List<SelectItem> dipartimenti = this._getDipartimenti(false,true);
+			((SelectListImpl)this.form.getDipartimento()).setElencoSelectItems(dipartimenti);
 			this.form.reset();
+			if(!dipartimenti.isEmpty() && this.form.getDipartimento().getValue() == null) {
+				this.form.getDipartimento().setValue((org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem) dipartimenti.get(0).getValue()); 
+			}
 		}
 	}
 
@@ -580,13 +585,20 @@ IFatturaElettronicaAttivaService>{
 		this.form.setValues(null); 
 
 		// reset form valore dipartimento, se mettiamo null non valida il form e richfaces non valida gli altri campi.
-		List<SelectItem> lst = this._getDipartimenti(false, true);
-		if(lst != null && lst.size() > 0) {
-			SelectItem selectItem = lst.get(0);
-			this.form.getDipartimento().setDefaultValue((org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem) selectItem.getValue());
+//		List<SelectItem> lst = this._getDipartimenti(false, true);
+//		if(lst != null && lst.size() > 0) {
+//			SelectItem selectItem = lst.get(0);
+//			this.form.getDipartimento().setDefaultValue((org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem) selectItem.getValue());
+//		}
+		
+		List<SelectItem> dipartimenti = this._getDipartimenti(false,true);
+		((SelectListImpl)this.form.getDipartimento()).setElencoSelectItems(dipartimenti);
+		this.form.reset();
+		if(!dipartimenti.isEmpty() && this.form.getDipartimento().getValue() == null) {
+			this.form.getDipartimento().setValue((org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem) dipartimenti.get(0).getValue()); 
 		}
 
-		this.form.reset();
+//		this.form.reset();
 		this.listaConservazione = null;
 		this.form.getFatturaFile().clear(ae);
 		this.checkConservazione = false;

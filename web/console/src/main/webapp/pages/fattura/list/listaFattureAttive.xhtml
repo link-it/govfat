@@ -133,7 +133,7 @@
        		
        		<h:form id="formInitCaricaFattura">
             	<a4j:outputPanel layout="block" ajaxRendered="false">
-					<a4j:jsFunction name="initCaricaFattura" reRender="dsPanelChiudiUpload" limitToList="true" status="mainStatus" actionListener="#{fatturaElettronicaAttivaMBean.nuovaFatturaListener}">
+					<a4j:jsFunction name="initCaricaFattura" reRender="input_cf_dipartimentoCombo" limitToList="true" status="mainStatus" actionListener="#{fatturaElettronicaAttivaMBean.nuovaFatturaListener}">
             		</a4j:jsFunction>
            		</a4j:outputPanel>
        		</h:form>       		
@@ -508,12 +508,25 @@
 				            
 				            <h:inputHidden value="#{fatturaElettronicaAttivaMBean.form.idFiles}" id="idFilesValidi" /> 
 						</op2web:prop>
-						<op2web:formField field="#{fatturaElettronicaAttivaMBean.form.dipartimento}" />
+						<op2web:prop label="#{fatturaElettronicaAttivaMBean.form.dipartimento.label}" required="#{fatturaElettronicaAttivaMBean.form.dipartimento.required == 'true'}" rendered="#{fatturaElettronicaAttivaMBean.form.dipartimento.rendered == 'true'}">
+
+                       		<rich:comboBox id="input_#{fatturaElettronicaAttivaMBean.form.dipartimento.name}Combo" 
+                       				value="#{fatturaElettronicaAttivaMBean.form.dipartimento.value}" converter="selectItemConverter" 
+	                        		directInputSuggestions="true" style="#{fatturaElettronicaAttivaMBean.form.dipartimento.style}"
+	                                defaultLabel="#{commonsMsg['inputSelect.component.seleziona']} #{fatturaElettronicaAttivaMBean.form.dipartimento.label}" enableManualInput="#{fatturaElettronicaAttivaMBean.form.dipartimento.enableManualInput}"
+	                                required="#{fatturaElettronicaAttivaMBean.form.dipartimento.required}" listWidth="#{fatturaElettronicaAttivaMBean.form.dipartimento.selectItemsWidth}"
+	                                requiredMessage="#{fatturaElettronicaAttivaMBean.form.dipartimento.requiredMessage}" width="#{fatturaElettronicaAttivaMBean.form.dipartimento.width}"   >
+	                                <f:selectItems value="#{fatturaElettronicaAttivaMBean.form.dipartimento.elencoSelectItems}" />
+	                                <a4j:support status="mainStatus" event="onselect"  limitToList="true"
+	                                        reRender="#{fatturaElettronicaAttivaMBean.form.dipartimento.fieldsToUpdate}" 
+	                                        actionListener="#{fatturaElettronicaAttivaMBean.form.dipartimento.fieldSelected}" />
+	                        </rich:comboBox>
+				        </op2web:prop>
 					</op2web:fieldset>
 					<a4j:outputPanel layout="block" id="formCaricaFattura_btnPnl" ajaxRendered="false">
 						<div class="buttonrow" style="margin-left: 320px; margin-top:20px;">
 							<a4j:commandButton styleClass="icon-save positive" style="padding: 4px 6px 4px 5px;" id="caricaFattureButton"
-								disabled="#{!fatturaElettronicaAttivaMBean.form.buttonEnabled}"
+								disabled="#{!fatturaElettronicaAttivaMBean.form.buttonEnabled}" limitToList="true"
 								value="#{msg['fattura.button.salva']}" action="#{fatturaElettronicaAttivaMBean.salvaFatture}"
 								reRender="dsFileUploadErrorsCtr" onclick="this.disabled=true"
 								oncomplete="this.disabled=false; if (#{fatturaElettronicaAttivaMBean.salvataggioOk == 'true'}) { #{rich:component('fileUploadModalPnl')}.hide(); ricaricaListaFattureAttive(); }" />

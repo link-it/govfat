@@ -132,7 +132,7 @@
        		
        		<h:form id="formInitCaricaFattura">
             	<a4j:outputPanel layout="block" ajaxRendered="false">
-					<a4j:jsFunction name="initCaricaFattura" reRender="dsPanelChiudiUpload" limitToList="true" status="mainStatus" actionListener="#{fatturaElettronicaAttivaSoloConservazioneMBean.nuovaFatturaListener}">
+					<a4j:jsFunction name="initCaricaFattura" reRender="input_cf_dipartimentoCombo" limitToList="true" status="mainStatus" actionListener="#{fatturaElettronicaAttivaSoloConservazioneMBean.nuovaFatturaListener}">
             		</a4j:jsFunction>
            		</a4j:outputPanel>
        		</h:form>
@@ -475,12 +475,26 @@
 					            
 					            <h:inputHidden value="#{fatturaElettronicaAttivaSoloConservazioneMBean.form.idFiles}" id="idFilesValidi" /> 
 							</op2web:prop>
-							<op2web:formField field="#{fatturaElettronicaAttivaSoloConservazioneMBean.form.dipartimento}" />
+							
+							<op2web:prop label="#{fatturaElettronicaAttivaSoloConservazioneMBean.form.dipartimento.label}" required="#{fatturaElettronicaAttivaSoloConservazioneMBean.form.dipartimento.required == 'true'}" rendered="#{fatturaElettronicaAttivaSoloConservazioneMBean.form.dipartimento.rendered == 'true'}">
+
+                        		<rich:comboBox id="input_#{fatturaElettronicaAttivaSoloConservazioneMBean.form.dipartimento.name}Combo" 
+                        				value="#{fatturaElettronicaAttivaSoloConservazioneMBean.form.dipartimento.value}" converter="selectItemConverter" 
+		                        		directInputSuggestions="true" style="#{fatturaElettronicaAttivaSoloConservazioneMBean.form.dipartimento.style}"
+		                                defaultLabel="#{commonsMsg['inputSelect.component.seleziona']} #{fatturaElettronicaAttivaSoloConservazioneMBean.form.dipartimento.label}" enableManualInput="#{fatturaElettronicaAttivaSoloConservazioneMBean.form.dipartimento.enableManualInput}"
+		                                required="#{fatturaElettronicaAttivaSoloConservazioneMBean.form.dipartimento.required}" listWidth="#{fatturaElettronicaAttivaSoloConservazioneMBean.form.dipartimento.selectItemsWidth}"
+		                                requiredMessage="#{fatturaElettronicaAttivaSoloConservazioneMBean.form.dipartimento.requiredMessage}" width="#{fatturaElettronicaAttivaSoloConservazioneMBean.form.dipartimento.width}"   >
+		                                <f:selectItems value="#{fatturaElettronicaAttivaSoloConservazioneMBean.form.dipartimento.elencoSelectItems}" />
+		                                <a4j:support status="mainStatus" event="onselect"  limitToList="true"
+		                                        reRender="#{fatturaElettronicaAttivaSoloConservazioneMBean.form.dipartimento.fieldsToUpdate}" 
+		                                        actionListener="#{fatturaElettronicaAttivaSoloConservazioneMBean.form.dipartimento.fieldSelected}" />
+		                        </rich:comboBox>
+					        </op2web:prop>
 						</op2web:fieldset>
 						<a4j:outputPanel layout="block" id="formCaricaFattura_btnPnl" ajaxRendered="false">
 							<div class="buttonrow" style="margin-left: 320px; margin-top:20px;">
 								<a4j:commandButton styleClass="icon-save positive" style="padding: 4px 6px 4px 5px;" id="caricaFattureConservazioneButton"
-									disabled="#{!fatturaElettronicaAttivaSoloConservazioneMBean.form.buttonEnabled}"
+									disabled="#{!fatturaElettronicaAttivaSoloConservazioneMBean.form.buttonEnabled}" limitToList="true"
 									value="#{msg['fattura.button.salva']}" action="#{fatturaElettronicaAttivaSoloConservazioneMBean.preparaFormConservazione}"
 									reRender="dsFileUploadErrorsCtr,conservazioneFattureForm_formPnl" onclick="this.disabled=true"
 									oncomplete="this.disabled=false; if (#{fatturaElettronicaAttivaSoloConservazioneMBean.checkFormFattura == 'true'}) { #{rich:component('pannelloConservazioneFatture')}.show(); }" />
@@ -563,7 +577,7 @@
 				        	<div class="buttonrow" style="margin-left: 310px;">
 				        		<a4j:commandButton styleClass="icon-save positive" style="padding: 4px 6px 4px 5px;"
 									value="#{msg['fattura.button.invia']}" action="#{fatturaElettronicaAttivaSoloConservazioneMBean.salvaFormCorservazione}"
-									reRender="conservazioneFattureForm_formPnl,outPanelFormConservazioneError"
+									reRender="conservazioneFattureForm_formPnl,outPanelFormConservazioneError" limitToList="true"
 									oncomplete="if (#{fatturaElettronicaAttivaSoloConservazioneMBean.checkConservazione == 'true'}) { #{rich:component('pannelloConservazioneFatture')}.hide(); #{rich:component('fileUploadModalPnl')}.hide(); ricaricaListaFattureAttive(); }" />
 				        	</div>
 			        		
