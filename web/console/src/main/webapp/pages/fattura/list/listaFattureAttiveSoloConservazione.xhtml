@@ -119,6 +119,10 @@
 			function endDeleteOk(){
 				//propagaEndDeleteOk();
 			}
+			
+			function resetFileList(){
+				jQuery("[id$='idFilesValidi']").val('');
+			}
 			 //]]>
 		</script>
 		<rich:panel styleClass="noborder" id="pagina">
@@ -385,7 +389,7 @@
 						<h:outputText value="#{msg['commons.button.esporta']}" />
 					</h:commandLink>
 					
-					<h:commandLink id="carica-iconLink" styleClass="icon-carica-fattura" onclick="initCaricaFattura(); Richfaces.showModalPanel('fileUploadModalPnl'); return false;"  
+					<h:commandLink id="carica-iconLink" styleClass="icon-carica-fattura" onclick="initCaricaFattura(); resetFileList(); Richfaces.showModalPanel('fileUploadModalPnl'); return false;"  
 						rendered="#{fatturaElettronicaAttivaSoloConservazioneMBean.visualizzaTastoCaricaFattura}" style="color: #dd2c0d;">
                                     <h:outputText value="#{msg['fattura.button.carica']}" />
                     </h:commandLink>
