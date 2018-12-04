@@ -329,6 +329,8 @@ public class LottoFattureAnalyzer {
 			}
 
 			return napp;
+		} catch (InserimentoLottiException e) {
+			throw e;
 		} catch (Exception e) {
 			this.log.error("Errore durante la valutazione dell'xPath:" + e.getMessage(), e);
 			throw new InserimentoLottiException(CODICE.ERRORE_GENERICO);

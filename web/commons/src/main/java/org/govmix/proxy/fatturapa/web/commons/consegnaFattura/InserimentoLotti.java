@@ -147,26 +147,20 @@ public class InserimentoLotti {
 		for(InserimentoLottoRequest request: requestList) {
 			Dipartimento dipartimento = this.getDipartimento(request.getNomeFile(), request.getDipartimento());
 			
-			try {
-				
-				LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), request.getNomeFile(), 1, dipartimento, dipartimento.getCodice(), this.log);
-				
-				if(!this.checkCodiceProcedimento(analizer.getLotto(), this.getDipartimento(request.getNomeFile(), request.getDipartimento()))) {
-					throw new InserimentoLottiException(CODICE.ERRORE_CODICE_PROCEDIMENTO, request.getNomeFile(), request.getDipartimento(), analizer.getLotto().getFormatoTrasmissione());
+			LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), request.getNomeFile(), 1, dipartimento, dipartimento.getCodice(), this.log);
+			
+			if(!this.checkCodiceProcedimento(analizer.getLotto(), this.getDipartimento(request.getNomeFile(), request.getDipartimento()))) {
+				throw new InserimentoLottiException(CODICE.ERRORE_CODICE_PROCEDIMENTO, request.getNomeFile(), request.getDipartimento(), analizer.getLotto().getFormatoTrasmissione());
+			}
+			
+			if(analizer.isFirmato()) {
+				if(this.getDipartimento(request.getNomeFile(), request.getDipartimento()).getFirmaAutomatica()){
+					throw new InserimentoLottiException(analizer.getCodiceErroreFirmato(), request.getNomeFile(), request.getDipartimento());
 				}
-				
-				if(analizer.isFirmato()) {
-					if(this.getDipartimento(request.getNomeFile(), request.getDipartimento()).getFirmaAutomatica()){
-						throw new InserimentoLottiException(analizer.getCodiceErroreFirmato(), request.getNomeFile(), request.getDipartimento());
-					}
-				} else {
-					if(!this.getDipartimento(request.getNomeFile(), request.getDipartimento()).getFirmaAutomatica() && analizer.isFirmaNecessaria()){
-						throw new InserimentoLottiException(analizer.getCodiceErroreNonFirmato(), request.getNomeFile(), request.getDipartimento());
-					}
+			} else {
+				if(!this.getDipartimento(request.getNomeFile(), request.getDipartimento()).getFirmaAutomatica() && analizer.isFirmaNecessaria()){
+					throw new InserimentoLottiException(analizer.getCodiceErroreNonFirmato(), request.getNomeFile(), request.getDipartimento());
 				}
-				
-			} catch(Exception e) {
-				throw new InserimentoLottiException(CODICE.ERRORE_FORMATO_FILE, request.getNomeFile());
 			}
 		}
 	}
@@ -174,18 +168,12 @@ public class InserimentoLotti {
 	public void checkLottoSoloConservazione(List<InserimentoLottoSoloConservazioneRequest> requestList) throws InserimentoLottiException {
 		for(InserimentoLottoSoloConservazioneRequest request: requestList) {
 
-			try {
-				LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), request.getNomeFile(), 1, null, request.getDipartimento(), this.log);
-				
-				if(!analizer.isFirmato()) {
-					throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO_CONSERVAZIONE, request.getNomeFile(), request.getDipartimento());
-				}
-				
-			} catch(InserimentoLottiException e) {
-				throw e;
-			} catch(Exception e) {
-				throw new InserimentoLottiException(CODICE.ERRORE_FORMATO_FILE, request.getNomeFile());
+			LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), request.getNomeFile(), 1, null, request.getDipartimento(), this.log);
+			
+			if(!analizer.isFirmato()) {
+				throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO_CONSERVAZIONE, request.getNomeFile(), request.getDipartimento());
 			}
+				
 		}
 	}
 
