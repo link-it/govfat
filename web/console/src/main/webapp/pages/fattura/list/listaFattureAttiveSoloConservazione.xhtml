@@ -501,7 +501,7 @@
 								<a4j:commandButton styleClass="icon-save positive" style="padding: 4px 6px 4px 5px;" id="caricaFattureConservazioneButton"
 									disabled="#{!fatturaElettronicaAttivaSoloConservazioneMBean.form.buttonEnabled}" limitToList="true"
 									value="#{msg['fattura.button.salva']}" action="#{fatturaElettronicaAttivaSoloConservazioneMBean.preparaFormConservazione}"
-									reRender="dsFileUploadErrorsCtr,conservazioneFattureForm_formPnl" onclick="this.disabled=true"
+									reRender="dsFileUploadErrorsCtr,outPanelFormConservazioneError,conservazioneFattureForm_formPnl" onclick="this.disabled=true"
 									oncomplete="this.disabled=false; if (#{fatturaElettronicaAttivaSoloConservazioneMBean.checkFormFattura == 'true'}) { #{rich:component('pannelloConservazioneFatture')}.show(); }" />
 							</div>
 						</a4j:outputPanel>		

@@ -137,7 +137,8 @@
        		
        		<h:form id="formInitCaricaFattura">
             	<a4j:outputPanel layout="block" ajaxRendered="false">
-					<a4j:jsFunction name="initCaricaFattura" reRender="dsFileUploadErrorsCtr,input_cf_dipartimentoCombo" limitToList="true" status="mainStatus" actionListener="#{fatturaElettronicaAttivaMBean.nuovaFatturaListener}">
+					<a4j:jsFunction name="initCaricaFattura" reRender="dsFileUploadErrorsCtr,input_cf_dipartimentoCombo" limitToList="true" status="mainStatus" actionListener="#{fatturaElettronicaAttivaMBean.nuovaFatturaListener}"
+						oncomplete="resetFileList(); Richfaces.showModalPanel('fileUploadModalPnl');">
             		</a4j:jsFunction>
            		</a4j:outputPanel>
        		</h:form>       		
@@ -424,7 +425,7 @@
 						<h:outputText value="#{msg['commons.button.esporta']}" />
 					</h:commandLink>
 					
-					<h:commandLink id="carica-iconLink" styleClass="icon-carica-fattura" onclick="initCaricaFattura(); resetFileList(); Richfaces.showModalPanel('fileUploadModalPnl'); return false;"  
+					<h:commandLink id="carica-iconLink" styleClass="icon-carica-fattura" onclick="initCaricaFattura(); return false;"  
 						rendered="#{fatturaElettronicaAttivaMBean.visualizzaTastoCaricaFattura}" style="color: #dd2c0d;">
                                     <h:outputText value="#{msg['fattura.button.carica']}" />
                     </h:commandLink>
