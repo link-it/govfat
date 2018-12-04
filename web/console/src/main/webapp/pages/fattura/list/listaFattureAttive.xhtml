@@ -137,7 +137,7 @@
        		
        		<h:form id="formInitCaricaFattura">
             	<a4j:outputPanel layout="block" ajaxRendered="false">
-					<a4j:jsFunction name="initCaricaFattura" reRender="input_cf_dipartimentoCombo" limitToList="true" status="mainStatus" actionListener="#{fatturaElettronicaAttivaMBean.nuovaFatturaListener}">
+					<a4j:jsFunction name="initCaricaFattura" reRender="dsFileUploadErrorsCtr,input_cf_dipartimentoCombo" limitToList="true" status="mainStatus" actionListener="#{fatturaElettronicaAttivaMBean.nuovaFatturaListener}">
             		</a4j:jsFunction>
            		</a4j:outputPanel>
        		</h:form>       		
