@@ -181,6 +181,8 @@ public class InserimentoLotti {
 					throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO_CONSERVAZIONE, request.getNomeFile(), request.getDipartimento());
 				}
 				
+			} catch(InserimentoLottiException e) {
+				throw e;
 			} catch(Exception e) {
 				throw new InserimentoLottiException(CODICE.ERRORE_FORMATO_FILE, request.getNomeFile());
 			}
