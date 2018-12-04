@@ -177,8 +177,8 @@ public class InserimentoLotti {
 			try {
 				LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), request.getNomeFile(), 1, null, request.getDipartimento(), this.log);
 				
-				if(!analizer.isFirmato() && analizer.isFirmaNecessaria()) {
-					throw new InserimentoLottiException(analizer.getCodiceErroreNonFirmato(), request.getNomeFile(), request.getDipartimento());
+				if(!analizer.isFirmato()) {
+					throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO_CONSERVAZIONE, request.getNomeFile(), request.getDipartimento());
 				}
 				
 			} catch(Exception e) {
@@ -205,8 +205,8 @@ public class InserimentoLotti {
 
 				LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), request.getNomeFile(), identificativo, null, request.getDipartimento(), this.log);
 				
-				if(!analizer.isFirmato() && analizer.isFirmaNecessaria()) {
-					throw new InserimentoLottiException(analizer.getCodiceErroreNonFirmato(), request.getNomeFile(), request.getDipartimento());
+				if(!analizer.isFirmato()) {
+					throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO_CONSERVAZIONE, request.getNomeFile(), request.getDipartimento());
 				}
 
 

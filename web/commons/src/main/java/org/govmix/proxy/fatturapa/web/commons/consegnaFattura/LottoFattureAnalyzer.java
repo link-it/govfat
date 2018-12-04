@@ -48,7 +48,7 @@ public class LottoFattureAnalyzer {
 		this(lotto.getXml(), lotto.getNomeFile(), lotto.getIdentificativoSdi(), dipartimento, codiceDipartimento, log);
 	}
 	
-	public LottoFattureAnalyzer(byte[] lottoFatture, String nomeFile, Integer identificativo, Dipartimento dipartimento, String codiceDipartimento, Logger log) throws Exception {
+	public LottoFattureAnalyzer(byte[] lottoFatture, String nomeFile, Integer identificativo, Dipartimento dipartimento, String codiceDipartimento, Logger log) throws InserimentoLottiException {
 		this.log = log;
 		this.original = lottoFatture;
 		try {
@@ -69,7 +69,7 @@ public class LottoFattureAnalyzer {
 
 			} catch(Exception e) {
 				this.log.error("Errore durante l'acquisizione del lotto xml:" + e.getMessage(), e);
-				throw e;
+				throw new InserimentoLottiException(CODICE.ERRORE_FORMATO_FILE, e.getMessage());
 			}
 		}
 		String type = this.isP7M ? "P7M" : "XML"; 
@@ -161,19 +161,19 @@ public class LottoFattureAnalyzer {
 		this.decoded = decoded;
 	}
 
-	private static DominioType getDominio(String codiceDipartimento) throws Exception {
+	private static DominioType getDominio(String codiceDipartimento) throws InserimentoLottiException {
 		if(codiceDipartimento==null)
-			throw new Exception("Impossibile determinare il dominio. Codice dipartimento null");
+			throw new InserimentoLottiException(CODICE.ERRORE_GENERICO, "Impossibile determinare il dominio. Codice dipartimento null");
 		if(codiceDipartimento.length() == 6)
 			return DominioType.PA;
 		if(codiceDipartimento.length() == 7)
 			return DominioType.B2B;
 		
-		throw new Exception("Lunghezza del codice dipartimento ["+codiceDipartimento.length()+"]. Impossibile determinare il dominio");
+		throw new InserimentoLottiException(CODICE.ERRORE_GENERICO, "Lunghezza del codice dipartimento ["+codiceDipartimento.length()+"]. Impossibile determinare il dominio");
 	}
 	
 	
-	private static SottodominioType getSottodominio(String codiceDipartimento) throws Exception {
+	private static SottodominioType getSottodominio(String codiceDipartimento) throws InserimentoLottiException {
 		
 		DominioType dominio = getDominio(codiceDipartimento);
 		if(dominio.toString().equals(DominioType.B2B.toString())) {
@@ -190,7 +190,7 @@ public class LottoFattureAnalyzer {
 
 	}
 	
-	private LottoFatture getLotto(byte[] xml, String nomeFile, Integer identificativo, String type, Dipartimento dipartimento, String codiceDipartimento) throws Exception {
+	private LottoFatture getLotto(byte[] xml, String nomeFile, Integer identificativo, String type, Dipartimento dipartimento, String codiceDipartimento) throws InserimentoLottiException {
 		
 		
 		ConsegnaFatturaParameters params = null;
