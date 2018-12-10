@@ -129,7 +129,7 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 				filter.setOffset(arg0);
 				filter.setLimit(arg1);
 
-				List<FatturaElettronica> findAll = this.fatturaAttivaBD.findAll(filter);
+				List<FatturaElettronica> findAll = this.fatturaAttivaBD.fatturaElettronicaSelectForListaFatture(filter);
 
 				if(findAll != null && findAll.size() > 0){
 					for (FatturaElettronica fatturaElettronica : findAll) {
@@ -204,7 +204,7 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 				List<FilterSortWrapper> listaOrderBy  = this.getOrderByFromSearch(fatturaAttivaBD, this.form);
 				filter.getFilterSortList().addAll(listaOrderBy);
 
-				List<FatturaElettronica> findAll = this.fatturaAttivaBD.findAll(filter);
+				List<FatturaElettronica> findAll = this.fatturaAttivaBD.fatturaElettronicaSelectForListaFatture(filter);
 
 				if(findAll != null && findAll.size() > 0){
 					for (FatturaElettronica fatturaElettronica : findAll) {

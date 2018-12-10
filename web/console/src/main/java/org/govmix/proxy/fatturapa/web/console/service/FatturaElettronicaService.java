@@ -132,7 +132,7 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 				filter.setOffset(arg0);
 				filter.setLimit(arg1);
 				
-				List<FatturaElettronica> findAll = this.fatturaPassivaBD.findAll(filter);
+				List<FatturaElettronica> findAll = this.fatturaPassivaBD.fatturaElettronicaSelectForListaFatture(filter);
 
 				if(findAll != null && findAll.size() > 0){
 					for (FatturaElettronica fatturaElettronica : findAll) {
@@ -216,7 +216,7 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 				fsw.setField(FatturaElettronica.model().DATA_RICEZIONE);
 				filter.getFilterSortList().add(fsw);
 
-				List<FatturaElettronica> findAll = this.fatturaPassivaBD.findAll(filter);
+				List<FatturaElettronica> findAll = this.fatturaPassivaBD.fatturaElettronicaSelectForListaFatture(filter);
 
 				if(findAll != null && findAll.size() > 0){
 					for (FatturaElettronica fatturaElettronica : findAll) {
