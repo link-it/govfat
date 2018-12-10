@@ -408,10 +408,10 @@ public class FatturaBD extends BaseBD {
 			fields.add(FatturaElettronica.model().DATA_PROTOCOLLAZIONE);
 			fields.add(FatturaElettronica.model().PROTOCOLLO);
 			String idDecorrenzaTerminiField = "id_notifica_decorrenza_termini";
-			fields.add(new CustomField(idDecorrenzaTerminiField, Long.class, idDecorrenzaTerminiField, converter.toTable(FatturaElettronica.model())));
 			String idEsitoContabilizzazioneField = "id_contabilizzazione";
-			fields.add(new CustomField(idEsitoContabilizzazioneField, Long.class, idEsitoContabilizzazioneField, converter.toTable(FatturaElettronica.model())));
 			String idEsitoScadenzaField = "id_scadenza";
+			fields.add(new CustomField(idDecorrenzaTerminiField, Long.class, idDecorrenzaTerminiField, converter.toTable(FatturaElettronica.model())));
+			fields.add(new CustomField(idEsitoContabilizzazioneField, Long.class, idEsitoContabilizzazioneField, converter.toTable(FatturaElettronica.model())));
 			fields.add(new CustomField(idEsitoScadenzaField, Long.class, idEsitoScadenzaField, converter.toTable(FatturaElettronica.model())));
 			
 			String lottoTable = "LottoFatture";
@@ -476,7 +476,15 @@ public class FatturaBD extends BaseBD {
 			
 		List<Map<String,Object>> select = this.select(filter, fields);
 		FatturaElettronicaFetch fetch = new FatturaElettronicaFetch();
+		
+		String idDecorrenzaTerminiField = "id_notifica_decorrenza_termini";
+		String idEsitoContabilizzazioneField = "id_contabilizzazione";
+		String idEsitoScadenzaField = "id_scadenza";
+
 		for(Map<String, Object> map: select) {
+			Object idFK_fatturaElettronica_notificaDecorrenzaTermini = map.remove(idDecorrenzaTerminiField);
+			Object idFK_fatturaElettronica_esitoContabilizzazione = map.remove(idEsitoContabilizzazioneField);
+			Object idFK_fatturaElettronica_esitoScadenza = map.remove(idEsitoScadenzaField);
 			Object idFK_fatturaElettronica_sipOBJ = map.remove("id_sip");
 			Object idFK_fatturaElettronica_LottosipOBJ = map.remove("l_id_sip");
 
@@ -510,6 +518,25 @@ public class FatturaBD extends BaseBD {
 //				}
 				fatturaElettronica.setIdSIP(idSIP);
 			}
+			
+			if(idFK_fatturaElettronica_notificaDecorrenzaTermini != null && idFK_fatturaElettronica_notificaDecorrenzaTermini instanceof Long) {
+				org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini id_fatturaElettronica_notificaDecorrenzaTermini = new org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini();
+				id_fatturaElettronica_notificaDecorrenzaTermini.setId((Long) idFK_fatturaElettronica_notificaDecorrenzaTermini);
+				fatturaElettronica.setIdDecorrenzaTermini(id_fatturaElettronica_notificaDecorrenzaTermini);
+			}
+			
+			if(idFK_fatturaElettronica_esitoContabilizzazione != null && idFK_fatturaElettronica_esitoContabilizzazione instanceof Long) {
+				org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito id_fatturaElettronica_pccTracciaTrasmissioneEsito = new org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito();
+				id_fatturaElettronica_pccTracciaTrasmissioneEsito.setId((Long) idFK_fatturaElettronica_esitoContabilizzazione);
+				fatturaElettronica.setIdEsitoContabilizzazione(id_fatturaElettronica_pccTracciaTrasmissioneEsito);
+			}
+
+			if(idFK_fatturaElettronica_esitoScadenza != null && idFK_fatturaElettronica_esitoScadenza instanceof Long) {
+				org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito id_fatturaElettronica_pccTracciaTrasmissioneEsito = new org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito();
+				id_fatturaElettronica_pccTracciaTrasmissioneEsito.setId((Long) idFK_fatturaElettronica_esitoScadenza);
+				fatturaElettronica.setIdEsitoScadenza(id_fatturaElettronica_pccTracciaTrasmissioneEsito);
+			}
+
 			
 			fatLst.add(fatturaElettronica);
 		}
