@@ -1009,6 +1009,12 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 
 	public void setListaComunicazioni(List<TracciaSDIBean> listaComunicazioni) {
 		this.listaComunicazioni = listaComunicazioni;
+		
+		if(this.listaComunicazioni != null && !this.listaComunicazioni.isEmpty()) {
+			for (TracciaSDIBean tracciaSDIBean : this.listaComunicazioni) {
+				tracciaSDIBean.setDominioType(this.getDTO().getLottoFatture().getDominio());
+			}
+		}
 	}
 
 	public Text getStatoElaborazioneDettaglio() {

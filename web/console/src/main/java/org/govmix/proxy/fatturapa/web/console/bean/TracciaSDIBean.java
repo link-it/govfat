@@ -27,6 +27,7 @@ import javax.faces.context.FacesContext;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.Metadato;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
+import org.govmix.proxy.fatturapa.orm.constants.DominioType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
@@ -58,6 +59,7 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IBean<
 	private Button pdf = null;
 	
 	private IdFattura idFattura = null;
+	private DominioType dominioType =null;
 	
 	public TracciaSDIBean() {
 		try{
@@ -175,8 +177,17 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IBean<
 				+FattureExporter.PARAMETRO_IDS+"=" + idLongComunicazione
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_PDF
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ actionValue;
+		
+		boolean visualizzaPdf  = this.getDTO().getRawData() != null;
+		
+		// comunicazione fattura in uscita di una fattura B2B non deve essere visualizzato
+		if(this.dominioType != null && this.dominioType.equals(DominioType.B2B)) {
+			if(this.getDTO().getTipoComunicazione().equals(TipoComunicazioneType.FAT_OUT)) {
+				visualizzaPdf = false;
+			}
+		}
 
-		this.pdf.setHref( this.getDTO().getRawData() != null ? url : null);
+		this.pdf.setHref( visualizzaPdf ? url : null);
 	}
 
 	public Text getIdentificativoSdi() {
@@ -297,6 +308,15 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IBean<
 
 	public void setIdFattura(IdFattura idFattura) {
 		this.idFattura = idFattura;
+		this.prepareUrls();
+	}
+
+	public DominioType getDominioType() {
+		return dominioType;
+	}
+
+	public void setDominioType(DominioType dominioType) {
+		this.dominioType = dominioType;
 		this.prepareUrls();
 	}
 	
