@@ -56,7 +56,7 @@ div.form-container form p,div.form-container .display-form p{
 }
 
 div.form-container form p.note, div.form-container .display-form p.note {
-	margin-left: 195px;
+	margin-left: 200px;
 	font-size: 90%;
 	color: #333;
 }
@@ -89,7 +89,7 @@ div.form-container form fieldset div,div.form-container .display-form fieldset{
 div.form-container label,div.form-container .display-form label {
 	margin-right: 10px;
 	padding-right: 10px;
-	width: 175px;
+	width: 180px;
 	display: block;
 	float: left;
 	text-align: right;
@@ -144,18 +144,18 @@ div.form-container .display-form div.controlset label.controlset{
 
 div.form-container div.controlset div,
 div.form-container .display-form div.controlset div {
-	margin-left: 195px;
+	margin-left: 200px;
 }
 
 div.form-container div.buttonrow,
 div.form-container .display-form div.buttonrow {
 	margin-top: 10px;
-	margin-left: 195px;
+	margin-left: 200px;
 }
 
 div.form-container div.rich-combobox,
 div.form-container .display-form div.rich-combobox{
-	margin-left: 195px;
+	margin-left: 200px;
 }
 
 /**
@@ -312,7 +312,7 @@ input[type="submit"]:hover, input[type="button"]:hover, .buttonrow a:hover{
 label.longLabel{
 	margin-right: 10px;
 	padding-right: 10px;
-	width: 200px !important;
+	width: 210px !important;
 	display: block;
 	float: left;
 	text-align: right;
@@ -364,7 +364,7 @@ textarea[type="textarea"][disabled], input[type="text"][disabled], input[type="p
 
 @media screen and (max-width: 989px) {
     .keepMargin {
-       margin-left: 195px;
+       margin-left: 200px;
     }
 }
 

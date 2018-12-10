@@ -440,7 +440,7 @@
 			<f:facet name="controls">
 				<h:panelGroup id="dsPanelChiudiUpload">
 					<a href="#"
-						onclick="Richfaces.hideModalPanel('fileUploadModalPnl');">#{msg['commons.label.chiudi']}</a>
+						onclick="Richfaces.hideModalPanel('fileUploadModalPnl'); ricaricaListaFattureAttive();">#{msg['commons.label.chiudi']}</a>
 				</h:panelGroup>
 			</f:facet>
 			<a4j:outputPanel id="dsFileUploadErrorsCtr" ajaxRendered="true">
