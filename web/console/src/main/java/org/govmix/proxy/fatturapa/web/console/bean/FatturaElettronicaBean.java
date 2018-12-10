@@ -795,7 +795,7 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_FATTURA;
 
-		this.xml.setHref(this.getDTO().getXml() != null ?  url : null);
+		this.xml.setHref(url);
 
 		url = context.getExternalContext().getRequestContextPath() 
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
@@ -803,7 +803,7 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_PDF
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_FATTURA;
 
-		this.pdf.setHref( this.getDTO().getXml() != null ? url : null);
+		this.pdf.setHref(url);
 
 
 		url = context.getExternalContext().getRequestContextPath() 
@@ -813,7 +813,7 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_FATTURA;
 
 
-		this.zip.setHref(this.getDTO().getXml() != null ? url : null);
+		this.zip.setHref(url);
 
 
 	}

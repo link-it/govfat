@@ -798,7 +798,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_FATTURA;
 
-		this.xml.setHref(this.getDTO().getXml() != null ?  url : null);
+		this.xml.setHref(url);
 
 		url = context.getExternalContext().getRequestContextPath() 
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
@@ -806,7 +806,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_PDF
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_FATTURA;
 
-		boolean visualizzaPdf = this.getDTO().getXml() != null && this.getDTO().getLottoFatture().getDominio().equals(DominioType.PA);
+		boolean visualizzaPdf = this.getDTO().getLottoFatture().getDominio().equals(DominioType.PA);
 		
 		this.pdf.setHref(visualizzaPdf ? url : null);
 
@@ -816,7 +816,7 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_ZIP_CON_ALLEGATI
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_FATTURA;
 
-		this.zip.setHref(this.getDTO().getXml() != null ? url : null);
+		this.zip.setHref(url);
 
 	}
 
