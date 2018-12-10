@@ -281,22 +281,28 @@ public class EnteService extends BaseService<EnteSearchForm> implements IEnteSer
 	@Override
 	public EnteBean findEnteByDipartimento(String nome) throws ServiceException {
 		String methodName = "findEnteByNome("+nome+")";
-		IExpression expr = null;
+		IPaginatedExpression expr = null;
 
 		try{
-			expr = this.dipartimentoSearchDao.newExpression();
+			expr = this.dipartimentoSearchDao.newPaginatedExpression();
 			expr.equals(Dipartimento.model().CODICE, nome);
 			
-			Dipartimento dipartimento = this.dipartimentoSearchDao.find(expr);
+			List<Dipartimento> dipartimentoLst = this.dipartimentoSearchDao.findAll(expr);
 			
-			String nomeEnte = dipartimento.getEnte().getNome(); 
+			if(dipartimentoLst.isEmpty())
+				throw new NotFoundException();
 			
-			expr = this.enteSearchDao.newExpression();
+			String nomeEnte = dipartimentoLst.get(0).getEnte().getNome(); 
+			
+			expr = this.enteSearchDao.newPaginatedExpression();
 			expr.equals(Ente.model().NOME, nomeEnte);
 
-			Ente u = this.enteSearchDao.find(expr);
+			List<Ente> enteLst = this.enteSearchDao.findAll(expr);
+			if(enteLst.isEmpty())
+				throw new NotFoundException();
+			
 			EnteBean ente = new EnteBean();
-			ente.setDTO(u);
+			ente.setDTO(enteLst.get(0));
 
 			return ente;
 

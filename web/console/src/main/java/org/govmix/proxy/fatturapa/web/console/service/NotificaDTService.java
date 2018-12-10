@@ -27,10 +27,12 @@ import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.dao.INotificaDecorrenzaTerminiServiceSearch;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.NotificaDecorrenzaTerminiFieldConverter;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.bean.NotificaDTBean;
 import org.govmix.proxy.fatturapa.web.console.iservice.INotificaDTService;
+import org.openspcoop2.generic_project.beans.CustomField;
 import org.openspcoop2.generic_project.beans.NonNegativeNumber;
 import org.openspcoop2.generic_project.exception.ExpressionException;
 import org.openspcoop2.generic_project.exception.ExpressionNotImplementedException;
@@ -182,7 +184,9 @@ public class NotificaDTService implements INotificaDTService{
 		try {
 
 			IExpression expr = this.notificaDTSearchDAO.newExpression();
-			expr.equals(NotificaDecorrenzaTermini.model().IDENTIFICATIVO_SDI, this.idNotificaDT.getIdentificativoSdi());
+			CustomField idField = new CustomField("id", Long.class, "id",new NotificaDecorrenzaTerminiFieldConverter(DAOFactory.getInstance().getServiceManagerProperties(true).getDatabaseType()).toTable(NotificaDecorrenzaTermini.model()));
+
+			expr.equals(idField, this.idNotificaDT.getId());
 			expr.sortOrder(SortOrder.ASC);
 			expr.addOrder(NotificaDecorrenzaTermini.model().DATA_RICEZIONE);
 
@@ -209,6 +213,9 @@ public class NotificaDTService implements INotificaDTService{
 			NotificaDTService.log.error("Si e' verificato un errore durante la find all notifiche decorrenza termini:" + e.getMessage(), e);
 			throw new ServiceException(e);
 		} catch (NotImplementedException e) {
+			NotificaDTService.log.error("Si e' verificato un errore durante la find all notifiche decorrenza termini:" + e.getMessage(), e);
+			throw new ServiceException(e);
+		} catch (Exception e) {
 			NotificaDTService.log.error("Si e' verificato un errore durante la find all notifiche decorrenza termini:" + e.getMessage(), e);
 			throw new ServiceException(e);
 		}
