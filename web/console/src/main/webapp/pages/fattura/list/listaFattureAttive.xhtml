@@ -51,7 +51,7 @@
 		</style>
 		<script type="text/javascript">
 		//<![CDATA[
-			if(!(windows.console && console.log)){
+			if(!(window.console && console.log)){
 				console = {
 					log: function(){},
 					debug: function(){},
@@ -123,6 +123,15 @@
 			
 			function resetFileList(){
 				jQuery("[id$='idFilesValidi']").val('');
+				
+				if(isIE()){
+					if(IEVersione() <= 8){
+					    console.log('IsIE:');
+					    console.log(IEVersione());
+					    
+						jQuery('#uploadFattureFrame').get(0).contentWindow.location.reload(true);
+					}
+				}
 			}
 			 //]]>
 		</script>
@@ -409,12 +418,12 @@
 				<!-- Link dettagli -->
 				<rich:column style="text-align: center;">
 					<h:panelGroup>
-						<a4j:commandLink id="dettaglio_btn" action="dettaglioAttiva" ajaxSingle="true">
+						<a4j:htmlCommandLink id="dettaglio_btn" action="dettaglioAttiva" ajaxSingle="true">
 							<f:setPropertyActionListener value="tabSDI" target="#{fatturaElettronicaAttivaMBean.selectedTab}" />
 							<f:setPropertyActionListener value="#{item}" target="#{fatturaElettronicaAttivaMBean.selectedElement}" />
 							<h:graphicImage value="/images/magnifier.png" width="16" alt="#{msg['fattura.label.ricercaFatture.dettaglioTitle']}"
 								height="16" title="#{msg['fattura.label.ricercaFatture.dettaglioTitle']}" />
-						</a4j:commandLink>
+						</a4j:htmlCommandLink>
 					</h:panelGroup>
 				</rich:column>
 				

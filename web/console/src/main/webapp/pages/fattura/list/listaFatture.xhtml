@@ -281,12 +281,12 @@
 				<!-- Link dettagli -->
 				<rich:column style="text-align: center;">
 					<h:panelGroup>
-						<a4j:commandLink id="dettaglio_btn" action="dettaglio" ajaxSingle="true">
+						<a4j:htmlCommandLink id="dettaglio_btn" action="dettaglio" ajaxSingle="true">
 							<f:setPropertyActionListener value="tabSDI" target="#{fatturaElettronicaMBean.selectedTab}" />
 							<f:setPropertyActionListener value="#{item}" target="#{fatturaElettronicaMBean.selectedElement}" />
 							<h:graphicImage value="/images/magnifier.png" width="16" alt="#{msg['fattura.label.ricercaFatture.dettaglioTitle']}"
 								height="16" title="#{msg['fattura.label.ricercaFatture.dettaglioTitle']}" />
-						</a4j:commandLink>
+						</a4j:htmlCommandLink>
 					</h:panelGroup>
 				</rich:column>
 				
