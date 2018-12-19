@@ -591,8 +591,8 @@
 				        	<div class="buttonrow" style="margin-left: 310px;">
 				        		<a4j:commandButton styleClass="icon-save positive" style="padding: 4px 6px 4px 5px;"
 									value="#{msg['fattura.button.invia']}" action="#{fatturaElettronicaAttivaSoloConservazioneMBean.salvaFormCorservazione}"
-									reRender="conservazioneFattureForm_formPnl,outPanelFormConservazioneError" limitToList="true"
-									oncomplete="if (#{fatturaElettronicaAttivaSoloConservazioneMBean.checkConservazione == 'true'}) { #{rich:component('pannelloConservazioneFatture')}.hide(); #{rich:component('fileUploadModalPnl')}.hide(); ricaricaListaFattureAttive(); }" />
+									reRender="conservazioneFattureForm_formPnl,outPanelFormConservazioneError" limitToList="true" onclick="this.disabled=true"
+									oncomplete="this.disabled=false; if (#{fatturaElettronicaAttivaSoloConservazioneMBean.checkConservazione == 'true'}) { #{rich:component('pannelloConservazioneFatture')}.hide(); #{rich:component('fileUploadModalPnl')}.hide(); ricaricaListaFattureAttive(); }" />
 				        	</div>
 			        		
 			       		</h:form>
