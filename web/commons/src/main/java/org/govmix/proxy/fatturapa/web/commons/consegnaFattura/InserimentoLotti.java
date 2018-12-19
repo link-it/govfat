@@ -20,6 +20,7 @@ import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFattureAttiv
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException.CODICE;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoResponse.ESITO;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
+import org.openspcoop2.generic_project.exception.ValidationException;
 
 public class InserimentoLotti {
 
@@ -123,9 +124,12 @@ public class InserimentoLotti {
 			if(fattureLst.get(i) == null) {
 				throw new Exception("La fattura ricevuta in ingresso e' null");
 			}
-			
-			ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(lotto, (i+1), nomeFile, fattureLst.get(i));
-			consegnaFattura.consegnaFattura(params);
+			try {
+				ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(lotto, (i+1), nomeFile, fattureLst.get(i));
+				consegnaFattura.consegnaFattura(params);
+			} catch(ValidationException e) {
+				throw new InserimentoLottiException(CODICE.PARAMETRI_NON_VALIDI, nomeFile);
+			}
 		}
 
 	}
