@@ -31,6 +31,7 @@ import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters;
+import org.openspcoop2.generic_project.exception.ValidationException;
 
 public abstract class AbstractFatturaConverter<T> {
 
@@ -38,7 +39,7 @@ public abstract class AbstractFatturaConverter<T> {
 	protected ConsegnaFatturaParameters params;
 	protected byte[] fatturaAsByte;
 	
-	public AbstractFatturaConverter(T t, byte[] fatturaAsString, ConsegnaFatturaParameters params) throws Exception {
+	public AbstractFatturaConverter(T t, byte[] fatturaAsString, ConsegnaFatturaParameters params) throws ValidationException {
 		this.fattura = t;
 		this.fatturaAsByte = fatturaAsString;
 		this.params = params;
@@ -48,7 +49,7 @@ public abstract class AbstractFatturaConverter<T> {
 	protected SimpleDateFormat getSdfYear() {
 		return new SimpleDateFormat("yyyy");
 	}
-	public abstract void validate() throws Exception;
+	public abstract void validate() throws ValidationException;
 	
 	public abstract List<String> getCausali();
 	public abstract double getImportoTotaleDocumento();
@@ -70,7 +71,7 @@ public abstract class AbstractFatturaConverter<T> {
 		} else return null;
 	}
 
-	public FatturaElettronica getFatturaElettronica() throws Exception {
+	public FatturaElettronica getFatturaElettronica() {
 		
 		FatturaElettronica fatturaElettronica = this.getDatiComuni();
 		this.populateFatturaConDatiSpecifici(fatturaElettronica);
@@ -79,9 +80,9 @@ public abstract class AbstractFatturaConverter<T> {
 	}
 
 	
-	protected abstract void populateFatturaConDatiSpecifici(FatturaElettronica fatturaElettronica) throws Exception;
+	protected abstract void populateFatturaConDatiSpecifici(FatturaElettronica fatturaElettronica) ;
 
-	private FatturaElettronica getDatiComuni() throws Exception {
+	private FatturaElettronica getDatiComuni() {
 		FatturaElettronica fatturaElettronica = new FatturaElettronica();
 
 		fatturaElettronica.setFormatoTrasmissione(FormatoTrasmissioneType.toEnumConstant(this.params.getFormatoFatturaPA()));

@@ -33,6 +33,7 @@ import org.govmix.proxy.fatturapa.web.commons.converter.fattura.AbstractFatturaC
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FPA12Converter;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FatturaV10Converter;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FatturaV11Converter;
+import org.openspcoop2.generic_project.exception.ValidationException;
 
 public class ConsegnaFattura {
 
@@ -82,14 +83,14 @@ public class ConsegnaFattura {
 		}
 	}
 
-	public void consegnaFattura(ConsegnaFatturaParameters params) throws Exception {
+	public void consegnaFattura(ConsegnaFatturaParameters params) throws ValidationException,Exception {
 
 		AbstractFatturaConverter<?> converter = ConsegnaFattura.getConverter(params);
 		inserisciFattura(params, converter);
 		
 	}
 	
-	public static AbstractFatturaConverter<?> getConverter(ConsegnaFatturaParameters params) throws Exception {
+	public static AbstractFatturaConverter<?> getConverter(ConsegnaFatturaParameters params) throws ValidationException {
 		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.equals(params.getFormatoFatturaPA())) {
 			return new FatturaV10Converter(params.getXml(), params);
 		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.equals(params.getFormatoFatturaPA())) {
@@ -98,7 +99,7 @@ public class ConsegnaFattura {
 				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.equals(params.getFormatoFatturaPA())) {
 			return new FPA12Converter(params.getXml(), params);
 		} else {
-			throw new Exception("Formato FatturaPA ["+params.getFormatoFatturaPA()+"] non riconosciuto");
+			throw new ValidationException("Formato FatturaPA ["+params.getFormatoFatturaPA()+"] non riconosciuto");
 		}
 
 	}

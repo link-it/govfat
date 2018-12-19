@@ -27,6 +27,8 @@ import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters;
+import org.openspcoop2.generic_project.exception.DeserializerException;
+import org.openspcoop2.generic_project.exception.ValidationException;
 
 import it.gov.fatturapa.sdi.fatturapa.v1_1.AllegatiType;
 import it.gov.fatturapa.sdi.fatturapa.v1_1.DatiGeneraliDocumentoType;
@@ -43,35 +45,24 @@ public class FatturaV11Converter extends AbstractFatturaConverter<FatturaElettro
 			deserializer = new JaxbDeserializer();
 		}
 		
-//		public FatturaV11Converter(String fatturaString, ConsegnaFatturaParameters params) throws Exception {
-//			super(deserializer.readFatturaElettronicaTypeFromString(fatturaString), fatturaString, params);
-//		}
+		private static FatturaElettronicaType readFatturaElettronicaType(byte[] fatturaBytes) throws ValidationException {
+			try {
+				return deserializer.readFatturaElettronicaType(fatturaBytes);
+			} catch(DeserializerException e) {
+				throw new ValidationException(e);
+			}
+		}
+
 		
-		public FatturaV11Converter(byte[] fattura, ConsegnaFatturaParameters params) throws Exception {
-			super(deserializer.readFatturaElettronicaType(fattura), fattura, params);
+		public FatturaV11Converter(byte[] fattura, ConsegnaFatturaParameters params) throws ValidationException {
+			super(FatturaV11Converter.readFatturaElettronicaType(fattura), fattura, params);
 		}
 		
 
 		@Override
-		public void populateFatturaConDatiSpecifici(FatturaElettronica fatturaElettronica) throws Exception {
+		public void populateFatturaConDatiSpecifici(FatturaElettronica fatturaElettronica) {
 
-			FatturaElettronicaBodyType fatturaBody = null;
-			FatturaElettronicaType getFattura = this.getFattura();
-			if(getFattura == null)
-				throw new Exception("File fattura non presente");
-			if(getFattura.getFatturaElettronicaBodyList() == null || getFattura.getFatturaElettronicaBodyList().isEmpty())
-				throw new Exception("File fattura non contiene fatture");
-			
-			fatturaBody = getFattura.getFatturaElettronicaBody(0);
-
-			if(fatturaBody.getDatiGenerali() == null)
-				throw new Exception("La fattura non contiene l'elemento datiGenerali");
-			
-			if(fatturaBody.getDatiGenerali().getDatiGeneraliDocumento() == null)
-				throw new Exception("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento");
-			
-
-			DatiGeneraliDocumentoType datiGeneraliDocumento = fatturaBody.getDatiGenerali().getDatiGeneraliDocumento();
+			DatiGeneraliDocumentoType datiGeneraliDocumento =  this.getFattura().getFatturaElettronicaBody(0).getDatiGenerali().getDatiGeneraliDocumento();
 			
 			TipoDocumentoType tipoDoc = null;
 			if(datiGeneraliDocumento.getTipoDocumento()!=null) {
@@ -89,17 +80,14 @@ public class FatturaV11Converter extends AbstractFatturaConverter<FatturaElettro
 				case TD06: tipoDoc = TipoDocumentoType.TD06;
 					break;
 				}
-			} else {
-				throw new Exception("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.tipoDocumento");
+//			} else {
+//				throw new Exception("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.tipoDocumento");
 			}
 			
 			fatturaElettronica.setTipoDocumento(tipoDoc);
 			
 			fatturaElettronica.setDivisa(datiGeneraliDocumento.getDivisa());
 
-			if(datiGeneraliDocumento.getData() == null)
-				throw new Exception("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.data");
-			
 			fatturaElettronica.setData(datiGeneraliDocumento.getData());
 			fatturaElettronica.setAnno(new Integer(this.getSdfYear().format(datiGeneraliDocumento.getData())));
 
@@ -148,12 +136,32 @@ public class FatturaV11Converter extends AbstractFatturaConverter<FatturaElettro
 		}
 
 		@Override
-		public void validate() throws Exception {
-			if(getFattura().getFatturaElettronicaBodyList() == null || getFattura().getFatturaElettronicaBodyList().size() == 0){
-				throw new Exception("Nessuna fattura contenuta nel lotto ricevuto");
-			} else if(getFattura().getFatturaElettronicaBodyList().size() != 1) {
-				throw new Exception("Impossibile gestire fatture multiple. Trovate ["+getFattura().getFatturaElettronicaBodyList().size()+"] fatture");
-			}
+		public void validate() throws ValidationException {
+			FatturaElettronicaType getFattura = this.getFattura();
+			if(getFattura == null)
+				throw new ValidationException("File fattura non presente");
+			if(getFattura.getFatturaElettronicaBodyList() == null || getFattura.getFatturaElettronicaBodyList().isEmpty())
+				throw new ValidationException("Nessuna fattura contenuta nel lotto ricevuto");
+			
+			if(getFattura.getFatturaElettronicaBodyList().size() != 1)
+				throw new ValidationException("Impossibile gestire fatture multiple. Trovate ["+getFattura().getFatturaElettronicaBodyList().size()+"] fatture");
+			
+			FatturaElettronicaBodyType fatturaBody = getFattura.getFatturaElettronicaBody(0);
+
+			if(fatturaBody.getDatiGenerali() == null)
+				throw new ValidationException("La fattura non contiene l'elemento datiGenerali");
+			
+			if(fatturaBody.getDatiGenerali().getDatiGeneraliDocumento() == null)
+				throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento");
+			
+			DatiGeneraliDocumentoType datiGeneraliDocumento = fatturaBody.getDatiGenerali().getDatiGeneraliDocumento();
+			
+			if(datiGeneraliDocumento.getTipoDocumento()==null)
+				throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.tipoDocumento");
+			
+			if(datiGeneraliDocumento.getData() == null)
+				throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.data");
+
 		}
 		
 		@Override

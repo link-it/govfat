@@ -100,10 +100,10 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 								lottoBD.setProcessato(idLotto);
 								connection.commit();
 
-							} catch(Exception e) {
+							} catch(ValidationException e) {
 								//NOTA: in caso di errore oltre che effettuare il rollback il lotto viene marcato come in errore, e viene inviata una notifica di rifiuto d'ufficio al fornitore
 								connection.rollback();
-								this.log.error("Errore durante l'inserimento del lotto con identificativo SdI ["+lotto.getIdentificativoSdi()+"]: "+e.getMessage(), e);
+								this.log.error("Errore di validazione durante l'inserimento del lotto con identificativo SdI ["+lotto.getIdentificativoSdi()+"]: "+e.getMessage(), e);
 
 								if(properties.isRifiutoAutomaticoAbilitato()) {
 									
@@ -131,6 +131,15 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 									}
 								} else {
 									lottoBD.setProcessato(idLotto, true); //processiamo il lotto con errore
+								}
+							} catch(Exception e) {
+								connection.rollback();
+								this.log.error("Errore durante l'inserimento del lotto con identificativo SdI ["+lotto.getIdentificativoSdi()+"]: "+e.getMessage(), e);
+
+								try{
+									lottoBD.setProcessato(idLotto, true); //processiamo il lotto con errore
+								} catch(Exception ex) {
+									this.log.warn("Errore durante l'aggiornamento del lotto con identificativo SdI ["+lotto.getIdentificativoSdi()+"]: "+ex.getMessage(), e);
 								}
 							}
 							countFattureElaborate++;
@@ -163,16 +172,16 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 	}
 
 	public void inserisciFattura(ConsegnaFattura consegnaFattura, LottoFatture lotto,
-			int posizione, String nomeFile, byte[] xml) throws Exception, ValidationException {
-		ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(lotto, posizione, nomeFile, xml);
-
+			int posizione, String nomeFile, byte[] xml) throws ValidationException, Exception {
+		
 		try {
 
+			ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(lotto, posizione, nomeFile, xml);
 			if(xml == null) {
-				throw new Exception("La fattura ricevuta in ingresso e' null");
+				throw new ValidationException("La fattura ricevuta in ingresso e' null");
 			}
 
-			consegnaFattura.consegnaFattura(params);//, fatturaString);
+			consegnaFattura.consegnaFattura(params);
 		} catch(Exception e) {
 			this.log.error("riceviFattura completata con errore per il lotto["+lotto.getIdentificativoSdi()+"] posizione ["+posizione+"]:"+ e.getMessage(), e);
 			throw e;
