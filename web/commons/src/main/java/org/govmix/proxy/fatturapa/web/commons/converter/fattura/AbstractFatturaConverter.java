@@ -37,16 +37,17 @@ public abstract class AbstractFatturaConverter<T> {
 	private T fattura;
 	protected ConsegnaFatturaParameters params;
 	protected byte[] fatturaAsByte;
-	protected SimpleDateFormat sdfYear;
 	
 	public AbstractFatturaConverter(T t, byte[] fatturaAsString, ConsegnaFatturaParameters params) throws Exception {
 		this.fattura = t;
 		this.fatturaAsByte = fatturaAsString;
 		this.params = params;
-		this.sdfYear = new SimpleDateFormat("yyyy");
 		this.validate();
 	}
-	
+
+	protected SimpleDateFormat getSdfYear() {
+		return new SimpleDateFormat("yyyy");
+	}
 	public abstract void validate() throws Exception;
 	
 	public abstract List<String> getCausali();
@@ -78,7 +79,7 @@ public abstract class AbstractFatturaConverter<T> {
 	}
 
 	
-	protected abstract void populateFatturaConDatiSpecifici(FatturaElettronica fatturaElettronica);
+	protected abstract void populateFatturaConDatiSpecifici(FatturaElettronica fatturaElettronica) throws Exception;
 
 	private FatturaElettronica getDatiComuni() throws Exception {
 		FatturaElettronica fatturaElettronica = new FatturaElettronica();
@@ -155,6 +156,9 @@ public abstract class AbstractFatturaConverter<T> {
 			fatturaElettronica.setDataRicezione(new Date());
 		}
 		
+		fatturaElettronica.setCausale(getCausale());
+		fatturaElettronica.setXml(this.fatturaAsByte);
+
 		return fatturaElettronica;
 	}
 	

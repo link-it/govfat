@@ -9,6 +9,7 @@ import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters;
 
 import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.AllegatiType;
+import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.DatiGeneraliDocumentoType;
 import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.DatiRiepilogoType;
 import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.FatturaElettronicaBodyType;
 import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.FatturaElettronicaType;
@@ -26,38 +27,57 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 	}
 
 	@Override
-	public void populateFatturaConDatiSpecifici(FatturaElettronica fatturaElettronica) {
+	public void populateFatturaConDatiSpecifici(FatturaElettronica fatturaElettronica) throws Exception {
 
-		FatturaElettronicaBodyType fatturaBody = getFattura().getFatturaElettronicaBody(0);
-
-		TipoDocumentoType tipoDoc;
-		switch(fatturaBody.getDatiGenerali().getDatiGeneraliDocumento().getTipoDocumento()) {
-		case TD01: tipoDoc = TipoDocumentoType.TD01;
-			break;
-		case TD02: tipoDoc = TipoDocumentoType.TD02;
-			break;
-		case TD03: tipoDoc = TipoDocumentoType.TD03;
-			break;
-		case TD04: tipoDoc = TipoDocumentoType.TD04;
-			break;
-		case TD05: tipoDoc = TipoDocumentoType.TD05;
-			break;
-		case TD06: tipoDoc = TipoDocumentoType.TD06;
-			break;
-		default:  tipoDoc = TipoDocumentoType.TD01;
-			break;
+		FatturaElettronicaBodyType fatturaBody = null;
+		FatturaElettronicaType getFattura = this.getFattura();
+		if(getFattura == null)
+			throw new Exception("File fattura non presente");
+		if(getFattura.getFatturaElettronicaBodyList() == null || getFattura.getFatturaElettronicaBodyList().isEmpty())
+			throw new Exception("File fattura non contiene fatture");
 		
+		fatturaBody = getFattura.getFatturaElettronicaBody(0);
+
+		if(fatturaBody.getDatiGenerali() == null)
+			throw new Exception("La fattura non contiene l'elemento datiGenerali");
+		
+		if(fatturaBody.getDatiGenerali().getDatiGeneraliDocumento() == null)
+			throw new Exception("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento");
+		
+
+		DatiGeneraliDocumentoType datiGeneraliDocumento = fatturaBody.getDatiGenerali().getDatiGeneraliDocumento();
+		
+		TipoDocumentoType tipoDoc = null;
+		if(datiGeneraliDocumento.getTipoDocumento()!=null) {
+			switch(datiGeneraliDocumento.getTipoDocumento()) {
+			case TD01: tipoDoc = TipoDocumentoType.TD01;
+				break;
+			case TD02: tipoDoc = TipoDocumentoType.TD02;
+				break;
+			case TD03: tipoDoc = TipoDocumentoType.TD03;
+				break;
+			case TD04: tipoDoc = TipoDocumentoType.TD04;
+				break;
+			case TD05: tipoDoc = TipoDocumentoType.TD05;
+				break;
+			case TD06: tipoDoc = TipoDocumentoType.TD06;
+				break;
+			}
+		} else {
+			throw new Exception("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.tipoDocumento");
 		}
 		
 		fatturaElettronica.setTipoDocumento(tipoDoc);
 		
-		fatturaElettronica.setDivisa(fatturaBody.getDatiGenerali().getDatiGeneraliDocumento().getDivisa());
-		fatturaElettronica.setData(fatturaBody.getDatiGenerali().getDatiGeneraliDocumento().getData());
-		fatturaElettronica.setNumero(fatturaBody.getDatiGenerali().getDatiGeneraliDocumento().getNumero());
-		fatturaElettronica.setAnno(new Integer(sdfYear.format(fatturaElettronica.getData())));
-		fatturaElettronica.setCausale(getCausale());
+		fatturaElettronica.setDivisa(datiGeneraliDocumento.getDivisa());
 
-		fatturaElettronica.setXml(this.fatturaAsByte);
+		if(datiGeneraliDocumento.getData() == null)
+			throw new Exception("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.data");
+		
+		fatturaElettronica.setData(datiGeneraliDocumento.getData());
+		fatturaElettronica.setAnno(new Integer(this.getSdfYear().format(datiGeneraliDocumento.getData())));
+
+		fatturaElettronica.setNumero(datiGeneraliDocumento.getNumero());
 	}
 	
 	
