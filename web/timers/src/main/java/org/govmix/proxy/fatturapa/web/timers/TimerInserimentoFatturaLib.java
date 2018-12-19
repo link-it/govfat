@@ -74,7 +74,7 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 			long countFattureElaborate = 0; 
 
 			if(countFatture > 0) {
-//				connection.setAutoCommit(false);
+				connection.setAutoCommit(false);
 
 				this.log.info("Gestisco ["+countFatture+"] lotti di fatture da inserire, ["+this.limit+"] alla volta");
 				List<LottoFatture> lstLotti = lottoBD.getLottiDaInserire(limitDate, 0, this.limit);
@@ -98,7 +98,8 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 								}
 								
 								lottoBD.setProcessato(idLotto);
-	
+								connection.commit();
+
 							} catch(Exception e) {
 								//NOTA: in caso di errore oltre che effettuare il rollback il lotto viene marcato come in errore, e viene inviata una notifica di rifiuto d'ufficio al fornitore
 								connection.rollback();
@@ -138,7 +139,6 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 
 						lstLotti = lottoBD.getLottiDaInserire(limitDate, 0, this.limit);
 						
-//						connection.commit();
 						Sonda.getInstance().registraChiamataServizioOK(this.getTimerName());
 					} catch(Exception e) {
 						this.log.error("Errore durante l'esecuzione del batch InserimentoFattura: "+e.getMessage(), e);
