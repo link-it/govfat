@@ -78,8 +78,8 @@ public class FatturaV10Converter extends AbstractFatturaConverter<FatturaElettro
 			case TD06: tipoDoc = TipoDocumentoType.TD06;
 				break;
 			}
-//		} else {
-//			throw new Exception("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.tipoDocumento");
+		} else {
+			tipoDoc = TipoDocumentoType.TDXX;
 		}
 		
 		fatturaElettronica.setTipoDocumento(tipoDoc);
@@ -135,7 +135,7 @@ public class FatturaV10Converter extends AbstractFatturaConverter<FatturaElettro
 
 
 	@Override
-	public void validate() throws ValidationException {
+	public void validate(boolean strictValidation) throws ValidationException {
 		FatturaElettronicaType getFattura = this.getFattura();
 		if(getFattura == null)
 			throw new ValidationException("File fattura non presente");
@@ -156,8 +156,10 @@ public class FatturaV10Converter extends AbstractFatturaConverter<FatturaElettro
 		
 		DatiGeneraliDocumentoType datiGeneraliDocumento = fatturaBody.getDatiGenerali().getDatiGeneraliDocumento();
 		
-		if(datiGeneraliDocumento.getTipoDocumento()==null)
-			throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.tipoDocumento");
+		if(strictValidation) {
+			if(datiGeneraliDocumento.getTipoDocumento()==null)
+				throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.tipoDocumento");
+		}
 		
 		if(datiGeneraliDocumento.getData() == null)
 			throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.data");

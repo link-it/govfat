@@ -171,6 +171,11 @@
 					<xsd:documentation>Parcella</xsd:documentation>
 				</xsd:annotation>
 			</xsd:enumeration>
+			<xsd:enumeration value="TDXX">
+				<xsd:annotation>
+					<xsd:documentation>Sconosciuto</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
 		</xsd:restriction>
 	</xsd:simpleType>
 	

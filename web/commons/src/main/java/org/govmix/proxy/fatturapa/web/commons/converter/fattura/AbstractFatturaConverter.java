@@ -43,13 +43,13 @@ public abstract class AbstractFatturaConverter<T> {
 		this.fattura = t;
 		this.fatturaAsByte = fatturaAsString;
 		this.params = params;
-		this.validate();
+		this.validate(this.params.isFatturazioneAttiva()); //la validazione per la fatturazione attiva e' piu' restrittiva, nella fatturazione passiva sono ammessi alcuni default
 	}
 
 	protected SimpleDateFormat getSdfYear() {
 		return new SimpleDateFormat("yyyy");
 	}
-	public abstract void validate() throws ValidationException;
+	public abstract void validate(boolean strictValidation) throws ValidationException;
 	
 	public abstract List<String> getCausali();
 	public abstract double getImportoTotaleDocumento();
