@@ -99,7 +99,7 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 								
 								lottoBD.setProcessato(idLotto);
 	
-							} catch(ValidationException e) {
+							} catch(Exception e) {
 								//NOTA: in caso di errore oltre che effettuare il rollback il lotto viene marcato come in errore, e viene inviata una notifica di rifiuto d'ufficio al fornitore
 								connection.rollback();
 								this.log.error("Errore durante l'inserimento del lotto con identificativo SdI ["+lotto.getIdentificativoSdi()+"]: "+e.getMessage(), e);
