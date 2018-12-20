@@ -43,7 +43,8 @@ public abstract class AbstractFatturaConverter<T> {
 		this.fattura = t;
 		this.fatturaAsByte = fatturaAsString;
 		this.params = params;
-		this.validate(this.params.isFatturazioneAttiva()); //la validazione per la fatturazione attiva e' piu' restrittiva, nella fatturazione passiva sono ammessi alcuni default
+		if(this.params!=null)
+			this.validate(this.params.isFatturazioneAttiva()); //la validazione per la fatturazione attiva e' piu' restrittiva, nella fatturazione passiva sono ammessi alcuni default
 	}
 
 	protected SimpleDateFormat getSdfYear() {
