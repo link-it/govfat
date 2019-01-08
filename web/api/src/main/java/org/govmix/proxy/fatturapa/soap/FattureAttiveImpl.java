@@ -129,7 +129,7 @@ public class FattureAttiveImpl implements FattureAttive {
 				throw new Exception("Fattura non trovata");
 			}
 
-			if(!listaCodDipartimentiUtente.contains(fattura.getDipartimento().getCodice())) {
+			if(!listaCodDipartimentiUtente.contains(fattura.getCodiceDestinatario())) {
 				throw new AuthorizationFault_Exception("L'utente ["+principal+"] non e' abilitato a visualizzare le notifiche per questa fattura");
 			}
 
