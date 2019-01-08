@@ -121,9 +121,9 @@ public class TracciaSdISingleFileExporter extends AbstractSingleFileXMLExporter<
 		try {
 			TracciaSDI traccia = this.convertToObject(ids[0]);
 			List<IdFattura> lst = new ArrayList<IdFattura>();
-			IdLotto idLottoPassive = new IdLotto(false);
-			idLottoPassive.setIdentificativoSdi(traccia.getIdentificativoSdi());
-			lst.addAll(this.getFatturaBD().findAllIdFatturaByIdLotto(idLottoPassive));
+//			IdLotto idLottoPassive = new IdLotto(false);
+//			idLottoPassive.setIdentificativoSdi(traccia.getIdentificativoSdi());
+//			lst.addAll(this.getFatturaBD().findAllIdFatturaByIdLotto(idLottoPassive));
 			IdLotto idLottoAttive = new IdLotto(true);
 			idLottoAttive.setIdentificativoSdi(traccia.getIdentificativoSdi());
 			lst.addAll(this.getFatturaBD().findAllIdFatturaByIdLotto(idLottoAttive));
