@@ -20,6 +20,7 @@ import org.govmix.fatturapa.NotificheTipo;
 import org.govmix.fatturapa.ProtocolloTipo;
 import org.govmix.fatturapa.RiceviNotificheRichiestaTipo;
 import org.govmix.fatturapa.RiceviNotificheRispostaTipo;
+import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
@@ -101,6 +102,9 @@ public class FattureAttiveImpl implements FattureAttive {
 			
 			FatturaAttivaBD fatturaBD = new FatturaAttivaBD(this.log);
 			
+			String principal = getPrincipal();
+			List<Dipartimento> listaDipartimentiUtente = new DipartimentoBD(this.log).getListaDipartimentiUtente(principal);
+			
 			FatturaElettronica fattura = null;
 			try {
 				if(richiesta.getIdentificativoSDI()!=null) {
@@ -108,7 +112,7 @@ public class FattureAttiveImpl implements FattureAttive {
 					id.setIdentificativoSdi(richiesta.getIdentificativoSDI().getIdSDI().intValue());
 					id.setPosizione(richiesta.getIdentificativoSDI().getPosizione().intValue());
 					fattura = fatturaBD.get(id);
-
+					
 					risposta.setIdentificativoSDI(richiesta.getIdentificativoSDI());
 				} else if(richiesta.getIdentificativoUO()!=null) {
 					fattura = fatturaBD.findByCodDipartimentoNumeroData(richiesta.getIdentificativoUO().getCodiceUO(),richiesta.getIdentificativoUO().getNumeroFattura(),richiesta.getIdentificativoUO().getDataFattura());
@@ -121,6 +125,9 @@ public class FattureAttiveImpl implements FattureAttive {
 				throw new Exception("Fattura non trovata");
 			}
 
+			if(!listaDipartimentiUtente.contains(fattura.getDipartimento())) {
+				throw new AuthorizationFault_Exception("L'utente ["+principal+"] non e' abilitato a visualizzare le notifiche per questa fattura");
+			}
 
 			if(fattura.getProtocollo()!=null) {
 				String[] split = fattura.getProtocollo().split("/");
@@ -188,6 +195,9 @@ public class FattureAttiveImpl implements FattureAttive {
 			
 			this.log.info("riceviNotifiche completata con successo");
 			return risposta;
+		} catch(AuthorizationFault_Exception e) {
+			this.log.error("riceviNotifiche completata con errore di autorizzazione: "  + e.getMessage(), e);
+			throw e;
 		} catch(Exception e) {
 			this.log.error("riceviNotifiche completata con errore: "  + e.getMessage(), e);
 			throw new GenericFault_Exception(e.getMessage(), e);
