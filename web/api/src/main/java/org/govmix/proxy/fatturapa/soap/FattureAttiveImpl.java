@@ -105,6 +105,10 @@ public class FattureAttiveImpl implements FattureAttive {
 			String principal = getPrincipal();
 			List<Dipartimento> listaDipartimentiUtente = new DipartimentoBD(this.log).getListaDipartimentiUtente(principal);
 			
+			List<String> listaCodDipartimentiUtente = new ArrayList<String>();
+			for(Dipartimento d: listaDipartimentiUtente) {
+				listaCodDipartimentiUtente.add(d.getCodice());
+			}
 			FatturaElettronica fattura = null;
 			try {
 				if(richiesta.getIdentificativoSDI()!=null) {
@@ -125,7 +129,7 @@ public class FattureAttiveImpl implements FattureAttive {
 				throw new Exception("Fattura non trovata");
 			}
 
-			if(!listaDipartimentiUtente.contains(fattura.getDipartimento())) {
+			if(!listaCodDipartimentiUtente.contains(fattura.getDipartimento().getCodice())) {
 				throw new AuthorizationFault_Exception("L'utente ["+principal+"] non e' abilitato a visualizzare le notifiche per questa fattura");
 			}
 
