@@ -27,7 +27,7 @@ import org.openspcoop2.generic_project.beans.IEnumeration;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 
 /**     
- * Enumeration dell'elemento FatturaElettronica.statoProtocollazione xsd (tipo:string) 
+ * Enumeration dell'elemento idTraccia.statoProtocollazione xsd (tipo:string) 
  *
  * @author Giuseppe Papandrea (papandrea@link.it)
  * @author Giovanni Bussu (bussu@link.it)
@@ -42,6 +42,8 @@ public enum StatoProtocollazioneType implements IEnumeration , Serializable , Cl
 	NON_PROTOCOLLATA ("NON_PROTOCOLLATA"),
 	@javax.xml.bind.annotation.XmlEnumValue("PROTOCOLLATA_IN_ELABORAZIONE")
 	PROTOCOLLATA_IN_ELABORAZIONE ("PROTOCOLLATA_IN_ELABORAZIONE"),
+	@javax.xml.bind.annotation.XmlEnumValue("IN_RICONSEGNA")
+	IN_RICONSEGNA ("IN_RICONSEGNA"),
 	@javax.xml.bind.annotation.XmlEnumValue("ERRORE_PROTOCOLLAZIONE")
 	ERRORE_PROTOCOLLAZIONE ("ERRORE_PROTOCOLLAZIONE"),
 	@javax.xml.bind.annotation.XmlEnumValue("PROTOCOLLATA")

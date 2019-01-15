@@ -65,7 +65,7 @@ public class TracciaSdIFilter extends AbstractFilter {
 			}
 			
 			if(this.daProtocollare != null) {
-				expression.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.MODALITA_PUSH, this.daProtocollare);
+				expression.equals(TracciaSDI.model().DIPARTIMENTO.MODALITA_PUSH, this.daProtocollare);
 			}
 
 			

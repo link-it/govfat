@@ -20,43 +20,38 @@
  */
 package org.govmix.proxy.fatturapa.orm.dao.jdbc;
 
-import java.util.List;
+import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import java.sql.Connection;
-
 import org.apache.log4j.Logger;
-
-import org.openspcoop2.utils.sql.ISQLQueryObject;
-
-import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
+import org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini;
+import org.govmix.proxy.fatturapa.orm.IdTracciaSdi;
+import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.NotificaDecorrenzaTerminiFieldConverter;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.NotificaDecorrenzaTerminiFetch;
+import org.openspcoop2.generic_project.beans.CustomField;
+import org.openspcoop2.generic_project.beans.FunctionField;
+import org.openspcoop2.generic_project.beans.IField;
+import org.openspcoop2.generic_project.beans.InUse;
+import org.openspcoop2.generic_project.beans.NonNegativeNumber;
+import org.openspcoop2.generic_project.beans.Union;
+import org.openspcoop2.generic_project.beans.UnionExpression;
+import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithId;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCPaginatedExpression;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
 import org.openspcoop2.generic_project.dao.jdbc.utils.IJDBCFetch;
 import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject;
-import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithId;
-import org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini;
-import org.openspcoop2.generic_project.utils.UtilsTemplate;
-import org.openspcoop2.generic_project.beans.CustomField;
-import org.openspcoop2.generic_project.beans.InUse;
-import org.openspcoop2.generic_project.beans.IField;
-import org.openspcoop2.generic_project.beans.NonNegativeNumber;
-import org.openspcoop2.generic_project.beans.UnionExpression;
-import org.openspcoop2.generic_project.beans.Union;
-import org.openspcoop2.generic_project.beans.FunctionField;
 import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
-import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
-import org.openspcoop2.generic_project.dao.jdbc.JDBCPaginatedExpression;
-
-import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.NotificaDecorrenzaTerminiFieldConverter;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.NotificaDecorrenzaTerminiFetch;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCServiceManager;
-
-import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
+import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
+import org.openspcoop2.generic_project.utils.UtilsTemplate;
+import org.openspcoop2.utils.sql.ISQLQueryObject;
 
 /**     
  * JDBCNotificaDecorrenzaTerminiServiceSearchImpl
@@ -134,20 +129,21 @@ public class JDBCNotificaDecorrenzaTerminiServiceSearchImpl implements IJDBCServ
 
 		List<IdNotificaDecorrenzaTermini> list = new ArrayList<IdNotificaDecorrenzaTermini>();
 
-		// TODO: implementazione non efficente. 
-		// Per ottenere una implementazione efficente:
-		// 1. Usare metodo select di questa classe indirizzando esattamente i field necessari a create l'ID logico
-		// 2. Usare metodo getNotificaDecorrenzaTerminiFetch() sul risultato della select per ottenere un oggetto NotificaDecorrenzaTermini
-		//	  La fetch con la map inserirà nell'oggetto solo i valori estratti 
-		// 3. Usare metodo convertToId per ottenere l'id
+        try {
+        	
+			List<IField> fields = new ArrayList<IField>();
 
-        List<Long> ids = this.findAllTableIds(jdbcProperties, log, connection, sqlQueryObject, expression);
-        
-        for(Long id: ids) {
-        	NotificaDecorrenzaTermini notificaDecorrenzaTermini = this.get(jdbcProperties, log, connection, sqlQueryObject, id, idMappingResolutionBehaviour);
-			IdNotificaDecorrenzaTermini idNotificaDecorrenzaTermini = this.convertToId(jdbcProperties,log,connection,sqlQueryObject,notificaDecorrenzaTermini);
-        	list.add(idNotificaDecorrenzaTermini);
-        }
+			fields.add(NotificaDecorrenzaTermini.model().IDENTIFICATIVO_SDI);
+
+			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));
+
+			for(Map<String, Object> map: returnMap) {
+
+				IdNotificaDecorrenzaTermini notificaDecorrenzaTermini = this.convertToId(jdbcProperties, log, connection, sqlQueryObject, (NotificaDecorrenzaTermini)this.getFetch().fetch(jdbcProperties.getDatabase(), NotificaDecorrenzaTermini.model(), map));
+				list.add(notificaDecorrenzaTermini);
+			}
+
+		} catch(NotFoundException e) {}
 
         return list;
 		
@@ -158,17 +154,36 @@ public class JDBCNotificaDecorrenzaTerminiServiceSearchImpl implements IJDBCServ
 
         List<NotificaDecorrenzaTermini> list = new ArrayList<NotificaDecorrenzaTermini>();
         
-        // TODO: implementazione non efficente. 
-		// Per ottenere una implementazione efficente:
-		// 1. Usare metodo select di questa classe indirizzando esattamente i field necessari
-		// 2. Usare metodo getNotificaDecorrenzaTerminiFetch() sul risultato della select per ottenere un oggetto NotificaDecorrenzaTermini
-		//	  La fetch con la map inserirà nell'oggetto solo i valori estratti 
+        try {
+        	
+			List<IField> fields = new ArrayList<IField>();
 
-        List<Long> ids = this.findAllTableIds(jdbcProperties, log, connection, sqlQueryObject, expression);
-        
-        for(Long id: ids) {
-        	list.add(this.get(jdbcProperties, log, connection, sqlQueryObject, id, idMappingResolutionBehaviour));
-        }
+			String id = "id";
+			fields.add(new CustomField(id, Long.class, id, this.getFieldConverter().toTable(NotificaDecorrenzaTermini.model())));
+			fields.add(NotificaDecorrenzaTermini.model().IDENTIFICATIVO_SDI);
+			fields.add(NotificaDecorrenzaTermini.model().NOME_FILE);
+			fields.add(NotificaDecorrenzaTermini.model().DESCRIZIONE);
+			fields.add(NotificaDecorrenzaTermini.model().MESSAGE_ID);
+			fields.add(NotificaDecorrenzaTermini.model().NOTE);
+			fields.add(NotificaDecorrenzaTermini.model().DATA_RICEZIONE);
+			fields.add(NotificaDecorrenzaTermini.model().ID_TRACCIA.DATA_PROSSIMA_PROTOCOLLAZIONE);
+			fields.add(NotificaDecorrenzaTermini.model().ID_TRACCIA.STATO_PROTOCOLLAZIONE);
+
+			String idTracciaNotifica = "id_traccia";
+			fields.add(new CustomField("idTraccia.id", Long.class, idTracciaNotifica, this.getFieldConverter().toTable(NotificaDecorrenzaTermini.model())));
+
+			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));
+
+			for(Map<String, Object> map: returnMap) {
+				NotificaDecorrenzaTermini notificaDecorrenzaTermini = (NotificaDecorrenzaTermini)this.getFetch().fetch(jdbcProperties.getDatabase(), NotificaDecorrenzaTermini.model(), map);
+				IdTracciaSdi idTracciaSdi = (IdTracciaSdi)this.getFetch().fetch(jdbcProperties.getDatabase(), NotificaDecorrenzaTermini.model().ID_TRACCIA, map);
+
+				notificaDecorrenzaTermini.setIdTraccia(idTracciaSdi);
+
+				list.add(notificaDecorrenzaTermini);
+			}
+
+		} catch(NotFoundException e) {}
 
         return list;      
 		
@@ -459,37 +474,23 @@ public class JDBCNotificaDecorrenzaTerminiServiceSearchImpl implements IJDBCServ
 	
 	private NotificaDecorrenzaTermini _get(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, Long tableId, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotFoundException, MultipleResultException, NotImplementedException, ServiceException, Exception {
 	
-		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 
-					new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
+		JDBCPaginatedExpression expression = newPaginatedExpression(log);
+		CustomField idField = new CustomField("id", Long.class, "id", this.getFieldConverter().toTable(NotificaDecorrenzaTermini.model()));
+		expression.equals(idField, tableId);
+		expression.offset(0);
+		expression.limit(2);
 		
-		ISQLQueryObject sqlQueryObjectGet = sqlQueryObject.newSQLQueryObject();
-				
-		NotificaDecorrenzaTermini notificaDecorrenzaTermini = new NotificaDecorrenzaTermini();
+		expression.addOrder(idField, org.openspcoop2.generic_project.expression.SortOrder.ASC);
+
+		List<NotificaDecorrenzaTermini> findAll = this.findAll(jdbcProperties, log, connection, sqlQueryObject, expression, idMappingResolutionBehaviour);
 		
-
-		// Object notificaDecorrenzaTermini
-		ISQLQueryObject sqlQueryObjectGet_notificaDecorrenzaTermini = sqlQueryObjectGet.newSQLQueryObject();
-		sqlQueryObjectGet_notificaDecorrenzaTermini.setANDLogicOperator(true);
-		sqlQueryObjectGet_notificaDecorrenzaTermini.addFromTable(this.getNotificaDecorrenzaTerminiFieldConverter().toTable(NotificaDecorrenzaTermini.model()));
-		sqlQueryObjectGet_notificaDecorrenzaTermini.addSelectField("id");
-		sqlQueryObjectGet_notificaDecorrenzaTermini.addSelectField(this.getNotificaDecorrenzaTerminiFieldConverter().toColumn(NotificaDecorrenzaTermini.model().IDENTIFICATIVO_SDI,true));
-		sqlQueryObjectGet_notificaDecorrenzaTermini.addSelectField(this.getNotificaDecorrenzaTerminiFieldConverter().toColumn(NotificaDecorrenzaTermini.model().NOME_FILE,true));
-		sqlQueryObjectGet_notificaDecorrenzaTermini.addSelectField(this.getNotificaDecorrenzaTerminiFieldConverter().toColumn(NotificaDecorrenzaTermini.model().DESCRIZIONE,true));
-		sqlQueryObjectGet_notificaDecorrenzaTermini.addSelectField(this.getNotificaDecorrenzaTerminiFieldConverter().toColumn(NotificaDecorrenzaTermini.model().MESSAGE_ID,true));
-		sqlQueryObjectGet_notificaDecorrenzaTermini.addSelectField(this.getNotificaDecorrenzaTerminiFieldConverter().toColumn(NotificaDecorrenzaTermini.model().NOTE,true));
-		sqlQueryObjectGet_notificaDecorrenzaTermini.addSelectField(this.getNotificaDecorrenzaTerminiFieldConverter().toColumn(NotificaDecorrenzaTermini.model().DATA_RICEZIONE,true));
-		sqlQueryObjectGet_notificaDecorrenzaTermini.addSelectField(this.getNotificaDecorrenzaTerminiFieldConverter().toColumn(NotificaDecorrenzaTermini.model().XML,true));
-		sqlQueryObjectGet_notificaDecorrenzaTermini.addWhereCondition("id=?");
-
-		// Get notificaDecorrenzaTermini
-		notificaDecorrenzaTermini = (NotificaDecorrenzaTermini) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_notificaDecorrenzaTermini.createSQLQuery(), jdbcProperties.isShowSql(), NotificaDecorrenzaTermini.model(), this.getNotificaDecorrenzaTerminiFetch(),
-			new JDBCObject(tableId,Long.class));
-
-
-
-		
-        return notificaDecorrenzaTermini;  
-	
+		if(findAll == null || findAll.size() <=0) {
+			throw new NotFoundException();
+		} else if(findAll.size() > 1) {
+			throw new MultipleResultException();
+		} else {
+			return findAll.get(0);
+		}
 	} 
 	
 	@Override
@@ -522,6 +523,7 @@ public class JDBCNotificaDecorrenzaTerminiServiceSearchImpl implements IJDBCServ
 	}
 	
 	private void _join(IExpression expression, ISQLQueryObject sqlQueryObject) throws NotImplementedException, ServiceException, Exception{
+		sqlQueryObject.addWhereCondition(this.getNotificaDecorrenzaTerminiFieldConverter().toTable(NotificaDecorrenzaTermini.model())+".id_traccia="+this.getNotificaDecorrenzaTerminiFieldConverter().toTable(NotificaDecorrenzaTermini.model().ID_TRACCIA)+".id");
 	}
 	
 	protected java.util.List<Object> _getRootTablePrimaryKeyValues(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdNotificaDecorrenzaTermini id) throws NotFoundException, ServiceException, NotImplementedException, Exception{

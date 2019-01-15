@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -33,12 +34,13 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.log4j.Logger;
-import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.Utente;
+import org.govmix.proxy.fatturapa.orm.UtenteDipartimento;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.UserRole;
 import org.govmix.proxy.fatturapa.orm.dao.IUtenteServiceSearch;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.TracciaSdIBD;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.exporter.exception.ExportException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
@@ -69,24 +71,27 @@ public abstract class AbstractSingleFileExporter<T, K> {
     public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_SCARTO = "com_"+ TipoComunicazioneType.NS.toString();
     public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_MANCATA_CONSEGNA = "com_"+ TipoComunicazioneType.MC.toString();
     public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_ESITO_COMMITTENTE = "com_"+ TipoComunicazioneType.NE.toString();
-    public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE = "com_"+ TipoComunicazioneType.DT.toString();
+    public static final String PARAMETRO_ACTION_COMUNICAZIONE_NOTIFICA_DECORRENZA_TERMINI_TRASMITTENTE = "com_"+ TipoComunicazioneType.DT_ATT.toString();
     public static final String PARAMETRO_ACTION_COMUNICAZIONE_AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO = "com_"+ TipoComunicazioneType.AT.toString();
 
 	protected Logger log;
 	private IUtenteServiceSearch utenteSearchDAO;
 	private FatturaBD fatturaBD;
+	protected TracciaSdIBD tracciaBD;
 
 
 	public AbstractSingleFileExporter(Logger log, Connection connection, boolean autocommit) throws ServiceException, NotImplementedException, Exception {
 		this.log = log;
 		this.utenteSearchDAO = DAOFactory.getInstance().getServiceManager(connection, autocommit).getUtenteServiceSearch();
 		this.fatturaBD = new FatturaBD(log, connection, autocommit);
+		this.tracciaBD = new TracciaSdIBD(log, connection, autocommit);
 	}
 
 	public AbstractSingleFileExporter(Logger log) throws ServiceException, NotImplementedException, Exception {
 		this.log = log;
 		this.utenteSearchDAO = DAOFactory.getInstance().getServiceManager().getUtenteServiceSearch();
 		this.fatturaBD = new FatturaBD(log);
+		this.tracciaBD = new TracciaSdIBD(log);
 	}
 
 	public abstract void export(T object, OutputStream out, FORMAT format) throws ExportException;
@@ -222,10 +227,9 @@ public abstract class AbstractSingleFileExporter<T, K> {
 		exportAsZip(this.convertToObject(id), out, rootDir);
 	}
 
+	protected abstract List<String> findCodiciDipartimento(String[] ids, boolean fatturazioneAttiva) throws ServiceException, NotFoundException;
 
-	protected abstract List<IdFattura> findIdFattura(String[] ids, boolean isAll) throws ServiceException, NotFoundException;
-
-	public boolean checkautorizzazioneExport(String username, String []ids, boolean isAll) throws ExportException {
+	public boolean checkautorizzazioneExport(String username, String []ids, boolean fatturazioneAttiva, boolean isAll) throws ExportException {
 
 		try {
 			log.debug("Controllo autorizzazione per l'utente ["+username+"] in corso...");
@@ -247,29 +251,48 @@ public abstract class AbstractSingleFileExporter<T, K> {
 				return true;
 			}
 
-			List<IdFattura> idFatturaRichiesti = null;
+			List<String> codiciDipartimentoRichiesti = null;
 			try {
-				idFatturaRichiesti = findIdFattura(ids, isAll);
+				codiciDipartimentoRichiesti = findCodiciDipartimento(ids, fatturazioneAttiva);
 			}catch(NotFoundException e){
 				log.debug("Impossibile trovare la risorsa richiesta:"+ e.getMessage(), e);
 				throw new ExportException("Impossibile trovare la risorsa richiesta.");
 			}
 
-			// passo alla bd l'id utente che mi restituisce una lista di idFattura 
-			List<IdFattura> idFattureByUtente = this.fatturaBD.getIdFattureByUtente(utente);
-
-
-			for (IdFattura idFattura : idFatturaRichiesti) {
-				boolean found = false;
-				for (IdFattura idFatturaAutorizzata : idFattureByUtente) {
-					if(idFattura.equals(idFatturaAutorizzata)){
-						found = true;
-						break;
-					}
-				}
+			List<String> codiciDipartimentoByUtente = new ArrayList<String>();
+			for(UtenteDipartimento d: utente.getUtenteDipartimentoList()) {
+				codiciDipartimentoByUtente.add(d.getIdDipartimento().getCodice());
+			}
+			
+			for (String codiceRichiesto: codiciDipartimentoRichiesti) {
+				boolean found = codiciDipartimentoByUtente.contains(codiceRichiesto);
+				
 				if(!found)
 					return false;
 			}
+//			List<IdFattura> idFatturaRichiesti = null;
+//			try {
+//				idFatturaRichiesti = findIdFattura(ids, isAll);
+//			}catch(NotFoundException e){
+//				log.debug("Impossibile trovare la risorsa richiesta:"+ e.getMessage(), e);
+//				throw new ExportException("Impossibile trovare la risorsa richiesta.");
+//			}
+//
+//			// passo alla bd l'id utente che mi restituisce una lista di idFattura 
+//			List<IdFattura> idFattureByUtente = this.fatturaBD.getIdFattureByUtente(utente);
+//
+//
+//			for (IdFattura idFattura : idFatturaRichiesti) {
+//				boolean found = false;
+//				for (IdFattura idFatturaAutorizzata : idFattureByUtente) {
+//					if(idFattura.equals(idFatturaAutorizzata)){
+//						found = true;
+//						break;
+//					}
+//				}
+//				if(!found)
+//					return false;
+//			}
 
 			return true;
 
@@ -280,10 +303,6 @@ public abstract class AbstractSingleFileExporter<T, K> {
 		}
 
 	}
-//
-//	public IFatturaElettronicaServiceSearch getFatturaSearchDAO() {
-//		return fatturaSearchDAO;
-//	}
 
 	public FatturaBD getFatturaBD() {
 		return fatturaBD;

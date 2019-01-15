@@ -33,8 +33,8 @@ public class ProtocollazioneNotifiche implements IWorkFlow<TracciaSDI> {
 		this.log = log;
 		this.limit = limit;
 		this.limitDate = new Date();
-		this.tracciaSdiBD = new TracciaSdIBD(log, connection, false);
-		this.endpointSelector = new EndpointSelector(log, connection, false);
+		this.tracciaSdiBD = new TracciaSdIBD(log, connection, true);
+		this.endpointSelector = new EndpointSelector(log, connection, true);
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class ProtocollazioneNotifiche implements IWorkFlow<TracciaSDI> {
 				httpConn.setRequestProperty(CostantiProtocollazione.POSIZIONE_HEADER_PARAM, ""+ tracciaSDI.getPosizione());
 
 			httpConn.setRequestProperty(CostantiProtocollazione.NOME_FILE_HEADER_PARAM, ""+tracciaSDI.getNomeFile());
-			httpConn.setRequestProperty(CostantiProtocollazione.DESTINATARIO_HEADER_PARAM, tracciaSDI.getLottoFatture().getCodiceDestinatario());
+			httpConn.setRequestProperty(CostantiProtocollazione.DESTINATARIO_HEADER_PARAM, tracciaSDI.getCodiceDipartimento());
 			httpConn.setRequestProperty(CostantiProtocollazione.TIPO_RICEVUTA_HEADER_PARAM, tracciaSDI.getTipoComunicazione().toString());
 			
 			httpConn.setRequestProperty("Content-Type", tracciaSDI.getContentType());
@@ -124,7 +124,7 @@ public class ProtocollazioneNotifiche implements IWorkFlow<TracciaSDI> {
 			
 			long offset = policy.getOffsetRispedizione();
 
-			StatoProtocollazioneType nextStato = policy.isRispedizioneAbilitata() ? StatoProtocollazioneType.NON_PROTOCOLLATA : nextStatoKO;
+			StatoProtocollazioneType nextStato = policy.isRispedizioneAbilitata() ? StatoProtocollazioneType.IN_RICONSEGNA : nextStatoKO;
 
 			this.log.debug("Elaboro la traccia ["+tracciaSDI.getId()+"], stato ["+tracciaSDI.getStatoProtocollazione()+"] -> ["+nextStato+"]...");
 			this.tracciaSdiBD.updateStatoProtocollazioneKO(tracciaSDI, nextStato, response, new Date(now+offset), tracciaSDI.getTentativiProtocollazione() + 1);

@@ -20,18 +20,17 @@
  */
 package org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch;
 
+import java.sql.ResultSet;
+import java.util.Map;
+
+import org.govmix.proxy.fatturapa.orm.IdTracciaSdi;
+import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
 import org.openspcoop2.generic_project.beans.IModel;
 import org.openspcoop2.generic_project.dao.jdbc.utils.AbstractJDBCFetch;
 import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCParameterUtilities;
 import org.openspcoop2.generic_project.exception.ServiceException;
-
-import java.sql.ResultSet;
-import java.util.Map;
-
 import org.openspcoop2.utils.TipiDatabase;
 import org.openspcoop2.utils.jdbc.IKeyGeneratorObject;
-
-import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
 
 
 /**     
@@ -67,8 +66,6 @@ public class NotificaDecorrenzaTerminiFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "note", NotificaDecorrenzaTermini.model().NOTE.getFieldType()));
 				setParameter(object, "setDataRicezione", NotificaDecorrenzaTermini.model().DATA_RICEZIONE.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "data_ricezione", NotificaDecorrenzaTermini.model().DATA_RICEZIONE.getFieldType()));
-				setParameter(object, "setXml", NotificaDecorrenzaTermini.model().XML.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "xml", NotificaDecorrenzaTermini.model().XML.getFieldType()));
 				return object;
 			}
 			
@@ -103,8 +100,18 @@ public class NotificaDecorrenzaTerminiFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"note"));
 				setParameter(object, "setDataRicezione", NotificaDecorrenzaTermini.model().DATA_RICEZIONE.getFieldType(),
 					this.getObjectFromMap(map,"dataRicezione"));
-				setParameter(object, "setXml", NotificaDecorrenzaTermini.model().XML.getFieldType(),
-					this.getObjectFromMap(map,"xml"));
+				return object;
+			}
+
+			if(model.equals(NotificaDecorrenzaTermini.model().ID_TRACCIA)){
+				IdTracciaSdi object = new IdTracciaSdi();
+				setParameter(object, "setId", Long.class,
+					this.getObjectFromMap(map,"idTraccia.id"));
+				setParameter(object, "set_value_statoProtocollazione", String.class,
+						this.getObjectFromMap(map,"idTraccia.statoProtocollazione"));
+				setParameter(object, "setDataProssimaProtocollazione", NotificaDecorrenzaTermini.model().ID_TRACCIA.DATA_PROSSIMA_PROTOCOLLAZIONE.getFieldType(),
+					this.getObjectFromMap(map,"idTraccia.dataProssimaProtocollazione"));
+
 				return object;
 			}
 			

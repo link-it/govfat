@@ -7,12 +7,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.govmix.proxy.fatturapa.orm.IdFattura;
-import org.govmix.proxy.fatturapa.orm.IdLotto;
+import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.orm.dao.IDBTracciaSDIServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.ITracciaSDIServiceSearch;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.exporter.PDFCreator.TipoXSL;
 import org.govmix.proxy.fatturapa.web.commons.exporter.exception.ExportException;
@@ -46,8 +46,9 @@ public class TracciaSdISingleFileExporter extends AbstractSingleFileXMLExporter<
 	protected TipoXSL getTipoXsl(TracciaSDI object) throws Exception {
 		switch(object.getTipoComunicazione()){
 		case AT: return TipoXSL.TRACCIA_AT;
-		case DT: return TipoXSL.NOTIFICA_DT;
-		case EC: throw new Exception("Usare classe: " + NotificaECSingleFileExporter.class.getName());
+		case DT_PASS:
+		case DT_ATT: return TipoXSL.NOTIFICA_DT;
+		case EC: return TipoXSL.NOTIFICA_EC;
 		case FAT_IN: throw new Exception("Usare classe: " + FatturaSingleFileExporter.class.getName());
 		case FAT_OUT: throw new Exception("Usare classe: " + FatturaSingleFileExporter.class.getName());
 		case MC: return TipoXSL.TRACCIA_MC;
@@ -55,7 +56,7 @@ public class TracciaSdISingleFileExporter extends AbstractSingleFileXMLExporter<
 		case NE:return TipoXSL.TRACCIA_NE;
 		case NS:return TipoXSL.TRACCIA_NS;
 		case RC:return TipoXSL.TRACCIA_RC;
-		case SE: throw new Exception("Usare classe: " + ScartoECSingleFileExporter.class.getName());
+		case SE: return TipoXSL.SCARTO_EC;
 		default: return null;
 
 		}
@@ -117,16 +118,18 @@ public class TracciaSdISingleFileExporter extends AbstractSingleFileXMLExporter<
 	}
 
 	@Override
-	protected List<IdFattura> findIdFattura(String[] ids, boolean isAll) throws ServiceException, NotFoundException {
+	protected List<String> findCodiciDipartimento(String[] ids, boolean fatturazioneAttiva) throws ServiceException, NotFoundException{
 		try {
 			TracciaSDI traccia = this.convertToObject(ids[0]);
-			List<IdFattura> lst = new ArrayList<IdFattura>();
-//			IdLotto idLottoPassive = new IdLotto(false);
-//			idLottoPassive.setIdentificativoSdi(traccia.getIdentificativoSdi());
-//			lst.addAll(this.getFatturaBD().findAllIdFatturaByIdLotto(idLottoPassive));
-			IdLotto idLottoAttive = new IdLotto(true);
-			idLottoAttive.setIdentificativoSdi(traccia.getIdentificativoSdi());
-			lst.addAll(this.getFatturaBD().findAllIdFatturaByIdLotto(idLottoAttive));
+			List<String> lst = new ArrayList<String>();
+			FatturaFilter filter = this.getFatturaBD().newFilter();
+			filter.setIdentificativoSdi(traccia.getIdentificativoSdi());
+			filter.setFatturazioneAttiva(fatturazioneAttiva);
+			List<FatturaElettronica> findAll = this.getFatturaBD().findAll(filter);
+			
+			for(FatturaElettronica f: findAll) {
+				lst.add(f.getCodiceDestinatario());
+			}
 
 			return lst;
 		} catch (Exception e) {

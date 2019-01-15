@@ -65,8 +65,8 @@ public class EndpointSelector {
 	}
 	
 	public Endpoint findEndpoint(TracciaSDI traccia) throws Exception {
-		this.log.debug("Cerco endpoint per fattura Id-SdI["+traccia.getIdentificativoSdi()+"] con destinatario ["+traccia.getLottoFatture().getCodiceDestinatario()+"]");
-		return findEndpoint(traccia.getLottoFatture().getCodiceDestinatario());
+		this.log.debug("Cerco endpoint per fattura Id-SdI["+traccia.getIdentificativoSdi()+"] con destinatario ["+traccia.getCodiceDipartimento()+"]");
+		return findEndpoint(traccia.getCodiceDipartimento());
 	}
 	
 	public Endpoint findEndpoint(LottoFatture lotto) throws Exception {

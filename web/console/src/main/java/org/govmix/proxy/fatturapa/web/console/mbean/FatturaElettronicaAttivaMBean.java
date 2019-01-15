@@ -424,10 +424,8 @@ IFatturaElettronicaAttivaService>{
 
 			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi"))));
 			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoComunicazioneType.FAT_OUT.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.FAT_OUT.toString()))));
-//			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoComunicazioneType.EC.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.EC.toString()))));
 			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoComunicazioneType.NE.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.NE.toString()))));
-			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoComunicazioneType.DT.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.DT.toString()))));
-//			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoComunicazioneType.SE.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.SE.toString()))));
+			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoComunicazioneType.DT_ATT.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.DT_ATT.toString()))));
 			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoComunicazioneType.RC.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.RC.toString()))));
 			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoComunicazioneType.NS.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.NS.toString()))));
 			this.listaTipoComunicazione.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoComunicazioneType.MC.toString(),  ("fattura.tipoComunicazione."+TipoComunicazioneType.MC.toString()))));

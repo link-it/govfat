@@ -20,30 +20,14 @@
  */
 package org.govmix.proxy.fatturapa.web.timers;
 
-import java.io.ByteArrayOutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
-import org.apache.cxf.helpers.IOUtils;
 import org.apache.log4j.Logger;
-import org.apache.soap.encoding.soapenc.Base64;
-import org.govmix.proxy.fatturapa.orm.IdLotto;
-import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
-import org.govmix.proxy.fatturapa.orm.constants.FormatoArchivioInvioFatturaType;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFatturePassiveBD;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.sonde.Sonda;
-import org.govmix.proxy.fatturapa.web.commons.utils.CostantiProtocollazione;
-import org.govmix.proxy.fatturapa.web.commons.utils.Endpoint;
-import org.govmix.proxy.fatturapa.web.commons.utils.EndpointSelector;
 
 /**
  * Implementazione dell'interfaccia {@link TimerConsegnaLotto}.
@@ -74,11 +58,11 @@ public class TimerProtocollazioneRicevutaLib extends AbstractTimerLib {
 			
 			workflow.init(this.log, connection, this.limit);
 			long countFatture = workflow.count();
-			this.log.info("Trovate ["+countFatture+"] fatture");
+			this.log.info("Trovate ["+countFatture+"] ricevute");
 			long countFattureElaborate = 0; 
 
 			if(countFatture > 0) {
-				this.log.info("Gestisco ["+countFatture+"] fatture, ["+this.limit+"] alla volta");
+				this.log.info("Gestisco ["+countFatture+"] ricevute, ["+this.limit+"] alla volta");
 				List<TracciaSDI> lst = workflow.getNextLista();
 
 				while(lst != null && !lst.isEmpty()) {
@@ -93,14 +77,13 @@ public class TimerProtocollazioneRicevutaLib extends AbstractTimerLib {
 						
 						Sonda.getInstance().registraChiamataServizioOK(this.getTimerName());
 					} catch(Exception e) {
-						this.log.error("Errore durante la spedizione dell'esito: "+e.getMessage(), e);
+						this.log.error("Errore durante la protocollazinoe della ricevuta: "+e.getMessage(), e);
 					}
 				}
-				this.log.info("Gestite ["+countFattureElaborate+"\\"+countFatture+"] fatture. Fine.");
+				this.log.info("Gestite ["+countFattureElaborate+"\\"+countFatture+"] ricevute. Fine.");
 			}
 		}catch(Exception e){
-			this.log.error("Errore durante l'esecuzione del batch TimerWorkFlowFatturaLib: "+e.getMessage(), e);
-			connection.rollback();
+			this.log.error("Errore durante l'esecuzione del batch TimerProtocollazioneRicevutaLib: "+e.getMessage(), e);
 			throw e;
 		} finally {
 			if(connection != null) {

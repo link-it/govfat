@@ -215,18 +215,46 @@ public class NotificaEsitoCommittenteFieldConverter extends AbstractSQLFieldConv
 				return "scarto_note";
 			}
 		}
-		if(field.equals(NotificaEsitoCommittente.model().SCARTO_XML)){
+		if(field.equals(NotificaEsitoCommittente.model().ID_TRACCIA_NOTIFICA.ID_TRACCIA)){
 			if(appendTablePrefix){
-				return this.toAliasTable(field)+".scarto_xml";
+				return this.toAliasTable(field)+".id_traccia";
 			}else{
-				return "scarto_xml";
+				return "id_traccia";
 			}
 		}
-		if(field.equals(NotificaEsitoCommittente.model().XML)){
+		if(field.equals(NotificaEsitoCommittente.model().ID_TRACCIA_NOTIFICA.STATO_PROTOCOLLAZIONE)){
 			if(appendTablePrefix){
-				return this.toAliasTable(field)+".xml";
+				return this.toAliasTable(field)+".stato_protocollazione";
 			}else{
-				return "xml";
+				return "stato_protocollazione";
+			}
+		}
+		if(field.equals(NotificaEsitoCommittente.model().ID_TRACCIA_NOTIFICA.DATA_PROSSIMA_PROTOCOLLAZIONE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".data_protocollazione";
+			}else{
+				return "data_protocollazione";
+			}
+		}
+		if(field.equals(NotificaEsitoCommittente.model().ID_TRACCIA_SCARTO.ID_TRACCIA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".id_traccia";
+			}else{
+				return "id_traccia";
+			}
+		}
+		if(field.equals(NotificaEsitoCommittente.model().ID_TRACCIA_SCARTO.STATO_PROTOCOLLAZIONE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".stato_protocollazione";
+			}else{
+				return "stato_protocollazione";
+			}
+		}
+		if(field.equals(NotificaEsitoCommittente.model().ID_TRACCIA_SCARTO.DATA_PROSSIMA_PROTOCOLLAZIONE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".data_protocollazione";
+			}else{
+				return "data_protocollazione";
 			}
 		}
 
@@ -305,11 +333,23 @@ public class NotificaEsitoCommittenteFieldConverter extends AbstractSQLFieldConv
 		if(field.equals(NotificaEsitoCommittente.model().SCARTO_NOTE)){
 			return this.toTable(NotificaEsitoCommittente.model(), returnAlias);
 		}
-		if(field.equals(NotificaEsitoCommittente.model().SCARTO_XML)){
-			return this.toTable(NotificaEsitoCommittente.model(), returnAlias);
+		if(field.equals(NotificaEsitoCommittente.model().ID_TRACCIA_NOTIFICA.ID_TRACCIA)){
+			return this.toTable(NotificaEsitoCommittente.model().ID_TRACCIA_NOTIFICA, returnAlias);
 		}
-		if(field.equals(NotificaEsitoCommittente.model().XML)){
-			return this.toTable(NotificaEsitoCommittente.model(), returnAlias);
+		if(field.equals(NotificaEsitoCommittente.model().ID_TRACCIA_NOTIFICA.STATO_PROTOCOLLAZIONE)){
+			return this.toTable(NotificaEsitoCommittente.model().ID_TRACCIA_NOTIFICA, returnAlias);
+		}
+		if(field.equals(NotificaEsitoCommittente.model().ID_TRACCIA_NOTIFICA.DATA_PROSSIMA_PROTOCOLLAZIONE)){
+			return this.toTable(NotificaEsitoCommittente.model().ID_TRACCIA_NOTIFICA, returnAlias);
+		}
+		if(field.equals(NotificaEsitoCommittente.model().ID_TRACCIA_SCARTO.ID_TRACCIA)){
+			return this.toTable(NotificaEsitoCommittente.model().ID_TRACCIA_SCARTO, returnAlias);
+		}
+		if(field.equals(NotificaEsitoCommittente.model().ID_TRACCIA_SCARTO.STATO_PROTOCOLLAZIONE)){
+			return this.toTable(NotificaEsitoCommittente.model().ID_TRACCIA_SCARTO, returnAlias);
+		}
+		if(field.equals(NotificaEsitoCommittente.model().ID_TRACCIA_SCARTO.DATA_PROSSIMA_PROTOCOLLAZIONE)){
+			return this.toTable(NotificaEsitoCommittente.model().ID_TRACCIA_SCARTO, returnAlias);
 		}
 
 
@@ -332,6 +372,12 @@ public class NotificaEsitoCommittenteFieldConverter extends AbstractSQLFieldConv
 		}
 		if(model.equals(NotificaEsitoCommittente.model().UTENTE)){
 			return "utenti";
+		}
+		if(model.equals(NotificaEsitoCommittente.model().ID_TRACCIA_NOTIFICA)){
+			return "tracce_sdi";
+		}
+		if(model.equals(NotificaEsitoCommittente.model().ID_TRACCIA_SCARTO)){
+			return "tracce_sdi";
 		}
 
 

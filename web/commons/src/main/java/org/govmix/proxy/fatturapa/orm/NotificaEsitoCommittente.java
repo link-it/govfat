@@ -58,8 +58,8 @@ import java.io.Serializable;
  * 			&lt;element name="tentativiConsegnaSdi" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="scarto" type="{http://www.govmix.org/proxy/fatturapa/orm}ScartoType" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="scartoNote" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
- * 			&lt;element name="scartoXml" type="{http://www.w3.org/2001/XMLSchema}base64Binary" minOccurs="0" maxOccurs="1"/>
- * 			&lt;element name="xml" type="{http://www.w3.org/2001/XMLSchema}base64Binary" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="idTracciaNotifica" type="{http://www.govmix.org/proxy/fatturapa/orm}id-traccia-sdi" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="idTracciaScarto" type="{http://www.govmix.org/proxy/fatturapa/orm}id-traccia-sdi" minOccurs="0" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -93,8 +93,8 @@ import java.io.Serializable;
   	"tentativiConsegnaSdi",
   	"scarto",
   	"scartoNote",
-  	"scartoXml",
-  	"xml"
+  	"idTracciaNotifica",
+  	"idTracciaScarto"
   }
 )
 
@@ -316,20 +316,20 @@ public class NotificaEsitoCommittente extends org.openspcoop2.utils.beans.BaseBe
     this.scartoNote = scartoNote;
   }
 
-  public byte[] getScartoXml() {
-    return this.scartoXml;
+  public IdTracciaSdi getIdTracciaNotifica() {
+    return this.idTracciaNotifica;
   }
 
-  public void setScartoXml(byte[] scartoXml) {
-    this.scartoXml = scartoXml;
+  public void setIdTracciaNotifica(IdTracciaSdi idTracciaNotifica) {
+    this.idTracciaNotifica = idTracciaNotifica;
   }
 
-  public byte[] getXml() {
-    return this.xml;
+  public IdTracciaSdi getIdTracciaScarto() {
+    return this.idTracciaScarto;
   }
 
-  public void setXml(byte[] xml) {
-    this.xml = xml;
+  public void setIdTracciaScarto(IdTracciaSdi idTracciaScarto) {
+    this.idTracciaScarto = idTracciaScarto;
   }
 
   private static final long serialVersionUID = 1L;
@@ -440,12 +440,10 @@ public class NotificaEsitoCommittente extends org.openspcoop2.utils.beans.BaseBe
   @XmlElement(name="scartoNote",required=false,nillable=false)
   protected java.lang.String scartoNote;
 
-  @javax.xml.bind.annotation.XmlSchemaType(name="base64Binary")
-  @XmlElement(name="scartoXml",required=false,nillable=false)
-  protected byte[] scartoXml;
+  @XmlElement(name="idTracciaNotifica",required=false,nillable=false)
+  protected IdTracciaSdi idTracciaNotifica;
 
-  @javax.xml.bind.annotation.XmlSchemaType(name="base64Binary")
-  @XmlElement(name="xml",required=false,nillable=false)
-  protected byte[] xml;
+  @XmlElement(name="idTracciaScarto",required=false,nillable=false)
+  protected IdTracciaSdi idTracciaScarto;
 
 }

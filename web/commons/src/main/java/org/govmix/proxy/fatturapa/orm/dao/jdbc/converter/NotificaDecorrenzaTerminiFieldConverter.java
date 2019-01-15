@@ -110,11 +110,25 @@ public class NotificaDecorrenzaTerminiFieldConverter extends AbstractSQLFieldCon
 				return "data_ricezione";
 			}
 		}
-		if(field.equals(NotificaDecorrenzaTermini.model().XML)){
+		if(field.equals(NotificaDecorrenzaTermini.model().ID_TRACCIA.ID_TRACCIA)){
 			if(appendTablePrefix){
-				return this.toAliasTable(field)+".xml";
+				return this.toAliasTable(field)+".id_traccia";
 			}else{
-				return "xml";
+				return "id_traccia";
+			}
+		}
+		if(field.equals(NotificaDecorrenzaTermini.model().ID_TRACCIA.STATO_PROTOCOLLAZIONE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".stato_protocollazione";
+			}else{
+				return "stato_protocollazione";
+			}
+		}
+		if(field.equals(NotificaDecorrenzaTermini.model().ID_TRACCIA.DATA_PROSSIMA_PROTOCOLLAZIONE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".data_protocollazione";
+			}else{
+				return "data_protocollazione";
 			}
 		}
 
@@ -148,8 +162,14 @@ public class NotificaDecorrenzaTerminiFieldConverter extends AbstractSQLFieldCon
 		if(field.equals(NotificaDecorrenzaTermini.model().DATA_RICEZIONE)){
 			return this.toTable(NotificaDecorrenzaTermini.model(), returnAlias);
 		}
-		if(field.equals(NotificaDecorrenzaTermini.model().XML)){
-			return this.toTable(NotificaDecorrenzaTermini.model(), returnAlias);
+		if(field.equals(NotificaDecorrenzaTermini.model().ID_TRACCIA.ID_TRACCIA)){
+			return this.toTable(NotificaDecorrenzaTermini.model().ID_TRACCIA, returnAlias);
+		}
+		if(field.equals(NotificaDecorrenzaTermini.model().ID_TRACCIA.STATO_PROTOCOLLAZIONE)){
+			return this.toTable(NotificaDecorrenzaTermini.model().ID_TRACCIA, returnAlias);
+		}
+		if(field.equals(NotificaDecorrenzaTermini.model().ID_TRACCIA.DATA_PROSSIMA_PROTOCOLLAZIONE)){
+			return this.toTable(NotificaDecorrenzaTermini.model().ID_TRACCIA, returnAlias);
 		}
 
 
@@ -166,6 +186,9 @@ public class NotificaDecorrenzaTerminiFieldConverter extends AbstractSQLFieldCon
 		
 		if(model.equals(NotificaDecorrenzaTermini.model())){
 			return "decorrenza_termini";
+		}
+		if(model.equals(NotificaDecorrenzaTermini.model().ID_TRACCIA)){
+			return "tracce_sdi";
 		}
 
 

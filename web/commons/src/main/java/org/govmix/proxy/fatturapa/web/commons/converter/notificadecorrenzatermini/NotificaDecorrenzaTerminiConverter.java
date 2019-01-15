@@ -20,12 +20,16 @@
  */
 package org.govmix.proxy.fatturapa.web.commons.converter.notificadecorrenzatermini;
 
-import it.gov.fatturapa.sdi.messaggi.v1_0.NotificaDecorrenzaTerminiType;
-import it.gov.fatturapa.sdi.messaggi.v1_0.utils.serializer.JaxbDeserializer;
-
 import java.util.Date;
 
+import org.govmix.proxy.fatturapa.orm.IdTracciaSdi;
 import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
+import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
+import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
+
+import it.gov.fatturapa.sdi.messaggi.v1_0.NotificaDecorrenzaTerminiType;
+import it.gov.fatturapa.sdi.messaggi.v1_0.utils.serializer.JaxbDeserializer;
 
 public class NotificaDecorrenzaTerminiConverter {
 
@@ -41,13 +45,19 @@ public class NotificaDecorrenzaTerminiConverter {
 	
 	private NotificaDecorrenzaTerminiType esito;
 	private byte[] raw;
+	private String idEgov;
 	
-	public NotificaDecorrenzaTerminiConverter(byte[] raw) throws Exception {
+	public NotificaDecorrenzaTerminiConverter(byte[] raw, String idEgov) throws Exception {
 		this.raw = raw;
+		this.idEgov = idEgov;
 		this.esito =  deserializer.readNotificaDecorrenzaTerminiType(raw);
 	}
 	
-	public NotificaDecorrenzaTermini getNotificaDecorrenzaTermini() throws Exception {
+	public int getIdentificativoSdi() throws Exception {
+		return this.esito.getIdentificativoSdI();
+	}
+	
+	public NotificaDecorrenzaTermini getNotificaDecorrenzaTermini(long idTraccia) throws Exception {
 
 		NotificaDecorrenzaTermini notifica = new NotificaDecorrenzaTermini();
 		
@@ -57,9 +67,33 @@ public class NotificaDecorrenzaTerminiConverter {
 		notifica.setMessageId(this.esito.getMessageId());
 		notifica.setNote(this.esito.getNote());
 		notifica.setDataRicezione(new Date());
-		notifica.setXml(this.raw);
+		
+		IdTracciaSdi idTracciaSdi = new IdTracciaSdi();
+		idTracciaSdi.setIdTraccia(idTraccia);
+		notifica.setIdTraccia(idTracciaSdi);
 		
 		return notifica;
+	}
+
+	public TracciaSDI getTraccia() throws Exception {
+
+		TracciaSDI traccia = new TracciaSDI();
+
+		traccia.setIdentificativoSdi(this.esito.getIdentificativoSdI());
+		
+		traccia.setTipoComunicazione(TipoComunicazioneType.DT_PASS);
+		traccia.setData(new Date());
+		traccia.setContentType("text/xml");
+		traccia.setNomeFile(this.esito.getNomeFile());
+		traccia.setRawData(this.raw);
+		
+		traccia.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
+		traccia.setTentativiProtocollazione(0);
+		traccia.setDataProssimaProtocollazione(new Date());
+		traccia.setIdEgov(this.idEgov);
+		
+		return traccia;
+
 	}
 
 	public Integer getPosizioneFattura() {

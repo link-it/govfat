@@ -30,13 +30,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
+import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
+import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
+import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
+import org.govmix.proxy.fatturapa.web.console.util.ConsoleProperties;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.web.bean.IBean;
 import org.openspcoop2.generic_project.web.factory.Costanti;
@@ -99,6 +103,7 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 	private DateTime dataProssimaConsegna = null;
 	private DateTime dataScadenza = null;
 	private Text dataScadenzaAssente = null;
+	private Text idEgov = null; //identificativo eGov della transazione di creazione della fattura
 
 	// Informazioni necessarie per la visualizzazione del dettaglio
 	// Metadata Allegati
@@ -189,6 +194,7 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 		this.dataProssimaConsegna = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataProssimaConsegna","fattura.dataProssimaConsegna",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS);
 		this.dataScadenza = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataScadenza","fattura.dataScadenza",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY);
 		this.dataScadenzaAssente = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("dataScadenzaAssente","fattura.dataScadenzaAssente");
+		this.idEgov = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("idEgov","fattura.idEgov");
 		
 		this.setField(this.cedentePrestatore);
 		this.setField(this.cedentePrestatorePaese);
@@ -227,6 +233,7 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 		this.setField(this.dataProssimaConsegna);
 		this.setField(this.dataScadenza);
 		this.setField(this.dataScadenzaAssente);
+		this.setField(this.idEgov);
 
 		this.datiIntestazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiIntestazione",6);
 		this.datiIntestazione.setRendered(true);
@@ -265,6 +272,7 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 		this.datiTrasmissione1.addField(this.dataProssimaConsegna);
 		this.datiTrasmissione1.addField(this.statoConsegna);
 		this.datiTrasmissione1.addField(this.protocollo);
+		this.datiTrasmissione1.addField(this.idEgov);
 
 		this.contenutoFattura = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("contenutoFattura",4);
 		this.contenutoFattura.setRendered(true);
@@ -492,6 +500,14 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 				this.statoConsegna.setValue("fattura.statoConsegna.nonConsegnata");
 			}
 		}
+		
+		this.idEgov.setRendered(false);
+		try {
+			if(ConsoleProperties.getInstance(LoggerManager.getConsoleLogger()).isVisualizzaEgov()) {
+				this.idEgov.setRendered(true);
+				this.idEgov.setValue(this.getDTO().getLottoFatture().getIdEgov());
+			}
+		} catch (Exception e) {}
 	}
 
 	public Text getCedentePrestatore() {
@@ -999,6 +1015,74 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 
 		return false;
 	}
+	
+	public boolean isVisualizzaColonneNotificaECInfoEnte (){
+		try {
+			return ConsoleProperties.getInstance(LoggerManager.getConsoleLogger()).isVisualizzaInfoConsegnaEnte();
+		} catch (Exception e) {
+			LoggerManager.getConsoleLogger().error("Errore durante la lettura delle properties:" + e.getMessage(), e);
+			return false;
+		}
+	}
+	
+	public boolean isVisualizzaColonneNotificaDTInfoEnte (){
+		try {
+			return ConsoleProperties.getInstance(LoggerManager.getConsoleLogger()).isVisualizzaInfoConsegnaEnte();
+		} catch (Exception e) {
+			LoggerManager.getConsoleLogger().error("Errore durante la lettura delle properties:" + e.getMessage(), e);
+			return false;
+		}
+	}
+	
+	public boolean isVisualizzaColonnaRiconsegnaNotificaECEnte (){
+		boolean isAdmin = Utils.getLoginBean().isAdmin();
+		boolean isVisualizzaInfoConsegnaEnte = false;
+		try {
+			isVisualizzaInfoConsegnaEnte = ConsoleProperties.getInstance(LoggerManager.getConsoleLogger()).isVisualizzaInfoConsegnaEnte();
+		} catch (Exception e) {}
+
+		if(isAdmin && isVisualizzaInfoConsegnaEnte){
+			if(this.getListaNotificaEC() != null &&
+					this.getListaNotificaEC().size() > 0) {
+				for (NotificaECBean notifica : this.getListaNotificaEC()) {
+					NotificaEsitoCommittente dto = notifica.getDTO();
+					if(dto.getIdTracciaNotifica().getStatoProtocollazione() != null 
+							&& ((dto.getIdTracciaNotifica().getStatoProtocollazione().equals(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE)) || (dto.getIdTracciaNotifica().getStatoProtocollazione().equals(StatoProtocollazioneType.IN_RICONSEGNA)))) {
+						return true;
+					}
+					
+					if(dto.getIdTracciaScarto().getStatoProtocollazione() != null 
+							&& ((dto.getIdTracciaScarto().getStatoProtocollazione().equals(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE)) || (dto.getIdTracciaScarto().getStatoProtocollazione().equals(StatoProtocollazioneType.IN_RICONSEGNA)))) {
+						return true;
+					}
+					
+						
+				}
+			}
+		}
+		return false;
+	}
+	
+	public boolean isVisualizzaColonnaRiconsegnaNotificaDT(){
+		boolean isAdmin = Utils.getLoginBean().isAdmin();
+		boolean isVisualizzaInfoConsegnaEnte = false;
+		try {
+			isVisualizzaInfoConsegnaEnte = ConsoleProperties.getInstance(LoggerManager.getConsoleLogger()).isVisualizzaInfoConsegnaEnte();
+		} catch (Exception e) {}
+		if(isAdmin && isVisualizzaInfoConsegnaEnte){
+			if(this.getListaNotificaDT() != null &&
+					this.getListaNotificaDT().size() > 0) {
+				for (NotificaDTBean notifica : this.getListaNotificaDT()) {
+					NotificaDecorrenzaTermini dto = notifica.getDTO();
+					if(dto.getIdTraccia().getStatoProtocollazione() != null 
+							&& ((dto.getIdTraccia().getStatoProtocollazione().equals(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE)) || (dto.getIdTraccia().getStatoProtocollazione().equals(StatoProtocollazioneType.IN_RICONSEGNA)))) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
 
 	public boolean isShowPCC() {
 		return showPCC;
@@ -1023,6 +1107,15 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 	public void setDataScadenzaAssente(Text dataScadenzaAssente) {
 		this.dataScadenzaAssente = dataScadenzaAssente;
 	}
+
+	public Text getIdEgov() {
+		return idEgov;
+	}
+
+	public void setIdEgov(Text idEgov) {
+		this.idEgov = idEgov;
+	}
+	
 	
 }
 

@@ -50,10 +50,11 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 				case MC:
 				case NE:
 				case AT:
-				case DT:
+				case DT_ATT:
 					add= true;
 					break;
 				
+				case DT_PASS:
 				case EC:
 				case FAT_IN:
 				case FAT_OUT:
@@ -119,10 +120,10 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 			return "NOTIFICA DI ESITO";
 		case AT:
 			return "ATTESTAZIONE IMPOSSIBILITA' DI RECAPITO";
-		case DT:
+		case DT_ATT:
 			return "NOTIFICA DI DECORRENZA DEI TERMINI";
 		
-		case EC:
+		case DT_PASS:
 		case FAT_IN:
 		case FAT_OUT:
 		case MT:

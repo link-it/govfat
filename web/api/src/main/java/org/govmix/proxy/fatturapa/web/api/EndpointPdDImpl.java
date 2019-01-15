@@ -210,7 +210,7 @@ public class EndpointPdDImpl implements EndpointPdD {
 	}
 
 	@Override
-	public Response postConsegnaNotificaDT(InputStream notifica) {
+	public Response postConsegnaNotificaDT(HttpHeaders headers, InputStream notifica) {
 		this.log.info("Invoke riceviNotificaDT");
 
 		try {
@@ -218,7 +218,9 @@ public class EndpointPdDImpl implements EndpointPdD {
 				throw new Exception("La notifica ricevuta in ingresso e' null");
 			}
 
-			this.riceviNotifica.ricevi(IOUtils.readBytesFromStream(notifica));
+			String idEgov = getIdEgov(headers);
+
+			this.riceviNotifica.ricevi(IOUtils.readBytesFromStream(notifica), idEgov);
 		} catch(Exception e) {
 			this.log.error("riceviNotificaDT completata con errore:"+ e.getMessage(), e);
 			return Response.status(500).build();

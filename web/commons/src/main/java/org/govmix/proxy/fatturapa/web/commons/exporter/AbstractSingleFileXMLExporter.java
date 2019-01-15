@@ -94,7 +94,7 @@ public abstract class AbstractSingleFileXMLExporter<T,K> extends AbstractSingleF
 				baos = new ByteArrayOutputStream();
 				exportAsPdf(object, baos);
 				nomeCompleto = this.getRawName(object)+ ".pdf";
-				addEntryToZip(zip, nomeCompleto, baos.toByteArray());
+				addEntryToZip(zip, rootDir + nomeCompleto, baos.toByteArray());
 			}
 		}catch(Exception e){
 			String msg = "Si e' verificato un errore durante l'esportazione dell'oggetto di classe["+object.getClass()+ "] nome ["+this.getRawName(object)+"]";

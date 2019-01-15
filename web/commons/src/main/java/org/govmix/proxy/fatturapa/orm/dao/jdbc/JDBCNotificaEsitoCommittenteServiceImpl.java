@@ -99,6 +99,40 @@ public class JDBCNotificaEsitoCommittenteServiceImpl extends JDBCNotificaEsitoCo
 			}
 		}
 
+		// Object _tracciaSDI
+		Long id_tracciaSDI = null;
+		org.govmix.proxy.fatturapa.orm.IdTracciaSdi idLogic_tracciaSDI = null;
+		idLogic_tracciaSDI = notificaEsitoCommittente.getIdTracciaNotifica();
+		if(idLogic_tracciaSDI!=null){
+			if(idMappingResolutionBehaviour==null ||
+				(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour))){
+				id_tracciaSDI = ((JDBCTracciaSDIServiceSearch)(this.getServiceManager().getTracciaSDIServiceSearch())).findTableId(idLogic_tracciaSDI, false);
+			}
+			else if(org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour)){
+				id_tracciaSDI = idLogic_tracciaSDI.getId();
+				if(id_tracciaSDI==null || id_tracciaSDI<=0){
+					throw new Exception("Logic id not contains table id");
+				}
+			}
+		}
+
+		// Object _tracciaSDIInstance2
+		Long id_tracciaSDIInstance2 = null;
+		org.govmix.proxy.fatturapa.orm.IdTracciaSdi idLogic_tracciaSDIInstance2 = null;
+		idLogic_tracciaSDIInstance2 = notificaEsitoCommittente.getIdTracciaScarto();
+		if(idLogic_tracciaSDIInstance2!=null){
+			if(idMappingResolutionBehaviour==null ||
+				(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour))){
+				id_tracciaSDIInstance2 = ((JDBCTracciaSDIServiceSearch)(this.getServiceManager().getTracciaSDIServiceSearch())).findTableId(idLogic_tracciaSDIInstance2, false);
+			}
+			else if(org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour)){
+				id_tracciaSDIInstance2 = idLogic_tracciaSDIInstance2.getId();
+				if(id_tracciaSDIInstance2==null || id_tracciaSDIInstance2<=0){
+					throw new Exception("Logic id not contains table id");
+				}
+			}
+		}
+
 
 		// Object notificaEsitoCommittente
 		sqlQueryObjectInsert.addInsertTable(this.getNotificaEsitoCommittenteFieldConverter().toTable(NotificaEsitoCommittente.model()));
@@ -119,10 +153,10 @@ public class JDBCNotificaEsitoCommittenteServiceImpl extends JDBCNotificaEsitoCo
 		sqlQueryObjectInsert.addInsertField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().TENTATIVI_CONSEGNA_SDI,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().SCARTO,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().SCARTO_NOTE,false),"?");
-		sqlQueryObjectInsert.addInsertField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().SCARTO_XML,false),"?");
-		sqlQueryObjectInsert.addInsertField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().XML,false),"?");
 		sqlQueryObjectInsert.addInsertField("id_fattura_elettronica","?");
 		sqlQueryObjectInsert.addInsertField("id_utente","?");
+		sqlQueryObjectInsert.addInsertField("id_traccia_notifica","?");
+		sqlQueryObjectInsert.addInsertField("id_traccia_scarto","?");
 
 		// Insert notificaEsitoCommittente
 		org.openspcoop2.utils.jdbc.IKeyGeneratorObject keyGenerator = this.getNotificaEsitoCommittenteFetch().getKeyGeneratorObject(NotificaEsitoCommittente.model());
@@ -144,10 +178,10 @@ public class JDBCNotificaEsitoCommittenteServiceImpl extends JDBCNotificaEsitoCo
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(notificaEsitoCommittente.getTentativiConsegnaSdi(),NotificaEsitoCommittente.model().TENTATIVI_CONSEGNA_SDI.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(notificaEsitoCommittente.getScarto(),NotificaEsitoCommittente.model().SCARTO.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(notificaEsitoCommittente.getScartoNote(),NotificaEsitoCommittente.model().SCARTO_NOTE.getFieldType()),
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(notificaEsitoCommittente.getScartoXml(),NotificaEsitoCommittente.model().SCARTO_XML.getFieldType()),
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(notificaEsitoCommittente.getXml(),NotificaEsitoCommittente.model().XML.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id_fatturaElettronica,Long.class),
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id_utente,Long.class)
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id_utente,Long.class),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id_tracciaSDI,Long.class),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id_tracciaSDIInstance2,Long.class)
 		);
 		notificaEsitoCommittente.setId(id);
 
@@ -214,6 +248,40 @@ public class JDBCNotificaEsitoCommittenteServiceImpl extends JDBCNotificaEsitoCo
 			}
 		}
 
+		// Object _notificaEsitoCommittente_tracciaSDI
+		Long id_notificaEsitoCommittente_tracciaSDI = null;
+		org.govmix.proxy.fatturapa.orm.IdTracciaSdi idLogic_notificaEsitoCommittente_tracciaSDI = null;
+		idLogic_notificaEsitoCommittente_tracciaSDI = notificaEsitoCommittente.getIdTracciaNotifica();
+		if(idLogic_notificaEsitoCommittente_tracciaSDI!=null){
+			if(idMappingResolutionBehaviour==null ||
+				(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour))){
+				id_notificaEsitoCommittente_tracciaSDI = ((JDBCTracciaSDIServiceSearch)(this.getServiceManager().getTracciaSDIServiceSearch())).findTableId(idLogic_notificaEsitoCommittente_tracciaSDI, false);
+			}
+			else if(org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour)){
+				id_notificaEsitoCommittente_tracciaSDI = idLogic_notificaEsitoCommittente_tracciaSDI.getId();
+				if(id_notificaEsitoCommittente_tracciaSDI==null || id_notificaEsitoCommittente_tracciaSDI<=0){
+					throw new Exception("Logic id not contains table id");
+				}
+			}
+		}
+
+		// Object _notificaEsitoCommittente_tracciaSDIInstance2
+		Long id_notificaEsitoCommittente_tracciaSDIInstance2 = null;
+		org.govmix.proxy.fatturapa.orm.IdTracciaSdi idLogic_notificaEsitoCommittente_tracciaSDIInstance2 = null;
+		idLogic_notificaEsitoCommittente_tracciaSDIInstance2 = notificaEsitoCommittente.getIdTracciaScarto();
+		if(idLogic_notificaEsitoCommittente_tracciaSDIInstance2!=null){
+			if(idMappingResolutionBehaviour==null ||
+				(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour))){
+				id_notificaEsitoCommittente_tracciaSDIInstance2 = ((JDBCTracciaSDIServiceSearch)(this.getServiceManager().getTracciaSDIServiceSearch())).findTableId(idLogic_notificaEsitoCommittente_tracciaSDIInstance2, false);
+			}
+			else if(org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour)){
+				id_notificaEsitoCommittente_tracciaSDIInstance2 = idLogic_notificaEsitoCommittente_tracciaSDIInstance2.getId();
+				if(id_notificaEsitoCommittente_tracciaSDIInstance2==null || id_notificaEsitoCommittente_tracciaSDIInstance2<=0){
+					throw new Exception("Logic id not contains table id");
+				}
+			}
+		}
+
 
 		// Object notificaEsitoCommittente
 		sqlQueryObjectUpdate.setANDLogicOperator(true);
@@ -254,10 +322,6 @@ public class JDBCNotificaEsitoCommittenteServiceImpl extends JDBCNotificaEsitoCo
 		lstObjects_notificaEsitoCommittente.add(new JDBCObject(notificaEsitoCommittente.getScarto(), NotificaEsitoCommittente.model().SCARTO.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().SCARTO_NOTE,false), "?");
 		lstObjects_notificaEsitoCommittente.add(new JDBCObject(notificaEsitoCommittente.getScartoNote(), NotificaEsitoCommittente.model().SCARTO_NOTE.getFieldType()));
-		sqlQueryObjectUpdate.addUpdateField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().SCARTO_XML,false), "?");
-		lstObjects_notificaEsitoCommittente.add(new JDBCObject(notificaEsitoCommittente.getScartoXml(), NotificaEsitoCommittente.model().SCARTO_XML.getFieldType()));
-		sqlQueryObjectUpdate.addUpdateField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().XML,false), "?");
-		lstObjects_notificaEsitoCommittente.add(new JDBCObject(notificaEsitoCommittente.getXml(), NotificaEsitoCommittente.model().XML.getFieldType()));
 		if(setIdMappingResolutionBehaviour){
 			sqlQueryObjectUpdate.addUpdateField("id_fattura_elettronica","?");
 		}
@@ -265,10 +329,22 @@ public class JDBCNotificaEsitoCommittenteServiceImpl extends JDBCNotificaEsitoCo
 			sqlQueryObjectUpdate.addUpdateField("id_utente","?");
 		}
 		if(setIdMappingResolutionBehaviour){
+			sqlQueryObjectUpdate.addUpdateField("id_traccia_notifica","?");
+		}
+		if(setIdMappingResolutionBehaviour){
+			sqlQueryObjectUpdate.addUpdateField("id_traccia_scarto","?");
+		}
+		if(setIdMappingResolutionBehaviour){
 			lstObjects_notificaEsitoCommittente.add(new JDBCObject(id_notificaEsitoCommittente_fatturaElettronica, Long.class));
 		}
 		if(setIdMappingResolutionBehaviour){
 			lstObjects_notificaEsitoCommittente.add(new JDBCObject(id_notificaEsitoCommittente_utente, Long.class));
+		}
+		if(setIdMappingResolutionBehaviour){
+			lstObjects_notificaEsitoCommittente.add(new JDBCObject(id_notificaEsitoCommittente_tracciaSDI, Long.class));
+		}
+		if(setIdMappingResolutionBehaviour){
+			lstObjects_notificaEsitoCommittente.add(new JDBCObject(id_notificaEsitoCommittente_tracciaSDIInstance2, Long.class));
 		}
 		sqlQueryObjectUpdate.addWhereCondition("id=?");
 		lstObjects_notificaEsitoCommittente.add(new JDBCObject(tableId, Long.class));

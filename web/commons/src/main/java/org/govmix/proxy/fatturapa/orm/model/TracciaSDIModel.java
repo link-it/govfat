@@ -46,6 +46,7 @@ public class TracciaSDIModel extends AbstractModel<TracciaSDI> {
 		this.POSIZIONE = new Field("posizione",java.lang.Integer.class,"TracciaSDI",TracciaSDI.class);
 		this.TIPO_COMUNICAZIONE = new Field("tipoComunicazione",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.NOME_FILE = new Field("nomeFile",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
+		this.CODICE_DIPARTIMENTO = new Field("codiceDipartimento",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.DATA = new Field("data",java.util.Date.class,"TracciaSDI",TracciaSDI.class);
 		this.ID_EGOV = new Field("idEgov",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.CONTENT_TYPE = new Field("contentType",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
@@ -56,7 +57,7 @@ public class TracciaSDIModel extends AbstractModel<TracciaSDI> {
 		this.TENTATIVI_PROTOCOLLAZIONE = new Field("tentativiProtocollazione",java.lang.Integer.class,"TracciaSDI",TracciaSDI.class);
 		this.DETTAGLIO_PROTOCOLLAZIONE = new Field("dettaglioProtocollazione",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.METADATO = new org.govmix.proxy.fatturapa.orm.model.MetadatoModel(new Field("Metadato",org.govmix.proxy.fatturapa.orm.Metadato.class,"TracciaSDI",TracciaSDI.class));
-		this.LOTTO_FATTURE = new org.govmix.proxy.fatturapa.orm.model.LottoFattureModel(new Field("LottoFatture",org.govmix.proxy.fatturapa.orm.LottoFatture.class,"TracciaSDI",TracciaSDI.class));
+		this.DIPARTIMENTO = new org.govmix.proxy.fatturapa.orm.model.DipartimentoModel(new Field("Dipartimento",org.govmix.proxy.fatturapa.orm.Dipartimento.class,"TracciaSDI",TracciaSDI.class));
 	
 	}
 	
@@ -68,6 +69,7 @@ public class TracciaSDIModel extends AbstractModel<TracciaSDI> {
 		this.POSIZIONE = new ComplexField(father,"posizione",java.lang.Integer.class,"TracciaSDI",TracciaSDI.class);
 		this.TIPO_COMUNICAZIONE = new ComplexField(father,"tipoComunicazione",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.NOME_FILE = new ComplexField(father,"nomeFile",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
+		this.CODICE_DIPARTIMENTO = new ComplexField(father,"codiceDipartimento",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.DATA = new ComplexField(father,"data",java.util.Date.class,"TracciaSDI",TracciaSDI.class);
 		this.ID_EGOV = new ComplexField(father,"idEgov",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.CONTENT_TYPE = new ComplexField(father,"contentType",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
@@ -78,7 +80,7 @@ public class TracciaSDIModel extends AbstractModel<TracciaSDI> {
 		this.TENTATIVI_PROTOCOLLAZIONE = new ComplexField(father,"tentativiProtocollazione",java.lang.Integer.class,"TracciaSDI",TracciaSDI.class);
 		this.DETTAGLIO_PROTOCOLLAZIONE = new ComplexField(father,"dettaglioProtocollazione",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.METADATO = new org.govmix.proxy.fatturapa.orm.model.MetadatoModel(new ComplexField(father,"Metadato",org.govmix.proxy.fatturapa.orm.Metadato.class,"TracciaSDI",TracciaSDI.class));
-		this.LOTTO_FATTURE = new org.govmix.proxy.fatturapa.orm.model.LottoFattureModel(new ComplexField(father,"LottoFatture",org.govmix.proxy.fatturapa.orm.LottoFatture.class,"TracciaSDI",TracciaSDI.class));
+		this.DIPARTIMENTO = new org.govmix.proxy.fatturapa.orm.model.DipartimentoModel(new ComplexField(father,"Dipartimento",org.govmix.proxy.fatturapa.orm.Dipartimento.class,"TracciaSDI",TracciaSDI.class));
 	
 	}
 	
@@ -91,6 +93,8 @@ public class TracciaSDIModel extends AbstractModel<TracciaSDI> {
 	public IField TIPO_COMUNICAZIONE = null;
 	 
 	public IField NOME_FILE = null;
+	 
+	public IField CODICE_DIPARTIMENTO = null;
 	 
 	public IField DATA = null;
 	 
@@ -112,7 +116,7 @@ public class TracciaSDIModel extends AbstractModel<TracciaSDI> {
 	 
 	public org.govmix.proxy.fatturapa.orm.model.MetadatoModel METADATO = null;
 	 
-	public org.govmix.proxy.fatturapa.orm.model.LottoFattureModel LOTTO_FATTURE = null;
+	public org.govmix.proxy.fatturapa.orm.model.DipartimentoModel DIPARTIMENTO = null;
 	 
 
 	@Override

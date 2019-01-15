@@ -29,8 +29,11 @@ import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFatturePassiveBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.NotificaDecorrenzaTerminiBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.TracciaSdIBD;
 import org.govmix.proxy.fatturapa.web.commons.converter.notificadecorrenzatermini.NotificaDecorrenzaTerminiConverter;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 
@@ -43,10 +46,9 @@ public class RiceviNotifica {
 	}
 
 
-	public void ricevi(byte[] raw) throws Exception {
-		NotificaDecorrenzaTerminiConverter converter = new NotificaDecorrenzaTerminiConverter(raw);
-		NotificaDecorrenzaTermini notificaDecorrenzaTermini = converter.getNotificaDecorrenzaTermini();
-
+	public void ricevi(byte[] raw, String idEgov) throws Exception {
+		NotificaDecorrenzaTerminiConverter converter = new NotificaDecorrenzaTerminiConverter(raw, idEgov);
+		
 		Connection connection = null;
 		try {
 			
@@ -54,14 +56,19 @@ public class RiceviNotifica {
 			connection.setAutoCommit(false);
 
 			FatturaPassivaBD fatturaElettronicaBD = new FatturaPassivaBD(log, connection, false);
+			LottoFatturePassiveBD lottoFatturePassiveBD = new LottoFatturePassiveBD(log, connection, false);
+			TracciaSdIBD tracciaSdiBD = new TracciaSdIBD(log, connection, false);
+			NotificaDecorrenzaTerminiBD notificaDecorrenzaTerminiBD = new NotificaDecorrenzaTerminiBD(log, connection, false);
 
 			List<IdFattura> lstIdFattura = new ArrayList<IdFattura>();
-	
+
+			int identificativoSdi = converter.getIdentificativoSdi();
 			Integer posizioneFattura = converter.getPosizioneFattura();
+			
 			if(posizioneFattura != null) {
 				
 				IdFattura idFattura = fatturaElettronicaBD.newIdFattura();
-				idFattura.setIdentificativoSdi(notificaDecorrenzaTermini.getIdentificativoSdi());
+				idFattura.setIdentificativoSdi(identificativoSdi);
 				idFattura.setPosizione(posizioneFattura);
 				
 				if(!fatturaElettronicaBD.exists(idFattura)) {
@@ -72,15 +79,23 @@ public class RiceviNotifica {
 				
 			} else {
 				IdLotto idLotto = new IdLotto(false);
-				idLotto.setIdentificativoSdi(notificaDecorrenzaTermini.getIdentificativoSdi());
+				idLotto.setIdentificativoSdi(identificativoSdi);
 				lstIdFattura.addAll(fatturaElettronicaBD.findAllIdFatturaByIdLotto(idLotto));
 			}
 			
 			if(lstIdFattura.size() <= 0) {
-				throw new Exception("Ricevuta NotificaDecorrenzaTermini relativa a fattura [ Identificativo SdI ["+notificaDecorrenzaTermini.getIdentificativoSdi()+"] "+(posizioneFattura != null ? "Posizione ["+posizioneFattura+"]" : "")+"] inesistente");
+				throw new Exception("Ricevuta NotificaDecorrenzaTermini relativa a fattura [ Identificativo SdI ["+identificativoSdi+"] "+(posizioneFattura != null ? "Posizione ["+posizioneFattura+"]" : "")+"] inesistente");
 			}
+			
+			TracciaSDI tracciaSdI = converter.getTraccia();
+			IdLotto idLotto = lottoFatturePassiveBD.newIdLotto();
+			idLotto.setIdentificativoSdi(identificativoSdi);
+			
+			tracciaSdI.setCodiceDipartimento(lottoFatturePassiveBD.get(idLotto).getCodiceDestinatario()); 
 
-			NotificaDecorrenzaTerminiBD notificaDecorrenzaTerminiBD = new NotificaDecorrenzaTerminiBD(log, connection, false);
+			tracciaSdiBD.insert(tracciaSdI);
+			NotificaDecorrenzaTermini notificaDecorrenzaTermini = converter.getNotificaDecorrenzaTermini(tracciaSdI.getId());
+
 			notificaDecorrenzaTerminiBD.create(notificaDecorrenzaTermini);
 
 			for(IdFattura idF: lstIdFattura) {

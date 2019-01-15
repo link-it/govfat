@@ -27,7 +27,7 @@ import org.openspcoop2.generic_project.beans.IEnumeration;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 
 /**     
- * Enumeration dell'elemento FatturaElettronica.formatoTrasmissione xsd (tipo:string) 
+ * Enumeration dell'elemento LottoFatture.formatoTrasmissione xsd (tipo:string) 
  *
  * @author Giuseppe Papandrea (papandrea@link.it)
  * @author Giovanni Bussu (bussu@link.it)

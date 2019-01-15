@@ -23,8 +23,10 @@ package org.govmix.proxy.fatturapa.web.console.bean;
 import javax.faces.context.FacesContext;
 
 import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
+import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
+import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.web.bean.IBean;
 import org.openspcoop2.generic_project.web.factory.FactoryException;
 import org.openspcoop2.generic_project.web.impl.jsf1.bean.BaseBean;
@@ -49,8 +51,10 @@ public class NotificaDTBean extends BaseBean<NotificaDecorrenzaTermini, Long> im
 	private Button xml = null;
 	private Button pdf = null;
 	
-	private Long idFattura = null;
+	private Text statoConsegna = null;
 	
+	private DateTime dataProssimaConsegna =null;
+		
 	public NotificaDTBean(){
 		try{
 			this.init();
@@ -67,13 +71,18 @@ public class NotificaDTBean extends BaseBean<NotificaDecorrenzaTermini, Long> im
 		this.xml = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("xml","commons.label.xml",null,org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_XML,"commons.label.xml.iconTitle","commons.label.xml.iconTitle");
 		this.pdf = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("pdf","commons.label.pdf",null,org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_PDF,"commons.label.pdf.iconTitle","commons.label.pdf.iconTitle");
 	
+		this.statoConsegna = this.getWebGenericProjectFactory().getOutputFieldFactory().createText( "statoConsegnaDT","notificaDecorrenzaTermini.statoConsegna");
+		this.dataProssimaConsegna = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataProssimaConsegnaDT","notificaDecorrenzaTermini.dataProssimaConsegna","dd/M/yyyy HH:mm" );
+
+		
 		this.setField(this.note);
 		this.setField(this.nomeFile);
 		this.setField(this.dataRicezione);
 		this.setField(this.descrizione);
 		this.setField(this.xml);
 		this.setField(this.pdf);
- 
+		this.setField(this.statoConsegna);
+		this.setField(this.dataProssimaConsegna);
 	}
 	
 	@Override
@@ -85,11 +94,23 @@ public class NotificaDTBean extends BaseBean<NotificaDecorrenzaTermini, Long> im
 		this.dataRicezione.setValue(this.getDTO().getDataRicezione());
 		this.descrizione.setValue(this.getDTO().getDescrizione());
 		
-		this.prepareUrls();
-	}
-	
-	public void setIdFattura(Long id){
-		this.idFattura = id;
+		this.dataProssimaConsegna.setValue(this.getDTO().getIdTraccia().getDataProssimaProtocollazione());
+		this.dataProssimaConsegna.setRendered(false);
+		
+		StatoProtocollazioneType statoConsegnaE = this.getDTO().getIdTraccia().getStatoProtocollazione();
+		if(statoConsegnaE != null){
+			if(statoConsegnaE.equals(StatoProtocollazioneType.PROTOCOLLATA)) {
+				this.statoConsegna.setValue("notificaEsitoCommittente.statoConsegna.consegnata");
+			} else if(statoConsegnaE.equals(StatoProtocollazioneType.IN_RICONSEGNA)) {
+				this.statoConsegna.setValue("notificaEsitoCommittente.statoConsegna.inRiconsegna");
+				this.dataProssimaConsegna.setRendered(true);
+			} else if(statoConsegnaE.equals(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE)) {
+				this.statoConsegna.setValue("notificaEsitoCommittente.statoConsegna.erroreConsegna");
+			} else {
+				this.statoConsegna.setValue("notificaEsitoCommittente.statoConsegna.nonConsegnata");
+			}
+		}
+		
 		this.prepareUrls();
 	}
 	
@@ -150,20 +171,47 @@ public class NotificaDTBean extends BaseBean<NotificaDecorrenzaTermini, Long> im
 		FacesContext context = FacesContext.getCurrentInstance();
 		String url = context.getExternalContext().getRequestContextPath() 
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
-				+FattureExporter.PARAMETRO_IDS+"=" + this.idFattura
+				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getIdTraccia()
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_NOTIFICA_DT;
 
-		this.xml.setHref(this.getDTO().getXml() != null ?  url : null);
+		this.xml.setHref(url);
 
 		url = context.getExternalContext().getRequestContextPath() 
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
-				+FattureExporter.PARAMETRO_IDS+"=" + this.idFattura
+				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getIdTraccia()
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_PDF
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_NOTIFICA_DT;
 
-		this.pdf.setHref( this.getDTO().getXml() != null ? url : null);
+		this.pdf.setHref(url);
  
 	}
 
+	public boolean isVisualizzaLinkRiconsegnaNotificaDT(){
+		boolean isAdmin = Utils.getLoginBean().isAdmin();
+		StatoProtocollazioneType statoConsegnaType =  this.getDTO().getIdTraccia().getStatoProtocollazione();
+		
+		if(((statoConsegnaType.equals(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE))|| (statoConsegnaType.equals(StatoProtocollazioneType.IN_RICONSEGNA))) && isAdmin)
+			return true;
+		
+		return false;
+	}
+
+	public Text getStatoConsegna() {
+		return statoConsegna;
+	}
+
+	public void setStatoConsegna(Text statoConsegna) {
+		this.statoConsegna = statoConsegna;
+	}
+
+	public DateTime getDataProssimaConsegna() {
+		return dataProssimaConsegna;
+	}
+
+	public void setDataProssimaConsegna(DateTime dataProssimaConsegna) {
+		this.dataProssimaConsegna = dataProssimaConsegna;
+	}
+	
+	
 }

@@ -2,6 +2,7 @@ package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -178,6 +179,31 @@ public class LottoFatturePassiveBD extends LottoBD {
 			throw new Exception(e);
 		}
 	}
+	
+	public List<IdLotto> getIdLottiRicevuti(String codiceUfficio,
+			Date dataIniziale, Date dataFinale) throws Exception{
+		try {
+			IPaginatedExpression expression = this.service.newPaginatedExpression();
+			expression.equals(LottoFatture.model().CODICE_DESTINATARIO, codiceUfficio);
+			expression.equals(LottoFatture.model().FATTURAZIONE_ATTIVA, false);
+			expression.greaterEquals(LottoFatture.model().DATA_RICEZIONE, dataIniziale);
+			
+			Calendar dataFinaleCalendar = Calendar.getInstance();
+			dataFinaleCalendar.setTime(dataFinale);
+			dataFinaleCalendar.set(Calendar.HOUR_OF_DAY, 23);
+			dataFinaleCalendar.set(Calendar.MINUTE, 59);
+			dataFinaleCalendar.set(Calendar.SECOND, 59);
+			dataFinaleCalendar.set(Calendar.MILLISECOND, 999);
+			expression.lessEquals(LottoFatture.model().DATA_RICEZIONE, dataFinaleCalendar.getTime());
+			
+			return this.service.findAllIds(expression);
+		} catch (ServiceException e) {
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			throw new Exception(e);
+		}
+	}
+
 
 
 	public void setProcessato(IdLotto idLotto) throws Exception {

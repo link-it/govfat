@@ -42,7 +42,7 @@ import java.io.Serializable;
  * 			&lt;element name="messageId" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="note" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="dataRicezione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="1" maxOccurs="1"/>
- * 			&lt;element name="xml" type="{http://www.w3.org/2001/XMLSchema}base64Binary" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="idTraccia" type="{http://www.govmix.org/proxy/fatturapa/orm}id-traccia-sdi" minOccurs="1" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -63,7 +63,7 @@ import java.io.Serializable;
   	"messageId",
   	"note",
   	"dataRicezione",
-  	"xml"
+  	"idTraccia"
   }
 )
 
@@ -141,12 +141,12 @@ public class NotificaDecorrenzaTermini extends org.openspcoop2.utils.beans.BaseB
     this.dataRicezione = dataRicezione;
   }
 
-  public byte[] getXml() {
-    return this.xml;
+  public IdTracciaSdi getIdTraccia() {
+    return this.idTraccia;
   }
 
-  public void setXml(byte[] xml) {
-    this.xml = xml;
+  public void setIdTraccia(IdTracciaSdi idTraccia) {
+    this.idTraccia = idTraccia;
   }
 
   private static final long serialVersionUID = 1L;
@@ -197,8 +197,7 @@ public class NotificaDecorrenzaTermini extends org.openspcoop2.utils.beans.BaseB
   @XmlElement(name="dataRicezione",required=true,nillable=false,type=java.lang.String.class)
   protected java.util.Date dataRicezione;
 
-  @javax.xml.bind.annotation.XmlSchemaType(name="base64Binary")
-  @XmlElement(name="xml",required=true,nillable=false)
-  protected byte[] xml;
+  @XmlElement(name="idTraccia",required=true,nillable=false)
+  protected IdTracciaSdi idTraccia;
 
 }

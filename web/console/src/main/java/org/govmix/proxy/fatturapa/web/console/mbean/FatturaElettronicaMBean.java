@@ -37,6 +37,7 @@ import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.NotificaDecorrenzaTerminiBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.NotificaEsitoCommittenteBD;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
@@ -102,6 +103,7 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 	private INotificaDTService notificaDTService = null;
 	private IEnteService enteService = null;
 	private NotificaECBean selectedNotifica = null;
+	private NotificaDTBean selectedNotificaDT = null;
 
 	private IdFattura selectedIdFattura = null;
 
@@ -237,11 +239,6 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 				try{
 					listaNotificaDT = this.notificaDTService.findAll();
 
-					if(listaNotificaDT != null && listaNotificaDT.size() > 0){
-						for (NotificaDTBean notificaDTBean : listaNotificaDT) {
-							notificaDTBean.setIdFattura(this.selectedElement.getDTO().getId());
-						}
-					}
 				}catch(Exception e){
 					this.log.debug("Si e' verificato un errore durante il caricamento della lista delle notifiche DT: "+ e.getMessage(), e);
 
@@ -534,6 +531,76 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 		}
 		return null;
 	}
+	
+	public String ritentaConsegnaNotificaECEnte(){
+		try{
+			if(this.selectedNotifica != null){
+				NotificaEsitoCommittenteBD notificaECBD = new NotificaEsitoCommittenteBD(log);
+				notificaECBD.forzaRispedizioneEnteNotifica(this.selectedNotifica.getDTO());
+				MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegnaNotificaECEnte.cambioStatoOK"));
+
+				// resetto la notifica 
+				this.selectedNotifica = null;
+
+				// caricare le informazioni su   notificheEC  
+				if(this.notificaECService == null)
+					this.notificaECService = new NotificaECService();
+
+				IdFattura idFattura = new IdFattura(false);
+				idFattura.setPosizione(this.selectedElement.getDTO().getPosizione());
+				idFattura.setIdentificativoSdi(this.selectedElement.getDTO().getIdentificativoSdi());
+
+				this.notificaECService.setIdFattura(idFattura);
+				List<NotificaECBean> listaNotificaEC = new ArrayList<NotificaECBean>();
+				try{
+					listaNotificaEC = this.notificaECService.findAll();
+				}catch(Exception e){
+					log.debug("Si e' verificato un errore durante il caricamento della lista delle notifiche EC: "+ e.getMessage(), e);
+
+				}
+				this.selectedElement.setListaNotificaEC(listaNotificaEC); 
+
+			}
+
+		}catch(Exception e){
+			log.error("Errore durante l'aggiornamento dello stato della NotificaEC Ente [In Elaborazione -> In Riconsegna]: "+ e.getMessage(),e);
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegnaNotificaECEnte.erroreGenerico"));
+		}
+		return null;
+	}
+	
+	public String ritentaConsegnaNotificaDT(){
+		try{
+			if(this.selectedNotificaDT != null){
+				NotificaDecorrenzaTerminiBD notificaDTBD = new NotificaDecorrenzaTerminiBD(log);
+				notificaDTBD.forzaRispedizioneNotifica(this.selectedNotificaDT.getDTO());
+				MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegnaNotificaDT.cambioStatoOK"));
+
+				// resetto la notifica 
+				this.selectedNotificaDT = null;
+
+				// caricare le informazioni su   notificheDT  
+				if(this.notificaDTService == null)
+					this.notificaDTService = new NotificaDTService();
+
+				this.notificaDTService.setIdNotificaDecorrenzaTermini(this.selectedElement.getDTO().getIdDecorrenzaTermini());
+				List<NotificaDTBean> listaNotificaDT = new ArrayList<NotificaDTBean>();
+				try{
+					listaNotificaDT = this.notificaDTService.findAll();
+				}catch(Exception e){
+					log.debug("Si e' verificato un errore durante il caricamento della lista delle notifiche DT: "+ e.getMessage(), e);
+
+				}
+				this.selectedElement.setListaNotificaDT(listaNotificaDT); 
+
+			}
+
+		}catch(Exception e){
+			log.error("Errore durante l'aggiornamento dello stato della NotificaDT [In Elaborazione -> In Riconsegna]: "+ e.getMessage(),e);
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegnaNotificaDT.erroreGenerico"));
+		}
+		return null;
+	}
 
 	public NotificaECBean getSelectedNotifica() {
 		return selectedNotifica;
@@ -541,6 +608,14 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 
 	public void setSelectedNotifica(NotificaECBean selectedNotifica) {
 		this.selectedNotifica = selectedNotifica;
+	}
+	
+	public NotificaDTBean getSelectedNotificaDT() {
+		return selectedNotificaDT;
+	}
+
+	public void setSelectedNotificaDT(NotificaDTBean selectedNotificaDT) {
+		this.selectedNotificaDT = selectedNotificaDT;
 	}
 
 	public IdFattura getSelectedIdFattura() {

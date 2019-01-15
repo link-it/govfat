@@ -20,42 +20,36 @@
  */
 package org.govmix.proxy.fatturapa.orm.dao.jdbc;
 
-import java.util.List;
+import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import java.sql.Connection;
-
 import org.apache.log4j.Logger;
-
-import org.openspcoop2.utils.sql.ISQLQueryObject;
-
-import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
+import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.NotificaEsitoCommittenteFieldConverter;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.NotificaEsitoCommittenteFetch;
+import org.openspcoop2.generic_project.beans.CustomField;
+import org.openspcoop2.generic_project.beans.FunctionField;
+import org.openspcoop2.generic_project.beans.IField;
+import org.openspcoop2.generic_project.beans.InUse;
+import org.openspcoop2.generic_project.beans.NonNegativeNumber;
+import org.openspcoop2.generic_project.beans.Union;
+import org.openspcoop2.generic_project.beans.UnionExpression;
+import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithoutId;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCPaginatedExpression;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
 import org.openspcoop2.generic_project.dao.jdbc.utils.IJDBCFetch;
 import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject;
-import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithoutId;
-import org.openspcoop2.generic_project.utils.UtilsTemplate;
-import org.openspcoop2.generic_project.beans.CustomField;
-import org.openspcoop2.generic_project.beans.InUse;
-import org.openspcoop2.generic_project.beans.IField;
-import org.openspcoop2.generic_project.beans.NonNegativeNumber;
-import org.openspcoop2.generic_project.beans.UnionExpression;
-import org.openspcoop2.generic_project.beans.Union;
-import org.openspcoop2.generic_project.beans.FunctionField;
 import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
-import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
-import org.openspcoop2.generic_project.dao.jdbc.JDBCPaginatedExpression;
-
-import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.NotificaEsitoCommittenteFieldConverter;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.NotificaEsitoCommittenteFetch;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCServiceManager;
-
-import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
+import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
+import org.openspcoop2.generic_project.utils.UtilsTemplate;
+import org.openspcoop2.utils.sql.ISQLQueryObject;
 
 /**     
  * JDBCNotificaEsitoCommittenteServiceSearchImpl
@@ -111,18 +105,121 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 
         List<NotificaEsitoCommittente> list = new ArrayList<NotificaEsitoCommittente>();
         
-        // TODO: implementazione non efficente. 
-		// Per ottenere una implementazione efficente:
-		// 1. Usare metodo select di questa classe indirizzando esattamente i field necessari
-		// 2. Usare metodo getNotificaEsitoCommittenteFetch() sul risultato della select per ottenere un oggetto NotificaEsitoCommittente
-		//	  La fetch con la map inserirà nell'oggetto solo i valori estratti 
+        try {
+        	
+			List<IField> fields = new ArrayList<IField>();
 
-        List<Long> ids = this.findAllTableIds(jdbcProperties, log, connection, sqlQueryObject, expression);
-        
-        for(Long id: ids) {
-        	list.add(this.get(jdbcProperties, log, connection, sqlQueryObject, id, idMappingResolutionBehaviour));
-        }
+			String id = "id";
+			fields.add(new CustomField(id, Long.class, id, this.getFieldConverter().toTable(NotificaEsitoCommittente.model())));
+			fields.add(NotificaEsitoCommittente.model().IDENTIFICATIVO_SDI);
+			fields.add(NotificaEsitoCommittente.model().NUMERO_FATTURA);
+			fields.add(NotificaEsitoCommittente.model().ANNO);
+			fields.add(NotificaEsitoCommittente.model().POSIZIONE);
+			fields.add(NotificaEsitoCommittente.model().ESITO);
+			fields.add(NotificaEsitoCommittente.model().DESCRIZIONE);
+			fields.add(NotificaEsitoCommittente.model().MESSAGE_ID_COMMITTENTE);
+			fields.add(NotificaEsitoCommittente.model().NOME_FILE);
+			fields.add(NotificaEsitoCommittente.model().MODALITA_BATCH);
+			fields.add(NotificaEsitoCommittente.model().DATA_INVIO_ENTE);
+			fields.add(NotificaEsitoCommittente.model().DATA_INVIO_SDI);
+			fields.add(NotificaEsitoCommittente.model().STATO_CONSEGNA_SDI);
+			fields.add(NotificaEsitoCommittente.model().DATA_ULTIMA_CONSEGNA_SDI);
+			fields.add(NotificaEsitoCommittente.model().DATA_PROSSIMA_CONSEGNA_SDI);
+			fields.add(NotificaEsitoCommittente.model().TENTATIVI_CONSEGNA_SDI);
+			fields.add(NotificaEsitoCommittente.model().SCARTO);
+			fields.add(NotificaEsitoCommittente.model().SCARTO_NOTE);
 
+			String idTracciaNotifica = "id_traccia_notifica";
+			fields.add(new CustomField(idTracciaNotifica, Long.class, idTracciaNotifica, this.getFieldConverter().toTable(NotificaEsitoCommittente.model())));
+			String idTracciaScarto = "id_traccia_scarto";
+			fields.add(new CustomField(idTracciaScarto, Long.class, idTracciaScarto, this.getFieldConverter().toTable(NotificaEsitoCommittente.model())));
+			String idFatturaElettronica = "id_fattura_elettronica";
+			fields.add(new CustomField(idFatturaElettronica, Long.class, idFatturaElettronica, this.getFieldConverter().toTable(NotificaEsitoCommittente.model())));
+			String idUtente = "id_utente";
+			fields.add(new CustomField(idUtente, Long.class, idUtente, this.getFieldConverter().toTable(NotificaEsitoCommittente.model())));
+
+			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));
+
+			for(Map<String, Object> map: returnMap) {
+				Object idFK_notificaOBJ = map.remove(idTracciaNotifica);
+				Object idFK_scartoOBJ = map.remove(idTracciaScarto);
+
+				NotificaEsitoCommittente notificaEsitoCommittente = (NotificaEsitoCommittente)this.getFetch().fetch(jdbcProperties.getDatabase(), NotificaEsitoCommittente.model(), map);
+
+				
+				if(idMappingResolutionBehaviour==null ||
+						(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
+					){
+						Long idFK_notificaEsitoCommittente_fatturaElettronica = (Long) map.get(idFatturaElettronica); 
+						
+						org.govmix.proxy.fatturapa.orm.IdFattura id_notificaEsitoCommittente_fatturaElettronica = null;
+						if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
+							id_notificaEsitoCommittente_fatturaElettronica = ((JDBCFatturaElettronicaServiceSearch)(this.getServiceManager().getFatturaElettronicaServiceSearch())).findId(idFK_notificaEsitoCommittente_fatturaElettronica, false);
+						}else{
+							id_notificaEsitoCommittente_fatturaElettronica = org.govmix.proxy.fatturapa.orm.IdFattura.newIdFattura();
+						}
+						id_notificaEsitoCommittente_fatturaElettronica.setId(idFK_notificaEsitoCommittente_fatturaElettronica);
+						notificaEsitoCommittente.setIdFattura(id_notificaEsitoCommittente_fatturaElettronica);
+					}
+
+					if(idMappingResolutionBehaviour==null ||
+						(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
+					){
+						Long idFK_notificaEsitoCommittente_utente = (Long) map.get(idUtente);
+						
+						org.govmix.proxy.fatturapa.orm.IdUtente id_notificaEsitoCommittente_utente = null;
+						if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
+							id_notificaEsitoCommittente_utente = ((JDBCUtenteServiceSearch)(this.getServiceManager().getUtenteServiceSearch())).findId(idFK_notificaEsitoCommittente_utente, false);
+						}else{
+							id_notificaEsitoCommittente_utente = new org.govmix.proxy.fatturapa.orm.IdUtente();
+						}
+						id_notificaEsitoCommittente_utente.setId(idFK_notificaEsitoCommittente_utente);
+						notificaEsitoCommittente.setUtente(id_notificaEsitoCommittente_utente);
+					}
+
+
+					if(idFK_notificaOBJ != null && idFK_notificaOBJ instanceof Long) {
+						if(idMappingResolutionBehaviour==null ||
+								(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
+								){
+							try {
+								Long idFK_NotificaEsitoCommittente_traccia_notifica = (Long) idFK_notificaOBJ;
+
+								org.govmix.proxy.fatturapa.orm.IdTracciaSdi id_fatturaElettronica_sip = null;
+								if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
+									id_fatturaElettronica_sip = ((JDBCTracciaSDIServiceSearch)(this.getServiceManager().getTracciaSDIServiceSearch())).findId(idFK_NotificaEsitoCommittente_traccia_notifica, false);
+								}else{
+									id_fatturaElettronica_sip = new org.govmix.proxy.fatturapa.orm.IdTracciaSdi();
+								}
+								id_fatturaElettronica_sip.setId(idFK_NotificaEsitoCommittente_traccia_notifica);
+								notificaEsitoCommittente.setIdTracciaNotifica(id_fatturaElettronica_sip);
+							}catch(NotFoundException e) {}
+						}
+					}
+
+					if(idFK_scartoOBJ != null && idFK_scartoOBJ instanceof Long) {
+						if(idMappingResolutionBehaviour==null ||
+								(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
+								){
+							try {
+								Long idFK_NotificaEsitoCommittente_traccia_scarto = (Long) idFK_scartoOBJ;
+
+								org.govmix.proxy.fatturapa.orm.IdTracciaSdi id_fatturaElettronica_sip = null;
+								if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
+									id_fatturaElettronica_sip = ((JDBCTracciaSDIServiceSearch)(this.getServiceManager().getTracciaSDIServiceSearch())).findId(idFK_NotificaEsitoCommittente_traccia_scarto, false);
+								}else{
+									id_fatturaElettronica_sip = new org.govmix.proxy.fatturapa.orm.IdTracciaSdi();
+								}
+								id_fatturaElettronica_sip.setId(idFK_NotificaEsitoCommittente_traccia_scarto);
+								notificaEsitoCommittente.setIdTracciaScarto(id_fatturaElettronica_sip);
+							}catch(NotFoundException e) {}
+						}
+					}
+
+				list.add(notificaEsitoCommittente);
+			}
+
+		} catch(NotFoundException e) {}
         return list;      
 		
 	}
@@ -386,92 +483,24 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 	}
 	
 	private NotificaEsitoCommittente _get(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, Long tableId, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotFoundException, MultipleResultException, NotImplementedException, ServiceException, Exception {
-	
-		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 
-					new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
+
+		JDBCPaginatedExpression expression = newPaginatedExpression(log);
+		CustomField idField = new CustomField("id", Long.class, "id", this.getFieldConverter().toTable(NotificaEsitoCommittente.model()));
+		expression.equals(idField, tableId);
+		expression.offset(0);
+		expression.limit(2);
 		
-		ISQLQueryObject sqlQueryObjectGet = sqlQueryObject.newSQLQueryObject();
-				
-		NotificaEsitoCommittente notificaEsitoCommittente = new NotificaEsitoCommittente();
+		expression.addOrder(idField, org.openspcoop2.generic_project.expression.SortOrder.ASC);
+
+		List<NotificaEsitoCommittente> findAll = this.findAll(jdbcProperties, log, connection, sqlQueryObject, expression, idMappingResolutionBehaviour);
 		
-
-		// Object notificaEsitoCommittente
-		ISQLQueryObject sqlQueryObjectGet_notificaEsitoCommittente = sqlQueryObjectGet.newSQLQueryObject();
-		sqlQueryObjectGet_notificaEsitoCommittente.setANDLogicOperator(true);
-		sqlQueryObjectGet_notificaEsitoCommittente.addFromTable(this.getNotificaEsitoCommittenteFieldConverter().toTable(NotificaEsitoCommittente.model()));
-		sqlQueryObjectGet_notificaEsitoCommittente.addSelectField("id");
-		sqlQueryObjectGet_notificaEsitoCommittente.addSelectField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().IDENTIFICATIVO_SDI,true));
-		sqlQueryObjectGet_notificaEsitoCommittente.addSelectField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().NUMERO_FATTURA,true));
-		sqlQueryObjectGet_notificaEsitoCommittente.addSelectField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().ANNO,true));
-		sqlQueryObjectGet_notificaEsitoCommittente.addSelectField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().POSIZIONE,true));
-		sqlQueryObjectGet_notificaEsitoCommittente.addSelectField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().ESITO,true));
-		sqlQueryObjectGet_notificaEsitoCommittente.addSelectField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().DESCRIZIONE,true));
-		sqlQueryObjectGet_notificaEsitoCommittente.addSelectField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().MESSAGE_ID_COMMITTENTE,true));
-		sqlQueryObjectGet_notificaEsitoCommittente.addSelectField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().NOME_FILE,true));
-		sqlQueryObjectGet_notificaEsitoCommittente.addSelectField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().MODALITA_BATCH,true));
-		sqlQueryObjectGet_notificaEsitoCommittente.addSelectField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().DATA_INVIO_ENTE,true));
-		sqlQueryObjectGet_notificaEsitoCommittente.addSelectField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().DATA_INVIO_SDI,true));
-		sqlQueryObjectGet_notificaEsitoCommittente.addSelectField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().STATO_CONSEGNA_SDI,true));
-		sqlQueryObjectGet_notificaEsitoCommittente.addSelectField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().DATA_ULTIMA_CONSEGNA_SDI,true));
-		sqlQueryObjectGet_notificaEsitoCommittente.addSelectField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().DATA_PROSSIMA_CONSEGNA_SDI,true));
-		sqlQueryObjectGet_notificaEsitoCommittente.addSelectField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().TENTATIVI_CONSEGNA_SDI,true));
-		sqlQueryObjectGet_notificaEsitoCommittente.addSelectField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().SCARTO,true));
-		sqlQueryObjectGet_notificaEsitoCommittente.addSelectField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().SCARTO_NOTE,true));
-		sqlQueryObjectGet_notificaEsitoCommittente.addSelectField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().SCARTO_XML,true));
-		sqlQueryObjectGet_notificaEsitoCommittente.addSelectField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().XML,true));
-		sqlQueryObjectGet_notificaEsitoCommittente.addWhereCondition("id=?");
-
-		// Get notificaEsitoCommittente
-		notificaEsitoCommittente = (NotificaEsitoCommittente) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_notificaEsitoCommittente.createSQLQuery(), jdbcProperties.isShowSql(), NotificaEsitoCommittente.model(), this.getNotificaEsitoCommittenteFetch(),
-			new JDBCObject(tableId,Long.class));
-
-
-		if(idMappingResolutionBehaviour==null ||
-			(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
-		){
-			// Object _notificaEsitoCommittente_fatturaElettronica (recupero id)
-			ISQLQueryObject sqlQueryObjectGet_notificaEsitoCommittente_fatturaElettronica_readFkId = sqlQueryObjectGet.newSQLQueryObject();
-			sqlQueryObjectGet_notificaEsitoCommittente_fatturaElettronica_readFkId.addFromTable(this.getNotificaEsitoCommittenteFieldConverter().toTable(org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente.model()));
-			sqlQueryObjectGet_notificaEsitoCommittente_fatturaElettronica_readFkId.addSelectField("id_fattura_elettronica");
-			sqlQueryObjectGet_notificaEsitoCommittente_fatturaElettronica_readFkId.addWhereCondition("id=?");
-			sqlQueryObjectGet_notificaEsitoCommittente_fatturaElettronica_readFkId.setANDLogicOperator(true);
-			Long idFK_notificaEsitoCommittente_fatturaElettronica = (Long) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_notificaEsitoCommittente_fatturaElettronica_readFkId.createSQLQuery(), jdbcProperties.isShowSql(),Long.class,
-					new JDBCObject(notificaEsitoCommittente.getId(),Long.class));
-			
-			org.govmix.proxy.fatturapa.orm.IdFattura id_notificaEsitoCommittente_fatturaElettronica = null;
-			if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
-				id_notificaEsitoCommittente_fatturaElettronica = ((JDBCFatturaElettronicaServiceSearch)(this.getServiceManager().getFatturaElettronicaServiceSearch())).findId(idFK_notificaEsitoCommittente_fatturaElettronica, false);
-			}else{
-				id_notificaEsitoCommittente_fatturaElettronica = org.govmix.proxy.fatturapa.orm.IdFattura.newIdFattura();
-			}
-			id_notificaEsitoCommittente_fatturaElettronica.setId(idFK_notificaEsitoCommittente_fatturaElettronica);
-			notificaEsitoCommittente.setIdFattura(id_notificaEsitoCommittente_fatturaElettronica);
+		if(findAll == null || findAll.size() <=0) {
+			throw new NotFoundException();
+		} else if(findAll.size() > 1) {
+			throw new MultipleResultException();
+		} else {
+			return findAll.get(0);
 		}
-
-		if(idMappingResolutionBehaviour==null ||
-			(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
-		){
-			// Object _notificaEsitoCommittente_utente (recupero id)
-			ISQLQueryObject sqlQueryObjectGet_notificaEsitoCommittente_utente_readFkId = sqlQueryObjectGet.newSQLQueryObject();
-			sqlQueryObjectGet_notificaEsitoCommittente_utente_readFkId.addFromTable(this.getNotificaEsitoCommittenteFieldConverter().toTable(org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente.model()));
-			sqlQueryObjectGet_notificaEsitoCommittente_utente_readFkId.addSelectField("id_utente");
-			sqlQueryObjectGet_notificaEsitoCommittente_utente_readFkId.addWhereCondition("id=?");
-			sqlQueryObjectGet_notificaEsitoCommittente_utente_readFkId.setANDLogicOperator(true);
-			Long idFK_notificaEsitoCommittente_utente = (Long) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_notificaEsitoCommittente_utente_readFkId.createSQLQuery(), jdbcProperties.isShowSql(),Long.class,
-					new JDBCObject(notificaEsitoCommittente.getId(),Long.class));
-			
-			org.govmix.proxy.fatturapa.orm.IdUtente id_notificaEsitoCommittente_utente = null;
-			if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
-				id_notificaEsitoCommittente_utente = ((JDBCUtenteServiceSearch)(this.getServiceManager().getUtenteServiceSearch())).findId(idFK_notificaEsitoCommittente_utente, false);
-			}else{
-				id_notificaEsitoCommittente_utente = new org.govmix.proxy.fatturapa.orm.IdUtente();
-			}
-			id_notificaEsitoCommittente_utente.setId(idFK_notificaEsitoCommittente_utente);
-			notificaEsitoCommittente.setUtente(id_notificaEsitoCommittente_utente);
-		}
-
-        return notificaEsitoCommittente;  
-	
 	} 
 	
 	@Override

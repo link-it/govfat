@@ -66,7 +66,8 @@ public interface EndpointPdD {
 	@POST
 	@Consumes("text/xml")
 	@Path("riceviNotificaDT")
-	Response postConsegnaNotificaDT(InputStream notificaStream);
+	Response postConsegnaNotificaDT(@Context HttpHeaders headers,
+			InputStream notificaStream);
 	
 	@POST
 	@Path("riceviComunicazione")

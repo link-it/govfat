@@ -21,12 +21,16 @@
 package org.govmix.proxy.fatturapa.web.commons.businessdelegate;
 
 import java.sql.Connection;
+import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
+import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.dao.INotificaDecorrenzaTerminiService;
+import org.govmix.proxy.fatturapa.orm.dao.ITracciaSDIService;
 import org.openspcoop2.generic_project.exception.ExpressionException;
 import org.openspcoop2.generic_project.exception.ExpressionNotImplementedException;
 import org.openspcoop2.generic_project.exception.MultipleResultException;
@@ -38,6 +42,8 @@ import org.openspcoop2.generic_project.expression.IExpression;
 public class NotificaDecorrenzaTerminiBD extends BaseBD {
 
 	private INotificaDecorrenzaTerminiService service;
+	private ITracciaSDIService tracciaService;
+
 	public NotificaDecorrenzaTerminiBD() throws Exception {
 		this(Logger.getLogger(NotificaDecorrenzaTerminiBD.class));
 	}
@@ -45,6 +51,7 @@ public class NotificaDecorrenzaTerminiBD extends BaseBD {
 	public NotificaDecorrenzaTerminiBD(Logger log) throws Exception {
 		super(log);
 		this.service = this.serviceManager.getNotificaDecorrenzaTerminiService();
+		this.tracciaService = this.serviceManager.getTracciaSDIService();
 	}
 
 	public NotificaDecorrenzaTerminiBD(Logger log, Connection connection, boolean autocommit) throws Exception {
@@ -69,6 +76,27 @@ public class NotificaDecorrenzaTerminiBD extends BaseBD {
 			throw new Exception(e);
 		}
 	}
+
+	public void forzaRispedizioneNotifica(NotificaDecorrenzaTermini notifica) throws Exception {
+		try {
+			TracciaSDI tracciaNotifica = this.tracciaService.get(notifica.getIdTraccia());
+			
+			if(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE.equals(tracciaNotifica.getStatoProtocollazione())) {
+				tracciaNotifica.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
+				tracciaNotifica.setDataProssimaProtocollazione(new Date());
+				tracciaNotifica.setTentativiProtocollazione(0);
+				this.tracciaService.update(notifica.getIdTraccia(), tracciaNotifica);
+			}
+			
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la forzaRispedizioneNotifica: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la forzaRispedizioneNotifica: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
 
 	public NotificaDecorrenzaTermini getNotificaDT(IdFattura idFattura) throws ServiceException, NotFoundException {
 		try {

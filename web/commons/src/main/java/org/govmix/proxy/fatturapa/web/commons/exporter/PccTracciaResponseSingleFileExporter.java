@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.govmix.proxy.fatturapa.orm.IdFattura;
+import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdTraccia;
 import org.govmix.proxy.fatturapa.orm.PccTraccia;
 import org.govmix.proxy.fatturapa.orm.dao.IPccTracciaServiceSearch;
@@ -93,21 +93,18 @@ public class PccTracciaResponseSingleFileExporter extends AbstractSingleFileXMLE
 	}
 
 	@Override
-	protected List<IdFattura> findIdFattura(String[] ids, boolean isAll) throws ServiceException, NotFoundException {
+	protected List<String> findCodiciDipartimento(String[] ids, boolean fatturazioneAttiva) throws ServiceException, NotFoundException{
 		try {
-			List<IdFattura> idFatturaRichiesti = new ArrayList<IdFattura>();
-			PccTraccia traccia =  this.convertToObject(ids[0]);
-			
-			IdFattura id = this.getFatturaBD().convertToId(this.getFatturaBD().getById(traccia.getIdFattura()));
-			idFatturaRichiesti.add(id);
-			return idFatturaRichiesti;
+			List<String> codDipartimentoRichiesti = new ArrayList<String>();
+			for (String idFattura : ids) {
+				FatturaElettronica fattura = this.getFatturaBD().getById(Long.parseLong(idFattura));
+				codDipartimentoRichiesti.add(fattura.getCodiceDestinatario());
+			}
+			return codDipartimentoRichiesti;
 		} catch (NumberFormatException e) {
 			throw new ServiceException(e);
-		} catch (ExportException e) {
-			throw new ServiceException(e);
-		} 
+		}
 	}
-
 
 	@Override
 	public void export(PccTraccia object, OutputStream out,	FORMAT format) throws ExportException {

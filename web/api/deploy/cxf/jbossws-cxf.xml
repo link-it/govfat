@@ -31,16 +31,10 @@
 		</jaxrs:serviceBeans>
 	</jaxrs:server>
 
-	<jaxrs:server id="apTrasmittente" address="/trasmittente">
-		<jaxrs:serviceBeans>
-			<bean id="endpointTrasmittente"
-				class="org.govmix.proxy.fatturapa.web.api.EndpointTrasmittenteImpl" />
-		</jaxrs:serviceBeans>
-	</jaxrs:server>
 	<jaxrs:server id="apEnte" address="/ente">
 		<jaxrs:serviceBeans>
 			<bean id="endpointEnte"
-				class="org.govmix.proxy.fatturapa.web.api.EndpointEnteImpl" />
+				class="${org.govmix.proxy.fatturapa.web.api.ente.class}" />
 		</jaxrs:serviceBeans>
 		<jaxrs:inInterceptors>
 			<ref bean="authorizationInterceptor" />
@@ -48,7 +42,7 @@
 	</jaxrs:server>
 
 	<jaxws:endpoint id="fattureAttiveImpl"
-		implementor="org.govmix.proxy.fatturapa.soap.FattureAttiveImpl"
+		implementor="#fattureAttiveImplBean"
 		address="/fattureAttive">
 		<jaxws:inInterceptors>
 			<ref bean="authorizationInterceptor" />
@@ -58,6 +52,11 @@
 		</jaxws:properties>
 	</jaxws:endpoint>
 
+
+	<bean id="fattureAttiveImplBean"
+		class="org.govmix.proxy.fatturapa.soap.FattureAttiveImpl">
+		<constructor-arg index="0" value="${org.govmix.proxy.fatturapa.fattureAttive.modalitaPushRichiesta}"/>
+	</bean>
 
 	<bean id="authorizationInterceptor"
 		class="${org.govmix.proxy.fatturapa.web.api.authentication.filter.class}" />

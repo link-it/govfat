@@ -54,9 +54,11 @@ public class FattureAttiveImpl implements FattureAttive {
 	}
 
 	private Logger log;
+	private boolean modalitaPushRichiesta;
 
-	public FattureAttiveImpl() throws Exception {
+	public FattureAttiveImpl(boolean modalitaPushRichiesta) throws Exception {
 		this.log = LoggerManager.getEndpointFattureAttiveLogger();
+		this.modalitaPushRichiesta = modalitaPushRichiesta;
 		this.log.info("Init fattureAttive Service completato. Info versione: " + CommonsProperties.getInstance(this.log).getInfoVersione());
 	}
 
@@ -67,7 +69,7 @@ public class FattureAttiveImpl implements FattureAttive {
 		this.log.info("Invoke inviaFattura...");
 
 		try {
-			InserimentoLotti inserimento = new InserimentoLotti(this.log);
+			InserimentoLotti inserimento = new InserimentoLotti(this.log, this.modalitaPushRichiesta);
 
 			inserimento.setDipartimenti(new DipartimentoBD(this.log).getListaDipartimentiUtente(getPrincipal()));
 			List<InserimentoLottoRequest> requestList = new ArrayList<InserimentoLottoRequest>();
@@ -158,9 +160,11 @@ public class FattureAttiveImpl implements FattureAttive {
 						notifiche.setAttestazioneTrasmissioneFattura(getRaw(traccia));
 						add = true;
 						break;
-					case DT:
+					case DT_ATT:
 						notifiche.setNotificaDecorrenzaTermini(getRaw(traccia));
 						add = true;
+						break;
+					case DT_PASS: //Solo fatturazione passiva
 						break;
 					case EC: //Solo fatturazione passiva
 						break;

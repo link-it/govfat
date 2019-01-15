@@ -20,22 +20,27 @@
  */
 package org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente;
 
-import it.gov.fatturapa.sdi.messaggi.v1_0.NotificaEsitoCommittenteType;
-import it.gov.fatturapa.sdi.messaggi.v1_0.ObjectFactory;
-import it.gov.fatturapa.sdi.messaggi.v1_0.ScartoEsitoCommittenteType;
-import it.gov.fatturapa.sdi.messaggi.v1_0.utils.serializer.JaxbDeserializer;
-import it.gov.fatturapa.sdi.messaggi.v1_0.utils.serializer.JaxbSerializer;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Date;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.soap.encoding.soapenc.Base64;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
+import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
+import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.openspcoop2.generic_project.exception.DeserializerException;
 import org.openspcoop2.generic_project.exception.SerializerException;
 
-import org.apache.soap.encoding.soapenc.Base64;
+import it.gov.fatturapa.sdi.messaggi.v1_0.NotificaEsitoCommittenteType;
+import it.gov.fatturapa.sdi.messaggi.v1_0.ObjectFactory;
+import it.gov.fatturapa.sdi.messaggi.v1_0.RiferimentoFatturaType;
+import it.gov.fatturapa.sdi.messaggi.v1_0.ScartoEsitoCommittenteType;
+import it.gov.fatturapa.sdi.messaggi.v1_0.constants.EsitoCommittenteType;
+import it.gov.fatturapa.sdi.messaggi.v1_0.utils.serializer.JaxbDeserializer;
+import it.gov.fatturapa.sdi.messaggi.v1_0.utils.serializer.JaxbSerializer;
 
 public class InvioNotifica {
 
@@ -49,12 +54,6 @@ public class InvioNotifica {
 	private String username;
 	private String password;
 	
-	private int esitoChiamata;
-	private byte[] notificaXML;
-	private byte[] scartoXML;
-	private ScartoEsitoCommittenteType scarto;
-	
-	
 	public InvioNotifica(URL url, String username, String password) {
 		this.url = url;
 		this.username = username;
@@ -66,10 +65,43 @@ public class InvioNotifica {
 	}
 	
 	
-	public void invia(NotificaEsitoCommittenteType nec, String nomeFile) throws IOException, SerializerException, DeserializerException {
-		this.notificaXML = this.serializer.toByteArray(this.of.createNotificaEsitoCommittente(nec));
+	public NotificaECResponse invia(NotificaECRequest request) throws IOException, SerializerException, DeserializerException {
+		
+		NotificaEsitoCommittenteType nec = new NotificaEsitoCommittenteType();
+		
+		NotificaECResponse response = new NotificaECResponse();
+		
+		EsitoCommittenteType esito;
+		switch(request.getNotifica().getEsito()) {
+		case EC01: esito = EsitoCommittenteType.EC01;
+		break;
+		case EC02: esito = EsitoCommittenteType.EC02;
+		break;
+		default: esito = EsitoCommittenteType.EC02;
+		break;
 
-		URL url = new URL(this.url.toString() + "?" + NOME_FILE_URL_PARAM + "=" + nomeFile);
+		}
+		nec.setEsito(esito);
+
+		nec.setDescrizione(request.getNotifica().getDescrizione());
+		nec.setIdentificativoSdI(request.getNotifica().getIdentificativoSdi());
+
+		nec.setMessageIdCommittente(request.getNotifica().getMessageIdCommittente());
+		nec.setVersione("1.0");
+
+		if(request.getNotifica().getIdFattura() != null) {
+			RiferimentoFatturaType riferimentoFattura = new RiferimentoFatturaType();
+			riferimentoFattura.setAnnoFattura(request.getNotifica().getAnno());
+			riferimentoFattura.setNumeroFattura(request.getNotifica().getNumeroFattura());
+			riferimentoFattura.setPosizioneFattura(request.getNotifica().getIdFattura().getPosizione());
+	
+			nec.setRiferimentoFattura(riferimentoFattura);
+		}
+
+		Date dataSpedizione = new Date();
+		byte[] notificaXML = this.serializer.toByteArray(this.of.createNotificaEsitoCommittente(nec));
+
+		URL url = new URL(this.url.toString() + "?" + NOME_FILE_URL_PARAM + "=" + request.getNotifica().getNomeFile());
 		URLConnection conn = url.openConnection();
 		HttpURLConnection httpConn = (HttpURLConnection) conn;
 
@@ -87,36 +119,61 @@ public class InvioNotifica {
 		httpConn.setDoInput(true);
 
 		httpConn.setRequestMethod("POST");
-		httpConn.getOutputStream().write(this.notificaXML);
+		httpConn.getOutputStream().write(notificaXML);
 		httpConn.getOutputStream().close();
 
-		this.esitoChiamata = httpConn.getResponseCode();
+		int responseCode = httpConn.getResponseCode();
+		response.setEsitoChiamata(responseCode);
 
-		if(this.esitoChiamata == 200) { //leggo lo scarto
-			
-			this.scartoXML = IOUtils.toByteArray(httpConn.getInputStream());
+		TracciaSDI tracciaNotifica = new TracciaSDI();
+
+		tracciaNotifica.setIdentificativoSdi(request.getNotifica().getIdentificativoSdi());
+		if(request.getNotifica().getIdFattura()!=null)
+			tracciaNotifica.setPosizione(request.getNotifica().getIdFattura().getPosizione());
+		
+		tracciaNotifica.setTipoComunicazione(TipoComunicazioneType.EC);
+		tracciaNotifica.setData(dataSpedizione);
+		tracciaNotifica.setContentType("text/xml");
+		tracciaNotifica.setNomeFile(request.getNotifica().getNomeFile());
+		tracciaNotifica.setRawData(notificaXML);
+		
+		tracciaNotifica.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
+		tracciaNotifica.setTentativiProtocollazione(0);
+		tracciaNotifica.setDataProssimaProtocollazione(new Date());
+		tracciaNotifica.setIdEgov("--");
+
+		response.setTracciaNotifica(tracciaNotifica);
+		
+		if(responseCode == 200) { //leggo lo scarto
+
+			byte[] scartoXML = IOUtils.toByteArray(httpConn.getInputStream());
+			ScartoEsitoCommittenteType scarto = deserializer.readScartoEsitoCommittenteType(scartoXML);
 			IOUtils.closeQuietly(httpConn.getInputStream());
-			this.scarto = deserializer.readScartoEsitoCommittenteType(scartoXML);
+
+			TracciaSDI tracciaScarto = new TracciaSDI();
+
+			tracciaScarto.setIdentificativoSdi(request.getNotifica().getIdentificativoSdi());
+			
+			if(request.getNotifica().getIdFattura()!=null)
+				tracciaScarto.setPosizione(request.getNotifica().getIdFattura().getPosizione());
+			
+			tracciaScarto.setTipoComunicazione(TipoComunicazioneType.SE);
+			tracciaScarto.setData(dataSpedizione);
+			tracciaScarto.setContentType("text/xml");
+			tracciaScarto.setNomeFile(request.getNotifica().getNomeFile() + "-SE.xml"); //TODO scarto?
+			tracciaScarto.setRawData(scartoXML);
+			
+			tracciaScarto.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
+			tracciaScarto.setTentativiProtocollazione(0);
+			tracciaScarto.setDataProssimaProtocollazione(new Date());
+			tracciaScarto.setIdEgov("--");
+
+			response.setTracciaScarto(tracciaScarto);
+			response.setScarto(scarto);
 		}
+		
+		return response;
 
-	}
-
-
-	public int getEsitoChiamata() {
-		return this.esitoChiamata;
-	}
-
-
-	public byte[] getScartoXML() {
-		return this.scartoXML;
-	}
-
-	public byte[] getNotificaXML() {
-		return this.notificaXML;
-	}
-
-	public ScartoEsitoCommittenteType getScarto() {
-		return this.scarto;
 	}
 
 }

@@ -66,6 +66,23 @@ public class JDBCNotificaDecorrenzaTerminiServiceImpl extends JDBCNotificaDecorr
 		ISQLQueryObject sqlQueryObjectInsert = sqlQueryObject.newSQLQueryObject();
 				
 
+		// Object _tracciaSDI
+		Long id_tracciaSDI = null;
+		org.govmix.proxy.fatturapa.orm.IdTracciaSdi idLogic_tracciaSDI = null;
+		idLogic_tracciaSDI = notificaDecorrenzaTermini.getIdTraccia();
+		if(idLogic_tracciaSDI!=null){
+			if(idMappingResolutionBehaviour==null ||
+				(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour))){
+				id_tracciaSDI = ((JDBCTracciaSDIServiceSearch)(this.getServiceManager().getTracciaSDIServiceSearch())).findTableId(idLogic_tracciaSDI, false);
+			}
+			else if(org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour)){
+				id_tracciaSDI = idLogic_tracciaSDI.getId();
+				if(id_tracciaSDI==null || id_tracciaSDI<=0){
+					throw new Exception("Logic id not contains table id");
+				}
+			}
+		}
+
 
 		// Object notificaDecorrenzaTermini
 		sqlQueryObjectInsert.addInsertTable(this.getNotificaDecorrenzaTerminiFieldConverter().toTable(NotificaDecorrenzaTermini.model()));
@@ -75,7 +92,7 @@ public class JDBCNotificaDecorrenzaTerminiServiceImpl extends JDBCNotificaDecorr
 		sqlQueryObjectInsert.addInsertField(this.getNotificaDecorrenzaTerminiFieldConverter().toColumn(NotificaDecorrenzaTermini.model().MESSAGE_ID,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getNotificaDecorrenzaTerminiFieldConverter().toColumn(NotificaDecorrenzaTermini.model().NOTE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getNotificaDecorrenzaTerminiFieldConverter().toColumn(NotificaDecorrenzaTermini.model().DATA_RICEZIONE,false),"?");
-		sqlQueryObjectInsert.addInsertField(this.getNotificaDecorrenzaTerminiFieldConverter().toColumn(NotificaDecorrenzaTermini.model().XML,false),"?");
+		sqlQueryObjectInsert.addInsertField("id_traccia_sdi","?");
 
 		// Insert notificaDecorrenzaTermini
 		org.openspcoop2.utils.jdbc.IKeyGeneratorObject keyGenerator = this.getNotificaDecorrenzaTerminiFetch().getKeyGeneratorObject(NotificaDecorrenzaTermini.model());
@@ -86,7 +103,7 @@ public class JDBCNotificaDecorrenzaTerminiServiceImpl extends JDBCNotificaDecorr
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(notificaDecorrenzaTermini.getMessageId(),NotificaDecorrenzaTermini.model().MESSAGE_ID.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(notificaDecorrenzaTermini.getNote(),NotificaDecorrenzaTermini.model().NOTE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(notificaDecorrenzaTermini.getDataRicezione(),NotificaDecorrenzaTermini.model().DATA_RICEZIONE.getFieldType()),
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(notificaDecorrenzaTermini.getXml(),NotificaDecorrenzaTermini.model().XML.getFieldType())
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id_tracciaSDI,Long.class)
 		);
 		notificaDecorrenzaTermini.setId(id);
 
@@ -123,11 +140,28 @@ public class JDBCNotificaDecorrenzaTerminiServiceImpl extends JDBCNotificaDecorr
 		ISQLQueryObject sqlQueryObjectGet = sqlQueryObjectDelete.newSQLQueryObject();
 		ISQLQueryObject sqlQueryObjectUpdate = sqlQueryObjectGet.newSQLQueryObject();
 		
-//		boolean setIdMappingResolutionBehaviour = 
-//			(idMappingResolutionBehaviour==null) ||
-//			org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) ||
-//			org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour);
+		boolean setIdMappingResolutionBehaviour = 
+			(idMappingResolutionBehaviour==null) ||
+			org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) ||
+			org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour);
 			
+
+		// Object _notificaDecorrenzaTermini_tracciaSDI
+		Long id_notificaDecorrenzaTermini_tracciaSDI = null;
+		org.govmix.proxy.fatturapa.orm.IdTracciaSdi idLogic_notificaDecorrenzaTermini_tracciaSDI = null;
+		idLogic_notificaDecorrenzaTermini_tracciaSDI = notificaDecorrenzaTermini.getIdTraccia();
+		if(idLogic_notificaDecorrenzaTermini_tracciaSDI!=null){
+			if(idMappingResolutionBehaviour==null ||
+				(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour))){
+				id_notificaDecorrenzaTermini_tracciaSDI = ((JDBCTracciaSDIServiceSearch)(this.getServiceManager().getTracciaSDIServiceSearch())).findTableId(idLogic_notificaDecorrenzaTermini_tracciaSDI, false);
+			}
+			else if(org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour)){
+				id_notificaDecorrenzaTermini_tracciaSDI = idLogic_notificaDecorrenzaTermini_tracciaSDI.getId();
+				if(id_notificaDecorrenzaTermini_tracciaSDI==null || id_notificaDecorrenzaTermini_tracciaSDI<=0){
+					throw new Exception("Logic id not contains table id");
+				}
+			}
+		}
 
 
 		// Object notificaDecorrenzaTermini
@@ -147,8 +181,12 @@ public class JDBCNotificaDecorrenzaTerminiServiceImpl extends JDBCNotificaDecorr
 		lstObjects_notificaDecorrenzaTermini.add(new JDBCObject(notificaDecorrenzaTermini.getNote(), NotificaDecorrenzaTermini.model().NOTE.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getNotificaDecorrenzaTerminiFieldConverter().toColumn(NotificaDecorrenzaTermini.model().DATA_RICEZIONE,false), "?");
 		lstObjects_notificaDecorrenzaTermini.add(new JDBCObject(notificaDecorrenzaTermini.getDataRicezione(), NotificaDecorrenzaTermini.model().DATA_RICEZIONE.getFieldType()));
-		sqlQueryObjectUpdate.addUpdateField(this.getNotificaDecorrenzaTerminiFieldConverter().toColumn(NotificaDecorrenzaTermini.model().XML,false), "?");
-		lstObjects_notificaDecorrenzaTermini.add(new JDBCObject(notificaDecorrenzaTermini.getXml(), NotificaDecorrenzaTermini.model().XML.getFieldType()));
+		if(setIdMappingResolutionBehaviour){
+			sqlQueryObjectUpdate.addUpdateField("id_traccia_sdi","?");
+		}
+		if(setIdMappingResolutionBehaviour){
+			lstObjects_notificaDecorrenzaTermini.add(new JDBCObject(id_notificaDecorrenzaTermini_tracciaSDI, Long.class));
+		}
 		sqlQueryObjectUpdate.addWhereCondition("id=?");
 		lstObjects_notificaDecorrenzaTermini.add(new JDBCObject(tableId, Long.class));
 

@@ -390,6 +390,20 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 				return "nome";
 			}
 		}
+		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.ENTE.NODO_CODICE_PAGAMENTO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".nodo_codice_pagamento";
+			}else{
+				return "nodo_codice_pagamento";
+			}
+		}
+		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.ENTE.PREFISSO_CODICE_PAGAMENTO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".prefisso_codice_pagamento";
+			}else{
+				return "prefisso_codice_pagamento";
+			}
+		}
 		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.DESCRIZIONE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".descrizione";

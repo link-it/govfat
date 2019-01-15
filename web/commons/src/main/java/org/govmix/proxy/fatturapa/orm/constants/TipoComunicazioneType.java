@@ -56,8 +56,10 @@ public enum TipoComunicazioneType implements IEnumeration , Serializable , Clone
 	EC ("EC"),
 	@javax.xml.bind.annotation.XmlEnumValue("SE")
 	SE ("SE"),
-	@javax.xml.bind.annotation.XmlEnumValue("DT")
-	DT ("DT"),
+	@javax.xml.bind.annotation.XmlEnumValue("DT_ATT")
+	DT_ATT ("DT_ATT"),
+	@javax.xml.bind.annotation.XmlEnumValue("DT_PASS")
+	DT_PASS ("DT_PASS"),
 	@javax.xml.bind.annotation.XmlEnumValue("AT")
 	AT ("AT");
 	

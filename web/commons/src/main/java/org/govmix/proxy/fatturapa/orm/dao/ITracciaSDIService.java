@@ -21,7 +21,8 @@
 package org.govmix.proxy.fatturapa.orm.dao;
 
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
-import org.openspcoop2.generic_project.dao.IServiceWithoutId;
+import org.openspcoop2.generic_project.dao.IServiceWithId;
+import org.govmix.proxy.fatturapa.orm.IdTracciaSdi;
 
 /**     
  * Service can be used both for research that will make persistent objects on the backend of type org.govmix.proxy.fatturapa.orm.TracciaSDI 
@@ -32,6 +33,6 @@ import org.openspcoop2.generic_project.dao.IServiceWithoutId;
  * @version $Rev$, $Date$
  */
 
-public interface ITracciaSDIService extends IServiceWithoutId<TracciaSDI> {
+public interface ITracciaSDIService extends IServiceWithId<TracciaSDI, IdTracciaSdi> {
 
 }

@@ -28,18 +28,18 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
+import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFatturePassiveBD;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFattura;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaUtils;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.InvioNotifica;
+import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.NotificaECRequest;
+import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.NotificaECResponse;
 import org.govmix.proxy.fatturapa.web.commons.sonde.Sonda;
 import org.govmix.proxy.fatturapa.web.timers.utils.BatchProperties;
 import org.openspcoop2.generic_project.exception.ValidationException;
-
-import it.gov.fatturapa.sdi.messaggi.v1_0.NotificaEsitoCommittenteType;
-import it.gov.fatturapa.sdi.messaggi.v1_0.constants.EsitoCommittenteType;
 
 /**
  * Implementazione dell'interfaccia {@link TimerInserimentoFattura}
@@ -109,19 +109,21 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 									
 									try {
 										InvioNotifica invioNotifica = new InvioNotifica(properties.getRicezioneEsitoURL(), properties.getRicezioneEsitoUsername(), properties.getRicezioneEsitoPassword());
-										NotificaEsitoCommittenteType nec = new NotificaEsitoCommittenteType();
-										nec.setIdentificativoSdI(lotto.getIdentificativoSdi());
-										nec.setEsito(EsitoCommittenteType.EC02);
-										nec.setDescrizione("Lotto rifiutato d'ufficio in quanto non conforme alle specifiche");
-										nec.setMessageIdCommittente(lotto.getMessageId());
-										nec.setVersione("1.0");
 										this.log.info("Invio della notifica di rifiuto automatico per il lotto ["+lotto.getIdentificativoSdi()+"]...");
 										
-										invioNotifica.invia(nec, lotto.getNomeFile());
+										NotificaECRequest request = new NotificaECRequest();
+
+										NotificaEsitoCommittente notifica = new NotificaEsitoCommittente();
+										notifica.setIdentificativoSdi(lotto.getIdentificativoSdi());
+										notifica.setMessageIdCommittente(lotto.getMessageId());
+										notifica.setEsito(org.govmix.proxy.fatturapa.orm.constants.EsitoCommittenteType.EC02);
+										notifica.setDescrizione("Lotto rifiutato d'ufficio in quanto non conforme alle specifiche");
+										request.setNotifica(notifica);
+										NotificaECResponse invioNotificaResponse = invioNotifica.invia(request);
 										
-										this.log.info("Invio della notifica di rifiuto automatico per il lotto ["+lotto.getIdentificativoSdi()+"] completato. Return code ["+invioNotifica.getEsitoChiamata()+"]");
+										this.log.info("Invio della notifica di rifiuto automatico per il lotto ["+lotto.getIdentificativoSdi()+"] completato. Return code ["+invioNotificaResponse.getEsitoChiamata()+"]");
 										
-										if(invioNotifica.getEsitoChiamata() == 202 || invioNotifica.getEsitoChiamata() == 200) { //solo se lo SdI accetta la notifica (o se c'e' uno scarto)
+										if(invioNotificaResponse.getEsitoChiamata() == 202 || invioNotificaResponse.getEsitoChiamata() == 200) { //solo se lo SdI accetta la notifica (o se c'e' uno scarto)
 											lottoBD.setProcessato(idLotto, true); //processiamo il lotto con errore
 										}
 									} catch(Exception eInterna) {

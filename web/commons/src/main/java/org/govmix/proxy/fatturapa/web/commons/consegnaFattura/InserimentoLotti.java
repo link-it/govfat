@@ -26,9 +26,11 @@ public class InserimentoLotti {
 
 	private Logger log;
 	private Map<String, Dipartimento> dipartimenti;
+	private boolean modalitaPushRichiesta;
 	
-	public InserimentoLotti(Logger log) throws Exception {
+	public InserimentoLotti(Logger log, boolean modalitaPushRichiesta) throws Exception {
 		this.log = log;
+		this.modalitaPushRichiesta = modalitaPushRichiesta;
 	}
 	
 	public InserimentoLottoResponse inserisciLotto(List<InserimentoLottoRequest> requestList) {
@@ -66,7 +68,7 @@ public class InserimentoLotti {
 				}
 
 				LottoFatture lotto = analizer.getLotto();
-				if(dipartimento.getModalitaPush()) {
+				if(this.modalitaPushRichiesta && dipartimento.getModalitaPush()) {
 					lotto.setStatoElaborazioneInUscita(StatoElaborazioneType.PRESA_IN_CARICO);
 				} else {
 					if(!analizer.isFirmato()  && analizer.isFirmaNecessaria()) {

@@ -33,6 +33,47 @@ end;
 
 
 
+CREATE SEQUENCE seq_tracce_sdi MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 INCREMENT BY 1 CACHE 2 NOCYCLE;
+
+CREATE TABLE tracce_sdi
+(
+	identificativo_sdi NUMBER NOT NULL,
+	posizione NUMBER,
+	tipo_comunicazione VARCHAR2(255 CHAR) NOT NULL,
+	nome_file VARCHAR2(50 CHAR) NOT NULL,
+	codice_dipartimento VARCHAR2(7 CHAR) NOT NULL,
+	data TIMESTAMP NOT NULL,
+	id_egov VARCHAR2(255 CHAR) NOT NULL,
+	content_type VARCHAR2(255 CHAR) NOT NULL,
+	raw_data BLOB,
+	stato_protocollazione VARCHAR2(255 CHAR) NOT NULL,
+	data_protocollazione TIMESTAMP,
+	data_prossima_protocollazione TIMESTAMP,
+	tentativi_protocollazione NUMBER NOT NULL,
+	dettaglio_protocollazione VARCHAR2(255 CHAR),
+	-- fk/pk columns
+	id NUMBER NOT NULL,
+	-- check constraints
+	CONSTRAINT chk_tracce_sdi_1 CHECK (tipo_comunicazione IN ('FAT_OUT','FAT_IN','RC','NS','MC','NE','MT','EC','SE','DT_ATT','DT_PASS','AT')),
+	CONSTRAINT chk_tracce_sdi_2 CHECK (stato_protocollazione IN ('NON_PROTOCOLLATA','PROTOCOLLATA_IN_ELABORAZIONE','IN_RICONSEGNA','ERRORE_PROTOCOLLAZIONE','PROTOCOLLATA')),
+	-- fk/pk keys constraints
+	CONSTRAINT pk_tracce_sdi PRIMARY KEY (id)
+);
+
+CREATE TRIGGER trg_tracce_sdi
+BEFORE
+insert on tracce_sdi
+for each row
+begin
+   IF (:new.id IS NULL) THEN
+      SELECT seq_tracce_sdi.nextval INTO :new.id
+                FROM DUAL;
+   END IF;
+end;
+/
+
+
+
 CREATE SEQUENCE seq_lotti MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 INCREMENT BY 1 CACHE 2 NOCYCLE;
 
 CREATE TABLE lotti
@@ -126,12 +167,13 @@ CREATE TABLE decorrenza_termini
 	message_id VARCHAR(14) NOT NULL,
 	note VARCHAR(255),
 	data_ricezione TIMESTAMP NOT NULL,
-	xml BLOB NOT NULL,
 	-- fk/pk columns
 	id NUMBER NOT NULL,
+	id_traccia_sdi NUMBER NOT NULL,
 	-- unique constraints
 	CONSTRAINT unique_decorrenza_termini_1 UNIQUE (identificativo_sdi),
 	-- fk/pk keys constraints
+	CONSTRAINT fk_decorrenza_termini_1 FOREIGN KEY (id_traccia_sdi) REFERENCES tracce_sdi(id),
 	CONSTRAINT pk_decorrenza_termini PRIMARY KEY (id)
 );
 
@@ -423,46 +465,6 @@ end;
 
 
 
-CREATE SEQUENCE seq_tracce_sdi MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 INCREMENT BY 1 CACHE 2 NOCYCLE;
-
-CREATE TABLE tracce_sdi
-(
-	identificativo_sdi NUMBER NOT NULL,
-	posizione NUMBER,
-	tipo_comunicazione VARCHAR(255) NOT NULL,
-	nome_file VARCHAR(50) NOT NULL,
-	data TIMESTAMP NOT NULL,
-	id_egov VARCHAR(255) NOT NULL,
-	content_type VARCHAR(255) NOT NULL,
-	raw_data BLOB,
-	stato_protocollazione VARCHAR(255) NOT NULL,
-	data_protocollazione TIMESTAMP,
-	data_prossima_protocollazione TIMESTAMP,
-	tentativi_protocollazione NUMBER NOT NULL,
-	dettaglio_protocollazione VARCHAR(255),
-	-- fk/pk columns
-	id NUMBER NOT NULL,
-	-- check constraints
-	CONSTRAINT chk_tracce_sdi_1 CHECK (tipo_comunicazione IN ('FAT_OUT','FAT_IN','RC','NS','MC','NE','MT','EC','SE','DT','AT')),
-	CONSTRAINT chk_tracce_sdi_2 CHECK (stato_protocollazione IN ('NON_PROTOCOLLATA','PROTOCOLLATA_IN_ELABORAZIONE','ERRORE_PROTOCOLLAZIONE','PROTOCOLLATA')),
-	-- fk/pk keys constraints
-	CONSTRAINT pk_tracce_sdi PRIMARY KEY (id)
-);
-
-CREATE TRIGGER trg_tracce_sdi
-BEFORE
-insert on tracce_sdi
-for each row
-begin
-   IF (:new.id IS NULL) THEN
-      SELECT seq_tracce_sdi.nextval INTO :new.id
-                FROM DUAL;
-   END IF;
-end;
-/
-
-
-
 CREATE SEQUENCE seq_metadati MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 INCREMENT BY 1 CACHE 2 NOCYCLE;
 
 CREATE TABLE metadati
@@ -705,12 +707,12 @@ CREATE TABLE esito_committente
 	tentativi_consegna_sdi NUMBER NOT NULL,
 	scarto VARCHAR(255),
 	scarto_note VARCHAR(255),
-	scarto_xml BLOB,
-	xml BLOB,
 	-- fk/pk columns
 	id NUMBER NOT NULL,
 	id_fattura_elettronica NUMBER NOT NULL,
 	id_utente NUMBER NOT NULL,
+	id_traccia_notifica NUMBER,
+	id_traccia_scarto NUMBER,
 	-- check constraints
 	CONSTRAINT chk_esito_committente_1 CHECK (esito IN ('EC01','EC02')),
 	CONSTRAINT chk_esito_committente_2 CHECK (stato_consegna_sdi IN ('NON_CONSEGNATA','IN_RICONSEGNA','ERRORE_CONSEGNA','CONSEGNATA')),
@@ -718,6 +720,8 @@ CREATE TABLE esito_committente
 	-- fk/pk keys constraints
 	CONSTRAINT fk_esito_committente_1 FOREIGN KEY (id_fattura_elettronica) REFERENCES fatture(id),
 	CONSTRAINT fk_esito_committente_2 FOREIGN KEY (id_utente) REFERENCES utenti(id),
+	CONSTRAINT fk_esito_committente_3 FOREIGN KEY (id_traccia_notifica) REFERENCES tracce_sdi(id),
+	CONSTRAINT fk_esito_committente_4 FOREIGN KEY (id_traccia_scarto) REFERENCES tracce_sdi(id),
 	CONSTRAINT pk_esito_committente PRIMARY KEY (id)
 );
 

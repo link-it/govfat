@@ -19,6 +19,36 @@ CREATE TABLE sip
 
 
 
+CREATE SEQUENCE seq_tracce_sdi start 1 increment 1 maxvalue 9223372036854775807 minvalue 1 cache 1 NO CYCLE;
+
+CREATE TABLE tracce_sdi
+(
+	identificativo_sdi INT NOT NULL,
+	posizione INT,
+	tipo_comunicazione VARCHAR(255) NOT NULL,
+	nome_file VARCHAR(50) NOT NULL,
+	codice_dipartimento VARCHAR(7) NOT NULL,
+	data TIMESTAMP NOT NULL,
+	id_egov VARCHAR(255) NOT NULL,
+	content_type VARCHAR(255) NOT NULL,
+	raw_data BYTEA,
+	stato_protocollazione VARCHAR(255) NOT NULL,
+	data_protocollazione TIMESTAMP,
+	data_prossima_protocollazione TIMESTAMP,
+	tentativi_protocollazione INT NOT NULL,
+	dettaglio_protocollazione VARCHAR(255),
+	-- fk/pk columns
+	id BIGINT DEFAULT nextval('seq_tracce_sdi') NOT NULL,
+	-- check constraints
+	CONSTRAINT chk_tracce_sdi_1 CHECK (tipo_comunicazione IN ('FAT_OUT','FAT_IN','RC','NS','MC','NE','MT','EC','SE','DT_ATT','DT_PASS','AT')),
+	CONSTRAINT chk_tracce_sdi_2 CHECK (stato_protocollazione IN ('NON_PROTOCOLLATA','PROTOCOLLATA_IN_ELABORAZIONE','IN_RICONSEGNA','ERRORE_PROTOCOLLAZIONE','PROTOCOLLATA')),
+	-- fk/pk keys constraints
+	CONSTRAINT pk_tracce_sdi PRIMARY KEY (id)
+);
+
+
+
+
 CREATE SEQUENCE seq_lotti start 1 increment 1 maxvalue 9223372036854775807 minvalue 1 cache 1 NO CYCLE;
 
 CREATE TABLE lotti
@@ -101,12 +131,13 @@ CREATE TABLE decorrenza_termini
 	message_id VARCHAR(14) NOT NULL,
 	note VARCHAR(255),
 	data_ricezione TIMESTAMP NOT NULL,
-	xml BYTEA NOT NULL,
 	-- fk/pk columns
 	id BIGINT DEFAULT nextval('seq_decorrenza_termini') NOT NULL,
+	id_traccia_sdi BIGINT NOT NULL,
 	-- unique constraints
 	CONSTRAINT unique_decorrenza_termini_1 UNIQUE (identificativo_sdi),
 	-- fk/pk keys constraints
+	CONSTRAINT fk_decorrenza_termini_1 FOREIGN KEY (id_traccia_sdi) REFERENCES tracce_sdi(id),
 	CONSTRAINT pk_decorrenza_termini PRIMARY KEY (id)
 );
 
@@ -314,35 +345,6 @@ CREATE TABLE allegati
 
 
 
-CREATE SEQUENCE seq_tracce_sdi start 1 increment 1 maxvalue 9223372036854775807 minvalue 1 cache 1 NO CYCLE;
-
-CREATE TABLE tracce_sdi
-(
-	identificativo_sdi INT NOT NULL,
-	posizione INT,
-	tipo_comunicazione VARCHAR(255) NOT NULL,
-	nome_file VARCHAR(50) NOT NULL,
-	data TIMESTAMP NOT NULL,
-	id_egov VARCHAR(255) NOT NULL,
-	content_type VARCHAR(255) NOT NULL,
-	raw_data BYTEA,
-	stato_protocollazione VARCHAR(255) NOT NULL,
-	data_protocollazione TIMESTAMP,
-	data_prossima_protocollazione TIMESTAMP,
-	tentativi_protocollazione INT NOT NULL,
-	dettaglio_protocollazione VARCHAR(255),
-	-- fk/pk columns
-	id BIGINT DEFAULT nextval('seq_tracce_sdi') NOT NULL,
-	-- check constraints
-	CONSTRAINT chk_tracce_sdi_1 CHECK (tipo_comunicazione IN ('FAT_OUT','FAT_IN','RC','NS','MC','NE','MT','EC','SE','DT','AT')),
-	CONSTRAINT chk_tracce_sdi_2 CHECK (stato_protocollazione IN ('NON_PROTOCOLLATA','PROTOCOLLATA_IN_ELABORAZIONE','ERRORE_PROTOCOLLAZIONE','PROTOCOLLATA')),
-	-- fk/pk keys constraints
-	CONSTRAINT pk_tracce_sdi PRIMARY KEY (id)
-);
-
-
-
-
 CREATE SEQUENCE seq_metadati start 1 increment 1 maxvalue 9223372036854775807 minvalue 1 cache 1 NO CYCLE;
 
 CREATE TABLE metadati
@@ -508,12 +510,12 @@ CREATE TABLE esito_committente
 	tentativi_consegna_sdi INT NOT NULL,
 	scarto VARCHAR(255),
 	scarto_note VARCHAR(255),
-	scarto_xml BYTEA,
-	xml BYTEA,
 	-- fk/pk columns
 	id BIGINT DEFAULT nextval('seq_esito_committente') NOT NULL,
 	id_fattura_elettronica BIGINT NOT NULL,
 	id_utente BIGINT NOT NULL,
+	id_traccia_notifica BIGINT,
+	id_traccia_scarto BIGINT,
 	-- check constraints
 	CONSTRAINT chk_esito_committente_1 CHECK (esito IN ('EC01','EC02')),
 	CONSTRAINT chk_esito_committente_2 CHECK (stato_consegna_sdi IN ('NON_CONSEGNATA','IN_RICONSEGNA','ERRORE_CONSEGNA','CONSEGNATA')),
@@ -521,6 +523,8 @@ CREATE TABLE esito_committente
 	-- fk/pk keys constraints
 	CONSTRAINT fk_esito_committente_1 FOREIGN KEY (id_fattura_elettronica) REFERENCES fatture(id),
 	CONSTRAINT fk_esito_committente_2 FOREIGN KEY (id_utente) REFERENCES utenti(id),
+	CONSTRAINT fk_esito_committente_3 FOREIGN KEY (id_traccia_notifica) REFERENCES tracce_sdi(id),
+	CONSTRAINT fk_esito_committente_4 FOREIGN KEY (id_traccia_scarto) REFERENCES tracce_sdi(id),
 	CONSTRAINT pk_esito_committente PRIMARY KEY (id)
 );
 

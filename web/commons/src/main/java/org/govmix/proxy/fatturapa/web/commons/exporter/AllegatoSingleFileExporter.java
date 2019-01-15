@@ -31,6 +31,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
+import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.dao.IAllegatoFatturaServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCAllegatoFatturaServiceSearch;
@@ -129,12 +130,14 @@ public class AllegatoSingleFileExporter extends	AbstractSingleFileExporter<Alleg
 
 
 	@Override
-	protected List<IdFattura> findIdFattura(String[] ids, boolean isAll) throws ServiceException, NotFoundException {
+	protected List<String> findCodiciDipartimento(String[] ids, boolean fatturazioneAttiva) throws ServiceException, NotFoundException{
 		try {
-			List<IdFattura> idFatturaRichiesti = new ArrayList<IdFattura>();
 			AllegatoFattura allegato = ((JDBCAllegatoFatturaServiceSearch)this.allegatoSearchDAO).get(Long.parseLong(ids[0]));
-			idFatturaRichiesti.add(allegato.getIdFattura());
-			return idFatturaRichiesti;
+			List<String> codDipartimentoRichiesti = new ArrayList<String>();
+			FatturaElettronica fattura = this.getFatturaBD().get(allegato.getIdFattura());
+			codDipartimentoRichiesti.add(fattura.getCodiceDestinatario());
+
+			return codDipartimentoRichiesti;
 		} catch (NumberFormatException e) {
 			throw new ServiceException(e);
 		} catch (MultipleResultException e) {

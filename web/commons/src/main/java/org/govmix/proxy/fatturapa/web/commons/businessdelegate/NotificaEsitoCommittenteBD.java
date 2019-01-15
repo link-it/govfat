@@ -25,12 +25,14 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
+import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.dao.IDBNotificaEsitoCommittenteService;
 import org.govmix.proxy.fatturapa.orm.dao.INotificaEsitoCommittenteService;
+import org.govmix.proxy.fatturapa.orm.dao.ITracciaSDIService;
 import org.openspcoop2.generic_project.exception.ExpressionException;
 import org.openspcoop2.generic_project.exception.ExpressionNotImplementedException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
@@ -42,14 +44,18 @@ import org.openspcoop2.generic_project.expression.SortOrder;
 public class NotificaEsitoCommittenteBD extends BaseBD {
 
 	private INotificaEsitoCommittenteService service;
+	private ITracciaSDIService tracciaService;
+
 	public NotificaEsitoCommittenteBD(Logger log) throws Exception {
 		super(log);
 		this.service = this.serviceManager.getNotificaEsitoCommittenteService();
+		this.tracciaService = this.serviceManager.getTracciaSDIService();
 	}
 
 	public NotificaEsitoCommittenteBD(Logger log, Connection connection, boolean autocommit) throws Exception {
 		super(log, connection, autocommit);
 		this.service = this.serviceManager.getNotificaEsitoCommittenteService();
+		this.tracciaService = this.serviceManager.getTracciaSDIService();
 	}
 
 	public void create(NotificaEsitoCommittente notificaEsitoCommittente) throws Exception {
@@ -182,6 +188,34 @@ public class NotificaEsitoCommittenteBD extends BaseBD {
 			throw new Exception(e);
 		} catch (NotImplementedException e) {
 			this.log.error("Errore durante la forzaRispedizioneFattura: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public void forzaRispedizioneEnteNotifica(NotificaEsitoCommittente notifica) throws Exception {
+		try {
+			TracciaSDI tracciaNotifica = this.tracciaService.get(notifica.getIdTracciaNotifica());
+			
+			if(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE.equals(tracciaNotifica.getStatoProtocollazione())) {
+				tracciaNotifica.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
+				tracciaNotifica.setDataProssimaProtocollazione(new Date());
+				tracciaNotifica.setTentativiProtocollazione(0);
+				this.tracciaService.update(notifica.getIdTracciaNotifica(), tracciaNotifica);
+			}
+			TracciaSDI tracciaScarto = this.tracciaService.get(notifica.getIdTracciaScarto());
+			
+			if(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE.equals(tracciaScarto.getStatoProtocollazione())) {
+				tracciaScarto.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
+				tracciaScarto.setDataProssimaProtocollazione(new Date());
+				tracciaScarto.setTentativiProtocollazione(0);
+				this.tracciaService.update(notifica.getIdTracciaNotifica(), tracciaScarto);
+			}
+			
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la forzaRispedizioneEnteNotifica: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la forzaRispedizioneEnteNotifica: " + e.getMessage(), e);
 			throw new Exception(e);
 		}
 	}

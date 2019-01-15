@@ -89,6 +89,20 @@ public class DipartimentoPropertyFieldConverter extends AbstractSQLFieldConverte
 				return "nome";
 			}
 		}
+		if(field.equals(DipartimentoProperty.model().ID_ENTE.NODO_CODICE_PAGAMENTO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".nodo_codice_pagamento";
+			}else{
+				return "nodo_codice_pagamento";
+			}
+		}
+		if(field.equals(DipartimentoProperty.model().ID_ENTE.PREFISSO_CODICE_PAGAMENTO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".prefisso_codice_pagamento";
+			}else{
+				return "prefisso_codice_pagamento";
+			}
+		}
 
 
 		return super.toColumn(field,returnAlias,appendTablePrefix);
@@ -109,6 +123,12 @@ public class DipartimentoPropertyFieldConverter extends AbstractSQLFieldConverte
 			return this.toTable(DipartimentoProperty.model(), returnAlias);
 		}
 		if(field.equals(DipartimentoProperty.model().ID_ENTE.NOME)){
+			return this.toTable(DipartimentoProperty.model().ID_ENTE, returnAlias);
+		}
+		if(field.equals(DipartimentoProperty.model().ID_ENTE.NODO_CODICE_PAGAMENTO)){
+			return this.toTable(DipartimentoProperty.model().ID_ENTE, returnAlias);
+		}
+		if(field.equals(DipartimentoProperty.model().ID_ENTE.PREFISSO_CODICE_PAGAMENTO)){
 			return this.toTable(DipartimentoProperty.model().ID_ENTE, returnAlias);
 		}
 

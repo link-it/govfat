@@ -123,94 +123,94 @@ public abstract class AbstractFatturaPassivaUnitaDocumentariaBuilder extends Bas
 		int index = 1;
 
 
-		if(input.getNotificaEC() != null && !input.getNotificaEC().isEmpty()) {
-
-			for(NotificaEsitoCommittente nec: input.getNotificaEC()) {
-				if(nec.getXml() != null) {
-					DocumentoType annessoNEC = new DocumentoType();
-					String idDocumentoNotificaEC = 	nec.getIdFattura().getIdentificativoSdi() + "_" +nec.getIdFattura().getPosizione() + "_EC"+index;
-					annessoNEC.setIDDocumento(idDocumentoNotificaEC);
-
-					annessoNEC.setTipoDocumento("NOTIFICA DI ESITO COMMITTENTE");
-					StrutturaType strutturaOriginale = new StrutturaType();
-					Componenti componenti = new Componenti();
-					ComponenteType componente = new ComponenteType();
-					componente.setID(idDocumentoNotificaEC);
-					componente.setOrdinePresentazione(2);
-					componente.setTipoComponente("Contenuto");
-					componente.setTipoSupportoComponente(TipoSupportoType.FILE);
-					componente.setNomeComponente(nec.getNomeFile());
-					componente.setFormatoFileVersato("XML");
-					componente.setUtilizzoDataFirmaPerRifTemp(true);
-					componenti.getComponente().add(componente);
-					strutturaOriginale.setComponenti(componenti);
-					annessoNEC.setStrutturaOriginale(strutturaOriginale);
-
-					DocumentoWrapper docEC = new DocumentoWrapper();
-					docEC.setDoc(annessoNEC);
-					docEC.setIndex(index++);
-					docEC.setRaw(nec.getXml());
-					annessiLst.add(docEC);
-
-					//SCARTO
-					if(nec.getScartoXml() != null) {
-						DocumentoType annessoSEC = new DocumentoType();
-						String idDocumentoScarto = 	nec.getIdFattura().getIdentificativoSdi() + "_" +nec.getIdFattura().getPosizione() + "_EC_SC"+(index-1);
-						annessoSEC.setIDDocumento(idDocumentoScarto);
-
-						annessoSEC.setTipoDocumento("SCARTO ESITO COMMITTENTE");
-						StrutturaType strutturaOriginaleSEC = new StrutturaType();
-						Componenti componentiSEC = new Componenti();
-						ComponenteType componenteSEC = new ComponenteType();
-						componenteSEC.setID(idDocumentoScarto);
-						componenteSEC.setOrdinePresentazione(annessiLst.size()+2);
-						componenteSEC.setTipoComponente("Contenuto");
-						componenteSEC.setTipoSupportoComponente(TipoSupportoType.FILE);
-						componenteSEC.setNomeComponente(nec.getNomeFile());
-						componenteSEC.setFormatoFileVersato("XML");
-						componenteSEC.setUtilizzoDataFirmaPerRifTemp(true);
-						componentiSEC.getComponente().add(componenteSEC);
-						strutturaOriginaleSEC.setComponenti(componentiSEC);
-						annessoSEC.setStrutturaOriginale(strutturaOriginaleSEC);
-
-						DocumentoWrapper docSEC = new DocumentoWrapper();
-						docSEC.setDoc(annessoSEC);
-						docSEC.setIndex(index++);
-						docSEC.setRaw(nec.getScartoXml());
-						annessiLst.add(docSEC);
-
-					}
-
-				}
-			}
-		}
-		if(input.getNotificaDT() != null) {
-			DocumentoType annessoNDT = new DocumentoType();
-			String idDocumentoNotificaDT = input.getNotificaDT().getIdentificativoSdi() + "_DT"; 
-			annessoNDT.setIDDocumento(idDocumentoNotificaDT);
-
-			annessoNDT.setTipoDocumento("NOTIFICA DI DECORRENZA DEI TERMINI");
-			StrutturaType strutturaOriginale = new StrutturaType();
-			Componenti componenti = new Componenti();
-			ComponenteType componente = new ComponenteType();
-			componente.setID(idDocumentoNotificaDT);
-			componente.setOrdinePresentazione(annessiLst.size()+2);
-			componente.setTipoComponente("Contenuto");
-			componente.setTipoSupportoComponente(TipoSupportoType.FILE);
-			componente.setNomeComponente(input.getNotificaDT().getNomeFile());
-			componente.setFormatoFileVersato("XML");
-			componente.setUtilizzoDataFirmaPerRifTemp(true);
-			componenti.getComponente().add(componente);
-			strutturaOriginale.setComponenti(componenti);
-			annessoNDT.setStrutturaOriginale(strutturaOriginale);
-
-			DocumentoWrapper docDT = new DocumentoWrapper();
-			docDT.setDoc(annessoNDT);
-			docDT.setIndex(index++);
-			docDT.setRaw(input.getNotificaDT().getXml());
-			annessiLst.add(docDT);
-
-		}
+//		if(input.getNotificaEC() != null && !input.getNotificaEC().isEmpty()) {
+//
+//			for(NotificaEsitoCommittente nec: input.getNotificaEC()) {
+//				if(nec.getXml() != null) {
+//					DocumentoType annessoNEC = new DocumentoType();
+//					String idDocumentoNotificaEC = 	nec.getIdFattura().getIdentificativoSdi() + "_" +nec.getIdFattura().getPosizione() + "_EC"+index;
+//					annessoNEC.setIDDocumento(idDocumentoNotificaEC);
+//
+//					annessoNEC.setTipoDocumento("NOTIFICA DI ESITO COMMITTENTE");
+//					StrutturaType strutturaOriginale = new StrutturaType();
+//					Componenti componenti = new Componenti();
+//					ComponenteType componente = new ComponenteType();
+//					componente.setID(idDocumentoNotificaEC);
+//					componente.setOrdinePresentazione(2);
+//					componente.setTipoComponente("Contenuto");
+//					componente.setTipoSupportoComponente(TipoSupportoType.FILE);
+//					componente.setNomeComponente(nec.getNomeFile());
+//					componente.setFormatoFileVersato("XML");
+//					componente.setUtilizzoDataFirmaPerRifTemp(true);
+//					componenti.getComponente().add(componente);
+//					strutturaOriginale.setComponenti(componenti);
+//					annessoNEC.setStrutturaOriginale(strutturaOriginale);
+//
+//					DocumentoWrapper docEC = new DocumentoWrapper();
+//					docEC.setDoc(annessoNEC);
+//					docEC.setIndex(index++);
+//					docEC.setRaw(nec.getXml());
+//					annessiLst.add(docEC);
+//
+//					//SCARTO
+//					if(nec.getScartoXml() != null) {
+//						DocumentoType annessoSEC = new DocumentoType();
+//						String idDocumentoScarto = 	nec.getIdFattura().getIdentificativoSdi() + "_" +nec.getIdFattura().getPosizione() + "_EC_SC"+(index-1);
+//						annessoSEC.setIDDocumento(idDocumentoScarto);
+//
+//						annessoSEC.setTipoDocumento("SCARTO ESITO COMMITTENTE");
+//						StrutturaType strutturaOriginaleSEC = new StrutturaType();
+//						Componenti componentiSEC = new Componenti();
+//						ComponenteType componenteSEC = new ComponenteType();
+//						componenteSEC.setID(idDocumentoScarto);
+//						componenteSEC.setOrdinePresentazione(annessiLst.size()+2);
+//						componenteSEC.setTipoComponente("Contenuto");
+//						componenteSEC.setTipoSupportoComponente(TipoSupportoType.FILE);
+//						componenteSEC.setNomeComponente(nec.getNomeFile());
+//						componenteSEC.setFormatoFileVersato("XML");
+//						componenteSEC.setUtilizzoDataFirmaPerRifTemp(true);
+//						componentiSEC.getComponente().add(componenteSEC);
+//						strutturaOriginaleSEC.setComponenti(componentiSEC);
+//						annessoSEC.setStrutturaOriginale(strutturaOriginaleSEC);
+//
+//						DocumentoWrapper docSEC = new DocumentoWrapper();
+//						docSEC.setDoc(annessoSEC);
+//						docSEC.setIndex(index++);
+//						docSEC.setRaw(nec.getScartoXml());
+//						annessiLst.add(docSEC);
+//
+//					}
+//
+//				}
+//			}
+//		}
+//		if(input.getNotificaDT() != null) {
+//			DocumentoType annessoNDT = new DocumentoType();
+//			String idDocumentoNotificaDT = input.getNotificaDT().getIdentificativoSdi() + "_DT"; 
+//			annessoNDT.setIDDocumento(idDocumentoNotificaDT);
+//
+//			annessoNDT.setTipoDocumento("NOTIFICA DI DECORRENZA DEI TERMINI");
+//			StrutturaType strutturaOriginale = new StrutturaType();
+//			Componenti componenti = new Componenti();
+//			ComponenteType componente = new ComponenteType();
+//			componente.setID(idDocumentoNotificaDT);
+//			componente.setOrdinePresentazione(annessiLst.size()+2);
+//			componente.setTipoComponente("Contenuto");
+//			componente.setTipoSupportoComponente(TipoSupportoType.FILE);
+//			componente.setNomeComponente(input.getNotificaDT().getNomeFile());
+//			componente.setFormatoFileVersato("XML");
+//			componente.setUtilizzoDataFirmaPerRifTemp(true);
+//			componenti.getComponente().add(componente);
+//			strutturaOriginale.setComponenti(componenti);
+//			annessoNDT.setStrutturaOriginale(strutturaOriginale);
+//
+//			DocumentoWrapper docDT = new DocumentoWrapper();
+//			docDT.setDoc(annessoNDT);
+//			docDT.setIndex(index++);
+//			docDT.setRaw(input.getNotificaDT().getXml());
+//			annessiLst.add(docDT);
+//
+//		}
 
 		if(annessiLst.size() > 0)
 			return annessiLst;

@@ -61,7 +61,7 @@ public class RiceviComunicazioneSdI {
 		} else if("NotificaEsito".equals(tipo)) {
 			return TipoComunicazioneType.NE;
 		} else if("NotificaDecorrenzaTermini".equals(tipo)) {
-			return TipoComunicazioneType.DT;
+			return TipoComunicazioneType.DT_ATT;
 		} else if("AttestazioneTrasmissioneFattura".equals(tipo)) {
 			return TipoComunicazioneType.AT;
 		} 
@@ -70,14 +70,15 @@ public class RiceviComunicazioneSdI {
 	}
 
 	public void ricevi(TracciaSDI tracciaSdI) throws Exception {
-		this.tracciaBD.insert(tracciaSdI);
 		StatoElaborazioneType nuovoStatoLotto = null;
 		NotificaEsitoConverter notificaEsitoConverter = null;
 		
 		switch(tracciaSdI.getTipoComunicazione()) {
 		case AT: nuovoStatoLotto = StatoElaborazioneType.IMPOSSIBILITA_DI_RECAPITO;
 		break;
-		case DT: nuovoStatoLotto = StatoElaborazioneType.RICEVUTA_DECORRENZA_TERMINI;
+		case DT_ATT: nuovoStatoLotto = StatoElaborazioneType.RICEVUTA_DECORRENZA_TERMINI;
+		break;
+		case DT_PASS: // solo fatturazione passiva, non gestita
 		break;
 		case EC: // solo fatturazione passiva, non gestita
 			break;
@@ -101,16 +102,21 @@ public class RiceviComunicazioneSdI {
 			break;
 		}
 
+		IdLotto idLotto = this.lottoBD.newIdLotto();
+		idLotto.setIdentificativoSdi(tracciaSdI.getIdentificativoSdi());
+		LottoFatture lotto = this.lottoBD.get(idLotto);
+		
 		if(nuovoStatoLotto != null) {
-			IdLotto idLotto = this.lottoBD.newIdLotto();
-			idLotto.setIdentificativoSdi(tracciaSdI.getIdentificativoSdi());
-			LottoFatture lotto = this.lottoBD.get(idLotto);
 			String tipiComunicazione =  toTipiComunicazione(tracciaSdI, notificaEsitoConverter);
 			if(lotto.getTipiComunicazione() != null && !lotto.getTipiComunicazione().contains(tipiComunicazione)) {
 				tipiComunicazione += "." + lotto.getTipiComunicazione();  
 			}
 			this.lottoBD.updateStatoElaborazioneInUscitaOK(idLotto, nuovoStatoLotto, tipiComunicazione);
 		}
+		
+		tracciaSdI.setCodiceDipartimento(lotto.getCodiceDestinatario());
+		this.tracciaBD.insert(tracciaSdI);
+
 	}
 
 	public static String toTipiComunicazione(TracciaSDI tracciaSdI, NotificaEsitoConverter notificaEsitoConverter) throws Exception {

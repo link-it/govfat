@@ -149,6 +149,27 @@ public class FatturaPassivaBD extends FatturaBD {
 		filter.setDaAccettareAutomaticamente(true);
 		return filter;
 	}
+	
+
+	public List<IdFattura> getIdFattureRicevute(Integer idSdI) throws Exception {
+		try {
+			FatturaPassivaFilter filter = this.newFilter();
+			filter.setIdentificativoSdi(idSdI);
+
+			return this.service.findAllIds(filter.toPaginatedExpression());
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la getIdFattureNonConsegnate: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la getIdFattureNonConsegnate: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (Exception e) {
+			this.log.error("Errore durante la getIdFattureNonConsegnate: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+
+	}
+
 
 	public void updateEsito(IdFattura idFattura, EsitoType esito) throws Exception {
 		try {

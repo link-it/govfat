@@ -36,7 +36,9 @@ import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
-import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
+import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.TracciaSdIFilter;
 import org.govmix.proxy.fatturapa.web.commons.exporter.PDFCreator.TipoXSL;
 import org.govmix.proxy.fatturapa.web.commons.exporter.exception.ExportException;
 import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
@@ -47,23 +49,20 @@ import org.openspcoop2.generic_project.exception.ServiceException;
 public class FatturaSingleFileExporter extends AbstractSingleFileXMLExporter<FatturaElettronica, IdFattura> {
 
 	private AllegatoSingleFileExporter allegatoSFE;
-	private NotificaECSingleFileExporter notificaECSFE;
-	private NotificaDTSingleFileExporter notificaDTSFE;
+	private TracciaSdISingleFileExporter tracciaSFE;
 	private LottoSingleFileExporter lottoSFE;
 
 	public FatturaSingleFileExporter(Logger log) throws ServiceException, NotImplementedException, Exception {
 		super(log);
 		this.allegatoSFE = new AllegatoSingleFileExporter(log);
-		this.notificaECSFE = new NotificaECSingleFileExporter(log);
-		this.notificaDTSFE = new NotificaDTSingleFileExporter(log);
+		this.tracciaSFE = new TracciaSdISingleFileExporter(log);
 		this.lottoSFE = new LottoSingleFileExporter(log);
 	}
 
 	public FatturaSingleFileExporter(Logger log, Connection connection, boolean autocommit) throws ServiceException, NotImplementedException, Exception {
 		super(log, connection, autocommit);
 		this.allegatoSFE = new AllegatoSingleFileExporter(log, connection, autocommit);
-		this.notificaECSFE = new NotificaECSingleFileExporter(log, connection, autocommit);
-		this.notificaDTSFE = new NotificaDTSingleFileExporter(log, connection, autocommit);
+		this.tracciaSFE = new TracciaSdISingleFileExporter(log, connection, autocommit);
 		this.lottoSFE = new LottoSingleFileExporter(log, connection, autocommit);
 	}
 
@@ -140,20 +139,34 @@ public class FatturaSingleFileExporter extends AbstractSingleFileXMLExporter<Fat
 
 			// Notifica Esito Committente
 			
-			List<ExtendedNotificaEsitoCommittente> listaNotificheEC = this.notificaECSFE.getNotificheECPerFattura(idFattura);
+			TracciaSdIFilter filter = this.tracciaBD.newFilter();
+			filter.setIdentificativoSdi(object.getIdentificativoSdi());
+			filter.setPosizione(object.getPosizione());
+			filter.setTipoComunicazione(TipoComunicazioneType.EC.toString());
+			List<TracciaSDI> listaNotificheEC = this.tracciaBD.findAll(filter);
+			
 
 			String notificheECDir = fatturaDir +   "notificaEsitoCommittente"+ File.separatorChar;
 			if(listaNotificheEC != null && listaNotificheEC.size() > 0){
-				this.notificaECSFE.exportAsZip(listaNotificheEC, zip, notificheECDir);
+				this.tracciaSFE.exportAsZip(listaNotificheEC, zip, notificheECDir);
+			}
+
+			filter.setTipoComunicazione(TipoComunicazioneType.SE.toString());
+			List<TracciaSDI> listaScartoEC = this.tracciaBD.findAll(filter);
+
+			if(listaScartoEC != null && listaScartoEC.size() > 0){
+				this.tracciaSFE.exportAsZip(listaScartoEC, zip, notificheECDir);
 			}
 
 			// Notifica decorrenza termini se e' presente nella fattura
 			if(object.getIdDecorrenzaTermini() != null){
-				List<NotificaDecorrenzaTermini> listaNotificheDT = this.notificaDTSFE.getNotificheDTPerFattura(idFattura);
-
+				filter.setPosizione(null);
+				filter.setTipoComunicazione(TipoComunicazioneType.DT_PASS.toString());
+				List<TracciaSDI> listaNotificheDT = this.tracciaBD.findAll(filter);
+				
 				String notificheDTDir = fatturaDir  + "notificaDecorrenzaTermini"+ File.separatorChar;
 				if(listaNotificheDT != null && listaNotificheDT.size() > 0){
-					this.notificaDTSFE.exportAsZip(listaNotificheDT, zip, notificheDTDir); 
+					this.tracciaSFE.exportAsZip(listaNotificheDT, zip, notificheDTDir); 
 				}
 			}
 
@@ -184,15 +197,14 @@ public class FatturaSingleFileExporter extends AbstractSingleFileXMLExporter<Fat
 	}
 
 	@Override
-	protected List<IdFattura> findIdFattura(String[] ids, boolean isAll) throws ServiceException, NotFoundException {
+	protected List<String> findCodiciDipartimento(String[] ids, boolean fatturazioneAttiva) throws ServiceException, NotFoundException{
 		try {
-			List<IdFattura> idFatturaRichiesti = new ArrayList<IdFattura>();
+			List<String> codDipartimentoRichiesti = new ArrayList<String>();
 			for (String idFattura : ids) {
 				FatturaElettronica fattura = this.getFatturaBD().getById(Long.parseLong(idFattura));
-				IdFattura idFattura2 = this.getFatturaBD().convertToId(fattura);
-				idFatturaRichiesti.add(idFattura2);
+				codDipartimentoRichiesti.add(fattura.getCodiceDestinatario());
 			}
-			return idFatturaRichiesti;
+			return codDipartimentoRichiesti;
 		} catch (NumberFormatException e) {
 			throw new ServiceException(e);
 		}

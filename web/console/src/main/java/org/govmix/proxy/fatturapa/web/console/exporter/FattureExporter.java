@@ -37,7 +37,6 @@ import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
-import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.PccTraccia;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaBD;
@@ -46,14 +45,10 @@ import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FilterSort
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter.FORMAT;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AllegatoSingleFileExporter;
-import org.govmix.proxy.fatturapa.web.commons.exporter.ExtendedNotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.web.commons.exporter.FatturaSingleFileExporter;
-import org.govmix.proxy.fatturapa.web.commons.exporter.NotificaDTSingleFileExporter;
-import org.govmix.proxy.fatturapa.web.commons.exporter.NotificaECSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.exporter.PccTracciaResponseSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.exporter.RapportoVersamentoLottoSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.exporter.RapportoVersamentoSingleFileExporter;
-import org.govmix.proxy.fatturapa.web.commons.exporter.ScartoECSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.exporter.TracciaSdISingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.exporter.exception.ExportException;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
@@ -181,7 +176,7 @@ public class FattureExporter  extends HttpServlet{
 							}
 						}
 
-						boolean autorizzato = sfe.checkautorizzazioneExport(username, ids, isAll);
+						boolean autorizzato = sfe.checkautorizzazioneExport(username, ids, isFatturazioneAttiva(action), isAll);
 
 						// utente non autorizzato ad accerdere alla risorsa
 						if(!autorizzato){
@@ -247,8 +242,8 @@ public class FattureExporter  extends HttpServlet{
 							if(!formato.equals(AbstractSingleFileExporter.FORMATO_PDF) && !formato.equals(AbstractSingleFileExporter.FORMATO_XML))
 								throw new ExportException("Si e' verificato un errore durante l'export: Il formato richiesto non e' disponibile per la risorsa di tipo Notifica DT.");
 
-							NotificaDTSingleFileExporter dtsfe = (NotificaDTSingleFileExporter) sfe;
-							NotificaDecorrenzaTermini dt = dtsfe.convertToObject(ids[0]);
+							TracciaSdISingleFileExporter dtsfe = (TracciaSdISingleFileExporter) sfe;
+							TracciaSDI dt = dtsfe.convertToObject(ids[0]);
 
 							// Visualizzazione Notifica DT formato PDF
 							if(formato.equals(AbstractSingleFileExporter.FORMATO_PDF)){
@@ -270,8 +265,8 @@ public class FattureExporter  extends HttpServlet{
 							if(!formato.equals(AbstractSingleFileExporter.FORMATO_PDF) && !formato.equals(AbstractSingleFileExporter.FORMATO_XML))
 								throw new ExportException("Si e' verificato un errore durante l'export: Il formato richiesto non e' disponibile per la risorsa di tipo Notifica EC.");
 
-							NotificaECSingleFileExporter ecsfe = (NotificaECSingleFileExporter) sfe;
-							ExtendedNotificaEsitoCommittente ec = ecsfe.convertToObject(ids[0]);
+							TracciaSdISingleFileExporter ecsfe = (TracciaSdISingleFileExporter) sfe;
+							TracciaSDI ec = ecsfe.convertToObject(ids[0]);
 
 							// Visualizzazione Notifica EC formato PDF
 							if(formato.equals(AbstractSingleFileExporter.FORMATO_PDF)){
@@ -293,8 +288,8 @@ public class FattureExporter  extends HttpServlet{
 							if(!formato.equals(AbstractSingleFileExporter.FORMATO_PDF) && !formato.equals(AbstractSingleFileExporter.FORMATO_XML))
 								throw new ExportException("Si e' verificato un errore durante l'export: Il formato richiesto non e' disponibile per la risorsa di tipo Scarto Notifica EC.");
 
-							ScartoECSingleFileExporter ecsfe = (ScartoECSingleFileExporter) sfe;
-							ExtendedNotificaEsitoCommittente ec = ecsfe.convertToObject(ids[0]);
+							TracciaSdISingleFileExporter ecsfe = (TracciaSdISingleFileExporter) sfe;
+							TracciaSDI ec = ecsfe.convertToObject(ids[0]);
 
 
 							// Visualizzazione Scarto formato PDF
@@ -572,6 +567,20 @@ public class FattureExporter  extends HttpServlet{
 		}
 	}
 
+	private boolean isFatturazioneAttiva(String action) {
+		
+		List<String> actionPassiva = new ArrayList<String>();
+		
+		actionPassiva.add(PARAMETRO_ACTION_FATTURA);
+		actionPassiva.add(PARAMETRO_ACTION_ALLEGATO);
+		actionPassiva.add(PARAMETRO_ACTION_NOTIFICA_EC);
+		actionPassiva.add(PARAMETRO_ACTION_NOTIFICA_DT);
+		actionPassiva.add(PARAMETRO_ACTION_SCARTO);
+		actionPassiva.add(PARAMETRO_ACTION_PCC_RIALLINEAMENTO);
+		
+		return !actionPassiva.contains(action);
+	}
+
 	private List<IdFattura> getLstIdFattura(FatturaBD fatturaBD, FatturaFilter expressionFromSearch) throws Exception {
 
 		FatturaFilter filter = null;
@@ -616,11 +625,11 @@ public class FattureExporter  extends HttpServlet{
 		} else if(action.equals(PARAMETRO_ACTION_ALLEGATO)) { 
 			return new AllegatoSingleFileExporter(log);
 		} else if(action.equals(PARAMETRO_ACTION_NOTIFICA_EC)) {
-			return new NotificaECSingleFileExporter(log);
+			return new TracciaSdISingleFileExporter(log);
 		} else if(action.equals(PARAMETRO_ACTION_SCARTO)) {
-			return new ScartoECSingleFileExporter(log);
+			return new TracciaSdISingleFileExporter(log);
 		} else if(action.equals(PARAMETRO_ACTION_NOTIFICA_DT)) {
-			return new NotificaDTSingleFileExporter(log);
+			return new TracciaSdISingleFileExporter(log);
 		} else if(action.equals(PARAMETRO_ACTION_COMUNICAZIONE_AVVENUTA_TRASMISSIONE_IMPOSSIBILITA_RECAPITO)) {
 			return new TracciaSdISingleFileExporter(log);
 		}  else if(action.equals(PARAMETRO_ACTION_COMUNICAZIONE_FATTURA_USCITA)) {

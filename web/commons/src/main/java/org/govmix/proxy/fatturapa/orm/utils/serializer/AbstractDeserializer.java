@@ -47,6 +47,7 @@ import org.govmix.proxy.fatturapa.orm.IdDipartimento;
 import org.govmix.proxy.fatturapa.orm.PccDipartimentoOperazione;
 import org.govmix.proxy.fatturapa.orm.IdOperazione;
 import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
+import org.govmix.proxy.fatturapa.orm.IdTracciaSdi;
 import org.govmix.proxy.fatturapa.orm.IdTraccia;
 import org.govmix.proxy.fatturapa.orm.DipartimentoPropertyValue;
 import org.govmix.proxy.fatturapa.orm.Metadato;
@@ -1712,6 +1713,69 @@ public abstract class AbstractDeserializer {
 	 */
 	public NotificaDecorrenzaTermini readNotificaDecorrenzaTerminiFromString(String in) throws DeserializerException {
 		return (NotificaDecorrenzaTermini) this.xmlToObj(in.getBytes(), NotificaDecorrenzaTermini.class);
+	}	
+	
+	
+	
+	/*
+	 =================================================================================
+	 Object: id-traccia-sdi
+	 =================================================================================
+	*/
+	
+	/**
+	 * Transform the xml in <var>fileName</var> in the object type {@link org.govmix.proxy.fatturapa.orm.IdTracciaSdi}
+	 * 
+	 * @param fileName Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.IdTracciaSdi}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.IdTracciaSdi}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public IdTracciaSdi readIdTracciaSdi(String fileName) throws DeserializerException {
+		return (IdTracciaSdi) this.xmlToObj(fileName, IdTracciaSdi.class);
+	}
+	
+	/**
+	 * Transform the xml in <var>file</var> in the object type {@link org.govmix.proxy.fatturapa.orm.IdTracciaSdi}
+	 * 
+	 * @param file Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.IdTracciaSdi}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.IdTracciaSdi}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public IdTracciaSdi readIdTracciaSdi(File file) throws DeserializerException {
+		return (IdTracciaSdi) this.xmlToObj(file, IdTracciaSdi.class);
+	}
+	
+	/**
+	 * Transform the input stream <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.IdTracciaSdi}
+	 * 
+	 * @param in InputStream to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.IdTracciaSdi}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.IdTracciaSdi}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public IdTracciaSdi readIdTracciaSdi(InputStream in) throws DeserializerException {
+		return (IdTracciaSdi) this.xmlToObj(in, IdTracciaSdi.class);
+	}	
+	
+	/**
+	 * Transform the byte array <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.IdTracciaSdi}
+	 * 
+	 * @param in Byte array to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.IdTracciaSdi}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.IdTracciaSdi}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public IdTracciaSdi readIdTracciaSdi(byte[] in) throws DeserializerException {
+		return (IdTracciaSdi) this.xmlToObj(in, IdTracciaSdi.class);
+	}	
+	
+	/**
+	 * Transform the String <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.IdTracciaSdi}
+	 * 
+	 * @param in String to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.IdTracciaSdi}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.IdTracciaSdi}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public IdTracciaSdi readIdTracciaSdiFromString(String in) throws DeserializerException {
+		return (IdTracciaSdi) this.xmlToObj(in.getBytes(), IdTracciaSdi.class);
 	}	
 	
 	

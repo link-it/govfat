@@ -44,6 +44,7 @@ import java.util.List;
  * 			&lt;element name="posizione" type="{http://www.w3.org/2001/XMLSchema}positiveInteger" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="tipoComunicazione" type="{http://www.govmix.org/proxy/fatturapa/orm}TipoComunicazioneType" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="nomeFile" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="codiceDipartimento" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="data" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="idEgov" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="contentType" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="1" maxOccurs="1"/>
@@ -54,7 +55,7 @@ import java.util.List;
  * 			&lt;element name="tentativiProtocollazione" type="{http://www.w3.org/2001/XMLSchema}nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="dettaglioProtocollazione" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="Metadato" type="{http://www.govmix.org/proxy/fatturapa/orm}Metadato" minOccurs="0" maxOccurs="unbounded"/>
- * 			&lt;element name="LottoFatture" type="{http://www.govmix.org/proxy/fatturapa/orm}LottoFatture" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="Dipartimento" type="{http://www.govmix.org/proxy/fatturapa/orm}Dipartimento" minOccurs="0" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -73,6 +74,7 @@ import java.util.List;
   	"posizione",
   	"tipoComunicazione",
   	"nomeFile",
+  	"codiceDipartimento",
   	"data",
   	"idEgov",
   	"contentType",
@@ -83,7 +85,7 @@ import java.util.List;
   	"tentativiProtocollazione",
   	"dettaglioProtocollazione",
   	"metadato",
-  	"lottoFatture"
+  	"dipartimento"
   }
 )
 
@@ -155,6 +157,14 @@ public class TracciaSDI extends org.openspcoop2.utils.beans.BaseBean implements 
 
   public void setNomeFile(java.lang.String nomeFile) {
     this.nomeFile = nomeFile;
+  }
+
+  public java.lang.String getCodiceDipartimento() {
+    return this.codiceDipartimento;
+  }
+
+  public void setCodiceDipartimento(java.lang.String codiceDipartimento) {
+    this.codiceDipartimento = codiceDipartimento;
   }
 
   public java.util.Date getData() {
@@ -265,12 +275,12 @@ public class TracciaSDI extends org.openspcoop2.utils.beans.BaseBean implements 
     return this.metadato.size();
   }
 
-  public LottoFatture getLottoFatture() {
-    return this.lottoFatture;
+  public Dipartimento getDipartimento() {
+    return this.dipartimento;
   }
 
-  public void setLottoFatture(LottoFatture lottoFatture) {
-    this.lottoFatture = lottoFatture;
+  public void setDipartimento(Dipartimento dipartimento) {
+    this.dipartimento = dipartimento;
   }
 
   private static final long serialVersionUID = 1L;
@@ -313,6 +323,10 @@ public class TracciaSDI extends org.openspcoop2.utils.beans.BaseBean implements 
   @javax.xml.bind.annotation.XmlSchemaType(name="string")
   @XmlElement(name="nomeFile",required=true,nillable=false)
   protected java.lang.String nomeFile;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @XmlElement(name="codiceDipartimento",required=true,nillable=false)
+  protected java.lang.String codiceDipartimento;
 
   @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.DateTime2String.class)
   @javax.xml.bind.annotation.XmlSchemaType(name="dateTime")
@@ -385,7 +399,7 @@ public class TracciaSDI extends org.openspcoop2.utils.beans.BaseBean implements 
   	return this.metadato.size();
   }
 
-  @XmlElement(name="LottoFatture",required=false,nillable=false)
-  protected LottoFatture lottoFatture;
+  @XmlElement(name="Dipartimento",required=false,nillable=false)
+  protected Dipartimento dipartimento;
 
 }

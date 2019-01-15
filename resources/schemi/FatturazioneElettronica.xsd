@@ -22,6 +22,7 @@
 							<linkit:sql-table-list>
 								<linkit:sql-table object-name="SIP" object-type="SIP" />
 
+								<linkit:sql-table object-name="TracciaSDI" object-type="TracciaSDI" />
 								<linkit:sql-table object-name="LottoFatture" object-type="LottoFatture" />
 								<linkit:sql-table object-name="NotificaDecorrenzaTermini" object-type="NotificaDecorrenzaTermini" />
 								<linkit:sql-table object-name="PccTraccia" object-type="PccTraccia" />
@@ -30,7 +31,6 @@
 								<linkit:sql-table object-name="PccErroreElaborazione" object-type="PccErroreElaborazione" />
 								<linkit:sql-table object-name="FatturaElettronica" object-type="FatturaElettronica" />
 								<linkit:sql-table object-name="AllegatoFattura" object-type="AllegatoFattura" />
-								<linkit:sql-table object-name="TracciaSDI" object-type="TracciaSDI" />
 								<linkit:sql-table object-name="Metadato" object-type="Metadato" />
 								<linkit:sql-table object-name="Ente" object-type="Ente" />
 								<linkit:sql-table object-name="Protocollo" object-type="Protocollo" />
@@ -431,6 +431,7 @@
 		<xsd:restriction base="xsd:string">
 			<xsd:enumeration value="NON_PROTOCOLLATA" />
 			<xsd:enumeration value="PROTOCOLLATA_IN_ELABORAZIONE" />
+			<xsd:enumeration value="IN_RICONSEGNA" />
 			<xsd:enumeration value="ERRORE_PROTOCOLLAZIONE" />
 			<xsd:enumeration value="PROTOCOLLATA" />
 		</xsd:restriction>
@@ -586,7 +587,6 @@
 	
 	<xsd:simpleType name="TipoComunicazioneType">
 		<xsd:restriction base="xsd:string">
-			<!--		<xsd:enumeration value="FATTURA_INGRESSO" /> -->
 			<xsd:enumeration value="FAT_OUT"/>
 			<xsd:enumeration value="FAT_IN"/>
 			<xsd:enumeration value="RC"/>
@@ -596,7 +596,8 @@
 			<xsd:enumeration value="MT"/>
 			<xsd:enumeration value="EC"/>
 			<xsd:enumeration value="SE"/>
-			<xsd:enumeration value="DT"/>
+			<xsd:enumeration value="DT_ATT"/>
+			<xsd:enumeration value="DT_PASS"/>
 			<xsd:enumeration value="AT"/>
 		</xsd:restriction>
 	</xsd:simpleType>
@@ -638,6 +639,14 @@
 	<xsd:complexType name="id-traccia">
 		<xsd:sequence>
 			<xsd:element name="idTraccia" type="xsd:long" />
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="id-traccia-sdi">
+		<xsd:sequence>
+			<xsd:element name="idTraccia" type="xsd:long" />
+			<xsd:element name="statoProtocollazione" type="StatoProtocollazioneType" />
+			<xsd:element name="dataProssimaProtocollazione" type="xsd:dateTime" minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
 	
@@ -936,7 +945,7 @@
 		<xsd:annotation>
 			<xsd:appinfo>
 				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
-					<linkit:interface crud="true" />
+					<linkit:interface crud="true" id="id-traccia-sdi" />
 					<linkit:sql-table-mapping generate-sql="true"
 						name="tracce_sdi" on-delete-cascade="false">
 					</linkit:sql-table-mapping>
@@ -948,6 +957,7 @@
 			<xsd:element name="posizione" type="xsd:positiveInteger" minOccurs="0" />
 			<xsd:element name="tipoComunicazione" type="TipoComunicazioneType" />
 			<xsd:element name="nomeFile" type="NomeFileType" />
+			<xsd:element name="codiceDipartimento" type="CodiceDestinatarioType" />
 			<xsd:element name="data" type="xsd:dateTime" />
 			<xsd:element name="idEgov" type="xsd:string" />
 			<xsd:element name="contentType" type="xsd:string" />
@@ -959,13 +969,13 @@
 			<xsd:element name="dettaglioProtocollazione" type="xsd:string" minOccurs="0" />
 			<xsd:element ref="Metadato" minOccurs="0" maxOccurs="unbounded" />
 			
-			<!-- elementi per agevolare la ricerca, non mappato sul db -->
-			<xsd:element name="LottoFatture" type="LottoFatture" minOccurs="0">
+			<!-- elementi per agevolare la ricerca, non mappati sul db -->
+			<xsd:element name="Dipartimento" type="Dipartimento" minOccurs="0">
 				<xsd:annotation>
 					<xsd:appinfo>
 						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
-							<linkit:sql-id-mapping object-name="LottoFatture"
-								object-type="LottoFatture" relationship="none" />
+							<linkit:sql-id-mapping object-name="Dipartimento"
+								object-type="Dipartimento" relationship="none" />
 						</linkit:generator>
 					</xsd:appinfo>
 				</xsd:annotation>
@@ -1241,9 +1251,34 @@
 			
 			<xsd:element name="scarto" type="ScartoType" minOccurs="0" />
 			<xsd:element name="scartoNote" type="xsd:string" minOccurs="0" />
-			<xsd:element name="scartoXml" type="xsd:base64Binary" minOccurs="0"/>
+
+			<xsd:element name="idTracciaNotifica" type="id-traccia-sdi" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-id-mapping object-name="TracciaSDI"
+								object-type="TracciaSDI" relationship="reversed" />
+							<linkit:sql-column-mapping name="id_traccia_notifica" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
 			
-			<xsd:element name="xml" type="xsd:base64Binary" minOccurs="0"/>
+			<xsd:element name="idTracciaScarto" type="id-traccia-sdi" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-id-mapping object-name="TracciaSDI"
+								object-type="TracciaSDI" relationship="reversed" />
+							<linkit:sql-column-mapping name="id_traccia_scarto" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+			
+			<!--xsd:element name="xml" type="xsd:base64Binary" minOccurs="0"/-->
+			<!--xsd:element name="scartoXml" type="xsd:base64Binary" minOccurs="0"/-->
+			
 		</xsd:sequence>
 	</xsd:complexType>
 
@@ -1271,7 +1306,18 @@
 			<xsd:element name="messageId" type="MessageIdType" />
 			<xsd:element name="note" type="xsd:string" minOccurs="0" />
 			<xsd:element name="dataRicezione" type="xsd:dateTime" />
-			<xsd:element name="xml" type="xsd:base64Binary" />
+			<xsd:element name="idTraccia" type="id-traccia-sdi">
+					<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-id-mapping object-name="TracciaSDI"
+								object-type="TracciaSDI" relationship="reversed" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+			
+			<!--xsd:element name="xml" type="xsd:base64Binary" /-->
 		</xsd:sequence>
 	</xsd:complexType>
 

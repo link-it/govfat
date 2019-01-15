@@ -22,29 +22,24 @@ package org.govmix.proxy.fatturapa.orm.dao.jdbc;
 
 import java.sql.Connection;
 
-import org.openspcoop2.utils.sql.ISQLQueryObject;
-
 import org.apache.log4j.Logger;
-
-import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceCRUDWithoutId;
+import org.govmix.proxy.fatturapa.orm.IdTracciaSdi;
+import org.govmix.proxy.fatturapa.orm.Metadato;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.openspcoop2.generic_project.beans.NonNegativeNumber;
 import org.openspcoop2.generic_project.beans.UpdateField;
 import org.openspcoop2.generic_project.beans.UpdateModel;
-
-import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities;
+import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceCRUDWithId;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCPaginatedExpression;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
 import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject;
+import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCUtilities;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
-import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
-import org.openspcoop2.generic_project.dao.jdbc.JDBCPaginatedExpression;
-
-import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
-
-import org.govmix.proxy.fatturapa.orm.Metadato;
-import org.govmix.proxy.fatturapa.orm.TracciaSDI;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCServiceManager;
+import org.openspcoop2.utils.sql.ISQLQueryObject;
 
 /**     
  * JDBCTracciaSDIServiceImpl
@@ -55,7 +50,7 @@ import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCServiceManager;
  * @version $Rev$, $Date$
  */
 public class JDBCTracciaSDIServiceImpl extends JDBCTracciaSDIServiceSearchImpl
-	implements IJDBCServiceCRUDWithoutId<TracciaSDI, JDBCServiceManager> {
+	implements IJDBCServiceCRUDWithId<TracciaSDI, IdTracciaSdi, JDBCServiceManager> {
 
 	@Override
 	public void create(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, TracciaSDI tracciaSDI, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotImplementedException,ServiceException,Exception {
@@ -73,6 +68,7 @@ public class JDBCTracciaSDIServiceImpl extends JDBCTracciaSDIServiceSearchImpl
 		sqlQueryObjectInsert.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().POSIZIONE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().TIPO_COMUNICAZIONE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().NOME_FILE,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().CODICE_DIPARTIMENTO,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().DATA,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().ID_EGOV,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().CONTENT_TYPE,false),"?");
@@ -90,6 +86,7 @@ public class JDBCTracciaSDIServiceImpl extends JDBCTracciaSDIServiceSearchImpl
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getPosizione(),TracciaSDI.model().POSIZIONE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getTipoComunicazione(),TracciaSDI.model().TIPO_COMUNICAZIONE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getNomeFile(),TracciaSDI.model().NOME_FILE.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getCodiceDipartimento(),TracciaSDI.model().CODICE_DIPARTIMENTO.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getData(),TracciaSDI.model().DATA.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getIdEgov(),TracciaSDI.model().ID_EGOV.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getContentType(),TracciaSDI.model().CONTENT_TYPE.getFieldType()),
@@ -129,9 +126,18 @@ public class JDBCTracciaSDIServiceImpl extends JDBCTracciaSDIServiceSearchImpl
 	}
 
 	@Override
-	public void update(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, TracciaSDI tracciaSDI, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotFoundException, NotImplementedException, ServiceException, Exception {
-		
+	public void update(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdTracciaSdi oldId, TracciaSDI tracciaSDI, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotFoundException, NotImplementedException, ServiceException, Exception {
+		ISQLQueryObject sqlQueryObjectUpdate = sqlQueryObject.newSQLQueryObject();
+		Long longIdByLogicId = this.findIdTracciaSDI(jdbcProperties, log, connection, sqlQueryObjectUpdate.newSQLQueryObject(), oldId, true);
 		Long tableId = tracciaSDI.getId();
+		if(tableId != null && tableId.longValue() > 0) {
+			if(tableId.longValue() != longIdByLogicId.longValue()) {
+				throw new Exception("Ambiguous parameter: tracciaSDI.id ["+tableId+"] does not match logic id ["+longIdByLogicId+"]");
+			}
+		} else {
+			tableId = longIdByLogicId;
+			tracciaSDI.setId(tableId);
+		}
 		if(tableId==null || tableId<=0){
 			throw new Exception("Retrieve tableId failed");
 		}
@@ -164,6 +170,8 @@ public class JDBCTracciaSDIServiceImpl extends JDBCTracciaSDIServiceSearchImpl
 		lstObjects_tracciaSDI.add(new JDBCObject(tracciaSDI.getTipoComunicazione(), TracciaSDI.model().TIPO_COMUNICAZIONE.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().NOME_FILE,false), "?");
 		lstObjects_tracciaSDI.add(new JDBCObject(tracciaSDI.getNomeFile(), TracciaSDI.model().NOME_FILE.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().CODICE_DIPARTIMENTO,false), "?");
+		lstObjects_tracciaSDI.add(new JDBCObject(tracciaSDI.getCodiceDipartimento(), TracciaSDI.model().CODICE_DIPARTIMENTO.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().DATA,false), "?");
 		lstObjects_tracciaSDI.add(new JDBCObject(tracciaSDI.getData(), TracciaSDI.model().DATA.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().ID_EGOV,false), "?");
@@ -275,32 +283,32 @@ public class JDBCTracciaSDIServiceImpl extends JDBCTracciaSDIServiceSearchImpl
 	}
 	
 	@Override
-	public void updateFields(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, TracciaSDI tracciaSDI, UpdateField ... updateFields) throws NotFoundException, NotImplementedException, ServiceException, Exception {
+	public void updateFields(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdTracciaSdi id, UpdateField ... updateFields) throws NotFoundException, NotImplementedException, ServiceException, Exception {
 		
 		JDBCUtilities.updateFields(jdbcProperties, log, connection, sqlQueryObject, 
 				this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model()), 
 				this._getMapTableToPKColumn(), 
-				this._getRootTablePrimaryKeyValues(jdbcProperties, log, connection, sqlQueryObject, tracciaSDI),
+				this._getRootTablePrimaryKeyValues(jdbcProperties, log, connection, sqlQueryObject, id),
 				this.getTracciaSDIFieldConverter(), this, null, updateFields);
 	}
 	
 	@Override
-	public void updateFields(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, TracciaSDI tracciaSDI, IExpression condition, UpdateField ... updateFields) throws NotFoundException, NotImplementedException, ServiceException, Exception {
+	public void updateFields(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdTracciaSdi id, IExpression condition, UpdateField ... updateFields) throws NotFoundException, NotImplementedException, ServiceException, Exception {
 		
 		JDBCUtilities.updateFields(jdbcProperties, log, connection, sqlQueryObject, 
 				this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model()), 
 				this._getMapTableToPKColumn(), 
-				this._getRootTablePrimaryKeyValues(jdbcProperties, log, connection, sqlQueryObject, tracciaSDI),
+				this._getRootTablePrimaryKeyValues(jdbcProperties, log, connection, sqlQueryObject, id),
 				this.getTracciaSDIFieldConverter(), this, condition, updateFields);
 	}
 	
 	@Override
-	public void updateFields(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, TracciaSDI tracciaSDI, UpdateModel ... updateModels) throws NotFoundException, NotImplementedException, ServiceException, Exception {
+	public void updateFields(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdTracciaSdi id, UpdateModel ... updateModels) throws NotFoundException, NotImplementedException, ServiceException, Exception {
 		
 		JDBCUtilities.updateFields(jdbcProperties, log, connection, sqlQueryObject, 
 				this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model()), 
 				this._getMapTableToPKColumn(), 
-				this._getRootTablePrimaryKeyValues(jdbcProperties, log, connection, sqlQueryObject, tracciaSDI),
+				this._getRootTablePrimaryKeyValues(jdbcProperties, log, connection, sqlQueryObject, id),
 				this.getTracciaSDIFieldConverter(), this, updateModels);
 	}	
 	
@@ -338,11 +346,10 @@ public class JDBCTracciaSDIServiceImpl extends JDBCTracciaSDIServiceSearchImpl
 	}
 	
 	@Override
-	public void updateOrCreate(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, TracciaSDI tracciaSDI, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotImplementedException,ServiceException,Exception {
+	public void updateOrCreate(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdTracciaSdi oldId, TracciaSDI tracciaSDI, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws NotImplementedException,ServiceException,Exception {
 	
-		Long id = tracciaSDI.getId();
-		if(id != null && this.exists(jdbcProperties, log, connection, sqlQueryObject, id)) {
-			this.update(jdbcProperties, log, connection, sqlQueryObject, tracciaSDI,idMappingResolutionBehaviour);		
+		if(this.exists(jdbcProperties, log, connection, sqlQueryObject, oldId)) {
+			this.update(jdbcProperties, log, connection, sqlQueryObject, oldId, tracciaSDI,idMappingResolutionBehaviour);
 		} else {
 			this.create(jdbcProperties, log, connection, sqlQueryObject, tracciaSDI,idMappingResolutionBehaviour);
 		}
@@ -363,13 +370,16 @@ public class JDBCTracciaSDIServiceImpl extends JDBCTracciaSDIServiceSearchImpl
 		
 		
 		Long longId = null;
-		if(tracciaSDI.getId()==null){
-			throw new Exception("Parameter "+tracciaSDI.getClass().getName()+".id is null");
+		if( (tracciaSDI.getId()!=null) && (tracciaSDI.getId()>0) ){
+			longId = tracciaSDI.getId();
 		}
-		if(tracciaSDI.getId()<=0){
-			throw new Exception("Parameter "+tracciaSDI.getClass().getName()+".id is less equals 0");
-		}
-		longId = tracciaSDI.getId();
+		else{
+			IdTracciaSdi idTracciaSDI = this.convertToId(jdbcProperties,log,connection,sqlQueryObject,tracciaSDI);
+			longId = this.findIdTracciaSDI(jdbcProperties,log,connection,sqlQueryObject,idTracciaSDI,false);
+			if(longId == null){
+				return; // entry not exists
+			}
+		}		
 		
 		this._delete(jdbcProperties, log, connection, sqlQueryObject, longId);
 		
@@ -424,6 +434,18 @@ public class JDBCTracciaSDIServiceImpl extends JDBCTracciaSDIServiceSearchImpl
 
 	}
 
+	@Override
+	public void deleteById(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdTracciaSdi idTracciaSDI) throws NotImplementedException,ServiceException,Exception {
+
+		Long id = null;
+		try{
+			id = this.findIdTracciaSDI(jdbcProperties, log, connection, sqlQueryObject, idTracciaSDI, true);
+		}catch(NotFoundException notFound){
+			return;
+		}
+		this._delete(jdbcProperties, log, connection, sqlQueryObject, id);
+		
+	}
 	
 	@Override
 	public NonNegativeNumber deleteAll(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject) throws NotImplementedException,ServiceException,Exception {

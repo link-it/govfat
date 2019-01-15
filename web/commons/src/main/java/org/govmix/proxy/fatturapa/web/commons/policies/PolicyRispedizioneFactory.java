@@ -20,40 +20,117 @@
  */
 package org.govmix.proxy.fatturapa.web.commons.policies;
 
+import java.util.Map;
+
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
-import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
+import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
-import org.govmix.proxy.pcc.fatture.utils.PccProperties;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 
 public class PolicyRispedizioneFactory {
 
+	private Map<String, PolicyRispedizioneConfig> params;
 	
-	private static int fattore = PccProperties.getInstance().getFattoreRispedizione();
-	private static int maxTentativiRispedizione = PccProperties.getInstance().getMaxTentativiRispedizione();
+	private PolicyRispedizioneFactory() {} //per usare solo il getinstance
+	public static void init(Map<String, PolicyRispedizioneConfig> params) {
+		instance = new PolicyRispedizioneFactory();
+		instance.setParams(params);
+	}
+
+	private static PolicyRispedizioneFactory instance;
+	public static PolicyRispedizioneFactory getInstance() throws Exception {
+		if(instance == null) {
+			instance = new PolicyRispedizioneFactory();
+		}
+//			throw new Exception("Instance not initialized");
+		return instance;
+	}
 	
-	public static IPolicyRispedizione getPolicyRispedizione(FatturaElettronica fattura) throws Exception {
+	public IPolicyRispedizione getPolicyRispedizione(FatturaElettronica fattura) throws Exception {
+		PolicyRispedizioneRetry policy = new PolicyRispedizioneRetry();
 		
-		PolicyRispedizioneRetry policy = new PolicyRispedizioneRetry();
-		policy.setFattore(fattore);
-		policy.setMaxTentativiRispedizione(maxTentativiRispedizione);
+		PolicyRispedizioneConfig config = getConfig("default");
+		
+		policy.setFattore(config.getFattoreRispedizione());
+		policy.setMaxTentativiRispedizione(config.getMaxTentativiRispedizione());
+		PolicyRispedizioneParameters params = new PolicyRispedizioneParameters();
+		params.setTentativi(fattura.getTentativiConsegna()+1);
+		policy.setParams(params);
 		return policy;
 
 	}
 
-	public static IPolicyRispedizione getPolicyRispedizione(NotificaEsitoCommittente notifica) throws Exception {
+	private PolicyRispedizioneConfig getConfig(String configName) {
+		if(params == null || !params.containsKey(configName)) {
+			
+			if(params!=null && params.containsKey("default")) {
+				return params.get("default");
+			}
+			
+			PolicyRispedizioneConfig config = new PolicyRispedizioneConfig();
+			config.setFattoreRispedizione(5);
+			config.setMaxTentativiRispedizione(5);
+			return config;
+		} else {
+			return params.get(configName);
+		}
+	}
+
+	public IPolicyRispedizione getPolicyRispedizione(TracciaSDI tracciaSdI) throws Exception {
 		PolicyRispedizioneRetry policy = new PolicyRispedizioneRetry();
-		policy.setFattore(fattore);
-		policy.setMaxTentativiRispedizione(maxTentativiRispedizione);
+		
+		PolicyRispedizioneConfig config = getConfig("default");
+
+		policy.setFattore(config.getFattoreRispedizione());
+		policy.setMaxTentativiRispedizione(config.getMaxTentativiRispedizione());
+		PolicyRispedizioneParameters params = new PolicyRispedizioneParameters();
+		params.setTentativi(tracciaSdI.getTentativiProtocollazione()+1);
+		policy.setParams(params);
 		return policy;
 
 	}
 
-	public static IPolicyRispedizione getPolicyRispedizione(NotificaDecorrenzaTermini notifica) throws Exception {
+	public IPolicyRispedizione getPolicyRispedizioneWFM(LottoFatture lotto) throws Exception {
 		PolicyRispedizioneRetry policy = new PolicyRispedizioneRetry();
-		policy.setFattore(fattore);
-		policy.setMaxTentativiRispedizione(maxTentativiRispedizione);
+		PolicyRispedizioneConfig config = getConfig("WFM");
+
+		policy.setFattore(config.getFattoreRispedizione());
+		policy.setMaxTentativiRispedizione(config.getMaxTentativiRispedizione());
+		PolicyRispedizioneParameters params = new PolicyRispedizioneParameters();
+		params.setTentativi(lotto.getTentativiConsegna()+1);
+		policy.setParams(params);
 		return policy;
 
+	}
+
+	public IPolicyRispedizione getPolicyRispedizioneSdI(LottoFatture lotto) throws Exception {
+		PolicyRispedizioneRetry policy = new PolicyRispedizioneRetry();
+		PolicyRispedizioneConfig config = getConfig("SDI");
+
+		policy.setFattore(config.getFattoreRispedizione());
+		policy.setMaxTentativiRispedizione(config.getMaxTentativiRispedizione());
+		PolicyRispedizioneParameters params = new PolicyRispedizioneParameters();
+		params.setTentativi(lotto.getTentativiConsegna()+1);
+		policy.setParams(params);
+		return policy;
+
+	}
+
+	public IPolicyRispedizione getPolicyRispedizione(NotificaEsitoCommittente notifica) throws Exception {
+		PolicyRispedizioneRetry policy = new PolicyRispedizioneRetry();
+		PolicyRispedizioneConfig config = getConfig("default");
+
+		policy.setFattore(config.getFattoreRispedizione());
+		policy.setMaxTentativiRispedizione(config.getMaxTentativiRispedizione());
+		PolicyRispedizioneParameters params = new PolicyRispedizioneParameters();
+		params.setTentativi(notifica.getTentativiConsegnaSdi()+1);
+		policy.setParams(params);
+		return policy;
+
+	}
+
+	public void setParams(Map<String, PolicyRispedizioneConfig> params) {
+		this.params = params;
 	}
 
 }

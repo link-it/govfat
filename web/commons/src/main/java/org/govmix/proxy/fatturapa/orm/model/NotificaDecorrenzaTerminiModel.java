@@ -48,7 +48,7 @@ public class NotificaDecorrenzaTerminiModel extends AbstractModel<NotificaDecorr
 		this.MESSAGE_ID = new Field("messageId",java.lang.String.class,"NotificaDecorrenzaTermini",NotificaDecorrenzaTermini.class);
 		this.NOTE = new Field("note",java.lang.String.class,"NotificaDecorrenzaTermini",NotificaDecorrenzaTermini.class);
 		this.DATA_RICEZIONE = new Field("dataRicezione",java.util.Date.class,"NotificaDecorrenzaTermini",NotificaDecorrenzaTermini.class);
-		this.XML = new Field("xml",byte[].class,"NotificaDecorrenzaTermini",NotificaDecorrenzaTermini.class);
+		this.ID_TRACCIA = new org.govmix.proxy.fatturapa.orm.model.IdTracciaSdiModel(new Field("idTraccia",org.govmix.proxy.fatturapa.orm.IdTracciaSdi.class,"NotificaDecorrenzaTermini",NotificaDecorrenzaTermini.class));
 	
 	}
 	
@@ -62,7 +62,7 @@ public class NotificaDecorrenzaTerminiModel extends AbstractModel<NotificaDecorr
 		this.MESSAGE_ID = new ComplexField(father,"messageId",java.lang.String.class,"NotificaDecorrenzaTermini",NotificaDecorrenzaTermini.class);
 		this.NOTE = new ComplexField(father,"note",java.lang.String.class,"NotificaDecorrenzaTermini",NotificaDecorrenzaTermini.class);
 		this.DATA_RICEZIONE = new ComplexField(father,"dataRicezione",java.util.Date.class,"NotificaDecorrenzaTermini",NotificaDecorrenzaTermini.class);
-		this.XML = new ComplexField(father,"xml",byte[].class,"NotificaDecorrenzaTermini",NotificaDecorrenzaTermini.class);
+		this.ID_TRACCIA = new org.govmix.proxy.fatturapa.orm.model.IdTracciaSdiModel(new ComplexField(father,"idTraccia",org.govmix.proxy.fatturapa.orm.IdTracciaSdi.class,"NotificaDecorrenzaTermini",NotificaDecorrenzaTermini.class));
 	
 	}
 	
@@ -80,7 +80,7 @@ public class NotificaDecorrenzaTerminiModel extends AbstractModel<NotificaDecorr
 	 
 	public IField DATA_RICEZIONE = null;
 	 
-	public IField XML = null;
+	public org.govmix.proxy.fatturapa.orm.model.IdTracciaSdiModel ID_TRACCIA = null;
 	 
 
 	@Override

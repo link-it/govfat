@@ -22,6 +22,7 @@ package org.govmix.proxy.fatturapa.web.commons.exporter;
 
 import java.io.OutputStream;
 import java.sql.Connection;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -105,10 +106,10 @@ public class LottoSingleFileExporter extends AbstractSingleFileExporter<LottoFat
 	}
 
 	@Override
-	protected List<IdFattura> findIdFattura(String[] ids, boolean isAll) throws ServiceException, NotFoundException {
+	protected List<String> findCodiciDipartimento(String[] ids, boolean fatturazioneAttiva) throws ServiceException, NotFoundException{
 		try {
 			LottoFatture lotto = ((JDBCLottoFattureServiceSearch)this.lottoFattureSearchDAO).get(Long.parseLong(ids[0]));
-			return this.getFatturaBD().findAllIdFatturaByIdLotto(this.lottoFattureSearchDAO.convertToId(lotto));
+			return Arrays.asList(lotto.getCodiceDestinatario());
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}

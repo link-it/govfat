@@ -23,6 +23,7 @@ package org.govmix.proxy.fatturapa.web.commons.recuperaFatture;
 import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -32,13 +33,16 @@ import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdDipartimento;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
+import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.IdUtente;
 import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.recuperofatture.Fattura;
 import org.govmix.proxy.fatturapa.recuperofatture.ListaFattureNonConsegnateResponse;
+import org.govmix.proxy.fatturapa.recuperofatture.ListaFattureResponse;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.DipartimentoBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFatturePassiveBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.UtenteBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaPassivaFilter;
 import org.govmix.proxy.fatturapa.web.commons.exporter.FatturaSingleFileExporter;
@@ -46,6 +50,7 @@ import org.govmix.proxy.fatturapa.web.commons.exporter.FatturaSingleFileExporter
 public class RecuperaFatture {
 
 	private FatturaPassivaBD fatturaPassivaBD;
+	private LottoFatturePassiveBD lottoFattureBD;
 	private DipartimentoBD dipartimentoBD;
 	private UtenteBD utenteBD;
 	private FatturaSingleFileExporter sfe;
@@ -70,6 +75,7 @@ public class RecuperaFatture {
 	}
 	public RecuperaFatture(Logger log) throws Exception {
 		this.fatturaPassivaBD = new FatturaPassivaBD(log);
+		this.lottoFattureBD = new LottoFatturePassiveBD(log);
 		this.dipartimentoBD = new DipartimentoBD(log);
 		this.utenteBD = new UtenteBD(log);
 		
@@ -162,6 +168,63 @@ public class RecuperaFatture {
 			throw new Exception("Il dipartimento destinatario della fattura ["+idDipartimento+"] ha abilitato la modalita' push di consegna delle fatture.");
 		}
 		
+	}
+
+	public String cercaLottiRicevuti(String codiceUfficio, Date dataIniziale,
+			Date dataFinale) throws Exception {
+		List<IdLotto> lst = this.lottoFattureBD.
+				getIdLottiRicevuti(codiceUfficio, dataIniziale, dataFinale);
+		
+		ListaFattureResponse response = new ListaFattureResponse();
+		
+		for(IdLotto id : lst) {
+			Fattura fattura = new Fattura();
+			fattura.setIdSDI(new BigInteger(id.getIdentificativoSdi().toString()));
+//			fattura.setPosizione(new BigInteger(id.getPosizione().toString()));
+			response.getFattura().add(fattura);
+		}
+		
+		ByteArrayOutputStream os = null;
+		try {
+			os = new ByteArrayOutputStream();
+			marshaller.marshal(response, os);
+			return os.toString();
+		} finally {
+			if(os != null) {
+				try {
+					os.close();
+				} catch(Exception e) {}
+			}
+		}
+
+	}
+
+	public String cercaFattureRicevute(Integer idSdi) throws Exception {
+		List<IdFattura> lst = this.fatturaPassivaBD.
+				getIdFattureRicevute(idSdi);
+		
+		ListaFattureResponse response = new ListaFattureResponse();
+		
+		for(IdFattura id : lst) {
+			Fattura fattura = new Fattura();
+			fattura.setIdSDI(new BigInteger(id.getIdentificativoSdi().toString()));
+			fattura.setPosizione(new BigInteger(id.getPosizione().toString()));
+			response.getFattura().add(fattura);
+		}
+		
+		ByteArrayOutputStream os = null;
+		try {
+			os = new ByteArrayOutputStream();
+			marshaller.marshal(response, os);
+			return os.toString();
+		} finally {
+			if(os != null) {
+				try {
+					os.close();
+				} catch(Exception e) {}
+			}
+		}
+
 	}
 	
 }

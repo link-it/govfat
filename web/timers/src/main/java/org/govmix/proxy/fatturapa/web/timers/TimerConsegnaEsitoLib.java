@@ -26,68 +26,29 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.govmix.proxy.fatturapa.orm.IdTracciaSdi;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.ScartoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.NotificaEsitoCommittenteBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.TracciaSdIBD;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.InvioNotifica;
+import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.NotificaECRequest;
+import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.NotificaECResponse;
 import org.govmix.proxy.fatturapa.web.commons.sonde.Sonda;
 import org.govmix.proxy.fatturapa.web.timers.policies.IPolicyRispedizione;
 import org.govmix.proxy.fatturapa.web.timers.policies.PolicyRispedizioneFactory;
 import org.govmix.proxy.fatturapa.web.timers.utils.BatchProperties;
 
-import it.gov.fatturapa.sdi.messaggi.v1_0.NotificaEsitoCommittenteType;
-import it.gov.fatturapa.sdi.messaggi.v1_0.RiferimentoFatturaType;
 import it.gov.fatturapa.sdi.messaggi.v1_0.ScartoEsitoCommittenteType;
-import it.gov.fatturapa.sdi.messaggi.v1_0.constants.EsitoCommittenteType;
-
-/**
- * Timer per la consegna degli esiti delle fatture alla PdD
- * 
- *  
- * @author Giovanni Bussu (bussu@link.it)
- * @author $Author: gbussu $
- * @version $Rev: 9747 $, $Date: 2014-03-10 11:47:43 +0100 (Mon, 10 Mar 2014) $
- */
 
 public class TimerConsegnaEsitoLib extends AbstractTimerLib {
-
-	//	private static final String NOME_FILE_URL_PARAM = "NomeFile";
-	//
-	//	private JaxbSerializer serializer;
-	//	private ObjectFactory of;
-	//	private JaxbDeserializer deserializer;
-
-
-	//	public static void main(String[] args) throws Exception {
-	//		
-	//		JaxbSerializer serializer = new JaxbSerializer();
-	//		ObjectFactory of = new ObjectFactory();
-	//		
-	//		NotificaEsitoCommittenteType nec = new NotificaEsitoCommittenteType();
-	//		nec.setEsito(EsitoCommittenteType.EC02);
-	//		nec.setDescrizione("Formato XML della fattura non corretto");
-	//		nec.setIdentificativoSdI(5751387);
-	//		nec.setMessageIdCommittente("28071547");
-	//		nec.setVersione("1.0");
-	////
-	////		RiferimentoFatturaType riferimentoFattura = new RiferimentoFatturaType();
-	////		riferimentoFattura.setAnnoFattura(notifica.getAnno());
-	////		riferimentoFattura.setNumeroFattura(notifica.getNumeroFattura());
-	////		riferimentoFattura.setPosizioneFattura(notifica.getIdFattura().getPosizione());
-	//		String necXML = serializer.toString(of.createNotificaEsitoCommittente(nec));
-	//		System.out.println(necXML);
-	//	}
-
 	public TimerConsegnaEsitoLib(int limit, Logger log, boolean logQuery) throws Exception{
 		super(limit, log, logQuery);
-		//		this.serializer = new JaxbSerializer();
-		//		this.of = new ObjectFactory();
-		//		this.deserializer = new JaxbDeserializer();
-
 	}
 
 	@Override
@@ -97,6 +58,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 		try {
 			connection = DAOFactory.getInstance().getConnection();
 			NotificaEsitoCommittenteBD notificaEsitoCommittenteBD = new NotificaEsitoCommittenteBD(log, connection, false);
+			TracciaSdIBD tracciaBD = new TracciaSdIBD(log, connection, false);
 			FatturaPassivaBD fatturaElettronicaBD = new FatturaPassivaBD(log, connection, false);
 
 			Date limitDate = new Date(System.currentTimeMillis());
@@ -107,9 +69,9 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 			long countNotificheElaborate = 0; 
 
 			if(countNotifiche > 0) {
-//				connection.setAutoCommit(false);
+				connection.setAutoCommit(false);
 
-				this.log.info("Gestisco ["+countNotifiche+"] NotificheEsitoCommittente da consegnare, ["+limit+"] alla volta");
+				this.log.info("Gestisco ["+countNotifiche+"] NotificheEsitoCommittente da consegnare, ["+this.limit+"] alla volta");
 				List<NotificaEsitoCommittente> lstNotifiche = notificaEsitoCommittenteBD.findAllNotifiche(limitDate, 0, this.limit);
 
 				BatchProperties properties = BatchProperties.getInstance();
@@ -118,34 +80,13 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 						for(NotificaEsitoCommittente notifica : lstNotifiche) {
 
 							try{
-								NotificaEsitoCommittenteType nec = new NotificaEsitoCommittenteType();
-								EsitoCommittenteType esito;
-								switch(notifica.getEsito()) {
-								case EC01: esito = EsitoCommittenteType.EC01;
-								break;
-								case EC02: esito = EsitoCommittenteType.EC02;
-								break;
-								default: esito = EsitoCommittenteType.EC02;
-								break;
-
-								}
-								nec.setEsito(esito);
-
-								nec.setDescrizione(notifica.getDescrizione());
-								nec.setIdentificativoSdI(notifica.getIdFattura().getIdentificativoSdi());
-
-								nec.setMessageIdCommittente(notifica.getMessageIdCommittente());
-								nec.setVersione("1.0");
-
-								RiferimentoFatturaType riferimentoFattura = new RiferimentoFatturaType();
-								riferimentoFattura.setAnnoFattura(notifica.getAnno());
-								riferimentoFattura.setNumeroFattura(notifica.getNumeroFattura());
-								riferimentoFattura.setPosizioneFattura(notifica.getIdFattura().getPosizione());
-
-								nec.setRiferimentoFattura(riferimentoFattura);
 								InvioNotifica invioNotifica = new InvioNotifica(properties.getRicezioneEsitoURL(), properties.getRicezioneEsitoUsername(), properties.getRicezioneEsitoPassword());
-								invioNotifica.invia(nec, notifica.getNomeFile());
-								int esitoChiamata = invioNotifica.getEsitoChiamata();
+
+								
+								NotificaECRequest request = new NotificaECRequest();
+								request.setNotifica(notifica);
+								NotificaECResponse invioNotificaResponse = invioNotifica.invia(request);
+								int esitoChiamata = invioNotificaResponse.getEsitoChiamata();
 
 								if(esitoChiamata > 299) {
 									IPolicyRispedizione policyRispedizione = PolicyRispedizioneFactory.getPolicyRispedizione(notifica);
@@ -163,14 +104,23 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 									continue;
 									
 								} else {
+									
+									String codiceDestinatario = fatturaElettronicaBD.get(notifica.getIdFattura()).getCodiceDestinatario();
+									
 									this.log.info("Risposta dallo SdI con codice ["+esitoChiamata+"].");
 									notifica.setDataInvioSdi(new Date());
-									notifica.setXml(invioNotifica.getNotificaXML());
+									
+									TracciaSDI tracciaNotifica = invioNotificaResponse.getTracciaNotifica();
+									tracciaNotifica.setCodiceDipartimento(codiceDestinatario);
+									tracciaBD.insert(tracciaNotifica);
+									IdTracciaSdi idTraccia = new IdTracciaSdi();
+									idTraccia.setIdTraccia(tracciaNotifica.getId());
+									notifica.setIdTracciaNotifica(idTraccia);
 
 									EsitoType esitoFattura = null;
 									if(esitoChiamata == 200) {
 
-										ScartoEsitoCommittenteType scarto = invioNotifica.getScarto();
+										ScartoEsitoCommittenteType scarto = invioNotificaResponse.getScarto();
 										ScartoType scartoT;
 										switch(scarto.getScarto()) {
 										case EN00: scartoT = ScartoType.EN00;
@@ -191,7 +141,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 												// ma il proxy non e' riuscito a riceverne comunicazione.
 												this.log.info("Risposta dallo SdI con Scarto Note["+scarto.getNote()+"]. Considero il precedente tentativo di invio come andato a buon fine. Inserisco l'esito");
 
-												switch(esito) {
+												switch(notifica.getEsito()) {
 												case EC01: esitoFattura = EsitoType.INVIATA_ACCETTATO;
 												break;
 												case EC02: esitoFattura = EsitoType.INVIATA_RIFIUTATO;
@@ -233,9 +183,16 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 												
 												notifica.setScarto(scartoT);
 												notifica.setScartoNote(scarto.getNote());
-												notifica.setScartoXml(invioNotifica.getScartoXML());
+												
+												TracciaSDI tracciaScarto = invioNotificaResponse.getTracciaScarto();
+												tracciaScarto.setCodiceDipartimento(codiceDestinatario);
+												tracciaBD.insert(tracciaScarto);
+												IdTracciaSdi idTracciaScarto = new IdTracciaSdi();
+												idTracciaScarto.setIdTraccia(invioNotificaResponse.getTracciaScarto().getId());
+												notifica.setIdTracciaScarto(idTracciaScarto);
 
-												switch(esito) {
+
+												switch(notifica.getEsito()) {
 												case EC01: esitoFattura = EsitoType.SCARTATA_ACCETTATO;
 												break;
 												case EC02: esitoFattura = EsitoType.SCARTATA_RIFIUTATO;
@@ -251,9 +208,14 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 
 											notifica.setScarto(scartoT);
 											notifica.setScartoNote(scarto.getNote());
-											notifica.setScartoXml(invioNotifica.getScartoXML());
+											TracciaSDI tracciaScarto = invioNotificaResponse.getTracciaScarto();
+											tracciaScarto.setCodiceDipartimento(codiceDestinatario);
+											tracciaBD.insert(tracciaScarto);
+											IdTracciaSdi idTracciaScarto = new IdTracciaSdi();
+											idTracciaScarto.setIdTraccia(invioNotificaResponse.getTracciaScarto().getId());
+											notifica.setIdTracciaScarto(idTracciaScarto);
 
-											switch(esito) {
+											switch(notifica.getEsito()) {
 											case EC01: esitoFattura = EsitoType.SCARTATA_ACCETTATO;
 											break;
 											case EC02: esitoFattura = EsitoType.SCARTATA_RIFIUTATO;
@@ -269,7 +231,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 									} else if (esitoChiamata == 202) {
 										this.log.info("Risposta dallo SdI con codice ["+esitoChiamata+"]. Aggiorno l'esito della fattura.");
 
-										switch(esito) {
+										switch(notifica.getEsito()) {
 										case EC01: esitoFattura = EsitoType.INVIATA_ACCETTATO;
 										break;
 										case EC02: esitoFattura = EsitoType.INVIATA_RIFIUTATO;
@@ -288,6 +250,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 								notifica.setStatoConsegnaSdi(StatoConsegnaType.CONSEGNATA);
 								notifica.setDataInvioSdi(new Date());
 								notificaEsitoCommittenteBD.update(notifica);
+								
 							} catch(Exception e) {
 								this.log.error("Errore durante l'invio della notifica relativa alla fattura ["+notifica.getIdFattura().toJson()+"]:"+e.getMessage(), e);
 								IPolicyRispedizione policyRispedizione = PolicyRispedizioneFactory.getPolicyRispedizione(notifica);
@@ -300,17 +263,17 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 								notifica.setStatoConsegnaSdi(policyRispedizione.isRispedizioneAbilitata() ? StatoConsegnaType.IN_RICONSEGNA: StatoConsegnaType.ERRORE_CONSEGNA);
 								notificaEsitoCommittenteBD.update(notifica);
 							}
+							
+							connection.commit();
 							countNotificheElaborate++;
 						}
 						this.log.info("Gestite ["+countNotificheElaborate+"\\"+countNotifiche+"] NotificheEsitoCommittente da consegnare");
 
 						lstNotifiche = notificaEsitoCommittenteBD.findAllNotifiche(limitDate, 0, this.limit);
-//						connection.commit();
 					}
 					Sonda.getInstance().registraChiamataServizioOK(this.getTimerName());
 				} catch(Exception e) {
 					log.error("Errore durante la consegnaEsito:"+e.getMessage(), e);
-//					connection.rollback();
 				}
 
 				this.log.info("Gestite ["+countNotificheElaborate+"\\"+countNotifiche+"] NotificheEsitoCommittente da consegnare. Fine");

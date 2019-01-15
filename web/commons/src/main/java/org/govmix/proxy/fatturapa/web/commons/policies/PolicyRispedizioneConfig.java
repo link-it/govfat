@@ -18,21 +18,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.govmix.proxy.fatturapa.orm.dao;
+package org.govmix.proxy.fatturapa.web.commons.policies;
 
-import org.govmix.proxy.fatturapa.orm.TracciaSDI;
-import org.openspcoop2.generic_project.dao.IDBServiceWithId;
-import org.govmix.proxy.fatturapa.orm.IdTracciaSdi;
+public class PolicyRispedizioneConfig {
 
-/**     
- * Service can be used both for research that will make persistent objects on the backend of type org.govmix.proxy.fatturapa.orm.TracciaSDI 
- *
- * @author Giuseppe Papandrea (papandrea@link.it)
- * @author Giovanni Bussu (bussu@link.it)
- * @author $Author$
- * @version $Rev$, $Date$
- */
-
-public interface IDBTracciaSDIService extends ITracciaSDIService,IDBServiceWithId<TracciaSDI, IdTracciaSdi> {
-
+	private int fattoreRispedizione;
+	private int maxTentativiRispedizione;
+	public int getMaxTentativiRispedizione() {
+		return this.maxTentativiRispedizione;
+	}
+	public void setMaxTentativiRispedizione(int maxTentativiRispedizione) {
+		this.maxTentativiRispedizione = maxTentativiRispedizione;
+	}
+	public int getFattoreRispedizione() {
+		return this.fattoreRispedizione;
+	}
+	public void setFattoreRispedizione(int fattoreRispedizione) {
+		this.fattoreRispedizione = fattoreRispedizione;
+	}
 }

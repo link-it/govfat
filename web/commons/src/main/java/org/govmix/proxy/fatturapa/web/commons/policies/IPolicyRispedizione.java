@@ -20,9 +20,8 @@
  */
 package org.govmix.proxy.fatturapa.web.commons.policies;
 
-
 public interface IPolicyRispedizione {
 
-	public long getOffsetRispedizione(PolicyRispedizioneParameters params);
-	public boolean isRispedizioneAbilitata(PolicyRispedizioneParameters params);
+	public long getOffsetRispedizione();
+	public boolean isRispedizioneAbilitata();
 }

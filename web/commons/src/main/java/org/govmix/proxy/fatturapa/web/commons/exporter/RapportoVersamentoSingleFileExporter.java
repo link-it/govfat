@@ -100,13 +100,12 @@ public class RapportoVersamentoSingleFileExporter extends AbstractSingleFileExpo
 	}
 
 	@Override
-	protected List<IdFattura> findIdFattura(String[] ids, boolean isAll) throws ServiceException, NotFoundException {
+	protected List<String> findCodiciDipartimento(String[] ids, boolean fatturazioneAttiva) throws ServiceException, NotFoundException{
 		try {
-			List<IdFattura> idFatturaRichiesti = new ArrayList<IdFattura>();
+			List<String> idFatturaRichiesti = new ArrayList<String>();
 			for (String idFattura : ids) {
 				FatturaElettronica fattura = this.getFatturaBD().getById(Long.parseLong(idFattura));
-				IdFattura idFattura2 = this.getFatturaBD().convertToId(fattura);
-				idFatturaRichiesti.add(idFattura2);
+				idFatturaRichiesti.add(fattura.getCodiceDestinatario());
 			}
 			return idFatturaRichiesti;
 		} catch (NumberFormatException e) {

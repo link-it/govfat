@@ -20,16 +20,16 @@
  */
 package org.govmix.proxy.fatturapa.web.commons.policies;
 
-
 public class PolicyRispedizioneRetry implements IPolicyRispedizione {
 
 	private int maxTentativiRispedizione;
 	private int fattore;
 	private static final int SECONDS = 1000;
+	private PolicyRispedizioneParameters params;
 	
 	@Override
-	public long getOffsetRispedizione(PolicyRispedizioneParameters params) {
-		return this.getFattore()*params.getTentativi()*SECONDS;
+	public long getOffsetRispedizione() {
+		return this.getFattore()*this.params.getTentativi()*SECONDS;
 	}
 
 	public int getFattore() {
@@ -49,8 +49,16 @@ public class PolicyRispedizioneRetry implements IPolicyRispedizione {
 	}
 
 	@Override
-	public boolean isRispedizioneAbilitata(PolicyRispedizioneParameters params) {
-		return params.getTentativi() < this.maxTentativiRispedizione;
+	public boolean isRispedizioneAbilitata() {
+		return this.params.getTentativi() < this.maxTentativiRispedizione;
+	}
+
+	public PolicyRispedizioneParameters getParams() {
+		return params;
+	}
+
+	public void setParams(PolicyRispedizioneParameters params) {
+		this.params = params;
 	}
 
 }

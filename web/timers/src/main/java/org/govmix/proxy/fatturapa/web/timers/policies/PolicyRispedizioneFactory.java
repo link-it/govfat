@@ -82,15 +82,5 @@ public class PolicyRispedizioneFactory {
 		return policy;
 
 	}
-//
-//	public static IPolicyRispedizione getPolicyRispedizione(NotificaDecorrenzaTermini notifica) throws Exception {
-//		PolicyRispedizioneRetry policy = new PolicyRispedizioneRetry();
-//		policy.setFattore(BatchProperties.getInstance().getFattoreRispedizione());
-//		policy.setMaxTentativiRispedizione(BatchProperties.getInstance().getMaxTentativiRispedizione());
-//		PolicyRispedizioneParameters params = new PolicyRispedizioneParameters();
-//		params.setTentativi(notifica.getTentativiConsegna()+1);
-//		policy.setParams(params);
-//		return policy;
-//	}
 
 }

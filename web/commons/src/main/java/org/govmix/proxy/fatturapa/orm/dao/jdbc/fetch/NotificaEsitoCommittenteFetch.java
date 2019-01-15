@@ -89,10 +89,6 @@ public class NotificaEsitoCommittenteFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "scarto", NotificaEsitoCommittente.model().SCARTO.getFieldType())+"");
 				setParameter(object, "setScartoNote", NotificaEsitoCommittente.model().SCARTO_NOTE.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "scarto_note", NotificaEsitoCommittente.model().SCARTO_NOTE.getFieldType()));
-				setParameter(object, "setScartoXml", NotificaEsitoCommittente.model().SCARTO_XML.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "scarto_xml", NotificaEsitoCommittente.model().SCARTO_XML.getFieldType()));
-				setParameter(object, "setXml", NotificaEsitoCommittente.model().XML.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "xml", NotificaEsitoCommittente.model().XML.getFieldType()));
 				return object;
 			}
 			
@@ -149,10 +145,6 @@ public class NotificaEsitoCommittenteFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"scarto"));
 				setParameter(object, "setScartoNote", NotificaEsitoCommittente.model().SCARTO_NOTE.getFieldType(),
 					this.getObjectFromMap(map,"scartoNote"));
-				setParameter(object, "setScartoXml", NotificaEsitoCommittente.model().SCARTO_XML.getFieldType(),
-					this.getObjectFromMap(map,"scartoXml"));
-				setParameter(object, "setXml", NotificaEsitoCommittente.model().XML.getFieldType(),
-					this.getObjectFromMap(map,"xml"));
 				return object;
 			}
 			

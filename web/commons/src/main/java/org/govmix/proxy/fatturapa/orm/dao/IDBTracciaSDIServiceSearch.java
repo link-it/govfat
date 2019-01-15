@@ -21,7 +21,8 @@
 package org.govmix.proxy.fatturapa.orm.dao;
 
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
-import org.openspcoop2.generic_project.dao.IDBServiceSearchWithoutId;
+import org.openspcoop2.generic_project.dao.IDBServiceSearchWithId;
+import org.govmix.proxy.fatturapa.orm.IdTracciaSdi;
 
 
 /** 
@@ -33,5 +34,5 @@ import org.openspcoop2.generic_project.dao.IDBServiceSearchWithoutId;
  * @version $Rev$, $Date$
  */
 
-public interface IDBTracciaSDIServiceSearch extends ITracciaSDIServiceSearch,IDBServiceSearchWithoutId<TracciaSDI> {
+public interface IDBTracciaSDIServiceSearch extends ITracciaSDIServiceSearch,IDBServiceSearchWithId<TracciaSDI, IdTracciaSdi> {
 }

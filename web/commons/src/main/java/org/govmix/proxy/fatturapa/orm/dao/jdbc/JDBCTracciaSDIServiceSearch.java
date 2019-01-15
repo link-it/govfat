@@ -21,7 +21,8 @@
 package org.govmix.proxy.fatturapa.orm.dao.jdbc;
 
 import org.openspcoop2.generic_project.dao.IDBServiceUtilities;
-import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithoutId;
+import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithId;
+import org.govmix.proxy.fatturapa.orm.IdTracciaSdi;
 import org.openspcoop2.generic_project.beans.InUse;
 import org.openspcoop2.generic_project.beans.IField;
 import org.openspcoop2.generic_project.beans.NonNegativeNumber;
@@ -70,7 +71,7 @@ public class JDBCTracciaSDIServiceSearch implements IDBTracciaSDIServiceSearch, 
 	protected JDBCServiceManagerProperties jdbcProperties = null;
 	protected JDBCServiceManager jdbcServiceManager = null;
 	protected Logger log = null;
-	protected IJDBCServiceSearchWithoutId<TracciaSDI, JDBCServiceManager> serviceSearch = null;
+	protected IJDBCServiceSearchWithId<TracciaSDI, IdTracciaSdi, JDBCServiceManager> serviceSearch = null;
 	protected JDBC_SQLObjectFactory jdbcSqlObjectFactory = null;
 	public JDBCTracciaSDIServiceSearch(JDBCServiceManager jdbcServiceManager) throws ServiceException {
 		this.jdbcServiceManager = jdbcServiceManager;
@@ -99,10 +100,229 @@ public class JDBCTracciaSDIServiceSearch implements IDBTracciaSDIServiceSearch, 
 		return this.serviceSearch.getFieldConverter();
 	}
 	
+	@Override
+	public IdTracciaSdi convertToId(TracciaSDI obj)
+			throws ServiceException, NotImplementedException {
 		
-
-
+		Connection connection = null;
+		try{
+			
+			// check parameters
+			if(obj==null){
+				throw new Exception("Parameter (type:"+TracciaSDI.class.getName()+") 'obj' is null");
+			}
+			
+			// ISQLQueryObject
+			ISQLQueryObject sqlQueryObject = this.jdbcSqlObjectFactory.createSQLQueryObject(this.jdbcProperties.getDatabase());
+			sqlQueryObject.setANDLogicOperator(true);
+			// Connection sql
+			connection = this.jdbcServiceManager.getConnection();
+		
+			return this.serviceSearch.convertToId(this.jdbcProperties,this.log,connection,sqlQueryObject,obj);
+		
+		}catch(ServiceException e){
+			this.log.error(e,e); throw e;
+		}catch(NotImplementedException e){
+			this.log.error(e,e); throw e;
+		}catch(Exception e){
+			this.log.error(e,e); throw new ServiceException("ConvertToId not completed: "+e.getMessage(),e);
+		}finally{
+			if(connection!=null){
+				this.jdbcServiceManager.closeConnection(connection);
+			}
+		}
+		
+	}
+		
+	@Override
+	public TracciaSDI get(IdTracciaSdi id) throws ServiceException, NotFoundException,MultipleResultException, NotImplementedException {
+    
+		Connection connection = null;
+		try{
+			
+			// check parameters
+			if(id==null){
+				throw new Exception("Parameter (type:"+IdTracciaSdi.class.getName()+") 'id' is null");
+			}
+			
+			// ISQLQueryObject
+			ISQLQueryObject sqlQueryObject = this.jdbcSqlObjectFactory.createSQLQueryObject(this.jdbcProperties.getDatabase());
+			sqlQueryObject.setANDLogicOperator(true);
+			// Connection sql
+			connection = this.jdbcServiceManager.getConnection();
+		
+			return this.serviceSearch.get(this.jdbcProperties,this.log,connection,sqlQueryObject,id,null);
+		
+		}catch(ServiceException e){
+			this.log.error(e,e); throw e;
+		}catch(NotFoundException e){
+			this.log.debug(e,e); throw e;
+		}catch(MultipleResultException e){
+			this.log.error(e,e); throw e;
+		}catch(NotImplementedException e){
+			this.log.error(e,e); throw e;
+		}catch(Exception e){
+			this.log.error(e,e); throw new ServiceException("Get not completed: "+e.getMessage(),e);
+		}finally{
+			if(connection!=null){
+				this.jdbcServiceManager.closeConnection(connection);
+			}
+		}
 	
+	}
+
+	@Override
+	public TracciaSDI get(IdTracciaSdi id, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws ServiceException, NotFoundException,MultipleResultException, NotImplementedException {
+		Connection connection = null;
+		try{
+			
+			// check parameters
+			if(id==null){
+				throw new Exception("Parameter (type:"+IdTracciaSdi.class.getName()+") 'id' is null");
+			}
+			if(idMappingResolutionBehaviour==null){
+				throw new Exception("Parameter (type:"+org.openspcoop2.generic_project.beans.IDMappingBehaviour.class.getName()+") 'idMappingResolutionBehaviour' is null");
+			}
+			
+			// ISQLQueryObject
+			ISQLQueryObject sqlQueryObject = this.jdbcSqlObjectFactory.createSQLQueryObject(this.jdbcProperties.getDatabase());
+			sqlQueryObject.setANDLogicOperator(true);
+			// Connection sql
+			connection = this.jdbcServiceManager.getConnection();
+		
+			return this.serviceSearch.get(this.jdbcProperties,this.log,connection,sqlQueryObject,id,idMappingResolutionBehaviour);
+		
+		}catch(ServiceException e){
+			this.log.error(e,e); throw e;
+		}catch(NotFoundException e){
+			this.log.debug(e,e); throw e;
+		}catch(MultipleResultException e){
+			this.log.error(e,e); throw e;
+		}catch(NotImplementedException e){
+			this.log.error(e,e); throw e;
+		}catch(Exception e){
+			this.log.error(e,e); throw new ServiceException("Get (idMappingResolutionBehaviour) not completed: "+e.getMessage(),e);
+		}finally{
+			if(connection!=null){
+				this.jdbcServiceManager.closeConnection(connection);
+			}
+		}
+	
+	}
+
+	@Override
+	public boolean exists(IdTracciaSdi id) throws MultipleResultException,ServiceException,NotImplementedException {
+
+		Connection connection = null;
+		try{
+			
+			// check parameters
+			if(id==null){
+				throw new Exception("Parameter (type:"+IdTracciaSdi.class.getName()+") 'id' is null");
+			}
+
+			// ISQLQueryObject
+			ISQLQueryObject sqlQueryObject = this.jdbcSqlObjectFactory.createSQLQueryObject(this.jdbcProperties.getDatabase());
+			sqlQueryObject.setANDLogicOperator(true);
+			// Connection sql
+			connection = this.jdbcServiceManager.getConnection();
+
+			return this.serviceSearch.exists(this.jdbcProperties,this.log,connection,sqlQueryObject,id);
+	
+		}catch(MultipleResultException e){
+			this.log.error(e,e); throw e;
+		}catch(ServiceException e){
+			this.log.error(e,e); throw e;
+		}catch(NotImplementedException e){
+			this.log.error(e,e); throw e;
+		}catch(Exception e){
+			this.log.error(e,e); throw new ServiceException("Exists not completed: "+e.getMessage(),e);
+		}finally{
+			if(connection!=null){
+				this.jdbcServiceManager.closeConnection(connection);
+			}
+		}
+		
+	}
+	
+	@Override
+	public List<IdTracciaSdi> findAllIds(IPaginatedExpression expression) throws ServiceException, NotImplementedException {
+
+		Connection connection = null;
+		try{
+			
+			// check parameters
+			if(expression==null){
+				throw new Exception("Parameter (type:"+IPaginatedExpression.class.getName()+") 'expression' is null");
+			}
+			if( ! (expression instanceof JDBCPaginatedExpression) ){
+				throw new Exception("Parameter (type:"+expression.getClass().getName()+") 'expression' has wrong type, expect "+JDBCPaginatedExpression.class.getName());
+			}
+			JDBCPaginatedExpression jdbcPaginatedExpression = (JDBCPaginatedExpression) expression;
+			this.log.debug("sql = "+jdbcPaginatedExpression.toSql());
+
+			// ISQLQueryObject
+			ISQLQueryObject sqlQueryObject = this.jdbcSqlObjectFactory.createSQLQueryObject(this.jdbcProperties.getDatabase());
+			sqlQueryObject.setANDLogicOperator(true);
+			// Connection sql
+			connection = this.jdbcServiceManager.getConnection();
+			
+			return this.serviceSearch.findAllIds(this.jdbcProperties,this.log,connection,sqlQueryObject,jdbcPaginatedExpression,null);
+	
+		}catch(ServiceException e){
+			this.log.error(e,e); throw e;
+		}catch(NotImplementedException e){
+			this.log.error(e,e); throw e;
+		}catch(Exception e){
+			this.log.error(e,e); throw new ServiceException("FindAllIds not completed: "+e.getMessage(),e);
+		}finally{
+			if(connection!=null){
+				this.jdbcServiceManager.closeConnection(connection);
+			}
+		}
+		
+	}
+	
+	@Override
+	public List<IdTracciaSdi> findAllIds(IPaginatedExpression expression, org.openspcoop2.generic_project.beans.IDMappingBehaviour idMappingResolutionBehaviour) throws ServiceException, NotImplementedException {
+
+		Connection connection = null;
+		try{
+			
+			// check parameters
+			if(idMappingResolutionBehaviour==null){
+				throw new Exception("Parameter (type:"+org.openspcoop2.generic_project.beans.IDMappingBehaviour.class.getName()+") 'idMappingResolutionBehaviour' is null");
+			}
+			if(expression==null){
+				throw new Exception("Parameter (type:"+IPaginatedExpression.class.getName()+") 'expression' is null");
+			}
+			if( ! (expression instanceof JDBCPaginatedExpression) ){
+				throw new Exception("Parameter (type:"+expression.getClass().getName()+") 'expression' has wrong type, expect "+JDBCPaginatedExpression.class.getName());
+			}
+			JDBCPaginatedExpression jdbcPaginatedExpression = (JDBCPaginatedExpression) expression;
+			this.log.debug("sql = "+jdbcPaginatedExpression.toSql());
+
+			// ISQLQueryObject
+			ISQLQueryObject sqlQueryObject = this.jdbcSqlObjectFactory.createSQLQueryObject(this.jdbcProperties.getDatabase());
+			sqlQueryObject.setANDLogicOperator(true);
+			// Connection sql
+			connection = this.jdbcServiceManager.getConnection();
+			
+			return this.serviceSearch.findAllIds(this.jdbcProperties,this.log,connection,sqlQueryObject,jdbcPaginatedExpression,idMappingResolutionBehaviour);
+	
+		}catch(ServiceException e){
+			this.log.error(e,e); throw e;
+		}catch(NotImplementedException e){
+			this.log.error(e,e); throw e;
+		}catch(Exception e){
+			this.log.error(e,e); throw new ServiceException("FindAllIds not completed: "+e.getMessage(),e);
+		}finally{
+			if(connection!=null){
+				this.jdbcServiceManager.closeConnection(connection);
+			}
+		}
+		
+	}
 
 	@Override
 	public List<TracciaSDI> findAll(IPaginatedExpression expression) throws ServiceException, NotImplementedException {
@@ -308,6 +528,40 @@ public class JDBCTracciaSDIServiceSearch implements IDBTracciaSDIServiceSearch, 
 		
 	}
 
+	@Override
+	public InUse inUse(IdTracciaSdi id) throws ServiceException, NotFoundException,NotImplementedException {
+
+		Connection connection = null;
+		try{
+			
+			// check parameters
+			if(id==null){
+				throw new Exception("Parameter (type:"+IdTracciaSdi.class.getName()+") 'id' is null");
+			}
+			
+			// ISQLQueryObject
+			ISQLQueryObject sqlQueryObject = this.jdbcSqlObjectFactory.createSQLQueryObject(this.jdbcProperties.getDatabase());
+			sqlQueryObject.setANDLogicOperator(true);
+			// Connection sql
+			connection = this.jdbcServiceManager.getConnection();
+
+			return this.serviceSearch.inUse(this.jdbcProperties,this.log,connection,sqlQueryObject,id);	
+	
+		}catch(ServiceException e){
+			this.log.error(e,e); throw e;
+		}catch(NotFoundException e){
+			this.log.debug(e,e); throw e;
+		}catch(NotImplementedException e){
+			this.log.error(e,e); throw e;
+		}catch(Exception e){
+			this.log.error(e,e); throw new ServiceException("InUse not completed: "+e.getMessage(),e);
+		}finally{
+			if(connection!=null){
+				this.jdbcServiceManager.closeConnection(connection);
+			}
+		}
+		
+	}
 	
 	@Override
 	public List<Object> select(IPaginatedExpression paginatedExpression, IField field) throws ServiceException,NotFoundException,NotImplementedException {
@@ -729,6 +983,77 @@ public class JDBCTracciaSDIServiceSearch implements IDBTracciaSDIServiceSearch, 
 
 	// -- DB
 	
+	@Override
+	public void mappingTableIds(IdTracciaSdi id, TracciaSDI obj) throws ServiceException,NotFoundException,NotImplementedException{
+		Connection connection = null;
+		try{
+			
+			// check parameters
+			if(id==null){
+				throw new Exception("Parameter (type:"+IdTracciaSdi.class.getName()+") 'id' is null");
+			}
+			if(obj==null){
+				throw new Exception("Parameter (type:"+TracciaSDI.class.getName()+") 'obj' is null");
+			}
+			
+			// ISQLQueryObject
+			ISQLQueryObject sqlQueryObject = this.jdbcSqlObjectFactory.createSQLQueryObject(this.jdbcProperties.getDatabase());
+			sqlQueryObject.setANDLogicOperator(true);
+			// Connection sql
+			connection = this.jdbcServiceManager.getConnection();
+		
+			this.serviceSearch.mappingTableIds(this.jdbcProperties,this.log,connection,sqlQueryObject,id,obj);
+		
+		}catch(ServiceException e){
+			this.log.error(e,e); throw e;
+		}catch(NotFoundException e){
+			this.log.debug(e,e); throw e;
+		}catch(NotImplementedException e){
+			this.log.error(e,e); throw e;
+		}catch(Exception e){
+			this.log.error(e,e); throw new ServiceException("mappingIds(IdObject) not completed: "+e.getMessage(),e);
+		}finally{
+			if(connection!=null){
+				this.jdbcServiceManager.closeConnection(connection);
+			}
+		}
+	}
+	
+	@Override
+	public void mappingTableIds(long tableId, TracciaSDI obj) throws ServiceException,NotFoundException,NotImplementedException{
+		Connection connection = null;
+		try{
+			
+			// check parameters
+			if(tableId<=0){
+				throw new Exception("Parameter (type:"+IdTracciaSdi.class.getName()+") 'tableId' is lessEquals 0");
+			}
+			if(obj==null){
+				throw new Exception("Parameter (type:"+TracciaSDI.class.getName()+") 'obj' is null");
+			}
+			
+			// ISQLQueryObject
+			ISQLQueryObject sqlQueryObject = this.jdbcSqlObjectFactory.createSQLQueryObject(this.jdbcProperties.getDatabase());
+			sqlQueryObject.setANDLogicOperator(true);
+			// Connection sql
+			connection = this.jdbcServiceManager.getConnection();
+		
+			this.serviceSearch.mappingTableIds(this.jdbcProperties,this.log,connection,sqlQueryObject,tableId,obj);
+		
+		}catch(ServiceException e){
+			this.log.error(e,e); throw e;
+		}catch(NotFoundException e){
+			this.log.debug(e,e); throw e;
+		}catch(NotImplementedException e){
+			this.log.error(e,e); throw e;
+		}catch(Exception e){
+			this.log.error(e,e); throw new ServiceException("mappingIds(tableId) not completed: "+e.getMessage(),e);
+		}finally{
+			if(connection!=null){
+				this.jdbcServiceManager.closeConnection(connection);
+			}
+		}
+	}
 		
 	@Override
 	public TracciaSDI get(long tableId) throws ServiceException, NotFoundException,MultipleResultException, NotImplementedException {
@@ -957,6 +1282,76 @@ public class JDBCTracciaSDIServiceSearch implements IDBTracciaSDIServiceSearch, 
 	
 	}
 	
+	@Override
+	public IdTracciaSdi findId(long tableId, boolean throwNotFound)
+			throws NotFoundException, ServiceException, NotImplementedException {
+		
+		Connection connection = null;
+		try{
+			
+			// check parameters
+			if(tableId<=0){
+				throw new Exception("Parameter 'tableId' is less equals 0");
+			}
+			
+			// ISQLQueryObject
+			ISQLQueryObject sqlQueryObject = this.jdbcSqlObjectFactory.createSQLQueryObject(this.jdbcProperties.getDatabase());
+			sqlQueryObject.setANDLogicOperator(true);
+			// Connection sql
+			connection = this.jdbcServiceManager.getConnection();
+
+			return this.serviceSearch.findId(this.jdbcProperties,this.log,connection,sqlQueryObject,tableId,throwNotFound);		
+	
+		}catch(ServiceException e){
+			this.log.error(e,e); throw e;
+		}catch(NotFoundException e){
+			this.log.debug(e,e); throw e;
+		}catch(NotImplementedException e){
+			this.log.error(e,e); throw e;
+		}catch(Exception e){
+			this.log.error(e,e); throw new ServiceException("findId(tableId,throwNotFound) not completed: "+e.getMessage(),e);
+		}finally{
+			if(connection!=null){
+				this.jdbcServiceManager.closeConnection(connection);
+			}
+		}
+		
+	}
+
+	@Override
+	public Long findTableId(IdTracciaSdi id, boolean throwNotFound)
+			throws NotFoundException, ServiceException, NotImplementedException {
+		
+		Connection connection = null;
+		try{
+			
+			// check parameters
+			if(id==null){
+				throw new Exception("Parameter 'id' is null");
+			}
+			
+			// ISQLQueryObject
+			ISQLQueryObject sqlQueryObject = this.jdbcSqlObjectFactory.createSQLQueryObject(this.jdbcProperties.getDatabase());
+			sqlQueryObject.setANDLogicOperator(true);
+			// Connection sql
+			connection = this.jdbcServiceManager.getConnection();
+
+			return this.serviceSearch.findTableId(this.jdbcProperties,this.log,connection,sqlQueryObject,id,throwNotFound);		
+	
+		}catch(ServiceException e){
+			this.log.error(e,e); throw e;
+		}catch(NotFoundException e){
+			this.log.debug(e,e); throw e;
+		}catch(NotImplementedException e){
+			this.log.error(e,e); throw e;
+		}catch(Exception e){
+			this.log.error(e,e); throw new ServiceException("findId(tableId,throwNotFound) not completed: "+e.getMessage(),e);
+		}finally{
+			if(connection!=null){
+				this.jdbcServiceManager.closeConnection(connection);
+			}
+		}
+	}
 	
 	@Override
 	public void disableSelectForUpdate() throws ServiceException,NotImplementedException {

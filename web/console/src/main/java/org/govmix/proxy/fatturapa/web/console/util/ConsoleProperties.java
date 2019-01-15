@@ -75,6 +75,9 @@ public class ConsoleProperties extends AbstractProperties {
 	private List<String> listaNomiPropertiesDipartimentoObbligatorie = null;
 	private List<String> listaNomiPropertiesRegistroObbligatorie = null;
 	
+	private boolean visualizzaEgov;
+	private boolean visualizzaInfoConsegnaEnte;
+	private boolean showMenuConservazione;
 	
 	private static final String propertiesPath = "/fatturapa.properties";
 	/** Copia Statica */
@@ -168,6 +171,10 @@ public class ConsoleProperties extends AbstractProperties {
 			if(split != null && split.length > 0)
 				this.listaNomiPropertiesRegistroObbligatorie = Arrays.asList(split);
 		}
+		
+		this.visualizzaEgov = this.getBooleanProperty("org.govmix.proxy.fatturapa.web.console.visualizzaEgov", true);
+		this.visualizzaInfoConsegnaEnte = this.getBooleanProperty("org.govmix.proxy.fatturapa.web.console.visualizzaInfoConsegnaEnte", true);
+		this.showMenuConservazione = this.getBooleanProperty("org.govmix.proxy.fatturapa.web.console.showMenuConservazione", true);
 		
 	}
 
@@ -297,5 +304,29 @@ public class ConsoleProperties extends AbstractProperties {
 			this.listaNomiPropertiesRegistroObbligatorie = new ArrayList<String>();
 		
 		return listaNomiPropertiesRegistroObbligatorie;
+	}
+
+	public boolean isVisualizzaEgov() {
+		return visualizzaEgov;
+	}
+
+	public void setVisualizzaEgov(boolean visualizzaEgov) {
+		this.visualizzaEgov = visualizzaEgov;
+	}
+
+	public boolean isVisualizzaInfoConsegnaEnte() {
+		return visualizzaInfoConsegnaEnte;
+	}
+
+	public void setVisualizzaInfoConsegnaEnte(boolean visualizzaInfoConsegnaEnte) {
+		this.visualizzaInfoConsegnaEnte = visualizzaInfoConsegnaEnte;
+	}
+
+	public boolean isShowMenuConservazione() {
+		return showMenuConservazione;
+	}
+
+	public void setShowMenuConservazione(boolean showMenuConservazione) {
+		this.showMenuConservazione = showMenuConservazione;
 	}
 }
