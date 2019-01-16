@@ -50,7 +50,6 @@ import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.IdTracciaSdi;
 import org.govmix.proxy.fatturapa.orm.IdTraccia;
 import org.govmix.proxy.fatturapa.orm.DipartimentoPropertyValue;
-import org.govmix.proxy.fatturapa.orm.Metadato;
 import org.govmix.proxy.fatturapa.orm.PccRispedizione;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.Registro;
@@ -1902,69 +1901,6 @@ public abstract class AbstractDeserializer {
 	 */
 	public DipartimentoPropertyValue readDipartimentoPropertyValueFromString(String in) throws DeserializerException {
 		return (DipartimentoPropertyValue) this.xmlToObj(in.getBytes(), DipartimentoPropertyValue.class);
-	}	
-	
-	
-	
-	/*
-	 =================================================================================
-	 Object: Metadato
-	 =================================================================================
-	*/
-	
-	/**
-	 * Transform the xml in <var>fileName</var> in the object type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * 
-	 * @param fileName Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
-	 */
-	public Metadato readMetadato(String fileName) throws DeserializerException {
-		return (Metadato) this.xmlToObj(fileName, Metadato.class);
-	}
-	
-	/**
-	 * Transform the xml in <var>file</var> in the object type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * 
-	 * @param file Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
-	 */
-	public Metadato readMetadato(File file) throws DeserializerException {
-		return (Metadato) this.xmlToObj(file, Metadato.class);
-	}
-	
-	/**
-	 * Transform the input stream <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * 
-	 * @param in InputStream to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
-	 */
-	public Metadato readMetadato(InputStream in) throws DeserializerException {
-		return (Metadato) this.xmlToObj(in, Metadato.class);
-	}	
-	
-	/**
-	 * Transform the byte array <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * 
-	 * @param in Byte array to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
-	 */
-	public Metadato readMetadato(byte[] in) throws DeserializerException {
-		return (Metadato) this.xmlToObj(in, Metadato.class);
-	}	
-	
-	/**
-	 * Transform the String <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * 
-	 * @param in String to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
-	 */
-	public Metadato readMetadatoFromString(String in) throws DeserializerException {
-		return (Metadato) this.xmlToObj(in.getBytes(), Metadato.class);
 	}	
 	
 	

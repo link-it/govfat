@@ -52,26 +52,26 @@
 	</managed-bean>
 	
 			<!-- Scadenze -->
-<!-- 	<managed-bean> -->
-<!-- 		<managed-bean-name>scadenzaMBean</managed-bean-name> -->
-<!-- 		<managed-bean-class>org.govmix.proxy.fatturapa.web.console.pcc.mbean.ScadenzaMBean</managed-bean-class> -->
-<!-- 		<managed-bean-scope>request</managed-bean-scope> -->
-<!-- 		<managed-property> -->
-<!-- 			<property-name>service</property-name> -->
-<!-- 			<property-class>org.govmix.proxy.fatturapa.web.console.pcc.iservice.IScadenzaService</property-class> -->
-<!-- 			<value>#{scadenzaService}</value> -->
-<!-- 		</managed-property> -->
-<!-- 		<managed-property> -->
-<!-- 			<property-name>search</property-name> -->
-<!-- 			<property-class>org.govmix.proxy.fatturapa.web.console.pcc.search.ScadenzaSearchForm</property-class> -->
-<!-- 			<value>#{scadenzaSearchForm}</value> -->
-<!-- 		</managed-property> -->
-<!-- 		<managed-property> -->
-<!-- 			<property-name>idFattura</property-name> -->
-<!-- 			<property-class>org.govmix.proxy.fatturapa.orm.IdFattura</property-class> -->
-<!-- 			<value>#{fatturaElettronicaMBean.selectedIdFattura}</value> -->
-<!-- 		</managed-property> -->
-<!-- 	</managed-bean> -->
+	<managed-bean>
+		<managed-bean-name>scadenzaMBean</managed-bean-name>
+		<managed-bean-class>org.govmix.proxy.fatturapa.web.console.pcc.mbean.ScadenzaMBean</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>service</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.pcc.iservice.IScadenzaService</property-class>
+			<value>#{scadenzaService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>search</property-name>
+			<property-class>org.govmix.proxy.fatturapa.web.console.pcc.search.ScadenzaSearchForm</property-class>
+			<value>#{scadenzaSearchForm}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>idFattura</property-name>
+			<property-class>org.govmix.proxy.fatturapa.orm.IdFattura</property-class>
+			<value>#{fatturaElettronicaMBean.selectedIdFattura}</value>
+		</managed-property>
+	</managed-bean>
 
 	
 	<managed-bean>

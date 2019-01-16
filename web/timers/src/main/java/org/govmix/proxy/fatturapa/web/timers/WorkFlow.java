@@ -17,11 +17,11 @@ import org.govmix.proxy.fatturapa.orm.constants.FormatoArchivioInvioFatturaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFattureAttiveBD;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.LottoFattureAnalyzer;
+import org.govmix.proxy.fatturapa.web.commons.policies.IPolicyRispedizione;
+import org.govmix.proxy.fatturapa.web.commons.policies.PolicyRispedizioneFactory;
 import org.govmix.proxy.fatturapa.web.commons.utils.CostantiProtocollazione;
 import org.govmix.proxy.fatturapa.web.commons.utils.Endpoint;
 import org.govmix.proxy.fatturapa.web.commons.utils.EndpointSelector;
-import org.govmix.proxy.fatturapa.web.timers.policies.IPolicyRispedizione;
-import org.govmix.proxy.fatturapa.web.timers.policies.PolicyRispedizioneFactory;
 
 public class WorkFlow implements IWorkFlow<LottoFatture> {
 
@@ -132,7 +132,7 @@ public class WorkFlow implements IWorkFlow<LottoFatture> {
 					this.lottoBD.updateStatoElaborazioneInUscitaOK(idLotto, nextStatoOK);
 					this.log.debug("Elaboro il lotto ["+this.lottoBD.convertToId(lotto).toJson()+"], stato ["+lotto.getStatoElaborazioneInUscita()+"] -> ["+nextStatoOK+"] OK");
 				} else {
-					IPolicyRispedizione policy = PolicyRispedizioneFactory.getPolicyRispedizioneWFM(lotto);
+					IPolicyRispedizione policy = PolicyRispedizioneFactory.getInstance().getPolicyRispedizioneWFM(lotto);
 
 					long now = new Date().getTime();
 					

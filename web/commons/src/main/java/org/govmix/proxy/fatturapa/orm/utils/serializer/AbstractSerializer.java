@@ -52,7 +52,6 @@ import org.govmix.proxy.fatturapa.orm.NotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.IdTracciaSdi;
 import org.govmix.proxy.fatturapa.orm.IdTraccia;
 import org.govmix.proxy.fatturapa.orm.DipartimentoPropertyValue;
-import org.govmix.proxy.fatturapa.orm.Metadato;
 import org.govmix.proxy.fatturapa.orm.PccRispedizione;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.Registro;
@@ -3468,124 +3467,6 @@ public abstract class AbstractSerializer {
 	 */
 	public String toString(DipartimentoPropertyValue dipartimentoPropertyValue,boolean prettyPrint) throws SerializerException {
 		return this.objToXml(DipartimentoPropertyValue.class, dipartimentoPropertyValue, prettyPrint).toString();
-	}
-	
-	
-	
-	/*
-	 =================================================================================
-	 Object: Metadato
-	 =================================================================================
-	*/
-	
-	/**
-	 * Serialize to file system in <var>fileName</var> the object <var>metadato</var> of type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * 
-	 * @param fileName Xml file to serialize the object <var>metadato</var>
-	 * @param metadato Object to be serialized in xml file <var>fileName</var>
-	 * @throws SerializerException The exception that is thrown when an error occurs during serialization
-	 */
-	public void write(String fileName,Metadato metadato) throws SerializerException {
-		this.objToXml(fileName, Metadato.class, metadato, false);
-	}
-	/**
-	 * Serialize to file system in <var>fileName</var> the object <var>metadato</var> of type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * 
-	 * @param fileName Xml file to serialize the object <var>metadato</var>
-	 * @param metadato Object to be serialized in xml file <var>fileName</var>
-	 * @param prettyPrint if true output the XML with indenting
-	 * @throws SerializerException The exception that is thrown when an error occurs during serialization
-	 */
-	public void write(String fileName,Metadato metadato,boolean prettyPrint) throws SerializerException {
-		this.objToXml(fileName, Metadato.class, metadato, prettyPrint);
-	}
-	
-	/**
-	 * Serialize to file system in <var>file</var> the object <var>metadato</var> of type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * 
-	 * @param file Xml file to serialize the object <var>metadato</var>
-	 * @param metadato Object to be serialized in xml file <var>fileName</var>
-	 * @throws SerializerException The exception that is thrown when an error occurs during serialization
-	 */
-	public void write(File file,Metadato metadato) throws SerializerException {
-		this.objToXml(file, Metadato.class, metadato, false);
-	}
-	/**
-	 * Serialize to file system in <var>file</var> the object <var>metadato</var> of type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * 
-	 * @param file Xml file to serialize the object <var>metadato</var>
-	 * @param metadato Object to be serialized in xml file <var>fileName</var>
-	 * @param prettyPrint if true output the XML with indenting
-	 * @throws SerializerException The exception that is thrown when an error occurs during serialization
-	 */
-	public void write(File file,Metadato metadato,boolean prettyPrint) throws SerializerException {
-		this.objToXml(file, Metadato.class, metadato, prettyPrint);
-	}
-	
-	/**
-	 * Serialize to output stream <var>out</var> the object <var>metadato</var> of type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * 
-	 * @param out OutputStream to serialize the object <var>metadato</var>
-	 * @param metadato Object to be serialized in xml file <var>fileName</var>
-	 * @throws SerializerException The exception that is thrown when an error occurs during serialization
-	 */
-	public void write(OutputStream out,Metadato metadato) throws SerializerException {
-		this.objToXml(out, Metadato.class, metadato, false);
-	}
-	/**
-	 * Serialize to output stream <var>out</var> the object <var>metadato</var> of type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * 
-	 * @param out OutputStream to serialize the object <var>metadato</var>
-	 * @param metadato Object to be serialized in xml file <var>fileName</var>
-	 * @param prettyPrint if true output the XML with indenting
-	 * @throws SerializerException The exception that is thrown when an error occurs during serialization
-	 */
-	public void write(OutputStream out,Metadato metadato,boolean prettyPrint) throws SerializerException {
-		this.objToXml(out, Metadato.class, metadato, prettyPrint);
-	}
-			
-	/**
-	 * Serialize to byte array the object <var>metadato</var> of type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * 
-	 * @param metadato Object to be serialized
-	 * @return Object to be serialized in byte array
-	 * @throws SerializerException The exception that is thrown when an error occurs during serialization
-	 */
-	public byte[] toByteArray(Metadato metadato) throws SerializerException {
-		return this.objToXml(Metadato.class, metadato, false).toByteArray();
-	}
-	/**
-	 * Serialize to byte array the object <var>metadato</var> of type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * 
-	 * @param metadato Object to be serialized
-	 * @param prettyPrint if true output the XML with indenting
-	 * @return Object to be serialized in byte array
-	 * @throws SerializerException The exception that is thrown when an error occurs during serialization
-	 */
-	public byte[] toByteArray(Metadato metadato,boolean prettyPrint) throws SerializerException {
-		return this.objToXml(Metadato.class, metadato, prettyPrint).toByteArray();
-	}
-	
-	/**
-	 * Serialize to String the object <var>metadato</var> of type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * 
-	 * @param metadato Object to be serialized
-	 * @return Object to be serialized as String
-	 * @throws SerializerException The exception that is thrown when an error occurs during serialization
-	 */
-	public String toString(Metadato metadato) throws SerializerException {
-		return this.objToXml(Metadato.class, metadato, false).toString();
-	}
-	/**
-	 * Serialize to String the object <var>metadato</var> of type {@link org.govmix.proxy.fatturapa.orm.Metadato}
-	 * 
-	 * @param metadato Object to be serialized
-	 * @param prettyPrint if true output the XML with indenting
-	 * @return Object to be serialized as String
-	 * @throws SerializerException The exception that is thrown when an error occurs during serialization
-	 */
-	public String toString(Metadato metadato,boolean prettyPrint) throws SerializerException {
-		return this.objToXml(Metadato.class, metadato, prettyPrint).toString();
 	}
 	
 	

@@ -106,7 +106,9 @@ public class NotificaDecorrenzaTerminiFetch extends AbstractJDBCFetch {
 			if(model.equals(NotificaDecorrenzaTermini.model().ID_TRACCIA)){
 				IdTracciaSdi object = new IdTracciaSdi();
 				setParameter(object, "setId", Long.class,
-					this.getObjectFromMap(map,"idTraccia.id"));
+						this.getObjectFromMap(map,"idTraccia.id"));
+				setParameter(object, "setIdTraccia", long.class,
+						this.getObjectFromMap(map,"idTraccia.id"));
 				setParameter(object, "set_value_statoProtocollazione", String.class,
 						this.getObjectFromMap(map,"idTraccia.statoProtocollazione"));
 				setParameter(object, "setDataProssimaProtocollazione", NotificaDecorrenzaTermini.model().ID_TRACCIA.DATA_PROSSIMA_PROTOCOLLAZIONE.getFieldType(),

@@ -29,6 +29,8 @@ import org.govmix.proxy.fatturapa.orm.DipartimentoPropertyValue;
 import org.govmix.proxy.fatturapa.orm.PccDipartimentoOperazione;
 import org.govmix.proxy.fatturapa.orm.PccOperazione;
 import org.govmix.proxy.fatturapa.orm.constants.NomePccOperazioneType;
+import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
+import org.govmix.proxy.fatturapa.web.console.util.ConsoleProperties;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.web.bean.IBean;
 import org.openspcoop2.generic_project.web.factory.FactoryException;
@@ -87,10 +89,12 @@ public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IB
 	 private List<PccDipartimentoOperazione> listaProprietaAbilitate = null; 
 	 
 	 private boolean showPCC = false;
+	 private boolean showOpzioniDipartimentiFatturazioneAttiva = false;
 
 	public DipartimentoBean(){
 		try{
 			this.init();
+			this.showOpzioniDipartimentiFatturazioneAttiva = ConsoleProperties.getInstance(LoggerManager.getConsoleLogger()).isShowOpzioniDipartimentiFatturazioneAttiva();
 		}catch(Exception e){
 
 		}
@@ -230,12 +234,15 @@ public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IB
 
 		this.indirizziNotifica.setValue(this.getDTO().getListaEmailNotifiche());
 		
+				
 		this.fatturazioneAttiva.setValue(Utils.getBooleanAsLabel(this.getDTO().isFatturazioneAttiva(),"commons.label.si", "commons.label.no"));
+		this.fatturazioneAttiva.setRendered(this.showOpzioniDipartimentiFatturazioneAttiva);
 		this.firmaAutomatica.setValue(Utils.getBooleanAsLabel(this.getDTO().isFirmaAutomatica(),"commons.label.si", "commons.label.no"));
+		this.firmaAutomatica.setRendered(this.showOpzioniDipartimentiFatturazioneAttiva);
 		this.codiceProcedimento.setValue(this.getDTO().getIdProcedimento());
-		this.codiceProcedimento.setRendered(this.getDTO().isFatturazioneAttiva() && StringUtils.isNotEmpty(this.getDTO().getIdProcedimento()));
+		this.codiceProcedimento.setRendered(this.showOpzioniDipartimentiFatturazioneAttiva && this.getDTO().isFatturazioneAttiva() && StringUtils.isNotEmpty(this.getDTO().getIdProcedimento()));
 		this.codiceProcedimentoB2B.setValue(this.getDTO().getIdProcedimentoB2B());
-		this.codiceProcedimentoB2B.setRendered(this.getDTO().isFatturazioneAttiva() && StringUtils.isNotEmpty(this.getDTO().getIdProcedimentoB2B()));
+		this.codiceProcedimentoB2B.setRendered(this.showOpzioniDipartimentiFatturazioneAttiva && this.getDTO().isFatturazioneAttiva() && StringUtils.isNotEmpty(this.getDTO().getIdProcedimentoB2B()));
 	}
 	
 	public void setProprietaPCC(List<PccOperazione> listaProprietaConsentiteAiDipartimenti, List<PccDipartimentoOperazione> listaProprietaAbilitate){

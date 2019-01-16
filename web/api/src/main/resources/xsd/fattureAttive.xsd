@@ -21,6 +21,7 @@
 		    <xs:element name="codiceUO" type="xs:string"/>
 		    <xs:element name="nomeFileFattura" type="xs:string"/>
 		    <xs:element name="fileFattura"  type="xs:base64Binary"/>
+		    <xs:element name="protocollo" type="xs:string" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
     <xs:complexType name="riceviNotificheRichiestaTipo">

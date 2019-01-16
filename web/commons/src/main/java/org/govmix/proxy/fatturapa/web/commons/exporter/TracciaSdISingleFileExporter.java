@@ -122,14 +122,8 @@ public class TracciaSdISingleFileExporter extends AbstractSingleFileXMLExporter<
 		try {
 			TracciaSDI traccia = this.convertToObject(ids[0]);
 			List<String> lst = new ArrayList<String>();
-			FatturaFilter filter = this.getFatturaBD().newFilter();
-			filter.setIdentificativoSdi(traccia.getIdentificativoSdi());
-			filter.setFatturazioneAttiva(fatturazioneAttiva);
-			List<FatturaElettronica> findAll = this.getFatturaBD().findAll(filter);
 			
-			for(FatturaElettronica f: findAll) {
-				lst.add(f.getCodiceDestinatario());
-			}
+			lst.add(traccia.getCodiceDipartimento());
 
 			return lst;
 		} catch (Exception e) {

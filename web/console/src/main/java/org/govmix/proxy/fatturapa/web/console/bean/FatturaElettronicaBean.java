@@ -1051,6 +1051,25 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 						return true;
 					}
 					
+				}
+			}
+		}
+		return false;
+	}
+	
+	public boolean isVisualizzaColonnaRiconsegnaScartoECEnte (){
+		boolean isAdmin = Utils.getLoginBean().isAdmin();
+		boolean isVisualizzaInfoConsegnaEnte = false;
+		try {
+			isVisualizzaInfoConsegnaEnte = ConsoleProperties.getInstance(LoggerManager.getConsoleLogger()).isVisualizzaInfoConsegnaEnte();
+		} catch (Exception e) {}
+
+		if(isAdmin && isVisualizzaInfoConsegnaEnte){
+			if(this.getListaNotificaEC() != null &&
+					this.getListaNotificaEC().size() > 0) {
+				for (NotificaECBean notifica : this.getListaNotificaEC()) {
+					NotificaEsitoCommittente dto = notifica.getDTO();
+					
 					if(dto.getIdTracciaScarto().getStatoProtocollazione() != null 
 							&& ((dto.getIdTracciaScarto().getStatoProtocollazione().equals(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE)) || (dto.getIdTracciaScarto().getStatoProtocollazione().equals(StatoProtocollazioneType.IN_RICONSEGNA)))) {
 						return true;

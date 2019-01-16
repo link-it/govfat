@@ -35,17 +35,20 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.bouncycastle.util.Arrays;
+import java.util.Arrays;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.IdRegistro;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFattureAttiveBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.NotificaDecorrenzaTerminiBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.TracciaSdIBD;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException.CODICE;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoRequest;
@@ -57,6 +60,7 @@ import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.bean.AllegatoFatturaBean;
 import org.govmix.proxy.fatturapa.web.console.bean.ConservazioneFormBean;
 import org.govmix.proxy.fatturapa.web.console.bean.FatturaElettronicaAttivaBean;
+import org.govmix.proxy.fatturapa.web.console.bean.NotificaDTBean;
 import org.govmix.proxy.fatturapa.web.console.bean.TracciaSDIBean;
 import org.govmix.proxy.fatturapa.web.console.datamodel.FatturaElettronicaAttivaDM;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
@@ -66,7 +70,9 @@ import org.govmix.proxy.fatturapa.web.console.iservice.IFatturaElettronicaAttiva
 import org.govmix.proxy.fatturapa.web.console.iservice.ITracciaSDIService;
 import org.govmix.proxy.fatturapa.web.console.search.FatturaElettronicaAttivaSearchForm;
 import org.govmix.proxy.fatturapa.web.console.service.AllegatiService;
+import org.govmix.proxy.fatturapa.web.console.service.NotificaDTService;
 import org.govmix.proxy.fatturapa.web.console.service.TracciaSDIService;
+import org.govmix.proxy.fatturapa.web.console.util.ConsoleProperties;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.DataModelListView;
@@ -126,6 +132,9 @@ IFatturaElettronicaAttivaService>{
 
 	private Pattern protocolloPattern = null;
 	private Pattern annoPattern = null;
+	
+	private TracciaSDIBean selectedTraccia = null;
+	private boolean caricamentoFatturaAbilitato;
 
 	public FatturaElettronicaAttivaMBean(){
 		super(LoggerManager.getConsoleLogger());
@@ -158,6 +167,7 @@ IFatturaElettronicaAttivaService>{
 			this.table.setMBean(this);
 			this.table.setMetadata(this.getMetadata()); 
 
+			this.caricamentoFatturaAbilitato = ConsoleProperties.getInstance(this.log).isCaricamentoFatturaAbilitatoDaConsole();
 		}catch (Exception e) {
 			log.error("Errore durante la init Fattura MBean:" + e.getMessage(),e);  
 		}
@@ -633,7 +643,7 @@ IFatturaElettronicaAttivaService>{
 				String nomeFattura = nomeFiles.get(i);
 				byte[] xml = this.form.getFatturaFile().getContenuto().get(i);
 				
-				if(filesMap.containsKey(nomeFattura) && Arrays.areEqual(filesMap.get(nomeFattura), xml)) {
+				if(filesMap.containsKey(nomeFattura) && Arrays.equals(filesMap.get(nomeFattura), xml)) {
 					// NON INSERISCO
 					
 					this.log.info("Non inserisco il file ["+nomeFattura+"] in quanto duplicato");
@@ -727,7 +737,7 @@ IFatturaElettronicaAttivaService>{
 				String nomeFattura = nomiFileRicevuti.get(i);
 				byte[] xml = this.form.getFatturaFile().getContenuto().get(i);
 				
-				if(filesMap.containsKey(nomeFattura) && Arrays.areEqual(filesMap.get(nomeFattura), xml)) {
+				if(filesMap.containsKey(nomeFattura) && Arrays.equals(filesMap.get(nomeFattura), xml)) {
 					// NON INSERISCO
 					
 					this.log.info("Non inserisco il file ["+nomeFattura+"] in quanto duplicato");
@@ -959,7 +969,9 @@ IFatturaElettronicaAttivaService>{
 
 
 	public boolean isVisualizzaTastoCaricaFattura() {
-		this.visualizzaTastoCaricaFattura = this._getDipartimenti(false, true).size() > 0;
+		
+		boolean hasDipartimenti = this._getDipartimenti(false, true).size() > 0;
+		this.visualizzaTastoCaricaFattura = hasDipartimenti && this.caricamentoFatturaAbilitato;
 
 		return visualizzaTastoCaricaFattura;
 	}
@@ -986,5 +998,46 @@ IFatturaElettronicaAttivaService>{
 
 	private boolean visualizzaTastoCaricaFattura = false;
 	private String labelColonnaRegistro = null;
+	
+	public TracciaSDIBean getSelectedTraccia() {
+		return selectedTraccia;
+	}
+
+	public void setSelectedTraccia(TracciaSDIBean selectedTraccia) {
+		this.selectedTraccia = selectedTraccia;
+	}
+
+	public String ritentaConsegnaTraccia(){
+		try{
+			if(this.selectedTraccia != null){
+				TracciaSdIBD notificaDTBD = new TracciaSdIBD(log);
+				notificaDTBD.forzaRispedizioneNotifica(this.selectedTraccia.getDTO());
+				MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegnaNotificaDT.cambioStatoOK")); //TODO
+
+				// resetto la notifica 
+				this.selectedTraccia = null;
+
+				// caricare le informazioni su   notificheDT  
+				if(this.comunicazioneService == null)
+					this.comunicazioneService = new TracciaSDIService();
+
+				this.comunicazioneService.setIdFattura(this.selectedIdFattura);
+				List<TracciaSDIBean> listaComunicazioni = new ArrayList<TracciaSDIBean>();
+				try{
+					listaComunicazioni = this.comunicazioneService.findAll();
+				}catch(Exception e){
+					log.debug("Si e' verificato un errore durante il caricamento della lista delle notifiche DT: "+ e.getMessage(), e);
+
+				}
+				this.selectedElement.setListaComunicazioni(listaComunicazioni); 
+
+			}
+
+		}catch(Exception e){
+			log.error("Errore durante l'aggiornamento dello stato della NotificaDT [In Elaborazione -> In Riconsegna]: "+ e.getMessage(),e);
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegnaNotificaDT.erroreGenerico")); //TODO
+		}
+		return null;
+	}
 	
 }

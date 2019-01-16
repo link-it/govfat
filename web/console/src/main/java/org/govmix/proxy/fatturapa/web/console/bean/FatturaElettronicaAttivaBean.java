@@ -30,13 +30,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.DominioType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
+import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.FatturaDeserializerUtils;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
+import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
+import org.govmix.proxy.fatturapa.web.console.util.ConsoleProperties;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.web.bean.IBean;
 import org.openspcoop2.generic_project.web.factory.Costanti;
@@ -1050,5 +1054,26 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 	}
 	
 	
+	public boolean isVisualizzaColonnaRiconsegnaTraccia (){
+		boolean isAdmin = Utils.getLoginBean().isAdmin();
+		boolean isVisualizzaInfoConsegnaEnte = false;
+		try {
+			isVisualizzaInfoConsegnaEnte = ConsoleProperties.getInstance(LoggerManager.getConsoleLogger()).isVisualizzaInfoConsegnaEnte();
+		} catch (Exception e) {}
+
+		if(isAdmin && isVisualizzaInfoConsegnaEnte){
+			if(this.getListaComunicazioni() != null &&
+					this.getListaComunicazioni().size() > 0) {
+				for (TracciaSDIBean traccia: this.getListaComunicazioni()) {
+					TracciaSDI dto = traccia.getDTO();
+					if(dto.getStatoProtocollazione() != null 
+							&& ((dto.getStatoProtocollazione().equals(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE)) || (dto.getStatoProtocollazione().equals(StatoProtocollazioneType.IN_RICONSEGNA)))) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
 }
 

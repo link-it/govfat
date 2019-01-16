@@ -162,12 +162,6 @@
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
     <value name="idTrasmissioneEsito" field="idTrasmissioneEsito" usage="required"/>
   </mapping>
-  <mapping name="Metadato" class="org.govmix.proxy.fatturapa.orm.Metadato">
-    <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
-    <value name="richiesta" field="richiesta" usage="required"/>
-    <value name="nome" field="nome" usage="required"/>
-    <value name="valore" field="valore" usage="required"/>
-  </mapping>
   <mapping name="LottoFatture" class="org.govmix.proxy.fatturapa.orm.LottoFatture">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
     <value name="formatoTrasmissione" field="formatoTrasmissione" usage="required" enum-value-method="toString"/>
@@ -233,9 +227,6 @@
     <value name="dataProssimaProtocollazione" field="dataProssimaProtocollazione" usage="optional"/>
     <value name="tentativiProtocollazione" field="tentativiProtocollazione" usage="required"/>
     <value name="dettaglioProtocollazione" field="dettaglioProtocollazione" usage="optional"/>
-    <collection field="metadato" create-type="java.util.ArrayList">
-      <structure map-as="org.govmix.proxy.fatturapa.orm.Metadato"/>
-    </collection>
     <structure name="Dipartimento" field="dipartimento" usage="optional" map-as="_Dipartimento_Type"/>
   </mapping>
   <mapping name="FatturaElettronica" class="org.govmix.proxy.fatturapa.orm.FatturaElettronica">

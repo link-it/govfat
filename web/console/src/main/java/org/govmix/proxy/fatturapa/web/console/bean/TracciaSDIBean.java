@@ -20,12 +20,9 @@
  */
 package org.govmix.proxy.fatturapa.web.console.bean;
 
-import java.util.List;
-
 import javax.faces.context.FacesContext;
 
 import org.govmix.proxy.fatturapa.orm.IdFattura;
-import org.govmix.proxy.fatturapa.orm.Metadato;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.DominioType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
@@ -53,7 +50,6 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IBean<
 	private DateTime dataProssimaProtocollazione = null;
 	private Text tentativiProtocollazione = null;
 	private Text dettaglioProtocollazione = null;
-	private Text metadato = null;
 	private DateTime data = null;
 	private Button xml = null;
 	private Button pdf = null;
@@ -76,11 +72,10 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IBean<
 		this.idEgov = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("idEgov","tracciaSDI.idEgov");
 		this.contentType = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("contentType","tracciaSDI.contentType");
 		this.statoProtocollazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("statoProtocollazione","tracciaSDI.statoProtocollazione");
-		this.dataProtocollazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataProtocollazione","tracciaSDI.dataProtocollazione",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_MM_YYYY);
-		this.dataProssimaProtocollazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataProssimaProtocollazione","tracciaSDI.dataProssimaProtocollazione",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_MM_YYYY);
+		this.dataProtocollazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataProtocollazione","tracciaSDI.dataProtocollazione",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS);
+		this.dataProssimaProtocollazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataProssimaProtocollazione","tracciaSDI.dataProssimaProtocollazione",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY_HH_MM_SS);
 		this.tentativiProtocollazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("tentativiProtocollazione","tracciaSDI.tentativiProtocollazione");
 		this.dettaglioProtocollazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("dettaglioProtocollazione","tracciaSDI.dettaglioProtocollazione");
-		this.metadato = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("metadato","tracciaSDI.metadato");
 		this.data = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("data","tracciaSDI.data",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_MM_YYYY);
 		this.xml = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("xml","tracciaSDI.label.xml",null,org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_XML,"tracciaSDI.label.xml.iconTitle","tracciaSDI.label.xml.iconTitle");
 		this.pdf = this.getWebGenericProjectFactory().getOutputFieldFactory().createButton("pdf","tracciaSDI.label.pdf",null,org.govmix.proxy.fatturapa.web.console.costanti.Costanti.PATH_ICONA_PDF,"tracciaSDI.label.pdf.iconTitle","tracciaSDI.label.pdf.iconTitle");
@@ -95,7 +90,6 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IBean<
 		this.setField(this.dataProssimaProtocollazione);
 		this.setField(this.tentativiProtocollazione);
 		this.setField(this.dettaglioProtocollazione);
-		this.setField(this.metadato);
 		this.setField(this.data);
 		this.setField(this.xml);
 		this.setField(this.pdf);
@@ -115,26 +109,29 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IBean<
 		this.idEgov.setValue(this.getDTO().getIdEgov());
 		this.contentType.setValue(this.getDTO().getContentType());
 		StatoProtocollazioneType statoProtocollazione2 = this.getDTO().getStatoProtocollazione();
-		if(statoProtocollazione2 != null)
-		this.statoProtocollazione.setValue("tracciaSDI.statoProtocollazione."+ statoProtocollazione2.getValue());
-		this.dataProtocollazione.setValue(this.getDTO().getDataProtocollazione());
-		this.dataProssimaProtocollazione.setValue(this.getDTO().getDataProssimaProtocollazione());
+		if(statoProtocollazione2 != null) {
+			this.statoProtocollazione.setValue("tracciaSDI.statoProtocollazione."+ statoProtocollazione2.getValue());
+			
+			switch(statoProtocollazione2) {
+			case ERRORE_PROTOCOLLAZIONE:
+				break;
+			case IN_RICONSEGNA: this.dataProssimaProtocollazione.setValue(this.getDTO().getDataProssimaProtocollazione());
+				break;
+			case NON_PROTOCOLLATA:
+				break;
+			case PROTOCOLLATA: this.dataProtocollazione.setValue(this.getDTO().getDataProtocollazione());
+				break;
+			case PROTOCOLLATA_IN_ELABORAZIONE:
+				break;
+			default:
+				break;}
+			
+		}
+			
+		
 		String tentativiProtocollazione2 = this.getDTO().getTentativiProtocollazione() != null ? this.getDTO().getTentativiProtocollazione() + "" : "--";
 		this.tentativiProtocollazione.setValue(tentativiProtocollazione2);
 		this.dettaglioProtocollazione.setValue(this.getDTO().getDettaglioProtocollazione());
-		List<Metadato> metadatoList = this.getDTO().getMetadatoList();
-		StringBuffer sb = new StringBuffer();
-		if(metadatoList != null && metadatoList.size() > 0) {
-			for (Metadato metadato : metadatoList) {
-				if(sb.length() >0)
-					sb.append("\n");
-				
-				String richiesta = Utils.getBooleanAsLabel(metadato.isRichiesta(), "commons.label.si", "commons.label.no");
-				sb.append(metadato.getNome()).append(": ").append(metadato.getValore()).append(", ").append(richiesta);
-			}
-		}
-		
-		this.metadato.setValue(sb.toString());
 		this.data.setValue(this.getDTO().getData());
 		
 		
@@ -294,14 +291,6 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IBean<
 		this.dettaglioProtocollazione = dettaglioProtocollazione;
 	}
 
-	public Text getMetadato() {
-		return metadato;
-	}
-
-	public void setMetadato(Text metadato) {
-		this.metadato = metadato;
-	}
-
 	public IdFattura getIdFattura() {
 		return idFattura;
 	}
@@ -320,5 +309,18 @@ public class TracciaSDIBean extends BaseBean<TracciaSDI, Long> implements IBean<
 		this.prepareUrls();
 	}
 	
-	
+	public boolean isVisualizzaLinkRiconsegnaTraccia(){
+		if(this.getDTO().getStatoProtocollazione() != null){
+			boolean isAdmin = Utils.getLoginBean().isAdmin();
+			StatoProtocollazioneType statoConsegnaType =  this.getDTO().getStatoProtocollazione();
+			
+			
+			if((statoConsegnaType.equals(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE) || statoConsegnaType.equals(StatoProtocollazioneType.IN_RICONSEGNA)) && isAdmin) {
+				return true;
+			}
+				
+		}
+		
+		return false;
+	}
 }

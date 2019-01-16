@@ -6,8 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
+import javax.xml.XMLConstants;
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -19,7 +22,6 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.cxf.helpers.MapNamespaceContext;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
@@ -88,6 +90,52 @@ public class LottoFattureAnalyzer {
 		init = true;
 	}
 
+	class MapNamespaceContext implements NamespaceContext {
+	    private Map<String, String> namespaces = new HashMap<String, String>();
+
+	    public MapNamespaceContext() {
+			this.namespaces.put("ds", "http://www.w3.org/2000/09/xmldsig#");
+	    }
+
+	    public String getNamespaceURI(String prefix) {
+	        if (null == prefix) {
+	            throw new IllegalArgumentException("Null prefix to getNamespaceURI");
+	        }
+	        if (XMLConstants.XML_NS_PREFIX.equals(prefix)) {
+	            return XMLConstants.XML_NS_URI;
+	        }
+	        if (XMLConstants.XMLNS_ATTRIBUTE.equals(prefix)) {
+	            return XMLConstants.XMLNS_ATTRIBUTE_NS_URI;
+	        }
+	        return namespaces.get(prefix);
+	    }
+
+	    public String getPrefix(String namespaceURI) {
+	        if (namespaceURI == null) {
+	            throw new IllegalArgumentException("Null namespace to getPrefix");
+	        }
+	        if (XMLConstants.XML_NS_URI.equals(namespaceURI)) {
+	            return XMLConstants.XML_NS_PREFIX;
+	        }
+	        if (XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(namespaceURI)) {
+	            return XMLConstants.XMLNS_ATTRIBUTE;
+	        }
+
+	        for (Map.Entry<String, String> e : namespaces.entrySet()) {
+	            if (e.getValue().equals(namespaceURI)) {
+	                return e.getKey();
+	            }
+	        }
+	        return null;
+	    }
+
+	    public Iterator<String> getPrefixes(String namespaceURI) {
+	        return null;
+	    }
+
+};
+
+	
 	private byte[] extractContentFromXadesSignedFile(byte[] xmlIn) throws Exception {
 		InputStream xadesIn = null;
 		ByteArrayOutputStream bos = null;
@@ -99,10 +147,8 @@ public class LottoFattureAnalyzer {
 
 			XPath xpath = xPathfactory.newXPath();
 
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("ds", "http://www.w3.org/2000/09/xmldsig#");
-
-			xpath.setNamespaceContext(new MapNamespaceContext(map));
+			NamespaceContext nc = new MapNamespaceContext();	
+			xpath.setNamespaceContext(nc);
 
 			XPathExpression expr = xpath.compile("//ds:Signature");
 			NodeList referenceNodes = (NodeList) expr.evaluate(doc.getDocumentElement(), XPathConstants.NODESET);

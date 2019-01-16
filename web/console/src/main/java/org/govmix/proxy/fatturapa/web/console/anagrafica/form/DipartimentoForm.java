@@ -533,7 +533,6 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		this.endpoint = endpoint;
 	}
 
-
 	public String valida (){
 
 		String _codice = this.codice.getValue();
@@ -632,7 +631,12 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		// fatturazione attiva
 		
 		// se fatturazione attiva e modalita' push allora devo controllare il contenuto dei codici procedimento.
-		if(fattAttiva && mod)  {
+		boolean showOpzioniDipartimentiFatturazioneAttiva = false;
+		try {
+			showOpzioniDipartimentiFatturazioneAttiva = ConsoleProperties.getInstance(LoggerManager.getConsoleLogger()).isShowOpzioniDipartimentiFatturazioneAttiva();
+		} catch(Exception e) {}
+		
+		if(fattAttiva && mod && showOpzioniDipartimentiFatturazioneAttiva)  {
 			String _codiceProcedimentoB2B = this.codiceProcedimentoB2B.getValue();
 			String _codiceProcedimento = this.codiceProcedimento.getValue();
 			
@@ -722,12 +726,19 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 			dipartimento.setListaEmailNotifiche(this.indirizziNotifica.getValue()); 
 		}
 		
-		
-		// fatturazione attiva
-		boolean _fatturazioneAttiva = this.fatturazioneAttiva.getValue() != null ? (this.fatturazioneAttiva.getValue() ? true : false) : false;
-		boolean _firmaAutomatica = this.firmaAutomatica.getValue() != null ? (this.firmaAutomatica.getValue() ? true : false) : false;
-		String _codiceProcedimento = this.codiceProcedimento.getValue();
-		String _codiceProcedimentoB2B = this.codiceProcedimentoB2B.getValue();
+		boolean _fatturazioneAttiva = true;
+		boolean _firmaAutomatica = false;
+		String _codiceProcedimento = null;
+		String _codiceProcedimentoB2B = null;
+		try {
+			if(ConsoleProperties.getInstance(LoggerManager.getConsoleLogger()).isShowOpzioniDipartimentiFatturazioneAttiva()) {
+				// fatturazione attiva
+				_fatturazioneAttiva = this.fatturazioneAttiva.getValue() != null ? (this.fatturazioneAttiva.getValue() ? true : false) : false;
+				_firmaAutomatica = this.firmaAutomatica.getValue() != null ? (this.firmaAutomatica.getValue() ? true : false) : false;
+				_codiceProcedimento = this.codiceProcedimento.getValue();
+				_codiceProcedimentoB2B = this.codiceProcedimentoB2B.getValue();
+			}
+		} catch (Exception e) {}
 		
 		dipartimento.setFatturazioneAttiva(_fatturazioneAttiva);
 		dipartimento.setFirmaAutomatica(_firmaAutomatica);

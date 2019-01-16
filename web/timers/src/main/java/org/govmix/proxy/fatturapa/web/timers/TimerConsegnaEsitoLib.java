@@ -39,9 +39,9 @@ import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.InvioNotifica;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.NotificaECRequest;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.NotificaECResponse;
+import org.govmix.proxy.fatturapa.web.commons.policies.IPolicyRispedizione;
+import org.govmix.proxy.fatturapa.web.commons.policies.PolicyRispedizioneFactory;
 import org.govmix.proxy.fatturapa.web.commons.sonde.Sonda;
-import org.govmix.proxy.fatturapa.web.timers.policies.IPolicyRispedizione;
-import org.govmix.proxy.fatturapa.web.timers.policies.PolicyRispedizioneFactory;
 import org.govmix.proxy.fatturapa.web.timers.utils.BatchProperties;
 
 import it.gov.fatturapa.sdi.messaggi.v1_0.ScartoEsitoCommittenteType;
@@ -89,7 +89,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 								int esitoChiamata = invioNotificaResponse.getEsitoChiamata();
 
 								if(esitoChiamata > 299) {
-									IPolicyRispedizione policyRispedizione = PolicyRispedizioneFactory.getPolicyRispedizione(notifica);
+									IPolicyRispedizione policyRispedizione = PolicyRispedizioneFactory.getInstance().getPolicyRispedizione(notifica);
 									long offset = policyRispedizione.getOffsetRispedizione();
 									Date nextDate = new Date(System.currentTimeMillis() + offset);
 									this.log.info("Risposta dallo SdI con codice ["+esitoChiamata+"]. ritentero' l'invio in data ["+nextDate+"]");
@@ -253,7 +253,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 								
 							} catch(Exception e) {
 								this.log.error("Errore durante l'invio della notifica relativa alla fattura ["+notifica.getIdFattura().toJson()+"]:"+e.getMessage(), e);
-								IPolicyRispedizione policyRispedizione = PolicyRispedizioneFactory.getPolicyRispedizione(notifica);
+								IPolicyRispedizione policyRispedizione = PolicyRispedizioneFactory.getInstance().getPolicyRispedizione(notifica);
 								long offset = policyRispedizione.getOffsetRispedizione();
 								Date nextDate = new Date(System.currentTimeMillis() + offset);
 								notifica.setDataUltimaConsegnaSdi(new Date());

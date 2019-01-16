@@ -112,7 +112,7 @@
 						<op2web:simpleListView id="tabellaComunicazioni" value="#{listaComunicazioni}" rendered="#{not empty listaComunicazioni}" itemMetadata="#{metadataComunicazione}">
 						
 							<!-- Data, Nome File, identificativoSdi -->
-							<op2web:tableColumns nomiColonne="#{'tipoComunicazione,data,nomeFile,idEgov,statoProtocollazione'}" />
+							<op2web:tableColumns nomiColonne="#{'tipoComunicazione,data,nomeFile,idEgov,statoProtocollazione,dataProssimaProtocollazione'}" />
 
 							<!-- XML (Icona) -->
 							<rich:column style="text-align: center;">
@@ -137,6 +137,21 @@
 									<h:outputLink value="#{item.pdf.href}"  target="_blank" rendered="#{not empty item.pdf.href}">
 										<h:graphicImage value="#{item.pdf.image}" width="16" height="16" title="#{item.pdf.title}" />
 									</h:outputLink>
+								</h:panelGroup>
+							</rich:column>
+							
+							<!-- Forza rispedizione Ente-->
+							<rich:column style="text-align: center;" rendered="#{mbean.selectedElement.visualizzaColonnaRiconsegnaTraccia}">
+								<f:facet name="header"></f:facet>
+
+								<h:panelGroup>
+									<a4j:commandLink id="ritentaRiconsegnaTraccia-Link"   rendered="#{item.visualizzaLinkRiconsegnaTraccia}"
+										action="#{mbean.ritentaConsegnaTraccia}"
+										reRender="panelDettaglio2" styleClass="buttonNoRed" ajaxSingle="true">
+										<h:graphicImage
+											value="/images/iris/icons/up-grey.png" width="16" height="16" title="#{msg['tracciaSDI.ritentaConsegnaEnte']}" />
+										<f:setPropertyActionListener value="#{item}" target="#{mbean.selectedTraccia}" />
+									</a4j:commandLink>
 								</h:panelGroup>
 							</rich:column>
 							

@@ -181,6 +181,11 @@ public class ScadenzaMBean  extends BaseMBean<ScadenzaPccBean, Long, ScadenzaSea
 		}
 	}
 
+	@Override
+	public void setService(IBaseService<ScadenzaPccBean, Long, ScadenzaSearchForm> service) {
+		super.setService(service);
+	}
+
 	public IBaseService<ScadenzaPccBean, Long, ScadenzaSearchForm> getService(){
 		return this.service;
 	}

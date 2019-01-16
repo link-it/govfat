@@ -1,9 +1,12 @@
 package org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
+import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.openspcoop2.generic_project.beans.CustomField;
 import org.openspcoop2.generic_project.dao.IExpressionConstructor;
 import org.openspcoop2.generic_project.exception.ExpressionException;
@@ -24,6 +27,7 @@ public class TracciaSdIFilter extends AbstractFilter {
 	private StatoProtocollazioneType statoProtocollazione;
 	private Date dataProssimaProtocollazioneMax;
 	private Boolean daProtocollare;
+	private Boolean fatturazioneAttiva;
 	
 	public TracciaSdIFilter(IExpressionConstructor expressionConstructor) {
 		super(expressionConstructor);
@@ -66,6 +70,18 @@ public class TracciaSdIFilter extends AbstractFilter {
 			
 			if(this.daProtocollare != null) {
 				expression.equals(TracciaSDI.model().DIPARTIMENTO.MODALITA_PUSH, this.daProtocollare);
+			}
+			
+			if(this.fatturazioneAttiva != null) {
+				List<String> listaTipiComunicazione = null;
+
+				if(this.fatturazioneAttiva) {
+					listaTipiComunicazione = Arrays.asList(TipoComunicazioneType.AT.toString(),TipoComunicazioneType.DT_ATT.toString(),TipoComunicazioneType.FAT_OUT.toString(),TipoComunicazioneType.MC.toString(),TipoComunicazioneType.MT.toString(),TipoComunicazioneType.NE.toString(),TipoComunicazioneType.NS.toString(),TipoComunicazioneType.RC.toString());
+				} else {
+					listaTipiComunicazione = Arrays.asList(TipoComunicazioneType.DT_PASS.toString(),TipoComunicazioneType.FAT_IN.toString(),TipoComunicazioneType.EC.toString(),TipoComunicazioneType.SE.toString());
+				}
+				
+				expression.in(TracciaSDI.model().TIPO_COMUNICAZIONE, listaTipiComunicazione);
 			}
 
 			
@@ -141,6 +157,14 @@ public class TracciaSdIFilter extends AbstractFilter {
 
 	public void setConsentiPosizioneNull(boolean consentiPosizioneNull) {
 		this.consentiPosizioneNull = consentiPosizioneNull;
+	}
+
+	public Boolean getFatturazioneAttiva() {
+		return fatturazioneAttiva;
+	}
+
+	public void setFatturazioneAttiva(Boolean fatturazioneAttiva) {
+		this.fatturazioneAttiva = fatturazioneAttiva;
 	}
 
 }

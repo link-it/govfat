@@ -24,8 +24,6 @@ import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdTracciaSdi;
-import org.govmix.proxy.fatturapa.orm.Metadato;
-import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.openspcoop2.generic_project.beans.NonNegativeNumber;
 import org.openspcoop2.generic_project.beans.UpdateField;
 import org.openspcoop2.generic_project.beans.UpdateModel;
@@ -40,7 +38,7 @@ import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
 import org.openspcoop2.utils.sql.ISQLQueryObject;
-
+import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 /**     
  * JDBCTracciaSDIServiceImpl
  *
@@ -98,29 +96,6 @@ public class JDBCTracciaSDIServiceImpl extends JDBCTracciaSDIServiceSearchImpl
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getDettaglioProtocollazione(),TracciaSDI.model().DETTAGLIO_PROTOCOLLAZIONE.getFieldType())
 		);
 		tracciaSDI.setId(id);
-
-		// for tracciaSDI
-		for (int i = 0; i < tracciaSDI.getMetadatoList().size(); i++) {
-
-
-			// Object tracciaSDI.getMetadatoList().get(i)
-			ISQLQueryObject sqlQueryObjectInsert_metadato = sqlQueryObjectInsert.newSQLQueryObject();
-			sqlQueryObjectInsert_metadato.addInsertTable(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model().METADATO));
-			sqlQueryObjectInsert_metadato.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().METADATO.RICHIESTA,false),"?");
-			sqlQueryObjectInsert_metadato.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().METADATO.NOME,false),"?");
-			sqlQueryObjectInsert_metadato.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().METADATO.VALORE,false),"?");
-			sqlQueryObjectInsert_metadato.addInsertField("id_traccia_sdi","?");
-
-			// Insert tracciaSDI.getMetadatoList().get(i)
-			org.openspcoop2.utils.jdbc.IKeyGeneratorObject keyGenerator_metadato = this.getTracciaSDIFetch().getKeyGeneratorObject(TracciaSDI.model().METADATO);
-			long id_metadato = jdbcUtilities.insertAndReturnGeneratedKey(sqlQueryObjectInsert_metadato, keyGenerator_metadato, jdbcProperties.isShowSql(),
-				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getMetadatoList().get(i).getRichiesta(),TracciaSDI.model().METADATO.RICHIESTA.getFieldType()),
-				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getMetadatoList().get(i).getNome(),TracciaSDI.model().METADATO.NOME.getFieldType()),
-				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI.getMetadatoList().get(i).getValore(),TracciaSDI.model().METADATO.VALORE.getFieldType()),
-				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(new Long(id),Long.class)
-			);
-			tracciaSDI.getMetadatoList().get(i).setId(id_metadato);
-		} // fine for 
 
 		
 	}
@@ -198,86 +173,6 @@ public class JDBCTracciaSDIServiceImpl extends JDBCTracciaSDIServiceSearchImpl
 			jdbcUtilities.executeUpdate(sqlQueryObjectUpdate.createSQLUpdate(), jdbcProperties.isShowSql(), 
 				lstObjects_tracciaSDI.toArray(new JDBCObject[]{}));
 		}
-		// for tracciaSDI_metadato
-
-		java.util.List<Long> ids_tracciaSDI_metadato_da_non_eliminare = new java.util.ArrayList<Long>();
-		for (Object tracciaSDI_metadato_object : tracciaSDI.getMetadatoList()) {
-			Metadato tracciaSDI_metadato = (Metadato) tracciaSDI_metadato_object;
-			if(tracciaSDI_metadato.getId() == null || tracciaSDI_metadato.getId().longValue() <= 0) {
-
-				long id = tracciaSDI.getId();			
-
-				// Object tracciaSDI_metadato
-				ISQLQueryObject sqlQueryObjectInsert_tracciaSDI_metadato = sqlQueryObjectInsert.newSQLQueryObject();
-				sqlQueryObjectInsert_tracciaSDI_metadato.addInsertTable(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model().METADATO));
-				sqlQueryObjectInsert_tracciaSDI_metadato.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().METADATO.RICHIESTA,false),"?");
-				sqlQueryObjectInsert_tracciaSDI_metadato.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().METADATO.NOME,false),"?");
-				sqlQueryObjectInsert_tracciaSDI_metadato.addInsertField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().METADATO.VALORE,false),"?");
-				sqlQueryObjectInsert_tracciaSDI_metadato.addInsertField("id_traccia_sdi","?");
-
-				// Insert tracciaSDI_metadato
-				org.openspcoop2.utils.jdbc.IKeyGeneratorObject keyGenerator_tracciaSDI_metadato = this.getTracciaSDIFetch().getKeyGeneratorObject(TracciaSDI.model().METADATO);
-				long id_tracciaSDI_metadato = jdbcUtilities.insertAndReturnGeneratedKey(sqlQueryObjectInsert_tracciaSDI_metadato, keyGenerator_tracciaSDI_metadato, jdbcProperties.isShowSql(),
-					new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI_metadato.getRichiesta(),TracciaSDI.model().METADATO.RICHIESTA.getFieldType()),
-					new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI_metadato.getNome(),TracciaSDI.model().METADATO.NOME.getFieldType()),
-					new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tracciaSDI_metadato.getValore(),TracciaSDI.model().METADATO.VALORE.getFieldType()),
-					new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(new Long(id),Long.class)
-				);
-				tracciaSDI_metadato.setId(id_tracciaSDI_metadato);
-
-				ids_tracciaSDI_metadato_da_non_eliminare.add(tracciaSDI_metadato.getId());
-			} else {
-
-
-				// Object tracciaSDI_metadato
-				ISQLQueryObject sqlQueryObjectUpdate_tracciaSDI_metadato = sqlQueryObjectUpdate.newSQLQueryObject();
-				sqlQueryObjectUpdate_tracciaSDI_metadato.setANDLogicOperator(true);
-				sqlQueryObjectUpdate_tracciaSDI_metadato.addUpdateTable(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model().METADATO));
-				boolean isUpdate_tracciaSDI_metadato = true;
-				java.util.List<JDBCObject> lstObjects_tracciaSDI_metadato = new java.util.ArrayList<JDBCObject>();
-				sqlQueryObjectUpdate_tracciaSDI_metadato.addUpdateField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().METADATO.RICHIESTA,false), "?");
-				lstObjects_tracciaSDI_metadato.add(new JDBCObject(tracciaSDI_metadato.getRichiesta(), TracciaSDI.model().METADATO.RICHIESTA.getFieldType()));
-				sqlQueryObjectUpdate_tracciaSDI_metadato.addUpdateField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().METADATO.NOME,false), "?");
-				lstObjects_tracciaSDI_metadato.add(new JDBCObject(tracciaSDI_metadato.getNome(), TracciaSDI.model().METADATO.NOME.getFieldType()));
-				sqlQueryObjectUpdate_tracciaSDI_metadato.addUpdateField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().METADATO.VALORE,false), "?");
-				lstObjects_tracciaSDI_metadato.add(new JDBCObject(tracciaSDI_metadato.getValore(), TracciaSDI.model().METADATO.VALORE.getFieldType()));
-				sqlQueryObjectUpdate_tracciaSDI_metadato.addWhereCondition("id=?");
-				ids_tracciaSDI_metadato_da_non_eliminare.add(tracciaSDI_metadato.getId());
-				lstObjects_tracciaSDI_metadato.add(new JDBCObject(new Long(tracciaSDI_metadato.getId()),Long.class));
-
-				if(isUpdate_tracciaSDI_metadato) {
-					// Update tracciaSDI_metadato
-					jdbcUtilities.executeUpdate(sqlQueryObjectUpdate_tracciaSDI_metadato.createSQLUpdate(), jdbcProperties.isShowSql(), 
-						lstObjects_tracciaSDI_metadato.toArray(new JDBCObject[]{}));
-				}
-			}
-		} // fine for tracciaSDI_metadato
-
-		// elimino tutte le occorrenze di tracciaSDI_metadato non presenti nell'update
-
-		ISQLQueryObject sqlQueryObjectUpdate_metadato_deleteList = sqlQueryObjectUpdate.newSQLQueryObject();
-		sqlQueryObjectUpdate_metadato_deleteList.setANDLogicOperator(true);
-		sqlQueryObjectUpdate_metadato_deleteList.addDeleteTable(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model().METADATO));
-		java.util.List<JDBCObject> jdbcObjects_tracciaSDI_metadato_delete = new java.util.ArrayList<JDBCObject>();
-
-		sqlQueryObjectUpdate_metadato_deleteList.addWhereCondition("id_traccia_sdi=?");
-		jdbcObjects_tracciaSDI_metadato_delete.add(new JDBCObject(tracciaSDI.getId(), Long.class));
-
-		StringBuffer marks_tracciaSDI_metadato = new StringBuffer();
-		if(ids_tracciaSDI_metadato_da_non_eliminare.size() > 0) {
-			for(Long ids : ids_tracciaSDI_metadato_da_non_eliminare) {
-				if(marks_tracciaSDI_metadato.length() > 0) {
-					marks_tracciaSDI_metadato.append(",");
-				}
-				marks_tracciaSDI_metadato.append("?");
-				jdbcObjects_tracciaSDI_metadato_delete.add(new JDBCObject(ids, Long.class));
-
-			}
-			sqlQueryObjectUpdate_metadato_deleteList.addWhereCondition("id NOT IN ("+marks_tracciaSDI_metadato.toString()+")");
-		}
-
-		jdbcUtilities.execute(sqlQueryObjectUpdate_metadato_deleteList.createSQLDelete(), jdbcProperties.isShowSql(), jdbcObjects_tracciaSDI_metadato_delete.toArray(new JDBCObject[]{}));
-
 
 
 	}
@@ -396,31 +291,6 @@ public class JDBCTracciaSDIServiceImpl extends JDBCTracciaSDIServiceSearchImpl
 		
 		ISQLQueryObject sqlQueryObjectDelete = sqlQueryObject.newSQLQueryObject();
 		
-
-		//Recupero oggetto _tracciaSDI_metadato
-		ISQLQueryObject sqlQueryObjectDelete_tracciaSDI_metadato_getToDelete = sqlQueryObjectDelete.newSQLQueryObject();
-		sqlQueryObjectDelete_tracciaSDI_metadato_getToDelete.setANDLogicOperator(true);
-		sqlQueryObjectDelete_tracciaSDI_metadato_getToDelete.addFromTable(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model().METADATO));
-		sqlQueryObjectDelete_tracciaSDI_metadato_getToDelete.addWhereCondition("id_traccia_sdi=?");
-		java.util.List<Object> tracciaSDI_metadato_toDelete_list = (java.util.List<Object>) jdbcUtilities.executeQuery(sqlQueryObjectDelete_tracciaSDI_metadato_getToDelete.createSQLQuery(), jdbcProperties.isShowSql(), TracciaSDI.model().METADATO, this.getTracciaSDIFetch(),
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(new Long(id),Long.class));
-
-		// for tracciaSDI_metadato
-		for (Object tracciaSDI_metadato_object : tracciaSDI_metadato_toDelete_list) {
-			Metadato tracciaSDI_metadato = (Metadato) tracciaSDI_metadato_object;
-
-			// Object tracciaSDI_metadato
-			ISQLQueryObject sqlQueryObjectDelete_tracciaSDI_metadato = sqlQueryObjectDelete.newSQLQueryObject();
-			sqlQueryObjectDelete_tracciaSDI_metadato.setANDLogicOperator(true);
-			sqlQueryObjectDelete_tracciaSDI_metadato.addDeleteTable(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model().METADATO));
-			sqlQueryObjectDelete_tracciaSDI_metadato.addWhereCondition("id=?");
-
-			// Delete tracciaSDI_metadato
-			if(tracciaSDI_metadato != null){
-				jdbcUtilities.execute(sqlQueryObjectDelete_tracciaSDI_metadato.createSQLDelete(), jdbcProperties.isShowSql(), 
-				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(new Long(tracciaSDI_metadato.getId()),Long.class));
-			}
-		} // fine for tracciaSDI_metadato
 
 		// Object tracciaSDI
 		sqlQueryObjectDelete.setANDLogicOperator(true);

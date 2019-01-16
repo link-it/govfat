@@ -160,7 +160,7 @@
 						
 						                <h:outputText id="#{metadataNotificaEC.dataProssimaConsegnaEnte.name}DataValue" value="#{item.dataProssimaConsegnaEnte.value}" styleClass="#{metadataNotificaEC.dataProssimaConsegnaEnte.valueStyleClass}"
 						                        rendered="#{not empty item.dataProssimaConsegnaEnte.value}">
-						                        <f:convertDateTime pattern="#{item.dataProssimaConsegnaEnte.pattern}" defaultTime="00:00" timeZone="Europe/Rome" />
+						                        <f:convertDateTime pattern="#{metadataNotificaEC.dataProssimaConsegnaEnte.pattern}" defaultTime="00:00" timeZone="Europe/Rome" />
 						                </h:outputText>
 									</rich:column>
 									
@@ -270,6 +270,21 @@
 											</h:outputLink>
 										</h:panelGroup>
 									</rich:column>
+									
+									<!-- Forza rispedizione Ente-->
+									<rich:column style="text-align: center;" rendered="#{fatturaElettronicaMBean.selectedElement.visualizzaColonnaRiconsegnaScartoECEnte}">
+										<f:facet name="header"></f:facet>
+		
+										<h:panelGroup>
+											<a4j:commandLink id="ritentaRiconsegnaScartoECEnte-Link"   rendered="#{item.visualizzaLinkRiconsegnaScartoECEnte}"
+												action="#{fatturaElettronicaMBean.ritentaConsegnaScartoECEnte}"
+												reRender="panelDettaglio2" styleClass="buttonNoRed" ajaxSingle="true">
+												<h:graphicImage
+													value="/images/iris/icons/up-grey.png" width="16" height="16" title="#{msg['notificaEsitoCommittente.ritentaConsegnaEnte']}" />
+												<f:setPropertyActionListener value="#{item}" target="#{fatturaElettronicaMBean.selectedNotifica}" />
+											</a4j:commandLink>
+										</h:panelGroup>
+									</rich:column>
 		
 								</op2web:simpleListView>
 							</h:panelGrid>
@@ -305,7 +320,7 @@
 				
 				                <h:outputText id="#{metadataNotificaDT.dataProssimaConsegna.name}DataValue" value="#{item.dataProssimaConsegna.value}" styleClass="#{metadataNotificaDT.dataProssimaConsegna.valueStyleClass}"
 				                        rendered="#{not empty item.dataProssimaConsegna.value}">
-				                        <f:convertDateTime pattern="#{item.dataProssimaConsegna.pattern}" defaultTime="00:00" timeZone="Europe/Rome" />
+				                        <f:convertDateTime pattern="#{metadataNotificaDT.dataProssimaConsegna.pattern}" defaultTime="00:00" timeZone="Europe/Rome" />
 				                </h:outputText>
 							</rich:column>
 							

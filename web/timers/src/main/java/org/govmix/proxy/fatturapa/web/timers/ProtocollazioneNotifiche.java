@@ -14,11 +14,11 @@ import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.TracciaSdIBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.TracciaSdIFilter;
+import org.govmix.proxy.fatturapa.web.commons.policies.IPolicyRispedizione;
+import org.govmix.proxy.fatturapa.web.commons.policies.PolicyRispedizioneFactory;
 import org.govmix.proxy.fatturapa.web.commons.utils.CostantiProtocollazione;
 import org.govmix.proxy.fatturapa.web.commons.utils.Endpoint;
 import org.govmix.proxy.fatturapa.web.commons.utils.EndpointSelector;
-import org.govmix.proxy.fatturapa.web.timers.policies.IPolicyRispedizione;
-import org.govmix.proxy.fatturapa.web.timers.policies.PolicyRispedizioneFactory;
 
 public class ProtocollazioneNotifiche implements IWorkFlow<TracciaSDI> {
 
@@ -73,7 +73,8 @@ public class ProtocollazioneNotifiche implements IWorkFlow<TracciaSDI> {
 
 		URLConnection conn = url.openConnection();
 		HttpURLConnection httpConn = (HttpURLConnection) conn;
-		boolean esitoPositivo = false;
+//		boolean esitoPositivo = false;
+		int responseCode = -1;
 		String response = null;
 		try{
 			httpConn.setRequestProperty(CostantiProtocollazione.IDENTIFICATIVO_SDI_HEADER_PARAM, ""+tracciaSDI.getIdentificativoSdi());
@@ -104,31 +105,42 @@ public class ProtocollazioneNotifiche implements IWorkFlow<TracciaSDI> {
 			httpConn.getOutputStream().flush();
 			httpConn.getOutputStream().close();
 			
-			esitoPositivo = httpConn.getResponseCode() < 299;
+			responseCode = httpConn.getResponseCode();
 			
-			response = IOUtils.readStringFromStream(esitoPositivo ? httpConn.getInputStream() : httpConn.getErrorStream());
+			response = IOUtils.readStringFromStream(responseCode < 299 ? httpConn.getInputStream() : httpConn.getErrorStream());
 		} catch(Exception e) {
 			this.log.error("Errore durante la protocollazione della traccia: " + e.getMessage(), e);
 		}
 		
 		
-		if(esitoPositivo) {
+		if(responseCode > 0 && responseCode < 299) {
 			this.log.debug("Elaboro la traccia ["+tracciaSDI.getId()+"], stato ["+tracciaSDI.getStatoProtocollazione()+"] -> ["+nextStatoOK+"]...");
 			this.tracciaSdiBD.updateStatoProtocollazioneOK(tracciaSDI, nextStatoOK);
 			this.log.debug("Elaboro la traccia ["+tracciaSDI.getId()+"], stato ["+tracciaSDI.getStatoProtocollazione()+"] -> ["+nextStatoOK+"] OK");
 		} else {
 			
-			IPolicyRispedizione policy = PolicyRispedizioneFactory.getPolicyRispedizione(tracciaSDI);
+			if(responseCode == 503) { // protocollo della fattura non ancora disponibile, rimando semplicemente la data di prossima protocollazione senza aumentare il numero di tentativi
+				long now = new Date().getTime();
+				long offset = 1000*60*60; //rimando di un'ora
 
-			long now = new Date().getTime();
-			
-			long offset = policy.getOffsetRispedizione();
+				StatoProtocollazioneType nextStato = tracciaSDI.getStatoProtocollazione();
 
-			StatoProtocollazioneType nextStato = policy.isRispedizioneAbilitata() ? StatoProtocollazioneType.IN_RICONSEGNA : nextStatoKO;
+				this.log.debug("Protocollo della fattura non ancora disponibile, rimando semplicemente la data di prossima protocollazione di un'ora senza aumentare il numero di tentativi...");
+				this.tracciaSdiBD.updateStatoProtocollazioneKO(tracciaSDI, nextStato, response, new Date(now+offset), tracciaSDI.getTentativiProtocollazione());
+				this.log.debug("Protocollo della fattura non ancora disponibile, rimando semplicemente la data di prossima protocollazione di un'ora senza aumentare il numero di tentativi OK");
+			} else {
+				IPolicyRispedizione policy = PolicyRispedizioneFactory.getInstance().getPolicyRispedizione(tracciaSDI);
 
-			this.log.debug("Elaboro la traccia ["+tracciaSDI.getId()+"], stato ["+tracciaSDI.getStatoProtocollazione()+"] -> ["+nextStato+"]...");
-			this.tracciaSdiBD.updateStatoProtocollazioneKO(tracciaSDI, nextStato, response, new Date(now+offset), tracciaSDI.getTentativiProtocollazione() + 1);
-			this.log.debug("Elaboro la traccia ["+tracciaSDI.getId()+"], stato ["+tracciaSDI.getStatoProtocollazione()+"] -> ["+nextStato+"] OK");
+				long now = new Date().getTime();
+				
+				long offset = policy.getOffsetRispedizione();
+
+				StatoProtocollazioneType nextStato = policy.isRispedizioneAbilitata() ? StatoProtocollazioneType.IN_RICONSEGNA : nextStatoKO;
+
+				this.log.debug("Elaboro la traccia ["+tracciaSDI.getId()+"], stato ["+tracciaSDI.getStatoProtocollazione()+"] -> ["+nextStato+"]...");
+				this.tracciaSdiBD.updateStatoProtocollazioneKO(tracciaSDI, nextStato, response, new Date(now+offset), tracciaSDI.getTentativiProtocollazione() + 1);
+				this.log.debug("Elaboro la traccia ["+tracciaSDI.getId()+"], stato ["+tracciaSDI.getStatoProtocollazione()+"] -> ["+nextStato+"] OK");
+			}
 		}
 
 	}

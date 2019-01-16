@@ -31,6 +31,8 @@ import org.apache.soap.encoding.soapenc.Base64;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
+import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
+import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.openspcoop2.generic_project.exception.DeserializerException;
 import org.openspcoop2.generic_project.exception.SerializerException;
 
@@ -140,7 +142,21 @@ public class InvioNotifica {
 		tracciaNotifica.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
 		tracciaNotifica.setTentativiProtocollazione(0);
 		tracciaNotifica.setDataProssimaProtocollazione(new Date());
-		tracciaNotifica.setIdEgov("--");
+		
+		
+		for(String k: httpConn.getHeaderFields().keySet()) {
+			LoggerManager.getBatchStartupLogger().debug("RESPONSE HEADER ESITO COMMITTENTE ["+k+"] -> ["+httpConn.getHeaderFields().get(k)+"]");
+		}
+		
+		String idEgov = "--";
+		String idEgovHeader;
+		try {
+			idEgovHeader = CommonsProperties.getInstance(LoggerManager.getBatchStartupLogger()).getIdEgovHeader();
+			if(httpConn.getHeaderFields().containsKey(idEgovHeader))
+				idEgov = httpConn.getHeaderFields().get(idEgovHeader).get(0);
+		} catch (Exception e) {}
+		
+		tracciaNotifica.setIdEgov(idEgov);
 
 		response.setTracciaNotifica(tracciaNotifica);
 		
@@ -166,7 +182,7 @@ public class InvioNotifica {
 			tracciaScarto.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
 			tracciaScarto.setTentativiProtocollazione(0);
 			tracciaScarto.setDataProssimaProtocollazione(new Date());
-			tracciaScarto.setIdEgov("--");
+			tracciaScarto.setIdEgov(idEgov);
 
 			response.setTracciaScarto(tracciaScarto);
 			response.setScarto(scarto);

@@ -55,6 +55,38 @@ public class CommonsProperties extends AbstractProperties {
 	private String invioFatturaPassword;
 
 	private String idEgovHeader;
+	
+	private int maxTentativiRispedizione;
+	private int fattoreRispedizione;
+	private int maxTentativiRispedizioneWFM;
+	private int fattoreRispedizioneWFM;
+	private int maxTentativiRispedizioneSdI;
+	private int fattoreRispedizioneSdI;
+
+
+	public int getMaxTentativiRispedizione() {
+		return maxTentativiRispedizione;
+	}
+
+	public void setMaxTentativiRispedizione(int maxTentativiRispedizione) {
+		this.maxTentativiRispedizione = maxTentativiRispedizione;
+	}
+
+	public int getMaxTentativiRispedizioneWFM() {
+		return maxTentativiRispedizioneWFM;
+	}
+
+	public void setMaxTentativiRispedizioneWFM(int maxTentativiRispedizioneWFM) {
+		this.maxTentativiRispedizioneWFM = maxTentativiRispedizioneWFM;
+	}
+
+	public int getMaxTentativiRispedizioneSdI() {
+		return maxTentativiRispedizioneSdI;
+	}
+
+	public void setMaxTentativiRispedizioneSdI(int maxTentativiRispedizioneSdI) {
+		this.maxTentativiRispedizioneSdI = maxTentativiRispedizioneSdI;
+	}
 
 	private static final String propertiesPath = "/webCommons.properties";
 	/** Copia Statica */
@@ -140,9 +172,40 @@ public class CommonsProperties extends AbstractProperties {
 
 		this.idEgovHeader = this.getProperty("header.idegov", true);
 
+		this.maxTentativiRispedizione = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.maxTentativiRispedizione", true));
+		this.fattoreRispedizione = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.fattoreRispedizione", true));
+		this.maxTentativiRispedizioneWFM = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.maxTentativiRispedizioneWFM", true));
+		this.fattoreRispedizioneWFM = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.fattoreRispedizioneWFM", true));
+		this.maxTentativiRispedizioneSdI = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.maxTentativiRispedizioneSdI", true));
+		this.fattoreRispedizioneSdI = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.fattoreRispedizioneSdI", true));
+
 	}
 
 	/* ********  P R O P E R T I E S  ******** */
+
+	public int getFattoreRispedizione() {
+		return fattoreRispedizione;
+	}
+
+	public void setFattoreRispedizione(int fattoreRispedizione) {
+		this.fattoreRispedizione = fattoreRispedizione;
+	}
+
+	public int getFattoreRispedizioneWFM() {
+		return fattoreRispedizioneWFM;
+	}
+
+	public void setFattoreRispedizioneWFM(int fattoreRispedizioneWFM) {
+		this.fattoreRispedizioneWFM = fattoreRispedizioneWFM;
+	}
+
+	public int getFattoreRispedizioneSdI() {
+		return fattoreRispedizioneSdI;
+	}
+
+	public void setFattoreRispedizioneSdI(int fattoreRispedizioneSdI) {
+		this.fattoreRispedizioneSdI = fattoreRispedizioneSdI;
+	}
 
 	public Enumeration<?> keys(){
 		return this.reader.propertyNames();

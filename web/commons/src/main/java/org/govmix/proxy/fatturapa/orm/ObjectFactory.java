@@ -271,13 +271,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Metadato }
-     */
-    public Metadato createMetadato() {
-        return new Metadato();
-    }
-
-    /**
      * Create an instance of {@link PccScadenza }
      */
     public PccScadenza createPccScadenza() {
@@ -380,6 +373,13 @@ public class ObjectFactory {
      */
     public IdProtocollo createIdProtocollo() {
         return new IdProtocollo();
+    }
+
+    /**
+     * Create an instance of {@link IdTracciaSdi }
+     */
+    public IdTracciaSdi createIdTracciaSdi() {
+        return new IdTracciaSdi();
     }
 
     /**

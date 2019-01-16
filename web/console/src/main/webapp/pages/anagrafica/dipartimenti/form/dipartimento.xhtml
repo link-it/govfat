@@ -86,7 +86,7 @@
 				</op2web:fieldset>
 				<rich:spacer height="10"/>
 				
-				<op2web:fieldset legend="#{msg['dipartimento.form.fatturazioneAttiva.label']}" collapsible="false" closed="false" rendered="#{true}">
+				<op2web:fieldset legend="#{msg['dipartimento.form.fatturazioneAttiva.label']}" collapsible="false" closed="false" rendered="#{dipartimentoMBean.showOpzioniDipartimentiFatturazioneAttiva}">
 
 					<op2web:formFields nomiFields="#{'fatturazioneAttiva,firmaAutomatica,codiceProcedimento,codiceProcedimentoB2B'}"/>
 

@@ -29,8 +29,6 @@ import javax.xml.bind.annotation.XmlType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /** <p>Java class for TracciaSDI complex type.
@@ -54,7 +52,6 @@ import java.util.List;
  * 			&lt;element name="dataProssimaProtocollazione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="tentativiProtocollazione" type="{http://www.w3.org/2001/XMLSchema}nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="dettaglioProtocollazione" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
- * 			&lt;element name="Metadato" type="{http://www.govmix.org/proxy/fatturapa/orm}Metadato" minOccurs="0" maxOccurs="unbounded"/>
  * 			&lt;element name="Dipartimento" type="{http://www.govmix.org/proxy/fatturapa/orm}Dipartimento" minOccurs="0" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
@@ -84,7 +81,6 @@ import java.util.List;
   	"dataProssimaProtocollazione",
   	"tentativiProtocollazione",
   	"dettaglioProtocollazione",
-  	"metadato",
   	"dipartimento"
   }
 )
@@ -251,30 +247,6 @@ public class TracciaSDI extends org.openspcoop2.utils.beans.BaseBean implements 
     this.dettaglioProtocollazione = dettaglioProtocollazione;
   }
 
-  public void addMetadato(Metadato metadato) {
-    this.metadato.add(metadato);
-  }
-
-  public Metadato getMetadato(int index) {
-    return this.metadato.get( index );
-  }
-
-  public Metadato removeMetadato(int index) {
-    return this.metadato.remove( index );
-  }
-
-  public List<Metadato> getMetadatoList() {
-    return this.metadato;
-  }
-
-  public void setMetadatoList(List<Metadato> metadato) {
-    this.metadato=metadato;
-  }
-
-  public int sizeMetadatoList() {
-    return this.metadato.size();
-  }
-
   public Dipartimento getDipartimento() {
     return this.dipartimento;
   }
@@ -368,36 +340,6 @@ public class TracciaSDI extends org.openspcoop2.utils.beans.BaseBean implements 
   @javax.xml.bind.annotation.XmlSchemaType(name="string")
   @XmlElement(name="dettaglioProtocollazione",required=false,nillable=false)
   protected java.lang.String dettaglioProtocollazione;
-
-  @XmlElement(name="Metadato",required=true,nillable=false)
-  protected List<Metadato> metadato = new ArrayList<Metadato>();
-
-  /**
-   * @deprecated Use method getMetadatoList
-   * @return List<Metadato>
-  */
-  @Deprecated
-  public List<Metadato> getMetadato() {
-  	return this.metadato;
-  }
-
-  /**
-   * @deprecated Use method setMetadatoList
-   * @param metadato List<Metadato>
-  */
-  @Deprecated
-  public void setMetadato(List<Metadato> metadato) {
-  	this.metadato=metadato;
-  }
-
-  /**
-   * @deprecated Use method sizeMetadatoList
-   * @return lunghezza della lista
-  */
-  @Deprecated
-  public int sizeMetadato() {
-  	return this.metadato.size();
-  }
 
   @XmlElement(name="Dipartimento",required=false,nillable=false)
   protected Dipartimento dipartimento;

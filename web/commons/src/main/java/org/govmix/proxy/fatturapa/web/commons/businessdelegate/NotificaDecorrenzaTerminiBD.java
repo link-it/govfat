@@ -81,7 +81,7 @@ public class NotificaDecorrenzaTerminiBD extends BaseBD {
 		try {
 			TracciaSDI tracciaNotifica = this.tracciaService.get(notifica.getIdTraccia());
 			
-			if(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE.equals(tracciaNotifica.getStatoProtocollazione())) {
+			if(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE.equals(tracciaNotifica.getStatoProtocollazione())||StatoProtocollazioneType.IN_RICONSEGNA.equals(tracciaNotifica.getStatoProtocollazione())) {
 				tracciaNotifica.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
 				tracciaNotifica.setDataProssimaProtocollazione(new Date());
 				tracciaNotifica.setTentativiProtocollazione(0);

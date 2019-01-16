@@ -56,7 +56,6 @@ public class TracciaSDIModel extends AbstractModel<TracciaSDI> {
 		this.DATA_PROSSIMA_PROTOCOLLAZIONE = new Field("dataProssimaProtocollazione",java.util.Date.class,"TracciaSDI",TracciaSDI.class);
 		this.TENTATIVI_PROTOCOLLAZIONE = new Field("tentativiProtocollazione",java.lang.Integer.class,"TracciaSDI",TracciaSDI.class);
 		this.DETTAGLIO_PROTOCOLLAZIONE = new Field("dettaglioProtocollazione",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
-		this.METADATO = new org.govmix.proxy.fatturapa.orm.model.MetadatoModel(new Field("Metadato",org.govmix.proxy.fatturapa.orm.Metadato.class,"TracciaSDI",TracciaSDI.class));
 		this.DIPARTIMENTO = new org.govmix.proxy.fatturapa.orm.model.DipartimentoModel(new Field("Dipartimento",org.govmix.proxy.fatturapa.orm.Dipartimento.class,"TracciaSDI",TracciaSDI.class));
 	
 	}
@@ -79,7 +78,6 @@ public class TracciaSDIModel extends AbstractModel<TracciaSDI> {
 		this.DATA_PROSSIMA_PROTOCOLLAZIONE = new ComplexField(father,"dataProssimaProtocollazione",java.util.Date.class,"TracciaSDI",TracciaSDI.class);
 		this.TENTATIVI_PROTOCOLLAZIONE = new ComplexField(father,"tentativiProtocollazione",java.lang.Integer.class,"TracciaSDI",TracciaSDI.class);
 		this.DETTAGLIO_PROTOCOLLAZIONE = new ComplexField(father,"dettaglioProtocollazione",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
-		this.METADATO = new org.govmix.proxy.fatturapa.orm.model.MetadatoModel(new ComplexField(father,"Metadato",org.govmix.proxy.fatturapa.orm.Metadato.class,"TracciaSDI",TracciaSDI.class));
 		this.DIPARTIMENTO = new org.govmix.proxy.fatturapa.orm.model.DipartimentoModel(new ComplexField(father,"Dipartimento",org.govmix.proxy.fatturapa.orm.Dipartimento.class,"TracciaSDI",TracciaSDI.class));
 	
 	}
@@ -113,8 +111,6 @@ public class TracciaSDIModel extends AbstractModel<TracciaSDI> {
 	public IField TENTATIVI_PROTOCOLLAZIONE = null;
 	 
 	public IField DETTAGLIO_PROTOCOLLAZIONE = null;
-	 
-	public org.govmix.proxy.fatturapa.orm.model.MetadatoModel METADATO = null;
 	 
 	public org.govmix.proxy.fatturapa.orm.model.DipartimentoModel DIPARTIMENTO = null;
 	 

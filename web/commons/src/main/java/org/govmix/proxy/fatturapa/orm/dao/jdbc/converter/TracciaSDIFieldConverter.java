@@ -166,27 +166,6 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 				return "dettaglio_protocollazione";
 			}
 		}
-		if(field.equals(TracciaSDI.model().METADATO.RICHIESTA)){
-			if(appendTablePrefix){
-				return this.toAliasTable(field)+".richiesta";
-			}else{
-				return "richiesta";
-			}
-		}
-		if(field.equals(TracciaSDI.model().METADATO.NOME)){
-			if(appendTablePrefix){
-				return this.toAliasTable(field)+".nome";
-			}else{
-				return "nome";
-			}
-		}
-		if(field.equals(TracciaSDI.model().METADATO.VALORE)){
-			if(appendTablePrefix){
-				return this.toAliasTable(field)+".valore";
-			}else{
-				return "valore";
-			}
-		}
 		if(field.equals(TracciaSDI.model().DIPARTIMENTO.CODICE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".codice";
@@ -375,15 +354,6 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 		if(field.equals(TracciaSDI.model().DETTAGLIO_PROTOCOLLAZIONE)){
 			return this.toTable(TracciaSDI.model(), returnAlias);
 		}
-		if(field.equals(TracciaSDI.model().METADATO.RICHIESTA)){
-			return this.toTable(TracciaSDI.model().METADATO, returnAlias);
-		}
-		if(field.equals(TracciaSDI.model().METADATO.NOME)){
-			return this.toTable(TracciaSDI.model().METADATO, returnAlias);
-		}
-		if(field.equals(TracciaSDI.model().METADATO.VALORE)){
-			return this.toTable(TracciaSDI.model().METADATO, returnAlias);
-		}
 		if(field.equals(TracciaSDI.model().DIPARTIMENTO.CODICE)){
 			return this.toTable(TracciaSDI.model().DIPARTIMENTO, returnAlias);
 		}
@@ -456,9 +426,6 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 		
 		if(model.equals(TracciaSDI.model())){
 			return "tracce_sdi";
-		}
-		if(model.equals(TracciaSDI.model().METADATO)){
-			return "metadati";
 		}
 		if(model.equals(TracciaSDI.model().DIPARTIMENTO)){
 			return "dipartimenti";

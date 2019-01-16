@@ -185,11 +185,13 @@ public class NotificaECBean extends BaseBean<NotificaEsitoCommittente, Long> imp
 				if(statoConsegnaEnte != null){
 					if(statoConsegnaEnte.equals(StatoProtocollazioneType.PROTOCOLLATA)) {
 						this.statoConsegnaEnte.setValue("notificaEsitoCommittente.statoConsegna.consegnata");
-					} else if(statoConsegnaEnte.equals(StatoProtocollazioneType.NON_PROTOCOLLATA)) { //TODO in riconsegna
+					} else if(statoConsegnaEnte.equals(StatoProtocollazioneType.IN_RICONSEGNA)) {
 						this.statoConsegnaEnte.setValue("notificaEsitoCommittente.statoConsegna.inRiconsegna");
 						this.dataProssimaConsegnaEnte.setRendered(true);
 					} else if(statoConsegnaEnte.equals(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE)) {
 						this.statoConsegnaEnte.setValue("notificaEsitoCommittente.statoConsegna.erroreConsegna");
+					} else {
+						this.statoConsegnaEnte.setValue("notificaEsitoCommittente.statoConsegna.nonConsegnata");
 					}
 				}
 			} else {
@@ -338,11 +340,23 @@ public class NotificaECBean extends BaseBean<NotificaEsitoCommittente, Long> imp
 		if(this.getDTO().getStatoConsegnaSdi() != null){
 			boolean isAdmin = Utils.getLoginBean().isAdmin();
 			StatoProtocollazioneType statoConsegnaType =  this.getDTO().getIdTracciaNotifica().getStatoProtocollazione();
-			StatoProtocollazioneType statoConsegnaScartoType =  this.getDTO().getIdTracciaScarto().getStatoProtocollazione();
 			
-			if((statoConsegnaType.equals(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE) //TODO in riconsegna
-					) && isAdmin) {
-				return(statoConsegnaScartoType.equals(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE)); //TODO in riconsegna
+			if((statoConsegnaType.equals(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE) || statoConsegnaType.equals(StatoProtocollazioneType.IN_RICONSEGNA)) && isAdmin) {
+				return true;
+			}
+				
+		}
+		
+		return false;
+	}
+	
+	public boolean isVisualizzaLinkRiconsegnaScartoECEnte(){
+		if(this.getDTO().getStatoConsegnaSdi() != null){
+			boolean isAdmin = Utils.getLoginBean().isAdmin();
+			StatoProtocollazioneType statoConsegnaType =  this.getDTO().getIdTracciaScarto().getStatoProtocollazione();
+			
+			if((statoConsegnaType.equals(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE) || statoConsegnaType.equals(StatoProtocollazioneType.IN_RICONSEGNA)) && isAdmin) {
+				return true;
 			}
 				
 		}

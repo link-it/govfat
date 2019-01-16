@@ -20,18 +20,17 @@
  */
 package org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch;
 
+import java.sql.ResultSet;
+import java.util.Map;
+
+import org.govmix.proxy.fatturapa.orm.IdTracciaSdi;
+import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.openspcoop2.generic_project.beans.IModel;
 import org.openspcoop2.generic_project.dao.jdbc.utils.AbstractJDBCFetch;
 import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCParameterUtilities;
 import org.openspcoop2.generic_project.exception.ServiceException;
-
-import java.sql.ResultSet;
-import java.util.Map;
-
 import org.openspcoop2.utils.TipiDatabase;
 import org.openspcoop2.utils.jdbc.IKeyGeneratorObject;
-
-import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 
 
 /**     
@@ -147,7 +146,33 @@ public class NotificaEsitoCommittenteFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"scartoNote"));
 				return object;
 			}
-			
+			if(model.equals(NotificaEsitoCommittente.model().ID_TRACCIA_NOTIFICA)){
+				IdTracciaSdi object = new IdTracciaSdi();
+				setParameter(object, "setId", Long.class,
+						this.getObjectFromMap(map,"idTracciaNotifica.id"));
+				setParameter(object, "setIdTraccia", long.class,
+						this.getObjectFromMap(map,"idTracciaNotifica.id"));
+				setParameter(object, "set_value_statoProtocollazione", String.class,
+						this.getObjectFromMap(map,"idTracciaNotifica.statoProtocollazione"));
+				setParameter(object, "setDataProssimaProtocollazione", NotificaEsitoCommittente.model().ID_TRACCIA_NOTIFICA.DATA_PROSSIMA_PROTOCOLLAZIONE.getFieldType(),
+					this.getObjectFromMap(map,"idTracciaNotifica.dataProssimaProtocollazione"));
+
+				return object;
+			}
+			if(model.equals(NotificaEsitoCommittente.model().ID_TRACCIA_SCARTO)){
+				IdTracciaSdi object = new IdTracciaSdi();
+				setParameter(object, "setId", Long.class,
+						this.getObjectFromMap(map,"idTracciaScarto.id"));
+				setParameter(object, "setIdTraccia", long.class,
+						this.getObjectFromMap(map,"idTracciaScarto.id"));
+				setParameter(object, "set_value_statoProtocollazione", String.class,
+						this.getObjectFromMap(map,"idTracciaScarto.statoProtocollazione"));
+				setParameter(object, "setDataProssimaProtocollazione", NotificaEsitoCommittente.model().ID_TRACCIA_SCARTO.DATA_PROSSIMA_PROTOCOLLAZIONE.getFieldType(),
+					this.getObjectFromMap(map,"idTracciaScarto.dataProssimaProtocollazione"));
+
+				return object;
+			}
+
 			else{
 				throw new ServiceException("Model ["+model.toString()+"] not supported by fetch: "+this.getClass().getName());
 			}	

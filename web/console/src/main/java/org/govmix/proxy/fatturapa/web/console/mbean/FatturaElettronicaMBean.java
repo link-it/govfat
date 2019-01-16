@@ -569,6 +569,43 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 		return null;
 	}
 	
+	public String ritentaConsegnaScartoECEnte(){
+		try{
+			if(this.selectedNotifica != null){
+				NotificaEsitoCommittenteBD notificaECBD = new NotificaEsitoCommittenteBD(log);
+				notificaECBD.forzaRispedizioneEnteScarto(this.selectedNotifica.getDTO());
+				MessageUtils.addInfoMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegnaNotificaECEnte.cambioStatoOK"));
+
+				// resetto la notifica 
+				this.selectedNotifica = null;
+
+				// caricare le informazioni su   notificheEC  
+				if(this.notificaECService == null)
+					this.notificaECService = new NotificaECService();
+
+				IdFattura idFattura = new IdFattura(false);
+				idFattura.setPosizione(this.selectedElement.getDTO().getPosizione());
+				idFattura.setIdentificativoSdi(this.selectedElement.getDTO().getIdentificativoSdi());
+
+				this.notificaECService.setIdFattura(idFattura);
+				List<NotificaECBean> listaNotificaEC = new ArrayList<NotificaECBean>();
+				try{
+					listaNotificaEC = this.notificaECService.findAll();
+				}catch(Exception e){
+					log.debug("Si e' verificato un errore durante il caricamento della lista delle notifiche EC: "+ e.getMessage(), e);
+
+				}
+				this.selectedElement.setListaNotificaEC(listaNotificaEC); 
+
+			}
+
+		}catch(Exception e){
+			log.error("Errore durante l'aggiornamento dello stato della NotificaEC Ente [In Elaborazione -> In Riconsegna]: "+ e.getMessage(),e);
+			MessageUtils.addErrorMsg(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("fattura.ritentaConsegnaNotificaECEnte.erroreGenerico"));
+		}
+		return null;
+	}
+	
 	public String ritentaConsegnaNotificaDT(){
 		try{
 			if(this.selectedNotificaDT != null){

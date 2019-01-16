@@ -31,7 +31,6 @@ import java.util.Map;
 import org.openspcoop2.utils.TipiDatabase;
 import org.openspcoop2.utils.jdbc.IKeyGeneratorObject;
 
-import org.govmix.proxy.fatturapa.orm.Metadato;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 
 
@@ -86,18 +85,6 @@ public class TracciaSDIFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "dettaglio_protocollazione", TracciaSDI.model().DETTAGLIO_PROTOCOLLAZIONE.getFieldType()));
 				return object;
 			}
-			if(model.equals(TracciaSDI.model().METADATO)){
-				Metadato object = new Metadato();
-				setParameter(object, "setId", Long.class,
-					jdbcParameterUtilities.readParameter(rs, "id", Long.class));
-				setParameter(object, "setRichiesta", TracciaSDI.model().METADATO.RICHIESTA.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "richiesta", TracciaSDI.model().METADATO.RICHIESTA.getFieldType()));
-				setParameter(object, "setNome", TracciaSDI.model().METADATO.NOME.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "nome", TracciaSDI.model().METADATO.NOME.getFieldType()));
-				setParameter(object, "setValore", TracciaSDI.model().METADATO.VALORE.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "valore", TracciaSDI.model().METADATO.VALORE.getFieldType()));
-				return object;
-			}
 			
 			else{
 				throw new ServiceException("Model ["+model.toString()+"] not supported by fetch: "+this.getClass().getName());
@@ -148,18 +135,6 @@ public class TracciaSDIFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"dettaglioProtocollazione"));
 				return object;
 			}
-			if(model.equals(TracciaSDI.model().METADATO)){
-				Metadato object = new Metadato();
-				setParameter(object, "setId", Long.class,
-					this.getObjectFromMap(map,"Metadato.id"));
-				setParameter(object, "setRichiesta", TracciaSDI.model().METADATO.RICHIESTA.getFieldType(),
-					this.getObjectFromMap(map,"Metadato.richiesta"));
-				setParameter(object, "setNome", TracciaSDI.model().METADATO.NOME.getFieldType(),
-					this.getObjectFromMap(map,"Metadato.nome"));
-				setParameter(object, "setValore", TracciaSDI.model().METADATO.VALORE.getFieldType(),
-					this.getObjectFromMap(map,"Metadato.valore"));
-				return object;
-			}
 			
 			else{
 				throw new ServiceException("Model ["+model.toString()+"] not supported by fetch: "+this.getClass().getName());
@@ -179,9 +154,6 @@ public class TracciaSDIFetch extends AbstractJDBCFetch {
 
 			if(model.equals(TracciaSDI.model())){
 				return new org.openspcoop2.utils.jdbc.CustomKeyGeneratorObject("tracce_sdi","id","seq_tracce_sdi","tracce_sdi_init_seq");
-			}
-			if(model.equals(TracciaSDI.model().METADATO)){
-				return new org.openspcoop2.utils.jdbc.CustomKeyGeneratorObject("metadati","id","seq_metadati","metadati_init_seq");
 			}
 			
 			else{

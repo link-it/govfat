@@ -295,15 +295,11 @@ public class LoginMBean extends LoginBean{
 	}
 	
 	public boolean isShowMenuItemFattureAttiveSoloConservazione(){
-		
-		boolean showMenu = false;
 		try{
-			showMenu = ConsoleProperties.getInstance(LoginMBean.log).isShowMenuConservazione();
+			return ConsoleProperties.getInstance(LoginMBean.log).isShowMenuConservazione();
 		} catch(Exception e) {
-			
+			return false;
 		}
-		
-		return this.loggedUtente.getRole().equals(UserRole.ADMIN) && showMenu;
 	}
 
 	public void updateProtocollo() throws Exception{

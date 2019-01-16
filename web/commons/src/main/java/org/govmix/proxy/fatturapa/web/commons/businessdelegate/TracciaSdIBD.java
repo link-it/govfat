@@ -64,6 +64,25 @@ public class TracciaSdIBD extends BaseBD {
 			throw new ServiceException(e);
 		}		
 	}
+	
+	public void forzaRispedizioneNotifica(TracciaSDI tracciaNotifica) throws Exception {
+		try {
+			if(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE.equals(tracciaNotifica.getStatoProtocollazione())||StatoProtocollazioneType.IN_RICONSEGNA.equals(tracciaNotifica.getStatoProtocollazione())) {
+				tracciaNotifica.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
+				tracciaNotifica.setDataProssimaProtocollazione(new Date());
+				tracciaNotifica.setTentativiProtocollazione(0);
+				this.service.update(this.service.convertToId(tracciaNotifica), tracciaNotifica);
+			}
+			
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la forzaRispedizioneNotifica: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la forzaRispedizioneNotifica: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
 
 	public TracciaSDI getById(long idFisico) throws ServiceException, NotFoundException {
 		try {

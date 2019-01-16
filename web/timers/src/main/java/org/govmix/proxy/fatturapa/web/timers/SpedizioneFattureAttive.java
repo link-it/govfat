@@ -12,13 +12,13 @@ import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFattureAttiveBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.TracciaSdIBD;
 import org.govmix.proxy.fatturapa.web.commons.fatturaattiva.EsitoInvioFattura;
 import org.govmix.proxy.fatturapa.web.commons.fatturaattiva.EsitoInvioFattura.ESITO;
 import org.govmix.proxy.fatturapa.web.commons.fatturaattiva.InvioFattura;
-import org.govmix.proxy.fatturapa.web.commons.ricevicomunicazionesdi.RiceviComunicazioneSdI;
+import org.govmix.proxy.fatturapa.web.commons.policies.IPolicyRispedizione;
+import org.govmix.proxy.fatturapa.web.commons.policies.PolicyRispedizioneFactory;
 import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
-import org.govmix.proxy.fatturapa.web.timers.policies.IPolicyRispedizione;
-import org.govmix.proxy.fatturapa.web.timers.policies.PolicyRispedizioneFactory;
 
 public class SpedizioneFattureAttive implements IWorkFlow<LottoFatture> {
 
@@ -28,7 +28,7 @@ public class SpedizioneFattureAttive implements IWorkFlow<LottoFatture> {
 	private FatturaAttivaBD fatturaAttivaBD;
 	private Date limitDate;
 	private InvioFattura invioFattura;
-	private RiceviComunicazioneSdI riceviComunicazioneSdi;
+	private TracciaSdIBD tracciaBD;
 
 	@Override
 	public void init(Logger log, Connection connection, int limit) throws Exception {
@@ -38,7 +38,7 @@ public class SpedizioneFattureAttive implements IWorkFlow<LottoFatture> {
 		this.lottoFattureAttiveBD = new LottoFattureAttiveBD(log, connection, false);
 		this.fatturaAttivaBD = new FatturaAttivaBD(log, connection, false);
 		this.invioFattura = new InvioFattura(CommonsProperties.getInstance(log).getInvioFatturaURL(), CommonsProperties.getInstance(log).getInvioFatturaUsername(), CommonsProperties.getInstance(log).getInvioFatturaPassword(), log);
-		this.riceviComunicazioneSdi = new RiceviComunicazioneSdI(log, connection, false);
+		this.tracciaBD = new TracciaSdIBD(this.log);
 
 	}
 
@@ -79,14 +79,15 @@ public class SpedizioneFattureAttive implements IWorkFlow<LottoFatture> {
 			tracciaSdi.setDataProssimaProtocollazione(new Date());
 
 			tracciaSdi.setIdEgov(esitoInvioFattura.getMetadato(CommonsProperties.getInstance(log).getIdEgovHeader()));
+			tracciaSdi.setCodiceDipartimento(lotto.getCodiceDestinatario());
 	
-			this.riceviComunicazioneSdi.ricevi(tracciaSdi);
+			this.tracciaBD.insert(tracciaSdi);
 			this.lottoFattureAttiveBD.updateIdentificativoSdI(lotto, tracciaSdi.getIdentificativoSdi());
 			this.fatturaAttivaBD.assegnaIdentificativoSDIAInteroLotto(this.lottoFattureAttiveBD.convertToId(lotto), tracciaSdi.getIdentificativoSdi());
 
 			this.log.debug("Elaboro il lotto ["+this.lottoFattureAttiveBD.convertToId(lotto).toJson()+"]: stato ["+lotto.getStatoElaborazioneInUscita()+"] -> ["+StatoElaborazioneType.RICEVUTA_DALLO_SDI+"]");
 		} else {
-			IPolicyRispedizione policy = PolicyRispedizioneFactory.getPolicyRispedizioneSdI(lotto);
+			IPolicyRispedizione policy = PolicyRispedizioneFactory.getInstance().getPolicyRispedizioneSdI(lotto);
 
 			long now = new Date().getTime();
 			

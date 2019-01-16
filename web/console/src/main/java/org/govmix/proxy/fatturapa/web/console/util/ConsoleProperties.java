@@ -78,7 +78,9 @@ public class ConsoleProperties extends AbstractProperties {
 	private boolean visualizzaEgov;
 	private boolean visualizzaInfoConsegnaEnte;
 	private boolean showMenuConservazione;
-	
+	private boolean showOpzioniDipartimentiFatturazioneAttiva;
+	private boolean caricamentoFatturaAbilitatoDaConsole;
+
 	private static final String propertiesPath = "/fatturapa.properties";
 	/** Copia Statica */
 	private static ConsoleProperties consoleProperties;
@@ -175,7 +177,8 @@ public class ConsoleProperties extends AbstractProperties {
 		this.visualizzaEgov = this.getBooleanProperty("org.govmix.proxy.fatturapa.web.console.visualizzaEgov", true);
 		this.visualizzaInfoConsegnaEnte = this.getBooleanProperty("org.govmix.proxy.fatturapa.web.console.visualizzaInfoConsegnaEnte", true);
 		this.showMenuConservazione = this.getBooleanProperty("org.govmix.proxy.fatturapa.web.console.showMenuConservazione", true);
-		
+		this.showOpzioniDipartimentiFatturazioneAttiva = this.getBooleanProperty("org.govmix.proxy.fatturapa.web.console.showOpzioniDipartimentiFatturazioneAttiva", true);
+		this.caricamentoFatturaAbilitatoDaConsole = this.getBooleanProperty("org.govmix.proxy.fatturapa.web.console.caricamentoFatturaAbilitatoDaConsole", true);
 	}
 
 	/* ********  P R O P E R T I E S  ******** */
@@ -328,5 +331,21 @@ public class ConsoleProperties extends AbstractProperties {
 
 	public void setShowMenuConservazione(boolean showMenuConservazione) {
 		this.showMenuConservazione = showMenuConservazione;
+	}
+
+	public boolean isShowOpzioniDipartimentiFatturazioneAttiva() {
+		return showOpzioniDipartimentiFatturazioneAttiva;
+	}
+
+	public void setShowOpzioniDipartimentiFatturazioneAttiva(boolean showOpzioniDipartimentiFatturazioneAttiva) {
+		this.showOpzioniDipartimentiFatturazioneAttiva = showOpzioniDipartimentiFatturazioneAttiva;
+	}
+
+	public boolean isCaricamentoFatturaAbilitatoDaConsole() {
+		return caricamentoFatturaAbilitatoDaConsole;
+	}
+
+	public void setCaricamentoFatturaAbilitatoDaConsole(boolean caricamentoFatturaAbilitatoDaConsole) {
+		this.caricamentoFatturaAbilitatoDaConsole = caricamentoFatturaAbilitatoDaConsole;
 	}
 }

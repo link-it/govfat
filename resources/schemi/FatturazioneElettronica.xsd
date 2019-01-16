@@ -31,7 +31,6 @@
 								<linkit:sql-table object-name="PccErroreElaborazione" object-type="PccErroreElaborazione" />
 								<linkit:sql-table object-name="FatturaElettronica" object-type="FatturaElettronica" />
 								<linkit:sql-table object-name="AllegatoFattura" object-type="AllegatoFattura" />
-								<linkit:sql-table object-name="Metadato" object-type="Metadato" />
 								<linkit:sql-table object-name="Ente" object-type="Ente" />
 								<linkit:sql-table object-name="Protocollo" object-type="Protocollo" />
 								<linkit:sql-table object-name="Registro" object-type="Registro" />
@@ -662,23 +661,6 @@
 		</xsd:sequence>
 	</xsd:complexType>
 		
-	<xsd:complexType name="Metadato">
-		<xsd:annotation>
-			<xsd:appinfo>
-				<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
-					<linkit:sql-table-mapping generate-sql="true"
-						name="metadati" on-delete-cascade="false">
-					</linkit:sql-table-mapping>
-				</linkit:generator>
-			</xsd:appinfo>
-		</xsd:annotation>
-		<xsd:sequence>
-			<xsd:element name="richiesta" type="xsd:boolean"/>
-			<xsd:element name="nome" type="xsd:string"/>
-			<xsd:element name="valore" type="xsd:string"/>
-		</xsd:sequence>
-	</xsd:complexType>
-	
 	<xsd:complexType name="LottoFatture">
 		<xsd:annotation>
 			<xsd:appinfo>
@@ -967,7 +949,6 @@
 			<xsd:element name="dataProssimaProtocollazione" type="xsd:dateTime" minOccurs="0" />
 			<xsd:element name="tentativiProtocollazione" type="xsd:nonNegativeInteger" />
 			<xsd:element name="dettaglioProtocollazione" type="xsd:string" minOccurs="0" />
-			<xsd:element ref="Metadato" minOccurs="0" maxOccurs="unbounded" />
 			
 			<!-- elementi per agevolare la ricerca, non mappati sul db -->
 			<xsd:element name="Dipartimento" type="Dipartimento" minOccurs="0">
@@ -2393,8 +2374,6 @@
 
 	<xsd:element name="AllegatoFattura" type="AllegatoFattura" />
 
-	<xsd:element name="Metadato" type="Metadato"/>
-	
 	<xsd:element name="Utente" type="Utente" />
 	
 	<xsd:element name="Ente" type="Ente" />

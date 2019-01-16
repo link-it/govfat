@@ -46,6 +46,7 @@ import org.govmix.proxy.fatturapa.web.console.anagrafica.iservice.IEnteService;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.iservice.IRegistroService;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.service.EnteService;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.service.RegistroService;
+import org.govmix.proxy.fatturapa.web.console.util.ConsoleProperties;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.govmix.proxy.fatturapa.web.console.util.input.RadioButtonImpl;
 import org.openspcoop2.generic_project.exception.ServiceException;
@@ -277,6 +278,12 @@ public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long,
 		}
 	}
 
+	public boolean isShowOpzioniDipartimentiFatturazioneAttiva() {
+		try {
+			return ConsoleProperties.getInstance(LoggerManager.getConsoleLogger()).isShowOpzioniDipartimentiFatturazioneAttiva();
+		} catch (Exception e) {}
+		return false;
+	}
 
 	@Override
 	protected String _annulla() throws AnnullaException {

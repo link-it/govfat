@@ -22,12 +22,12 @@ package org.govmix.proxy.fatturapa.orm.dao.jdbc;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdTracciaSdi;
-import org.govmix.proxy.fatturapa.orm.Metadato;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.TracciaSDIFieldConverter;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.TracciaSDIFetch;
@@ -187,31 +187,6 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithId
 
 			for(Map<String, Object> map: returnMap) {
 				TracciaSDI tracciaSdI = (TracciaSDI)this.getTracciaSDIFetch().fetch(jdbcProperties.getDatabase(), TracciaSDI.model(), map);
-
-				// Object tracciaSDI_metadato
-				ISQLQueryObject sqlQueryObjectGet_tracciaSDI_metadato = sqlQueryObject.newSQLQueryObject();
-				sqlQueryObjectGet_tracciaSDI_metadato.setANDLogicOperator(true);
-				sqlQueryObjectGet_tracciaSDI_metadato.addFromTable(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model().METADATO));
-				sqlQueryObjectGet_tracciaSDI_metadato.addSelectField("id");
-				sqlQueryObjectGet_tracciaSDI_metadato.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().METADATO.RICHIESTA,true));
-				sqlQueryObjectGet_tracciaSDI_metadato.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().METADATO.NOME,true));
-				sqlQueryObjectGet_tracciaSDI_metadato.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().METADATO.VALORE,true));
-				sqlQueryObjectGet_tracciaSDI_metadato.addWhereCondition("id_traccia_sdi=?");
-
-				// Get tracciaSDI_metadato
-				java.util.List<Object> tracciaSDI_metadato_list = (java.util.List<Object>) jdbcUtilities.executeQuery(sqlQueryObjectGet_tracciaSDI_metadato.createSQLQuery(), jdbcProperties.isShowSql(), TracciaSDI.model().METADATO, this.getTracciaSDIFetch(),
-						new JDBCObject(tracciaSdI.getId(),Long.class));
-
-				if(tracciaSDI_metadato_list != null) {
-					for (Object tracciaSDI_metadato_object: tracciaSDI_metadato_list) {
-						Metadato tracciaSDI_metadato = (Metadato) tracciaSDI_metadato_object;
-
-
-						tracciaSdI.addMetadato(tracciaSDI_metadato);
-					}
-				}
-
-				
 				list.add(tracciaSdI);
 			}
 
@@ -495,26 +470,6 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithId
 			return;
 		}
 		obj.setId(imgSaved.getId());
-		if(obj.getMetadatoList()!=null){
-			List<org.govmix.proxy.fatturapa.orm.Metadato> listObj_ = obj.getMetadatoList();
-			for(org.govmix.proxy.fatturapa.orm.Metadato itemObj_ : listObj_){
-				org.govmix.proxy.fatturapa.orm.Metadato itemAlreadySaved_ = null;
-				if(imgSaved.getMetadatoList()!=null){
-					List<org.govmix.proxy.fatturapa.orm.Metadato> listImgSaved_ = imgSaved.getMetadatoList();
-					for(org.govmix.proxy.fatturapa.orm.Metadato itemImgSaved_ : listImgSaved_){
-						boolean objEqualsToImgSaved_ = false;
-						 objEqualsToImgSaved_ = org.openspcoop2.generic_project.utils.Utilities.equals(itemObj_.getNome(),itemImgSaved_.getNome());
-						if(objEqualsToImgSaved_){
-							itemAlreadySaved_=itemImgSaved_;
-							break;
-						}
-					}
-				}
-				if(itemAlreadySaved_!=null){
-					itemObj_.setId(itemAlreadySaved_.getId());
-				}
-			}
-		}
 	}
 	
 	@Override
@@ -574,12 +529,6 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithId
 	
 	private void _join(IExpression expression, ISQLQueryObject sqlQueryObject) throws NotImplementedException, ServiceException, Exception{
 
-		if(expression.inUseModel(TracciaSDI.model().METADATO,false)){
-			String tableName1 = this.getTracciaSDIFieldConverter().toAliasTable(TracciaSDI.model());
-			String tableName2 = this.getTracciaSDIFieldConverter().toAliasTable(TracciaSDI.model().METADATO);
-			sqlQueryObject.addWhereCondition(tableName1+".id="+tableName2+".id_traccia_sdi");
-		}
-
 		if(expression.inUseModel(TracciaSDI.model().DIPARTIMENTO,false)){
 			String tableName1 = this.getTracciaSDIFieldConverter().toAliasTable(TracciaSDI.model());
 			String tableName2 = this.getTracciaSDIFieldConverter().toAliasTable(TracciaSDI.model().DIPARTIMENTO);
@@ -610,13 +559,6 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithId
 				utilities.newList(
 						new CustomField("id", Long.class, "id", converter.toTable(TracciaSDI.model()))
 						));
-
-		// TracciaSDI.model().METADATO
-		mapTableToPKColumn.put(converter.toTable(TracciaSDI.model().METADATO),
-				utilities.newList(
-						new CustomField("id", Long.class, "id", converter.toTable(TracciaSDI.model().METADATO))
-						));
-
 
 		return mapTableToPKColumn;		
 	}
@@ -707,6 +649,9 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithId
 		// Object _tracciaSDI
 		sqlQueryObjectGet.addFromTable(this.getTracciaSDIFieldConverter().toTable(TracciaSDI.model()));
 		sqlQueryObjectGet.addSelectField("id");
+		//aggiungo per model
+		sqlQueryObjectGet.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().STATO_PROTOCOLLAZIONE, false));
+		sqlQueryObjectGet.addSelectField(this.getTracciaSDIFieldConverter().toColumn(TracciaSDI.model().DATA_PROSSIMA_PROTOCOLLAZIONE, false));
 		sqlQueryObjectGet.setANDLogicOperator(true);
 		sqlQueryObjectGet.addWhereCondition("id=?");
 
@@ -716,6 +661,8 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithId
 		};
 		List<Class<?>> listaFieldIdReturnType_tracciaSDI = new ArrayList<Class<?>>();
 		listaFieldIdReturnType_tracciaSDI.add(Long.class);
+		listaFieldIdReturnType_tracciaSDI.add(TracciaSDI.model().STATO_PROTOCOLLAZIONE.getFieldType());
+		listaFieldIdReturnType_tracciaSDI.add(TracciaSDI.model().DATA_PROSSIMA_PROTOCOLLAZIONE.getFieldType());
 		org.govmix.proxy.fatturapa.orm.IdTracciaSdi id_tracciaSDI = null;
 		List<Object> listaFieldId_tracciaSDI = jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet.createSQLQuery(), jdbcProperties.isShowSql(),
 				listaFieldIdReturnType_tracciaSDI, searchParams_tracciaSDI);
@@ -728,6 +675,10 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithId
 			// set _tracciaSDI
 			id_tracciaSDI = new org.govmix.proxy.fatturapa.orm.IdTracciaSdi();
 			id_tracciaSDI.setIdTraccia((Long)listaFieldId_tracciaSDI.get(0));
+			id_tracciaSDI.set_value_statoProtocollazione((String)listaFieldId_tracciaSDI.get(1));
+			if(listaFieldId_tracciaSDI.get(2) instanceof Date) {
+				id_tracciaSDI.setDataProssimaProtocollazione((Date)listaFieldId_tracciaSDI.get(2));
+			}
 		}
 		
 		return id_tracciaSDI;
@@ -786,5 +737,4 @@ public class JDBCTracciaSDIServiceSearchImpl implements IJDBCServiceSearchWithId
 		
 		return id_tracciaSDI;
 	}
-
 }

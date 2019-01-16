@@ -196,19 +196,31 @@ public class NotificaEsitoCommittenteBD extends BaseBD {
 		try {
 			TracciaSDI tracciaNotifica = this.tracciaService.get(notifica.getIdTracciaNotifica());
 			
-			if(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE.equals(tracciaNotifica.getStatoProtocollazione())) {
+			if(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE.equals(tracciaNotifica.getStatoProtocollazione()) || StatoProtocollazioneType.IN_RICONSEGNA.equals(tracciaNotifica.getStatoProtocollazione())) {
 				tracciaNotifica.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
 				tracciaNotifica.setDataProssimaProtocollazione(new Date());
 				tracciaNotifica.setTentativiProtocollazione(0);
 				this.tracciaService.update(notifica.getIdTracciaNotifica(), tracciaNotifica);
 			}
+			
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la forzaRispedizioneEnteNotifica: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la forzaRispedizioneEnteNotifica: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public void forzaRispedizioneEnteScarto(NotificaEsitoCommittente notifica) throws Exception {
+		try {
 			TracciaSDI tracciaScarto = this.tracciaService.get(notifica.getIdTracciaScarto());
 			
-			if(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE.equals(tracciaScarto.getStatoProtocollazione())) {
+			if(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE.equals(tracciaScarto.getStatoProtocollazione()) || StatoProtocollazioneType.IN_RICONSEGNA.equals(tracciaScarto.getStatoProtocollazione())) {
 				tracciaScarto.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
 				tracciaScarto.setDataProssimaProtocollazione(new Date());
 				tracciaScarto.setTentativiProtocollazione(0);
-				this.tracciaService.update(notifica.getIdTracciaNotifica(), tracciaScarto);
+				this.tracciaService.update(notifica.getIdTracciaScarto(), tracciaScarto);
 			}
 			
 		} catch (ServiceException e) {
