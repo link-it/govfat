@@ -171,7 +171,7 @@ public class NotificaDTBean extends BaseBean<NotificaDecorrenzaTermini, Long> im
 		FacesContext context = FacesContext.getCurrentInstance();
 		String url = context.getExternalContext().getRequestContextPath() 
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
-				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getIdTraccia()
+				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getIdTraccia().getIdTraccia()
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_NOTIFICA_DT;
 
@@ -179,7 +179,7 @@ public class NotificaDTBean extends BaseBean<NotificaDecorrenzaTermini, Long> im
 
 		url = context.getExternalContext().getRequestContextPath() 
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
-				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getIdTraccia()
+				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getIdTraccia().getIdTraccia()
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_PDF
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_NOTIFICA_DT;
 

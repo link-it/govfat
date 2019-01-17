@@ -371,7 +371,7 @@ public class NotificaECBean extends BaseBean<NotificaEsitoCommittente, Long> imp
 
 		String url = context.getExternalContext().getRequestContextPath() 
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
-				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getIdTracciaNotifica()
+				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getIdTracciaNotifica().getIdTraccia()
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_NOTIFICA_EC;
 
@@ -379,7 +379,7 @@ public class NotificaECBean extends BaseBean<NotificaEsitoCommittente, Long> imp
 
 		url = context.getExternalContext().getRequestContextPath() 
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
-				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getIdTracciaNotifica()
+				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getIdTracciaNotifica().getIdTraccia()
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_PDF
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_NOTIFICA_EC;
 
@@ -388,7 +388,7 @@ public class NotificaECBean extends BaseBean<NotificaEsitoCommittente, Long> imp
 
 		url = context.getExternalContext().getRequestContextPath() 
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
-				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getIdTracciaScarto()
+				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getIdTracciaScarto().getIdTraccia()
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_SCARTO;
 
@@ -397,7 +397,7 @@ public class NotificaECBean extends BaseBean<NotificaEsitoCommittente, Long> imp
 
 		url = context.getExternalContext().getRequestContextPath() 
 				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
-				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getIdTracciaScarto()
+				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getIdTracciaScarto().getIdTraccia()
 				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_PDF
 				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_SCARTO;
 		this.scartoPdf.setHref( this.getDTO().getIdTracciaScarto() != null ? url : null);
