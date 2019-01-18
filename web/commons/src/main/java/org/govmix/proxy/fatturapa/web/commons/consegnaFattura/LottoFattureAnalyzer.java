@@ -46,15 +46,12 @@ public class LottoFattureAnalyzer {
 	private LottoFatture lotto;
 	private Logger log;
 
-	public LottoFattureAnalyzer(LottoFatture lotto, Dipartimento dipartimento, String codiceDipartimento, Logger log) throws Exception {
-		this(lotto.getXml(), lotto.getNomeFile(), lotto.getIdentificativoSdi(), dipartimento, codiceDipartimento, log);
-	}
-	
-	public LottoFattureAnalyzer(byte[] lottoFatture, String nomeFile, Integer identificativo, Dipartimento dipartimento, String codiceDipartimento, Logger log) throws InserimentoLottiException {
+	public LottoFattureAnalyzer(InserimentoLottoRequest request, Integer identificativo, Dipartimento dipartimento, String codiceDipartimento,
+			Logger log) throws InserimentoLottiException {
 		this.log = log;
-		this.original = lottoFatture;
+		this.original = request.getXml();
 		try {
-			P7MInfo info = new P7MInfo(lottoFatture, this.log);
+			P7MInfo info = new P7MInfo(request.getXml(), this.log);
 			this.decoded = info.getXmlDecoded();
 			this.isP7M = true;
 			this.isFirmato = true;
@@ -62,11 +59,11 @@ public class LottoFattureAnalyzer {
 			this.log.debug("Acquisizione lotto P7M non riuscita...provo ad acquisire lotto XML. Motivo della mancata acquisizione:" + t.getMessage());
 			this.isP7M = false;
 			try {
-				this.decoded = extractContentFromXadesSignedFile(lottoFatture);
+				this.decoded = extractContentFromXadesSignedFile(request.getXml());
 				if(this.decoded != null) {
 					this.isFirmato = true;
 				} else {
-					this.decoded = lottoFatture;
+					this.decoded = request.getXml();
 				}
 
 			} catch(Exception e) {
@@ -75,9 +72,23 @@ public class LottoFattureAnalyzer {
 			}
 		}
 		String type = this.isP7M ? "P7M" : "XML"; 
-		this.lotto  = getLotto(this.original, nomeFile, identificativo, type, dipartimento, codiceDipartimento);
+		this.lotto  = getLotto(request, identificativo, type, dipartimento, codiceDipartimento);
 	}
 
+	public static boolean isFirmato(byte[] xml, Logger log) throws InserimentoLottiException {
+		try {
+			P7MInfo info = new P7MInfo(xml, log);
+			info.getXmlDecoded();
+			return true;
+		} catch(Throwable t) {
+			try {
+				return extractContentFromXadesSignedFile(xml) != null;
+			} catch(Exception e) {
+				throw new InserimentoLottiException(CODICE.ERRORE_FORMATO_FILE, e.getMessage());
+			}
+
+		}		
+	}
 	private static DocumentBuilderFactory dbf;
 	private static XPathFactory xPathfactory;
 	private static boolean init;
@@ -90,7 +101,7 @@ public class LottoFattureAnalyzer {
 		init = true;
 	}
 
-	class MapNamespaceContext implements NamespaceContext {
+	static class MapNamespaceContext implements NamespaceContext {
 	    private Map<String, String> namespaces = new HashMap<String, String>();
 
 	    public MapNamespaceContext() {
@@ -136,7 +147,7 @@ public class LottoFattureAnalyzer {
 };
 
 	
-	private byte[] extractContentFromXadesSignedFile(byte[] xmlIn) throws Exception {
+	private static byte[] extractContentFromXadesSignedFile(byte[] xmlIn) throws Exception {
 		InputStream xadesIn = null;
 		ByteArrayOutputStream bos = null;
 		try {
@@ -206,22 +217,31 @@ public class LottoFattureAnalyzer {
 	public void setDecoded(byte[] decoded) {
 		this.decoded = decoded;
 	}
-
-	private static DominioType getDominio(String codiceDipartimento) throws InserimentoLottiException {
-		if(codiceDipartimento==null)
-			throw new InserimentoLottiException(CODICE.ERRORE_GENERICO, "Impossibile determinare il dominio. Codice dipartimento null");
-		if(codiceDipartimento.length() == 6)
-			return DominioType.PA;
-		if(codiceDipartimento.length() == 7)
-			return DominioType.B2B;
-		
-		throw new InserimentoLottiException(CODICE.ERRORE_GENERICO, "Lunghezza del codice dipartimento ["+codiceDipartimento.length()+"]. Impossibile determinare il dominio");
+	private static DominioType getDominio(FormatoTrasmissioneType formatoTrasmissione) throws InserimentoLottiException {
+		switch(formatoTrasmissione) {
+		case FPA12: 
+		case SDI10:
+		case SDI11: return DominioType.PA;
+		case FPR12: return DominioType.B2B;
+		default: return null;
+		}
 	}
 	
+//	private static DominioType getDominio(String codiceDipartimento) throws InserimentoLottiException {
+//		if(codiceDipartimento==null)
+//			throw new InserimentoLottiException(CODICE.ERRORE_GENERICO, "Impossibile determinare il dominio. Codice dipartimento null");
+//		if(codiceDipartimento.length() == 6)
+//			return DominioType.PA;
+//		if(codiceDipartimento.length() == 7)
+//			return DominioType.B2B;
+//		
+//		throw new InserimentoLottiException(CODICE.ERRORE_GENERICO, "Lunghezza del codice dipartimento ["+codiceDipartimento.length()+"]. Impossibile determinare il dominio");
+//	}
 	
-	private static SottodominioType getSottodominio(String codiceDipartimento) throws InserimentoLottiException {
+	
+	private static SottodominioType getSottodominio(String codiceDipartimento, FormatoTrasmissioneType formatoTrasmissione) throws InserimentoLottiException {
 		
-		DominioType dominio = getDominio(codiceDipartimento);
+		DominioType dominio = getDominio(formatoTrasmissione);
 		if(dominio.toString().equals(DominioType.B2B.toString())) {
 			if("XXXXXXX".equals(codiceDipartimento)) {
 				return SottodominioType.ESTERO;
@@ -236,7 +256,7 @@ public class LottoFattureAnalyzer {
 
 	}
 	
-	private LottoFatture getLotto(byte[] xml, String nomeFile, Integer identificativo, String type, Dipartimento dipartimento, String codiceDipartimento) throws InserimentoLottiException {
+	private LottoFatture getLotto(InserimentoLottoRequest request, Integer identificativo, String type, Dipartimento dipartimento, String codiceDipartimento) throws InserimentoLottiException {
 		
 		
 		ConsegnaFatturaParameters params = null;
@@ -244,16 +264,16 @@ public class LottoFattureAnalyzer {
 
 		try {
 
-			params = ConsegnaFatturaUtils.getParameters(identificativo, nomeFile,
+			params = ConsegnaFatturaUtils.getParameters(identificativo, request.getNomeFile(),
 							type, null,
 							messageId,
 							false,
-							xml);
+							request.getXml());
 			
 			params.validate(true);
 		} catch(Exception e) {
-			this.log.error("Errore durante il caricamento del lotto con nome file ["+nomeFile+"]: " + e.getMessage(), e);
-			throw new InserimentoLottiException(CODICE.PARAMETRI_NON_VALIDI, nomeFile);
+			this.log.error("Errore durante il caricamento del lotto con nome file ["+request.getNomeFile()+"]: " + e.getMessage(), e);
+			throw new InserimentoLottiException(CODICE.PARAMETRI_NON_VALIDI, request.getNomeFile());
 		}
 
 		LottoFatture lotto = new LottoFatture();
@@ -294,14 +314,26 @@ public class LottoFattureAnalyzer {
 		lotto.setFatturazioneAttiva(true);
 		
 		lotto.setDataRicezione(new Date());
-		lotto.setStatoConsegna(StatoConsegnaType.NON_CONSEGNATA);
-		lotto.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
-		lotto.setStatoInserimento(StatoInserimentoType.NON_INSERITO);
+		
+		if(request.getProtocollo()!=null) {
+			lotto.setProtocollo(request.getProtocollo());
+			lotto.setStatoProtocollazione(StatoProtocollazioneType.PROTOCOLLATA);
+		} else {
+			lotto.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
+		}
+		
+		if(request.getIdDocumentale() !=null) {
+			lotto.setStatoConsegna(StatoConsegnaType.CONSEGNATA);
+			lotto.setDettaglioConsegna(request.getIdDocumentale());
+		} else {
+			lotto.setStatoConsegna(StatoConsegnaType.NON_CONSEGNATA);
+		}
+		lotto.setStatoInserimento(StatoInserimentoType.INSERITO);
 		lotto.setDataUltimaElaborazione(new Date());
 		lotto.setDataProssimaElaborazione(new Date());
 		lotto.setTentativiConsegna(0);
-		lotto.setDominio(getDominio(params.getCodiceDestinatario()));
-		lotto.setSottodominio(getSottodominio(params.getCodiceDestinatario()));
+		lotto.setDominio(getDominio(lotto.getFormatoTrasmissione()));
+		lotto.setSottodominio(getSottodominio(params.getCodiceDestinatario(), lotto.getFormatoTrasmissione()));
 		
 		
 		if(dipartimento!=null) {

@@ -91,12 +91,18 @@ public abstract class AbstractFatturaConverter<T> {
 		fatturaElettronica.setPosizione(this.params.getPosizioneFatturaPA());
 		fatturaElettronica.setNomeFile(this.params.getNomeFile());
 		fatturaElettronica.setMessageId(this.params.getMessageId());
-		fatturaElettronica.setProtocollo(this.params.getProtocollo());
 		fatturaElettronica.setCodiceDestinatario(this.params.getCodiceDestinatario());
 		fatturaElettronica.setImportoTotaleDocumento(this.getImportoTotaleDocumento());
 		fatturaElettronica.setImportoTotaleRiepilogo(this.getImportoTotaleRiepilogo());
-		fatturaElettronica.setStatoConsegna(StatoConsegnaType.NON_CONSEGNATA);
-		fatturaElettronica.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
+		fatturaElettronica.setStatoConsegna(StatoConsegnaType.NON_CONSEGNATA);	
+
+		if(this.params.getProtocollo()!=null) {
+			fatturaElettronica.setStatoProtocollazione(StatoProtocollazioneType.PROTOCOLLATA);
+			fatturaElettronica.setProtocollo(this.params.getProtocollo());
+		} else {
+			fatturaElettronica.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
+		}
+			
 		fatturaElettronica.setStatoConservazione(StatoConservazioneType.NON_INVIATA);
 		
 		fatturaElettronica.setFatturazioneAttiva(this.params.isFatturazioneAttiva());		

@@ -172,12 +172,12 @@ public class CommonsProperties extends AbstractProperties {
 
 		this.idEgovHeader = this.getProperty("header.idegov", true);
 
-		this.maxTentativiRispedizione = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.maxTentativiRispedizione", true));
-		this.fattoreRispedizione = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.fattoreRispedizione", true));
-		this.maxTentativiRispedizioneWFM = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.maxTentativiRispedizioneWFM", true));
-		this.fattoreRispedizioneWFM = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.fattoreRispedizioneWFM", true));
-		this.maxTentativiRispedizioneSdI = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.maxTentativiRispedizioneSdI", true));
-		this.fattoreRispedizioneSdI = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.fattoreRispedizioneSdI", true));
+		this.maxTentativiRispedizione = Integer.parseInt(this.getProperty("rispedizioni.maxTentativiRispedizione", true));
+		this.fattoreRispedizione = Integer.parseInt(this.getProperty("rispedizioni.fattoreRispedizione", true));
+		this.maxTentativiRispedizioneWFM = Integer.parseInt(this.getProperty("rispedizioni.maxTentativiRispedizioneWFM", true));
+		this.fattoreRispedizioneWFM = Integer.parseInt(this.getProperty("rispedizioni.fattoreRispedizioneWFM", true));
+		this.maxTentativiRispedizioneSdI = Integer.parseInt(this.getProperty("rispedizioni.maxTentativiRispedizioneSdI", true));
+		this.fattoreRispedizioneSdI = Integer.parseInt(this.getProperty("rispedizioni.fattoreRispedizioneSdI", true));
 
 	}
 

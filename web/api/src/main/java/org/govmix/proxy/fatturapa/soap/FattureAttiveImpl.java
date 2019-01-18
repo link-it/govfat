@@ -78,6 +78,11 @@ public class FattureAttiveImpl implements FattureAttive {
 			request.setDipartimento(inviaFatturaRichiestaTipo.getCodiceUO());
 			request.setNomeFile(inviaFatturaRichiestaTipo.getNomeFileFattura());
 			request.setXml(getBytes(inviaFatturaRichiestaTipo.getFileFattura()));
+			if(inviaFatturaRichiestaTipo.getInfoDocumentale()!=null) {
+				request.setIdDocumentale(process(inviaFatturaRichiestaTipo.getInfoDocumentale().getIdDocumentale()));
+				request.setProtocollo(inviaFatturaRichiestaTipo.getInfoDocumentale().getDataProtocollo() + "/" + inviaFatturaRichiestaTipo.getInfoDocumentale().getNumeroProtocollo());
+			}
+			
 			
 			requestList.add(request);
 			InserimentoLottoResponse inserisciLotto = inserimento.inserisciLotto(requestList);
@@ -92,6 +97,10 @@ public class FattureAttiveImpl implements FattureAttive {
 			this.log.error("inviaFattura completata con errore: "  + e.getMessage(), e);
 			throw new GenericFault_Exception(e.getMessage(), e);
 		}
+	}
+
+	private String process(String idDocumentale) {
+		return "<ns2:idProtocollo xmlns:ns2=\"http://webservice.fascicoloinformatico.gvcc.net/\"><uuid>"+idDocumentale+"</uuid></ns2:idProtocollo>";
 	}
 
 	@Override

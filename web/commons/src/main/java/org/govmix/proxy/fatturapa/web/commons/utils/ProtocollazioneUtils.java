@@ -38,18 +38,17 @@ import org.openspcoop2.utils.UtilsException;
 public class ProtocollazioneUtils {
 
 	private Logger log;
-	private DateFormat sdf;
 
 
 	public ProtocollazioneUtils(Logger log) throws Exception {
 		this.log = log;
-		this.sdf = new SimpleDateFormat("MM/dd/yyy HH:mm:ss Z");
 	}
 
 	public boolean inviaLotto(LottoFatturePassiveBD lottoBD, EndpointSelector endpointSelector, LottoFatture lotto, String idLotto)
 			throws Exception, MalformedURLException, UtilsException,
 			IOException {
 		Endpoint endpoint = endpointSelector.findEndpoint(lotto);
+		DateFormat sdf = new SimpleDateFormat("MM/dd/yyy HH:mm:ss Z");
 
 		URL urlEndpoint = endpoint.getEndpoint().toURL();
 
@@ -167,6 +166,7 @@ public class ProtocollazioneUtils {
 		Endpoint endpoint = endpointSelector.findEndpoint(fattura);
 
 		URL urlEndpoint = endpoint.getEndpoint().toURL();
+		DateFormat sdf = new SimpleDateFormat("MM/dd/yyy HH:mm:ss Z");
 
 		this.log.debug("Spedisco la fattura ["+idFattura.toJson()+"] all'endpoint ["+urlEndpoint+"]");
 
@@ -201,8 +201,13 @@ public class ProtocollazioneUtils {
 			httpConn.setRequestProperty(CostantiProtocollazione.MITTENTE_CF_HEADER_PARAM, fattura.getCedentePrestatoreCodiceFiscale());
 			httpConn.setRequestProperty(CostantiProtocollazione.MITTENTE_RAGIONESOCIALE_HEADER_PARAM, fattura.getCedentePrestatoreDenominazione());
 
-			if(fattura.getDettaglioConsegna() != null)
-				httpConn.setRequestProperty(CostantiProtocollazione.DETTAGLIO_CONSEGNA_HEADER_PARAM, fattura.getDettaglioConsegna());
+			if(consegnaContestuale) {
+				if(fattura.getLottoFatture().getDettaglioConsegna() != null)
+					httpConn.setRequestProperty(CostantiProtocollazione.DETTAGLIO_CONSEGNA_HEADER_PARAM, fattura.getLottoFatture().getDettaglioConsegna());
+			} else {
+				if(fattura.getDettaglioConsegna() != null)
+					httpConn.setRequestProperty(CostantiProtocollazione.DETTAGLIO_CONSEGNA_HEADER_PARAM, fattura.getDettaglioConsegna());
+			}
 
 			httpConn.setRequestProperty(CostantiProtocollazione.DESTINATARIO_HEADER_PARAM, fattura.getCodiceDestinatario());
 			httpConn.setRequestProperty("Content-Type", "application/zip");

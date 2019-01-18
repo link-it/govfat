@@ -5,6 +5,8 @@ public class InserimentoLottoRequest {
 	private String nomeFile;
 	private byte[] xml;
 	private String dipartimento;
+	private String protocollo;
+	private String idDocumentale;
 	
 	public String getNomeFile() {
 		return nomeFile;
@@ -23,6 +25,18 @@ public class InserimentoLottoRequest {
 	}
 	public void setDipartimento(String dipartimento) {
 		this.dipartimento = dipartimento;
+	}
+	public String getProtocollo() {
+		return this.protocollo;
+	}
+	public void setProtocollo(String protocollo) {
+		this.protocollo = protocollo;
+	}
+	public String getIdDocumentale() {
+		return this.idDocumentale;
+	}
+	public void setIdDocumentale(String idDocumentale) {
+		this.idDocumentale = idDocumentale;
 	}
 	
 }

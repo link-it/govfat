@@ -21,9 +21,18 @@
 		    <xs:element name="codiceUO" type="xs:string"/>
 		    <xs:element name="nomeFileFattura" type="xs:string"/>
 		    <xs:element name="fileFattura"  type="xs:base64Binary"/>
-		    <xs:element name="protocollo" type="xs:string" minOccurs="0"/>
+		    <xs:element name="infoDocumentale" type="tns:infoDocumentaleTipo" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
+    <xs:complexType name="infoDocumentaleTipo">
+        <xs:sequence>
+            <xs:choice>
+                <xs:element name="idDocumentale" type="xs:string"/>
+                <xs:element name="numeroProtocollo" type="xs:string"/>
+                <xs:element name="dataProtocollo" type="xs:string"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
     <xs:complexType name="riceviNotificheRichiestaTipo">
         <xs:sequence>
             <xs:choice>

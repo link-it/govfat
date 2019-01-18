@@ -51,7 +51,7 @@ public class InserimentoLotti {
 
 				Dipartimento dipartimento = this.getDipartimento(request.getNomeFile(), request.getDipartimento());
 
-				LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), request.getNomeFile(), identificativo, dipartimento, dipartimento.getCodice(), this.log);
+				LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request, identificativo, dipartimento, dipartimento.getCodice(), this.log);
 				
 				if(!this.checkCodiceProcedimento(analizer.getLotto(), dipartimento)) {
 					throw new InserimentoLottiException(CODICE.ERRORE_CODICE_PROCEDIMENTO, request.getNomeFile(), request.getDipartimento(), analizer.getLotto().getFormatoTrasmissione());
@@ -153,7 +153,7 @@ public class InserimentoLotti {
 		for(InserimentoLottoRequest request: requestList) {
 			Dipartimento dipartimento = this.getDipartimento(request.getNomeFile(), request.getDipartimento());
 			
-			LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), request.getNomeFile(), 1, dipartimento, dipartimento.getCodice(), this.log);
+			LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request, 1, dipartimento, dipartimento.getCodice(), this.log);
 			
 			if(!this.checkCodiceProcedimento(analizer.getLotto(), this.getDipartimento(request.getNomeFile(), request.getDipartimento()))) {
 				throw new InserimentoLottiException(CODICE.ERRORE_CODICE_PROCEDIMENTO, request.getNomeFile(), request.getDipartimento(), analizer.getLotto().getFormatoTrasmissione());
@@ -174,9 +174,7 @@ public class InserimentoLotti {
 	public void checkLottoSoloConservazione(List<InserimentoLottoSoloConservazioneRequest> requestList) throws InserimentoLottiException {
 		for(InserimentoLottoSoloConservazioneRequest request: requestList) {
 
-			LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), request.getNomeFile(), 1, null, request.getDipartimento(), this.log);
-			
-			if(!analizer.isFirmato()) {
+			if(!LottoFattureAnalyzer.isFirmato(request.getXml(), this.log)) {
 				throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO_CONSERVAZIONE, request.getNomeFile(), request.getDipartimento());
 			}
 				
@@ -199,7 +197,7 @@ public class InserimentoLotti {
 			for(InserimentoLottoSoloConservazioneRequest request: requestList) {
 				Integer identificativo = generaIdentificativo(lottoBD);
 
-				LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request.getXml(), request.getNomeFile(), identificativo, null, request.getDipartimento(), this.log);
+				LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request, identificativo, null, request.getDipartimento(), this.log);
 				
 				if(!analizer.isFirmato()) {
 					throw new InserimentoLottiException(CODICE.ERRORE_FILE_NON_FIRMATO_CONSERVAZIONE, request.getNomeFile(), request.getDipartimento());

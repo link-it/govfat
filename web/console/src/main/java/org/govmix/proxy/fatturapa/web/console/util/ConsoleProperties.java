@@ -133,8 +133,8 @@ public class ConsoleProperties extends AbstractProperties {
 		this.timersProxyFatturaPASondaPassword= this.getProperty("org.govmix.proxy.fatturapa.web.console.timersProxyFatturaPA.sonda.password", false);
 
 		this.proxyPccWsFattureUrl = this.getProperty("org.govmix.proxy.fatturapa.web.console.proxyPcc.wsFatture.url", true);
-		this.proxyPccWsFattureUsername = this.getProperty("org.govmix.proxy.fatturapa.web.console.proxyPcc.wsFatture.username", true);
-		this.proxyPccWsFatturePassword = this.getProperty("org.govmix.proxy.fatturapa.web.console.proxyPcc.wsFatture.password", true);
+		this.proxyPccWsFattureUsername = this.getProperty("org.govmix.proxy.fatturapa.web.console.proxyPcc.wsFatture.username", false);
+		this.proxyPccWsFatturePassword = this.getProperty("org.govmix.proxy.fatturapa.web.console.proxyPcc.wsFatture.password", false	);
 
 		this.fatturaAttivaCaricamentoMaxNumeroFile = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.console.fatturazioneAttiva.caricamento.maxNumeroFile", true));
 		this.fatturaAttivaCaricamentoTipologieFileAccettati = this.getProperty("org.govmix.proxy.fatturapa.web.console.fatturazioneAttiva.caricamento.tipologieFileAccettate", true);

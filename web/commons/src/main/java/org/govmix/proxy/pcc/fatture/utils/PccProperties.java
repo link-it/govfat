@@ -46,8 +46,6 @@ public class PccProperties extends AbstractProperties {
 	private String passwordWadlEndpointPdd;
 	private String passwordWsdlFattureWS;
 	private String passwordWsdlTracceWS;
-	private int maxTentativiRispedizione;
-	private int fattoreRispedizione;
 
 	private String urlPCC;
 	private String usernamePCC;
@@ -94,10 +92,6 @@ public class PccProperties extends AbstractProperties {
 			this.sistemaRichiedenteGestionale = this.getProperty("org.govmix.proxy.pcc.sistemaRichiedenteGestionale", true);
 			this.utenteRichiedenteGestionale = this.getProperty("org.govmix.proxy.pcc.utenteRichiedenteGestionale", true);
 
-		
-			this.maxTentativiRispedizione = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.maxTentativiRispedizione", true));
-			this.fattoreRispedizione = Integer.parseInt(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.consegnaFattura.fattoreRispedizione", true));
-		
 			this.intervalloRispedizioneDefault = Integer.parseInt(this.getProperty("org.govmix.proxy.pcc.intervalloRispedizioneDefault", true));
 			this.intervalloSpedizioneEsito = Integer.parseInt(this.getProperty("org.govmix.proxy.pcc.intervalloSpedizioneEsito", true));
 		} catch(Exception e) {
@@ -148,16 +142,9 @@ public class PccProperties extends AbstractProperties {
 	public String getUrlWsdlTracceWS() {
 		return urlWsdlTracceWS;
 	}
-	public int getMaxTentativiRispedizione() {
-		return maxTentativiRispedizione;
-	}
 	public Integer getIntervalloRispedizioneDefault() {
 		return intervalloRispedizioneDefault;
 	}
-	public int getFattoreRispedizione() {
-		return fattoreRispedizione;
-	}
-
 	public Integer getIntervalloSpedizioneEsito() {
 		return intervalloSpedizioneEsito;
 	}
