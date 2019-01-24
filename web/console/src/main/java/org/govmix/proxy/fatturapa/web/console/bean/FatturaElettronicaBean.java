@@ -1046,7 +1046,7 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 					this.getListaNotificaEC().size() > 0) {
 				for (NotificaECBean notifica : this.getListaNotificaEC()) {
 					NotificaEsitoCommittente dto = notifica.getDTO();
-					if(dto.getIdTracciaNotifica().getStatoProtocollazione() != null 
+					if(dto.getIdTracciaNotifica() != null && dto.getIdTracciaNotifica().getStatoProtocollazione() != null 
 							&& ((dto.getIdTracciaNotifica().getStatoProtocollazione().equals(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE)) || (dto.getIdTracciaNotifica().getStatoProtocollazione().equals(StatoProtocollazioneType.IN_RICONSEGNA)))) {
 						return true;
 					}
@@ -1070,7 +1070,7 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 				for (NotificaECBean notifica : this.getListaNotificaEC()) {
 					NotificaEsitoCommittente dto = notifica.getDTO();
 					
-					if(dto.getIdTracciaScarto().getStatoProtocollazione() != null 
+					if(dto.getIdTracciaScarto() != null && dto.getIdTracciaScarto().getStatoProtocollazione() != null 
 							&& ((dto.getIdTracciaScarto().getStatoProtocollazione().equals(StatoProtocollazioneType.ERRORE_PROTOCOLLAZIONE)) || (dto.getIdTracciaScarto().getStatoProtocollazione().equals(StatoProtocollazioneType.IN_RICONSEGNA)))) {
 						return true;
 					}

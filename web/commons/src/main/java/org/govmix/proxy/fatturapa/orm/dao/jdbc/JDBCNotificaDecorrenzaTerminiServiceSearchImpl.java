@@ -169,7 +169,7 @@ public class JDBCNotificaDecorrenzaTerminiServiceSearchImpl implements IJDBCServ
 			fields.add(NotificaDecorrenzaTermini.model().ID_TRACCIA.DATA_PROSSIMA_PROTOCOLLAZIONE);
 			fields.add(NotificaDecorrenzaTermini.model().ID_TRACCIA.STATO_PROTOCOLLAZIONE);
 
-			String idTracciaNotifica = "id_traccia_sdi";
+			String idTracciaNotifica = "id_traccia";
 			fields.add(new CustomField("idTraccia.id", Long.class, idTracciaNotifica, this.getFieldConverter().toTable(NotificaDecorrenzaTermini.model())));
 
 			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));
@@ -523,7 +523,7 @@ public class JDBCNotificaDecorrenzaTerminiServiceSearchImpl implements IJDBCServ
 	}
 	
 	private void _join(IExpression expression, ISQLQueryObject sqlQueryObject) throws NotImplementedException, ServiceException, Exception{
-		sqlQueryObject.addWhereCondition(this.getNotificaDecorrenzaTerminiFieldConverter().toTable(NotificaDecorrenzaTermini.model())+".id_traccia_sdi="+this.getNotificaDecorrenzaTerminiFieldConverter().toTable(NotificaDecorrenzaTermini.model().ID_TRACCIA)+".id");
+		sqlQueryObject.addWhereCondition(this.getNotificaDecorrenzaTerminiFieldConverter().toTable(NotificaDecorrenzaTermini.model())+".id_traccia="+this.getNotificaDecorrenzaTerminiFieldConverter().toTable(NotificaDecorrenzaTermini.model().ID_TRACCIA)+".id");
 	}
 	
 	protected java.util.List<Object> _getRootTablePrimaryKeyValues(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, IdNotificaDecorrenzaTermini id) throws NotFoundException, ServiceException, NotImplementedException, Exception{

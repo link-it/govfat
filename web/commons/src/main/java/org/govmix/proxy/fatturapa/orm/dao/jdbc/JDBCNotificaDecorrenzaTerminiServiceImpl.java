@@ -92,7 +92,7 @@ public class JDBCNotificaDecorrenzaTerminiServiceImpl extends JDBCNotificaDecorr
 		sqlQueryObjectInsert.addInsertField(this.getNotificaDecorrenzaTerminiFieldConverter().toColumn(NotificaDecorrenzaTermini.model().MESSAGE_ID,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getNotificaDecorrenzaTerminiFieldConverter().toColumn(NotificaDecorrenzaTermini.model().NOTE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getNotificaDecorrenzaTerminiFieldConverter().toColumn(NotificaDecorrenzaTermini.model().DATA_RICEZIONE,false),"?");
-		sqlQueryObjectInsert.addInsertField("id_traccia_sdi","?");
+		sqlQueryObjectInsert.addInsertField("id_traccia","?");
 
 		// Insert notificaDecorrenzaTermini
 		org.openspcoop2.utils.jdbc.IKeyGeneratorObject keyGenerator = this.getNotificaDecorrenzaTerminiFetch().getKeyGeneratorObject(NotificaDecorrenzaTermini.model());
@@ -182,7 +182,7 @@ public class JDBCNotificaDecorrenzaTerminiServiceImpl extends JDBCNotificaDecorr
 		sqlQueryObjectUpdate.addUpdateField(this.getNotificaDecorrenzaTerminiFieldConverter().toColumn(NotificaDecorrenzaTermini.model().DATA_RICEZIONE,false), "?");
 		lstObjects_notificaDecorrenzaTermini.add(new JDBCObject(notificaDecorrenzaTermini.getDataRicezione(), NotificaDecorrenzaTermini.model().DATA_RICEZIONE.getFieldType()));
 		if(setIdMappingResolutionBehaviour){
-			sqlQueryObjectUpdate.addUpdateField("id_traccia_sdi","?");
+			sqlQueryObjectUpdate.addUpdateField("id_traccia","?");
 		}
 		if(setIdMappingResolutionBehaviour){
 			lstObjects_notificaDecorrenzaTermini.add(new JDBCObject(id_notificaDecorrenzaTermini_tracciaSDI, Long.class));

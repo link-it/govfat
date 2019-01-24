@@ -369,38 +369,40 @@ public class NotificaECBean extends BaseBean<NotificaEsitoCommittente, Long> imp
 
 
 
-		String url = context.getExternalContext().getRequestContextPath() 
-				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
-				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getIdTracciaNotifica().getIdTraccia()
-				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
-				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_NOTIFICA_EC;
+		if(this.getDTO().getIdTracciaNotifica() != null) {
+			String urlXML = context.getExternalContext().getRequestContextPath() 
+					+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
+					+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getIdTracciaNotifica().getIdTraccia()
+					+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
+					+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_NOTIFICA_EC;
+	
+			String urlPDF = context.getExternalContext().getRequestContextPath() 
+					+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
+					+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getIdTracciaNotifica().getIdTraccia()
+					+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_PDF
+					+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_NOTIFICA_EC;
+	
+			this.xml.setHref(urlXML);
+			this.pdf.setHref(urlPDF);
+		}
 
-		this.xml.setHref(this.getDTO().getIdTracciaNotifica() != null ?  url : null);
+		if(this.getDTO().getIdTracciaScarto()!=null) {
+	
+			String urlXML = context.getExternalContext().getRequestContextPath() 
+					+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
+					+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getIdTracciaScarto().getIdTraccia()
+					+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
+					+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_SCARTO;
+	
+			String urlPDF = context.getExternalContext().getRequestContextPath() 
+					+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
+					+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getIdTracciaScarto().getIdTraccia()
+					+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_PDF
+					+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_SCARTO;
 
-		url = context.getExternalContext().getRequestContextPath() 
-				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
-				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getIdTracciaNotifica().getIdTraccia()
-				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_PDF
-				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_NOTIFICA_EC;
-
-		this.pdf.setHref( this.getDTO().getIdTracciaNotifica() != null ? url : null);
-
-
-		url = context.getExternalContext().getRequestContextPath() 
-				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
-				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getIdTracciaScarto().getIdTraccia()
-				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_XML
-				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_SCARTO;
-
-
-		this.scartoXml.setHref(this.getDTO().getIdTracciaScarto() != null ? url : null);
-
-		url = context.getExternalContext().getRequestContextPath() 
-				+ "/"+FattureExporter.FATTURE_EXPORTER+"?"
-				+FattureExporter.PARAMETRO_IDS+"=" + this.getDTO().getIdTracciaScarto().getIdTraccia()
-				+ "&"+FattureExporter.PARAMETRO_FORMATO+"="+ AbstractSingleFileExporter.FORMATO_PDF
-				+ "&"+FattureExporter.PARAMETRO_ACTION+"="+ FattureExporter.PARAMETRO_ACTION_SCARTO;
-		this.scartoPdf.setHref( this.getDTO().getIdTracciaScarto() != null ? url : null);
+			this.scartoXml.setHref(urlXML);
+			this.scartoPdf.setHref(urlPDF);
+		}
 	}
 
 	public Text getStatoConsegnaEnte() {
