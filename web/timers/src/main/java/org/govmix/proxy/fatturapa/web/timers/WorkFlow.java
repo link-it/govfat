@@ -61,7 +61,7 @@ public class WorkFlow implements IWorkFlow<LottoFatture> {
 		StatoElaborazioneType nextStatoOK = null;
 		StatoElaborazioneType nextStatoKO = null;
 		
-		if(new LottoFattureAnalyzer(lotto, null, lotto.getCodiceDestinatario(), this.log).isFirmato()) {
+		if(new LottoFattureAnalyzer(lotto, null, lotto.getCodiceDestinatario(), this.log).isFirmaNecessaria()) {
 			nextStatoOK = StatoElaborazioneType.IN_CORSO_DI_PROTOCOLLAZIONE;
 			nextStatoKO = StatoElaborazioneType.ERRORE_DI_PROTOCOLLO;
 		} else {
