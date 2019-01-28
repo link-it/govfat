@@ -101,7 +101,7 @@ public class InvioNotificaEsitoCommittente {
 		FatturaPassivaBD fatturaElettronicaBD = new FatturaPassivaBD(this.log, connection, false);
 		FatturaElettronica fattura = fatturaElettronicaBD.get(notificaEsitoCommittente.getIdFattura());
 		if(fattura.getIdDecorrenzaTermini() != null) {
-			throw new Exception("Impossibile inviare la Notifica di Esito Committente, in quanto e' stata gia' ricevuta una Notifica di Decorrenza Termini per la fattura con id ["+notificaEsitoCommittente.getIdFattura().toJson()+"]");
+			throw new Exception("Impossibile inviare la Notifica di Esito Committente, in quanto e' stata gia' ricevuta una Notifica di Decorrenza Termini per la fattura con identificativo SdI ["+notificaEsitoCommittente.getIdFattura().getIdentificativoSdi()+"] e posizione ["+notificaEsitoCommittente.getIdFattura().getPosizione()+"]");
 		}
 
 		IdDipartimento idDipartimento = new IdDipartimento();
@@ -112,13 +112,13 @@ public class InvioNotificaEsitoCommittente {
 
 		//check utente appartenente a quel dipartimento
 		if(!utenteBD.belongsTo(idUtente, idDipartimento)) {
-			throw new Exception("L'utente ["+idUtente.toJson()+"] non appartiene al dipartimento destinatario della fattura.");
+			throw new Exception("L'utente ["+idUtente.getUsername()+"] non appartiene al dipartimento destinatario della fattura.");
 		}
 
 		if(notificaEsitoCommittenteBD.canNotificaEsitoCommittenteBeSent(notificaEsitoCommittente.getIdFattura()))
 		notificaEsitoCommittenteBD.create(notificaEsitoCommittente);
 		else
-			throw new NotificaGiaInviataException("Impossibile inviare la Notifica di Esito Committente per la fattura con id ["+notificaEsitoCommittente.getIdFattura().toJson()+"] in quanto ne e' stata gia' inviata una");
+			throw new NotificaGiaInviataException("Impossibile inviare la Notifica di Esito Committente per la fattura con identificativo SdI ["+notificaEsitoCommittente.getIdFattura().getIdentificativoSdi()+"] e posizione ["+notificaEsitoCommittente.getIdFattura().getPosizione()+"] in quanto ne e' stata gia' inviata una");
 
 		EsitoType esito = notificaEsitoCommittente.getEsito().equals(EsitoCommittenteType.EC01) ? EsitoType.IN_ELABORAZIONE_ACCETTATO : EsitoType.IN_ELABORAZIONE_RIFIUTATO;
 		fatturaElettronicaBD.updateEsito(notificaEsitoCommittente.getIdFattura(), esito);
