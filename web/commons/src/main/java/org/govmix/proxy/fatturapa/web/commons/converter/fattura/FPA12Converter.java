@@ -54,7 +54,9 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 			case TD05: tipoDoc = TipoDocumentoType.TD05;
 				break;
 			case TD06: tipoDoc = TipoDocumentoType.TD06;
-				break;
+			break;
+//			case TD20: tipoDoc = TipoDocumentoType.TD20;
+//			break;
 			}
 		} else {
 			tipoDoc = TipoDocumentoType.TDXX;
