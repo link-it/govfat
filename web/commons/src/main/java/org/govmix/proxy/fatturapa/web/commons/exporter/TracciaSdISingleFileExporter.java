@@ -1,11 +1,18 @@
 package org.govmix.proxy.fatturapa.web.commons.exporter;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
@@ -96,9 +103,48 @@ public class TracciaSdISingleFileExporter extends AbstractSingleFileXMLExporter<
 		return this.convertToObject(Long.parseLong(id));
 	}
 
+	
+	public static byte[] unzip(byte[] flussoRaw, String filename) throws IOException {
+		ZipFile zipFile = null;
+		ByteArrayOutputStream baos = null;
+		try {
+			baos = new ByteArrayOutputStream();
+			Path tempFile = Files.createTempFile("file", "");
+			Files.write(tempFile, flussoRaw);
+
+			zipFile = new ZipFile(tempFile.toFile());
+
+			ZipEntry nextEntry = zipFile.entries().nextElement();
+
+			IOUtils.copy(zipFile.getInputStream(nextEntry), baos);
+
+			Files.delete(tempFile);
+
+			return baos.toByteArray();
+			
+		} finally {
+			if(zipFile!=null) try{zipFile.close();} catch(IOException e) {}
+			if(baos!=null) {
+				try{baos.flush();} catch(IOException e) {}
+				try{baos.close();} catch(IOException e) {}
+			}
+		}
+
+	}
+
 	@Override
 	public byte[] getRawContent(TracciaSDI object) {
-		return object.getRawData();
+		
+		if(TipoComunicazioneType.AT.equals(object.getTipoComunicazione())) {
+			try {
+				return unzip(object.getRawData(), object.getNomeFile().replace("zip", "xml"));
+			} catch (IOException e) {
+				return new byte[] {};
+			}
+					
+		} else {
+			return object.getRawData();
+		}
 	}
 
 	@Override
