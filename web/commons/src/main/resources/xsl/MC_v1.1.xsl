@@ -11,7 +11,7 @@
 				<style type="text/css">
 					#notifica-container { width: 100%; position: relative; font-family: sans-serif; }
 
-					#notifica { margin-left: auto; margin-right: auto; max-width: 1280px; min-width: 930px; padding: 0; }
+					#notifica { margin-left: auto; margin-right: auto; max-width: 1280px; padding: 0; }
 					#notifica h1 { padding: 20px 0 0 0; margin: 0; font-size: 30px; }
 					#notifica h2 { padding: 20px 0 0 0; margin: 0; font-size: 20px; border-bottom: 2px solid #333333; }
 					#notifica h3 { padding: 20px 0 0 0; margin: 0; font-size: 17px; }
@@ -21,6 +21,10 @@
 					#notifica ul li {}
 					#notifica ul li span { font-weight: bold; }
 					#notifica div { padding: 0; margin: 0; }
+
+                                        @page {
+                                        size: A4 portrait;
+                                        }
 
 					#notifica div.page {
 					 	background: #fff url("http://www.fatturapa.gov.it/img/sdi.png") right bottom no-repeat !important;
