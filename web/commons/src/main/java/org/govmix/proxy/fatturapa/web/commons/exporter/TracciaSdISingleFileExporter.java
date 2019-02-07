@@ -114,7 +114,8 @@ public class TracciaSdISingleFileExporter extends AbstractSingleFileXMLExporter<
 
 			zipFile = new ZipFile(tempFile.toFile());
 
-			ZipEntry nextEntry = zipFile.entries().nextElement();
+			ZipEntry nextEntry = zipFile.getEntry(filename);
+			
 
 			IOUtils.copy(zipFile.getInputStream(nextEntry), baos);
 
