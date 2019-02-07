@@ -145,6 +145,7 @@ public class TracciaSdISingleFileExporter extends AbstractSingleFileXMLExporter<
 			try {
 				return unzip(object.getRawData(), object.getNomeFile().replace("zip", "xml"));
 			} catch (IOException e) {
+				log.error("Errore nell'estrazione della AT: " + e.getMessage(),e);
 				return new byte[] {};
 			}
 					
