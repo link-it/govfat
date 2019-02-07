@@ -134,6 +134,11 @@ public class TracciaSdISingleFileExporter extends AbstractSingleFileXMLExporter<
 
 	@Override
 	public byte[] getRawContent(TracciaSDI object) {
+		return object.getRawData();
+	}
+
+	@Override
+	public byte[] getRawContentPdf(TracciaSDI object) {
 		
 		if(TipoComunicazioneType.AT.equals(object.getTipoComunicazione())) {
 			try {

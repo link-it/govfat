@@ -40,7 +40,7 @@ import org.openspcoop2.generic_project.exception.ServiceException;
 public abstract class AbstractSingleFileXMLExporter<T,K> extends AbstractSingleFileExporter<T, K> {
 
 	public String exportAsPdf(T object,OutputStream out) throws ExportException {
-		InputStream xmlfile = new ByteArrayInputStream(this.getRawContent(object));
+		InputStream xmlfile = new ByteArrayInputStream(this.getRawContentPdf(object));
 		try {
 			PDFCreator.getInstance(log).createPDF(xmlfile, getTipoXsl(object), out);
 		} catch (Exception e) {
