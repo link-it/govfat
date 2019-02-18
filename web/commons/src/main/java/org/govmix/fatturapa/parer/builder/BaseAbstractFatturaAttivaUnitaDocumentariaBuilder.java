@@ -40,10 +40,17 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 		List<DocumentoWrapper> annessiLst = new ArrayList<DocumentoWrapper>();
 		
 		if(input.getTracce() != null && !input.getTracce().isEmpty()) {
-			Tika tika = new Tika();
 			int index = 1;
 			for(TracciaSDI traccia: input.getTracce()) {
 				boolean add = false;
+
+				String tipo = null;
+				if(traccia.getTipoComunicazione().equals(TipoComunicazioneType.AT)) {
+					tipo = "ZIP";
+				} else {
+					tipo = "XML";
+				}
+				
 				switch (traccia.getTipoComunicazione()) {
 				case NS:
 				case RC:
@@ -85,8 +92,7 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 					componente.setTipoComponente("Contenuto");
 					componente.setTipoSupportoComponente(TipoSupportoType.FILE);
 					componente.setNomeComponente(traccia.getNomeFile());
-					String formato = tika.detect(traccia.getRawData());
-					componente.setFormatoFileVersato(formato);
+					componente.setFormatoFileVersato(tipo);
 					componente.setUtilizzoDataFirmaPerRifTemp(true);
 					componenti.getComponente().add(componente);
 					strutturaOriginale.setComponenti(componenti);
