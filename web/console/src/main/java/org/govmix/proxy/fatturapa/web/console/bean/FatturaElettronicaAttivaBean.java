@@ -468,10 +468,20 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 			case IN_CORSO_DI_PROTOCOLLAZIONE:
 			case SOLO_CONSERVAZIONE:
 			case RICEVUTA_DALLO_SDI:
-			case RICEVUTA_DAL_DESTINATARIO:
 				this.esitoElaborazione.setImage("/images/fatturapa/icons/plus-grey.png");
 				this.esitoElaborazione.setTitle("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
 				this.esitoElaborazione.setAlt("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				break;
+			case RICEVUTA_DAL_DESTINATARIO:
+				if(this.getDTO().getLottoFatture().getDominio().equals(DominioType.PA)) {
+					this.esitoElaborazione.setImage("/images/fatturapa/icons/plus-grey.png");
+					this.esitoElaborazione.setTitle("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+					this.esitoElaborazione.setAlt("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				}else {
+					this.esitoElaborazione.setImage("/images/fatturapa/icons/accept_circle-green.png");
+					this.esitoElaborazione.setTitle("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+					this.esitoElaborazione.setAlt("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				}
 				break;
 			case ERRORE_DI_SPEDIZIONE:
 			case ERRORE_DI_FIRMA:
