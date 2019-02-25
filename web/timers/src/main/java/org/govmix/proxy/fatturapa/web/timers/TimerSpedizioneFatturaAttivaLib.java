@@ -65,8 +65,8 @@ public class TimerSpedizioneFatturaAttivaLib extends AbstractTimerLib {
 				this.log.info("Gestisco ["+countFatture+"] fatture, ["+this.limit+"] alla volta");
 				List<LottoFatture> lst = workflow.getNextLista();
 
-				while(lst != null && !lst.isEmpty()) {
-					try {
+				try {
+					while(lst != null && !lst.isEmpty()) {
 						for(LottoFatture fattura : lst) {
 							workflow.process(fattura);
 							countFattureElaborate++;
@@ -74,11 +74,11 @@ public class TimerSpedizioneFatturaAttivaLib extends AbstractTimerLib {
 						this.log.info("Gestite ["+countFattureElaborate+"\\"+countFatture+"] fatture");
 
 						lst = workflow.getNextLista();
-						
+
 						Sonda.getInstance().registraChiamataServizioOK(this.getTimerName());
-					} catch(Exception e) {
-						this.log.error("Errore durante la spedizione dell'esito: "+e.getMessage(), e);
 					}
+				} catch(Exception e) {
+					this.log.error("Errore durante la spedizione dell'esito: "+e.getMessage(), e);
 				}
 				this.log.info("Gestite ["+countFattureElaborate+"\\"+countFatture+"] fatture. Fine.");
 			}

@@ -3,6 +3,8 @@
  */
 package org.govmix.proxy.fatturapa.soap;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,8 @@ import org.apache.log4j.Logger;
 import org.govmix.fatturapa.AuthorizationFault_Exception;
 import org.govmix.fatturapa.FattureAttive;
 import org.govmix.fatturapa.GenericFault_Exception;
+import org.govmix.fatturapa.IdentificativoSDITipo;
+import org.govmix.fatturapa.IdentificativoUOTipo;
 import org.govmix.fatturapa.InviaFatturaRichiestaTipo;
 import org.govmix.fatturapa.NotificheTipo;
 import org.govmix.fatturapa.ProtocolloTipo;
@@ -24,6 +28,7 @@ import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
+import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.DipartimentoBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.TracciaSdIBD;
@@ -40,7 +45,6 @@ public class FattureAttiveImpl implements FattureAttive {
 
 	@Resource 
 	private WebServiceContext wsContext;
-
 	private String getPrincipal() throws Exception {
 		List<String> principals = ((Map<Object, List<String>>)wsContext.getMessageContext().get(MessageContext.HTTP_REQUEST_HEADERS)).get("PRINCIPAL_PROXY");
 		
@@ -53,12 +57,23 @@ public class FattureAttiveImpl implements FattureAttive {
 
 	}
 
+	private List<StatoElaborazioneType> fatturaInviataSdi;
 	private Logger log;
 	private boolean modalitaPushRichiesta;
 
 	public FattureAttiveImpl(boolean modalitaPushRichiesta) throws Exception {
 		this.log = LoggerManager.getEndpointFattureAttiveLogger();
 		this.modalitaPushRichiesta = modalitaPushRichiesta;
+		this.fatturaInviataSdi = new ArrayList<StatoElaborazioneType>();
+		
+		this.fatturaInviataSdi.add(StatoElaborazioneType.RICEVUTA_DALLO_SDI);
+		this.fatturaInviataSdi.add(StatoElaborazioneType.RICEVUTO_SCARTO_SDI);
+		this.fatturaInviataSdi.add(StatoElaborazioneType.RICEVUTA_DAL_DESTINATARIO);
+		this.fatturaInviataSdi.add(StatoElaborazioneType.IMPOSSIBILITA_DI_RECAPITO);
+		this.fatturaInviataSdi.add(StatoElaborazioneType.MANCATA_CONSEGNA);
+		this.fatturaInviataSdi.add(StatoElaborazioneType.RICEVUTA_DECORRENZA_TERMINI);
+		this.fatturaInviataSdi.add(StatoElaborazioneType.RICEVUTO_ESITO_CEDENTE_PRESTATORE_ACCETTAZIONE);
+		this.fatturaInviataSdi.add(StatoElaborazioneType.RICEVUTO_ESITO_CEDENTE_PRESTATORE_RIFIUTO);
 		this.log.info("Init fattureAttive Service completato. Info versione: " + CommonsProperties.getInstance(this.log).getInfoVersione());
 	}
 
@@ -122,20 +137,31 @@ public class FattureAttiveImpl implements FattureAttive {
 			}
 			FatturaElettronica fattura = null;
 			try {
+				
 				if(richiesta.getIdentificativoSDI()!=null) {
 					IdFattura id = new IdFattura(true);
 					id.setIdentificativoSdi(richiesta.getIdentificativoSDI().getIdSDI().intValue());
 					id.setPosizione(richiesta.getIdentificativoSDI().getPosizione().intValue());
 					fattura = fatturaBD.get(id);
-					
-					risposta.setIdentificativoSDI(richiesta.getIdentificativoSDI());
 				} else if(richiesta.getIdentificativoUO()!=null) {
 					fattura = fatturaBD.findByCodDipartimentoNumeroData(richiesta.getIdentificativoUO().getCodiceUO(),richiesta.getIdentificativoUO().getNumeroFattura(),richiesta.getIdentificativoUO().getDataFattura());
-					
-					risposta.setIdentificativoUO(richiesta.getIdentificativoUO());
 				} else {
 					throw new Exception("Impossibile identificare la fattura");					
 				}
+				
+				IdentificativoUOTipo idUO = new IdentificativoUOTipo();
+				idUO.setCodiceUO(fattura.getCodiceDestinatario());
+				idUO.setDataFattura(fattura.getData());
+				idUO.setNumeroFattura(fattura.getNumero());
+				risposta.setIdentificativoUO(idUO);
+				
+				if(this.fatturaInviataSdi.contains(fattura.getLottoFatture().getStatoElaborazioneInUscita())) {
+					IdentificativoSDITipo idSdi = new IdentificativoSDITipo();
+					idSdi.setIdSDI(BigDecimal.valueOf(fattura.getLottoFatture().getIdentificativoSdi()));
+					idSdi.setPosizione(BigInteger.valueOf(fattura.getPosizione()));
+					risposta.setIdentificativoSDI(idSdi);
+				}
+
 			} catch(NotFoundException e) {
 				throw new Exception("Fattura non trovata");
 			}

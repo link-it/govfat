@@ -164,7 +164,7 @@ public class FatturaBD extends BaseBD {
 			filter.setDataFattura(dataFattura);
 
 			FilterSortWrapper sort = new FilterSortWrapper();
-			sort.setField(FatturaElettronica.model().DATA);
+			sort.setField(FatturaElettronica.model().DATA_RICEZIONE);
 			sort.setSortOrder(SortOrder.DESC);
 			filter.getFilterSortList().add(sort);
 			
