@@ -156,6 +156,15 @@ public class FatturaBD extends BaseBD {
 
 	public FatturaElettronica findByCodDipartimentoNumeroData(String codiceDipartimento, String numero, Date dataFattura) throws Exception {
 		try {
+			List<StatoElaborazioneType> fatturaInviataSdi = new ArrayList<StatoElaborazioneType>();
+			fatturaInviataSdi = new ArrayList<StatoElaborazioneType>();
+			fatturaInviataSdi.add(StatoElaborazioneType.RICEVUTA_DALLO_SDI);
+			fatturaInviataSdi.add(StatoElaborazioneType.RICEVUTA_DAL_DESTINATARIO);
+			fatturaInviataSdi.add(StatoElaborazioneType.IMPOSSIBILITA_DI_RECAPITO);
+			fatturaInviataSdi.add(StatoElaborazioneType.MANCATA_CONSEGNA);
+			fatturaInviataSdi.add(StatoElaborazioneType.RICEVUTA_DECORRENZA_TERMINI);
+			fatturaInviataSdi.add(StatoElaborazioneType.RICEVUTO_ESITO_CEDENTE_PRESTATORE_ACCETTAZIONE);
+			fatturaInviataSdi.add(StatoElaborazioneType.RICEVUTO_ESITO_CEDENTE_PRESTATORE_RIFIUTO);
 
 			FatturaFilter filter = this.newFilter();
 			filter.setCodiceDestinatario(codiceDipartimento);
@@ -172,7 +181,14 @@ public class FatturaBD extends BaseBD {
 				throw new NotFoundException();
 			}
 
-			return this.findAll(filter).get(0);
+			List<FatturaElettronica> findAll = this.findAll(filter);
+			for(FatturaElettronica fat: findAll) {
+				if(fatturaInviataSdi.contains(fat.getLottoFatture().getStatoElaborazioneInUscita())) {
+					return fat;
+				}
+			}
+			
+			return findAll.get(0);
 
 		} catch (ServiceException e) {
 			throw new Exception(e);
