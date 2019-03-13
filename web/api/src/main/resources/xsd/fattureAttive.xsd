@@ -2,6 +2,7 @@
 <xs:schema targetNamespace="http://www.govmix.org/fatturaPA/" xmlns:tns="http://www.govmix.org/fatturaPA/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
 
     <xs:element name="inviaFatturaRichiestaTipo" type="tns:inviaFatturaRichiestaTipo"/>
+    <xs:element name="inviaFatturaRispostaTipo" type="tns:inviaFatturaRispostaTipo"/>
     <xs:element name="riceviNotificheRichiestaTipo" type="tns:riceviNotificheRichiestaTipo"/>
     <xs:element name="riceviNotificheRispostaTipo" type="tns:riceviNotificheRispostaTipo"/>
 	<xs:element name="authorizationFault" type="tns:authorizationFault"/>
@@ -24,6 +25,11 @@
 		    <xs:element name="infoDocumentale" type="tns:infoDocumentaleTipo" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
+    <xs:complexType name="inviaFatturaRispostaTipo">
+		<xs:sequence>
+	        <xs:element name="identificativoInterno" type="tns:identificativoInternoTipo"/>
+		</xs:sequence>
+	</xs:complexType>
     <xs:complexType name="infoDocumentaleTipo">
         <xs:sequence>
             <xs:choice>
@@ -37,6 +43,7 @@
         <xs:sequence>
             <xs:choice>
                 <xs:element name="identificativoSDI" type="tns:identificativoSDITipo"/>
+                <xs:element name="identificativoInterno" type="tns:identificativoInternoTipo"/>
                 <xs:element name="identificativoUO" type="tns:identificativoUOTipo"/>
             </xs:choice>
         </xs:sequence>
@@ -45,6 +52,7 @@
 		<xs:sequence>
 		    <xs:choice>
 		        <xs:element name="identificativoSDI" type="tns:identificativoSDITipo"/>
+                <xs:element name="identificativoInterno" type="tns:identificativoInternoTipo"/>
 		        <xs:element name="identificativoUO" type="tns:identificativoUOTipo"/>
 		    </xs:choice>
 		    <xs:element name="protocollo" type="tns:protocolloTipo" minOccurs="0"/>
@@ -56,6 +64,11 @@
         <xs:sequence>
             <xs:element name="idSDI" type="xs:decimal"/>
             <xs:element name="posizione" type="xs:positiveInteger"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="identificativoInternoTipo">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="identificativoUOTipo">

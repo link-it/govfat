@@ -155,6 +155,23 @@ public class FatturaBD extends BaseBD {
 		}
 	}
 
+	public FatturaElettronica findByMessageId(String messageId) throws Exception {
+		try {
+
+			FatturaFilter filter = this.newFilter();
+			filter.setMessageId(messageId);
+
+			if(this.count(filter) == 0) {
+				throw new NotFoundException();
+			}
+
+			return this.findAll(filter).get(0);
+
+		} catch (ServiceException e) {
+			throw new Exception(e);
+		}
+	}
+
 	public FatturaElettronica findByCodDipartimentoNumeroData(String codiceDipartimento, String numero, Date dataFattura) throws Exception {
 		try {
 			List<StatoElaborazioneType> fatturaInviataSdi = new ArrayList<StatoElaborazioneType>();

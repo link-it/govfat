@@ -44,6 +44,7 @@ public class FatturaFilter extends AbstractFilter {
 	private Date dataFattura;
 
 	private String codiceDestinatario;
+	private String messageId;
 
 	private String numero;
 	private String numeroLike;
@@ -126,6 +127,10 @@ public class FatturaFilter extends AbstractFilter {
 			
 			if(this.numero != null) {
 				expression.equals(FatturaElettronica.model().NUMERO, this.numero);
+			}
+			
+			if(this.messageId != null) {
+				expression.equals(FatturaElettronica.model().MESSAGE_ID, this.messageId);
 			}
 			
 			if(this.numeroLike != null) {
@@ -485,6 +490,14 @@ public class FatturaFilter extends AbstractFilter {
 
 	public void setFormatoTrasmissione(String formatoTrasmissione) {
 		this.formatoTrasmissione = formatoTrasmissione;
+	}
+
+	public String getMessageId() {
+		return messageId;
+	}
+
+	public void setMessageId(String messageId) {
+		this.messageId = messageId;
 	}
 	
 }

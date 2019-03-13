@@ -17,9 +17,11 @@ import org.apache.log4j.Logger;
 import org.govmix.fatturapa.AuthorizationFault_Exception;
 import org.govmix.fatturapa.FattureAttive;
 import org.govmix.fatturapa.GenericFault_Exception;
+import org.govmix.fatturapa.IdentificativoInternoTipo;
 import org.govmix.fatturapa.IdentificativoSDITipo;
 import org.govmix.fatturapa.IdentificativoUOTipo;
 import org.govmix.fatturapa.InviaFatturaRichiestaTipo;
+import org.govmix.fatturapa.InviaFatturaRispostaTipo;
 import org.govmix.fatturapa.NotificheTipo;
 import org.govmix.fatturapa.ProtocolloTipo;
 import org.govmix.fatturapa.RiceviNotificheRichiestaTipo;
@@ -78,7 +80,7 @@ public class FattureAttiveImpl implements FattureAttive {
 	}
 
 	@Override
-	public void inviaFattura(InviaFatturaRichiestaTipo inviaFatturaRichiestaTipo)
+	public InviaFatturaRispostaTipo inviaFattura(InviaFatturaRichiestaTipo inviaFatturaRichiestaTipo)
 			throws GenericFault_Exception, AuthorizationFault_Exception {
 
 		this.log.info("Invoke inviaFattura...");
@@ -104,7 +106,11 @@ public class FattureAttiveImpl implements FattureAttive {
 
 			if(ESITO.OK.toString().equals(inserisciLotto.getEsito().toString())) {
 				this.log.info("inviaFattura completata con successo");
-				return;
+				InviaFatturaRispostaTipo inviaFatturaRispostaTipo = new InviaFatturaRispostaTipo();
+				IdentificativoInternoTipo value = new IdentificativoInternoTipo();
+				value.setId(inserisciLotto.getLstIdentificativoEfatt().get(0).getIdentificativoSdi()+"");
+				inviaFatturaRispostaTipo.setIdentificativoInterno(value);
+				return inviaFatturaRispostaTipo;
 			} else {
 				throw inserisciLotto.getEccezione();
 			}
@@ -145,6 +151,8 @@ public class FattureAttiveImpl implements FattureAttive {
 					fattura = fatturaBD.get(id);
 				} else if(richiesta.getIdentificativoUO()!=null) {
 					fattura = fatturaBD.findByCodDipartimentoNumeroData(richiesta.getIdentificativoUO().getCodiceUO(),richiesta.getIdentificativoUO().getNumeroFattura(),richiesta.getIdentificativoUO().getDataFattura());
+				} else if(richiesta.getIdentificativoInterno()!=null) {
+					fattura = fatturaBD.findByMessageId(richiesta.getIdentificativoInterno().getId());
 				} else {
 					throw new Exception("Impossibile identificare la fattura");					
 				}
@@ -154,6 +162,10 @@ public class FattureAttiveImpl implements FattureAttive {
 				idUO.setDataFattura(fattura.getData());
 				idUO.setNumeroFattura(fattura.getNumero());
 				risposta.setIdentificativoUO(idUO);
+				
+				IdentificativoInternoTipo idInterno = new IdentificativoInternoTipo();
+				idInterno.setId(fattura.getMessageId());
+				risposta.setIdentificativoInterno(idInterno);
 				
 				if(this.fatturaInviataSdi.contains(fattura.getLottoFatture().getStatoElaborazioneInUscita())) {
 					IdentificativoSDITipo idSdi = new IdentificativoSDITipo();

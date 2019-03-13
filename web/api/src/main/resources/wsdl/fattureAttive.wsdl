@@ -8,7 +8,10 @@
     <wsdl:message name="inviaFatturaRichiesta">
         <wsdl:part name="inviaFatturaRichiestaTipo" element="tns:inviaFatturaRichiestaTipo"/>
     </wsdl:message>
-    <wsdl:message name="inviaFatturaRisposta" />
+    <wsdl:message name="inviaFatturaRisposta">
+            <wsdl:part name="inviaFatturaRispostaTipo" element="tns:inviaFatturaRispostaTipo"/>
+    </wsdl:message>
+    
     <wsdl:message name="riceviNotificheRichiesta">
         <wsdl:part name="riceviNotificheRichiestaTipo" element="tns:riceviNotificheRichiestaTipo"/>
     </wsdl:message>
