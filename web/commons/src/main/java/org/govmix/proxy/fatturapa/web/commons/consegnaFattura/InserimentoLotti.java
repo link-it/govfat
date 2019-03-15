@@ -137,7 +137,7 @@ public class InserimentoLotti {
 	}
 
 	private boolean checkCodiceProcedimento(LottoFatture lotto, Dipartimento dipartimento) {
-		if(!dipartimento.isModalitaPush())
+		if(!dipartimento.isModalitaPush() || !this.modalitaPushRichiesta)
 			return true; //senza modalita push i codici procedimento sono ininfluenti
 		
 		if(lotto.getDominio().toString().equals(DominioType.PA.toString()) || (lotto.getSottodominio()!= null && lotto.getSottodominio().toString().equals(SottodominioType.ESTERO.toString()))) {
