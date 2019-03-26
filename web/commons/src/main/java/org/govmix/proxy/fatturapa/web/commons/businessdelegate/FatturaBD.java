@@ -513,6 +513,7 @@ public class FatturaBD extends BaseBD {
 			if(idFK_fatturaElettronica_LottosipOBJ != null && idFK_fatturaElettronica_LottosipOBJ instanceof Long) {
 				IdSip idSIP = new IdSip();
 				idSIP.setIdSip((Long) idFK_fatturaElettronica_LottosipOBJ);
+				idSIP.setId((Long) idFK_fatturaElettronica_LottosipOBJ);
 				lottoFatture.setIdSIP(idSIP);
 			}
 			fatturaElettronica.setLottoFatture(lottoFatture);
@@ -520,19 +521,18 @@ public class FatturaBD extends BaseBD {
 			if(idFK_fatturaElettronica_sipOBJ != null && idFK_fatturaElettronica_sipOBJ instanceof Long) {
 				IdSip idSIP = new IdSip();
 				idSIP.setIdSip((Long) idFK_fatturaElettronica_sipOBJ);
-//				if(StatoConservazioneType.CONSERVAZIONE_COMPLETATA.equals(fatturaElettronica.getStatoConservazione())) {
-					try {
-						IPaginatedExpression expSIP = sipServiceSearch.newPaginatedExpression();
-						expSIP.equals(new CustomField("id", Long.class, "id", new SIPFieldConverter(this.serviceManager.getJdbcProperties().getDatabase()).toAliasTable(SIP.model())), idSIP.getIdSip());
-						List<Object> selectDataConsegna = sipServiceSearch.select(expSIP, SIP.model().DATA_ULTIMA_CONSEGNA);
-						
-						if(selectDataConsegna !=null && !selectDataConsegna.isEmpty() && selectDataConsegna.get(0) != null)
-							idSIP.setDataUltimaConsegna((Date) selectDataConsegna.get(0));
-						
-					} catch(Exception e) {
-						this.log.error("Errore durante il recupero della data ultima consegna per id sip ["+idFK_fatturaElettronica_sipOBJ+"]:" + e.getMessage(),e);
-					}
-//				}
+				idSIP.setId((Long) idFK_fatturaElettronica_sipOBJ);
+				try {
+					IPaginatedExpression expSIP = sipServiceSearch.newPaginatedExpression();
+					expSIP.equals(new CustomField("id", Long.class, "id", new SIPFieldConverter(this.serviceManager.getJdbcProperties().getDatabase()).toAliasTable(SIP.model())), idSIP.getIdSip());
+					List<Object> selectDataConsegna = sipServiceSearch.select(expSIP, SIP.model().DATA_ULTIMA_CONSEGNA);
+					
+					if(selectDataConsegna !=null && !selectDataConsegna.isEmpty() && selectDataConsegna.get(0) != null)
+						idSIP.setDataUltimaConsegna((Date) selectDataConsegna.get(0));
+					
+				} catch(Exception e) {
+					this.log.error("Errore durante il recupero della data ultima consegna per id sip ["+idFK_fatturaElettronica_sipOBJ+"]:" + e.getMessage(),e);
+				}
 				fatturaElettronica.setIdSIP(idSIP);
 			}
 			
