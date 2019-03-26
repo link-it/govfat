@@ -105,6 +105,8 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 
 		try {
 			String idSipField = "id_sip";
+			fields.add(FatturaElettronica.model().IDENTIFICATIVO_SDI);
+			fields.add(FatturaElettronica.model().POSIZIONE);
 			fields.add(FatturaElettronica.model().DATA_RICEZIONE);
 			fields.add(FatturaElettronica.model().LOTTO_FATTURE.STATO_ELABORAZIONE_IN_USCITA);
 			fields.add(new CustomField(idSipField, Long.class, idSipField, fieldConverter.toTable(FatturaElettronica.model())));
