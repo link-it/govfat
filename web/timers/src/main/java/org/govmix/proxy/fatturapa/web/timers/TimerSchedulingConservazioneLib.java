@@ -155,6 +155,7 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 					sipFattura.setAnno(chiaveFattura.getAnno());
 					sipFattura.setRegistro(chiaveFattura.getTipoRegistro());
 					sipFattura.setStatoConsegna(StatoConsegnaType.NON_CONSEGNATA);
+					sipFattura.setErroreTimeout(false);
 					sipFattura.setDataUltimaConsegna(new Date());
 					sipBD.create(sipFattura);
 					fatturaElettronicaBD.assegnaIdSip(fattura,sipFattura.getId());
@@ -179,6 +180,7 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 							sipLotto.setAnno(chiaveLotto.getAnno());
 							sipLotto.setRegistro(chiaveLotto.getTipoRegistro());
 							sipLotto.setStatoConsegna(StatoConsegnaType.NON_CONSEGNATA);
+							sipLotto.setErroreTimeout(false);
 							sipLotto.setDataUltimaConsegna(new Date());
 							sipBD.create(sipLotto);
 							lottoBD.assegnaIdSip(fattura.getLottoFatture(),sipLotto.getId());

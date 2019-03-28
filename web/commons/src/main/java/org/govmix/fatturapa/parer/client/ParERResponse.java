@@ -2,7 +2,7 @@ package org.govmix.fatturapa.parer.client;
 
 public class ParERResponse {
 
-	public enum STATO {OK, KO, ERRORE_CONNESSIONE};
+	public enum STATO {OK, KO, DUPLICATO, ERRORE_CONNESSIONE, ERRORE_TIMEOUT};
 	
 	private STATO stato;
 	private String rapportoVersamento;

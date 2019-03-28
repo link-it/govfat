@@ -46,6 +46,7 @@ public class SIPModel extends AbstractModel<SIP> {
 		this.ANNO = new Field("anno",int.class,"SIP",SIP.class);
 		this.NUMERO = new Field("numero",java.lang.String.class,"SIP",SIP.class);
 		this.STATO_CONSEGNA = new Field("statoConsegna",java.lang.String.class,"SIP",SIP.class);
+		this.ERRORE_TIMEOUT = new Field("erroreTimeout",boolean.class,"SIP",SIP.class);
 		this.DATA_ULTIMA_CONSEGNA = new Field("dataUltimaConsegna",java.util.Date.class,"SIP",SIP.class);
 		this.RAPPORTO_VERSAMENTO = new Field("rapportoVersamento",java.lang.String.class,"SIP",SIP.class);
 	
@@ -59,6 +60,7 @@ public class SIPModel extends AbstractModel<SIP> {
 		this.ANNO = new ComplexField(father,"anno",int.class,"SIP",SIP.class);
 		this.NUMERO = new ComplexField(father,"numero",java.lang.String.class,"SIP",SIP.class);
 		this.STATO_CONSEGNA = new ComplexField(father,"statoConsegna",java.lang.String.class,"SIP",SIP.class);
+		this.ERRORE_TIMEOUT = new ComplexField(father,"erroreTimeout",boolean.class,"SIP",SIP.class);
 		this.DATA_ULTIMA_CONSEGNA = new ComplexField(father,"dataUltimaConsegna",java.util.Date.class,"SIP",SIP.class);
 		this.RAPPORTO_VERSAMENTO = new ComplexField(father,"rapportoVersamento",java.lang.String.class,"SIP",SIP.class);
 	
@@ -73,6 +75,8 @@ public class SIPModel extends AbstractModel<SIP> {
 	public IField NUMERO = null;
 	 
 	public IField STATO_CONSEGNA = null;
+	 
+	public IField ERRORE_TIMEOUT = null;
 	 
 	public IField DATA_ULTIMA_CONSEGNA = null;
 	 

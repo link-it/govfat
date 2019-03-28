@@ -73,6 +73,7 @@ public class JDBCSIPServiceImpl extends JDBCSIPServiceSearchImpl
 		sqlQueryObjectInsert.addInsertField(this.getSIPFieldConverter().toColumn(SIP.model().ANNO,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getSIPFieldConverter().toColumn(SIP.model().NUMERO,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getSIPFieldConverter().toColumn(SIP.model().STATO_CONSEGNA,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getSIPFieldConverter().toColumn(SIP.model().ERRORE_TIMEOUT,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getSIPFieldConverter().toColumn(SIP.model().DATA_ULTIMA_CONSEGNA,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getSIPFieldConverter().toColumn(SIP.model().RAPPORTO_VERSAMENTO,false),"?");
 
@@ -83,6 +84,7 @@ public class JDBCSIPServiceImpl extends JDBCSIPServiceSearchImpl
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(sip.getAnno(),SIP.model().ANNO.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(sip.getNumero(),SIP.model().NUMERO.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(sip.getStatoConsegna(),SIP.model().STATO_CONSEGNA.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(sip.getErroreTimeout(),SIP.model().ERRORE_TIMEOUT.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(sip.getDataUltimaConsegna(),SIP.model().DATA_ULTIMA_CONSEGNA.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(sip.getRapportoVersamento(),SIP.model().RAPPORTO_VERSAMENTO.getFieldType())
 		);
@@ -141,6 +143,8 @@ public class JDBCSIPServiceImpl extends JDBCSIPServiceSearchImpl
 		lstObjects_sip.add(new JDBCObject(sip.getNumero(), SIP.model().NUMERO.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getSIPFieldConverter().toColumn(SIP.model().STATO_CONSEGNA,false), "?");
 		lstObjects_sip.add(new JDBCObject(sip.getStatoConsegna(), SIP.model().STATO_CONSEGNA.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getSIPFieldConverter().toColumn(SIP.model().ERRORE_TIMEOUT,false), "?");
+		lstObjects_sip.add(new JDBCObject(sip.getErroreTimeout(), SIP.model().ERRORE_TIMEOUT.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getSIPFieldConverter().toColumn(SIP.model().DATA_ULTIMA_CONSEGNA,false), "?");
 		lstObjects_sip.add(new JDBCObject(sip.getDataUltimaConsegna(), SIP.model().DATA_ULTIMA_CONSEGNA.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getSIPFieldConverter().toColumn(SIP.model().RAPPORTO_VERSAMENTO,false), "?");

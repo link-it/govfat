@@ -68,7 +68,7 @@ public class SIPBD extends BaseBD {
 		}
 	}
 
-	public void update(IdSip idSip, String rapportoVersamento, StatoConsegnaType statoConsegna, String numero, Integer anno, String registro) throws Exception {
+	public void update(IdSip idSip, String rapportoVersamento, StatoConsegnaType statoConsegna, String numero, Integer anno, String registro, Boolean erroreTimeout) throws Exception {
 		try {
 			
 			List<UpdateField> fields = new ArrayList<UpdateField>();
@@ -80,6 +80,8 @@ public class SIPBD extends BaseBD {
 				fields.add(new UpdateField(SIP.model().REGISTRO, registro));
 			if(rapportoVersamento != null)			
 				fields.add(new UpdateField(SIP.model().RAPPORTO_VERSAMENTO, rapportoVersamento));
+			if(erroreTimeout != null)			
+				fields.add(new UpdateField(SIP.model().ERRORE_TIMEOUT, erroreTimeout));
 			
 			fields.add(new UpdateField(SIP.model().STATO_CONSEGNA, statoConsegna));
 			fields.add(new UpdateField(SIP.model().DATA_ULTIMA_CONSEGNA, new Date()));

@@ -41,6 +41,7 @@ import java.io.Serializable;
  * 			&lt;element name="anno" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="numero" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="statoConsegna" type="{http://www.govmix.org/proxy/fatturapa/orm}StatoConsegnaType" minOccurs="1" maxOccurs="1" default="NON_CONSEGNATA"/>
+ * 			&lt;element name="erroreTimeout" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="dataUltimaConsegna" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="rapportoVersamento" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 		&lt;/sequence>
@@ -61,6 +62,7 @@ import java.io.Serializable;
   	"anno",
   	"numero",
   	"statoConsegna",
+  	"erroreTimeout",
   	"dataUltimaConsegna",
   	"rapportoVersamento"
   }
@@ -130,6 +132,18 @@ public class SIP extends org.openspcoop2.utils.beans.BaseBean implements Seriali
     this.statoConsegna = statoConsegna;
   }
 
+  public boolean isErroreTimeout() {
+    return this.erroreTimeout;
+  }
+
+  public boolean getErroreTimeout() {
+    return this.erroreTimeout;
+  }
+
+  public void setErroreTimeout(boolean erroreTimeout) {
+    this.erroreTimeout = erroreTimeout;
+  }
+
   public java.util.Date getDataUltimaConsegna() {
     return this.dataUltimaConsegna;
   }
@@ -182,6 +196,10 @@ public class SIP extends org.openspcoop2.utils.beans.BaseBean implements Seriali
 
   @XmlElement(name="statoConsegna",required=true,nillable=false,defaultValue="NON_CONSEGNATA")
   protected StatoConsegnaType statoConsegna = (StatoConsegnaType) StatoConsegnaType.toEnumConstantFromString("NON_CONSEGNATA");
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="boolean")
+  @XmlElement(name="erroreTimeout",required=true,nillable=false)
+  protected boolean erroreTimeout;
 
   @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.DateTime2String.class)
   @javax.xml.bind.annotation.XmlSchemaType(name="dateTime")

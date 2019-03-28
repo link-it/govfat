@@ -96,6 +96,13 @@ public class SIPFieldConverter extends AbstractSQLFieldConverter {
 				return "stato_consegna";
 			}
 		}
+		if(field.equals(SIP.model().ERRORE_TIMEOUT)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".errore_timeout";
+			}else{
+				return "errore_timeout";
+			}
+		}
 		if(field.equals(SIP.model().DATA_ULTIMA_CONSEGNA)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".data_ultima_consegna";
@@ -133,6 +140,9 @@ public class SIPFieldConverter extends AbstractSQLFieldConverter {
 			return this.toTable(SIP.model(), returnAlias);
 		}
 		if(field.equals(SIP.model().STATO_CONSEGNA)){
+			return this.toTable(SIP.model(), returnAlias);
+		}
+		if(field.equals(SIP.model().ERRORE_TIMEOUT)){
 			return this.toTable(SIP.model(), returnAlias);
 		}
 		if(field.equals(SIP.model().DATA_ULTIMA_CONSEGNA)){

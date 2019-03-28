@@ -51,11 +51,15 @@
   <mapping name="idEnte" class="org.govmix.proxy.fatturapa.orm.IdEnte" abstract="false">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
     <value name="nome" field="nome" usage="required"/>
+    <value name="nodoCodicePagamento" field="nodoCodicePagamento" usage="optional"/>
+    <value name="prefissoCodicePagamento" field="prefissoCodicePagamento" usage="optional"/>
   </mapping>
 
   <mapping type-name="_IdEnte_Type" class="org.govmix.proxy.fatturapa.orm.IdEnte" abstract="true">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
     <value name="nome" field="nome" usage="required"/>
+    <value name="nodoCodicePagamento" field="nodoCodicePagamento" usage="optional"/>
+    <value name="prefissoCodicePagamento" field="prefissoCodicePagamento" usage="optional"/>
   </mapping>
   <mapping name="idSIP" class="org.govmix.proxy.fatturapa.orm.IdSip" abstract="false">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
@@ -399,6 +403,7 @@
     <value name="anno" field="anno" usage="optional"/>
     <value name="numero" field="numero" usage="optional"/>
     <value name="statoConsegna" field="statoConsegna" default="NON_CONSEGNATA" usage="required" enum-value-method="toString"/>
+    <value name="erroreTimeout" field="erroreTimeout" usage="required"/>
     <value name="dataUltimaConsegna" field="dataUltimaConsegna" usage="optional"/>
     <value name="rapportoVersamento" field="rapportoVersamento" usage="optional"/>
   </mapping>
