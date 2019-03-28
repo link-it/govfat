@@ -40,6 +40,7 @@ import org.govmix.fatturapa.parer.beans.UnitaDocumentariaBean;
 import org.govmix.fatturapa.parer.client.ParERResponse.STATO;
 import org.govmix.fatturapa.parer.utils.ConservazioneProperties;
 import org.govmix.fatturapa.parer.versamento.request.UnitaDocumentaria;
+import org.govmix.fatturapa.parer.versamento.response.ECEsitoExtType;
 import org.govmix.fatturapa.parer.versamento.response.EsitoVersamentoType;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 
@@ -228,14 +229,18 @@ public class ParERClient {
 	} 
 	
 	private STATO getErrori(EsitoVersamentoType esito, String chiave) {
-		if(esito.getEsitoGenerale().getCodiceErrore() != null) {
-			if("UD-002-001".equals(esito.getEsitoGenerale().getCodiceErrore())) {
-				return STATO.DUPLICATO;				
+		if(ECEsitoExtType.NEGATIVO.equals(esito.getEsitoGenerale().getCodiceEsito())) {
+			if(esito.getEsitoGenerale().getCodiceErrore() != null) {
+				if("UD-002-001".equals(esito.getEsitoGenerale().getCodiceErrore())) {
+					return STATO.DUPLICATO;				
+				} else {
+					return STATO.KO;
+				}
 			} else {
-				return STATO.KO;
+				return STATO.OK;
 			}
 		} else {
-			return STATO.OK;	
+			return STATO.OK;
 		}
 	}
 
