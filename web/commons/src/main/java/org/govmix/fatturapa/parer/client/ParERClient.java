@@ -133,13 +133,14 @@ public class ParERClient {
 		                new String[] { "TLSv1" },
 		                null,
 		                SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
-		        client = HttpClients.custom().setSSLSocketFactory(sslsf).setDefaultRequestConfig(RequestConfig.custom()
+		        client = HttpClients.custom().setSSLSocketFactory(sslsf).setDefaultRequestConfig(RequestConfig.custom().setSocketTimeout(10)
 		                .setCookieSpec(CookieSpecs.STANDARD).build())
 		                .build();
 			} else {
-				client = HttpClientBuilder.create().setDefaultRequestConfig(RequestConfig.custom()
+				client = HttpClientBuilder.create().setDefaultRequestConfig(RequestConfig.custom().setSocketTimeout(10)
 		                .setCookieSpec(CookieSpecs.STANDARD).build()).build();
 			}
+			
 			
 			//invoca il web service
 			HttpResponse response = client.execute(httppost);
