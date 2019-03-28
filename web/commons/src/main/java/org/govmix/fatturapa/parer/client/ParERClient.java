@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
 import java.security.KeyStore;
 
@@ -23,7 +24,6 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
@@ -163,7 +163,7 @@ public class ParERClient {
 			parERResponse.setStato(STATO.ERRORE_CONNESSIONE);
 			
 			return parERResponse;
-		} catch(ConnectTimeoutException e) {
+		} catch(SocketTimeoutException e) {
 			this.log.error("Connect timeout durante l'invocazione del WS ParER: " + e.getMessage(), e);
 			ParERResponse parERResponse = new ParERResponse();
 			parERResponse.setStato(STATO.ERRORE_TIMEOUT);
