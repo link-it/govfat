@@ -311,6 +311,7 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 
 						// se posizione > 2 mettere in stato ERRORE_CONSEGNA
 						if(fattura.getPosizione() > 1) {
+							log.error("Impossibile spedire una fattura attiva con posizione ["+fattura.getPosizione()+"]."); 
 							statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
 							statoConservazione = StatoConservazioneType.ERRORE_CONSEGNA;
 							spedizione = false;
