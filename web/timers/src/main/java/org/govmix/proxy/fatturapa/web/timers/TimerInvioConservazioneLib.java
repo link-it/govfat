@@ -43,7 +43,9 @@ import org.govmix.fatturapa.parer.versamento.request.ChiaveType;
 import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
+import org.govmix.proxy.fatturapa.orm.IdSip;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
+import org.govmix.proxy.fatturapa.orm.SIP;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
@@ -159,7 +161,7 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 							rapportoVersamento = response.getRapportoVersamento();
 							break;
 						case DUPLICATO:
-							if(sipBD.findById(lotto.getIdSIP()).getErroreTimeout()) {
+							if(isVeroDuplicato(sipBD, lotto.getIdSIP())) {
 								statoConsegna = StatoConsegnaType.CONSEGNATA; 
 								rapportoVersamento = response.getRapportoVersamento();
 							} else {
@@ -237,7 +239,7 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 								rapportoVersamentoFat = responseFattura.getRapportoVersamento();
 								break;
 							case DUPLICATO:
-								if(sipBD.findById(fattura.getIdSIP()).getErroreTimeout()) {
+								if(isVeroDuplicato(sipBD, fattura.getIdSIP())) {
 									statoConservazioneFat = StatoConservazioneType.CONSERVAZIONE_COMPLETATA;
 									statoConsegnaFat = StatoConsegnaType.CONSEGNATA; 
 									rapportoVersamentoFat = responseFattura.getRapportoVersamento();
@@ -365,7 +367,7 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 							rapportoVersamento = response.getRapportoVersamento();
 							break;
 						case DUPLICATO:
-							if(sipBD.findById(fattura.getIdSIP()).getErroreTimeout()) {
+							if(isVeroDuplicato(sipBD, fattura.getIdSIP())) {
 								statoConservazione = StatoConservazioneType.CONSERVAZIONE_COMPLETATA;
 								statoConsegna = StatoConsegnaType.CONSEGNATA; 
 								rapportoVersamento = response.getRapportoVersamento();
@@ -415,6 +417,19 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 			}
 		}
 
+	}
+
+	private boolean isVeroDuplicato(SIPBD sipBD, IdSip idSIP) throws Exception {
+		SIP sip = sipBD.findById(idSIP);
+		if(sip.isErroreTimeout()) {
+			if(sipBD.exists(sip.getNumero(), sip.getAnno(), sip.getRegistro(), StatoConsegnaType.CONSEGNATA)) { //se esiste un'altro record con questa chiave SIP, significa che e' un vero duplicato, anche se c'e' il timeout
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return true;
+		}
 	}
 
 	private UnitaDocumentariaFatturaPassivaInput getUnitaDocumentariaFatturaPassiva(ConservazioneProperties props, FatturaBean fatturaBean) throws Exception {

@@ -133,6 +133,21 @@ public class SIPBD extends BaseBD {
 		}
 	}
 
+	public boolean exists(String numero, int anno, String registro, StatoConsegnaType statoConsegna) throws Exception {
+		try {
+			IExpression exp = this.service.newExpression();
+			exp.equals(SIP.model().NUMERO, numero);
+			exp.equals(SIP.model().ANNO, anno);
+			exp.equals(SIP.model().REGISTRO, registro);
+			exp.equals(SIP.model().STATO_CONSEGNA, statoConsegna);
+			return this.service.count(exp).longValue() > 0;
+		} catch (ServiceException e) {
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			throw new Exception(e);
+		}
+	}
+
 	public List<SIP> findAllSipFatture(Long idEnte) throws Exception {
 		String query = "select sip.numero, sip.anno, sip.registro, sip.rapporto_versamento from sip join fatture on sip.id = fatture.id_sip where (fatture.esito = 'INVIATA_ACCETTATO' or (fatture.esito is null and fatture.id_notifica_decorrenza_termini is not null)) and fatture.codice_destinatario in (select codice from dipartimenti where id_ente = ?)  and sip.stato_consegna='CONSEGNATA'";
 		return _findAllSip(query, idEnte);
