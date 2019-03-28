@@ -162,11 +162,11 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 							break;
 						case DUPLICATO:
 							if(isVeroDuplicato(sipBD, lotto.getIdSIP())) {
-								statoConsegna = StatoConsegnaType.CONSEGNATA; 
-								rapportoVersamento = response.getRapportoVersamento();
-							} else {
 								statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
 								rapportoVersamento = response.getEsitoVersamento();
+							} else {
+								statoConsegna = StatoConsegnaType.CONSEGNATA; 
+								rapportoVersamento = response.getRapportoVersamento();
 							}
 							break;
 						}
@@ -240,13 +240,13 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 								break;
 							case DUPLICATO:
 								if(isVeroDuplicato(sipBD, fattura.getIdSIP())) {
-									statoConservazioneFat = StatoConservazioneType.CONSERVAZIONE_COMPLETATA;
-									statoConsegnaFat = StatoConsegnaType.CONSEGNATA; 
-									rapportoVersamentoFat = responseFattura.getRapportoVersamento();
-								} else {
 									statoConservazioneFat = StatoConservazioneType.CONSERVAZIONE_FALLITA;
 									statoConsegnaFat = StatoConsegnaType.ERRORE_CONSEGNA;
 									rapportoVersamentoFat = responseFattura.getEsitoVersamento();
+								} else {
+									statoConservazioneFat = StatoConservazioneType.CONSERVAZIONE_COMPLETATA;
+									statoConsegnaFat = StatoConsegnaType.CONSEGNATA; 
+									rapportoVersamentoFat = responseFattura.getRapportoVersamento();
 								}
 								break;
 							}
@@ -368,13 +368,13 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 							break;
 						case DUPLICATO:
 							if(isVeroDuplicato(sipBD, fattura.getIdSIP())) {
-								statoConservazione = StatoConservazioneType.CONSERVAZIONE_COMPLETATA;
-								statoConsegna = StatoConsegnaType.CONSEGNATA; 
-								rapportoVersamento = response.getRapportoVersamento();
-							} else {
 								statoConservazione = StatoConservazioneType.CONSERVAZIONE_FALLITA;
 								statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
 								rapportoVersamento = response.getEsitoVersamento();
+							} else {
+								statoConservazione = StatoConservazioneType.CONSERVAZIONE_COMPLETATA;
+								statoConsegna = StatoConsegnaType.CONSEGNATA; 
+								rapportoVersamento = response.getRapportoVersamento();
 							}
 							break;
 						default:
