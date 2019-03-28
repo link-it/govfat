@@ -229,7 +229,8 @@ public class ParERClient {
 	} 
 	
 	private STATO getErrori(EsitoVersamentoType esito, String chiave) {
-		if(ECEsitoExtType.NEGATIVO.equals(esito.getEsitoGenerale().getCodiceEsito())) {
+		ECEsitoExtType codiceEsito = esito.getEsitoGenerale().getCodiceEsito() != null ? esito.getEsitoGenerale().getCodiceEsito() : ECEsitoExtType.NEGATIVO;
+		if(ECEsitoExtType.NEGATIVO.toString().equals(codiceEsito.toString())) {
 			if(esito.getEsitoGenerale().getCodiceErrore() != null) {
 				if("UD-002-001".equals(esito.getEsitoGenerale().getCodiceErrore())) {
 					return STATO.DUPLICATO;				
