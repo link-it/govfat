@@ -149,7 +149,7 @@ public class FattureExporter  extends HttpServlet{
 					String action =req.getParameter(FattureExporter.PARAMETRO_ACTION);
 					username = lb.getUsername();
 
-					if(ids == null || (ids != null && ids.length == 0))
+					if(!isAll && (ids == null || (ids != null && ids.length == 0)))
 						throw new ExportException("Si e' verificato un errore durante l'export: Formato parametri errato.");
 
 					if(action != null){

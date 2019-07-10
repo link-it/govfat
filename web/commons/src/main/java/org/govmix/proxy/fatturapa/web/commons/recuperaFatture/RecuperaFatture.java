@@ -59,7 +59,7 @@ public class RecuperaFatture {
 	
 	static {
 		try {
-			JAXBContext ctx = JAXBContext.newInstance(ListaFattureNonConsegnateResponse.class.getPackage().getName());
+			JAXBContext ctx = JAXBContext.newInstance(ListaFattureNonConsegnateResponse.class,ListaFattureResponse.class);
 			marshaller = ctx.createMarshaller();
 		} catch(Exception e) {
 			throw new RuntimeException(e);

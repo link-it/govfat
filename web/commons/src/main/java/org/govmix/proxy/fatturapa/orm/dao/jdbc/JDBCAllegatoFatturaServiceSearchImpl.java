@@ -20,42 +20,37 @@
  */
 package org.govmix.proxy.fatturapa.orm.dao.jdbc;
 
-import java.util.List;
+import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import java.sql.Connection;
-
 import org.apache.log4j.Logger;
-
-import org.openspcoop2.utils.sql.ISQLQueryObject;
-
-import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
+import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.AllegatoFatturaFieldConverter;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.AllegatoFatturaFetch;
+import org.openspcoop2.generic_project.beans.CustomField;
+import org.openspcoop2.generic_project.beans.FunctionField;
+import org.openspcoop2.generic_project.beans.IField;
+import org.openspcoop2.generic_project.beans.InUse;
+import org.openspcoop2.generic_project.beans.NonNegativeNumber;
+import org.openspcoop2.generic_project.beans.Union;
+import org.openspcoop2.generic_project.beans.UnionExpression;
+import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithoutId;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCPaginatedExpression;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
 import org.openspcoop2.generic_project.dao.jdbc.utils.IJDBCFetch;
 import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject;
-import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithoutId;
-import org.openspcoop2.generic_project.utils.UtilsTemplate;
-import org.openspcoop2.generic_project.beans.CustomField;
-import org.openspcoop2.generic_project.beans.InUse;
-import org.openspcoop2.generic_project.beans.IField;
-import org.openspcoop2.generic_project.beans.NonNegativeNumber;
-import org.openspcoop2.generic_project.beans.UnionExpression;
-import org.openspcoop2.generic_project.beans.Union;
-import org.openspcoop2.generic_project.beans.FunctionField;
 import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
-import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
-import org.openspcoop2.generic_project.dao.jdbc.JDBCPaginatedExpression;
-
-import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.AllegatoFatturaFieldConverter;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.AllegatoFatturaFetch;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCServiceManager;
-
-import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
+import org.openspcoop2.generic_project.expression.SortOrder;
+import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
+import org.openspcoop2.generic_project.utils.UtilsTemplate;
+import org.openspcoop2.utils.sql.ISQLQueryObject;
 
 /**     
  * JDBCAllegatoFatturaServiceSearchImpl
@@ -395,47 +390,111 @@ public class JDBCAllegatoFatturaServiceSearchImpl implements IJDBCServiceSearchW
 		AllegatoFattura allegatoFattura = new AllegatoFattura();
 		
 
-		// Object allegatoFattura
-		ISQLQueryObject sqlQueryObjectGet_allegatoFattura = sqlQueryObjectGet.newSQLQueryObject();
-		sqlQueryObjectGet_allegatoFattura.setANDLogicOperator(true);
-		sqlQueryObjectGet_allegatoFattura.addFromTable(this.getAllegatoFatturaFieldConverter().toTable(AllegatoFattura.model()));
-		sqlQueryObjectGet_allegatoFattura.addSelectField("id");
-		sqlQueryObjectGet_allegatoFattura.addSelectField(this.getAllegatoFatturaFieldConverter().toColumn(AllegatoFattura.model().NOME_ATTACHMENT,true));
-		sqlQueryObjectGet_allegatoFattura.addSelectField(this.getAllegatoFatturaFieldConverter().toColumn(AllegatoFattura.model().ALGORITMO_COMPRESSIONE,true));
-		sqlQueryObjectGet_allegatoFattura.addSelectField(this.getAllegatoFatturaFieldConverter().toColumn(AllegatoFattura.model().FORMATO_ATTACHMENT,true));
-		sqlQueryObjectGet_allegatoFattura.addSelectField(this.getAllegatoFatturaFieldConverter().toColumn(AllegatoFattura.model().DESCRIZIONE_ATTACHMENT,true));
-		sqlQueryObjectGet_allegatoFattura.addSelectField(this.getAllegatoFatturaFieldConverter().toColumn(AllegatoFattura.model().ATTACHMENT,true));
-		sqlQueryObjectGet_allegatoFattura.addWhereCondition("id=?");
+		
+//		// Object allegatoFattura
+//		ISQLQueryObject sqlQueryObjectGet_allegatoFattura = sqlQueryObjectGet.newSQLQueryObject();
+//		sqlQueryObjectGet_allegatoFattura.setANDLogicOperator(true);
+//		sqlQueryObjectGet_allegatoFattura.addFromTable(this.getAllegatoFatturaFieldConverter().toTable(AllegatoFattura.model()));
+//		sqlQueryObjectGet_allegatoFattura.addSelectField("id");
+//		sqlQueryObjectGet_allegatoFattura.addSelectField(this.getAllegatoFatturaFieldConverter().toColumn(AllegatoFattura.model().NOME_ATTACHMENT,true));
+//		sqlQueryObjectGet_allegatoFattura.addSelectField(this.getAllegatoFatturaFieldConverter().toColumn(AllegatoFattura.model().ALGORITMO_COMPRESSIONE,true));
+//		sqlQueryObjectGet_allegatoFattura.addSelectField(this.getAllegatoFatturaFieldConverter().toColumn(AllegatoFattura.model().FORMATO_ATTACHMENT,true));
+//		sqlQueryObjectGet_allegatoFattura.addSelectField(this.getAllegatoFatturaFieldConverter().toColumn(AllegatoFattura.model().DESCRIZIONE_ATTACHMENT,true));
+////		sqlQueryObjectGet_allegatoFattura.addSelectField(this.getAllegatoFatturaFieldConverter().toColumn(AllegatoFattura.model().ATTACHMENT,true));
+//		sqlQueryObjectGet_allegatoFattura.addWhereCondition("id=?");
+//
+//		
+//		// Get allegatoFattura
+//		allegatoFattura = (AllegatoFattura) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_allegatoFattura.createSQLQuery(), jdbcProperties.isShowSql(), AllegatoFattura.model(), this.getAllegatoFatturaFetch(),
+//			new JDBCObject(tableId,Long.class));
 
-		// Get allegatoFattura
-		allegatoFattura = (AllegatoFattura) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_allegatoFattura.createSQLQuery(), jdbcProperties.isShowSql(), AllegatoFattura.model(), this.getAllegatoFatturaFetch(),
-			new JDBCObject(tableId,Long.class));
+		CustomField idField = new CustomField("id", Long.class, "id", this.getFieldConverter().toTable(AllegatoFattura.model()));
+		
+		List<IField> fields = new ArrayList<IField>();
+		fields.add(idField);
+		fields.add(new CustomField("id_fattura_elettronica", Long.class, "id_fattura_elettronica", this.getFieldConverter().toTable(AllegatoFattura.model())));
+		fields.add(AllegatoFattura.model().NOME_ATTACHMENT);
+		fields.add(AllegatoFattura.model().ALGORITMO_COMPRESSIONE);
+		fields.add(AllegatoFattura.model().FORMATO_ATTACHMENT);
+		fields.add(AllegatoFattura.model().DESCRIZIONE_ATTACHMENT);
+		
+		
+		JDBCPaginatedExpression paginatedExpression = this.newPaginatedExpression(log);
+		paginatedExpression.equals(idField, tableId);
+		paginatedExpression.offset(0);
+		paginatedExpression.limit(2);
+		
+		paginatedExpression.sortOrder(SortOrder.DESC);
+		paginatedExpression.addOrder(idField);
 
-		if(allegatoFattura.getAttachment() == null) {
-			allegatoFattura.setAttachment("".getBytes());
-		}
-
-		if(idMappingResolutionBehaviour==null ||
-			(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
-		){
-			// Object _allegatoFattura_fatturaElettronica (recupero id)
-			ISQLQueryObject sqlQueryObjectGet_allegatoFattura_fatturaElettronica_readFkId = sqlQueryObjectGet.newSQLQueryObject();
-			sqlQueryObjectGet_allegatoFattura_fatturaElettronica_readFkId.addFromTable(this.getAllegatoFatturaFieldConverter().toTable(org.govmix.proxy.fatturapa.orm.AllegatoFattura.model()));
-			sqlQueryObjectGet_allegatoFattura_fatturaElettronica_readFkId.addSelectField("id_fattura_elettronica");
-			sqlQueryObjectGet_allegatoFattura_fatturaElettronica_readFkId.addWhereCondition("id=?");
-			sqlQueryObjectGet_allegatoFattura_fatturaElettronica_readFkId.setANDLogicOperator(true);
-			Long idFK_allegatoFattura_fatturaElettronica = (Long) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_allegatoFattura_fatturaElettronica_readFkId.createSQLQuery(), jdbcProperties.isShowSql(),Long.class,
-					new JDBCObject(allegatoFattura.getId(),Long.class));
+		List<Map<String,Object>> select = this.select(jdbcProperties, log, connection, sqlQueryObjectGet, paginatedExpression, fields.toArray(new IField[]{}));
+		
+		if(select.isEmpty()) {
+			throw new NotFoundException();
+		} else if(select.size() > 1) {
+			throw new MultipleResultException();
+		} else {
+			Long idFattura = (Long) select.get(0).remove("id_fattura_elettronica");
+			allegatoFattura = (AllegatoFattura)this.getFetch().fetch(jdbcProperties.getDatabase(), AllegatoFattura.model(), select.get(0));
 			
-			org.govmix.proxy.fatturapa.orm.IdFattura id_allegatoFattura_fatturaElettronica = null;
-			if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
-				id_allegatoFattura_fatturaElettronica = ((JDBCFatturaElettronicaServiceSearch)(this.getServiceManager().getFatturaElettronicaServiceSearch())).findId(idFK_allegatoFattura_fatturaElettronica, false);
-			}else{
-				id_allegatoFattura_fatturaElettronica = org.govmix.proxy.fatturapa.orm.IdFattura.newIdFattura();
+			List<IField> fields2 = new ArrayList<IField>();
+			fields2.add(idField);
+			fields2.add(AllegatoFattura.model().ATTACHMENT);
+			
+			
+			JDBCPaginatedExpression paginatedExpression2 = this.newPaginatedExpression(log);
+			paginatedExpression2.equals(idField, tableId);
+			paginatedExpression2.offset(0);
+			paginatedExpression2.limit(2);
+			
+			paginatedExpression2.sortOrder(SortOrder.DESC);
+			paginatedExpression2.addOrder(idField);
+
+			try {
+				List<Map<String,Object>> select2 = this.select(jdbcProperties, log, connection, sqlQueryObjectGet.newSQLQueryObject(), paginatedExpression2, fields2.toArray(new IField[]{}));
+				allegatoFattura.setAttachment(((AllegatoFattura)this.getFetch().fetch(jdbcProperties.getDatabase(), AllegatoFattura.model(), select2.get(0))).getAttachment());
+			} catch(Exception e) {
+				allegatoFattura.setAttachment("".getBytes());
 			}
-			id_allegatoFattura_fatturaElettronica.setId(idFK_allegatoFattura_fatturaElettronica);
-			allegatoFattura.setIdFattura(id_allegatoFattura_fatturaElettronica);
+
+
+			if(idMappingResolutionBehaviour==null ||
+					(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
+				){
+					org.govmix.proxy.fatturapa.orm.IdFattura id_allegatoFattura_fatturaElettronica = null;
+					if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
+						id_allegatoFattura_fatturaElettronica = ((JDBCFatturaElettronicaServiceSearch)(this.getServiceManager().getFatturaElettronicaServiceSearch())).findId(idFattura, false);
+					}else{
+						id_allegatoFattura_fatturaElettronica = org.govmix.proxy.fatturapa.orm.IdFattura.newIdFattura();
+					}
+					id_allegatoFattura_fatturaElettronica.setId(idFattura);
+					allegatoFattura.setIdFattura(id_allegatoFattura_fatturaElettronica);
+				}
+
+
 		}
+
+//		if(idMappingResolutionBehaviour==null ||
+//			(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
+//		){
+//			// Object _allegatoFattura_fatturaElettronica (recupero id)
+//			ISQLQueryObject sqlQueryObjectGet_allegatoFattura_fatturaElettronica_readFkId = sqlQueryObjectGet.newSQLQueryObject();
+//			sqlQueryObjectGet_allegatoFattura_fatturaElettronica_readFkId.addFromTable(this.getAllegatoFatturaFieldConverter().toTable(org.govmix.proxy.fatturapa.orm.AllegatoFattura.model()));
+//			sqlQueryObjectGet_allegatoFattura_fatturaElettronica_readFkId.addSelectField("id_fattura_elettronica");
+//			sqlQueryObjectGet_allegatoFattura_fatturaElettronica_readFkId.addWhereCondition("id=?");
+//			sqlQueryObjectGet_allegatoFattura_fatturaElettronica_readFkId.setANDLogicOperator(true);
+//			Long idFK_allegatoFattura_fatturaElettronica = (Long) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_allegatoFattura_fatturaElettronica_readFkId.createSQLQuery(), jdbcProperties.isShowSql(),Long.class,
+//					new JDBCObject(allegatoFattura.getId(),Long.class));
+//			
+//			org.govmix.proxy.fatturapa.orm.IdFattura id_allegatoFattura_fatturaElettronica = null;
+//			if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
+//				id_allegatoFattura_fatturaElettronica = ((JDBCFatturaElettronicaServiceSearch)(this.getServiceManager().getFatturaElettronicaServiceSearch())).findId(idFK_allegatoFattura_fatturaElettronica, false);
+//			}else{
+//				id_allegatoFattura_fatturaElettronica = org.govmix.proxy.fatturapa.orm.IdFattura.newIdFattura();
+//			}
+//			id_allegatoFattura_fatturaElettronica.setId(idFK_allegatoFattura_fatturaElettronica);
+//			allegatoFattura.setIdFattura(id_allegatoFattura_fatturaElettronica);
+//		}
 
         return allegatoFattura;  
 	
