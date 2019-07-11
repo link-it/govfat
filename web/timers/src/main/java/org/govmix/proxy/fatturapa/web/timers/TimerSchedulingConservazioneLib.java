@@ -105,6 +105,8 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 
 		try {
 			String idSipField = "id_sip";
+			fields.add(FatturaElettronica.model().IDENTIFICATIVO_SDI);
+			fields.add(FatturaElettronica.model().POSIZIONE);
 			fields.add(FatturaElettronica.model().DATA_RICEZIONE);
 			fields.add(FatturaElettronica.model().LOTTO_FATTURE.STATO_ELABORAZIONE_IN_USCITA);
 			fields.add(new CustomField(idSipField, Long.class, idSipField, fieldConverter.toTable(FatturaElettronica.model())));
@@ -153,6 +155,7 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 					sipFattura.setAnno(chiaveFattura.getAnno());
 					sipFattura.setRegistro(chiaveFattura.getTipoRegistro());
 					sipFattura.setStatoConsegna(StatoConsegnaType.NON_CONSEGNATA);
+					sipFattura.setErroreTimeout(false);
 					sipFattura.setDataUltimaConsegna(new Date());
 					sipBD.create(sipFattura);
 					fatturaElettronicaBD.assegnaIdSip(fattura,sipFattura.getId());
@@ -177,6 +180,7 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 							sipLotto.setAnno(chiaveLotto.getAnno());
 							sipLotto.setRegistro(chiaveLotto.getTipoRegistro());
 							sipLotto.setStatoConsegna(StatoConsegnaType.NON_CONSEGNATA);
+							sipLotto.setErroreTimeout(false);
 							sipLotto.setDataUltimaConsegna(new Date());
 							sipBD.create(sipLotto);
 							lottoBD.assegnaIdSip(fattura.getLottoFatture(),sipLotto.getId());
@@ -213,7 +217,7 @@ public class TimerSchedulingConservazioneLib extends AbstractTimerLib {
 					// 1) fatturazione passiva
 					// 2) il lotto deve avere associato il sip
 					
-					this.log.debug("Identificativo sdi ["+fattura.getIdentificativoSdi()+"] posizione ["+fattura.getPosizione()+"] id sip lotto ["+fattura.getLottoFatture().getIdSIP()+"]");
+					this.log.debug("Identificativo SdI ["+fattura.getIdentificativoSdi()+"] posizione ["+fattura.getPosizione()+"] id sip lotto ["+fattura.getLottoFatture().getIdSIP()+"]");
 					
 					if(!fattura.getFatturazioneAttiva() && fattura.getLottoFatture().getIdSIP() != null) {
 						sipBD.updateStatoConsegna(fattura.getLottoFatture().getIdSIP(), StatoConsegnaType.IN_RICONSEGNA);

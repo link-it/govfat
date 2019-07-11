@@ -43,7 +43,9 @@ import org.govmix.fatturapa.parer.versamento.request.ChiaveType;
 import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
+import org.govmix.proxy.fatturapa.orm.IdSip;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
+import org.govmix.proxy.fatturapa.orm.SIP;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
@@ -133,6 +135,8 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 						spedizione = false;
 					}
 
+					Boolean erroreTimeout = null;
+
 					if(spedizione) {
 						// Spedizione verso parer
 						this.log.debug("Invio lotto ["+lotto.getIdentificativoSdi()+"] in conservazione in corso...");
@@ -141,6 +145,10 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 
 
 						switch(response.getStato()) {
+						case ERRORE_TIMEOUT:
+							statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
+							erroreTimeout = true;
+							break;
 						case ERRORE_CONNESSIONE:
 							statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
 							break;
@@ -152,13 +160,22 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 							statoConsegna = StatoConsegnaType.CONSEGNATA; 
 							rapportoVersamento = response.getRapportoVersamento();
 							break;
+						case DUPLICATO:
+							if(isVeroDuplicato(sipBD, lotto.getIdSIP())) {
+								statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
+								rapportoVersamento = response.getEsitoVersamento();
+							} else {
+								statoConsegna = StatoConsegnaType.CONSEGNATA; 
+								rapportoVersamento = response.getRapportoVersamento();
+							}
+							break;
 						}
 						
 					}
 
 					// aggiornamento sip
 					this.log.debug("Aggiornamento entry SIP su db per il lotto ["+lotto.getIdentificativoSdi()+"] in corso...");
-					sipBD.update(lotto.getIdSIP(), rapportoVersamento, statoConsegna, chiave.getNumero(), chiave.getAnno(), chiave.getTipoRegistro());
+					sipBD.update(lotto.getIdSIP(), rapportoVersamento, statoConsegna, chiave.getNumero(), chiave.getAnno(), chiave.getTipoRegistro(), erroreTimeout);
 					this.log.debug("Aggiornamento entry SIP su db per il lotto ["+lotto.getIdentificativoSdi()+"] completata.");
 
 					List<FatturaBean> fatturaList = input != null ? input.getFattureLst() : null;
@@ -194,6 +211,7 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 							anno = chiave.getAnno();
 							registro = chiave.getTipoRegistro();
 						}
+						Boolean erroreTimeoutFattura = null;
 
 						if(spedizione) {
 							this.log.debug("Invio fattura ["+fattura.getIdentificativoSdi()+"] in conservazione in corso...");
@@ -201,6 +219,11 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 							this.log.debug("Invio fattura ["+fattura.getIdentificativoSdi()+"] in conservazione completata con esito ["+responseFattura.getStato()+"].");
 							
 							switch(responseFattura.getStato()) {
+							case ERRORE_TIMEOUT:
+								statoConservazioneFat = StatoConservazioneType.ERRORE_CONSEGNA;
+								statoConsegnaFat = StatoConsegnaType.ERRORE_CONSEGNA;
+								erroreTimeoutFattura = true;
+								break;
 							case ERRORE_CONNESSIONE:
 								statoConservazioneFat = StatoConservazioneType.ERRORE_CONSEGNA;
 								statoConsegnaFat = StatoConsegnaType.ERRORE_CONSEGNA;
@@ -215,6 +238,17 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 								statoConsegnaFat = StatoConsegnaType.CONSEGNATA; 
 								rapportoVersamentoFat = responseFattura.getRapportoVersamento();
 								break;
+							case DUPLICATO:
+								if(isVeroDuplicato(sipBD, fattura.getIdSIP())) {
+									statoConservazioneFat = StatoConservazioneType.CONSERVAZIONE_FALLITA;
+									statoConsegnaFat = StatoConsegnaType.ERRORE_CONSEGNA;
+									rapportoVersamentoFat = responseFattura.getEsitoVersamento();
+								} else {
+									statoConservazioneFat = StatoConservazioneType.CONSERVAZIONE_COMPLETATA;
+									statoConsegnaFat = StatoConsegnaType.CONSEGNATA; 
+									rapportoVersamentoFat = responseFattura.getRapportoVersamento();
+								}
+								break;
 							}
 							
 							
@@ -225,7 +259,7 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 						try {
 							this.log.debug("Aggiornamento entry SIP su db per la fattura ["+fattura.getIdentificativoSdi()+"] in corso...");
 							connection.setAutoCommit(false);
-							sipBD.update(fattura.getIdSIP(), rapportoVersamentoFat, statoConsegnaFat, numero, anno, registro);
+							sipBD.update(fattura.getIdSIP(), rapportoVersamentoFat, statoConsegnaFat, numero, anno, registro, erroreTimeoutFattura);
 							fatturaElettronicaBD.updateStatoConservazione(fattura, statoConservazioneFat);
 							connection.commit();
 							this.log.debug("Aggiornamento entry SIP su db per la fattura ["+fattura.getIdentificativoSdi()+"] completata.");
@@ -279,6 +313,7 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 
 						// se posizione > 2 mettere in stato ERRORE_CONSEGNA
 						if(fattura.getPosizione() > 1) {
+							log.error("Impossibile spedire una fattura attiva con posizione ["+fattura.getPosizione()+"]."); 
 							statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
 							statoConservazione = StatoConservazioneType.ERRORE_CONSEGNA;
 							spedizione = false;
@@ -303,6 +338,8 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 						registro = chiave.getTipoRegistro();
 					}
 
+					Boolean erroreTimeout = null;
+
 					//spedire
 					if(spedizione) {
 						this.log.debug("Invio fattura ["+fattura.getIdentificativoSdi()+"] in conservazione in corso...");
@@ -310,6 +347,11 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 						this.log.debug("Invio fattura ["+fattura.getIdentificativoSdi()+"] in conservazione completata con esito ["+response.getStato()+"].");
 						
 						switch(response.getStato()) {
+						case ERRORE_TIMEOUT:
+							statoConservazione = StatoConservazioneType.ERRORE_CONSEGNA;
+							statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
+							erroreTimeout = true;
+							break;
 						case ERRORE_CONNESSIONE:
 							statoConservazione = StatoConservazioneType.ERRORE_CONSEGNA;
 							statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
@@ -324,6 +366,19 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 							statoConsegna = StatoConsegnaType.CONSEGNATA; 
 							rapportoVersamento = response.getRapportoVersamento();
 							break;
+						case DUPLICATO:
+							if(isVeroDuplicato(sipBD, fattura.getIdSIP())) {
+								statoConservazione = StatoConservazioneType.CONSERVAZIONE_FALLITA;
+								statoConsegna = StatoConsegnaType.ERRORE_CONSEGNA;
+								rapportoVersamento = response.getEsitoVersamento();
+							} else {
+								statoConservazione = StatoConservazioneType.CONSERVAZIONE_COMPLETATA;
+								statoConsegna = StatoConsegnaType.CONSEGNATA; 
+								rapportoVersamento = response.getRapportoVersamento();
+							}
+							break;
+						default:
+							break;
 						}
 
 						
@@ -335,7 +390,7 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 						Long idSip = fattura.getIdSIP() != null ? fattura.getIdSIP().getId() : 0;
 						this.log.debug("Aggiornamento entry SIP ["+idSip+"] su db per la fattura ["+fattura.getIdentificativoSdi()+"] in corso...");
 						connection.setAutoCommit(false);
-						sipBD.update(fattura.getIdSIP(), rapportoVersamento, statoConsegna, numero, anno, registro);
+						sipBD.update(fattura.getIdSIP(), rapportoVersamento, statoConsegna, numero, anno, registro, erroreTimeout);
 						fatturaElettronicaBD.updateStatoConservazione(fattura, statoConservazione);
 						connection.commit();
 						this.log.debug("Aggiornamento entry SIP su db per la fattura ["+fattura.getIdentificativoSdi()+"] completata.");
@@ -362,6 +417,19 @@ public class TimerInvioConservazioneLib extends AbstractTimerLib {
 			}
 		}
 
+	}
+
+	private boolean isVeroDuplicato(SIPBD sipBD, IdSip idSIP) throws Exception {
+		SIP sip = sipBD.findById(idSIP);
+		if(sip.isErroreTimeout()) {
+			if(sipBD.exists(sip.getNumero(), sip.getAnno(), sip.getRegistro(), StatoConsegnaType.CONSEGNATA)) { //se esiste un'altro record con questa chiave SIP, significa che e' un vero duplicato, anche se c'e' il timeout
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return true;
+		}
 	}
 
 	private UnitaDocumentariaFatturaPassivaInput getUnitaDocumentariaFatturaPassiva(ConservazioneProperties props, FatturaBean fatturaBean) throws Exception {

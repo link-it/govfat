@@ -6,12 +6,10 @@ import org.apache.log4j.Logger;
 import org.govmix.fatturapa.parer.beans.DocumentoWrapper;
 import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaAttivaInput;
 import org.govmix.fatturapa.parer.versamento.request.ComponenteType;
-import org.govmix.fatturapa.parer.versamento.request.ConfigType;
 import org.govmix.fatturapa.parer.versamento.request.DocumentoCollegatoType;
 import org.govmix.fatturapa.parer.versamento.request.DocumentoType;
 import org.govmix.fatturapa.parer.versamento.request.StrutturaType;
 import org.govmix.fatturapa.parer.versamento.request.StrutturaType.Componenti;
-import org.govmix.fatturapa.parer.versamento.request.TipoConservazioneType;
 import org.govmix.fatturapa.parer.versamento.request.TipoSupportoType;
 
 public class FatturaAttivaSingolaUnitaDocumentariaBuilder extends AbstractFatturaAttivaUnitaDocumentariaBuilder {
@@ -95,17 +93,6 @@ public class FatturaAttivaSingolaUnitaDocumentariaBuilder extends AbstractFattur
 		}
 		
 		return annessi;
-	}
-
-	@Override
-	protected ConfigType getConfigurazione(UnitaDocumentariaFatturaAttivaInput input) {
-		ConfigType  config = new ConfigType();
-		config.setTipoConservazione(TipoConservazioneType.FISCALE);
-		config.setForzaAccettazione(true);
-		config.setForzaConservazione(false);
-		config.setForzaCollegamento(false);
-		return config;
-
 	}
 
 }

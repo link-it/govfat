@@ -7,13 +7,17 @@ import org.apache.log4j.Logger;
 import org.apache.tika.Tika;
 import org.govmix.fatturapa.parer.beans.DocumentoWrapper;
 import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaAttivaInput;
+import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaPassivaInput;
 import org.govmix.fatturapa.parer.versamento.request.ComponenteType;
+import org.govmix.fatturapa.parer.versamento.request.ConfigType;
 import org.govmix.fatturapa.parer.versamento.request.DocumentoType;
 import org.govmix.fatturapa.parer.versamento.request.StrutturaType;
+import org.govmix.fatturapa.parer.versamento.request.TipoConservazioneType;
 import org.govmix.fatturapa.parer.versamento.request.StrutturaType.Componenti;
 import org.govmix.fatturapa.parer.versamento.request.TipoSupportoType;
 import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
+import org.govmix.proxy.fatturapa.orm.constants.DominioType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 
 public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends AbstractUnitaDocumentariaBuilder<UnitaDocumentariaFatturaAttivaInput> {
@@ -40,10 +44,17 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 		List<DocumentoWrapper> annessiLst = new ArrayList<DocumentoWrapper>();
 		
 		if(input.getTracce() != null && !input.getTracce().isEmpty()) {
-			Tika tika = new Tika();
 			int index = 1;
 			for(TracciaSDI traccia: input.getTracce()) {
 				boolean add = false;
+
+				String tipo = null;
+				if(traccia.getTipoComunicazione().equals(TipoComunicazioneType.AT)) {
+					tipo = "ZIP";
+				} else {
+					tipo = "XML";
+				}
+				
 				switch (traccia.getTipoComunicazione()) {
 				case NS:
 				case RC:
@@ -85,8 +96,7 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 					componente.setTipoComponente("Contenuto");
 					componente.setTipoSupportoComponente(TipoSupportoType.FILE);
 					componente.setNomeComponente(traccia.getNomeFile());
-					String formato = tika.detect(traccia.getRawData());
-					componente.setFormatoFileVersato(formato);
+					componente.setFormatoFileVersato(tipo);
 					componente.setUtilizzoDataFirmaPerRifTemp(true);
 					componenti.getComponente().add(componente);
 					strutturaOriginale.setComponenti(componenti);
@@ -191,6 +201,16 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 		return "2.0";
 	}
 
+	@Override
+	protected ConfigType getConfigurazione(UnitaDocumentariaFatturaAttivaInput input) {
+		ConfigType  config = new ConfigType();
+		config.setTipoConservazione(TipoConservazioneType.FISCALE);
+		config.setForzaAccettazione(true);
+		config.setForzaConservazione(input.getLotto().getDominio().equals(DominioType.B2B));
+		config.setForzaCollegamento(false);
+		return config;
+
+	}
 
 //	private String getFormato(String nomeAttachment, String formatoAttachment, String formatoCompressione) {
 //		

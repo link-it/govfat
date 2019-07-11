@@ -1450,6 +1450,7 @@
 			<xsd:element name="anno" type="xsd:int" minOccurs="0" />
 			<xsd:element name="numero" type="xsd:string" minOccurs="0" />
 			<xsd:element name="statoConsegna" type="StatoConsegnaType" default="NON_CONSEGNATA" />
+			<xsd:element name="erroreTimeout" type="xsd:boolean"/>
 			<xsd:element name="dataUltimaConsegna" type="xsd:dateTime" minOccurs="0" />
 			<xsd:element name="rapportoVersamento" type="xsd:string" minOccurs="0">
 				<xsd:annotation>

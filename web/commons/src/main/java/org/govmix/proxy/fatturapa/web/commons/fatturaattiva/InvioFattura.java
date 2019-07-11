@@ -47,45 +47,52 @@ public class InvioFattura {
 	
 	public EsitoInvioFattura invia(LottoFatture lotto) throws IOException {
 
-		URL url = new URL(this.url.toString() + "?TipoFile="+lotto.getFormatoArchivioInvioFattura()+"&Versione="+lotto.getFormatoTrasmissione()+"&IdPaese="+lotto.getCedentePrestatorePaese()+"&IdCodice="+lotto.getCedentePrestatoreCodice());
-		URLConnection conn = url.openConnection();
-		HttpURLConnection httpConn = (HttpURLConnection) conn;
-
-		if(this.username != null && !"".equals(this.username)
-				&&
-			this.password != null && !"".equals(this.password)) {
-			String auth =  this.username + ":" +  this.password; 
-			String authentication = "Basic " + Base64.encode(auth.getBytes());
-			httpConn.setRequestProperty("Authorization", authentication);
-		}
-
-		String ct = null;
-
-		ct = getContentType(lotto);
-		
-		httpConn.setRequestProperty("Content-Type", ct);
-
-		httpConn.setDoOutput(true);
-		httpConn.setDoInput(true);
-
-		httpConn.setRequestMethod("POST");
-		httpConn.getOutputStream().write(lotto.getXml());
-		httpConn.getOutputStream().close();
-
-		int responseCode = httpConn.getResponseCode();
-
-		EsitoInvioFattura esito = new EsitoInvioFattura();
-		
-		this.log.info("Invio della fattura ["+lotto.getIdentificativoSdi()+"] verso la url ["+url+"]completato con responseCode ["+responseCode+"]");
-		if(responseCode < 299) {
-			esito.setEsito(ESITO.OK);
-		} else {
+		try {
+			URL url = new URL(this.url.toString() + "?TipoFile="+lotto.getFormatoArchivioInvioFattura()+"&Versione="+lotto.getFormatoTrasmissione()+"&IdPaese="+lotto.getCedentePrestatorePaese()+"&IdCodice="+lotto.getCedentePrestatoreCodice());
+			URLConnection conn = url.openConnection();
+			HttpURLConnection httpConn = (HttpURLConnection) conn;
+	
+			if(this.username != null && !"".equals(this.username)
+					&&
+				this.password != null && !"".equals(this.password)) {
+				String auth =  this.username + ":" +  this.password; 
+				String authentication = "Basic " + Base64.encode(auth.getBytes());
+				httpConn.setRequestProperty("Authorization", authentication);
+			}
+	
+			String ct = null;
+	
+			ct = getContentType(lotto);
+			
+			httpConn.setRequestProperty("Content-Type", ct);
+	
+			httpConn.setDoOutput(true);
+			httpConn.setDoInput(true);
+	
+			httpConn.setRequestMethod("POST");
+			httpConn.getOutputStream().write(lotto.getXml());
+			httpConn.getOutputStream().close();
+	
+			int responseCode = httpConn.getResponseCode();
+	
+			EsitoInvioFattura esito = new EsitoInvioFattura();
+			
+			this.log.info("Invio della fattura ["+lotto.getIdentificativoSdi()+"] verso la url ["+url+"]completato con responseCode ["+responseCode+"]");
+			if(responseCode < 299) {
+				esito.setEsito(ESITO.OK);
+			} else {
+				esito.setEsito(ESITO.KO);
+			}
+			
+			esito.setMetadati(httpConn.getHeaderFields());
+			
+			return esito;
+		} catch(Exception e) {
+			this.log.error("Errore durante l'invio della fattura ["+lotto.getIdentificativoSdi()+"] verso la url ["+this.url+"]:" + e.getMessage(), e);
+			EsitoInvioFattura esito = new EsitoInvioFattura();
 			esito.setEsito(ESITO.KO);
+			return esito; 
 		}
-		
-		esito.setMetadati(httpConn.getHeaderFields());
-		
-		return esito;
 
 	}
 

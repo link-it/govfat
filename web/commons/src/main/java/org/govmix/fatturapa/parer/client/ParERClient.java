@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
 import java.security.KeyStore;
 
@@ -140,6 +141,7 @@ public class ParERClient {
 		                .setCookieSpec(CookieSpecs.STANDARD).build()).build();
 			}
 			
+			
 			//invoca il web service
 			HttpResponse response = client.execute(httppost);
 
@@ -149,8 +151,8 @@ public class ParERClient {
 
 			this.log.info("Invio in conservazione l'UD con chiave " + chiaveString + " completato con esito " + parerResp.getStato());
 
-			if(STATO.KO.equals(parerResp.getStato())) {
-				this.log.warn("Response KO per la chiave "+chiaveString);
+			if(!STATO.OK.equals(parerResp.getStato())) {
+				this.log.warn("Response "+parerResp.getStato()+" per la chiave "+chiaveString);
 			}
 			
 			client.close();
@@ -159,6 +161,12 @@ public class ParERClient {
 			this.log.error("Errore durante l'invocazione del WS ParER: " + e.getMessage(), e);
 			ParERResponse parERResponse = new ParERResponse();
 			parERResponse.setStato(STATO.ERRORE_CONNESSIONE);
+			
+			return parERResponse;
+		} catch(SocketTimeoutException e) {
+			this.log.error("Connect timeout durante l'invocazione del WS ParER: " + e.getMessage(), e);
+			ParERResponse parERResponse = new ParERResponse();
+			parERResponse.setStato(STATO.ERRORE_TIMEOUT);
 			
 			return parERResponse;
 		} catch(IOException e) {
@@ -191,27 +199,11 @@ public class ParERClient {
 		ParERResponse parERResponse = new ParERResponse();
 		
 		
-		ECEsitoExtType codiceEsito = esito.getEsitoGenerale().getCodiceEsito() != null ? esito.getEsitoGenerale().getCodiceEsito() : ECEsitoExtType.NEGATIVO;
-		if(ECEsitoExtType.NEGATIVO.toString().equals(codiceEsito.toString())) {
-
-			boolean errore = getErrori(esito, chiave);
-			if(errore) {
-				parERResponse.setStato(STATO.KO);
-				parERResponse.setEsitoVersamento(new String(baos.toByteArray())); 
-			} else {
-				parERResponse.setStato(STATO.OK);
-				if(esito.getRapportoVersamento() != null) {
-					parERResponse.setRapportoVersamento(esito.getRapportoVersamento());
-				}					
-			}
-
-		} else {
-			parERResponse.setStato(STATO.OK);
-			if(esito.getRapportoVersamento() != null) {
-				parERResponse.setRapportoVersamento(esito.getRapportoVersamento());
-			}					
-
-		}
+		parERResponse.setStato(getErrori(esito, chiave));
+		parERResponse.setEsitoVersamento(new String(baos.toByteArray())); 
+		if(esito.getRapportoVersamento() != null) {
+			parERResponse.setRapportoVersamento(esito.getRapportoVersamento());
+		}					
 		
 		return parERResponse;
 	}
@@ -237,16 +229,20 @@ public class ParERClient {
 		}
 	} 
 	
-	private boolean getErrori(EsitoVersamentoType esito, String chiave) {
-		if(esito.getEsitoGenerale().getCodiceErrore() != null) {
-			if("UD-002-001".equals(esito.getEsitoGenerale().getCodiceErrore())) { // Fattura gia' presente nel sistema, considero caso ok
-				this.log.warn("Fattura con chiave "+chiave+" gia' presente nel sistema");
-				return false;				
+	private STATO getErrori(EsitoVersamentoType esito, String chiave) {
+		ECEsitoExtType codiceEsito = esito.getEsitoGenerale().getCodiceEsito() != null ? esito.getEsitoGenerale().getCodiceEsito() : ECEsitoExtType.NEGATIVO;
+		if(ECEsitoExtType.NEGATIVO.toString().equals(codiceEsito.toString())) {
+			if(esito.getEsitoGenerale().getCodiceErrore() != null) {
+				if("UD-002-001".equals(esito.getEsitoGenerale().getCodiceErrore())) {
+					return STATO.DUPLICATO;				
+				} else {
+					return STATO.KO;
+				}
 			} else {
-				return true;
+				return STATO.OK;
 			}
 		} else {
-			return false;	
+			return STATO.OK;
 		}
 	}
 

@@ -95,6 +95,10 @@ public abstract class AbstractSingleFileExporter<T, K> {
 	public abstract T convertToObject(String id) throws ExportException;
 
 	public abstract byte[] getRawContent(T object);
+	public byte[] getRawContentPdf(T object) {
+		return this.getRawContent(object);
+	}
+	
 	public abstract String getRawName(T object);
 	public abstract String getRawExtension(T object);
 

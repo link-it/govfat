@@ -63,6 +63,8 @@ public class SIPFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "numero", SIP.model().NUMERO.getFieldType()));
 				setParameter(object, "set_value_statoConsegna", String.class,
 					jdbcParameterUtilities.readParameter(rs, "stato_consegna", SIP.model().STATO_CONSEGNA.getFieldType())+"");
+				setParameter(object, "setErroreTimeout", SIP.model().ERRORE_TIMEOUT.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "errore_timeout", SIP.model().ERRORE_TIMEOUT.getFieldType()));
 				setParameter(object, "setDataUltimaConsegna", SIP.model().DATA_ULTIMA_CONSEGNA.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "data_ultima_consegna", SIP.model().DATA_ULTIMA_CONSEGNA.getFieldType()));
 				setParameter(object, "setRapportoVersamento", SIP.model().RAPPORTO_VERSAMENTO.getFieldType(),
@@ -97,6 +99,8 @@ public class SIPFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"numero"));
 				setParameter(object, "set_value_statoConsegna", String.class,
 					this.getObjectFromMap(map,"statoConsegna"));
+				setParameter(object, "setErroreTimeout", SIP.model().ERRORE_TIMEOUT.getFieldType(),
+					this.getObjectFromMap(map,"erroreTimeout"));
 				setParameter(object, "setDataUltimaConsegna", SIP.model().DATA_ULTIMA_CONSEGNA.getFieldType(),
 					this.getObjectFromMap(map,"dataUltimaConsegna"));
 				setParameter(object, "setRapportoVersamento", SIP.model().RAPPORTO_VERSAMENTO.getFieldType(),

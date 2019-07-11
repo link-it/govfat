@@ -21,24 +21,17 @@
 package org.govmix.proxy.fatturapa.web.api;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.cxf.jaxrs.ext.MessageContext;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdUtente;
 import org.govmix.proxy.fatturapa.web.api.utils.WebApiProperties;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.DipartimentoBD;
-import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLotti;
-import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoRequest;
-import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottoResponse;
-import org.govmix.proxy.fatturapa.web.commons.fatturaattiva.EsitoInvioFattura.ESITO;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.business.InvioNotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.web.commons.recuperaFatture.RecuperaFatture;
 import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
@@ -77,7 +70,7 @@ public class EndpointEnteImpl implements EndpointEnte {
 			this.invioNotificaEsitoCommittente.invia(esitoStream, idUtente);
 		} catch (Exception e) {
 			this.log.error("riceviNotificaEC completata con errore: "+ e.getMessage(), e);
-			return Response.status(500).build();
+			return Response.status(500).entity(e.getMessage()).build();
 		}
 		
 		this.log.info("riceviNotificaEC completata con successo");
@@ -95,7 +88,7 @@ public class EndpointEnteImpl implements EndpointEnte {
 			lst = this.recuperaFatture.cercaFattureNonConsegnate(idUtente, limitFatture);
 		} catch(Exception e) {
 			this.log.error("listaFattureNonConsegnate completata con errore: "+e.getMessage(), e);
-			return Response.status(500).build();
+			return Response.status(500).entity(e.getMessage()).build();
 		}
 		this.log.info("listaFattureNonConsegnate completata con successo");
 		return Response.ok(lst).build();
@@ -126,7 +119,7 @@ public class EndpointEnteImpl implements EndpointEnte {
 			fattura = this.recuperaFatture.recuperaFatturaNonConsegnata(idUtente, idFattura);
 		} catch(Exception e) {
 			this.log.info("consegnaFattura completata con errore: "+ e.getMessage(), e);
-			return Response.status(500).build();
+			return Response.status(500).entity(e.getMessage()).build();
 		}
 		this.log.info("consegnaFattura completata con successo");
 		return Response.ok(fattura).build();

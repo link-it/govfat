@@ -37,6 +37,7 @@ import org.govmix.proxy.fatturapa.orm.SIP;
 import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
+import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.dao.IDBFatturaElettronicaService;
 import org.govmix.proxy.fatturapa.orm.dao.IFatturaElettronicaService;
@@ -156,6 +157,15 @@ public class FatturaBD extends BaseBD {
 
 	public FatturaElettronica findByCodDipartimentoNumeroData(String codiceDipartimento, String numero, Date dataFattura) throws Exception {
 		try {
+			List<StatoElaborazioneType> fatturaInviataSdi = new ArrayList<StatoElaborazioneType>();
+			fatturaInviataSdi = new ArrayList<StatoElaborazioneType>();
+			fatturaInviataSdi.add(StatoElaborazioneType.RICEVUTA_DALLO_SDI);
+			fatturaInviataSdi.add(StatoElaborazioneType.RICEVUTA_DAL_DESTINATARIO);
+			fatturaInviataSdi.add(StatoElaborazioneType.IMPOSSIBILITA_DI_RECAPITO);
+			fatturaInviataSdi.add(StatoElaborazioneType.MANCATA_CONSEGNA);
+			fatturaInviataSdi.add(StatoElaborazioneType.RICEVUTA_DECORRENZA_TERMINI);
+			fatturaInviataSdi.add(StatoElaborazioneType.RICEVUTO_ESITO_CEDENTE_PRESTATORE_ACCETTAZIONE);
+			fatturaInviataSdi.add(StatoElaborazioneType.RICEVUTO_ESITO_CEDENTE_PRESTATORE_RIFIUTO);
 
 			FatturaFilter filter = this.newFilter();
 			filter.setCodiceDestinatario(codiceDipartimento);
@@ -172,7 +182,14 @@ public class FatturaBD extends BaseBD {
 				throw new NotFoundException();
 			}
 
-			return this.findAll(filter).get(0);
+			List<FatturaElettronica> findAll = this.findAll(filter);
+			for(FatturaElettronica fat: findAll) {
+				if(fatturaInviataSdi.contains(fat.getLottoFatture().getStatoElaborazioneInUscita())) {
+					return fat;
+				}
+			}
+			
+			return findAll.get(0);
 
 		} catch (ServiceException e) {
 			throw new Exception(e);
@@ -496,6 +513,7 @@ public class FatturaBD extends BaseBD {
 			if(idFK_fatturaElettronica_LottosipOBJ != null && idFK_fatturaElettronica_LottosipOBJ instanceof Long) {
 				IdSip idSIP = new IdSip();
 				idSIP.setIdSip((Long) idFK_fatturaElettronica_LottosipOBJ);
+				idSIP.setId((Long) idFK_fatturaElettronica_LottosipOBJ);
 				lottoFatture.setIdSIP(idSIP);
 			}
 			fatturaElettronica.setLottoFatture(lottoFatture);
@@ -503,19 +521,18 @@ public class FatturaBD extends BaseBD {
 			if(idFK_fatturaElettronica_sipOBJ != null && idFK_fatturaElettronica_sipOBJ instanceof Long) {
 				IdSip idSIP = new IdSip();
 				idSIP.setIdSip((Long) idFK_fatturaElettronica_sipOBJ);
-//				if(StatoConservazioneType.CONSERVAZIONE_COMPLETATA.equals(fatturaElettronica.getStatoConservazione())) {
-					try {
-						IPaginatedExpression expSIP = sipServiceSearch.newPaginatedExpression();
-						expSIP.equals(new CustomField("id", Long.class, "id", new SIPFieldConverter(this.serviceManager.getJdbcProperties().getDatabase()).toAliasTable(SIP.model())), idSIP.getIdSip());
-						List<Object> selectDataConsegna = sipServiceSearch.select(expSIP, SIP.model().DATA_ULTIMA_CONSEGNA);
-						
-						if(selectDataConsegna !=null && !selectDataConsegna.isEmpty() && selectDataConsegna.get(0) != null)
-							idSIP.setDataUltimaConsegna((Date) selectDataConsegna.get(0));
-						
-					} catch(Exception e) {
-						this.log.error("Errore durante il recupero della data ultima consegna per id sip ["+idFK_fatturaElettronica_sipOBJ+"]:" + e.getMessage(),e);
-					}
-//				}
+				idSIP.setId((Long) idFK_fatturaElettronica_sipOBJ);
+				try {
+					IPaginatedExpression expSIP = sipServiceSearch.newPaginatedExpression();
+					expSIP.equals(new CustomField("id", Long.class, "id", new SIPFieldConverter(this.serviceManager.getJdbcProperties().getDatabase()).toAliasTable(SIP.model())), idSIP.getIdSip());
+					List<Object> selectDataConsegna = sipServiceSearch.select(expSIP, SIP.model().DATA_ULTIMA_CONSEGNA);
+					
+					if(selectDataConsegna !=null && !selectDataConsegna.isEmpty() && selectDataConsegna.get(0) != null)
+						idSIP.setDataUltimaConsegna((Date) selectDataConsegna.get(0));
+					
+				} catch(Exception e) {
+					this.log.error("Errore durante il recupero della data ultima consegna per id sip ["+idFK_fatturaElettronica_sipOBJ+"]:" + e.getMessage(),e);
+				}
 				fatturaElettronica.setIdSIP(idSIP);
 			}
 			

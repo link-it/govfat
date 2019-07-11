@@ -475,6 +475,7 @@ public class JDBCSIPServiceSearchImpl implements IJDBCServiceSearchWithId<SIP, I
 		sqlQueryObjectGet_sip.addSelectField(this.getSIPFieldConverter().toColumn(SIP.model().ANNO,true));
 		sqlQueryObjectGet_sip.addSelectField(this.getSIPFieldConverter().toColumn(SIP.model().NUMERO,true));
 		sqlQueryObjectGet_sip.addSelectField(this.getSIPFieldConverter().toColumn(SIP.model().STATO_CONSEGNA,true));
+		sqlQueryObjectGet_sip.addSelectField(this.getSIPFieldConverter().toColumn(SIP.model().ERRORE_TIMEOUT,true));
 		sqlQueryObjectGet_sip.addSelectField(this.getSIPFieldConverter().toColumn(SIP.model().DATA_ULTIMA_CONSEGNA,true));
 		sqlQueryObjectGet_sip.addSelectField(this.getSIPFieldConverter().toColumn(SIP.model().RAPPORTO_VERSAMENTO,true));
 		sqlQueryObjectGet_sip.addWhereCondition("id=?");

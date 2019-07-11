@@ -70,15 +70,4 @@ public class FatturaPassivaMultiplaUnitaDocumentariaBuilder extends
 		
 	}
 
-	@Override
-	protected ConfigType getConfigurazione(UnitaDocumentariaFatturaPassivaInput input) {
-		ConfigType  config = new ConfigType();
-		config.setTipoConservazione(TipoConservazioneType.FISCALE);
-		config.setForzaAccettazione(true);
-		config.setForzaConservazione(true);
-		config.setForzaCollegamento(false);
-		return config;
-
-	}
-
 }

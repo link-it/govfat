@@ -8,8 +8,10 @@ import org.apache.tika.Tika;
 import org.govmix.fatturapa.parer.beans.DocumentoWrapper;
 import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaPassivaInput;
 import org.govmix.fatturapa.parer.versamento.request.ComponenteType;
+import org.govmix.fatturapa.parer.versamento.request.ConfigType;
 import org.govmix.fatturapa.parer.versamento.request.DocumentoType;
 import org.govmix.fatturapa.parer.versamento.request.StrutturaType;
+import org.govmix.fatturapa.parer.versamento.request.TipoConservazioneType;
 import org.govmix.fatturapa.parer.versamento.request.StrutturaType.Componenti;
 import org.govmix.fatturapa.parer.versamento.request.TipoSupportoType;
 import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
@@ -195,5 +197,17 @@ public abstract class BaseAbstractFatturaPassivaUnitaDocumentariaBuilder extends
 	protected String getVersioneDatiSpecifici(UnitaDocumentariaFatturaPassivaInput input) {
 		return "1.0";
 	}
+	
+	@Override
+	protected ConfigType getConfigurazione(UnitaDocumentariaFatturaPassivaInput input) {
+		ConfigType  config = new ConfigType();
+		config.setTipoConservazione(TipoConservazioneType.FISCALE);
+		config.setForzaAccettazione(true);
+		config.setForzaConservazione(true);
+		config.setForzaCollegamento(false);
+		return config;
+
+	}
+
 
 }

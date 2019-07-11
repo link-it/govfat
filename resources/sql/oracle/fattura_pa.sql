@@ -6,6 +6,7 @@ CREATE TABLE sip
 	anno NUMBER,
 	numero VARCHAR(255),
 	stato_consegna VARCHAR(255) NOT NULL,
+	errore_timeout NUMBER NOT NULL,
 	data_ultima_consegna TIMESTAMP,
 	rapporto_versamento CLOB,
 	-- fk/pk columns

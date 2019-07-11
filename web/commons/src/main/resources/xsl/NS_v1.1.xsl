@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:a="http://www.fatturapa.gov.it/sdi/messaggi/v1.0" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:a="http://www.fatturapa.gov.it/sdi/messaggi/v1.0" xmlns:ns3="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fattura/messaggi/v1.0" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
 	<xsl:output version="4.0" method="html" indent="no" encoding="UTF-8" doctype-public="-//W3C//DTD HTML 4.0 Transitional//EN" doctype-system="http://www.w3.org/TR/html4/loose.dtd"/>
 	<xsl:param name="SV_OutputFormat" select="'HTML'"/>
 	<xsl:variable name="XML" select="/"/>
@@ -64,7 +64,7 @@
 						
 							<div class="versione">
 								<xsl:if test="ds:Signature">
-									File con firma elettronica - 
+									File con firma digitale - 
 								</xsl:if>
 								Versione <xsl:value-of select="@versione"/>
 							</div>
@@ -119,10 +119,15 @@
 								</xsl:if>
 								
 								<xsl:if test="Note">
-								<li>
-									Note:
-									<span><xsl:value-of select="Note" /></span>
-								</li>
+								    Note:
+									<br />
+ 		  	                        <xsl:value-of select="substring-before(Note,'|')"/>   
+									<ul>	
+									   <xsl:call-template name="tokenizeNote">
+											<xsl:with-param name="list" select="substring-after(Note,'|')"/>
+											<xsl:with-param name="delimiter" select="'|'"/>
+									   </xsl:call-template>
+									</ul>
 								</xsl:if>
 								
 								<li>
@@ -146,7 +151,144 @@
 				</div>
 				
 				</xsl:for-each>
+				<xsl:for-each select="ns3:RicevutaScarto">
+				<div id="notifica-container">
+					<div id="notifica">
+						<div class="page">
+						
+							<div class="versione">
+								<xsl:if test="ds:Signature">
+									File con firma digitale - 
+								</xsl:if>
+								Versione <xsl:value-of select="@versione"/>
+							</div>
+							<h1>Ricevuta di Scarto</h1>
+						
+							<ul>
+								<li>
+									Identificativo SdI:
+									<span><xsl:value-of select="IdentificativoSdI" /></span>
+								</li>
+								
+								<li>
+									Nome File:
+									<span><xsl:value-of select="NomeFile" /></span>
+								</li>
+
+								<xsl:if test="Hash">
+									<li>
+										Hash:
+										<span><xsl:value-of select="Hash" /></span>
+									</li>
+								</xsl:if>
+								
+								<li>
+									Data Ora Ricezione:
+									<span><xsl:value-of select="DataOraRicezione" /></span>
+								</li>
+								
+								
+								<xsl:if test="RiferimentoArchivio">
+								<li>
+									<h3>Riferimento Archivio</h3>
+									<ul>
+										<li>
+											Identificativo SdI:
+											<span><xsl:value-of select="RiferimentoArchivio/IdentificativoSdI" /></span>
+										</li>
+										<li>
+											Nome File:
+											<span><xsl:value-of select="RiferimentoArchivio/NomeFile" /></span>
+										</li>
+									</ul>
+								</li>
+								</xsl:if>
+								
+								
+								<xsl:if test="MessageId">
+								<li>
+									Message Id:
+									<span><xsl:value-of select="MessageId" /></span>
+								</li>
+								</xsl:if>
+								
+								<xsl:if test="PecMessageId">
+								<li>
+									Pec Message Id:
+									<span><xsl:value-of select="PecMessageId" /></span>
+								</li>
+								</xsl:if>
+
+								<xsl:if test="Note">
+								    Note:
+									<br />
+ 		  	                        <xsl:value-of select="substring-before(Note,'|')"/>   
+									<ul>	
+									   <xsl:call-template name="tokenizeNote">
+											<xsl:with-param name="list" select="substring-after(Note,'|')"/>
+											<xsl:with-param name="delimiter" select="'|'"/>
+									   </xsl:call-template>
+									</ul>
+								</xsl:if>
+								
+								<li>
+									<table summaty="La tabella riporta gli errori riscontrati dal SdI nel file inviato">
+									<caption>Lista errori</caption>
+									<tr>
+										<th>Codice</th>
+										<th>Descrizione</th>
+									</tr>
+									<xsl:for-each select="ListaErrori/Errore">
+										<tr>
+											<td><xsl:value-of select="Codice"/></td>
+											<td><xsl:value-of select="Descrizione"/></td>
+										</tr>
+									</xsl:for-each>
+									</table>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				
+				</xsl:for-each>
+				
 			</body>
 		</html>	
 	</xsl:template>
+	
+    <!--############################################################-->
+    <!--## Template to tokenize Note                              ##-->
+    <!--############################################################-->
+    <xsl:template name="tokenizeNote">
+		<!--passed template parameter -->
+        <xsl:param name="list"/>
+        <xsl:param name="delimiter"/>
+        <xsl:choose>
+            <xsl:when test="contains($list, $delimiter)">                
+                <li>
+                    <!-- get everything in front of the first delimiter -->
+                    <xsl:value-of select="substring-before($list,$delimiter)"/>  
+                </li>
+                <xsl:call-template name="tokenizeNote">
+                    <!-- store anything left in another variable -->
+                    <xsl:with-param name="list" select="substring-after($list,$delimiter)"/>
+                    <xsl:with-param name="delimiter" select="$delimiter"/>
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:choose>
+                    <xsl:when test="$list = ''">
+                        <xsl:text/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      	  <li>
+							<xsl:value-of select="$list"/>   
+						  </li>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>	
+	
 </xsl:stylesheet>
