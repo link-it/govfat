@@ -245,6 +245,23 @@
 		<property name="service" ref="registroService" />
 		<property name="search" ref="registroSearchForm" />
 	</bean>
+	
+	<bean id="enteSearchForm"
+		class="org.govmix.proxy.fatturapa.web.console.anagrafica.form.EnteSearchForm"
+		scope="session" />
+
+	<bean id="enteService"
+		class="org.govmix.proxy.fatturapa.web.console.anagrafica.service.EnteService"
+		scope="request">
+		<property name="form" ref="enteSearchForm" />
+	</bean>
+
+	<bean id="enteMBean"
+		class="org.govmix.proxy.fatturapa.web.console.anagrafica.mbean.EnteMBean"
+		scope="request">
+		<property name="service" ref="enteService" />
+		<property name="search" ref="enteSearchForm" />
+	</bean>
 
 	<!-- Registri -->
 	<bean id="registroSearchForm"

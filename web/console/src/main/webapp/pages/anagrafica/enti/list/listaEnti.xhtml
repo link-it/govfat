@@ -1,0 +1,122 @@
+<!-- 
+  ProxyFatturaPA - Gestione del formato Fattura Elettronica 
+  http://www.gov4j.it/fatturapa
+  
+  Copyright (c) 2014-2018 Link.it srl (http://link.it). 
+  Copyright (c) 2014-2018 Provincia Autonoma di Bolzano (http://www.provincia.bz.it/). 
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+ 
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+ 
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<ui:composition template="/templates/defaultTemplate.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:op2web="http://www.openspcoop2.org/web/taglib/jsf">
+	<f:loadBundle var="msg" basename="messages" />
+	<a4j:loadScript src="resource://jquery.js" />
+
+	<ui:define name="pageTitle">#{msg['ente.listaEnti.pageTitle']}</ui:define>
+	<ui:define name="pageHeader">#{msg['ente.listaEnti.pageTitle']}</ui:define>
+	<ui:define name="navbar">
+		<ul>
+			<li><h:outputText value="/#{msg['menu.group.anagrafica']}" /></li>
+			<li><h:outputText value="/#{msg['ente.listaEnti.pageTitle']}" /></li>
+		</ul>
+	</ui:define>
+	<ui:define name="body">
+		<a4j:keepAlive beanName="enteMBean" ajaxOnly="true" />
+				<script type="text/javascript">
+				 jQuery(document).ready(function() {
+					_force_get = true;
+				 });
+		</script>
+		<rich:panel styleClass="noborder" id="pagina">
+
+			<op2web:search mBean="#{enteMBean}" fieldsToUpdateButtonFiltra="entiListView" fieldsToUpdateButtonReset="entiListView" >
+				<!-- Descrizione,Codice -->
+				<op2web:searchFields nomiFields="#{'nome,descrizione'}" />
+			</op2web:search>
+
+			<rich:spacer height="20"/>
+			
+			<op2web:managedPagedListView  value="#{enteDM}" mBean="#{enteMBean}">
+	
+				<!-- Colonne Descrizione,Codice,modalitaPush -->
+				<op2web:tableColumns nomiColonne="#{'nome,descrizione'}" />
+				
+				<rich:column style="text-align: center;">
+					<f:facet name="header">
+						<h:panelGroup>
+							<script type="text/javascript" >
+			                  	//<![CDATA[
+			                  		
+			              		function #{id}_checkAllCheckboxesInTable( inputId, state ){
+			                              var size = 0;
+			                              var tid = ":"+inputId+"_tbl";
+			                              if(state){
+			                                  size = jQuery("table [id$='"+tid+"'] input:checkbox[id$='#{id}_column_ckb']").not("[id$='selectedAllChbx']").attr("checked","on").size();
+			                              }else{
+			                                  jQuery("table [id$='"+tid+"'] input:checkbox[id$='#{id}_column_ckb']").removeAttr("checked");
+			                                  size=0;
+			                              }
+			
+			                              if(true){
+			                                  var _totRows = #{value.rowCount};
+			                                  var _rows = #{rowsToDisplay};
+			                                  if(state && _totRows>_rows ){
+			                                          var t1= formatMessage("#{commonsMsg['pagedDataTable.script.checkAllCheckboxesInTable.selezionati']}",{0:size,1:_totRows});
+			                                          jQuery("[id$='"+inputId+"_selectedInfoLbl']").show().text(t1);
+			                                          var t2= formatMessage("#{commonsMsg['pagedDataTable.script.checkAllCheckboxesInTable.selezionaTutti']}",{0:_totRows});
+			                                          jQuery("[id$='"+inputId+"_selectAllLink']").show().text(t2);
+	                                          }else{
+	                                                  jQuery("[id$='"+inputId+"_selectedInfoLbl']").hide();
+	                                                  jQuery("[id$='"+inputId+"_selectAllLink']").hide();
+	                                                  jQuery("[id$='"+inputId+"_undoSelectAllLink']").hide();                         
+	                                          }
+	                                      }
+			                     	}  
+			              		
+								jQuery(document).ready(function() {
+									
+									var iInputId = '#{id}';
+									var tiId = iInputId+"_deleteConfirmationContentTable";
+									
+									jQuery("table [id$='"+tiId+"'] tr td.rich-mpnl-body").css('padding-top','20px');
+									jQuery("table [id$='"+tiId+"'] tr td.rich-mpnl-body > table tbody tr td > table tbody tr td > img").css('margin-right','10px');
+									jQuery("table [id$='"+tiId+"'] tr td.rich-mpnl-body > table tbody tr td > div.buttonrow").css('padding-left','40px');
+									jQuery("table [id$='"+tiId+"'] tr td.rich-mpnl-body > table tbody tr td > div.buttonrow > input").css('padding','4px 6px 4px 5px');
+									
+// 									jQuery("table [id$='"+iInputId+"_tbl'] input:checkbox[id$='"+iInputId+"_checkAll']").hide();
+									
+								 });
+							//]]>
+			                </script>
+		               	 </h:panelGroup>
+		                </f:facet>
+		                <h:panelGroup>
+						<a4j:htmlCommandLink id="#{enteMBean.table.id}_dettaglio_btn_dx" action="#{enteMBean.dettaglio}" ajaxSingle="true">
+							<f:setPropertyActionListener value="#{item.DTO.id}" target="#{enteMBean.selectedId}" />
+							<h:graphicImage value="/images/magnifier.png" width="16" height="16" title="#{enteMBean.table.detailLinkText}" alt="#{enteMBean.table.detailLinkText}"/>
+						</a4j:htmlCommandLink>
+					</h:panelGroup>
+				</rich:column>
+					
+			</op2web:managedPagedListView>
+		</rich:panel>
+	</ui:define>
+</ui:composition>

@@ -23,6 +23,7 @@ package org.govmix.proxy.fatturapa.web.console.anagrafica.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.Ente;
@@ -40,6 +41,7 @@ import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
 import org.openspcoop2.generic_project.expression.IPaginatedExpression;
+import org.openspcoop2.generic_project.expression.LikeMode;
 import org.openspcoop2.generic_project.expression.SortOrder;
 import org.openspcoop2.generic_project.web.service.BaseService;
 
@@ -115,7 +117,21 @@ public class EnteService extends BaseService<EnteSearchForm> implements IEnteSer
 	public void deleteById(Long key) throws ServiceException {
 		String methodName = "deleteById(id)";
 
+		IExpression expr = null;
 		try{
+			EnteBean findById = this.findById(key);
+			
+			Ente ente = findById.getDTO();
+			
+			expr = this.dipartimentoSearchDao.newExpression();
+			expr.equals(Dipartimento.model().ENTE.NOME, ente.getNome());
+			NonNegativeNumber nnn = this.dipartimentoSearchDao.count(expr);
+			
+			if(nnn.longValue() > 0) {
+				throw new ServiceException(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("ente.deleteError.dipartimentiPresenti", ente.getNome()));
+			}
+			
+			
 			((JDBCEnteService)this.enteDao).deleteById(key.longValue());
 		}catch(ServiceException e){
 			EnteService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
@@ -130,9 +146,19 @@ public class EnteService extends BaseService<EnteSearchForm> implements IEnteSer
 	@Override
 	public void delete(EnteBean obj) throws ServiceException {
 		String methodName = "delete()";
-
+		
+		IExpression expr = null;
+		
 		try{
 			Ente ente = obj.getDTO();
+			
+			expr = this.dipartimentoSearchDao.newExpression();
+			expr.equals(Dipartimento.model().ENTE.NOME, ente.getNome());
+			NonNegativeNumber nnn = this.dipartimentoSearchDao.count(expr);
+			
+			if(nnn.longValue() > 0) {
+				throw new ServiceException(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("ente.deleteError.dipartimentiPresenti", ente.getNome()));
+			}
 
 			IdEnte idEnte = new IdEnte();
 			idEnte.setNome(ente.getNome());
@@ -179,8 +205,12 @@ public class EnteService extends BaseService<EnteSearchForm> implements IEnteSer
 		try{
 			expr = this.enteSearchDao.newExpression();
 			if(search != null){
-				if(search.getNome().getValue()!= null){
+				if(StringUtils.isNotBlank(search.getNome().getValue())){
 					expr.equals(Ente.model().NOME, search.getNome().getValue());
+				}
+				
+				if(StringUtils.isNotBlank(search.getDescrizione().getValue())){
+					expr.equals(Ente.model().DESCRIZIONE, search.getDescrizione().getValue());
 				}
 			}
 		}catch(Exception e){
@@ -313,6 +343,56 @@ public class EnteService extends BaseService<EnteSearchForm> implements IEnteSer
 		}
 
 		return null;
+	}
+	
+	@Override
+	public List<Ente> getDescrizioneAutoComplete(String val) throws ServiceException {
+		String methodName = "getDescrizioneAutoComplete(val)";
+
+		List<Ente> lst = new ArrayList<Ente>();
+
+		try{
+
+			IPaginatedExpression pagExpr = this.enteSearchDao.newPaginatedExpression();
+			pagExpr.ilike(Ente.model().DESCRIZIONE, val, LikeMode.ANYWHERE);
+
+			//order by
+			pagExpr.sortOrder(SortOrder.ASC);
+			pagExpr.addOrder(Ente.model().NOME);
+
+			lst = this.enteSearchDao.findAll(pagExpr);
+		}catch(ServiceException e){
+			EnteService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
+		}catch(Exception e){
+			EnteService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
+		}
+
+		return lst;
+	}
+	
+	@Override
+	public List<Ente> getNomeAutoComplete(String val) throws ServiceException {
+		String methodName = "getDescrizioneAutoComplete(val)";
+
+		List<Ente> lst = new ArrayList<Ente>();
+
+		try{
+
+			IPaginatedExpression pagExpr = this.enteSearchDao.newPaginatedExpression();
+			pagExpr.ilike(Ente.model().NOME, val, LikeMode.ANYWHERE);
+
+			//order by
+			pagExpr.sortOrder(SortOrder.ASC);
+			pagExpr.addOrder(Ente.model().NOME);
+
+			lst = this.enteSearchDao.findAll(pagExpr);
+		}catch(ServiceException e){
+			EnteService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
+		}catch(Exception e){
+			EnteService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
+		}
+
+		return lst;
 	}
 }
 

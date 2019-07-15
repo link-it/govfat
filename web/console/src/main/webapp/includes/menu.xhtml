@@ -33,8 +33,9 @@
 		 styleClass="noborder" headerClass="outpanelHeader" rendered="#{loginBean.isLoggedIn}">
 				<rich:panelMenu expandMode="none" mode="server">
 					<rich:panelMenuGroup label="#{msg['menu.group.anagrafica']}" expanded="true" rendered="#{loginBean.showMenuAnagrafica}">
-						<rich:panelMenuItem id="menuLinkEnti" label="#{msg['menu.group.anagrafica.protocolli']}" action="#{protocolloMBean.menuAction}"  rendered="#{loginBean.showMenuItemProtocolli}"/>
+						<rich:panelMenuItem id="menuLinkProtocollo" label="#{msg['menu.group.anagrafica.protocolli']}" action="#{protocolloMBean.menuAction}"  rendered="#{loginBean.showMenuItemProtocolli}"/>
 						<rich:panelMenuItem id="menuLinkUtenti" label="#{msg['menu.group.anagrafica.utenti']}" action="#{utenteMBean.menuAction}"  rendered="#{loginBean.showMenuItemUtenti}"/>
+						<rich:panelMenuItem id="menuLinkEnti" label="#{msg['menu.group.anagrafica.enti']}" action="#{enteMBean.menuAction}" rendered="#{loginBean.showMenuItemEnti}"/>
 						<rich:panelMenuItem id="menuLinkDipartimenti" label="#{msg['menu.group.anagrafica.dipartimenti']}" action="#{dipartimentoMBean.menuAction}" rendered="#{loginBean.showMenuItemDipartimenti}"/>
 						<rich:panelMenuItem id="menuLinkRispedizioni" label="#{msg['menu.group.anagrafica.rispedizioni']}" action="#{rispedizioneMBean.menuAction}" rendered="#{loginBean.showMenuItemRispedizioni}"/>
 					</rich:panelMenuGroup>

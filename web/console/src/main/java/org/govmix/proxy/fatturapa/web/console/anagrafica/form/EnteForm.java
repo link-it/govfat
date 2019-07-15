@@ -23,6 +23,8 @@ package org.govmix.proxy.fatturapa.web.console.anagrafica.form;
 import org.apache.commons.lang.StringUtils;
 import org.govmix.proxy.fatturapa.orm.Ente;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.bean.EnteBean;
+import org.govmix.proxy.fatturapa.web.console.anagrafica.mbean.EnteMBean;
+import org.govmix.proxy.fatturapa.web.console.util.XPathUtils;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
 import org.openspcoop2.generic_project.web.form.Form;
@@ -33,8 +35,15 @@ public class EnteForm extends BaseForm implements Form {
 
 
 	private Text nome;
-	private Text idPccAmministrazione;
 	private Text descrizione;
+	private Text idPccAmministrazione;
+	private Text cfAuth = null;
+	private Text enteVersatore = null;
+	private Text strutturaVersatore = null;
+	private Text nodoCodicePagamento = null;
+	private Text prefissoCodicePagamento = null;
+	
+	private EnteMBean mbean = null;
 
 	public EnteForm() throws Exception{
 		this.init();
@@ -48,18 +57,32 @@ public class EnteForm extends BaseForm implements Form {
 		this.nome = factory.getInputFieldFactory().createText("nome","ente.form.nome",null,false);
 		this.descrizione = factory.getInputFieldFactory().createText("descrizione","ente.form.descrizione",null,false);
 		this.idPccAmministrazione = factory.getInputFieldFactory().createText("idPccAmministrazione","ente.form.idPccAmministrazione",null,false);
+		this.cfAuth = factory.getInputFieldFactory().createText("cfAuth","ente.form.cfAuth",null,false);
+		this.enteVersatore = factory.getInputFieldFactory().createText("enteVersatore","ente.form.enteVersatore",null,false);
+		this.strutturaVersatore = factory.getInputFieldFactory().createText("strutturaVersatore","ente.form.strutturaVersatore",null,false);
+		this.nodoCodicePagamento = factory.getInputFieldFactory().createText("nodoCodicePagamento","ente.form.nodoCodicePagamento",null,false);
+		this.prefissoCodicePagamento = factory.getInputFieldFactory().createText("prefissoCodicePagamento","ente.form.prefissoCodicePagamento",null,false);
 		
 		this.setField(this.nome);
 		this.setField(this.descrizione);
 		this.setField(this.idPccAmministrazione);
-
+		this.setField(this.cfAuth);
+		this.setField(this.enteVersatore);
+		this.setField(this.strutturaVersatore);
+		this.setField(this.nodoCodicePagamento);
+		this.setField(this.prefissoCodicePagamento);
+		
 	}
 	@Override
 	public void reset() {
 		this.nome.reset(); 
 		this.descrizione.reset();
 		this.idPccAmministrazione.reset();
-
+		this.cfAuth.reset();
+		this.enteVersatore.reset();
+		this.strutturaVersatore.reset();
+		this.nodoCodicePagamento.reset();
+		this.prefissoCodicePagamento.reset();
 	}
 
 	/**
@@ -74,6 +97,11 @@ public class EnteForm extends BaseForm implements Form {
 			this.nome.setDisabled(true);
 			this.descrizione.setDefaultValue(bean.getDTO().getDescrizione());
 			this.idPccAmministrazione.setDefaultValue(bean.getDTO().getIdPccAmministrazione());
+			this.cfAuth.setDefaultValue(bean.getDTO().getCfAuth());
+			this.enteVersatore.setDefaultValue(bean.getDTO().getEnteVersatore());
+			this.strutturaVersatore.setDefaultValue(bean.getDTO().getStrutturaVersatore());
+			this.nodoCodicePagamento.setDefaultValue(bean.getDTO().getNodoCodicePagamento());
+			this.prefissoCodicePagamento.setDefaultValue(bean.getDTO().getPrefissoCodicePagamento());
 
 		} else {
 			// Nuovo Elemento
@@ -81,6 +109,12 @@ public class EnteForm extends BaseForm implements Form {
 			this.nome.setDisabled(false); 
 			this.descrizione.setDefaultValue(null);
 			this.idPccAmministrazione.setDefaultValue(null);
+			this.cfAuth.setDefaultValue(null);
+			this.enteVersatore.setDefaultValue(null);
+			this.strutturaVersatore.setDefaultValue(null);
+			this.nodoCodicePagamento.setDefaultValue(null);
+			this.prefissoCodicePagamento.setDefaultValue(null);
+			
 		}
 		this.reset();
 	}
@@ -91,16 +125,52 @@ public class EnteForm extends BaseForm implements Form {
 		if(StringUtils.isEmpty(_nome))
 			return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromCommonsResourceBundle(CostantiForm.FIELD_NON_PUO_ESSERE_VUOTO, this.nome.getLabel());
 
+		String msg = this.checkLunghezzaField(this.nome, 255);
+		if(msg != null)
+			return msg;
+		
+		msg = this.checkLunghezzaField(this.descrizione,255);
+		if(msg != null)
+			return msg;
+		
+		msg = this.checkLunghezzaField(this.idPccAmministrazione,255);
+		if(msg != null)
+			return msg;
+		
+		msg = this.checkLunghezzaField(this.cfAuth,255);
+		if(msg != null)
+			return msg;
+		
+		msg = this.checkLunghezzaField(this.enteVersatore,255);
+		if(msg != null)
+			return msg;
+		
+		msg = this.checkLunghezzaField(this.strutturaVersatore,255);
+		if(msg != null)
+			return msg;
+		
+		msg = this.checkLunghezzaField(this.nodoCodicePagamento,255);
+		if(msg != null)
+			return msg;
 
-		String _descrizione = this.descrizione.getValue();
-		if(StringUtils.isEmpty(_descrizione))
-			return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromCommonsResourceBundle(CostantiForm.FIELD_NON_PUO_ESSERE_VUOTO, this.descrizione.getLabel());
-
-
-//		String _endpoint = this.idPccAmministrazione.getValue();
-//		if(StringUtils.isEmpty(_endpoint))
-//			return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromCommonsResourceBundle(CostantiForm.FIELD_NON_PUO_ESSERE_VUOTO, this.idPccAmministrazione.getLabel());
-
+		if(StringUtils.isNotBlank(this.nodoCodicePagamento.getValue())) {
+			msg = XPathUtils.validaXpath(this.nodoCodicePagamento.getValue());
+			if(msg != null)
+				return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("ente.form.nodoCodicePagamentoErrato");
+		}
+		
+		msg = this.checkLunghezzaField(this.prefissoCodicePagamento,255);
+		if(msg != null)
+			return msg;
+		
+		return null;
+	}
+	
+	private String checkLunghezzaField(Text field, int length) {
+		if(StringUtils.isNotBlank(field.getValue())) {
+			if(field.getValue().length() > length)
+				return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("ente.form.lunghezza"+length+"Errata", field.getLabel());
+		}
 		return null;
 	}
 
@@ -111,6 +181,11 @@ public class EnteForm extends BaseForm implements Form {
 		ente.setNome(this.nome.getValue());
 		ente.setDescrizione(this.descrizione.getValue());
 		ente.setIdPccAmministrazione(this.idPccAmministrazione.getValue());
+		ente.setCfAuth(this.cfAuth.getValue());
+		ente.setEnteVersatore(this.enteVersatore.getValue());
+		ente.setStrutturaVersatore(this.strutturaVersatore.getValue());
+		ente.setNodoCodicePagamento(this.nodoCodicePagamento.getValue());
+		ente.setPrefissoCodicePagamento(this.prefissoCodicePagamento.getValue());
 
 		return ente;
 	}
@@ -134,6 +209,54 @@ public class EnteForm extends BaseForm implements Form {
 
 	public void setIdPccAmministrazione(Text idPccAmministrazione) {
 		this.idPccAmministrazione = idPccAmministrazione;
+	}
+
+	public EnteMBean getMbean() {
+		return mbean;
+	}
+
+	public void setMbean(EnteMBean mbean) {
+		this.mbean = mbean;
+	}
+
+	public Text getCfAuth() {
+		return cfAuth;
+	}
+
+	public void setCfAuth(Text cfAuth) {
+		this.cfAuth = cfAuth;
+	}
+
+	public Text getEnteVersatore() {
+		return enteVersatore;
+	}
+
+	public void setEnteVersatore(Text enteVersatore) {
+		this.enteVersatore = enteVersatore;
+	}
+
+	public Text getStrutturaVersatore() {
+		return strutturaVersatore;
+	}
+
+	public void setStrutturaVersatore(Text strutturaVersatore) {
+		this.strutturaVersatore = strutturaVersatore;
+	}
+
+	public Text getNodoCodicePagamento() {
+		return nodoCodicePagamento;
+	}
+
+	public void setNodoCodicePagamento(Text nodoCodicePagamento) {
+		this.nodoCodicePagamento = nodoCodicePagamento;
+	}
+
+	public Text getPrefissoCodicePagamento() {
+		return prefissoCodicePagamento;
+	}
+
+	public void setPrefissoCodicePagamento(Text prefissoCodicePagamento) {
+		this.prefissoCodicePagamento = prefissoCodicePagamento;
 	}
 	
 	

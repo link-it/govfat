@@ -18,22 +18,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.govmix.proxy.fatturapa.web.console.anagrafica.iservice;
-
-import java.util.List;
+package org.govmix.proxy.fatturapa.web.console.anagrafica.datamodel;
 
 import org.govmix.proxy.fatturapa.orm.Ente;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.bean.EnteBean;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.form.EnteSearchForm;
-import org.openspcoop2.generic_project.exception.ServiceException;
-import org.openspcoop2.generic_project.web.iservice.IBaseService;
+import org.govmix.proxy.fatturapa.web.console.anagrafica.iservice.IEnteService;
+import org.openspcoop2.generic_project.web.impl.jsf1.datamodel.ParameterizedDataModel;
 
-public interface IEnteService  extends IBaseService<EnteBean, Long, EnteSearchForm>{
+public class EnteDM extends ParameterizedDataModel<Long, EnteBean, 
+	IEnteService, Ente, EnteSearchForm>{
 	
-	public EnteBean findEnteByNome(String nome) throws ServiceException;
-
-	public EnteBean findEnteByDipartimento(String nome) throws ServiceException;
-	
-	public List<Ente> getDescrizioneAutoComplete(String val) throws ServiceException;
-	public List<Ente> getNomeAutoComplete(String val) throws ServiceException;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+ 
 }
