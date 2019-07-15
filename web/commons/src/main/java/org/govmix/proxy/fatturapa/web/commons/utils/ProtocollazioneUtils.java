@@ -147,7 +147,7 @@ public class ProtocollazioneUtils {
 
 		if(esitoPositivo) {
 			this.log.debug("Lotto di Fatture ["+idLotto+"] inviata correttamente all'endpoint ["+url+"]. Response: ["+response+"]");
-			lottoBD.updateProtocollo(idLottoSDI, protocollo, asincrono);
+			lottoBD.updateProtocollo(idLottoSDI, protocollo, response, asincrono);
 		} else {
 			if(errore != null) {
 				this.log.debug("Lotto di Fatture ["+idLotto+"] inviato con errore ["+errore+"] all'endpoint ["+url+"]. Response: ["+response+"]");
@@ -171,7 +171,7 @@ public class ProtocollazioneUtils {
 		this.log.debug("Spedisco la fattura ["+idFattura.toJson()+"] all'endpoint ["+urlEndpoint+"]");
 
 		if(consegnaContestuale) {
-			this.log.debug("Identificativo di protocollo lotto ["+fattura.getLottoFatture().getProtocollo()+"] per la fattura ["+idFattura.toJson()+"]");
+			this.log.debug("Identificativo di protocollo lotto ["+fattura.getLottoFatture().getDettaglioConsegna()+"] per la fattura ["+idFattura.toJson()+"]");
 		}
 
 		boolean esitoPositivo = false;
@@ -189,7 +189,7 @@ public class ProtocollazioneUtils {
 			HttpURLConnection httpConn = (HttpURLConnection) conn;
 
 			if(consegnaContestuale) {
-				httpConn.setRequestProperty(CostantiProtocollazione.ID_PROTOCOLLO_HEADER_PARAM, fattura.getLottoFatture().getProtocollo());
+				httpConn.setRequestProperty(CostantiProtocollazione.ID_PROTOCOLLO_HEADER_PARAM, fattura.getLottoFatture().getDettaglioConsegna());
 			}
 			httpConn.setRequestProperty(CostantiProtocollazione.NOME_FILE_HEADER_PARAM, fattura.getNomeFile());
 			httpConn.setRequestProperty(CostantiProtocollazione.IDENTIFICATIVO_SDI_HEADER_PARAM, ""+idFattura.getIdentificativoSdi());

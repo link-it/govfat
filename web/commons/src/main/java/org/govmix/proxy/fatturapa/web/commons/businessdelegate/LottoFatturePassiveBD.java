@@ -240,12 +240,15 @@ public class LottoFatturePassiveBD extends LottoBD {
 		}
 	}
 	
-	public void updateProtocollo(IdLotto idLotto, String protocollo,boolean asincrono) throws Exception {
+	public void updateProtocollo(IdLotto idLotto, String protocollo, String dettaglioConsegna, boolean asincrono) throws Exception {
 		try {
 
 			List<UpdateField> lst = new ArrayList<UpdateField>();
 			lst.add(new UpdateField(LottoFatture.model().STATO_CONSEGNA, StatoConsegnaType.CONSEGNATA));
 			lst.add(new UpdateField(LottoFatture.model().DATA_CONSEGNA, new Date()));
+			if(dettaglioConsegna!=null) {
+				lst.add(new UpdateField(LottoFatture.model().DETTAGLIO_CONSEGNA, dettaglioConsegna));
+			}
 			
 			if(asincrono) {
 				lst.add(new UpdateField(LottoFatture.model().STATO_PROTOCOLLAZIONE, StatoProtocollazioneType.PROTOCOLLATA_IN_ELABORAZIONE));
