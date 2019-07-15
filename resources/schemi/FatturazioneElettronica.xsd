@@ -553,6 +553,7 @@
 		<xsd:sequence>
 			<xsd:element name="nome" type="xsd:string" />
 			<xsd:element name="username" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="id-protocollo" type="id-protocollo" minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
 	
@@ -624,7 +625,7 @@
 	<xsd:complexType name="id-dipartimento-property">
 		<xsd:sequence>
 			<xsd:element name="nome" type="xsd:string" />
-			<xsd:element name="id-ente" type="id-ente" />
+			<xsd:element name="id-protocollo" type="id-protocollo" />
 		</xsd:sequence>
 	</xsd:complexType>
 	
@@ -1618,7 +1619,7 @@
 							<linkit:sql-table-unique-field
 								name="nome" />
 							<linkit:sql-table-unique-column
-								name="id_ente" />
+								name="id_protocollo" />
 						</linkit:sql-table-unique>
 					</linkit:sql-table-mapping>
 				</linkit:generator>
@@ -1627,12 +1628,12 @@
 		<xsd:sequence>
 			<xsd:element name="nome" type="xsd:string" />
 			<xsd:element name="label" type="xsd:string" />
-			<xsd:element name="idEnte" type="id-ente">
+			<xsd:element name="idProtocollo" type="id-protocollo">
 				<xsd:annotation>
 					<xsd:appinfo>
 						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
-							<linkit:sql-id-mapping object-name="Ente"
-								object-type="Ente" relationship="reversed" />
+							<linkit:sql-id-mapping object-name="Protocollo"
+								object-type="Protocollo" relationship="reversed" />
 						</linkit:generator>
 					</xsd:appinfo>
 				</xsd:annotation>

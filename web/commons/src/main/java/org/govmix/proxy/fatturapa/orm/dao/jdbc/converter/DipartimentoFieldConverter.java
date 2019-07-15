@@ -159,6 +159,13 @@ public class DipartimentoFieldConverter extends AbstractSQLFieldConverter {
 				return "username";
 			}
 		}
+		if(field.equals(Dipartimento.model().REGISTRO.ID_PROTOCOLLO.NOME)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".nome";
+			}else{
+				return "nome";
+			}
+		}
 		if(field.equals(Dipartimento.model().LISTA_EMAIL_NOTIFICHE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".lista_email_notifiche";
@@ -180,25 +187,11 @@ public class DipartimentoFieldConverter extends AbstractSQLFieldConverter {
 				return "nome";
 			}
 		}
-		if(field.equals(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE.NOME)){
+		if(field.equals(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO.NOME)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".nome";
 			}else{
 				return "nome";
-			}
-		}
-		if(field.equals(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE.NODO_CODICE_PAGAMENTO)){
-			if(appendTablePrefix){
-				return this.toAliasTable(field)+".nodo_codice_pagamento";
-			}else{
-				return "nodo_codice_pagamento";
-			}
-		}
-		if(field.equals(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE.PREFISSO_CODICE_PAGAMENTO)){
-			if(appendTablePrefix){
-				return this.toAliasTable(field)+".prefisso_codice_pagamento";
-			}else{
-				return "prefisso_codice_pagamento";
 			}
 		}
 
@@ -253,6 +246,9 @@ public class DipartimentoFieldConverter extends AbstractSQLFieldConverter {
 		if(field.equals(Dipartimento.model().REGISTRO.USERNAME)){
 			return this.toTable(Dipartimento.model().REGISTRO, returnAlias);
 		}
+		if(field.equals(Dipartimento.model().REGISTRO.ID_PROTOCOLLO.NOME)){
+			return this.toTable(Dipartimento.model().REGISTRO.ID_PROTOCOLLO, returnAlias);
+		}
 		if(field.equals(Dipartimento.model().LISTA_EMAIL_NOTIFICHE)){
 			return this.toTable(Dipartimento.model(), returnAlias);
 		}
@@ -262,14 +258,8 @@ public class DipartimentoFieldConverter extends AbstractSQLFieldConverter {
 		if(field.equals(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.NOME)){
 			return this.toTable(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY, returnAlias);
 		}
-		if(field.equals(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE.NOME)){
-			return this.toTable(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE, returnAlias);
-		}
-		if(field.equals(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE.NODO_CODICE_PAGAMENTO)){
-			return this.toTable(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE, returnAlias);
-		}
-		if(field.equals(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE.PREFISSO_CODICE_PAGAMENTO)){
-			return this.toTable(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE, returnAlias);
+		if(field.equals(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO.NOME)){
+			return this.toTable(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO, returnAlias);
 		}
 
 
@@ -293,14 +283,17 @@ public class DipartimentoFieldConverter extends AbstractSQLFieldConverter {
 		if(model.equals(Dipartimento.model().REGISTRO)){
 			return "registri";
 		}
+		if(model.equals(Dipartimento.model().REGISTRO.ID_PROTOCOLLO)){
+			return "protocolli";
+		}
 		if(model.equals(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE)){
 			return "dipartimenti_prop_values";
 		}
 		if(model.equals(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY)){
 			return "dipartimenti_props";
 		}
-		if(model.equals(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE)){
-			return "id_ente";
+		if(model.equals(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO)){
+			return "protocolli";
 		}
 
 

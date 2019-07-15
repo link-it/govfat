@@ -110,6 +110,13 @@ public class PccScadenzaFieldConverter extends AbstractSQLFieldConverter {
 				return "posizione";
 			}
 		}
+		if(field.equals(PccScadenza.model().ID_FATTURA.FATTURAZIONE_ATTIVA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".fatturazione_attiva";
+			}else{
+				return "fatturazione_attiva";
+			}
+		}
 		if(field.equals(PccScadenza.model().SISTEMA_RICHIEDENTE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".sistema_richiedente";
@@ -167,6 +174,9 @@ public class PccScadenzaFieldConverter extends AbstractSQLFieldConverter {
 			return this.toTable(PccScadenza.model().ID_FATTURA, returnAlias);
 		}
 		if(field.equals(PccScadenza.model().ID_FATTURA.POSIZIONE)){
+			return this.toTable(PccScadenza.model().ID_FATTURA, returnAlias);
+		}
+		if(field.equals(PccScadenza.model().ID_FATTURA.FATTURAZIONE_ATTIVA)){
 			return this.toTable(PccScadenza.model().ID_FATTURA, returnAlias);
 		}
 		if(field.equals(PccScadenza.model().SISTEMA_RICHIEDENTE)){

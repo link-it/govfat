@@ -37,6 +37,8 @@ import java.io.Serializable;
  * &lt;complexType name="id-registro">
  * 		&lt;sequence>
  * 			&lt;element name="nome" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="username" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="id-protocollo" type="{http://www.govmix.org/proxy/fatturapa/orm}id-protocollo" minOccurs="0" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -51,7 +53,9 @@ import java.io.Serializable;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "id-registro", 
   propOrder = {
-  	"nome"
+  	"nome",
+  	"username",
+  	"idProtocollo"
   }
 )
 
@@ -83,6 +87,22 @@ public class IdRegistro extends org.openspcoop2.utils.beans.BaseBean implements 
     this.nome = nome;
   }
 
+  public java.lang.String getUsername() {
+    return this.username;
+  }
+
+  public void setUsername(java.lang.String username) {
+    this.username = username;
+  }
+
+  public IdProtocollo getIdProtocollo() {
+    return this.idProtocollo;
+  }
+
+  public void setIdProtocollo(IdProtocollo idProtocollo) {
+    this.idProtocollo = idProtocollo;
+  }
+
   private static final long serialVersionUID = 1L;
 
   @XmlTransient
@@ -93,5 +113,12 @@ public class IdRegistro extends org.openspcoop2.utils.beans.BaseBean implements 
   @javax.xml.bind.annotation.XmlSchemaType(name="string")
   @XmlElement(name="nome",required=true,nillable=false)
   protected java.lang.String nome;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @XmlElement(name="username",required=false,nillable=false)
+  protected java.lang.String username;
+
+  @XmlElement(name="id-protocollo",required=false,nillable=false)
+  protected IdProtocollo idProtocollo;
 
 }

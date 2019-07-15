@@ -30,7 +30,7 @@ import org.apache.commons.lang.StringUtils;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.DipartimentoProperty;
 import org.govmix.proxy.fatturapa.orm.IdDipartimento;
-import org.govmix.proxy.fatturapa.orm.IdEnte;
+import org.govmix.proxy.fatturapa.orm.IdRegistro;
 import org.govmix.proxy.fatturapa.orm.PccDipartimentoOperazione;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.bean.DipartimentoBean;
@@ -398,17 +398,16 @@ public class DipartimentoMBean extends DataModelListView<DipartimentoBean, Long,
 		List<DipartimentoProperty> lista = new ArrayList<DipartimentoProperty>();
 
 		try{
-			org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem enteSI = this.form.getEnte().getValue();
-			String nomeEnte = null;
-			IdEnte idEnte = null;
-			if(enteSI!= null){
-				nomeEnte = enteSI.getValue();
-				idEnte = new IdEnte();
-				idEnte.setNome(nomeEnte);
+			org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem registroSI = this.form.getRegistro().getValue();
+			String nomeRegistro = null;
+			IdRegistro idRegistro = null;
+			if(registroSI!= null){
+				nomeRegistro = registroSI.getValue();
+				idRegistro = new IdRegistro();
+				idRegistro .setNome(nomeRegistro);
+				lista = ((IDipartimentoService)this.service).getListaPropertiesProtocollo(idRegistro);
 			}
 						
-			lista = ((IDipartimentoService)this.service).getListaPropertiesEnte(idEnte);
-//					org.govmix.proxy.fatturapa.web.console.util.Utils.getIdEnte());
 		}catch(Exception e){
 			this.log.error("Si e' verificato un errore durante il caricamento delle properties: " + e.getMessage(), e);
 		}

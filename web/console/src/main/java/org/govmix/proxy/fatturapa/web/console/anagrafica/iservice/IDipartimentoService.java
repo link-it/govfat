@@ -26,7 +26,7 @@ import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.DipartimentoProperty;
 import org.govmix.proxy.fatturapa.orm.IdDipartimento;
 import org.govmix.proxy.fatturapa.orm.IdDipartimentoProperty;
-import org.govmix.proxy.fatturapa.orm.IdEnte;
+import org.govmix.proxy.fatturapa.orm.IdRegistro;
 import org.govmix.proxy.fatturapa.orm.PccDipartimentoOperazione;
 import org.govmix.proxy.fatturapa.orm.PccOperazione;
 import org.govmix.proxy.fatturapa.orm.Utente;
@@ -47,7 +47,7 @@ public interface IDipartimentoService extends IBaseService<DipartimentoBean, Lon
 	
 	public List<DipartimentoBean> getListaDipartimentiUtente(Utente utente, boolean ignoreRole) throws ServiceException;
 	
-	public List<DipartimentoProperty> getListaPropertiesEnte(IdEnte idEnte) throws ServiceException;
+	public List<DipartimentoProperty> getListaPropertiesProtocollo(IdRegistro idRegistro) throws ServiceException;
 	
 	public DipartimentoProperty findPropertyById(IdDipartimentoProperty idProperty) throws ServiceException;
 	

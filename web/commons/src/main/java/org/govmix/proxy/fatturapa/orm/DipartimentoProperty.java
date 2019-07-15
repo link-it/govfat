@@ -38,7 +38,7 @@ import java.io.Serializable;
  * 		&lt;sequence>
  * 			&lt;element name="nome" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="label" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="1" maxOccurs="1"/>
- * 			&lt;element name="idEnte" type="{http://www.govmix.org/proxy/fatturapa/orm}id-ente" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="idProtocollo" type="{http://www.govmix.org/proxy/fatturapa/orm}id-protocollo" minOccurs="1" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -55,7 +55,7 @@ import java.io.Serializable;
   propOrder = {
   	"nome",
   	"label",
-  	"idEnte"
+  	"idProtocollo"
   }
 )
 
@@ -95,12 +95,12 @@ public class DipartimentoProperty extends org.openspcoop2.utils.beans.BaseBean i
     this.label = label;
   }
 
-  public IdEnte getIdEnte() {
-    return this.idEnte;
+  public IdProtocollo getIdProtocollo() {
+    return this.idProtocollo;
   }
 
-  public void setIdEnte(IdEnte idEnte) {
-    this.idEnte = idEnte;
+  public void setIdProtocollo(IdProtocollo idProtocollo) {
+    this.idProtocollo = idProtocollo;
   }
 
   private static final long serialVersionUID = 1L;
@@ -130,7 +130,7 @@ public class DipartimentoProperty extends org.openspcoop2.utils.beans.BaseBean i
   @XmlElement(name="label",required=true,nillable=false)
   protected java.lang.String label;
 
-  @XmlElement(name="idEnte",required=true,nillable=false)
-  protected IdEnte idEnte;
+  @XmlElement(name="idProtocollo",required=true,nillable=false)
+  protected IdProtocollo idProtocollo;
 
 }

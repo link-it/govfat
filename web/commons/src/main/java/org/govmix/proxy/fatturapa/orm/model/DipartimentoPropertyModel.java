@@ -44,7 +44,7 @@ public class DipartimentoPropertyModel extends AbstractModel<DipartimentoPropert
 	
 		this.NOME = new Field("nome",java.lang.String.class,"DipartimentoProperty",DipartimentoProperty.class);
 		this.LABEL = new Field("label",java.lang.String.class,"DipartimentoProperty",DipartimentoProperty.class);
-		this.ID_ENTE = new org.govmix.proxy.fatturapa.orm.model.IdEnteModel(new Field("idEnte",org.govmix.proxy.fatturapa.orm.IdEnte.class,"DipartimentoProperty",DipartimentoProperty.class));
+		this.ID_PROTOCOLLO = new org.govmix.proxy.fatturapa.orm.model.IdProtocolloModel(new Field("idProtocollo",org.govmix.proxy.fatturapa.orm.IdProtocollo.class,"DipartimentoProperty",DipartimentoProperty.class));
 	
 	}
 	
@@ -54,7 +54,7 @@ public class DipartimentoPropertyModel extends AbstractModel<DipartimentoPropert
 	
 		this.NOME = new ComplexField(father,"nome",java.lang.String.class,"DipartimentoProperty",DipartimentoProperty.class);
 		this.LABEL = new ComplexField(father,"label",java.lang.String.class,"DipartimentoProperty",DipartimentoProperty.class);
-		this.ID_ENTE = new org.govmix.proxy.fatturapa.orm.model.IdEnteModel(new ComplexField(father,"idEnte",org.govmix.proxy.fatturapa.orm.IdEnte.class,"DipartimentoProperty",DipartimentoProperty.class));
+		this.ID_PROTOCOLLO = new org.govmix.proxy.fatturapa.orm.model.IdProtocolloModel(new ComplexField(father,"idProtocollo",org.govmix.proxy.fatturapa.orm.IdProtocollo.class,"DipartimentoProperty",DipartimentoProperty.class));
 	
 	}
 	
@@ -64,7 +64,7 @@ public class DipartimentoPropertyModel extends AbstractModel<DipartimentoPropert
 	 
 	public IField LABEL = null;
 	 
-	public org.govmix.proxy.fatturapa.orm.model.IdEnteModel ID_ENTE = null;
+	public org.govmix.proxy.fatturapa.orm.model.IdProtocolloModel ID_PROTOCOLLO = null;
 	 
 
 	@Override

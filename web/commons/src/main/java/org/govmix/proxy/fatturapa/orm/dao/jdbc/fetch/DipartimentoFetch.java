@@ -26,6 +26,7 @@ import java.util.Map;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.DipartimentoPropertyValue;
 import org.govmix.proxy.fatturapa.orm.IdEnte;
+import org.govmix.proxy.fatturapa.orm.IdProtocollo;
 import org.govmix.proxy.fatturapa.orm.IdRegistro;
 import org.openspcoop2.generic_project.beans.IModel;
 import org.openspcoop2.generic_project.dao.jdbc.utils.AbstractJDBCFetch;
@@ -94,6 +95,13 @@ public class DipartimentoFetch extends AbstractJDBCFetch {
 				IdRegistro object = new IdRegistro();
 				setParameter(object, "setNome", Dipartimento.model().REGISTRO.NOME.getFieldType(),
 						jdbcParameterUtilities.readParameter(rs, "nome", Dipartimento.model().REGISTRO.NOME.getFieldType()));
+				
+				IdProtocollo idProtocollo = new IdProtocollo();
+				
+				setParameter(idProtocollo, "setNome", Dipartimento.model().REGISTRO.ID_PROTOCOLLO.NOME.getFieldType(),
+						jdbcParameterUtilities.readParameter(rs, "protocollo_nome", Dipartimento.model().REGISTRO.ID_PROTOCOLLO.NOME.getFieldType()));
+				object.setIdProtocollo(idProtocollo);
+				
 				return object;
 			}
 			

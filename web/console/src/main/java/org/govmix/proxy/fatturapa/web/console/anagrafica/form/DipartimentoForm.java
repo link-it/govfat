@@ -157,6 +157,8 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 			this.codicePCC = inputFieldFactory.createBooleanCheckBox("codicePCC","dipartimento.form.codicePCC",null,false);
 
 			this.registro = inputFieldFactory.createSelectList("registro","dipartimento.form.registro",null,false);
+			this.registro.setFieldsToUpdate(this.getId() + "_formPnl"); 
+			this.registro.setForm(this); 
 
 			
 
@@ -702,7 +704,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 					for (DipartimentoProperty nomeProprieta : this.listaNomiProperties) {
 						if(nomeProprieta.getNome().equals(nomeProp)){
 							IdDipartimentoProperty idProperty = new IdDipartimentoProperty();
-							idProperty.setIdEnte(nomeProprieta.getIdEnte());
+							idProperty.setIdProtocollo(nomeProprieta.getIdProtocollo());
 							idProperty.setNome(nomeProprieta.getNome());
 							value.setIdProperty(idProperty);
 							found = true;
@@ -816,13 +818,15 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		} else {
 			this.codicePCC.setValue(false);
 		}
-		
-		// reset valori delle properties in base all'ente scelto.
-		this.properties = new ArrayList<Text>();
-		this.setListaNomiProperties(this.mbean.getListaDipartimentoProperties(),false); 
 
 		// reset le scelte pcc
 		this.resetSezionePCC();
+	}
+
+	public void registroSelectListener(ActionEvent ae){
+		// reset valori delle properties in base al registro scelto.
+		this.properties = new ArrayList<Text>();
+		this.setListaNomiProperties(this.mbean.getListaDipartimentoProperties(),false); 
 	}
 
 	public void setRegistro(SelectList<SelectItem> registro) {

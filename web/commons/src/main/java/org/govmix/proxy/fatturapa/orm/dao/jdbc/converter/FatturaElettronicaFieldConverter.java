@@ -390,6 +390,20 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 				return "nome";
 			}
 		}
+		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.ENTE.NODO_CODICE_PAGAMENTO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".nodo_codice_pagamento";
+			}else{
+				return "nodo_codice_pagamento";
+			}
+		}
+		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.ENTE.PREFISSO_CODICE_PAGAMENTO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".prefisso_codice_pagamento";
+			}else{
+				return "prefisso_codice_pagamento";
+			}
+		}
 		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.DESCRIZIONE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".descrizione";
@@ -453,6 +467,13 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 				return "username";
 			}
 		}
+		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.REGISTRO.ID_PROTOCOLLO.NOME)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".nome";
+			}else{
+				return "nome";
+			}
+		}
 		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.LISTA_EMAIL_NOTIFICHE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".lista_email_notifiche";
@@ -474,7 +495,7 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 				return "nome";
 			}
 		}
-		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE.NOME)){
+		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO.NOME)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".nome";
 			}else{
@@ -824,6 +845,20 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 				return "nome";
 			}
 		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.ENTE.NODO_CODICE_PAGAMENTO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".nodo_codice_pagamento";
+			}else{
+				return "nodo_codice_pagamento";
+			}
+		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.ENTE.PREFISSO_CODICE_PAGAMENTO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".prefisso_codice_pagamento";
+			}else{
+				return "prefisso_codice_pagamento";
+			}
+		}
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.DESCRIZIONE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".descrizione";
@@ -887,6 +922,13 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 				return "username";
 			}
 		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.REGISTRO.ID_PROTOCOLLO.NOME)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".nome";
+			}else{
+				return "nome";
+			}
+		}
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.LISTA_EMAIL_NOTIFICHE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".lista_email_notifiche";
@@ -908,7 +950,7 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 				return "nome";
 			}
 		}
-		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE.NOME)){
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO.NOME)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".nome";
 			}else{
@@ -1066,6 +1108,12 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.ENTE.NOME)){
 			return this.toTable(FatturaElettronica.model().DIPARTIMENTO.ENTE, returnAlias);
 		}
+		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.ENTE.NODO_CODICE_PAGAMENTO)){
+			return this.toTable(FatturaElettronica.model().DIPARTIMENTO.ENTE, returnAlias);
+		}
+		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.ENTE.PREFISSO_CODICE_PAGAMENTO)){
+			return this.toTable(FatturaElettronica.model().DIPARTIMENTO.ENTE, returnAlias);
+		}
 		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.DESCRIZIONE)){
 			return this.toTable(FatturaElettronica.model().DIPARTIMENTO, returnAlias);
 		}
@@ -1093,6 +1141,9 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.REGISTRO.USERNAME)){
 			return this.toTable(FatturaElettronica.model().DIPARTIMENTO.REGISTRO, returnAlias);
 		}
+		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.REGISTRO.ID_PROTOCOLLO.NOME)){
+			return this.toTable(FatturaElettronica.model().DIPARTIMENTO.REGISTRO.ID_PROTOCOLLO, returnAlias);
+		}
 		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.LISTA_EMAIL_NOTIFICHE)){
 			return this.toTable(FatturaElettronica.model().DIPARTIMENTO, returnAlias);
 		}
@@ -1102,8 +1153,8 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.NOME)){
 			return this.toTable(FatturaElettronica.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY, returnAlias);
 		}
-		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE.NOME)){
-			return this.toTable(FatturaElettronica.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE, returnAlias);
+		if(field.equals(FatturaElettronica.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO.NOME)){
+			return this.toTable(FatturaElettronica.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO, returnAlias);
 		}
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.FORMATO_TRASMISSIONE)){
 			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE, returnAlias);
@@ -1252,6 +1303,12 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.ENTE.NOME)){
 			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.ENTE, returnAlias);
 		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.ENTE.NODO_CODICE_PAGAMENTO)){
+			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.ENTE, returnAlias);
+		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.ENTE.PREFISSO_CODICE_PAGAMENTO)){
+			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.ENTE, returnAlias);
+		}
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.DESCRIZIONE)){
 			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO, returnAlias);
 		}
@@ -1279,6 +1336,9 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.REGISTRO.USERNAME)){
 			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.REGISTRO, returnAlias);
 		}
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.REGISTRO.ID_PROTOCOLLO.NOME)){
+			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.REGISTRO.ID_PROTOCOLLO, returnAlias);
+		}
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.LISTA_EMAIL_NOTIFICHE)){
 			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO, returnAlias);
 		}
@@ -1288,8 +1348,8 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.NOME)){
 			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY, returnAlias);
 		}
-		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE.NOME)){
-			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE, returnAlias);
+		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO.NOME)){
+			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO, returnAlias);
 		}
 
 
@@ -1328,14 +1388,17 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 		if(model.equals(FatturaElettronica.model().DIPARTIMENTO.REGISTRO)){
 			return "registri";
 		}
+		if(model.equals(FatturaElettronica.model().DIPARTIMENTO.REGISTRO.ID_PROTOCOLLO)){
+			return "protocolli";
+		}
 		if(model.equals(FatturaElettronica.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE)){
 			return "dipartimenti_prop_values";
 		}
 		if(model.equals(FatturaElettronica.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY)){
 			return "dipartimenti_props";
 		}
-		if(model.equals(FatturaElettronica.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE)){
-			return "enti";
+		if(model.equals(FatturaElettronica.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO)){
+			return "protocolli";
 		}
 		if(model.equals(FatturaElettronica.model().LOTTO_FATTURE)){
 			return "lotti";
@@ -1352,14 +1415,17 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 		if(model.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.REGISTRO)){
 			return "registri";
 		}
+		if(model.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.REGISTRO.ID_PROTOCOLLO)){
+			return "protocolli";
+		}
 		if(model.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE)){
 			return "dipartimenti_prop_values";
 		}
 		if(model.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY)){
 			return "dipartimenti_props";
 		}
-		if(model.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE)){
-			return "enti";
+		if(model.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO)){
+			return "protocolli";
 		}
 
 

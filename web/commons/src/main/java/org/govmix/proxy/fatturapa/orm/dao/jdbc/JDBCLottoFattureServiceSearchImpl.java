@@ -545,9 +545,8 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 						if(itemObj_dipartimento.getIdProperty()!=null && 
 								itemAlreadySaved_dipartimento.getIdProperty()!=null){
 							itemObj_dipartimento.getIdProperty().setId(itemAlreadySaved_dipartimento.getIdProperty().getId());
-							if(itemObj_dipartimento.getIdProperty().getIdEnte()!=null && 
-									itemAlreadySaved_dipartimento.getIdProperty().getIdEnte()!=null){
-								itemObj_dipartimento.getIdProperty().getIdEnte().setId(itemAlreadySaved_dipartimento.getIdProperty().getIdEnte().getId());
+							if(itemObj_dipartimento.getIdProperty().getIdProtocollo()!=null && 
+									itemAlreadySaved_dipartimento.getIdProperty().getIdProtocollo()!=null){
 							}
 						}
 					}
@@ -761,9 +760,9 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 						));
 
 		// LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE
-		mapTableToPKColumn.put(converter.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE),
+		mapTableToPKColumn.put(converter.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO),
 				utilities.newList(
-						new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE))
+						new CustomField("id", Long.class, "id", converter.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO))
 						));
 
 		return mapTableToPKColumn;		

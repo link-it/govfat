@@ -44,6 +44,7 @@ public class IdRegistroModel extends AbstractModel<IdRegistro> {
 	
 		this.NOME = new Field("nome",java.lang.String.class,"id-registro",IdRegistro.class);
 		this.USERNAME = new Field("username",java.lang.String.class,"id-registro",IdRegistro.class);
+		this.ID_PROTOCOLLO = new org.govmix.proxy.fatturapa.orm.model.IdProtocolloModel(new Field("id-protocollo",org.govmix.proxy.fatturapa.orm.IdProtocollo.class,"id-registro",IdRegistro.class));
 	
 	}
 	
@@ -53,6 +54,7 @@ public class IdRegistroModel extends AbstractModel<IdRegistro> {
 	
 		this.NOME = new ComplexField(father,"nome",java.lang.String.class,"id-registro",IdRegistro.class);
 		this.USERNAME = new ComplexField(father,"username",java.lang.String.class,"id-registro",IdRegistro.class);
+		this.ID_PROTOCOLLO = new org.govmix.proxy.fatturapa.orm.model.IdProtocolloModel(new ComplexField(father,"id-protocollo",org.govmix.proxy.fatturapa.orm.IdProtocollo.class,"id-registro",IdRegistro.class));
 	
 	}
 	
@@ -61,6 +63,8 @@ public class IdRegistroModel extends AbstractModel<IdRegistro> {
 	public IField NOME = null;
 	 
 	public IField USERNAME = null;
+	 
+	public org.govmix.proxy.fatturapa.orm.model.IdProtocolloModel ID_PROTOCOLLO = null;
 	 
 
 	@Override

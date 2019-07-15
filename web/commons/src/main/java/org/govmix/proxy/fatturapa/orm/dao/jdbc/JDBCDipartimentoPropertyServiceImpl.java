@@ -66,18 +66,18 @@ public class JDBCDipartimentoPropertyServiceImpl extends JDBCDipartimentoPropert
 		ISQLQueryObject sqlQueryObjectInsert = sqlQueryObject.newSQLQueryObject();
 				
 
-		// Object _ente
-		Long id_ente = null;
-		org.govmix.proxy.fatturapa.orm.IdEnte idLogic_ente = null;
-		idLogic_ente = dipartimentoProperty.getIdEnte();
-		if(idLogic_ente!=null){
+		// Object _protocollo
+		Long id_protocollo = null;
+		org.govmix.proxy.fatturapa.orm.IdProtocollo idLogic_protocollo = null;
+		idLogic_protocollo = dipartimentoProperty.getIdProtocollo();
+		if(idLogic_protocollo!=null){
 			if(idMappingResolutionBehaviour==null ||
 				(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour))){
-				id_ente = ((JDBCEnteServiceSearch)(this.getServiceManager().getEnteServiceSearch())).findTableId(idLogic_ente, false);
+				id_protocollo = ((JDBCProtocolloServiceSearch)(this.getServiceManager().getProtocolloServiceSearch())).findTableId(idLogic_protocollo, false);
 			}
 			else if(org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour)){
-				id_ente = idLogic_ente.getId();
-				if(id_ente==null || id_ente<=0){
+				id_protocollo = idLogic_protocollo.getId();
+				if(id_protocollo==null || id_protocollo<=0){
 					throw new Exception("Logic id not contains table id");
 				}
 			}
@@ -88,14 +88,14 @@ public class JDBCDipartimentoPropertyServiceImpl extends JDBCDipartimentoPropert
 		sqlQueryObjectInsert.addInsertTable(this.getDipartimentoPropertyFieldConverter().toTable(DipartimentoProperty.model()));
 		sqlQueryObjectInsert.addInsertField(this.getDipartimentoPropertyFieldConverter().toColumn(DipartimentoProperty.model().NOME,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getDipartimentoPropertyFieldConverter().toColumn(DipartimentoProperty.model().LABEL,false),"?");
-		sqlQueryObjectInsert.addInsertField("id_ente","?");
+		sqlQueryObjectInsert.addInsertField("id_protocollo","?");
 
 		// Insert dipartimentoProperty
 		org.openspcoop2.utils.jdbc.IKeyGeneratorObject keyGenerator = this.getDipartimentoPropertyFetch().getKeyGeneratorObject(DipartimentoProperty.model());
 		long id = jdbcUtilities.insertAndReturnGeneratedKey(sqlQueryObjectInsert, keyGenerator, jdbcProperties.isShowSql(),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(dipartimentoProperty.getNome(),DipartimentoProperty.model().NOME.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(dipartimentoProperty.getLabel(),DipartimentoProperty.model().LABEL.getFieldType()),
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id_ente,Long.class)
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id_protocollo,Long.class)
 		);
 		dipartimentoProperty.setId(id);
 
@@ -137,18 +137,18 @@ public class JDBCDipartimentoPropertyServiceImpl extends JDBCDipartimentoPropert
 			org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour);
 			
 
-		// Object _dipartimentoProperty_ente
-		Long id_dipartimentoProperty_ente = null;
-		org.govmix.proxy.fatturapa.orm.IdEnte idLogic_dipartimentoProperty_ente = null;
-		idLogic_dipartimentoProperty_ente = dipartimentoProperty.getIdEnte();
-		if(idLogic_dipartimentoProperty_ente!=null){
+		// Object _dipartimentoProperty_protocollo
+		Long id_dipartimentoProperty_protocollo = null;
+		org.govmix.proxy.fatturapa.orm.IdProtocollo idLogic_dipartimentoProperty_protocollo = null;
+		idLogic_dipartimentoProperty_protocollo = dipartimentoProperty.getIdProtocollo();
+		if(idLogic_dipartimentoProperty_protocollo!=null){
 			if(idMappingResolutionBehaviour==null ||
 				(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour))){
-				id_dipartimentoProperty_ente = ((JDBCEnteServiceSearch)(this.getServiceManager().getEnteServiceSearch())).findTableId(idLogic_dipartimentoProperty_ente, false);
+				id_dipartimentoProperty_protocollo = ((JDBCProtocolloServiceSearch)(this.getServiceManager().getProtocolloServiceSearch())).findTableId(idLogic_dipartimentoProperty_protocollo, false);
 			}
 			else if(org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour)){
-				id_dipartimentoProperty_ente = idLogic_dipartimentoProperty_ente.getId();
-				if(id_dipartimentoProperty_ente==null || id_dipartimentoProperty_ente<=0){
+				id_dipartimentoProperty_protocollo = idLogic_dipartimentoProperty_protocollo.getId();
+				if(id_dipartimentoProperty_protocollo==null || id_dipartimentoProperty_protocollo<=0){
 					throw new Exception("Logic id not contains table id");
 				}
 			}
@@ -165,10 +165,10 @@ public class JDBCDipartimentoPropertyServiceImpl extends JDBCDipartimentoPropert
 		sqlQueryObjectUpdate.addUpdateField(this.getDipartimentoPropertyFieldConverter().toColumn(DipartimentoProperty.model().LABEL,false), "?");
 		lstObjects_dipartimentoProperty.add(new JDBCObject(dipartimentoProperty.getLabel(), DipartimentoProperty.model().LABEL.getFieldType()));
 		if(setIdMappingResolutionBehaviour){
-			sqlQueryObjectUpdate.addUpdateField("id_ente","?");
+			sqlQueryObjectUpdate.addUpdateField("id_protocollo","?");
 		}
 		if(setIdMappingResolutionBehaviour){
-			lstObjects_dipartimentoProperty.add(new JDBCObject(id_dipartimentoProperty_ente, Long.class));
+			lstObjects_dipartimentoProperty.add(new JDBCObject(id_dipartimentoProperty_protocollo, Long.class));
 		}
 		sqlQueryObjectUpdate.addWhereCondition("id=?");
 		lstObjects_dipartimentoProperty.add(new JDBCObject(tableId, Long.class));

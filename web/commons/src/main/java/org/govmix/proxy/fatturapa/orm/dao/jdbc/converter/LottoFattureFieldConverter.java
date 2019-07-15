@@ -411,6 +411,20 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 				return "nome";
 			}
 		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.ENTE.NODO_CODICE_PAGAMENTO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".nodo_codice_pagamento";
+			}else{
+				return "nodo_codice_pagamento";
+			}
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.ENTE.PREFISSO_CODICE_PAGAMENTO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".prefisso_codice_pagamento";
+			}else{
+				return "prefisso_codice_pagamento";
+			}
+		}
 		if(field.equals(LottoFatture.model().DIPARTIMENTO.DESCRIZIONE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".descrizione";
@@ -474,6 +488,13 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 				return "username";
 			}
 		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.REGISTRO.ID_PROTOCOLLO.NOME)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".nome";
+			}else{
+				return "nome";
+			}
+		}
 		if(field.equals(LottoFatture.model().DIPARTIMENTO.LISTA_EMAIL_NOTIFICHE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".lista_email_notifiche";
@@ -495,7 +516,7 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 				return "nome";
 			}
 		}
-		if(field.equals(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE.NOME)){
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO.NOME)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".nome";
 			}else{
@@ -662,6 +683,12 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 		if(field.equals(LottoFatture.model().DIPARTIMENTO.ENTE.NOME)){
 			return this.toTable(LottoFatture.model().DIPARTIMENTO.ENTE, returnAlias);
 		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.ENTE.NODO_CODICE_PAGAMENTO)){
+			return this.toTable(LottoFatture.model().DIPARTIMENTO.ENTE, returnAlias);
+		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.ENTE.PREFISSO_CODICE_PAGAMENTO)){
+			return this.toTable(LottoFatture.model().DIPARTIMENTO.ENTE, returnAlias);
+		}
 		if(field.equals(LottoFatture.model().DIPARTIMENTO.DESCRIZIONE)){
 			return this.toTable(LottoFatture.model().DIPARTIMENTO, returnAlias);
 		}
@@ -689,6 +716,9 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 		if(field.equals(LottoFatture.model().DIPARTIMENTO.REGISTRO.USERNAME)){
 			return this.toTable(LottoFatture.model().DIPARTIMENTO.REGISTRO, returnAlias);
 		}
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.REGISTRO.ID_PROTOCOLLO.NOME)){
+			return this.toTable(LottoFatture.model().DIPARTIMENTO.REGISTRO.ID_PROTOCOLLO, returnAlias);
+		}
 		if(field.equals(LottoFatture.model().DIPARTIMENTO.LISTA_EMAIL_NOTIFICHE)){
 			return this.toTable(LottoFatture.model().DIPARTIMENTO, returnAlias);
 		}
@@ -698,8 +728,8 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 		if(field.equals(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.NOME)){
 			return this.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY, returnAlias);
 		}
-		if(field.equals(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE.NOME)){
-			return this.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE, returnAlias);
+		if(field.equals(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO.NOME)){
+			return this.toTable(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO, returnAlias);
 		}
 
 
@@ -729,14 +759,17 @@ public class LottoFattureFieldConverter extends AbstractSQLFieldConverter {
 		if(model.equals(LottoFatture.model().DIPARTIMENTO.REGISTRO)){
 			return "registri";
 		}
+		if(model.equals(LottoFatture.model().DIPARTIMENTO.REGISTRO.ID_PROTOCOLLO)){
+			return "protocolli";
+		}
 		if(model.equals(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE)){
 			return "dipartimenti_prop_values";
 		}
 		if(model.equals(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY)){
 			return "dipartimenti_props";
 		}
-		if(model.equals(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE)){
-			return "id_ente";
+		if(model.equals(LottoFatture.model().DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO)){
+			return "protocolli";
 		}
 
 

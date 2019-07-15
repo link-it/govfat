@@ -523,6 +523,20 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 				return "nome";
 			}
 		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.ENTE.NODO_CODICE_PAGAMENTO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".nodo_codice_pagamento";
+			}else{
+				return "nodo_codice_pagamento";
+			}
+		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.ENTE.PREFISSO_CODICE_PAGAMENTO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".prefisso_codice_pagamento";
+			}else{
+				return "prefisso_codice_pagamento";
+			}
+		}
 		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.DESCRIZIONE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".descrizione";
@@ -579,6 +593,20 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 				return "nome";
 			}
 		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.REGISTRO.USERNAME)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".username";
+			}else{
+				return "username";
+			}
+		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.REGISTRO.ID_PROTOCOLLO.NOME)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".nome";
+			}else{
+				return "nome";
+			}
+		}
 		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.LISTA_EMAIL_NOTIFICHE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".lista_email_notifiche";
@@ -600,7 +628,7 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 				return "nome";
 			}
 		}
-		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE.NOME)){
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO.NOME)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".nome";
 			}else{
@@ -815,6 +843,12 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.ENTE.NOME)){
 			return this.toTable(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.ENTE, returnAlias);
 		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.ENTE.NODO_CODICE_PAGAMENTO)){
+			return this.toTable(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.ENTE, returnAlias);
+		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.ENTE.PREFISSO_CODICE_PAGAMENTO)){
+			return this.toTable(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.ENTE, returnAlias);
+		}
 		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.DESCRIZIONE)){
 			return this.toTable(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO, returnAlias);
 		}
@@ -839,6 +873,12 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.REGISTRO.NOME)){
 			return this.toTable(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.REGISTRO, returnAlias);
 		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.REGISTRO.USERNAME)){
+			return this.toTable(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.REGISTRO, returnAlias);
+		}
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.REGISTRO.ID_PROTOCOLLO.NOME)){
+			return this.toTable(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.REGISTRO.ID_PROTOCOLLO, returnAlias);
+		}
 		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.LISTA_EMAIL_NOTIFICHE)){
 			return this.toTable(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO, returnAlias);
 		}
@@ -848,8 +888,8 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.NOME)){
 			return this.toTable(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY, returnAlias);
 		}
-		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE.NOME)){
-			return this.toTable(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE, returnAlias);
+		if(field.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO.NOME)){
+			return this.toTable(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO, returnAlias);
 		}
 
 
@@ -885,14 +925,17 @@ public class TracciaSDIFieldConverter extends AbstractSQLFieldConverter {
 		if(model.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.REGISTRO)){
 			return "registri";
 		}
+		if(model.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.REGISTRO.ID_PROTOCOLLO)){
+			return "protocolli";
+		}
 		if(model.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE)){
 			return "dipartimenti_prop_values";
 		}
 		if(model.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY)){
 			return "dipartimenti_props";
 		}
-		if(model.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE)){
-			return "id_ente";
+		if(model.equals(TracciaSDI.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO)){
+			return "protocolli";
 		}
 
 

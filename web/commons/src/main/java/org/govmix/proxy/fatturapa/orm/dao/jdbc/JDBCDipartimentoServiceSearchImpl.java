@@ -198,17 +198,18 @@ public class JDBCDipartimentoServiceSearchImpl implements IJDBCDipartimentoServi
 						ISQLQueryObject sqlQueryObjectGet_dipartimento_registro = sqlQueryObjectGet.newSQLQueryObject();
 						sqlQueryObjectGet_dipartimento_registro.setANDLogicOperator(true);
 						sqlQueryObjectGet_dipartimento_registro.addFromTable(this.getDipartimentoFieldConverter().toTable(Dipartimento.model().REGISTRO));
-						sqlQueryObjectGet_dipartimento_registro.addSelectField("id");
+						sqlQueryObjectGet_dipartimento_registro.addFromTable(this.getDipartimentoFieldConverter().toTable(Dipartimento.model().REGISTRO.ID_PROTOCOLLO));
+						sqlQueryObjectGet_dipartimento_registro.addSelectField(this.getDipartimentoFieldConverter().toTable(Dipartimento.model().REGISTRO)+".id");
 						sqlQueryObjectGet_dipartimento_registro.addSelectField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().REGISTRO.NOME,true));
-						sqlQueryObjectGet_dipartimento_registro.addWhereCondition("id=?");
+						sqlQueryObjectGet_dipartimento_registro.addSelectAliasField(this.getDipartimentoFieldConverter().toColumn(Dipartimento.model().REGISTRO.ID_PROTOCOLLO.NOME,true), "protocollo_nome");
+						sqlQueryObjectGet_dipartimento_registro.addWhereCondition(this.getDipartimentoFieldConverter().toTable(Dipartimento.model().REGISTRO)+".id=?");
+						sqlQueryObjectGet_dipartimento_registro.addWhereCondition(this.getDipartimentoFieldConverter().toTable(Dipartimento.model().REGISTRO)+".id_protocollo="+this.getDipartimentoFieldConverter().toTable(Dipartimento.model().REGISTRO.ID_PROTOCOLLO)+".id");
 
 						org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities jdbcUtilities = 
 								new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCPreparedStatementUtilities(sqlQueryObject.getTipoDatabaseOpenSPCoop2(), log, connection);
 
 						idRegistro = (IdRegistro) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_dipartimento_registro.createSQLQuery(), jdbcProperties.isShowSql(), Dipartimento.model().REGISTRO, this.getDipartimentoFetch(), 
 								new JDBCObject(idRegistroLong,Long.class));
-
-						
 					}
 					
 					dipartimento.setRegistro(idRegistro);
@@ -566,9 +567,9 @@ public class JDBCDipartimentoServiceSearchImpl implements IJDBCDipartimentoServi
 					if(itemObj_.getIdProperty()!=null && 
 							itemAlreadySaved_.getIdProperty()!=null){
 						itemObj_.getIdProperty().setId(itemAlreadySaved_.getIdProperty().getId());
-						if(itemObj_.getIdProperty().getIdEnte()!=null && 
-								itemAlreadySaved_.getIdProperty().getIdEnte()!=null){
-							itemObj_.getIdProperty().getIdEnte().setId(itemAlreadySaved_.getIdProperty().getIdEnte().getId());
+						if(itemObj_.getIdProperty().getIdProtocollo()!=null && 
+								itemAlreadySaved_.getIdProperty().getIdProtocollo()!=null){
+							itemObj_.getIdProperty().getIdProtocollo().setId(itemAlreadySaved_.getIdProperty().getIdProtocollo().getId());
 						}
 					}
 				}
@@ -717,9 +718,9 @@ public class JDBCDipartimentoServiceSearchImpl implements IJDBCDipartimentoServi
 						));
 
 		// Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE
-		mapTableToPKColumn.put(converter.toTable(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE),
+		mapTableToPKColumn.put(converter.toTable(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO),
 				utilities.newList(
-						new CustomField("id", Long.class, "id", converter.toTable(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_ENTE))
+						new CustomField("id", Long.class, "id", converter.toTable(Dipartimento.model().DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO))
 						));
 
 

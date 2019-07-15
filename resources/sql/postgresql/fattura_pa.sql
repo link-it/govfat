@@ -564,11 +564,11 @@ CREATE TABLE dipartimenti_props
 	label VARCHAR(255) NOT NULL,
 	-- fk/pk columns
 	id BIGINT DEFAULT nextval('seq_dipartimenti_props') NOT NULL,
-	id_ente BIGINT NOT NULL,
+	id_protocollo BIGINT NOT NULL,
 	-- unique constraints
-	CONSTRAINT unique_dipartimenti_props_1 UNIQUE (nome,id_ente),
+	CONSTRAINT unique_dipartimenti_props_1 UNIQUE (nome,id_protocollo),
 	-- fk/pk keys constraints
-	CONSTRAINT fk_dipartimenti_props_1 FOREIGN KEY (id_ente) REFERENCES enti(id),
+	CONSTRAINT fk_dipartimenti_props_1 FOREIGN KEY (id_protocollo) REFERENCES protocolli(id),
 	CONSTRAINT pk_dipartimenti_props PRIMARY KEY (id)
 );
 

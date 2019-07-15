@@ -82,7 +82,7 @@ public class DipartimentoPropertyFieldConverter extends AbstractSQLFieldConverte
 				return "label";
 			}
 		}
-		if(field.equals(DipartimentoProperty.model().ID_ENTE.NOME)){
+		if(field.equals(DipartimentoProperty.model().ID_PROTOCOLLO.NOME)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".nome";
 			}else{
@@ -108,8 +108,8 @@ public class DipartimentoPropertyFieldConverter extends AbstractSQLFieldConverte
 		if(field.equals(DipartimentoProperty.model().LABEL)){
 			return this.toTable(DipartimentoProperty.model(), returnAlias);
 		}
-		if(field.equals(DipartimentoProperty.model().ID_ENTE.NOME)){
-			return this.toTable(DipartimentoProperty.model().ID_ENTE, returnAlias);
+		if(field.equals(DipartimentoProperty.model().ID_PROTOCOLLO.NOME)){
+			return this.toTable(DipartimentoProperty.model().ID_PROTOCOLLO, returnAlias);
 		}
 
 
@@ -127,8 +127,8 @@ public class DipartimentoPropertyFieldConverter extends AbstractSQLFieldConverte
 		if(model.equals(DipartimentoProperty.model())){
 			return "dipartimenti_props";
 		}
-		if(model.equals(DipartimentoProperty.model().ID_ENTE)){
-			return "enti";
+		if(model.equals(DipartimentoProperty.model().ID_PROTOCOLLO)){
+			return "protocolli";
 		}
 
 

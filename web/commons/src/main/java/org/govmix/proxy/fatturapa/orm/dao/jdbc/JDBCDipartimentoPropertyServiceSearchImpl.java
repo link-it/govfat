@@ -20,39 +20,38 @@
  */
 package org.govmix.proxy.fatturapa.orm.dao.jdbc;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.openspcoop2.utils.sql.ISQLQueryObject;
-import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
+import org.govmix.proxy.fatturapa.orm.DipartimentoProperty;
+import org.govmix.proxy.fatturapa.orm.IdDipartimentoProperty;
+import org.govmix.proxy.fatturapa.orm.IdProtocollo;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.DipartimentoPropertyFieldConverter;
+import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.DipartimentoPropertyFetch;
+import org.openspcoop2.generic_project.beans.CustomField;
+import org.openspcoop2.generic_project.beans.FunctionField;
+import org.openspcoop2.generic_project.beans.IField;
+import org.openspcoop2.generic_project.beans.InUse;
+import org.openspcoop2.generic_project.beans.NonNegativeNumber;
+import org.openspcoop2.generic_project.beans.Union;
+import org.openspcoop2.generic_project.beans.UnionExpression;
+import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithId;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCPaginatedExpression;
+import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
 import org.openspcoop2.generic_project.dao.jdbc.utils.IJDBCFetch;
 import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject;
-import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithId;
-import org.govmix.proxy.fatturapa.orm.IdDipartimentoProperty;
-import org.govmix.proxy.fatturapa.orm.IdEnte;
-import org.openspcoop2.generic_project.utils.UtilsTemplate;
-import org.openspcoop2.generic_project.beans.CustomField;
-import org.openspcoop2.generic_project.beans.InUse;
-import org.openspcoop2.generic_project.beans.IField;
-import org.openspcoop2.generic_project.beans.NonNegativeNumber;
-import org.openspcoop2.generic_project.beans.UnionExpression;
-import org.openspcoop2.generic_project.beans.Union;
-import org.openspcoop2.generic_project.beans.FunctionField;
 import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
-import org.openspcoop2.generic_project.dao.jdbc.JDBCExpression;
-import org.openspcoop2.generic_project.dao.jdbc.JDBCPaginatedExpression;
-import org.openspcoop2.generic_project.dao.jdbc.JDBCServiceManagerProperties;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.DipartimentoPropertyFieldConverter;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.DipartimentoPropertyFetch;
-import org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCServiceManager;
-import org.govmix.proxy.fatturapa.orm.DipartimentoProperty;
+import org.openspcoop2.generic_project.expression.impl.sql.ISQLFieldConverter;
+import org.openspcoop2.generic_project.utils.UtilsTemplate;
+import org.openspcoop2.utils.sql.ISQLQueryObject;
 
 /**     
  * JDBCDipartimentoPropertyServiceSearchImpl
@@ -103,7 +102,7 @@ public class JDBCDipartimentoPropertyServiceSearchImpl implements IJDBCServiceSe
 	public IdDipartimentoProperty convertToId(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, DipartimentoProperty dipartimentoProperty) throws NotImplementedException, ServiceException, Exception{
 	
 		IdDipartimentoProperty idDipartimentoProperty = new IdDipartimentoProperty();
-		idDipartimentoProperty.setIdEnte(dipartimentoProperty.getIdEnte());
+		idDipartimentoProperty.setIdProtocollo(dipartimentoProperty.getIdProtocollo());
 		idDipartimentoProperty.setNome(dipartimentoProperty.getNome());
 	
 		return idDipartimentoProperty;
@@ -445,9 +444,9 @@ public class JDBCDipartimentoPropertyServiceSearchImpl implements IJDBCServiceSe
 			return;
 		}
 		obj.setId(imgSaved.getId());
-		if(obj.getIdEnte()!=null && 
-				imgSaved.getIdEnte()!=null){
-			obj.getIdEnte().setId(imgSaved.getIdEnte().getId());
+		if(obj.getIdProtocollo()!=null && 
+				imgSaved.getIdProtocollo()!=null){
+			obj.getIdProtocollo().setId(imgSaved.getIdProtocollo().getId());
 		}
 
 	}
@@ -484,23 +483,23 @@ public class JDBCDipartimentoPropertyServiceSearchImpl implements IJDBCServiceSe
 		if(idMappingResolutionBehaviour==null ||
 			(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
 		){
-			// Object _dipartimentoProperty_ente (recupero id)
-			ISQLQueryObject sqlQueryObjectGet_dipartimentoProperty_ente_readFkId = sqlQueryObjectGet.newSQLQueryObject();
-			sqlQueryObjectGet_dipartimentoProperty_ente_readFkId.addFromTable(this.getDipartimentoPropertyFieldConverter().toTable(org.govmix.proxy.fatturapa.orm.DipartimentoProperty.model()));
-			sqlQueryObjectGet_dipartimentoProperty_ente_readFkId.addSelectField("id_ente");
-			sqlQueryObjectGet_dipartimentoProperty_ente_readFkId.addWhereCondition("id=?");
-			sqlQueryObjectGet_dipartimentoProperty_ente_readFkId.setANDLogicOperator(true);
-			Long idFK_dipartimentoProperty_ente = (Long) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_dipartimentoProperty_ente_readFkId.createSQLQuery(), jdbcProperties.isShowSql(),Long.class,
+			// Object _dipartimentoProperty_protocollo (recupero id)
+			ISQLQueryObject sqlQueryObjectGet_dipartimentoProperty_protocollo_readFkId = sqlQueryObjectGet.newSQLQueryObject();
+			sqlQueryObjectGet_dipartimentoProperty_protocollo_readFkId.addFromTable(this.getDipartimentoPropertyFieldConverter().toTable(org.govmix.proxy.fatturapa.orm.DipartimentoProperty.model()));
+			sqlQueryObjectGet_dipartimentoProperty_protocollo_readFkId.addSelectField("id_protocollo");
+			sqlQueryObjectGet_dipartimentoProperty_protocollo_readFkId.addWhereCondition("id=?");
+			sqlQueryObjectGet_dipartimentoProperty_protocollo_readFkId.setANDLogicOperator(true);
+			Long idFK_dipartimentoProperty_protocollo = (Long) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_dipartimentoProperty_protocollo_readFkId.createSQLQuery(), jdbcProperties.isShowSql(),Long.class,
 					new JDBCObject(dipartimentoProperty.getId(),Long.class));
 			
-			org.govmix.proxy.fatturapa.orm.IdEnte id_dipartimentoProperty_ente = null;
+			org.govmix.proxy.fatturapa.orm.IdProtocollo id_dipartimentoProperty_protocollo = null;
 			if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
-				id_dipartimentoProperty_ente = ((JDBCEnteServiceSearch)(this.getServiceManager().getEnteServiceSearch())).findId(idFK_dipartimentoProperty_ente, false);
+				id_dipartimentoProperty_protocollo = ((JDBCProtocolloServiceSearch)(this.getServiceManager().getProtocolloServiceSearch())).findId(idFK_dipartimentoProperty_protocollo, false);
 			}else{
-				id_dipartimentoProperty_ente = new org.govmix.proxy.fatturapa.orm.IdEnte();
+				id_dipartimentoProperty_protocollo = new org.govmix.proxy.fatturapa.orm.IdProtocollo();
 			}
-			id_dipartimentoProperty_ente.setId(idFK_dipartimentoProperty_ente);
-			dipartimentoProperty.setIdEnte(id_dipartimentoProperty_ente);
+			id_dipartimentoProperty_protocollo.setId(idFK_dipartimentoProperty_protocollo);
+			dipartimentoProperty.setIdProtocollo(id_dipartimentoProperty_protocollo);
 		}
 
         return dipartimentoProperty;  
@@ -538,10 +537,10 @@ public class JDBCDipartimentoPropertyServiceSearchImpl implements IJDBCServiceSe
 	
 	private void _join(IExpression expression, ISQLQueryObject sqlQueryObject) throws NotImplementedException, ServiceException, Exception{
 	
-		if(expression.inUseModel(DipartimentoProperty.model().ID_ENTE,false)){
+		if(expression.inUseModel(DipartimentoProperty.model().ID_PROTOCOLLO,false)){
 			String tableName1 = this.getDipartimentoPropertyFieldConverter().toAliasTable(DipartimentoProperty.model());
-			String tableName2 = this.getDipartimentoPropertyFieldConverter().toAliasTable(DipartimentoProperty.model().ID_ENTE);
-			sqlQueryObject.addWhereCondition(tableName1+".id_ente="+tableName2+".id");
+			String tableName2 = this.getDipartimentoPropertyFieldConverter().toAliasTable(DipartimentoProperty.model().ID_PROTOCOLLO);
+			sqlQueryObject.addWhereCondition(tableName1+".id_protocollo="+tableName2+".id");
 		}
 	}
 	
@@ -568,10 +567,10 @@ public class JDBCDipartimentoPropertyServiceSearchImpl implements IJDBCServiceSe
 				new CustomField("id", Long.class, "id", converter.toTable(DipartimentoProperty.model()))
 			));
 
-		// DipartimentoProperty.model().ID_ENTE
-		mapTableToPKColumn.put(converter.toTable(DipartimentoProperty.model().ID_ENTE),
+		// DipartimentoProperty.model().ID_PROTOCOLLO
+		mapTableToPKColumn.put(converter.toTable(DipartimentoProperty.model().ID_PROTOCOLLO),
 			utilities.newList(
-				new CustomField("id", Long.class, "id", converter.toTable(DipartimentoProperty.model().ID_ENTE))
+				new CustomField("id", Long.class, "id", converter.toTable(DipartimentoProperty.model().ID_PROTOCOLLO))
 			));
         
         return mapTableToPKColumn;		
@@ -662,11 +661,11 @@ public class JDBCDipartimentoPropertyServiceSearchImpl implements IJDBCServiceSe
 
 		// Object _dipartimentoProperty
 		sqlQueryObjectGet.addFromTable(this.getDipartimentoPropertyFieldConverter().toTable(DipartimentoProperty.model()));
-		sqlQueryObjectGet.addFromTable(this.getDipartimentoPropertyFieldConverter().toTable(DipartimentoProperty.model().ID_ENTE));
-		sqlQueryObjectGet.addSelectField(this.getDipartimentoPropertyFieldConverter().toColumn(DipartimentoProperty.model().ID_ENTE.NOME,true));
+		sqlQueryObjectGet.addFromTable(this.getDipartimentoPropertyFieldConverter().toTable(DipartimentoProperty.model().ID_PROTOCOLLO));
+		sqlQueryObjectGet.addSelectField(this.getDipartimentoPropertyFieldConverter().toColumn(DipartimentoProperty.model().ID_PROTOCOLLO.NOME,true));
 		sqlQueryObjectGet.addSelectField(this.getDipartimentoPropertyFieldConverter().toColumn(DipartimentoProperty.model().NOME,true));
 		sqlQueryObjectGet.setANDLogicOperator(true);
-		sqlQueryObjectGet.addWhereCondition(this.getDipartimentoPropertyFieldConverter().toTable(DipartimentoProperty.model())+".id_ente="+this.getDipartimentoPropertyFieldConverter().toTable(DipartimentoProperty.model().ID_ENTE) + ".id");
+		sqlQueryObjectGet.addWhereCondition(this.getDipartimentoPropertyFieldConverter().toTable(DipartimentoProperty.model())+".id_protocollo="+this.getDipartimentoPropertyFieldConverter().toTable(DipartimentoProperty.model().ID_PROTOCOLLO) + ".id");
 		sqlQueryObjectGet.addWhereCondition(this.getDipartimentoPropertyFieldConverter().toTable(DipartimentoProperty.model())+".id=?");
 
 		// Recupero _dipartimentoProperty
@@ -674,7 +673,7 @@ public class JDBCDipartimentoPropertyServiceSearchImpl implements IJDBCServiceSe
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(tableId,Long.class)
 		};
 		List<Class<?>> listaFieldIdReturnType_dipartimentoProperty = new ArrayList<Class<?>>();
-		listaFieldIdReturnType_dipartimentoProperty.add(DipartimentoProperty.model().ID_ENTE.NOME.getFieldType());
+		listaFieldIdReturnType_dipartimentoProperty.add(DipartimentoProperty.model().ID_PROTOCOLLO.NOME.getFieldType());
 		listaFieldIdReturnType_dipartimentoProperty.add(DipartimentoProperty.model().NOME.getFieldType());
 
 		org.govmix.proxy.fatturapa.orm.IdDipartimentoProperty id_dipartimentoProperty = null;
@@ -688,9 +687,9 @@ public class JDBCDipartimentoPropertyServiceSearchImpl implements IJDBCServiceSe
 		else{
 			id_dipartimentoProperty = new org.govmix.proxy.fatturapa.orm.IdDipartimentoProperty();
 			id_dipartimentoProperty.setNome((String) listaFieldId_dipartimentoProperty.get(1));
-			IdEnte idEnte = new IdEnte();
-			idEnte.setNome((String)listaFieldId_dipartimentoProperty.get(0));
-			id_dipartimentoProperty.setIdEnte(idEnte);
+			IdProtocollo idProtocollo = new IdProtocollo();
+			idProtocollo.setNome((String)listaFieldId_dipartimentoProperty.get(0));
+			id_dipartimentoProperty.setIdProtocollo(idProtocollo);
 		}
 		
 		return id_dipartimentoProperty;
@@ -723,18 +722,18 @@ public class JDBCDipartimentoPropertyServiceSearchImpl implements IJDBCServiceSe
 
 		// Object _dipartimentoProperty
 		sqlQueryObjectGet.addFromTable(this.getDipartimentoPropertyFieldConverter().toTable(DipartimentoProperty.model()));
-		sqlQueryObjectGet.addFromTable(this.getDipartimentoPropertyFieldConverter().toTable(DipartimentoProperty.model().ID_ENTE));
+		sqlQueryObjectGet.addFromTable(this.getDipartimentoPropertyFieldConverter().toTable(DipartimentoProperty.model().ID_PROTOCOLLO));
 		sqlQueryObjectGet.addSelectField(this.getDipartimentoPropertyFieldConverter().toTable(DipartimentoProperty.model())+".id");
 		// Devono essere mappati nella where condition i metodi dell'oggetto id.getXXX
 		sqlQueryObjectGet.setANDLogicOperator(true);
 		sqlQueryObjectGet.setSelectDistinct(true);
-		sqlQueryObjectGet.addWhereCondition(this.getDipartimentoPropertyFieldConverter().toColumn(DipartimentoProperty.model().ID_ENTE.NOME,true)+"=?");
+		sqlQueryObjectGet.addWhereCondition(this.getDipartimentoPropertyFieldConverter().toColumn(DipartimentoProperty.model().ID_PROTOCOLLO.NOME,true)+"=?");
 		sqlQueryObjectGet.addWhereCondition(this.getDipartimentoPropertyFieldConverter().toColumn(DipartimentoProperty.model().NOME,true)+"=?");
-		sqlQueryObjectGet.addWhereCondition(this.getDipartimentoPropertyFieldConverter().toTable(DipartimentoProperty.model())+".id_ente="+this.getDipartimentoPropertyFieldConverter().toTable(DipartimentoProperty.model().ID_ENTE) + ".id");
+		sqlQueryObjectGet.addWhereCondition(this.getDipartimentoPropertyFieldConverter().toTable(DipartimentoProperty.model())+".id_protocollo="+this.getDipartimentoPropertyFieldConverter().toTable(DipartimentoProperty.model().ID_PROTOCOLLO) + ".id");
 
 		// Recupero _dipartimentoProperty
 		org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject [] searchParams_dipartimentoProperty = new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject [] { 
-				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id.getIdEnte().getNome(),DipartimentoProperty.model().ID_ENTE.NOME.getFieldType()),
+				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id.getIdProtocollo().getNome(),DipartimentoProperty.model().ID_PROTOCOLLO.NOME.getFieldType()),
 				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id.getNome(),DipartimentoProperty.model().NOME.getFieldType())
 		};
 		Long id_dipartimentoProperty = null;

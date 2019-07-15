@@ -152,6 +152,13 @@ public class PccPagamentoFieldConverter extends AbstractSQLFieldConverter {
 				return "posizione";
 			}
 		}
+		if(field.equals(PccPagamento.model().ID_FATTURA.FATTURAZIONE_ATTIVA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".fatturazione_attiva";
+			}else{
+				return "fatturazione_attiva";
+			}
+		}
 		if(field.equals(PccPagamento.model().DATA_RICHIESTA)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".data_richiesta";
@@ -213,6 +220,9 @@ public class PccPagamentoFieldConverter extends AbstractSQLFieldConverter {
 			return this.toTable(PccPagamento.model().ID_FATTURA, returnAlias);
 		}
 		if(field.equals(PccPagamento.model().ID_FATTURA.POSIZIONE)){
+			return this.toTable(PccPagamento.model().ID_FATTURA, returnAlias);
+		}
+		if(field.equals(PccPagamento.model().ID_FATTURA.FATTURAZIONE_ATTIVA)){
 			return this.toTable(PccPagamento.model().ID_FATTURA, returnAlias);
 		}
 		if(field.equals(PccPagamento.model().DATA_RICHIESTA)){

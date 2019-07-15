@@ -30,7 +30,7 @@ import org.govmix.proxy.fatturapa.orm.DipartimentoProperty;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdDipartimento;
 import org.govmix.proxy.fatturapa.orm.IdDipartimentoProperty;
-import org.govmix.proxy.fatturapa.orm.IdEnte;
+import org.govmix.proxy.fatturapa.orm.IdRegistro;
 import org.govmix.proxy.fatturapa.orm.PccDipartimentoOperazione;
 import org.govmix.proxy.fatturapa.orm.PccOperazione;
 import org.govmix.proxy.fatturapa.orm.Utente;
@@ -54,6 +54,7 @@ import org.openspcoop2.generic_project.beans.CustomField;
 import org.openspcoop2.generic_project.beans.NonNegativeNumber;
 import org.openspcoop2.generic_project.exception.ExpressionException;
 import org.openspcoop2.generic_project.exception.ExpressionNotImplementedException;
+import org.openspcoop2.generic_project.exception.MultipleResultException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
@@ -72,6 +73,7 @@ public class DipartimentoService extends BaseService<DipartimentoSearchForm> imp
 	private org.govmix.proxy.fatturapa.orm.dao.IDipartimentoService dipartimentoDao = null;
 	private IFatturaElettronicaServiceSearch fatturaSearchDao = null;
 	private IUtenteServiceSearch utenteSearchDao = null;
+	private org.govmix.proxy.fatturapa.orm.dao.IRegistroServiceSearch registroSearchDao = null;
 	private org.govmix.proxy.fatturapa.orm.dao.IDipartimentoPropertyServiceSearch dipartimentoPropertySearchDao = null;
 	private IPccOperazioneServiceSearch pccOperazioniSearchDao = null;
 	private IPccDipartimentoOperazioneServiceSearch pccDipartimentoOperazioniSearchDao  =null;
@@ -85,6 +87,7 @@ public class DipartimentoService extends BaseService<DipartimentoSearchForm> imp
 			this.dipartimentoSearchDao = DAOFactory.getInstance().getServiceManager().getDipartimentoServiceSearch();
 			this.fatturaSearchDao = DAOFactory.getInstance().getServiceManager().getFatturaElettronicaServiceSearch();
 			this.utenteSearchDao = DAOFactory.getInstance().getServiceManager().getUtenteServiceSearch();
+			this.registroSearchDao = DAOFactory.getInstance().getServiceManager().getRegistroServiceSearch();
 			this.dipartimentoPropertySearchDao = DAOFactory.getInstance().getServiceManager().getDipartimentoPropertyServiceSearch();
 			this.pccOperazioniSearchDao = DAOFactory.getInstance().getServiceManager().getPccOperazioneServiceSearch();
 			this.pccDipartimentoOperazioniDao = DAOFactory.getInstance().getServiceManager().getPccDipartimentoOperazioneService();
@@ -277,8 +280,12 @@ public class DipartimentoService extends BaseService<DipartimentoSearchForm> imp
 			Dipartimento d = ((JDBCDipartimentoServiceSearch)this.dipartimentoSearchDao).get(key.longValue());
 			DipartimentoBean dip = new DipartimentoBean();
 			dip.setDTO(d);
-			List<DipartimentoProperty> listaPropertiesEnte = this.getListaPropertiesEnte(d.getEnte());
-			dip.setListaNomiProperties(listaPropertiesEnte);
+			if(d.getRegistro()!=null) {
+				List<DipartimentoProperty> listaPropertiesEnte = this.getListaPropertiesProtocollo(d.getRegistro());
+				dip.setListaNomiProperties(listaPropertiesEnte);
+			} else {
+				dip.setListaNomiProperties(new ArrayList<DipartimentoProperty>());
+			}
 
 			List<PccOperazione> listaOperazioniConsentiteUnitaOrganizzativa = this.getListaOperazioniConsentiteUnitaOrganizzativa();
 			IdDipartimento idDipartimento = new IdDipartimento();
@@ -430,9 +437,12 @@ public class DipartimentoService extends BaseService<DipartimentoSearchForm> imp
 			List<PccDipartimentoOperazione> listaOperazioniAbilitateUnitaOrganizzativa = this.getListaOperazioniAbilitateUnitaOrganizzativa(idDipartimento);
 			dip.setProprietaPCC(listaOperazioniConsentiteUnitaOrganizzativa, listaOperazioniAbilitateUnitaOrganizzativa);
 
-			List<DipartimentoProperty> listaPropertiesEnte = this.getListaPropertiesEnte(d.getEnte());
-			dip.setListaNomiProperties(listaPropertiesEnte);
-
+			if(d.getRegistro()!=null) {
+				List<DipartimentoProperty> listaPropertiesEnte = this.getListaPropertiesProtocollo(d.getRegistro());
+				dip.setListaNomiProperties(listaPropertiesEnte);
+			} else {
+				dip.setListaNomiProperties(new ArrayList<DipartimentoProperty>());
+			}
 			return dip;
 
 		}catch(ServiceException e){
@@ -690,8 +700,12 @@ public class DipartimentoService extends BaseService<DipartimentoSearchForm> imp
 							DipartimentoBean bean = new DipartimentoBean();
 							bean.setDTO(dipartimento);
 
-							List<DipartimentoProperty> listaPropertiesEnte = this.getListaPropertiesEnte(dipartimento.getEnte());
-							bean.setListaNomiProperties(listaPropertiesEnte);
+							if(dipartimento.getRegistro()!=null) {
+								List<DipartimentoProperty> listaPropertiesEnte = this.getListaPropertiesProtocollo(dipartimento.getRegistro());
+								bean.setListaNomiProperties(listaPropertiesEnte);
+							} else {
+								bean.setListaNomiProperties(new ArrayList<DipartimentoProperty>());
+							}
 
 							lst.add(bean);
 						}
@@ -719,9 +733,12 @@ public class DipartimentoService extends BaseService<DipartimentoSearchForm> imp
 								DipartimentoBean bean = new DipartimentoBean();
 								bean.setDTO(dipartimento);
 
-								List<DipartimentoProperty> listaPropertiesEnte = this.getListaPropertiesEnte(dipartimento.getEnte());
-								bean.setListaNomiProperties(listaPropertiesEnte);
-
+								if(dipartimento.getRegistro()!=null) {
+									List<DipartimentoProperty> listaPropertiesEnte = this.getListaPropertiesProtocollo(dipartimento.getRegistro());
+									bean.setListaNomiProperties(listaPropertiesEnte);
+								} else {
+									bean.setListaNomiProperties(new ArrayList<DipartimentoProperty>());
+								}
 								lst.add(bean);
 							}
 						}
@@ -743,6 +760,9 @@ public class DipartimentoService extends BaseService<DipartimentoSearchForm> imp
 		return lst;
 	}
 
+//	private IdProtocollo getProtocollo(Dipartimento dipartimento) {
+//		return dipartimento.getRegistro().getIdProtocollo();
+//	}
 	@Override
 	public DipartimentoProperty findPropertyById(IdDipartimentoProperty idProperty) throws ServiceException {
 		String methodName = "findPropertyById(id)";
@@ -760,27 +780,39 @@ public class DipartimentoService extends BaseService<DipartimentoSearchForm> imp
 	};
 
 	@Override
-	public List<DipartimentoProperty> getListaPropertiesEnte(IdEnte idEnte)
+	public List<DipartimentoProperty> getListaPropertiesProtocollo(IdRegistro idRegistro)
 			throws ServiceException {
 		List<DipartimentoProperty> lst = new ArrayList<DipartimentoProperty>();
 
+		
+		String nomeProtocollo = null;
 		try {
+			if(idRegistro.getIdProtocollo()!= null && idRegistro.getIdProtocollo().getNome()!=null) {
+				nomeProtocollo = idRegistro.getIdProtocollo().getNome();
+			} else {
+				nomeProtocollo = this.registroSearchDao.get(idRegistro).getIdProtocollo().getNome();
+				
+			}
+			
 			IPaginatedExpression pagExpr =  this.dipartimentoPropertySearchDao.newPaginatedExpression();
 			pagExpr.sortOrder(SortOrder.ASC);
 			pagExpr.addOrder(DipartimentoProperty.model().NOME);
-			if(idEnte != null && idEnte.getNome() != null)
-				pagExpr.equals(DipartimentoProperty.model().ID_ENTE.NOME, idEnte.getNome());
+			pagExpr.equals(DipartimentoProperty.model().ID_PROTOCOLLO.NOME, nomeProtocollo);
 
 			lst = this.dipartimentoPropertySearchDao.findAll(pagExpr);
 
 		} catch (ServiceException e) {
-			DipartimentoService.log.error("Si e' verificato un errore durante il caricamento dei dipartimenti l'ente ["+idEnte.getNome()+"]:" +e.getMessage(), e);
+			DipartimentoService.log.error("Si e' verificato un errore durante il caricamento dei dipartimenti per il protocollo ["+nomeProtocollo+"]:" +e.getMessage(), e);
 		} catch (NotImplementedException e) {
-			DipartimentoService.log.error("Si e' verificato un errore durante il caricamento dei dipartimenti l'ente ["+idEnte.getNome()+"]:" +e.getMessage(), e);
+			DipartimentoService.log.error("Si e' verificato un errore durante il caricamento dei dipartimenti per il protocollo ["+nomeProtocollo+"]:" +e.getMessage(), e);
 		} catch (ExpressionNotImplementedException e) {
-			DipartimentoService.log.error("Si e' verificato un errore durante il caricamento dei dipartimenti l'ente ["+idEnte.getNome()+"]:" +e.getMessage(), e);
+			DipartimentoService.log.error("Si e' verificato un errore durante il caricamento dei dipartimenti per il protocollo ["+nomeProtocollo+"]:" +e.getMessage(), e);
 		} catch (ExpressionException e) {
-			DipartimentoService.log.error("Si e' verificato un errore durante il caricamento dei dipartimenti l'ente ["+idEnte.getNome()+"]:" +e.getMessage(), e);
+			DipartimentoService.log.error("Si e' verificato un errore durante il caricamento dei dipartimenti per il protocollo ["+nomeProtocollo+"]:" +e.getMessage(), e);
+		} catch (NotFoundException e) {
+			DipartimentoService.log.error("Si e' verificato un errore durante il caricamento dei dipartimenti per il protocollo ["+nomeProtocollo+"]:" +e.getMessage(), e);
+		} catch (MultipleResultException e) {
+			DipartimentoService.log.error("Si e' verificato un errore durante il caricamento dei dipartimenti per il protocollo ["+nomeProtocollo+"]:" +e.getMessage(), e);
 		}
 
 		return lst;
