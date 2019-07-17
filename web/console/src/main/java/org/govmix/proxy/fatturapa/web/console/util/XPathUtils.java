@@ -4,6 +4,8 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
+
 public class XPathUtils {
 
 	private static XPathFactory xPathfactory;
@@ -20,12 +22,18 @@ public class XPathUtils {
 		init();
 		XPath xpath = xPathfactory.newXPath();
 		try {
-//			log.debug("Compilazione dell'espressione ["+input+"]...");
+			LoggerManager.getConsoleLogger().debug("Compilazione dell'espressione ["+input+"]...");
 			xpath.compile(input);
-//			log.debug("Compilazione dell'espressione ["+input+"] completata con successo");
+			LoggerManager.getConsoleLogger().debug("Compilazione dell'espressione ["+input+"] completata con successo");
 		} catch(XPathExpressionException e) {
-//			log.error("Errore durante la valutazione dell'xPath:" + e.getMessage(), e);
-			return e.getMessage();
+			String msg = e.getMessage();
+			Throwable t = e.getCause();
+			while(msg == null && t != null) {
+				msg = t.getMessage();
+				t = t.getCause();
+			}
+			LoggerManager.getConsoleLogger().error("Errore durante la valutazione dell'xPath:" + msg, e);
+			return msg;
 		}
 		return null;
 	}

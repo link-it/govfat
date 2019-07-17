@@ -54,7 +54,7 @@ public class EnteForm extends BaseForm implements Form {
 		
 		WebGenericProjectFactory factory = this.getWebGenericProjectFactory();
 		
-		this.nome = factory.getInputFieldFactory().createText("nome","ente.form.nome",null,false);
+		this.nome = factory.getInputFieldFactory().createText("nome","ente.form.nome",null,true);
 		this.descrizione = factory.getInputFieldFactory().createText("descrizione","ente.form.descrizione",null,false);
 		this.idPccAmministrazione = factory.getInputFieldFactory().createText("idPccAmministrazione","ente.form.idPccAmministrazione",null,false);
 		this.cfAuth = factory.getInputFieldFactory().createText("cfAuth","ente.form.cfAuth",null,false);
@@ -156,7 +156,7 @@ public class EnteForm extends BaseForm implements Form {
 		if(StringUtils.isNotBlank(this.nodoCodicePagamento.getValue())) {
 			msg = XPathUtils.validaXpath(this.nodoCodicePagamento.getValue());
 			if(msg != null)
-				return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("ente.form.nodoCodicePagamentoErrato");
+				return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("ente.form.nodoCodicePagamentoErrato", msg);
 		}
 		
 		msg = this.checkLunghezzaField(this.prefissoCodicePagamento,255);
