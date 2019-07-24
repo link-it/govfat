@@ -4,6 +4,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Connection;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class ProtocollazioneNotifiche implements IWorkFlow<TracciaSDI> {
 	private TracciaSdIFilter newFilter() {
 		TracciaSdIFilter filter = this.tracciaSdiBD.newFilter();
 		filter.setDataProssimaProtocollazioneMax(this.limitDate);
-		filter.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
+		filter.setStatoProtocollazioneLst(Arrays.asList(StatoProtocollazioneType.NON_PROTOCOLLATA,StatoProtocollazioneType.IN_RICONSEGNA));
 		filter.setDaProtocollare(true);
 		filter.setOffset(0);
 		filter.setLimit(this.limit);
