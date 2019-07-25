@@ -109,6 +109,7 @@ public abstract class AbstractFatturaPassivaUnitaDocumentariaBuilder extends Bas
 		case TD04:return "NOTA DI CREDITO";
 		case TD05:return "NOTA DI DEBITO";
 		case TD06:return "PARCELLA";
+		case TD20:return "AUTOFATTURA";
 		case TDXX:return "SCONOSCIUTO";
 		default:return null;
 		}

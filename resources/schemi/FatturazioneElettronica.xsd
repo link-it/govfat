@@ -171,6 +171,11 @@
 					<xsd:documentation>Parcella</xsd:documentation>
 				</xsd:annotation>
 			</xsd:enumeration>
+			<xsd:enumeration value="TD20">
+				<xsd:annotation>
+					<xsd:documentation>Autofattura</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
 			<xsd:enumeration value="TDXX">
 				<xsd:annotation>
 					<xsd:documentation>Sconosciuto</xsd:documentation>

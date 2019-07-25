@@ -50,6 +50,8 @@ public enum TipoDocumentoType implements IEnumeration , Serializable , Cloneable
 	TD05 ("TD05"),
 	@javax.xml.bind.annotation.XmlEnumValue("TD06")
 	TD06 ("TD06"),
+	@javax.xml.bind.annotation.XmlEnumValue("TD20")
+	TD20 ("TD20"),
 	@javax.xml.bind.annotation.XmlEnumValue("TDXX")
 	TDXX ("TDXX");
 	

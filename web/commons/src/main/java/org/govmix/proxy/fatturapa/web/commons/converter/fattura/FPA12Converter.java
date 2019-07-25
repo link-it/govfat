@@ -3,11 +3,15 @@ package org.govmix.proxy.fatturapa.web.commons.converter.fattura;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.XPathUtils;
+import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.openspcoop2.generic_project.exception.DeserializerException;
+import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.ValidationException;
 
 import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.AllegatiType;
@@ -57,7 +61,19 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 				break;
 			}
 		} else {
-			tipoDoc = TipoDocumentoType.TDXX;
+			Logger log = LoggerManager.getBatchInserimentoFatturaLogger();
+			try {
+				String tipoDocumento = XPathUtils.getTipoDocumento(this.fatturaAsByte, log); //per TD20
+				log.info("Trovato tipoDocumento ["+tipoDocumento+"]");
+				tipoDoc = TipoDocumentoType.toEnumConstant(tipoDocumento, true);
+				log.info("Trovato tipoDocumentoType ["+tipoDoc+"]");
+			} catch (NotFoundException e) {
+				tipoDoc = TipoDocumentoType.TDXX;
+				log.error("TipoDocumentoType non trovato: " + e.getMessage(), e);
+			} catch (Exception e) {
+				tipoDoc = TipoDocumentoType.TDXX;
+				log.error("Errore durante la lettura del TipoDocumento: " + e.getMessage(), e);
+			}
 		}
 		
 		fatturaElettronica.setTipoDocumento(tipoDoc);
