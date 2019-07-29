@@ -43,6 +43,7 @@ import org.openspcoop2.generic_project.expression.IExpression;
 import org.openspcoop2.generic_project.expression.IPaginatedExpression;
 import org.openspcoop2.generic_project.expression.LikeMode;
 import org.openspcoop2.generic_project.expression.SortOrder;
+import org.openspcoop2.generic_project.web.form.CostantiForm;
 import org.openspcoop2.generic_project.web.service.BaseService;
 
 public class EnteService extends BaseService<EnteSearchForm> implements IEnteService {
@@ -201,16 +202,41 @@ public class EnteService extends BaseService<EnteSearchForm> implements IEnteSer
 
 	private IExpression getExpressionFromSearch(EnteSearchForm search) throws Exception{
 		IExpression expr = null;
+		IExpression nomeExpr = null;
+		IExpression descExpr = null;
+		IExpression nomeOrDescExpr = null;
 
 		try{
 			expr = this.enteSearchDao.newExpression();
 			if(search != null){
-				if(StringUtils.isNotBlank(search.getNome().getValue())){
-					expr.equals(Ente.model().NOME, search.getNome().getValue());
+				if(search.getNome().getValue() != null && !StringUtils.isEmpty(search.getNome().getValue()) && !CostantiForm.NON_SELEZIONATO.equals(search.getNome().getValue())){
+					nomeExpr = this.enteSearchDao.newExpression();
+					nomeExpr.ilike(Ente.model().NOME, search.getNome().getValue(), LikeMode.ANYWHERE);
+					nomeOrDescExpr = this.enteSearchDao.newExpression();
+				}
+				if(search.getDescrizione().getValue() != null && !StringUtils.isEmpty(search.getDescrizione().getValue()) && !CostantiForm.NON_SELEZIONATO.equals(search.getDescrizione().getValue())){
+					descExpr = this.enteSearchDao.newExpression();
+					descExpr.ilike(Ente.model().DESCRIZIONE, search.getDescrizione().getValue(), LikeMode.ANYWHERE);
+					nomeOrDescExpr = this.enteSearchDao.newExpression();
 				}
 				
-				if(StringUtils.isNotBlank(search.getDescrizione().getValue())){
-					expr.equals(Ente.model().DESCRIZIONE, search.getDescrizione().getValue());
+				if(nomeOrDescExpr != null){
+					// Ho impostato la descrizione 
+					if(descExpr != null){
+						// se ho impostato il codice vado in  or
+						if(nomeExpr != null){
+							nomeOrDescExpr.or(descExpr, nomeExpr);
+						}else{
+							nomeOrDescExpr.or(descExpr);
+						}
+
+					}else {
+						// non ho impostato la descrizione 
+						if(nomeExpr != null)
+							nomeOrDescExpr.or(nomeExpr);
+					}
+
+					expr.and(nomeOrDescExpr);
 				}
 			}
 		}catch(Exception e){
