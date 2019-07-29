@@ -30,6 +30,7 @@ import org.openspcoop2.generic_project.web.form.CostantiForm;
 import org.openspcoop2.generic_project.web.form.Form;
 import org.openspcoop2.generic_project.web.impl.jsf1.form.BaseForm;
 import org.openspcoop2.generic_project.web.input.Text;
+import org.openspcoop2.generic_project.web.input.TextArea;
 
 public class EnteForm extends BaseForm implements Form {
 
@@ -40,7 +41,7 @@ public class EnteForm extends BaseForm implements Form {
 	private Text cfAuth = null;
 	private Text enteVersatore = null;
 	private Text strutturaVersatore = null;
-	private Text nodoCodicePagamento = null;
+	private TextArea nodoCodicePagamento = null;
 	private Text prefissoCodicePagamento = null;
 	
 	private EnteMBean mbean = null;
@@ -60,7 +61,7 @@ public class EnteForm extends BaseForm implements Form {
 		this.cfAuth = factory.getInputFieldFactory().createText("cfAuth","ente.form.cfAuth",null,false);
 		this.enteVersatore = factory.getInputFieldFactory().createText("enteVersatore","ente.form.enteVersatore",null,false);
 		this.strutturaVersatore = factory.getInputFieldFactory().createText("strutturaVersatore","ente.form.strutturaVersatore",null,false);
-		this.nodoCodicePagamento = factory.getInputFieldFactory().createText("nodoCodicePagamento","ente.form.nodoCodicePagamento",null,false);
+		this.nodoCodicePagamento = factory.getInputFieldFactory().createTextArea("nodoCodicePagamento","ente.form.nodoCodicePagamento",null,false);
 		this.prefissoCodicePagamento = factory.getInputFieldFactory().createText("prefissoCodicePagamento","ente.form.prefissoCodicePagamento",null,false);
 		
 		this.setField(this.nome);
@@ -69,8 +70,8 @@ public class EnteForm extends BaseForm implements Form {
 		this.setField(this.cfAuth);
 		this.setField(this.enteVersatore);
 		this.setField(this.strutturaVersatore);
-		this.setField(this.nodoCodicePagamento);
 		this.setField(this.prefissoCodicePagamento);
+		this.setField(this.nodoCodicePagamento);
 		
 	}
 	@Override
@@ -243,11 +244,11 @@ public class EnteForm extends BaseForm implements Form {
 		this.strutturaVersatore = strutturaVersatore;
 	}
 
-	public Text getNodoCodicePagamento() {
+	public TextArea getNodoCodicePagamento() {
 		return nodoCodicePagamento;
 	}
 
-	public void setNodoCodicePagamento(Text nodoCodicePagamento) {
+	public void setNodoCodicePagamento(TextArea nodoCodicePagamento) {
 		this.nodoCodicePagamento = nodoCodicePagamento;
 	}
 
