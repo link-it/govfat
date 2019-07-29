@@ -67,9 +67,9 @@ public class EnteBean extends BaseBean<Ente, Long> implements IBean<Ente, Long>{
 		this.setField(this.cfAuth);
 		this.setField(this.enteVersatore);
 		this.setField(this.strutturaVersatore);
-		this.setField(this.nodoCodicePagamento);
 		this.setField(this.prefissoCodicePagamento);
-
+		this.setField(this.nodoCodicePagamento);
+		
 		this.fieldsDatiGenerali = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiGenerali",2);
 		this.fieldsDatiGenerali.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
 		this.fieldsDatiGenerali.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE);
@@ -95,8 +95,8 @@ public class EnteBean extends BaseBean<Ente, Long> implements IBean<Ente, Long>{
 		this.fieldsDatiPagoPA.setStyleClass(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_TRASMISSIONE_TABLE); 
 		this.fieldsDatiPagoPA.setColumnClasses(org.govmix.proxy.fatturapa.web.console.costanti.Costanti.CSS_CLASS_DATI_DETTAGLIO_DUE_COLONNE);
 
-		this.fieldsDatiPagoPA.addField(this.nodoCodicePagamento);
 		this.fieldsDatiPagoPA.addField(this.prefissoCodicePagamento);
+		this.fieldsDatiPagoPA.addField(this.nodoCodicePagamento);
 		
 	}
 
