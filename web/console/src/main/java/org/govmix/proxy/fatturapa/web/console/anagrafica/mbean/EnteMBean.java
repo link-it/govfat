@@ -21,7 +21,6 @@
 package org.govmix.proxy.fatturapa.web.console.anagrafica.mbean;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.event.ActionEvent;
@@ -34,7 +33,6 @@ import org.govmix.proxy.fatturapa.web.console.anagrafica.datamodel.EnteDM;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.form.EnteForm;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.form.EnteSearchForm;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.iservice.IEnteService;
-import org.govmix.proxy.fatturapa.web.console.bean.FatturaElettronicaBean;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
@@ -186,9 +184,9 @@ public class EnteMBean extends DataModelListView<EnteBean, Long, EnteSearchForm,
 				//				EnteBean oldEnte = ((IEnteService) this.service).findEnteByNome(this.form.getNome().getValue());
 
 				if(exists){
-					throw new InviaException(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("ente.form.erroreValidazione") +
-							": " +org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("ente.form.dipartimentoEsistente",this.form.getNome().getValue()));
-					//					MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("ente.form.erroreValidazione") +
+					throw new InviaException(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromResourceBundle("ente.form.enteEsistente", this.form.getNome().getValue()));
+					//	org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("ente.form.erroreValidazione") +
+					// MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("ente.form.erroreValidazione") +
 					//							": " +Utils.getInstance().getMessageWithParamsFromResourceBundle("ente.form.dipartimentoEsistente",this.form.getNome().getValue()));
 					//					return null;
 				}
@@ -211,6 +209,8 @@ public class EnteMBean extends DataModelListView<EnteBean, Long, EnteSearchForm,
 			//			Utils.getLoginBean().setEnte(newEnte); 
 
 			return this.getNavigationManager().getInviaOutcome();//"invia";
+		}catch(InviaException e){
+			throw e;
 		}catch(Exception e){
 			this.log.error("Si e' verificato un errore durante il salvataggio dell'ente: " + e.getMessage(), e);
 			throw new InviaException(org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageFromResourceBundle("ente.form.erroreGenerico"));
