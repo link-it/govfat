@@ -37,6 +37,7 @@
       <xs:element name="SistemaDiMigrazione" type="TokenNVMax100Type" maxOccurs="1" minOccurs="0"/>
       <xs:element name="ForzaAccettazione" type="xs:boolean" maxOccurs="1" minOccurs="0"/>
       <xs:element name="ForzaConservazione" type="xs:boolean" maxOccurs="1" minOccurs="0"/>
+      <xs:element name="ForzaAggiuntaDocumento" type="xs:boolean" maxOccurs="1" minOccurs="0"/>
       <xs:element name="SimulaSalvataggioDatiInDB" type="xs:boolean" maxOccurs="1" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
