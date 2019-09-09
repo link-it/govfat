@@ -86,6 +86,9 @@ public class ProtocollazioneNotifiche implements IWorkFlow<TracciaSDI> {
 			httpConn.setRequestProperty(CostantiProtocollazione.NOME_FILE_HEADER_PARAM, ""+tracciaSDI.getNomeFile());
 			httpConn.setRequestProperty(CostantiProtocollazione.DESTINATARIO_HEADER_PARAM, tracciaSDI.getCodiceDipartimento());
 			httpConn.setRequestProperty(CostantiProtocollazione.TIPO_RICEVUTA_HEADER_PARAM, tracciaSDI.getTipoComunicazione().toString());
+			if(tracciaSDI.getDettaglioProtocollazione()!=null) {
+				httpConn.setRequestProperty(CostantiProtocollazione.DETTAGLIO_CONSEGNA_HEADER_PARAM, tracciaSDI.getDettaglioProtocollazione());
+			}
 			
 			httpConn.setRequestProperty("Content-Type", tracciaSDI.getContentType());
 			
