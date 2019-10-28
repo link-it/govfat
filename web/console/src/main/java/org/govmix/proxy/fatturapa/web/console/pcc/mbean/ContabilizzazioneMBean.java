@@ -582,8 +582,8 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 		//lista.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoDebitoType.LIQ.getValue(), "pccStatoDebito."+StatoDebitoType.LIQ.getValue())));
 		lista.add(new SelectItem(
 				new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoDebitoType.NOLIQ.getValue(), "pccStatoDebito."+StatoDebitoType.NOLIQ.getValue())));
-		lista.add(new SelectItem(
-				new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoDebitoType.SOSP.getValue(), "pccStatoDebito."+StatoDebitoType.SOSP.getValue())));
+		//lista.add(new SelectItem(
+		//		new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(StatoDebitoType.SOSP.getValue(), "pccStatoDebito."+StatoDebitoType.SOSP.getValue())));
 
 
 		return lista;
