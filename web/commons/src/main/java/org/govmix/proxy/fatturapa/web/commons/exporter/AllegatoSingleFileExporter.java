@@ -25,8 +25,10 @@ import java.io.OutputStream;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.log4j.Logger;
@@ -81,22 +83,36 @@ public class AllegatoSingleFileExporter extends	AbstractSingleFileExporter<Alleg
 	public void exportAsZip(List<AllegatoFattura> list, ZipOutputStream zip,
 			String rootDir) throws ExportException {
 		Map<String, Integer> allegatiName = new HashMap<String, Integer>();
+		Set<String> allegatiNameSet = new HashSet<String>();
+
+		for (AllegatoFattura object: list) {
+			String ext = this.getRawExtension(object);
+			String nome = this.getRawName(object);
+			String nomeCompleto = nome+ "." + ext;
+			allegatiNameSet.add(nomeCompleto);
+		}
+
 		for (AllegatoFattura object: list) {
 			try {
-				String ext = this.getRawExtension(object);
-				String nome = this.getRawName(object);
-				String nomeCompleto = nome+ "." + ext;
-				Integer indexFinale = null;
-				if(!allegatiName.containsKey(nomeCompleto)) {
-					allegatiName.put(nomeCompleto, 0);
-				} else {
-					Integer index = allegatiName.remove(nomeCompleto);
-					allegatiName.put(nomeCompleto, index + 1);
-					indexFinale = index + 1;
-				}
+					String ext = this.getRawExtension(object);
+					String nome = this.getRawName(object);
+					
+					String nomeCompleto = nome+ "." + ext;
+					int indexFinale = 0;
+					while(allegatiName.containsKey(nomeCompleto)) {
+						Integer index = allegatiName.get(nomeCompleto);
+						indexFinale = index + 1;
+						nomeCompleto = nome + "-" + indexFinale + "." + ext;
+						while(allegatiNameSet.contains(nomeCompleto)) {
+							indexFinale++;
+							nomeCompleto= nome + "-" + indexFinale + "." + ext;
+						}
+					}
 
-				if(indexFinale != null)
-					object.setNomeAttachment(nome + "-" + indexFinale);
+					allegatiName.put(nomeCompleto, indexFinale);
+
+					if(indexFinale > 0)
+						object.setNomeAttachment(nomeCompleto);
 				this.exportAsZip(object, zip, rootDir);
 			} catch(Exception e) {
 				throw new ExportException(e);
