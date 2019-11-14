@@ -110,9 +110,10 @@ public class AllegatoSingleFileExporter extends	AbstractSingleFileExporter<Alleg
 					}
 
 					allegatiName.put(nomeCompleto, indexFinale);
-
-					if(indexFinale > 0)
+					if(indexFinale > 0) {
 						object.setNomeAttachment(nomeCompleto);
+						allegatiNameSet.add(nomeCompleto);
+					}
 				this.exportAsZip(object, zip, rootDir);
 			} catch(Exception e) {
 				throw new ExportException(e);
