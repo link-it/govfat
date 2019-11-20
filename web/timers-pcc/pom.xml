@@ -126,6 +126,12 @@
 			<version>${project.version}</version>
 		</dependency>
 
+                <dependency>
+                        <groupId>net.sourceforge</groupId>
+                        <artifactId>spnego</artifactId>
+                        <version>r7</version>
+                </dependency>
+
 	</dependencies>
 	<build>
 		<filters>
