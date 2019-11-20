@@ -131,6 +131,20 @@ public class UtenteFieldConverter extends AbstractSQLFieldConverter {
 				return "codice";
 			}
 		}
+		if(field.equals(Utente.model().UTENTE_DIPARTIMENTO.DATA_ULTIMA_MODIFICA)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".data_ultima_modifica";
+			}else{
+				return "data_ultima_modifica";
+			}
+		}
+		if(field.equals(Utente.model().UTENTE_DIPARTIMENTO.ID_RESPONSABILE.USERNAME)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".username";
+			}else{
+				return "username";
+			}
+		}
 
 
 		return super.toColumn(field,returnAlias,appendTablePrefix);
@@ -171,6 +185,12 @@ public class UtenteFieldConverter extends AbstractSQLFieldConverter {
 		if(field.equals(Utente.model().UTENTE_DIPARTIMENTO.ID_DIPARTIMENTO.CODICE)){
 			return this.toTable(Utente.model().UTENTE_DIPARTIMENTO.ID_DIPARTIMENTO, returnAlias);
 		}
+		if(field.equals(Utente.model().UTENTE_DIPARTIMENTO.DATA_ULTIMA_MODIFICA)){
+			return this.toTable(Utente.model().UTENTE_DIPARTIMENTO, returnAlias);
+		}
+		if(field.equals(Utente.model().UTENTE_DIPARTIMENTO.ID_RESPONSABILE.USERNAME)){
+			return this.toTable(Utente.model().UTENTE_DIPARTIMENTO.ID_RESPONSABILE, returnAlias);
+		}
 
 
 		return super.toTable(field,returnAlias);
@@ -192,6 +212,9 @@ public class UtenteFieldConverter extends AbstractSQLFieldConverter {
 		}
 		if(model.equals(Utente.model().UTENTE_DIPARTIMENTO.ID_DIPARTIMENTO)){
 			return "dipartimenti";
+		}
+		if(model.equals(Utente.model().UTENTE_DIPARTIMENTO.ID_RESPONSABILE)){
+			return "utenti";
 		}
 
 

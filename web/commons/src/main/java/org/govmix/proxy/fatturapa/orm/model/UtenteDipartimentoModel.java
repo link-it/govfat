@@ -43,6 +43,8 @@ public class UtenteDipartimentoModel extends AbstractModel<UtenteDipartimento> {
 		super();
 	
 		this.ID_DIPARTIMENTO = new org.govmix.proxy.fatturapa.orm.model.IdDipartimentoModel(new Field("idDipartimento",org.govmix.proxy.fatturapa.orm.IdDipartimento.class,"UtenteDipartimento",UtenteDipartimento.class));
+		this.DATA_ULTIMA_MODIFICA = new Field("dataUltimaModifica",java.util.Date.class,"UtenteDipartimento",UtenteDipartimento.class);
+		this.ID_RESPONSABILE = new org.govmix.proxy.fatturapa.orm.model.IdUtenteModel(new Field("idResponsabile",org.govmix.proxy.fatturapa.orm.IdUtente.class,"UtenteDipartimento",UtenteDipartimento.class));
 	
 	}
 	
@@ -51,12 +53,18 @@ public class UtenteDipartimentoModel extends AbstractModel<UtenteDipartimento> {
 		super(father);
 	
 		this.ID_DIPARTIMENTO = new org.govmix.proxy.fatturapa.orm.model.IdDipartimentoModel(new ComplexField(father,"idDipartimento",org.govmix.proxy.fatturapa.orm.IdDipartimento.class,"UtenteDipartimento",UtenteDipartimento.class));
+		this.DATA_ULTIMA_MODIFICA = new ComplexField(father,"dataUltimaModifica",java.util.Date.class,"UtenteDipartimento",UtenteDipartimento.class);
+		this.ID_RESPONSABILE = new org.govmix.proxy.fatturapa.orm.model.IdUtenteModel(new ComplexField(father,"idResponsabile",org.govmix.proxy.fatturapa.orm.IdUtente.class,"UtenteDipartimento",UtenteDipartimento.class));
 	
 	}
 	
 	
 
 	public org.govmix.proxy.fatturapa.orm.model.IdDipartimentoModel ID_DIPARTIMENTO = null;
+	 
+	public IField DATA_ULTIMA_MODIFICA = null;
+	 
+	public org.govmix.proxy.fatturapa.orm.model.IdUtenteModel ID_RESPONSABILE = null;
 	 
 
 	@Override

@@ -1702,6 +1702,18 @@
 					</xsd:appinfo>
 				</xsd:annotation>
 			</xsd:element>
+			<xsd:element name="dataUltimaModifica" type="xsd:dateTime"/>
+			<xsd:element name="idResponsabile" type="id-utente">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+							<linkit:sql-id-mapping object-name="Utente"
+								object-type="Utente" relationship="reversed" />
+							<linkit:sql-column-mapping name="id_responsabile" />
+						</linkit:generator>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
 	

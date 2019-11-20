@@ -37,6 +37,8 @@ import java.io.Serializable;
  * &lt;complexType name="UtenteDipartimento">
  * 		&lt;sequence>
  * 			&lt;element name="idDipartimento" type="{http://www.govmix.org/proxy/fatturapa/orm}id-dipartimento" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="dataUltimaModifica" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="idResponsabile" type="{http://www.govmix.org/proxy/fatturapa/orm}id-utente" minOccurs="1" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -51,7 +53,9 @@ import java.io.Serializable;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "UtenteDipartimento", 
   propOrder = {
-  	"idDipartimento"
+  	"idDipartimento",
+  	"dataUltimaModifica",
+  	"idResponsabile"
   }
 )
 
@@ -83,6 +87,22 @@ public class UtenteDipartimento extends org.openspcoop2.utils.beans.BaseBean imp
     this.idDipartimento = idDipartimento;
   }
 
+  public java.util.Date getDataUltimaModifica() {
+    return this.dataUltimaModifica;
+  }
+
+  public void setDataUltimaModifica(java.util.Date dataUltimaModifica) {
+    this.dataUltimaModifica = dataUltimaModifica;
+  }
+
+  public IdUtente getIdResponsabile() {
+    return this.idResponsabile;
+  }
+
+  public void setIdResponsabile(IdUtente idResponsabile) {
+    this.idResponsabile = idResponsabile;
+  }
+
   private static final long serialVersionUID = 1L;
 
   @XmlTransient
@@ -92,5 +112,13 @@ public class UtenteDipartimento extends org.openspcoop2.utils.beans.BaseBean imp
 
   @XmlElement(name="idDipartimento",required=true,nillable=false)
   protected IdDipartimento idDipartimento;
+
+  @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.DateTime2String.class)
+  @javax.xml.bind.annotation.XmlSchemaType(name="dateTime")
+  @XmlElement(name="dataUltimaModifica",required=true,nillable=false,type=java.lang.String.class)
+  protected java.util.Date dataUltimaModifica;
+
+  @XmlElement(name="idResponsabile",required=true,nillable=false)
+  protected IdUtente idResponsabile;
 
 }

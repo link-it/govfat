@@ -39,7 +39,7 @@
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
     <value name="codice" field="codice" usage="required"/>
   </mapping>
-  <mapping name="idUtente" class="org.govmix.proxy.fatturapa.orm.IdUtente" abstract="false">
+  <mapping name="idResponsabile" class="org.govmix.proxy.fatturapa.orm.IdUtente" abstract="false">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
     <value name="username" field="username" usage="required"/>
   </mapping>
@@ -197,7 +197,7 @@
     <value name="statoProtocollazione" field="statoProtocollazione" usage="required" enum-value-method="toString"/>
     <value name="dominio" field="dominio" usage="required" enum-value-method="toString"/>
     <value name="sottodominio" field="sottodominio" usage="optional" enum-value-method="toString"/>
-    <value name="pagoPA" field="pagoPA" usage="required"/>
+    <value name="pagoPA" field="pagoPA" usage="optional"/>
     <value name="dataProtocollazione" field="dataProtocollazione" usage="optional"/>
     <value name="protocollo" field="protocollo" usage="optional"/>
     <structure name="idSIP" field="idSIP" usage="optional" map-as="_IdSip_Type"/>
@@ -247,7 +247,7 @@
     <value name="statoProtocollazione" field="statoProtocollazione" usage="required" enum-value-method="toString"/>
     <value name="dominio" field="dominio" usage="required" enum-value-method="toString"/>
     <value name="sottodominio" field="sottodominio" usage="optional" enum-value-method="toString"/>
-    <value name="pagoPA" field="pagoPA" usage="required"/>
+    <value name="pagoPA" field="pagoPA" usage="optional"/>
     <value name="dataProtocollazione" field="dataProtocollazione" usage="optional"/>
     <value name="protocollo" field="protocollo" usage="optional"/>
     <structure name="idSIP" field="idSIP" usage="optional" map-as="_IdSip_Type"/>
@@ -475,6 +475,8 @@
   <mapping name="UtenteDipartimento" class="org.govmix.proxy.fatturapa.orm.UtenteDipartimento">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
     <structure name="idDipartimento" field="idDipartimento" usage="required" map-as="_IdDipartimento_Type"/>
+    <value name="dataUltimaModifica" field="dataUltimaModifica" usage="required"/>
+    <structure name="idResponsabile" field="idResponsabile" usage="required" map-as="_IdUtente_Type"/>
   </mapping>
   <mapping name="PccOperazione" class="org.govmix.proxy.fatturapa.orm.PccOperazione">
     <namespace uri="http://www.govmix.org/proxy/fatturapa/orm" default="elements"/>
