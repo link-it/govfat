@@ -21,6 +21,8 @@
 package org.govmix.proxy.fatturapa.web.console.anagrafica.service;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +32,7 @@ import org.govmix.proxy.fatturapa.orm.IdUtente;
 import org.govmix.proxy.fatturapa.orm.PccOperazione;
 import org.govmix.proxy.fatturapa.orm.PccUtenteOperazione;
 import org.govmix.proxy.fatturapa.orm.Utente;
+import org.govmix.proxy.fatturapa.orm.UtenteDipartimento;
 import org.govmix.proxy.fatturapa.orm.dao.IPccOperazioneServiceSearch;
 import org.govmix.proxy.fatturapa.orm.dao.IPccUtenteOperazioneService;
 import org.govmix.proxy.fatturapa.orm.dao.IPccUtenteOperazioneServiceSearch;
@@ -40,6 +43,7 @@ import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.bean.UtenteBean;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.form.UtenteSearchForm;
 import org.govmix.proxy.fatturapa.web.console.anagrafica.iservice.IUtenteService;
+import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.beans.NonNegativeNumber;
 import org.openspcoop2.generic_project.exception.ExpressionException;
 import org.openspcoop2.generic_project.exception.ExpressionNotImplementedException;
@@ -146,15 +150,46 @@ public class UtenteService extends BaseService<UtenteSearchForm> implements IUte
 		String methodName = "store()";
 
 		try{
-			Utente utente = obj.getDTO();
+			Utente utenteNew = obj.getDTO();
 
+			Date dataUltimaModifica = new Date();
+			IdUtente idResponsabile = new IdUtente();
+			idResponsabile.setUsername(Utils.getLoggedUtente().getUsername());
+			
 			IdUtente idUtente = new IdUtente();
-			idUtente.setUsername(utente.getUsername());
+			idUtente.setUsername(utenteNew.getUsername());
 
-			if(this.utenteDao.exists(idUtente))
-				this.utenteDao.update(idUtente, utente);
-			else
-				this.utenteDao.create(utente);
+			if(this.utenteDao.exists(idUtente)) {
+				Utente utenteOriginale = this.utenteDao.get(idUtente);
+
+				Map<String,UtenteDipartimento> map = new HashMap<String, UtenteDipartimento>();
+				
+				for(UtenteDipartimento dip: utenteOriginale.getUtenteDipartimentoList()) {
+					map.put(dip.getIdDipartimento().getCodice(), dip);
+				}
+				
+				List<UtenteDipartimento> lst = new ArrayList<UtenteDipartimento>();
+				
+				for(UtenteDipartimento dip: utenteNew.getUtenteDipartimentoList()) {
+					if(map.containsKey(dip.getIdDipartimento().getCodice())) {
+						lst.add(map.get(dip.getIdDipartimento().getCodice()));
+					} else {
+						dip.setIdResponsabile(idResponsabile);
+						dip.setDataUltimaModifica(dataUltimaModifica);
+						lst.add(dip);
+					}
+				}
+				
+				utenteNew.setUtenteDipartimentoList(lst);
+				this.utenteDao.update(idUtente, utenteNew);
+			}
+			else {
+				this.utenteDao.create(utenteNew);
+				for(UtenteDipartimento dip: utenteNew.getUtenteDipartimentoList()) {
+					dip.setIdResponsabile(idResponsabile);
+					dip.setDataUltimaModifica(dataUltimaModifica);
+				}
+			}
 		}catch(ServiceException e){
 			UtenteService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 			throw e;

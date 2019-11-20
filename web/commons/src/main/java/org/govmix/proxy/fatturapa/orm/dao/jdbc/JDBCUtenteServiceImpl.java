@@ -110,17 +110,38 @@ public class JDBCUtenteServiceImpl extends JDBCUtenteServiceSearchImpl
 				}
 			}
 
+			// Object _utenteDipartimento_utente
+			Long id_utenteDipartimento_utente = null;
+			org.govmix.proxy.fatturapa.orm.IdUtente idLogic_utenteDipartimento_utente = null;
+			idLogic_utenteDipartimento_utente = utente.getUtenteDipartimentoList().get(i).getIdResponsabile();
+			if(idLogic_utenteDipartimento_utente!=null){
+				if(idMappingResolutionBehaviour==null ||
+					(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour))){
+					id_utenteDipartimento_utente = ((JDBCUtenteServiceSearch)(this.getServiceManager().getUtenteServiceSearch())).findTableId(idLogic_utenteDipartimento_utente, false);
+				}
+				else if(org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour)){
+					id_utenteDipartimento_utente = idLogic_utenteDipartimento_utente.getId();
+					if(id_utenteDipartimento_utente==null || id_utenteDipartimento_utente<=0){
+						throw new Exception("Logic id not contains table id");
+					}
+				}
+			}
+
 
 			// Object utente.getUtenteDipartimentoList().get(i)
 			ISQLQueryObject sqlQueryObjectInsert_utenteDipartimento = sqlQueryObjectInsert.newSQLQueryObject();
 			sqlQueryObjectInsert_utenteDipartimento.addInsertTable(this.getUtenteFieldConverter().toTable(Utente.model().UTENTE_DIPARTIMENTO));
+			sqlQueryObjectInsert_utenteDipartimento.addInsertField(this.getUtenteFieldConverter().toColumn(Utente.model().UTENTE_DIPARTIMENTO.DATA_ULTIMA_MODIFICA,false),"?");
 			sqlQueryObjectInsert_utenteDipartimento.addInsertField("id_dipartimento","?");
+			sqlQueryObjectInsert_utenteDipartimento.addInsertField("id_responsabile","?");
 			sqlQueryObjectInsert_utenteDipartimento.addInsertField("id_utente","?");
 
 			// Insert utente.getUtenteDipartimentoList().get(i)
 			org.openspcoop2.utils.jdbc.IKeyGeneratorObject keyGenerator_utenteDipartimento = this.getUtenteFetch().getKeyGeneratorObject(Utente.model().UTENTE_DIPARTIMENTO);
 			long id_utenteDipartimento = jdbcUtilities.insertAndReturnGeneratedKey(sqlQueryObjectInsert_utenteDipartimento, keyGenerator_utenteDipartimento, jdbcProperties.isShowSql(),
+				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(utente.getUtenteDipartimentoList().get(i).getDataUltimaModifica(),Utente.model().UTENTE_DIPARTIMENTO.DATA_ULTIMA_MODIFICA.getFieldType()),
 				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id_utenteDipartimento_dipartimento,Long.class),
+				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id_utenteDipartimento_utente,Long.class),
 				new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(new Long(id),Long.class)
 			);
 			utente.getUtenteDipartimentoList().get(i).setId(id_utenteDipartimento);
@@ -220,17 +241,38 @@ public class JDBCUtenteServiceImpl extends JDBCUtenteServiceSearchImpl
 					}
 				}
 
+				// Object _utente_utenteDipartimento_utente
+				Long id_utente_utenteDipartimento_utente = null;
+				org.govmix.proxy.fatturapa.orm.IdUtente idLogic_utente_utenteDipartimento_utente = null;
+				idLogic_utente_utenteDipartimento_utente = utente_utenteDipartimento.getIdResponsabile();
+				if(idLogic_utente_utenteDipartimento_utente!=null){
+					if(idMappingResolutionBehaviour==null ||
+						(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour))){
+						id_utente_utenteDipartimento_utente = ((JDBCUtenteServiceSearch)(this.getServiceManager().getUtenteServiceSearch())).findTableId(idLogic_utente_utenteDipartimento_utente, false);
+					}
+					else if(org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour)){
+						id_utente_utenteDipartimento_utente = idLogic_utente_utenteDipartimento_utente.getId();
+						if(id_utente_utenteDipartimento_utente==null || id_utente_utenteDipartimento_utente<=0){
+							throw new Exception("Logic id not contains table id");
+						}
+					}
+				}
+
 
 				// Object utente_utenteDipartimento
 				ISQLQueryObject sqlQueryObjectInsert_utente_utenteDipartimento = sqlQueryObjectInsert.newSQLQueryObject();
 				sqlQueryObjectInsert_utente_utenteDipartimento.addInsertTable(this.getUtenteFieldConverter().toTable(Utente.model().UTENTE_DIPARTIMENTO));
+				sqlQueryObjectInsert_utente_utenteDipartimento.addInsertField(this.getUtenteFieldConverter().toColumn(Utente.model().UTENTE_DIPARTIMENTO.DATA_ULTIMA_MODIFICA,false),"?");
 				sqlQueryObjectInsert_utente_utenteDipartimento.addInsertField("id_dipartimento","?");
+				sqlQueryObjectInsert_utente_utenteDipartimento.addInsertField("id_responsabile","?");
 				sqlQueryObjectInsert_utente_utenteDipartimento.addInsertField("id_utente","?");
 
 				// Insert utente_utenteDipartimento
 				org.openspcoop2.utils.jdbc.IKeyGeneratorObject keyGenerator_utente_utenteDipartimento = this.getUtenteFetch().getKeyGeneratorObject(Utente.model().UTENTE_DIPARTIMENTO);
 				long id_utente_utenteDipartimento = jdbcUtilities.insertAndReturnGeneratedKey(sqlQueryObjectInsert_utente_utenteDipartimento, keyGenerator_utente_utenteDipartimento, jdbcProperties.isShowSql(),
+					new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(utente_utenteDipartimento.getDataUltimaModifica(),Utente.model().UTENTE_DIPARTIMENTO.DATA_ULTIMA_MODIFICA.getFieldType()),
 					new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id_utente_utenteDipartimento_dipartimento,Long.class),
+					new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(id_utente_utenteDipartimento_utente,Long.class),
 					new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(new Long(id),Long.class)
 				);
 				utente_utenteDipartimento.setId(id_utente_utenteDipartimento);
@@ -255,6 +297,23 @@ public class JDBCUtenteServiceImpl extends JDBCUtenteServiceSearchImpl
 					}
 				}
 
+				// Object _utente_utenteDipartimento_utente
+				Long id_utente_utenteDipartimento_utente = null;
+				org.govmix.proxy.fatturapa.orm.IdUtente idLogic_utente_utenteDipartimento_utente = null;
+				idLogic_utente_utenteDipartimento_utente = utente_utenteDipartimento.getIdResponsabile();
+				if(idLogic_utente_utenteDipartimento_utente!=null){
+					if(idMappingResolutionBehaviour==null ||
+						(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour))){
+						id_utente_utenteDipartimento_utente = ((JDBCUtenteServiceSearch)(this.getServiceManager().getUtenteServiceSearch())).findTableId(idLogic_utente_utenteDipartimento_utente, false);
+					}
+					else if(org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour)){
+						id_utente_utenteDipartimento_utente = idLogic_utente_utenteDipartimento_utente.getId();
+						if(id_utente_utenteDipartimento_utente==null || id_utente_utenteDipartimento_utente<=0){
+							throw new Exception("Logic id not contains table id");
+						}
+					}
+				}
+
 
 				// Object utente_utenteDipartimento
 				ISQLQueryObject sqlQueryObjectUpdate_utente_utenteDipartimento = sqlQueryObjectUpdate.newSQLQueryObject();
@@ -262,11 +321,19 @@ public class JDBCUtenteServiceImpl extends JDBCUtenteServiceSearchImpl
 				sqlQueryObjectUpdate_utente_utenteDipartimento.addUpdateTable(this.getUtenteFieldConverter().toTable(Utente.model().UTENTE_DIPARTIMENTO));
 				boolean isUpdate_utente_utenteDipartimento = true;
 				java.util.List<JDBCObject> lstObjects_utente_utenteDipartimento = new java.util.ArrayList<JDBCObject>();
+				sqlQueryObjectUpdate_utente_utenteDipartimento.addUpdateField(this.getUtenteFieldConverter().toColumn(Utente.model().UTENTE_DIPARTIMENTO.DATA_ULTIMA_MODIFICA,false), "?");
+				lstObjects_utente_utenteDipartimento.add(new JDBCObject(utente_utenteDipartimento.getDataUltimaModifica(), Utente.model().UTENTE_DIPARTIMENTO.DATA_ULTIMA_MODIFICA.getFieldType()));
 				if(setIdMappingResolutionBehaviour){
 					sqlQueryObjectUpdate_utente_utenteDipartimento.addUpdateField("id_dipartimento","?");
 				}
 				if(setIdMappingResolutionBehaviour){
+					sqlQueryObjectUpdate_utente_utenteDipartimento.addUpdateField("id_responsabile","?");
+				}
+				if(setIdMappingResolutionBehaviour){
 					lstObjects_utente_utenteDipartimento.add(new JDBCObject(id_utente_utenteDipartimento_dipartimento, Long.class));
+				}
+				if(setIdMappingResolutionBehaviour){
+					lstObjects_utente_utenteDipartimento.add(new JDBCObject(id_utente_utenteDipartimento_utente, Long.class));
 				}
 				sqlQueryObjectUpdate_utente_utenteDipartimento.addWhereCondition("id=?");
 				ids_utente_utenteDipartimento_da_non_eliminare.add(utente_utenteDipartimento.getId());

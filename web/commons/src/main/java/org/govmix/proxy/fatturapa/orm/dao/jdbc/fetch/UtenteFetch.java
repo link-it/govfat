@@ -78,6 +78,8 @@ public class UtenteFetch extends AbstractJDBCFetch {
 				UtenteDipartimento object = new UtenteDipartimento();
 				setParameter(object, "setId", Long.class,
 					jdbcParameterUtilities.readParameter(rs, "id", Long.class));
+				setParameter(object, "setDataUltimaModifica", Utente.model().UTENTE_DIPARTIMENTO.DATA_ULTIMA_MODIFICA.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "data_ultima_modifica", Utente.model().UTENTE_DIPARTIMENTO.DATA_ULTIMA_MODIFICA.getFieldType()));
 				return object;
 			}
 			
@@ -122,6 +124,8 @@ public class UtenteFetch extends AbstractJDBCFetch {
 				UtenteDipartimento object = new UtenteDipartimento();
 				setParameter(object, "setId", Long.class,
 					this.getObjectFromMap(map,"UtenteDipartimento.id"));
+				setParameter(object, "setDataUltimaModifica", Utente.model().UTENTE_DIPARTIMENTO.DATA_ULTIMA_MODIFICA.getFieldType(),
+					this.getObjectFromMap(map,"UtenteDipartimento.dataUltimaModifica"));
 				return object;
 			}
 			

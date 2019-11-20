@@ -599,13 +599,16 @@ CREATE SEQUENCE seq_utenti_dipartimenti start 1 increment 1 maxvalue 92233720368
 
 CREATE TABLE utenti_dipartimenti
 (
+	data_ultima_modifica TIMESTAMP NOT NULL,
 	-- fk/pk columns
 	id BIGINT DEFAULT nextval('seq_utenti_dipartimenti') NOT NULL,
 	id_utente BIGINT NOT NULL,
 	id_dipartimento BIGINT NOT NULL,
+	id_responsabile BIGINT NOT NULL,
 	-- fk/pk keys constraints
 	CONSTRAINT fk_utenti_dipartimenti_1 FOREIGN KEY (id_utente) REFERENCES utenti(id),
 	CONSTRAINT fk_utenti_dipartimenti_2 FOREIGN KEY (id_dipartimento) REFERENCES dipartimenti(id),
+	CONSTRAINT fk_utenti_dipartimenti_3 FOREIGN KEY (id_responsabile) REFERENCES utenti(id),
 	CONSTRAINT pk_utenti_dipartimenti PRIMARY KEY (id)
 );
 

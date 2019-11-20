@@ -22,6 +22,7 @@ package org.govmix.proxy.fatturapa.orm.dao.jdbc;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -186,15 +187,23 @@ public class JDBCUtenteServiceSearchImpl implements IJDBCUtenteServiceSearch {
                                         exprDipartimenti.equals(Utente.model().USERNAME, utente.getUsername());
                                         ISQLQueryObject sqlQueryObjectDip = sqlQueryObject.newSQLQueryObject();
                                         sqlQueryObjectDip.setANDLogicOperator(true);
+                                        List<Map<String, Object>> returnMapDipartimenti = this.select(jdbcProperties, log, connection, sqlQueryObjectDip, exprDipartimenti, Utente.model().UTENTE_DIPARTIMENTO.ID_DIPARTIMENTO.CODICE, Utente.model().UTENTE_DIPARTIMENTO.ID_RESPONSABILE.USERNAME, Utente.model().UTENTE_DIPARTIMENTO.DATA_ULTIMA_MODIFICA);
 
-                                        List<Object> returnMapDipartimenti = this.select(jdbcProperties, log, connection, sqlQueryObjectDip, exprDipartimenti, Utente.model().UTENTE_DIPARTIMENTO.ID_DIPARTIMENTO.CODICE);
+                                        for(Map<String, Object> codiceObj: returnMapDipartimenti) {
+	                                            String codiceDipartimento = (String) codiceObj.get(Utente.model().UTENTE_DIPARTIMENTO.ID_DIPARTIMENTO.CODICE.getFieldName());
+	                                            String username = (String) codiceObj.get(Utente.model().UTENTE_DIPARTIMENTO.ID_RESPONSABILE.USERNAME.getFieldName());
+	                                            Date dataUltimaModifica = (Date) codiceObj.get(Utente.model().UTENTE_DIPARTIMENTO.DATA_ULTIMA_MODIFICA.getFieldName());
 
-                                        for(Object codiceObj: returnMapDipartimenti) {
-                                                String codice = (String) codiceObj;
-                                                UtenteDipartimento utenteDipartimento = new UtenteDipartimento();
+	                                            UtenteDipartimento utenteDipartimento = new UtenteDipartimento();
+                                                utenteDipartimento.setDataUltimaModifica(dataUltimaModifica);
+                                                
                                                 IdDipartimento idDipartimento = new IdDipartimento();
-                                                idDipartimento.setCodice(codice);
+                                                idDipartimento.setCodice(codiceDipartimento);
                                                 utenteDipartimento.setIdDipartimento(idDipartimento);
+                                                IdUtente idResponsabile = new IdUtente();
+                                                
+                                                idResponsabile.setUsername(username);
+												utenteDipartimento.setIdResponsabile(idResponsabile);
                                         }
                                 } catch(NotFoundException e) {}
                         }
@@ -504,6 +513,10 @@ public class JDBCUtenteServiceSearchImpl implements IJDBCUtenteServiceSearch {
 							itemAlreadySaved_.getIdDipartimento()!=null){
 						itemObj_.getIdDipartimento().setId(itemAlreadySaved_.getIdDipartimento().getId());
 					}
+					if(itemObj_.getIdResponsabile()!=null && 
+							itemAlreadySaved_.getIdResponsabile()!=null){
+						itemObj_.getIdResponsabile().setId(itemAlreadySaved_.getIdResponsabile().getId());
+					}
 				}
 			}
 		}
@@ -552,6 +565,7 @@ public class JDBCUtenteServiceSearchImpl implements IJDBCUtenteServiceSearch {
 		sqlQueryObjectGet_utente_utenteDipartimento.setANDLogicOperator(true);
 		sqlQueryObjectGet_utente_utenteDipartimento.addFromTable(this.getUtenteFieldConverter().toTable(Utente.model().UTENTE_DIPARTIMENTO));
 		sqlQueryObjectGet_utente_utenteDipartimento.addSelectField("id");
+		sqlQueryObjectGet_utente_utenteDipartimento.addSelectField(this.getUtenteFieldConverter().toColumn(Utente.model().UTENTE_DIPARTIMENTO.DATA_ULTIMA_MODIFICA,true));
 		sqlQueryObjectGet_utente_utenteDipartimento.addWhereCondition("id_utente=?");
 
 		// Get utente_utenteDipartimento
@@ -583,6 +597,28 @@ public class JDBCUtenteServiceSearchImpl implements IJDBCUtenteServiceSearch {
 					}
 					id_utente_utenteDipartimento_dipartimento.setId(idFK_utente_utenteDipartimento_dipartimento);
 					utente_utenteDipartimento.setIdDipartimento(id_utente_utenteDipartimento_dipartimento);
+				}
+
+				if(idMappingResolutionBehaviour==null ||
+					(org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour) || org.openspcoop2.generic_project.beans.IDMappingBehaviour.USE_TABLE_ID.equals(idMappingResolutionBehaviour))
+				){
+					// Object _utente_utenteDipartimento_utente (recupero id)
+					ISQLQueryObject sqlQueryObjectGet_utente_utenteDipartimento_utente_readFkId = sqlQueryObjectGet.newSQLQueryObject();
+					sqlQueryObjectGet_utente_utenteDipartimento_utente_readFkId.addFromTable(this.getUtenteFieldConverter().toTable(org.govmix.proxy.fatturapa.orm.Utente.model().UTENTE_DIPARTIMENTO));
+					sqlQueryObjectGet_utente_utenteDipartimento_utente_readFkId.addSelectField("id_responsabile");
+					sqlQueryObjectGet_utente_utenteDipartimento_utente_readFkId.addWhereCondition("id=?");
+					sqlQueryObjectGet_utente_utenteDipartimento_utente_readFkId.setANDLogicOperator(true);
+					Long idFK_utente_utenteDipartimento_utente = (Long) jdbcUtilities.executeQuerySingleResult(sqlQueryObjectGet_utente_utenteDipartimento_utente_readFkId.createSQLQuery(), jdbcProperties.isShowSql(),Long.class,
+							new JDBCObject(utente_utenteDipartimento.getId(),Long.class));
+					
+					org.govmix.proxy.fatturapa.orm.IdUtente id_utente_utenteDipartimento_utente = null;
+					if(idMappingResolutionBehaviour==null || org.openspcoop2.generic_project.beans.IDMappingBehaviour.ENABLED.equals(idMappingResolutionBehaviour)){
+						id_utente_utenteDipartimento_utente = ((JDBCUtenteServiceSearch)(this.getServiceManager().getUtenteServiceSearch())).findId(idFK_utente_utenteDipartimento_utente, false);
+					}else{
+						id_utente_utenteDipartimento_utente = new org.govmix.proxy.fatturapa.orm.IdUtente();
+					}
+					id_utente_utenteDipartimento_utente.setId(idFK_utente_utenteDipartimento_utente);
+					utente_utenteDipartimento.setIdResponsabile(id_utente_utenteDipartimento_utente);
 				}
 
 				utente.addUtenteDipartimento(utente_utenteDipartimento);
