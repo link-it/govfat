@@ -44,6 +44,7 @@
 		class="org.govmix.proxy.fatturapa.web.console.service.FatturaElettronicaAttivaService"
 		scope="request">
 		<constructor-arg index="0" value="${org.govmix.proxy.fatturapa.fattureAttive.modalitaPushRichiesta}"/>
+		<constructor-arg index="1" value="${org.govmix.proxy.fatturapa.fattureAttive.firmaLottoEsteroNecessaria}"/>
 		<property name="form" ref="fatturaElettronicaAttivaSearchForm" />
 	</bean>
 	

@@ -358,8 +358,8 @@ public class LottoFattureAnalyzer {
 		this.lotto = lotto;
 	}
 	
-	public boolean isFirmaNecessaria() {
-		return this.lotto.getDominio().toString().equals(DominioType.PA.toString()) || (this.getLotto().getSottodominio() != null && this.getLotto().getSottodominio().toString().equals(SottodominioType.ESTERO.toString()));
+	public boolean isFirmaNecessaria(boolean isFirmaLottoEsteroNeccessaria) {
+		return this.lotto.getDominio().toString().equals(DominioType.PA.toString()) || ((this.getLotto().getSottodominio() != null && this.getLotto().getSottodominio().toString().equals(SottodominioType.ESTERO.toString())) && isFirmaLottoEsteroNeccessaria);
 	}
 
 	public String getPagoPA(byte[] xml, String xPathExpression, String prefix, String nomeFile) throws InserimentoLottiException {

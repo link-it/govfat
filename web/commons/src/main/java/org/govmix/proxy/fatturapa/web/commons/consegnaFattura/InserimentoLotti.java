@@ -27,10 +27,12 @@ public class InserimentoLotti {
 	private Logger log;
 	private Map<String, Dipartimento> dipartimenti;
 	private boolean modalitaPushRichiesta;
+	private boolean firmaLottoEsteroNecessaria;
 	
-	public InserimentoLotti(Logger log, boolean modalitaPushRichiesta) throws Exception {
+	public InserimentoLotti(Logger log, boolean modalitaPushRichiesta, boolean firmaLottoEsteroNecessaria) throws Exception {
 		this.log = log;
 		this.modalitaPushRichiesta = modalitaPushRichiesta;
+		this.firmaLottoEsteroNecessaria = firmaLottoEsteroNecessaria;
 	}
 	
 	public InserimentoLottoResponse inserisciLotto(List<InserimentoLottoRequest> requestList) {
@@ -62,7 +64,7 @@ public class InserimentoLotti {
 						throw new InserimentoLottiException(analizer.getCodiceErroreFirmato(), request.getNomeFile(), request.getDipartimento());
 					}
 				} else {
-					if(!dipartimento.getFirmaAutomatica() && analizer.isFirmaNecessaria()){
+					if(!dipartimento.getFirmaAutomatica() && analizer.isFirmaNecessaria(firmaLottoEsteroNecessaria)){
 						throw new InserimentoLottiException(analizer.getCodiceErroreNonFirmato(), request.getNomeFile(), request.getDipartimento());
 					}
 				}
@@ -71,7 +73,7 @@ public class InserimentoLotti {
 				if(this.modalitaPushRichiesta && dipartimento.getModalitaPush()) {
 					lotto.setStatoElaborazioneInUscita(StatoElaborazioneType.PRESA_IN_CARICO);
 				} else {
-					if(!analizer.isFirmato()  && analizer.isFirmaNecessaria()) {
+					if(!analizer.isFirmato()  && analizer.isFirmaNecessaria(firmaLottoEsteroNecessaria)) {
 						throw new InserimentoLottiException(analizer.getCodiceErroreNonFirmato(), request.getNomeFile(), request.getDipartimento());
 					}
 					
@@ -164,7 +166,7 @@ public class InserimentoLotti {
 					throw new InserimentoLottiException(analizer.getCodiceErroreFirmato(), request.getNomeFile(), request.getDipartimento());
 				}
 			} else {
-				if(!this.getDipartimento(request.getNomeFile(), request.getDipartimento()).getFirmaAutomatica() && analizer.isFirmaNecessaria()){
+				if(!this.getDipartimento(request.getNomeFile(), request.getDipartimento()).getFirmaAutomatica() && analizer.isFirmaNecessaria(firmaLottoEsteroNecessaria)){
 					throw new InserimentoLottiException(analizer.getCodiceErroreNonFirmato(), request.getNomeFile(), request.getDipartimento());
 				}
 			}

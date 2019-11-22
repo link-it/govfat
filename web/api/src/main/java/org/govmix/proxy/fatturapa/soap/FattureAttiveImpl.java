@@ -62,10 +62,13 @@ public class FattureAttiveImpl implements FattureAttive {
 	private List<StatoElaborazioneType> fatturaInviataSdi;
 	private Logger log;
 	private boolean modalitaPushRichiesta;
+	private boolean firmaLottoEsteroNecessaria;
+	
 
-	public FattureAttiveImpl(boolean modalitaPushRichiesta) throws Exception {
+	public FattureAttiveImpl(boolean modalitaPushRichiesta, boolean firmaLottoEsteroNecessaria) throws Exception {
 		this.log = LoggerManager.getEndpointFattureAttiveLogger();
 		this.modalitaPushRichiesta = modalitaPushRichiesta;
+		this.firmaLottoEsteroNecessaria = firmaLottoEsteroNecessaria;
 		this.fatturaInviataSdi = new ArrayList<StatoElaborazioneType>();
 		
 		this.fatturaInviataSdi.add(StatoElaborazioneType.RICEVUTA_DALLO_SDI);
@@ -86,7 +89,7 @@ public class FattureAttiveImpl implements FattureAttive {
 		this.log.info("Invoke inviaFattura...");
 
 		try {
-			InserimentoLotti inserimento = new InserimentoLotti(this.log, this.modalitaPushRichiesta);
+			InserimentoLotti inserimento = new InserimentoLotti(this.log, this.modalitaPushRichiesta, this.firmaLottoEsteroNecessaria);
 
 			inserimento.setDipartimenti(new DipartimentoBD(this.log).getListaDipartimentiUtente(getPrincipal()));
 			List<InserimentoLottoRequest> requestList = new ArrayList<InserimentoLottoRequest>();
