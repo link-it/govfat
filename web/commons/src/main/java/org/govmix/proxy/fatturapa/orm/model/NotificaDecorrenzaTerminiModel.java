@@ -42,7 +42,7 @@ public class NotificaDecorrenzaTerminiModel extends AbstractModel<NotificaDecorr
 	
 		super();
 	
-		this.IDENTIFICATIVO_SDI = new Field("identificativoSdi",java.lang.Integer.class,"NotificaDecorrenzaTermini",NotificaDecorrenzaTermini.class);
+		this.IDENTIFICATIVO_SDI = new Field("identificativoSdi",java.lang.String.class,"NotificaDecorrenzaTermini",NotificaDecorrenzaTermini.class);
 		this.NOME_FILE = new Field("nomeFile",java.lang.String.class,"NotificaDecorrenzaTermini",NotificaDecorrenzaTermini.class);
 		this.DESCRIZIONE = new Field("descrizione",java.lang.String.class,"NotificaDecorrenzaTermini",NotificaDecorrenzaTermini.class);
 		this.MESSAGE_ID = new Field("messageId",java.lang.String.class,"NotificaDecorrenzaTermini",NotificaDecorrenzaTermini.class);
@@ -56,7 +56,7 @@ public class NotificaDecorrenzaTerminiModel extends AbstractModel<NotificaDecorr
 	
 		super(father);
 	
-		this.IDENTIFICATIVO_SDI = new ComplexField(father,"identificativoSdi",java.lang.Integer.class,"NotificaDecorrenzaTermini",NotificaDecorrenzaTermini.class);
+		this.IDENTIFICATIVO_SDI = new ComplexField(father,"identificativoSdi",java.lang.String.class,"NotificaDecorrenzaTermini",NotificaDecorrenzaTermini.class);
 		this.NOME_FILE = new ComplexField(father,"nomeFile",java.lang.String.class,"NotificaDecorrenzaTermini",NotificaDecorrenzaTermini.class);
 		this.DESCRIZIONE = new ComplexField(father,"descrizione",java.lang.String.class,"NotificaDecorrenzaTermini",NotificaDecorrenzaTermini.class);
 		this.MESSAGE_ID = new ComplexField(father,"messageId",java.lang.String.class,"NotificaDecorrenzaTermini",NotificaDecorrenzaTermini.class);

@@ -43,7 +43,7 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 		super();
 	
 		this.FORMATO_TRASMISSIONE = new Field("formatoTrasmissione",java.lang.String.class,"LottoFatture",LottoFatture.class);
-		this.IDENTIFICATIVO_SDI = new Field("identificativoSdi",java.lang.Integer.class,"LottoFatture",LottoFatture.class);
+		this.IDENTIFICATIVO_SDI = new Field("identificativoSdi",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.NOME_FILE = new Field("nomeFile",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.FORMATO_ARCHIVIO_INVIO_FATTURA = new Field("formatoArchivioInvioFattura",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.MESSAGE_ID = new Field("messageId",java.lang.String.class,"LottoFatture",LottoFatture.class);
@@ -96,7 +96,7 @@ public class LottoFattureModel extends AbstractModel<LottoFatture> {
 		super(father);
 	
 		this.FORMATO_TRASMISSIONE = new ComplexField(father,"formatoTrasmissione",java.lang.String.class,"LottoFatture",LottoFatture.class);
-		this.IDENTIFICATIVO_SDI = new ComplexField(father,"identificativoSdi",java.lang.Integer.class,"LottoFatture",LottoFatture.class);
+		this.IDENTIFICATIVO_SDI = new ComplexField(father,"identificativoSdi",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.NOME_FILE = new ComplexField(father,"nomeFile",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.FORMATO_ARCHIVIO_INVIO_FATTURA = new ComplexField(father,"formatoArchivioInvioFattura",java.lang.String.class,"LottoFatture",LottoFatture.class);
 		this.MESSAGE_ID = new ComplexField(father,"messageId",java.lang.String.class,"LottoFatture",LottoFatture.class);

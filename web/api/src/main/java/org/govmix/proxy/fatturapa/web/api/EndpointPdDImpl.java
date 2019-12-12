@@ -107,9 +107,9 @@ public class EndpointPdDImpl implements EndpointPdD {
 			return Response.status(500).build();
 		}
 
-		Integer identificativoSDI = null;
+		String identificativoSDI = null;
 		try{
-			identificativoSDI = Integer.parseInt(identificativoSDIString);
+			identificativoSDI = identificativoSDIString;
 		} catch(NumberFormatException e) {
 			this.log.error("Impossibile inserire il lotto, formato identificativo SdI ["+identificativoSDIString+"] errato:"+e.getMessage());
 			return Response.status(500).build();
@@ -229,7 +229,7 @@ public class EndpointPdDImpl implements EndpointPdD {
 	}
 	
 	@Override
-	public Response riceviComunicazioniSdI(Integer X_SDI_IdentificativoSDI, String azione, String X_SDI_NomeFile, String contentType, HttpHeaders headers, InputStream comunicazioneStream) {
+	public Response riceviComunicazioniSdI(String X_SDI_IdentificativoSDI, String azione, String X_SDI_NomeFile, String contentType, HttpHeaders headers, InputStream comunicazioneStream) {
 		this.log.info("Invoke riceviComunicazioniSdi");
 
 		Connection connection = null;

@@ -137,7 +137,7 @@ public class FatturaBD extends BaseBD {
 		return this.findAll(filter).get(0);
 	}
 
-	public FatturaElettronica findByIdSdiNumero(Integer identificativoSdi, String numero) throws Exception {
+	public FatturaElettronica findByIdSdiNumero(String identificativoSdi, String numero) throws Exception {
 		try {
 
 			FatturaFilter filter = this.newFilter();
@@ -580,7 +580,7 @@ public class FatturaBD extends BaseBD {
 		return cpValues;
 	}
 
-	public void assegnaIdentificativoSDIAInteroLotto(IdLotto idLotto, Integer identificativoSDI) throws Exception {
+	public void assegnaIdentificativoSDIAInteroLotto(IdLotto idLotto, String identificativoSDI) throws Exception {
 		try {
 
 			StringBuffer update = new StringBuffer();

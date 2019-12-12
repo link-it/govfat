@@ -40,7 +40,7 @@ import java.util.List;
  * <pre>
  * &lt;complexType name="TracciaSDI">
  * 		&lt;sequence>
- * 			&lt;element name="identificativoSdi" type="{http://www.govmix.org/proxy/fatturapa/orm}integer" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="identificativoSdi" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="posizione" type="{http://www.w3.org/2001/XMLSchema}positiveInteger" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="tipoComunicazione" type="{http://www.govmix.org/proxy/fatturapa/orm}TipoComunicazioneType" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="nomeFile" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
@@ -69,7 +69,7 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "TracciaSDI", 
   propOrder = {
-  	"_decimalWrapper_identificativoSdi",
+  	"identificativoSdi",
   	"posizione",
   	"tipoComunicazione",
   	"nomeFile",
@@ -107,18 +107,12 @@ public class TracciaSDI extends org.openspcoop2.utils.beans.BaseBean implements 
 		this.id=new Long(-1);
   }
 
-  public java.lang.Integer getIdentificativoSdi() {
-    if(this._decimalWrapper_identificativoSdi!=null){
-		return (java.lang.Integer) this._decimalWrapper_identificativoSdi.getObject(java.lang.Integer.class);
-	}else{
-		return this.identificativoSdi;
-	}
+  public java.lang.String getIdentificativoSdi() {
+    return this.identificativoSdi;
   }
 
-  public void setIdentificativoSdi(java.lang.Integer identificativoSdi) {
-    if(identificativoSdi!=null){
-		this._decimalWrapper_identificativoSdi = new org.openspcoop2.utils.jaxb.DecimalWrapper(1,12,identificativoSdi);
-	}
+  public void setIdentificativoSdi(java.lang.String identificativoSdi) {
+    this.identificativoSdi = identificativoSdi;
   }
 
   public java.lang.Integer getPosizione() {
@@ -292,13 +286,9 @@ public class TracciaSDI extends org.openspcoop2.utils.beans.BaseBean implements 
   }
 
 
-  @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.Decimal2String.class)
-  @javax.xml.bind.annotation.XmlSchemaType(name="integer")
+  @javax.xml.bind.annotation.XmlSchemaType(name="string")
   @XmlElement(name="identificativoSdi",required=true,nillable=false)
-  org.openspcoop2.utils.jaxb.DecimalWrapper _decimalWrapper_identificativoSdi = null;
-
-  @XmlTransient
-  protected java.lang.Integer identificativoSdi;
+  protected java.lang.String identificativoSdi;
 
   @javax.xml.bind.annotation.XmlSchemaType(name="positiveInteger")
   @XmlElement(name="posizione",required=false,nillable=false)

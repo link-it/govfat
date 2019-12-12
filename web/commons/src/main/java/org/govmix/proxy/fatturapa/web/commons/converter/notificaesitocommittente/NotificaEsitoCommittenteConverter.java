@@ -72,7 +72,7 @@ public class NotificaEsitoCommittenteConverter {
 		NotificaEsitoCommittente notificaEsitoCommittente = new NotificaEsitoCommittente();
 		
 		IdFattura idFattura = this.fatturaElettronicaBD.newIdFattura();
-		idFattura.setIdentificativoSdi(this.esito.getIdentificativoSdi().intValue());
+		idFattura.setIdentificativoSdi(this.esito.getIdentificativoSdi().toString());
 		idFattura.setPosizione(this.esito.getPosizione().intValue());
 		notificaEsitoCommittente.setIdFattura(idFattura);
 		

@@ -184,7 +184,7 @@ public class NotificaECMBean extends BaseFormMBean<NotificaECBean, Long, Notific
 			NotificaEC notificaECToSend = new NotificaEC();
 			notificaECToSend.setDescrizione(this.form.getDescrizione().getValue());
 			notificaECToSend.setEsito(EsitoCommittente.fromValue(this.form.getEsito().getValue().getValue()));
-			notificaECToSend.setIdentificativoSdi(BigInteger.valueOf(this.fattura.getDTO().getIdentificativoSdi()));
+//			notificaECToSend.setIdentificativoSdi(BigInteger.valueOf(this.fattura.getDTO().getIdentificativoSdi())); //TODO IDSDI
 			notificaECToSend.setPosizione(BigInteger.valueOf(this.fattura.getDTO().getPosizione()));
 
 			InvioNotificaEsitoCommittente sender = new InvioNotificaEsitoCommittente(this.log);

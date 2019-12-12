@@ -1,0 +1,264 @@
+Index: src/it/gov/fatturapa/sdi/messaggi/v1_0/MetadatiInvioFileType.java
+===================================================================
+--- src/it/gov/fatturapa/sdi/messaggi/v1_0/MetadatiInvioFileType.java	(revisione 12489)
++++ src/it/gov/fatturapa/sdi/messaggi/v1_0/MetadatiInvioFileType.java	(copia locale)
+@@ -58,7 +58,7 @@
+ @XmlAccessorType(XmlAccessType.FIELD)
+ @XmlType(name = "MetadatiInvioFile_Type", 
+   propOrder = {
+-  	"_decimalWrapper_identificativoSdI",
++  	"identificativoSdI",
+   	"nomeFile",
+   	"codiceDestinatario",
+   	"formato",
+@@ -88,18 +88,12 @@
+ 		this.id=new Long(-1);
+   }
+ 
+-  public java.lang.Integer getIdentificativoSdI() {
+-    if(this._decimalWrapper_identificativoSdI!=null){
+-		return (java.lang.Integer) this._decimalWrapper_identificativoSdI.getObject(java.lang.Integer.class);
+-	}else{
+-		return this.identificativoSdI;
+-	}
++  public java.lang.String getIdentificativoSdI() {
++	return this.identificativoSdI;
+   }
+ 
+-  public void setIdentificativoSdI(java.lang.Integer identificativoSdI) {
+-    if(identificativoSdI!=null){
+-		this._decimalWrapper_identificativoSdI = new org.openspcoop2.utils.jaxb.DecimalWrapper(1,12,identificativoSdI);
+-	}
++  public void setIdentificativoSdI(java.lang.String identificativoSdI) {
++    this.identificativoSdI = identificativoSdI;
+   }
+ 
+   public java.lang.String getNomeFile() {
+@@ -177,14 +171,9 @@
+   }
+ 
+ 
+-  @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.Decimal2String.class)
+-  @javax.xml.bind.annotation.XmlSchemaType(name="integer")
+   @XmlElement(name="IdentificativoSdI",required=true,nillable=false)
+-  org.openspcoop2.utils.jaxb.DecimalWrapper _decimalWrapper_identificativoSdI = null;
++  protected java.lang.String identificativoSdI;
+ 
+-  @XmlTransient
+-  protected java.lang.Integer identificativoSdI;
+-
+   @javax.xml.bind.annotation.XmlSchemaType(name="string")
+   @XmlElement(name="NomeFile",required=true,nillable=false)
+   protected java.lang.String nomeFile;
+Index: src/it/gov/fatturapa/sdi/messaggi/v1_0/NotificaDecorrenzaTerminiType.java
+===================================================================
+--- src/it/gov/fatturapa/sdi/messaggi/v1_0/NotificaDecorrenzaTerminiType.java	(revisione 12489)
++++ src/it/gov/fatturapa/sdi/messaggi/v1_0/NotificaDecorrenzaTerminiType.java	(copia locale)
+@@ -59,7 +59,7 @@
+ @XmlAccessorType(XmlAccessType.FIELD)
+ @XmlType(name = "NotificaDecorrenzaTermini_Type", 
+   propOrder = {
+-  	"_decimalWrapper_identificativoSdI",
++  	"identificativoSdI",
+   	"riferimentoFattura",
+   	"nomeFile",
+   	"descrizione",
+@@ -89,18 +89,12 @@
+ 		this.id=new Long(-1);
+   }
+ 
+-  public java.lang.Integer getIdentificativoSdI() {
+-    if(this._decimalWrapper_identificativoSdI!=null){
+-		return (java.lang.Integer) this._decimalWrapper_identificativoSdI.getObject(java.lang.Integer.class);
+-	}else{
+-		return this.identificativoSdI;
+-	}
++  public java.lang.String getIdentificativoSdI() {
++	return this.identificativoSdI;
+   }
+ 
+-  public void setIdentificativoSdI(java.lang.Integer identificativoSdI) {
+-    if(identificativoSdI!=null){
+-		this._decimalWrapper_identificativoSdI = new org.openspcoop2.utils.jaxb.DecimalWrapper(1,12,identificativoSdI);
+-	}
++  public void setIdentificativoSdI(java.lang.String identificativoSdI) {
++    this.identificativoSdI = identificativoSdI;
+   }
+ 
+   public RiferimentoFatturaType getRiferimentoFattura() {
+@@ -185,15 +179,9 @@
+ 	  return it.gov.fatturapa.sdi.messaggi.v1_0.NotificaDecorrenzaTerminiType.modelStaticInstance;
+   }
+ 
++@XmlElement(name="IdentificativoSdI",required=true,nillable=false)
++    protected java.lang.String identificativoSdI;
+ 
+-  @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.Decimal2String.class)
+-  @javax.xml.bind.annotation.XmlSchemaType(name="integer")
+-  @XmlElement(name="IdentificativoSdI",required=true,nillable=false)
+-  org.openspcoop2.utils.jaxb.DecimalWrapper _decimalWrapper_identificativoSdI = null;
+-
+-  @XmlTransient
+-  protected java.lang.Integer identificativoSdI;
+-
+   @XmlElement(name="RiferimentoFattura",required=false,nillable=false)
+   protected RiferimentoFatturaType riferimentoFattura;
+ 
+Index: src/it/gov/fatturapa/sdi/messaggi/v1_0/NotificaEsitoCommittenteType.java
+===================================================================
+--- src/it/gov/fatturapa/sdi/messaggi/v1_0/NotificaEsitoCommittenteType.java	(revisione 12489)
++++ src/it/gov/fatturapa/sdi/messaggi/v1_0/NotificaEsitoCommittenteType.java	(copia locale)
+@@ -57,7 +57,7 @@
+ @XmlAccessorType(XmlAccessType.FIELD)
+ @XmlType(name = "NotificaEsitoCommittente_Type", 
+   propOrder = {
+-  	"_decimalWrapper_identificativoSdI",
++  	"identificativoSdI",
+   	"riferimentoFattura",
+   	"esito",
+   	"descrizione",
+@@ -85,18 +85,12 @@
+ 		this.id=new Long(-1);
+   }
+ 
+-  public java.lang.Integer getIdentificativoSdI() {
+-    if(this._decimalWrapper_identificativoSdI!=null){
+-		return (java.lang.Integer) this._decimalWrapper_identificativoSdI.getObject(java.lang.Integer.class);
+-	}else{
+-		return this.identificativoSdI;
+-	}
++  public java.lang.String getIdentificativoSdI() {
++	return this.identificativoSdI;
+   }
+ 
+-  public void setIdentificativoSdI(java.lang.Integer identificativoSdI) {
+-    if(identificativoSdI!=null){
+-		this._decimalWrapper_identificativoSdI = new org.openspcoop2.utils.jaxb.DecimalWrapper(1,12,identificativoSdI);
+-	}
++  public void setIdentificativoSdI(java.lang.String identificativoSdI) {
++	this.identificativoSdI = identificativoSdI;
+   }
+ 
+   public RiferimentoFatturaType getRiferimentoFattura() {
+@@ -170,14 +164,9 @@
+   }
+ 
+ 
+-  @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.Decimal2String.class)
+-  @javax.xml.bind.annotation.XmlSchemaType(name="integer")
+   @XmlElement(name="IdentificativoSdI",required=true,nillable=false)
+-  org.openspcoop2.utils.jaxb.DecimalWrapper _decimalWrapper_identificativoSdI = null;
++  protected java.lang.String identificativoSdI;
+ 
+-  @XmlTransient
+-  protected java.lang.Integer identificativoSdI;
+-
+   @XmlElement(name="RiferimentoFattura",required=false,nillable=false)
+   protected RiferimentoFatturaType riferimentoFattura;
+ 
+Index: src/it/gov/fatturapa/sdi/ws/ricezione/v1_0/types/FileSdIType.java
+===================================================================
+--- src/it/gov/fatturapa/sdi/ws/ricezione/v1_0/types/FileSdIType.java	(revisione 12489)
++++ src/it/gov/fatturapa/sdi/ws/ricezione/v1_0/types/FileSdIType.java	(copia locale)
+@@ -52,7 +52,7 @@
+ @XmlAccessorType(XmlAccessType.FIELD)
+ @XmlType(name = "fileSdI_Type", 
+   propOrder = {
+-  	"_decimalWrapper_identificativoSdI",
++  	"identificativoSdI",
+   	"nomeFile",
+   	"file"
+   }
+@@ -78,18 +78,12 @@
+ 		this.id=new Long(-1);
+   }
+ 
+-  public java.lang.Integer getIdentificativoSdI() {
+-    if(this._decimalWrapper_identificativoSdI!=null){
+-		return (java.lang.Integer) this._decimalWrapper_identificativoSdI.getObject(java.lang.Integer.class);
+-	}else{
+-		return this.identificativoSdI;
+-	}
++  public java.lang.String getIdentificativoSdI() {
++	return this.identificativoSdI;
+   }
+ 
+-  public void setIdentificativoSdI(java.lang.Integer identificativoSdI) {
+-    if(identificativoSdI!=null){
+-		this._decimalWrapper_identificativoSdI = new org.openspcoop2.utils.jaxb.DecimalWrapper(1,12,identificativoSdI);
+-	}
++  public void setIdentificativoSdI(java.lang.String identificativoSdI) {
++    this.identificativoSdI = identificativoSdI;
+   }
+ 
+   public java.lang.String getNomeFile() {
+@@ -127,14 +121,9 @@
+   }
+ 
+ 
+-  @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.Decimal2String.class)
+-  @javax.xml.bind.annotation.XmlSchemaType(name="integer")
+   @XmlElement(name="IdentificativoSdI",required=true,nillable=false)
+-  org.openspcoop2.utils.jaxb.DecimalWrapper _decimalWrapper_identificativoSdI = null;
++  protected String identificativoSdI;
+ 
+-  @XmlTransient
+-  protected java.lang.Integer identificativoSdI;
+-
+   @javax.xml.bind.annotation.XmlSchemaType(name="string")
+   @XmlElement(name="NomeFile",required=true,nillable=false)
+   protected java.lang.String nomeFile;
+Index: src/it/gov/fatturapa/sdi/ws/trasmissione/v1_0/types/FileSdIType.java
+===================================================================
+--- src/it/gov/fatturapa/sdi/ws/trasmissione/v1_0/types/FileSdIType.java	(revisione 12489)
++++ src/it/gov/fatturapa/sdi/ws/trasmissione/v1_0/types/FileSdIType.java	(copia locale)
+@@ -52,7 +52,7 @@
+ @XmlAccessorType(XmlAccessType.FIELD)
+ @XmlType(name = "fileSdI_Type", 
+   propOrder = {
+-  	"_decimalWrapper_identificativoSdI",
++  	"identificativoSdI",
+   	"nomeFile",
+   	"file"
+   }
+@@ -78,18 +78,12 @@
+ 		this.id=new Long(-1);
+   }
+ 
+-  public java.lang.Integer getIdentificativoSdI() {
+-    if(this._decimalWrapper_identificativoSdI!=null){
+-		return (java.lang.Integer) this._decimalWrapper_identificativoSdI.getObject(java.lang.Integer.class);
+-	}else{
+-		return this.identificativoSdI;
+-	}
++  public java.lang.String getIdentificativoSdI() {
++	return this.identificativoSdI;
+   }
+ 
+-  public void setIdentificativoSdI(java.lang.Integer identificativoSdI) {
+-    if(identificativoSdI!=null){
+-		this._decimalWrapper_identificativoSdI = new org.openspcoop2.utils.jaxb.DecimalWrapper(1,12,identificativoSdI);
+-	}
++  public void setIdentificativoSdI(java.lang.String identificativoSdI) {
++    this.identificativoSdI = identificativoSdI;
+   }
+ 
+   public java.lang.String getNomeFile() {
+@@ -126,15 +120,9 @@
+ 	  return it.gov.fatturapa.sdi.ws.trasmissione.v1_0.types.FileSdIType.modelStaticInstance;
+   }
+ 
++@XmlElement(name="IdentificativoSdI",required=true,nillable=false)
++  protected java.lang.String identificativoSdI;
+ 
+-  @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.Decimal2String.class)
+-  @javax.xml.bind.annotation.XmlSchemaType(name="integer")
+-  @XmlElement(name="IdentificativoSdI",required=true,nillable=false)
+-  org.openspcoop2.utils.jaxb.DecimalWrapper _decimalWrapper_identificativoSdI = null;
+-
+-  @XmlTransient
+-  protected java.lang.Integer identificativoSdI;
+-
+   @javax.xml.bind.annotation.XmlSchemaType(name="string")
+   @XmlElement(name="NomeFile",required=true,nillable=false)
+   protected java.lang.String nomeFile;

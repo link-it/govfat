@@ -70,7 +70,7 @@ public interface EndpointPdD {
 	
 	@POST
 	@Path("riceviComunicazione")
-	Response riceviComunicazioniSdI(@HeaderParam("X-SDI-IdentificativoSdI") Integer X_SDI_IdentificativoSDI,
+	Response riceviComunicazioniSdI(@HeaderParam("X-SDI-IdentificativoSdI") String X_SDI_IdentificativoSDI,
 			@HeaderParam("X-OpenSPCoop2-Azione") String azione,
 			@HeaderParam("X-SDI-NomeFile") String X_SDI_NomeFile,
 			@HeaderParam("Content-Type") String contentType,
