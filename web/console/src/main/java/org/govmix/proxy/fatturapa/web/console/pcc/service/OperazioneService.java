@@ -432,7 +432,7 @@ public class OperazioneService extends BaseService<OperazioneSearchForm> impleme
 
 			// identificativoSDI
 			if(search.getIdentificativoLotto().getValue() != null && !StringUtils.isEmpty(search.getIdentificativoLotto().getValue())){
-				expr.equals(PccTraccia.model().FATTURA_ELETTRONICA.IDENTIFICATIVO_SDI, Integer.parseInt(search.getIdentificativoLotto().getValue()));
+				expr.equals(PccTraccia.model().FATTURA_ELETTRONICA.IDENTIFICATIVO_SDI, Long.parseLong(search.getIdentificativoLotto().getValue()));
 			}
 
 			// idPaTransazione

@@ -238,15 +238,15 @@ public class InserimentoLotti {
 	
 	private static synchronized Long generaIdentificativo(LottoFattureAttiveBD lottoBD) throws Exception {
 		
-		Long idSdI = Math.abs(new BigInteger(UUID.randomUUID().toString().replaceAll("-", ""), 16).longValue());
+		Integer idSdI = Math.abs(new BigInteger(UUID.randomUUID().toString().replaceAll("-", ""), 16).intValue());
 		IdLotto idLotto = lottoBD.newIdLotto();
-		idLotto.setIdentificativoSdi(idSdI);
+		idLotto.setIdentificativoSdi(idSdI.longValue());
 		while(lottoBD.exists(idLotto)) {
-			idSdI = Math.abs(new BigInteger(UUID.randomUUID().toString().replaceAll("-", ""), 16).longValue());
+			idSdI = Math.abs(new BigInteger(UUID.randomUUID().toString().replaceAll("-", ""), 16).intValue());
 			idLotto = lottoBD.newIdLotto();
-			idLotto.setIdentificativoSdi(idSdI);
+			idLotto.setIdentificativoSdi(idSdI.longValue());
 		}
-		return idSdI;
+		return idSdI.longValue();
 
 	}
 	
