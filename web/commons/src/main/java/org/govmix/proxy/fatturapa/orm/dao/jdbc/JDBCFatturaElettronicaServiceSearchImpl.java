@@ -931,7 +931,7 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 		else{
 			// set _fatturaElettronica
 			id_fatturaElettronica = new org.govmix.proxy.fatturapa.orm.IdFattura((Boolean)listaFieldId_fatturaElettronica.get(2));
-			id_fatturaElettronica.setIdentificativoSdi((String)listaFieldId_fatturaElettronica.get(0));
+			id_fatturaElettronica.setIdentificativoSdi((Long)listaFieldId_fatturaElettronica.get(0));
 			id_fatturaElettronica.setPosizione((Integer)listaFieldId_fatturaElettronica.get(1));
 		}
 		

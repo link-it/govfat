@@ -660,7 +660,7 @@ public class JDBCNotificaDecorrenzaTerminiServiceSearchImpl implements IJDBCServ
 		else{
 			// set _notificaDecorrenzaTermini
 			id_notificaDecorrenzaTermini = new org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini();
-			id_notificaDecorrenzaTermini.setIdentificativoSdi((String)listaFieldId_notificaDecorrenzaTermini.get(0));
+			id_notificaDecorrenzaTermini.setIdentificativoSdi((Long)listaFieldId_notificaDecorrenzaTermini.get(0));
 		}
 		
 		return id_notificaDecorrenzaTermini;

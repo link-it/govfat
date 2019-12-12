@@ -108,9 +108,9 @@ public class EndpointPdDImpl implements EndpointPdD {
 			return Response.status(500).build();
 		}
 
-		String identificativoSDI = null;
+		Long identificativoSDI = null;
 		try{
-			identificativoSDI = identificativoSDIString;
+			identificativoSDI = Long.parseLong(identificativoSDIString);
 		} catch(NumberFormatException e) {
 			this.log.error("Impossibile inserire il lotto, formato identificativo SdI ["+identificativoSDIString+"] errato:"+e.getMessage());
 			return Response.status(500).build();
@@ -232,7 +232,7 @@ public class EndpointPdDImpl implements EndpointPdD {
 	}
 	
 	@Override
-	public Response riceviComunicazioniSdI(String X_SDI_IdentificativoSDI, String azione, String X_SDI_NomeFile, String contentType, HttpHeaders headers, InputStream comunicazioneStream) {
+	public Response riceviComunicazioniSdI(String X_SDI_IdentificativoSDIString, String azione, String X_SDI_NomeFile, String contentType, HttpHeaders headers, InputStream comunicazioneStream) {
 		this.log.info("Invoke riceviComunicazioniSdi");
 
 		Connection connection = null;
@@ -257,11 +257,12 @@ public class EndpointPdDImpl implements EndpointPdD {
 				posizione = new NotificaEsitoConverter(rawData).getPosizione();
 			}
 			
+			Long X_SDI_IdentificativoSDI = Long.parseLong(X_SDI_IdentificativoSDIString);
 			FatturaFilter filter = fatturaBD.newFilter();
 			filter.setIdentificativoSdi(X_SDI_IdentificativoSDI);
 			filter.setPosizione(posizione);
 			if(fatturaBD.count(filter) <=0 ) {
-				throw new Exception("Comunicazione relativa a una fattura attiva (Identificativo SdI["+X_SDI_IdentificativoSDI+"]"+((posizione != null) ? " Posizione ["+posizione+"]" : "") +") non presente nel sistema");
+				throw new Exception("Comunicazione relativa a una fattura attiva (Identificativo SdI["+X_SDI_IdentificativoSDIString+"]"+((posizione != null) ? " Posizione ["+posizione+"]" : "") +") non presente nel sistema");
 			}
 			TracciaSDI tracciaSdi = new TracciaSDI();
 			

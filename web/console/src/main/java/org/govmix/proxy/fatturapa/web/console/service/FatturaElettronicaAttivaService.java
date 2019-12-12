@@ -354,7 +354,7 @@ public class FatturaElettronicaAttivaService extends BaseService<FatturaElettron
 
 			// identificativoSDI
 			if(search.getIdentificativoLotto().getValue() != null && !StringUtils.isEmpty(search.getIdentificativoLotto().getValue())){
-				filter.setIdentificativoSdi(search.getIdentificativoLotto().getValue());
+				filter.setIdentificativoSdi(Long.parseLong(search.getIdentificativoLotto().getValue()));
 			}
 
 			// data Fattura

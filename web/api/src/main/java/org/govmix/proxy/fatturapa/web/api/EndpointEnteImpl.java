@@ -96,7 +96,7 @@ public class EndpointEnteImpl implements EndpointEnte {
 	}
 
 	@Override
-	public Response recuperaFatturaNonConsegnata(String idSdI, Integer posizione) {
+	public Response recuperaFatturaNonConsegnata(Long idSdI, Integer posizione) {
 		
 		byte[] fattura;
 		try {

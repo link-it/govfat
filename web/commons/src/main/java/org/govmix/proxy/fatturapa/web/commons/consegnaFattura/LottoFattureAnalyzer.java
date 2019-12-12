@@ -46,7 +46,7 @@ public class LottoFattureAnalyzer {
 	private LottoFatture lotto;
 	private Logger log;
 
-	public LottoFattureAnalyzer(InserimentoLottoRequest request, String identificativo, Dipartimento dipartimento, String codiceDipartimento,
+	public LottoFattureAnalyzer(InserimentoLottoRequest request, Long identificativo, Dipartimento dipartimento, String codiceDipartimento,
 			Logger log) throws InserimentoLottiException {
 		this.log = log;
 		this.original = request.getXml();
@@ -256,7 +256,7 @@ public class LottoFattureAnalyzer {
 
 	}
 	
-	private LottoFatture getLotto(InserimentoLottoRequest request, String identificativo, String type, Dipartimento dipartimento, String codiceDipartimento) throws InserimentoLottiException {
+	private LottoFatture getLotto(InserimentoLottoRequest request, Long identificativo, String type, Dipartimento dipartimento, String codiceDipartimento) throws InserimentoLottiException {
 		
 		
 		ConsegnaFatturaParameters params = null;

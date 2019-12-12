@@ -148,7 +148,7 @@ public class AuthorizationManager {
 			} else if(bean.getIdentificativoPcc() != null) {
 				return this.fatturaBD.findByIdPcc(bean.getIdentificativoPcc());
 			} else if(bean.getIdentificativoSdi() != null) {
-				return this.fatturaBD.findByIdSdiNumero(bean.getIdentificativoSdi().getLottoSDI().toString(), bean.getIdentificativoSdi().getNumeroFattura());
+				return this.fatturaBD.findByIdSdiNumero(bean.getIdentificativoSdi().getLottoSDI().longValue(), bean.getIdentificativoSdi().getNumeroFattura());
 			} else if(bean.getIdentificativoGenerale() != null) {
 				return this.fatturaBD.findByIdFiscaleNumeroDataImporto(bean.getIdentificativoGenerale().getIdFiscaleIvaFornitore(), bean.getIdentificativoGenerale().getNumeroFattura(), bean.getIdentificativoGenerale().getDataEmissione(), bean.getIdentificativoGenerale().getImportoTotaleDocumento().doubleValue());
 			} else {

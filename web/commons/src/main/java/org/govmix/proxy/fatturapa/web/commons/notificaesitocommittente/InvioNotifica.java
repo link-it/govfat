@@ -86,7 +86,7 @@ public class InvioNotifica {
 		nec.setEsito(esito);
 
 		nec.setDescrizione(request.getNotifica().getDescrizione());
-		nec.setIdentificativoSdI(request.getNotifica().getIdentificativoSdi());
+		nec.setIdentificativoSdI(request.getNotifica().getIdentificativoSdi()+"");
 
 		nec.setMessageIdCommittente(request.getNotifica().getMessageIdCommittente());
 		nec.setVersione("1.0");

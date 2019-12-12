@@ -42,7 +42,7 @@ public class TracciaSDIModel extends AbstractModel<TracciaSDI> {
 	
 		super();
 	
-		this.IDENTIFICATIVO_SDI = new Field("identificativoSdi",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
+		this.IDENTIFICATIVO_SDI = new Field("identificativoSdi",java.lang.Long.class,"TracciaSDI",TracciaSDI.class);
 		this.POSIZIONE = new Field("posizione",java.lang.Integer.class,"TracciaSDI",TracciaSDI.class);
 		this.TIPO_COMUNICAZIONE = new Field("tipoComunicazione",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.NOME_FILE = new Field("nomeFile",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
@@ -64,7 +64,7 @@ public class TracciaSDIModel extends AbstractModel<TracciaSDI> {
 	
 		super(father);
 	
-		this.IDENTIFICATIVO_SDI = new ComplexField(father,"identificativoSdi",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
+		this.IDENTIFICATIVO_SDI = new ComplexField(father,"identificativoSdi",java.lang.Long.class,"TracciaSDI",TracciaSDI.class);
 		this.POSIZIONE = new ComplexField(father,"posizione",java.lang.Integer.class,"TracciaSDI",TracciaSDI.class);
 		this.TIPO_COMUNICAZIONE = new ComplexField(father,"tipoComunicazione",java.lang.String.class,"TracciaSDI",TracciaSDI.class);
 		this.NOME_FILE = new ComplexField(father,"nomeFile",java.lang.String.class,"TracciaSDI",TracciaSDI.class);

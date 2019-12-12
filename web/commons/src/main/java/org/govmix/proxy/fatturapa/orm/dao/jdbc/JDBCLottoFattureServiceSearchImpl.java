@@ -867,7 +867,7 @@ public class JDBCLottoFattureServiceSearchImpl implements IJDBCServiceSearchWith
 		else{
 			// set _lottoFatture
 			id_lottoFatture = new org.govmix.proxy.fatturapa.orm.IdLotto((Boolean)listaFieldId_lottoFatture.get(1));
-			id_lottoFatture.setIdentificativoSdi((String)listaFieldId_lottoFatture.get(0));
+			id_lottoFatture.setIdentificativoSdi((Long)listaFieldId_lottoFatture.get(0));
 		}
 
 		return id_lottoFatture;

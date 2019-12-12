@@ -43,7 +43,7 @@ public class NotificaEsitoCommittenteModel extends AbstractModel<NotificaEsitoCo
 		super();
 	
 		this.ID_FATTURA = new org.govmix.proxy.fatturapa.orm.model.IdFatturaModel(new Field("idFattura",org.govmix.proxy.fatturapa.orm.IdFattura.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class));
-		this.IDENTIFICATIVO_SDI = new Field("identificativoSdi",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
+		this.IDENTIFICATIVO_SDI = new Field("identificativoSdi",java.lang.Long.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.NUMERO_FATTURA = new Field("numeroFattura",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.ANNO = new Field("anno",java.lang.Integer.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.POSIZIONE = new Field("posizione",java.lang.Integer.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
@@ -71,7 +71,7 @@ public class NotificaEsitoCommittenteModel extends AbstractModel<NotificaEsitoCo
 		super(father);
 	
 		this.ID_FATTURA = new org.govmix.proxy.fatturapa.orm.model.IdFatturaModel(new ComplexField(father,"idFattura",org.govmix.proxy.fatturapa.orm.IdFattura.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class));
-		this.IDENTIFICATIVO_SDI = new ComplexField(father,"identificativoSdi",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
+		this.IDENTIFICATIVO_SDI = new ComplexField(father,"identificativoSdi",java.lang.Long.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.NUMERO_FATTURA = new ComplexField(father,"numeroFattura",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.ANNO = new ComplexField(father,"anno",java.lang.Integer.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.POSIZIONE = new ComplexField(father,"posizione",java.lang.Integer.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);

@@ -42,7 +42,7 @@ public class IdNotificaDecorrenzaTerminiModel extends AbstractModel<IdNotificaDe
 	
 		super();
 	
-		this.IDENTIFICATIVO_SDI = new Field("identificativoSdi",java.lang.String.class,"id-notifica-decorrenza-termini",IdNotificaDecorrenzaTermini.class);
+		this.IDENTIFICATIVO_SDI = new Field("identificativoSdi",java.lang.Long.class,"id-notifica-decorrenza-termini",IdNotificaDecorrenzaTermini.class);
 	
 	}
 	
@@ -50,7 +50,7 @@ public class IdNotificaDecorrenzaTerminiModel extends AbstractModel<IdNotificaDe
 	
 		super(father);
 	
-		this.IDENTIFICATIVO_SDI = new ComplexField(father,"identificativoSdi",java.lang.String.class,"id-notifica-decorrenza-termini",IdNotificaDecorrenzaTermini.class);
+		this.IDENTIFICATIVO_SDI = new ComplexField(father,"identificativoSdi",java.lang.Long.class,"id-notifica-decorrenza-termini",IdNotificaDecorrenzaTermini.class);
 	
 	}
 	

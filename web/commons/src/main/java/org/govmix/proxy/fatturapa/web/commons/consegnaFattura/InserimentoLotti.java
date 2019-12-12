@@ -49,7 +49,7 @@ public class InserimentoLotti {
 			
 			for(InserimentoLottoRequest request: requestList) {
 				
-				String identificativo = generaIdentificativo(lottoBD);
+				Long identificativo = generaIdentificativo(lottoBD);
 
 				Dipartimento dipartimento = this.getDipartimento(request.getNomeFile(), request.getDipartimento());
 
@@ -155,7 +155,7 @@ public class InserimentoLotti {
 		for(InserimentoLottoRequest request: requestList) {
 			Dipartimento dipartimento = this.getDipartimento(request.getNomeFile(), request.getDipartimento());
 			
-			LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request, "1", dipartimento, dipartimento.getCodice(), this.log);
+			LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request, 1l, dipartimento, dipartimento.getCodice(), this.log);
 			
 			if(!this.checkCodiceProcedimento(analizer.getLotto(), this.getDipartimento(request.getNomeFile(), request.getDipartimento()))) {
 				throw new InserimentoLottiException(CODICE.ERRORE_CODICE_PROCEDIMENTO, request.getNomeFile(), request.getDipartimento(), analizer.getLotto().getFormatoTrasmissione());
@@ -197,7 +197,7 @@ public class InserimentoLotti {
 			List<IdLotto> lstIdentificativoEfatt = new ArrayList<IdLotto>();
 
 			for(InserimentoLottoSoloConservazioneRequest request: requestList) {
-				String identificativo = generaIdentificativo(lottoBD);
+				Long identificativo = generaIdentificativo(lottoBD);
 
 				LottoFattureAnalyzer analizer = new LottoFattureAnalyzer(request, identificativo, null, request.getDipartimento(), this.log);
 				
@@ -238,13 +238,13 @@ public class InserimentoLotti {
 		return inserimentoLottoResponse;
 	}
 	
-	private static synchronized String generaIdentificativo(LottoFattureAttiveBD lottoBD) throws Exception {
+	private static synchronized Long generaIdentificativo(LottoFattureAttiveBD lottoBD) throws Exception {
 		
-		String idSdI = new String(""+Math.abs(new BigInteger(UUID.randomUUID().toString().replaceAll("-", ""), 16).longValue()));
+		Long idSdI = Math.abs(new BigInteger(UUID.randomUUID().toString().replaceAll("-", ""), 16).longValue());
 		IdLotto idLotto = lottoBD.newIdLotto();
 		idLotto.setIdentificativoSdi(idSdI);
 		while(lottoBD.exists(idLotto)) {
-			idSdI = new String(""+Math.abs(new BigInteger(UUID.randomUUID().toString().replaceAll("-", ""), 16).longValue()));
+			idSdI = Math.abs(new BigInteger(UUID.randomUUID().toString().replaceAll("-", ""), 16).longValue());
 			idLotto = lottoBD.newIdLotto();
 			idLotto.setIdentificativoSdi(idSdI);
 		}

@@ -53,15 +53,15 @@ public class NotificaDecorrenzaTerminiConverter {
 		this.esito =  deserializer.readNotificaDecorrenzaTerminiType(raw);
 	}
 	
-	public String getIdentificativoSdi() throws Exception {
-		return this.esito.getIdentificativoSdI().toString();
+	public Long getIdentificativoSdi() throws Exception {
+		return Long.parseLong(this.esito.getIdentificativoSdI());
 	}
 	
 	public NotificaDecorrenzaTermini getNotificaDecorrenzaTermini(long idTraccia) throws Exception {
 
 		NotificaDecorrenzaTermini notifica = new NotificaDecorrenzaTermini();
 		
-		notifica.setIdentificativoSdi(this.esito.getIdentificativoSdI());
+		notifica.setIdentificativoSdi(Long.parseLong(this.esito.getIdentificativoSdI()));
 		notifica.setNomeFile(this.esito.getNomeFile());
 		notifica.setDescrizione(this.esito.getDescrizione());
 		notifica.setMessageId(this.esito.getMessageId());
@@ -79,7 +79,7 @@ public class NotificaDecorrenzaTerminiConverter {
 
 		TracciaSDI traccia = new TracciaSDI();
 
-		traccia.setIdentificativoSdi(this.esito.getIdentificativoSdI());
+		traccia.setIdentificativoSdi(Long.parseLong(this.esito.getIdentificativoSdI()));
 		
 		traccia.setTipoComunicazione(TipoComunicazioneType.DT_PASS);
 		traccia.setData(new Date());

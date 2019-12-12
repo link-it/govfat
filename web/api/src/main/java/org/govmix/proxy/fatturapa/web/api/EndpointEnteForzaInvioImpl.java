@@ -51,7 +51,7 @@ public class EndpointEnteForzaInvioImpl extends EndpointEnteImpl implements Endp
 
 
 	@Override
-	public Response forzaInvioLotto(String idSdI, String consegnaDocumentiAccessori) {
+	public Response forzaInvioLotto(Long idSdI, String consegnaDocumentiAccessori) {
 		//forzaInvioLotto
 		try {
 			boolean consegna;
@@ -73,7 +73,7 @@ public class EndpointEnteForzaInvioImpl extends EndpointEnteImpl implements Endp
 
 
 	@Override
-	public Response elencoFattureRicevute(String idSdI) {
+	public Response elencoFattureRicevute(Long idSdI) {
 		String lst;
 		try {
 			this.log.info("Invoke elencoFattureRicevute");
@@ -89,7 +89,7 @@ public class EndpointEnteForzaInvioImpl extends EndpointEnteImpl implements Endp
 
 
 	@Override
-	public Response forzaInvioFattura(String idSdI, Integer posizione, String consegnaDocumentiAccessori) {
+	public Response forzaInvioFattura(Long idSdI, Integer posizione, String consegnaDocumentiAccessori) {
 		//forzaInvioFattura
 		this.log.info("Invoke forzaInvioFattura");
 		try {

@@ -46,6 +46,6 @@ public interface EndpointEnte {
 	@GET
 	@Produces("application/zip")
 	@Path("consegnaFattura")
-	Response recuperaFatturaNonConsegnata(@QueryParam("ProxyFatturaPA-IdSdI") String idSdI, @QueryParam("ProxyFatturaPA-Posizione") Integer posizione);
+	Response recuperaFatturaNonConsegnata(@QueryParam("ProxyFatturaPA-IdSdI") Long idSdI, @QueryParam("ProxyFatturaPA-Posizione") Integer posizione);
 
 }
