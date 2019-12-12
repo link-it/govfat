@@ -24,7 +24,7 @@ public class FatturaFilter extends AbstractFilter {
 	private Long id;
 
 	/** Dati identificativi della fattura (logici) **/
-	private String identificativoSdi;
+	private Long identificativoSdi;
 	private Integer posizione;
 	
 	/** Utente autenticato (filtra sulle fatture indirizzate ai dipartimenti di quell'utente **/
@@ -273,11 +273,11 @@ public class FatturaFilter extends AbstractFilter {
 		this.dataRicezioneMin = dataRicezioneMin;
 	}
 
-	public String getIdentificativoSdi() {
+	public Long getIdentificativoSdi() {
 		return identificativoSdi;
 	}
 
-	public void setIdentificativoSdi(String identificativoSdi) {
+	public void setIdentificativoSdi(Long identificativoSdi) {
 		this.identificativoSdi = identificativoSdi;
 	}
 

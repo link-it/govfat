@@ -27,7 +27,7 @@ public class LottoFattureAnalyzer {
 		this(lotto.getXml(), lotto.getNomeFile(), lotto.getIdentificativoSdi(), dipartimento, codiceDipartimento, log);
 	}
 	
-	public LottoFattureAnalyzer(byte[] lottoFatture, String nomeFile, String identificativo, Dipartimento dipartimento, String codiceDipartimento, Logger log) throws InserimentoLottiException {
+	public LottoFattureAnalyzer(byte[] lottoFatture, String nomeFile, Long identificativo, Dipartimento dipartimento, String codiceDipartimento, Logger log) throws InserimentoLottiException {
 		this.log = log;
 		this.original = lottoFatture;
 		try {
@@ -116,7 +116,7 @@ public class LottoFattureAnalyzer {
 
 	}
 	
-	private LottoFatture getLotto(byte[] xml, String nomeFile, String identificativo, String type, Dipartimento dipartimento, String codiceDipartimento) throws InserimentoLottiException {
+	private LottoFatture getLotto(byte[] xml, String nomeFile, Long identificativo, String type, Dipartimento dipartimento, String codiceDipartimento) throws InserimentoLottiException {
 		
 		
 		ConsegnaFatturaParameters params = null;

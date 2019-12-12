@@ -132,7 +132,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 								nec.setEsito(esito);
 
 								nec.setDescrizione(notifica.getDescrizione());
-								nec.setIdentificativoSdI(notifica.getIdFattura().getIdentificativoSdi());
+								nec.setIdentificativoSdI(""+notifica.getIdFattura().getIdentificativoSdi());
 
 								nec.setMessageIdCommittente(notifica.getMessageIdCommittente());
 								nec.setVersione("1.0");

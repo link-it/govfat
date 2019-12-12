@@ -43,7 +43,7 @@ import java.io.Serializable;
  * &lt;complexType name="FatturaElettronica">
  * 		&lt;sequence>
  * 			&lt;element name="formatoTrasmissione" type="{http://www.govmix.org/proxy/fatturapa/orm}FormatoTrasmissioneType" minOccurs="1" maxOccurs="1"/>
- * 			&lt;element name="identificativoSdi" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="identificativoSdi" type="{http://www.govmix.org/proxy/fatturapa/orm}unsignedLong" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="fatturazioneAttiva" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="dataRicezione" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="nomeFile" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
@@ -101,7 +101,7 @@ import java.io.Serializable;
 @XmlType(name = "FatturaElettronica", 
   propOrder = {
   	"formatoTrasmissione",
-  	"identificativoSdi",
+  	"_decimalWrapper_identificativoSdi",
   	"fatturazioneAttiva",
   	"dataRicezione",
   	"nomeFile",
@@ -187,12 +187,18 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
     this.formatoTrasmissione = formatoTrasmissione;
   }
 
-  public java.lang.String getIdentificativoSdi() {
-    return this.identificativoSdi;
+  public java.lang.Long getIdentificativoSdi() {
+    if(this._decimalWrapper_identificativoSdi!=null){
+		return (java.lang.Long) this._decimalWrapper_identificativoSdi.getObject(java.lang.Long.class);
+	}else{
+		return this.identificativoSdi;
+	}
   }
 
-  public void setIdentificativoSdi(java.lang.String identificativoSdi) {
-    this.identificativoSdi = identificativoSdi;
+  public void setIdentificativoSdi(java.lang.Long identificativoSdi) {
+    if(identificativoSdi!=null){
+		this._decimalWrapper_identificativoSdi = new org.openspcoop2.utils.jaxb.DecimalWrapper(1,40,identificativoSdi);
+	}
   }
 
   public boolean isFatturazioneAttiva() {
@@ -636,9 +642,13 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
   @XmlElement(name="formatoTrasmissione",required=true,nillable=false)
   protected FormatoTrasmissioneType formatoTrasmissione;
 
-  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.Decimal2String.class)
+  @javax.xml.bind.annotation.XmlSchemaType(name="unsignedLong")
   @XmlElement(name="identificativoSdi",required=true,nillable=false)
-  protected java.lang.String identificativoSdi;
+  org.openspcoop2.utils.jaxb.DecimalWrapper _decimalWrapper_identificativoSdi = null;
+
+  @XmlTransient
+  protected java.lang.Long identificativoSdi;
 
   @javax.xml.bind.annotation.XmlSchemaType(name="boolean")
   @XmlElement(name="fatturazioneAttiva",required=true,nillable=false)

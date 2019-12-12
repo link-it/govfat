@@ -113,7 +113,7 @@ public class FattureAttiveImpl implements FattureAttive {
 			try {
 				if(richiesta.getIdentificativoSDI()!=null) {
 					IdFattura id = new IdFattura(true);
-					id.setIdentificativoSdi(richiesta.getIdentificativoSDI().getIdSDI().toString());
+					id.setIdentificativoSdi(richiesta.getIdentificativoSDI().getIdSDI().longValue());
 					id.setPosizione(richiesta.getIdentificativoSDI().getPosizione().intValue());
 					fattura = fatturaBD.get(id);
 					

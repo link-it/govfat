@@ -51,7 +51,7 @@ public class NotificaDecorrenzaTerminiConverter {
 
 		NotificaDecorrenzaTermini notifica = new NotificaDecorrenzaTermini();
 		
-		notifica.setIdentificativoSdi(this.esito.getIdentificativoSdI());
+		notifica.setIdentificativoSdi(Long.parseLong(this.esito.getIdentificativoSdI()));
 		notifica.setNomeFile(this.esito.getNomeFile());
 		notifica.setDescrizione(this.esito.getDescrizione());
 		notifica.setMessageId(this.esito.getMessageId());

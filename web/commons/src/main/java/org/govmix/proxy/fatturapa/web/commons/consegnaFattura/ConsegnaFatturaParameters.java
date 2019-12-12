@@ -29,7 +29,7 @@ public class ConsegnaFatturaParameters {
 	private String formatoFatturaPA;
 	private FormatoArchivioInvioFatturaType formatoArchivioInvioFattura;
 	private Integer posizioneFatturaPA;
-	private String identificativoSdI;
+	private Long identificativoSdI;
 	
 	private byte[] xml;
 
@@ -54,11 +54,11 @@ public class ConsegnaFatturaParameters {
 		this.formatoFatturaPA = formatoFatturaPA;
 	}
 
-	public String getIdentificativoSdI() {
+	public Long getIdentificativoSdI() {
 		return this.identificativoSdI;
 	}
 
-	public void setIdentificativoSdI(String identificativoSdI) {
+	public void setIdentificativoSdI(Long identificativoSdI) {
 		this.identificativoSdI = identificativoSdI;
 	}
 

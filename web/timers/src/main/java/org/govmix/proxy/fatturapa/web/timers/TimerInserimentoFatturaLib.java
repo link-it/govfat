@@ -110,7 +110,7 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 									try {
 										InvioNotifica invioNotifica = new InvioNotifica(properties.getRicezioneEsitoURL(), properties.getRicezioneEsitoUsername(), properties.getRicezioneEsitoPassword());
 										NotificaEsitoCommittenteType nec = new NotificaEsitoCommittenteType();
-										nec.setIdentificativoSdI(lotto.getIdentificativoSdi());
+										nec.setIdentificativoSdI(""+lotto.getIdentificativoSdi());
 										nec.setEsito(EsitoCommittenteType.EC02);
 										nec.setDescrizione("Lotto rifiutato d'ufficio in quanto non conforme alle specifiche");
 										nec.setMessageIdCommittente(lotto.getMessageId());

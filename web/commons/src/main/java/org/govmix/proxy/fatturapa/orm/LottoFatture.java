@@ -45,7 +45,7 @@ import java.io.Serializable;
  * &lt;complexType name="LottoFatture">
  * 		&lt;sequence>
  * 			&lt;element name="formatoTrasmissione" type="{http://www.govmix.org/proxy/fatturapa/orm}FormatoTrasmissioneType" minOccurs="1" maxOccurs="1"/>
- * 			&lt;element name="identificativoSdi" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="identificativoSdi" type="{http://www.govmix.org/proxy/fatturapa/orm}unsignedLong" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="nomeFile" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="formatoArchivioInvioFattura" type="{http://www.govmix.org/proxy/fatturapa/orm}FormatoArchivioInvioFatturaType" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="messageId" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
@@ -105,7 +105,7 @@ import java.io.Serializable;
 @XmlType(name = "LottoFatture", 
   propOrder = {
   	"formatoTrasmissione",
-  	"identificativoSdi",
+  	"_decimalWrapper_identificativoSdi",
   	"nomeFile",
   	"formatoArchivioInvioFattura",
   	"messageId",
@@ -193,12 +193,18 @@ public class LottoFatture extends org.openspcoop2.utils.beans.BaseBean implement
     this.formatoTrasmissione = formatoTrasmissione;
   }
 
-  public java.lang.String getIdentificativoSdi() {
-    return this.identificativoSdi;
+  public java.lang.Long getIdentificativoSdi() {
+    if(this._decimalWrapper_identificativoSdi!=null){
+		return (java.lang.Long) this._decimalWrapper_identificativoSdi.getObject(java.lang.Long.class);
+	}else{
+		return this.identificativoSdi;
+	}
   }
 
-  public void setIdentificativoSdi(java.lang.String identificativoSdi) {
-    this.identificativoSdi = identificativoSdi;
+  public void setIdentificativoSdi(java.lang.Long identificativoSdi) {
+    if(identificativoSdi!=null){
+		this._decimalWrapper_identificativoSdi = new org.openspcoop2.utils.jaxb.DecimalWrapper(1,40,identificativoSdi);
+	}
   }
 
   public java.lang.String getNomeFile() {
@@ -666,9 +672,13 @@ public class LottoFatture extends org.openspcoop2.utils.beans.BaseBean implement
   @XmlElement(name="formatoTrasmissione",required=true,nillable=false)
   protected FormatoTrasmissioneType formatoTrasmissione;
 
-  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.Decimal2String.class)
+  @javax.xml.bind.annotation.XmlSchemaType(name="unsignedLong")
   @XmlElement(name="identificativoSdi",required=true,nillable=false)
-  protected java.lang.String identificativoSdi;
+  org.openspcoop2.utils.jaxb.DecimalWrapper _decimalWrapper_identificativoSdi = null;
+
+  @XmlTransient
+  protected java.lang.Long identificativoSdi;
 
   @javax.xml.bind.annotation.XmlSchemaType(name="string")
   @XmlElement(name="nomeFile",required=true,nillable=false)
