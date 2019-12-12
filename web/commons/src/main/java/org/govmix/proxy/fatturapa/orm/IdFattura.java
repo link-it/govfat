@@ -36,7 +36,7 @@ import java.io.Serializable;
  * <pre>
  * &lt;complexType name="id-fattura">
  * 		&lt;sequence>
- * 			&lt;element name="identificativoSdi" type="{http://www.govmix.org/proxy/fatturapa/orm}integer" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="identificativoSdi" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="posizione" type="{http://www.w3.org/2001/XMLSchema}positiveInteger" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="fatturazioneAttiva" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="1" maxOccurs="1"/>
  * 		&lt;/sequence>
@@ -53,7 +53,7 @@ import java.io.Serializable;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "id-fattura", 
   propOrder = {
-  	"_decimalWrapper_identificativoSdi",
+  	"identificativoSdi",
   	"posizione",
   	"fatturazioneAttiva"
   }
@@ -75,7 +75,7 @@ public class IdFattura extends org.openspcoop2.utils.beans.BaseBean implements S
 			return false;
 		IdFattura idFattura = (IdFattura) object;
 		
-		return idFattura.getIdentificativoSdi().intValue() == this.getIdentificativoSdi().intValue() && 
+		return idFattura.getIdentificativoSdi().equals(this.getIdentificativoSdi()) && 
 				idFattura.getPosizione().intValue() == this.getPosizione().intValue() && idFattura.getFatturazioneAttiva() == this.getFatturazioneAttiva();
 
 	}
@@ -100,18 +100,12 @@ public class IdFattura extends org.openspcoop2.utils.beans.BaseBean implements S
 		this.id=new Long(-1);
   }
 
-  public java.lang.Integer getIdentificativoSdi() {
-    if(this._decimalWrapper_identificativoSdi!=null){
-		return (java.lang.Integer) this._decimalWrapper_identificativoSdi.getObject(java.lang.Integer.class);
-	}else{
-		return this.identificativoSdi;
-	}
+  public java.lang.String getIdentificativoSdi() {
+    return this.identificativoSdi;
   }
 
-  public void setIdentificativoSdi(java.lang.Integer identificativoSdi) {
-    if(identificativoSdi!=null){
-		this._decimalWrapper_identificativoSdi = new org.openspcoop2.utils.jaxb.DecimalWrapper(1,12,identificativoSdi);
-	}
+  public void setIdentificativoSdi(java.lang.String identificativoSdi) {
+    this.identificativoSdi = identificativoSdi;
   }
 
   public java.lang.Integer getPosizione() {
@@ -141,13 +135,9 @@ public class IdFattura extends org.openspcoop2.utils.beans.BaseBean implements S
 
 
 
-  @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.Decimal2String.class)
-  @javax.xml.bind.annotation.XmlSchemaType(name="integer")
+  @javax.xml.bind.annotation.XmlSchemaType(name="string")
   @XmlElement(name="identificativoSdi",required=true,nillable=false)
-  org.openspcoop2.utils.jaxb.DecimalWrapper _decimalWrapper_identificativoSdi = null;
-
-  @XmlTransient
-  protected java.lang.Integer identificativoSdi;
+  protected java.lang.String identificativoSdi;
 
   @javax.xml.bind.annotation.XmlSchemaType(name="positiveInteger")
   @XmlElement(name="posizione",required=true,nillable=false)

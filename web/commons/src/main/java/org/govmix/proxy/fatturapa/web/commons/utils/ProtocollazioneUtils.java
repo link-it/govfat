@@ -419,7 +419,7 @@ public class ProtocollazioneUtils {
 		return esitoPositivo;
 	}
 
-	public boolean forzaInvioLotto(Integer idSdI, boolean consegnaDocumentiAssociati) throws Exception {
+	public boolean forzaInvioLotto(String idSdI, boolean consegnaDocumentiAssociati) throws Exception {
 		Connection conn = null;
 		boolean esitoPositivo = false;
 		try {
@@ -470,7 +470,7 @@ public class ProtocollazioneUtils {
 	}
 
 
-	public boolean forzaInvioFattura(Integer idSdI, Integer posizione, boolean consegnaDocumentiAssociati) throws Exception {
+	public boolean forzaInvioFattura(String idSdI, Integer posizione, boolean consegnaDocumentiAssociati) throws Exception {
 		Connection conn = null;
 		try {
 			conn = DAOFactory.getInstance().getConnection();
@@ -490,7 +490,7 @@ public class ProtocollazioneUtils {
 	}
 
 
-	public boolean forzaInvioFattura(Integer idSdI, Integer posizione, boolean consegnaDocumentiAssociati, Connection conn) throws Exception {
+	public boolean forzaInvioFattura(String idSdI, Integer posizione, boolean consegnaDocumentiAssociati, Connection conn) throws Exception {
 		boolean esitoPositivo = false;
 		boolean consegnaContestuale = true;
 

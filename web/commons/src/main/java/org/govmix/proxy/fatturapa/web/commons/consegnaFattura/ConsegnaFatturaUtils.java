@@ -49,7 +49,7 @@ public class ConsegnaFatturaUtils {
 
 
 	public static ConsegnaFatturaParameters getParameters(String formatoFatturaPA,
-			Integer identificativoSDI, String nomeFile,
+			String identificativoSDI, String nomeFile,
 			String formatoArchivioInvioFatturaString,
 			String formatoArchivioBase64, String messageId,
 			String codiceDestinatario, String cedentePrestatoreDenominazione,
@@ -90,7 +90,7 @@ public class ConsegnaFatturaUtils {
 	
 
 	public static ConsegnaFatturaParameters getParameters(String formatoFatturaPA,
-			Integer identificativoSDI, String nomeFile,
+			String identificativoSDI, String nomeFile,
 			String formatoArchivioInvioFatturaString,
 			String formatoArchivioBase64, String messageId,
 			String codiceDestinatario, String cedentePrestatoreDenominazione,
@@ -174,7 +174,7 @@ public class ConsegnaFatturaUtils {
 		return params;
 	}
 
-	public static ConsegnaFatturaParameters getParameters(Integer identificativoSDI, String nomeFile,
+	public static ConsegnaFatturaParameters getParameters(String identificativoSDI, String nomeFile,
 			String formatoArchivioInvioFatturaString,
 			String formatoArchivioBase64, String messageId,
 			boolean fatturazioneAttiva,
@@ -183,7 +183,7 @@ public class ConsegnaFatturaUtils {
 				
 	}
 
-	public static ConsegnaFatturaParameters getParameters(Integer identificativoSDI, String nomeFile,
+	public static ConsegnaFatturaParameters getParameters(String identificativoSDI, String nomeFile,
 			String formatoArchivioInvioFatturaString,
 			String formatoArchivioBase64, String messageId,
 			boolean fatturazioneAttiva,
@@ -209,7 +209,7 @@ public class ConsegnaFatturaUtils {
 	}
 
 	public static ConsegnaFatturaParameters getParameters(String formatoFatturaPA,
-			Integer identificativoSDI, String nomeFile,
+			String identificativoSDI, String nomeFile,
 			String formatoArchivioInvioFatturaString,
 			String formatoArchivioBase64, String messageId,
 			boolean fatturazioneAttiva,
@@ -351,7 +351,7 @@ public class ConsegnaFatturaUtils {
 	}
 
 	public static ConsegnaFatturaParameters getParameters(String formatoFatturaPA,
-			Integer identificativoSDI, String nomeFile,
+			String identificativoSDI, String nomeFile,
 			String formatoArchivioInvioFatturaString,
 			String formatoArchivioBase64, String messageId,
 			boolean fatturazioneAttiva,
@@ -392,7 +392,7 @@ public class ConsegnaFatturaUtils {
 		return getLottoXml(lotto.getFormatoArchivioInvioFattura(), lotto.getXml(), lotto.getIdentificativoSdi(), log);
 	}
 	
-	public static byte[] getLottoXml(FormatoArchivioInvioFatturaType formatoArchivioInvioFattura, byte[] xml, Integer identificativoSdI, Logger log) throws Exception {
+	public static byte[] getLottoXml(FormatoArchivioInvioFatturaType formatoArchivioInvioFattura, byte[] xml, String identificativoSdI, Logger log) throws Exception {
 		if(FormatoArchivioInvioFatturaType.P7M.equals(formatoArchivioInvioFattura)) {
 			try {
 				P7MInfo info = new P7MInfo(xml, log);

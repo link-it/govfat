@@ -63,7 +63,7 @@ public class SpedizioneFattureAttive implements IWorkFlow<LottoFatture> {
 			
 			TracciaSDI tracciaSdi = new TracciaSDI();
 			
-			tracciaSdi.setIdentificativoSdi(Integer.parseInt(esitoInvioFattura.getMetadato("X-SDI-IdentificativoSDI")));
+			tracciaSdi.setIdentificativoSdi(esitoInvioFattura.getMetadato("X-SDI-IdentificativoSDI"));
 			tracciaSdi.setTipoComunicazione(TipoComunicazioneType.FAT_OUT);
 			tracciaSdi.setData(new Date());
 			tracciaSdi.setContentType(InvioFattura.getContentType(lotto));

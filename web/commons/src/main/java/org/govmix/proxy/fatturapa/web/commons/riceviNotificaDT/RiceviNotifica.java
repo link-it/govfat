@@ -62,7 +62,7 @@ public class RiceviNotifica {
 
 			List<IdFattura> lstIdFattura = new ArrayList<IdFattura>();
 
-			int identificativoSdi = converter.getIdentificativoSdi();
+			String identificativoSdi = converter.getIdentificativoSdi();
 			Integer posizioneFattura = converter.getPosizioneFattura();
 			
 			if(posizioneFattura != null) {

@@ -53,8 +53,8 @@ public class NotificaDecorrenzaTerminiConverter {
 		this.esito =  deserializer.readNotificaDecorrenzaTerminiType(raw);
 	}
 	
-	public int getIdentificativoSdi() throws Exception {
-		return this.esito.getIdentificativoSdI();
+	public String getIdentificativoSdi() throws Exception {
+		return this.esito.getIdentificativoSdI().toString();
 	}
 	
 	public NotificaDecorrenzaTermini getNotificaDecorrenzaTermini(long idTraccia) throws Exception {

@@ -199,7 +199,7 @@ public class RecuperaFatture {
 
 	}
 
-	public String cercaFattureRicevute(Integer idSdi) throws Exception {
+	public String cercaFattureRicevute(String idSdi) throws Exception {
 		List<IdFattura> lst = this.fatturaPassivaBD.
 				getIdFattureRicevute(idSdi);
 		

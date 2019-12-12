@@ -340,7 +340,7 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 
 			// identificativoSDI
 			if(search.getIdentificativoLotto().getValue() != null && !StringUtils.isEmpty(search.getIdentificativoLotto().getValue())){
-				filter.setIdentificativoSdi(Integer.parseInt(search.getIdentificativoLotto().getValue()));
+				filter.setIdentificativoSdi(search.getIdentificativoLotto().getValue());
 			}
 
 			// data Fattura

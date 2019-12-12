@@ -40,7 +40,7 @@ import java.io.Serializable;
  * &lt;complexType name="NotificaEsitoCommittente">
  * 		&lt;sequence>
  * 			&lt;element name="idFattura" type="{http://www.govmix.org/proxy/fatturapa/orm}id-fattura" minOccurs="1" maxOccurs="1"/>
- * 			&lt;element name="identificativoSdi" type="{http://www.govmix.org/proxy/fatturapa/orm}integer" minOccurs="1" maxOccurs="1"/>
+ * 			&lt;element name="identificativoSdi" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="numeroFattura" type="{http://www.govmix.org/proxy/fatturapa/orm}normalizedString" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="anno" type="{http://www.w3.org/2001/XMLSchema}nonNegativeInteger" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="posizione" type="{http://www.w3.org/2001/XMLSchema}positiveInteger" minOccurs="0" maxOccurs="1"/>
@@ -75,7 +75,7 @@ import java.io.Serializable;
 @XmlType(name = "NotificaEsitoCommittente", 
   propOrder = {
   	"idFattura",
-  	"_decimalWrapper_identificativoSdi",
+  	"identificativoSdi",
   	"numeroFattura",
   	"anno",
   	"posizione",
@@ -126,18 +126,12 @@ public class NotificaEsitoCommittente extends org.openspcoop2.utils.beans.BaseBe
     this.idFattura = idFattura;
   }
 
-  public java.lang.Integer getIdentificativoSdi() {
-    if(this._decimalWrapper_identificativoSdi!=null){
-		return (java.lang.Integer) this._decimalWrapper_identificativoSdi.getObject(java.lang.Integer.class);
-	}else{
-		return this.identificativoSdi;
-	}
+  public java.lang.String getIdentificativoSdi() {
+    return this.identificativoSdi;
   }
 
-  public void setIdentificativoSdi(java.lang.Integer identificativoSdi) {
-    if(identificativoSdi!=null){
-		this._decimalWrapper_identificativoSdi = new org.openspcoop2.utils.jaxb.DecimalWrapper(1,12,identificativoSdi);
-	}
+  public void setIdentificativoSdi(java.lang.String identificativoSdi) {
+    this.identificativoSdi = identificativoSdi;
   }
 
   public java.lang.String getNumeroFattura() {
@@ -354,13 +348,9 @@ public class NotificaEsitoCommittente extends org.openspcoop2.utils.beans.BaseBe
   @XmlElement(name="idFattura",required=true,nillable=false)
   protected IdFattura idFattura;
 
-  @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.Decimal2String.class)
-  @javax.xml.bind.annotation.XmlSchemaType(name="integer")
+  @javax.xml.bind.annotation.XmlSchemaType(name="string")
   @XmlElement(name="identificativoSdi",required=true,nillable=false)
-  org.openspcoop2.utils.jaxb.DecimalWrapper _decimalWrapper_identificativoSdi = null;
-
-  @XmlTransient
-  protected java.lang.Integer identificativoSdi;
+  protected java.lang.String identificativoSdi;
 
   @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(javax.xml.bind.annotation.adapters.NormalizedStringAdapter.class)
   @javax.xml.bind.annotation.XmlSchemaType(name="normalizedString")

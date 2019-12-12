@@ -89,7 +89,7 @@ public class FatturaDeserializerUtils {
 	}
 
 	
-	public static ConsegnaFatturaParameters getParams(byte[] raw, Integer identificativo, String messageId,
+	public static ConsegnaFatturaParameters getParams(byte[] raw, String identificativo, String messageId,
 			String nomeFile, boolean fatturazioneAttiva, String type) throws Exception, IOException {
 		ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(identificativo, nomeFile,
 						type, null,
@@ -310,7 +310,7 @@ public class FatturaDeserializerUtils {
 		}
 	}
 
-	public static FatturaElettronica getFattura(Logger log, byte[] raw, Integer identificativo, int posizione, String messageId,
+	public static FatturaElettronica getFattura(Logger log, byte[] raw, String identificativo, int posizione, String messageId,
 			String nomeFile, String type, boolean fatturazioneAttiva, String dipartimento) throws Exception {
 		LottoFatture lotto = getLotto(getParams(raw, identificativo, messageId, nomeFile, fatturazioneAttiva, type), dipartimento);
 		
@@ -322,7 +322,7 @@ public class FatturaDeserializerUtils {
 		return converter.getFatturaElettronica();
 	}
 
-	public static AbstractFatturaConverter<?> getConverter(Logger log, byte[] raw, Integer identificativo, int posizione, String messageId,
+	public static AbstractFatturaConverter<?> getConverter(Logger log, byte[] raw, String identificativo, int posizione, String messageId,
 			String nomeFile, String type, boolean fatturazioneAttiva, String dipartimento) throws Exception {
 		LottoFatture lotto = getLotto(getParams(raw, identificativo, messageId, nomeFile, fatturazioneAttiva, type), dipartimento);
 		

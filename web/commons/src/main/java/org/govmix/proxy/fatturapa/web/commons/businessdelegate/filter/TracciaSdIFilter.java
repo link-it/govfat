@@ -20,7 +20,7 @@ public class TracciaSdIFilter extends AbstractFilter {
 	/** Identificativo fisico della traccia sul DB **/
 	private Long id;
 
-	private Integer identificativoSdi;
+	private String identificativoSdi;
 	private Integer posizione;
 	private Boolean consentiPosizioneNull;
 	private String tipoComunicazione;
@@ -95,11 +95,11 @@ public class TracciaSdIFilter extends AbstractFilter {
 		}
 	}
 
-	public Integer getIdentificativoSdi() {
+	public String getIdentificativoSdi() {
 		return identificativoSdi;
 	}
 
-	public void setIdentificativoSdi(Integer identificativoSdi) {
+	public void setIdentificativoSdi(String identificativoSdi) {
 		this.identificativoSdi = identificativoSdi;
 	}
 

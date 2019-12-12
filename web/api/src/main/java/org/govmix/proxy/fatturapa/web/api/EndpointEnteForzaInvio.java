@@ -40,16 +40,16 @@ public interface EndpointEnteForzaInvio extends EndpointEnte {
 	@GET
 	@Produces("text/plain")
 	@Path("forzaInvioLotto")
-	Response forzaInvioLotto(@QueryParam("ProxyFatturaPA-IdSdI") Integer idSdI, @QueryParam("ProxyFatturaPA-ConsegnaDocumentiAccessori") String consegnaDocumentiAccessori);
+	Response forzaInvioLotto(@QueryParam("ProxyFatturaPA-IdSdI") String idSdI, @QueryParam("ProxyFatturaPA-ConsegnaDocumentiAccessori") String consegnaDocumentiAccessori);
 	
 	@GET
 	@Produces("text/plain")
 	@Path("elencoFattureRicevute")
-	Response elencoFattureRicevute(@QueryParam("ProxyFatturaPA-IdSdI") Integer idSdI);
+	Response elencoFattureRicevute(@QueryParam("ProxyFatturaPA-IdSdI") String idSdI);
 	
 	@GET
 	@Produces("text/plain")
 	@Path("forzaInvioFattura")
-	Response forzaInvioFattura(@QueryParam("ProxyFatturaPA-IdSdI") Integer idSdI, @QueryParam("ProxyFatturaPA-Posizione") Integer posizione, @QueryParam("ProxyFatturaPA-ConsegnaDocumentiAccessori") String consegnaDocumentiAccessori);
+	Response forzaInvioFattura(@QueryParam("ProxyFatturaPA-IdSdI") String idSdI, @QueryParam("ProxyFatturaPA-Posizione") Integer posizione, @QueryParam("ProxyFatturaPA-ConsegnaDocumentiAccessori") String consegnaDocumentiAccessori);
 
 }

@@ -74,7 +74,7 @@ public class LottoFattureAttiveBD extends LottoBD {
 		return expression;
 	}
 	
-	public void updateIdentificativoSdI(LottoFatture lotto, Integer identificativoSdI) throws ServiceException, NotFoundException {
+	public void updateIdentificativoSdI(LottoFatture lotto, String identificativoSdI) throws ServiceException, NotFoundException {
 		try {
 			this.service.updateFields(this.service.convertToId(lotto), new UpdateField(LottoFatture.model().IDENTIFICATIVO_SDI, identificativoSdI), new UpdateField(LottoFatture.model().TIPI_COMUNICAZIONE, "#"+TipoComunicazioneType.FAT_OUT.name()+"#"));
 		} catch (NotImplementedException e) {

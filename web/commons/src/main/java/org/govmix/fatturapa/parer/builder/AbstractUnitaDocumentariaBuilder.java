@@ -188,7 +188,7 @@ public abstract class AbstractUnitaDocumentariaBuilder <T extends AbstractUnitaD
 		MetadatiInvioFileType metadati = new MetadatiInvioFileType();
 		metadati.setCodiceDestinatario(lotto.getCodiceDestinatario());
 		metadati.setFormato(lotto.getFormatoArchivioInvioFattura().getValue());
-		metadati.setIdentificativoSdI(lotto.getIdentificativoSdi());
+//		metadati.setIdentificativoSdI(new String(lotto.getIdentificativoSdi())); //TODO IDSDI
 		metadati.setMessageId(lotto.getMessageId());
 		metadati.setNomeFile(lotto.getNomeFile());
 		metadati.setVersione(lotto.getFormatoTrasmissione().getValue());

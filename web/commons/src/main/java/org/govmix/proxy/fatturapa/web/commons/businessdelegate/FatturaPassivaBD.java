@@ -151,7 +151,7 @@ public class FatturaPassivaBD extends FatturaBD {
 	}
 	
 
-	public List<IdFattura> getIdFattureRicevute(Integer idSdI) throws Exception {
+	public List<IdFattura> getIdFattureRicevute(String idSdI) throws Exception {
 		try {
 			FatturaPassivaFilter filter = this.newFilter();
 			filter.setIdentificativoSdi(idSdI);

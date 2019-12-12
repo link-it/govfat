@@ -63,8 +63,9 @@
 
 
 	<xsd:simpleType name="IdentificativoSdIType">
-		<xsd:restriction base="xsd:integer">
-			<xsd:totalDigits value="12" />
+		<xsd:restriction base="xsd:string">
+			<!--xsd:totalDigits value="40" /-->
+			<xsd:maxLength value="50" />
 		</xsd:restriction>
 	</xsd:simpleType>
 
