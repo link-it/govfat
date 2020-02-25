@@ -71,6 +71,14 @@ public class FatturaPassivaBD extends FatturaBD {
 	public List<FatturaElettronica> getFattureDaSpedireContestuale(int offset, int limit, Date date) throws Exception {
 		try {
 			FatturaPassivaFilter filter = getFattureDaSpedireFilter(date, true);
+			List<FilterSortWrapper> lst = new ArrayList<FilterSortWrapper>();
+			FilterSortWrapper w = new FilterSortWrapper();
+			w.setField(FatturaElettronica.model().DATA_RICEZIONE);
+			w.setSortOrder(SortOrder.ASC);
+			lst.add(w);
+			filter.setFilterSortList(lst);
+
+
 			filter.setOffset(offset);
 			filter.setLimit(limit);
 			return this.findAll(filter);
@@ -100,6 +108,7 @@ public class FatturaPassivaBD extends FatturaBD {
 			w.setSortOrder(SortOrder.ASC);
 			lst.add(w);
 			filter.setFilterSortList(lst);
+
 
 			return this.findAll(filter);
 		} catch (ServiceException e) {
