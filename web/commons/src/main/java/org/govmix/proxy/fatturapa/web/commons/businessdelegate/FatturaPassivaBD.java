@@ -43,6 +43,8 @@ import org.openspcoop2.generic_project.exception.ExpressionException;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
+import org.openspcoop2.generic_project.expression.SortOrder;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FilterSortWrapper;
 
 public class FatturaPassivaBD extends FatturaBD {
 
@@ -92,6 +94,13 @@ public class FatturaPassivaBD extends FatturaBD {
 	public List<FatturaElettronica> getFattureDaSpedire(int offset, int limit, Date date) throws Exception {
 		try {
 			FatturaPassivaFilter filter = getFattureDaSpedireFilter(date, false);
+			List<FilterSortWrapper> lst = new ArrayList<FilterSortWrapper>();
+			FilterSortWrapper w = new FilterSortWrapper();
+			w.setField(FatturaElettronica.model().DATA_RICEZIONE);
+			w.setSortOrder(SortOrder.ASC);
+			lst.add(w);
+			filter.setFilterSortList(lst);
+
 			return this.findAll(filter);
 		} catch (ServiceException e) {
 			this.log.error("Errore durante la getFattureDaSpedire: " + e.getMessage(), e);
