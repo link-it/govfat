@@ -44,6 +44,14 @@ public class EsitoInvioFattura {
 		this.metadati = metadati;
 	}
 	
+	public String getIdentificativoSdI() {
+		return this.getMetadato("GovWay-SDI-IdentificativoSdI");
+	}
+	
+	public String getNomeFile() {
+		return this.getMetadato("GovWay-SDI-NomeFile");
+	}
+	
 	public String getMetadato(String nome) {
 		for(String ks: this.getMetadati().keySet()) {
 			if(nome.equalsIgnoreCase(ks))

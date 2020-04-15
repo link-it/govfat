@@ -63,11 +63,11 @@ public class SpedizioneFattureAttive implements IWorkFlow<LottoFatture> {
 			
 			TracciaSDI tracciaSdi = new TracciaSDI();
 			
-			tracciaSdi.setIdentificativoSdi(Long.parseLong(esitoInvioFattura.getMetadato("X-SDI-IdentificativoSDI")));
+			tracciaSdi.setIdentificativoSdi(Long.parseLong(esitoInvioFattura.getIdentificativoSdI()));
 			tracciaSdi.setTipoComunicazione(TipoComunicazioneType.FAT_OUT);
 			tracciaSdi.setData(new Date());
 			tracciaSdi.setContentType(InvioFattura.getContentType(lotto));
-			String nomeFile = esitoInvioFattura.getMetadato("X-SDI-NomeFile");
+			String nomeFile = esitoInvioFattura.getNomeFile();
 			if(nomeFile == null)
 				nomeFile = lotto.getNomeFile();
 			
