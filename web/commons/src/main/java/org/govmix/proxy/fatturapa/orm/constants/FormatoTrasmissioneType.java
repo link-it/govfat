@@ -27,7 +27,7 @@ import org.openspcoop2.generic_project.beans.IEnumeration;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 
 /**     
- * Enumeration dell'elemento FatturaElettronica.formatoTrasmissione xsd (tipo:string) 
+ * Enumeration dell'elemento LottoFatture.formatoTrasmissione xsd (tipo:string) 
  *
  * @author Giuseppe Papandrea (papandrea@link.it)
  * @author Giovanni Bussu (bussu@link.it)
@@ -45,7 +45,11 @@ public enum FormatoTrasmissioneType implements IEnumeration , Serializable , Clo
 	@javax.xml.bind.annotation.XmlEnumValue("SDI11")
 	SDI11 ("SDI11"),
 	@javax.xml.bind.annotation.XmlEnumValue("SDI10")
-	SDI10 ("SDI10");
+	SDI10 ("SDI10"),
+	@javax.xml.bind.annotation.XmlEnumValue("UBL21")
+	UBL21 ("UBL21"),
+	@javax.xml.bind.annotation.XmlEnumValue("CII20")
+	CII20 ("CII20");
 	
 	
 	/** Value */

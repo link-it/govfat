@@ -8,6 +8,7 @@
 	<name>GovFat</name>
 
 	<modules>
+		<module>plugins</module>
 		<module>commons</module>
 		<module>api</module>
 		<module>api-pcc</module>

@@ -20,367 +20,112 @@
  */
 package org.govmix.proxy.fatturapa.web.commons.consegnaFattura;
 
-import java.io.IOException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.lang.reflect.Constructor;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
-import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
-import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
-import org.govmix.proxy.fatturapa.orm.constants.StatoInserimentoType;
-import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
-import org.govmix.proxy.fatturapa.web.commons.converter.fattura.AbstractFatturaConverter;
-import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FPA12Converter;
-import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FatturaV10Converter;
-import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FatturaV11Converter;
-
-import it.gov.fatturapa.sdi.fatturapa.v1_0.DatiPagamentoType;
-import it.gov.fatturapa.sdi.fatturapa.v1_0.DettaglioPagamentoType;
-import it.gov.fatturapa.sdi.fatturapa.v1_0.FatturaElettronicaBodyType;
+import org.govmix.proxy.fatturapa.orm.constants.FormatoArchivioInvioFatturaType;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException.CODICE;
+import org.govmix.proxy.fatturapa.web.commons.converter.fattura.ILottoConverter;
+import org.openspcoop2.protocol.sdi.utils.P7MInfo;
 
 public class FatturaDeserializerUtils {
 
-	public static LottoFatture getLotto(ConsegnaFatturaParameters params, String dipartimento) throws Exception {
-
-		LottoFatture lotto = new LottoFatture();
-
-		lotto.setFormatoArchivioInvioFattura(params.getFormatoArchivioInvioFattura());
-		lotto.setCedentePrestatoreCodice(params.getCedentePrestatore().getIdCodice());
-		lotto.setCedentePrestatorePaese(params.getCedentePrestatore().getIdPaese());
-		lotto.setCedentePrestatoreCodiceFiscale(params.getCedentePrestatore().getCodiceFiscale());
-		lotto.setCedentePrestatoreCognome(params.getCedentePrestatore().getCognome());
-		lotto.setCedentePrestatoreNome(params.getCedentePrestatore().getNome());
-		lotto.setCedentePrestatoreDenominazione(params.getCedentePrestatore().getDenominazione());
-
-		lotto.setCessionarioCommittenteCodice(params.getCessionarioCommittente().getIdCodice());
-		lotto.setCessionarioCommittentePaese(params.getCessionarioCommittente().getIdPaese());
-		lotto.setCessionarioCommittenteCodiceFiscale(params.getCessionarioCommittente().getCodiceFiscale());
-		lotto.setCessionarioCommittenteCognome(params.getCessionarioCommittente().getCognome());
-		lotto.setCessionarioCommittenteNome(params.getCessionarioCommittente().getNome());
-		lotto.setCessionarioCommittenteDenominazione(params.getCessionarioCommittente().getDenominazione());
-
-		if(params.getTerzoIntermediarioOSoggettoEmittente() != null) {
-			lotto.setTerzoIntermediarioOSoggettoEmittenteCodice(params.getTerzoIntermediarioOSoggettoEmittente().getIdCodice());
-			lotto.setTerzoIntermediarioOSoggettoEmittentePaese(params.getTerzoIntermediarioOSoggettoEmittente().getIdPaese());
-			lotto.setTerzoIntermediarioOSoggettoEmittenteCodiceFiscale(params.getTerzoIntermediarioOSoggettoEmittente().getCodiceFiscale());
-			lotto.setTerzoIntermediarioOSoggettoEmittenteCognome(params.getTerzoIntermediarioOSoggettoEmittente().getCognome());
-			lotto.setTerzoIntermediarioOSoggettoEmittenteNome(params.getTerzoIntermediarioOSoggettoEmittente().getNome());
-			lotto.setTerzoIntermediarioOSoggettoEmittenteDenominazione(params.getTerzoIntermediarioOSoggettoEmittente().getDenominazione());
-		}
-
-		lotto.setIdentificativoSdi(params.getIdentificativoSdI());
-
-		lotto.setCodiceDestinatario(dipartimento);
-		lotto.setFormatoTrasmissione(FormatoTrasmissioneType.valueOf(params.getFormatoFatturaPA()));
-
-		lotto.setNomeFile(params.getNomeFile());
-		lotto.setMessageId(params.getMessageId());
-
-		lotto.setXml(params.getXml());
+	public static ILottoConverter getLottoConverter(LottoFatture lotto, Logger log) throws Exception {
+		ConsegnaFatturaParameters params = new ConsegnaFatturaParameters();
+		params.setCodiceDestinatario(lotto.getCodiceDestinatario());
+		params.setDataRicezione(lotto.getDataRicezione());
+		params.setDominio(lotto.getDominio());
+		params.setSottodominio(lotto.getSottodominio());
+		params.setFatturazioneAttiva(lotto.getFatturazioneAttiva());
+		params.setFormatoArchivioInvioFattura(lotto.getFormatoArchivioInvioFattura());
+		params.setFormatoFatturaPA(lotto.getFormatoTrasmissione().toString());
+		params.setIdEgov(lotto.getIdEgov());
+		params.setIdentificativoSdI(lotto.getIdentificativoSdi());
+		params.setMessageId(lotto.getMessageId());
+		params.setNomeFile(lotto.getNomeFile());
+		params.setRaw(lotto.getXml());
+		params.setLog(log);
 		
-		lotto.setDataRicezione(new Date());
-		lotto.setStatoConsegna(StatoConsegnaType.NON_CONSEGNATA);
-		lotto.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
-		lotto.setStatoInserimento(StatoInserimentoType.NON_INSERITO);
+		params.setXml(FatturaDeserializerUtils.getLottoXml(params.getFormatoArchivioInvioFattura(), params.getRaw(), params.getIdentificativoSdI(), log));
 
-		return lotto;
+		return getLottoConverter(params);
 	}
 
-	
-	public static ConsegnaFatturaParameters getParams(byte[] raw, Long identificativo, String messageId,
-			String nomeFile, boolean fatturazioneAttiva, String type) throws Exception, IOException {
-		ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(identificativo, nomeFile,
-						type, null,
-						messageId,
-						fatturazioneAttiva,
-						raw);
-		params.validate(true);
-		return params;
+	public static ILottoConverter getLottoConverter(ConsegnaFatturaParameters params) throws InserimentoLottiException {
+		return getLottoConverter(params.getFormatoFatturaPA(), params.getXml(), params);
 	}
-	
-	public static ConsegnaFatturaParameters getParameters(LottoFatture lotto,
-			int posizione, String nomeFile, boolean fatturazioneAttiva, byte[] xml) throws Exception {
 
-		ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(lotto.getFormatoTrasmissione().toString(), lotto.getIdentificativoSdi(), nomeFile, lotto.getFormatoArchivioInvioFattura().toString(), null, 
-				lotto.getMessageId(), lotto.getCodiceDestinatario(), lotto.getCedentePrestatoreDenominazione(), lotto.getCedentePrestatoreNome(), lotto.getCedentePrestatoreCognome(), lotto.getCedentePrestatoreCodiceFiscale(),
-				lotto.getCedentePrestatoreCodice(), lotto.getCedentePrestatorePaese(),
-				lotto.getCessionarioCommittenteDenominazione(), lotto.getCessionarioCommittenteNome(), lotto.getCessionarioCommittenteCognome(), lotto.getCessionarioCommittenteCodiceFiscale(), 
-				lotto.getCessionarioCommittenteCodice(), lotto.getCessionarioCommittentePaese(), 
-				lotto.getTerzoIntermediarioOSoggettoEmittenteDenominazione(), lotto.getTerzoIntermediarioOSoggettoEmittenteNome(), lotto.getTerzoIntermediarioOSoggettoEmittenteCognome(), 
-				lotto.getTerzoIntermediarioOSoggettoEmittenteCodiceFiscale(), lotto.getTerzoIntermediarioOSoggettoEmittenteCodice(), lotto.getTerzoIntermediarioOSoggettoEmittentePaese(), fatturazioneAttiva, xml);
-		params.setPosizioneFatturaPA(posizione);
+	private static Map<String, Constructor<? extends ILottoConverter>> converters;
+
+	@SuppressWarnings("unchecked")
+	private static void addConverter(Map<String, Constructor<? extends ILottoConverter>> map, String key, String className) throws InserimentoLottiException {
+		try {
+			Class<? extends ILottoConverter> classReader = (Class<? extends ILottoConverter>) Class.forName(className);
+			map.put(key, classReader.getConstructor(byte[].class, ConsegnaFatturaParameters.class));
+		} catch(Exception e) {
+			throw new InserimentoLottiException(CODICE.ERRORE_GENERICO, e.getMessage());
+		}
 		
-		return params;
 	}
 	
-	public static String getDenominazioneDestinatarioFromFattura(FatturaElettronica fattura) throws Exception {
-		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV10Converter converter = new FatturaV10Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getDatiAnagrafici().getAnagrafica().getDenominazione();
-		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV11Converter converter = new FatturaV11Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getDatiAnagrafici().getAnagrafica().getDenominazione();
-		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.getValue().equals(fattura.getFormatoTrasmissione().getValue()) || 
-				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FPA12Converter converter = new FPA12Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getDatiAnagrafici().getAnagrafica().getDenominazione();
-		} else {
-			throw new Exception("Formato FatturaPA ["+fattura.getFormatoTrasmissione()+"] non riconosciuto");
-		}
-	}
-	
-	public static String getNomeDestinatarioFromFattura(FatturaElettronica fattura) throws Exception {
-		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV10Converter converter = new FatturaV10Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getDatiAnagrafici().getAnagrafica().getNome();
-		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV11Converter converter = new FatturaV11Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getDatiAnagrafici().getAnagrafica().getNome();
-		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.getValue().equals(fattura.getFormatoTrasmissione().getValue()) || 
-				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FPA12Converter converter = new FPA12Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getDatiAnagrafici().getAnagrafica().getNome();
-		} else {
-			throw new Exception("Formato FatturaPA ["+fattura.getFormatoTrasmissione()+"] non riconosciuto");
-		}
-	}
-	
-	public static String getCognomeDestinatarioFromFattura(FatturaElettronica fattura) throws Exception {
-		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV10Converter converter = new FatturaV10Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getDatiAnagrafici().getAnagrafica().getCognome();
-		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV11Converter converter = new FatturaV11Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getDatiAnagrafici().getAnagrafica().getCognome();
-		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.getValue().equals(fattura.getFormatoTrasmissione().getValue()) || 
-				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FPA12Converter converter = new FPA12Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getDatiAnagrafici().getAnagrafica().getCognome();
-		} else {
-			throw new Exception("Formato FatturaPA ["+fattura.getFormatoTrasmissione()+"] non riconosciuto");
-		}
-	}
-	
-	public static String getCodiceDestinatarioFromFattura(FatturaElettronica fattura) throws Exception {
-		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV10Converter converter = new FatturaV10Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getDatiTrasmissione().getCodiceDestinatario();
-		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV11Converter converter = new FatturaV11Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getDatiTrasmissione().getCodiceDestinatario();
-		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.getValue().equals(fattura.getFormatoTrasmissione().getValue()) || 
-				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FPA12Converter converter = new FPA12Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getDatiTrasmissione().getCodiceDestinatario();
-		} else {
-			throw new Exception("Formato FatturaPA ["+fattura.getFormatoTrasmissione()+"] non riconosciuto");
-		}
-	}
-	
-	public static String getIndirizzoDestinatarioFromFattura(FatturaElettronica fattura) throws Exception {
-		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV10Converter converter = new FatturaV10Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getIndirizzo();
-		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV11Converter converter = new FatturaV11Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getIndirizzo();
-		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.getValue().equals(fattura.getFormatoTrasmissione().getValue()) || 
-				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FPA12Converter converter = new FPA12Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getIndirizzo();
-		} else {
-			throw new Exception("Formato FatturaPA ["+fattura.getFormatoTrasmissione()+"] non riconosciuto");
-		}
-	}
-	
-	public static String getCapDestinatarioFromFattura(FatturaElettronica fattura) throws Exception {
-		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV10Converter converter = new FatturaV10Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getCap();
-		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV11Converter converter = new FatturaV11Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getCap();
-		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.getValue().equals(fattura.getFormatoTrasmissione().getValue()) || 
-				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FPA12Converter converter = new FPA12Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getCap();
-		} else {
-			throw new Exception("Formato FatturaPA ["+fattura.getFormatoTrasmissione()+"] non riconosciuto");
-		}
-	}
-	
-	public static String getComuneDestinatarioFromFattura(FatturaElettronica fattura) throws Exception {
-		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV10Converter converter = new FatturaV10Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getComune();
-		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV11Converter converter = new FatturaV11Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getComune();
-		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.getValue().equals(fattura.getFormatoTrasmissione().getValue()) || 
-				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FPA12Converter converter = new FPA12Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getComune();
-		} else {
-			throw new Exception("Formato FatturaPA ["+fattura.getFormatoTrasmissione()+"] non riconosciuto");
-		}
-	}
-	
-	public static String getProvinciaFromFattura(FatturaElettronica fattura) throws Exception {
-		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV10Converter converter = new FatturaV10Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getProvincia();
-		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV11Converter converter = new FatturaV11Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getProvincia();
-		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.getValue().equals(fattura.getFormatoTrasmissione().getValue()) || 
-				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FPA12Converter converter = new FPA12Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getProvincia();
-		} else {
-			throw new Exception("Formato FatturaPA ["+fattura.getFormatoTrasmissione()+"] non riconosciuto");
-		}
-	}
-	
-	public static String getStatoFromFattura(FatturaElettronica fattura) throws Exception {
-		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV10Converter converter = new FatturaV10Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getNazione();
-		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV11Converter converter = new FatturaV11Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getNazione();
-		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.getValue().equals(fattura.getFormatoTrasmissione().getValue()) || 
-				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FPA12Converter converter = new FPA12Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getNazione();
-		} else {
-			throw new Exception("Formato FatturaPA ["+fattura.getFormatoTrasmissione()+"] non riconosciuto");
-		}
-	}
-	
-	public static String getPartitaIVADestinatarioFromFattura(FatturaElettronica fattura) throws Exception {
-		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV10Converter converter = new FatturaV10Converter(fattura.getXml(), null);
-			if(converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getDatiAnagrafici().getIdFiscaleIVA() == null)
-				return null;
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getDatiAnagrafici().getIdFiscaleIVA().getIdCodice();
-		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV11Converter converter = new FatturaV11Converter(fattura.getXml(), null);
-			if(converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getDatiAnagrafici().getIdFiscaleIVA() == null)
-				return null;
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getDatiAnagrafici().getIdFiscaleIVA().getIdCodice();
-		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.getValue().equals(fattura.getFormatoTrasmissione().getValue()) || 
-				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FPA12Converter converter = new FPA12Converter(fattura.getXml(), null);
-			if(converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getDatiAnagrafici().getIdFiscaleIVA() == null)
-				return null;
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getDatiAnagrafici().getIdFiscaleIVA().getIdCodice();
-		} else {
-			throw new Exception("Formato FatturaPA ["+fattura.getFormatoTrasmissione()+"] non riconosciuto");
-		}
-	}
+	private static ILottoConverter getLottoConverter(String formato, byte[] xml, ConsegnaFatturaParameters params) throws InserimentoLottiException {
 
-	public static String getCFMittenteFromFattura(FatturaElettronica fattura) throws Exception {
-		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV10Converter converter = new FatturaV10Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCedentePrestatore().getDatiAnagrafici().getCodiceFiscale();
-		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV11Converter converter = new FatturaV11Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCedentePrestatore().getDatiAnagrafici().getCodiceFiscale();
-		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.getValue().equals(fattura.getFormatoTrasmissione().getValue()) || 
-				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FPA12Converter converter = new FPA12Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCedentePrestatore().getDatiAnagrafici().getCodiceFiscale();
-		} else {
-			throw new Exception("Formato FatturaPA ["+fattura.getFormatoTrasmissione()+"] non riconosciuto");
+		if(converters == null) {
+				converters = new HashMap<String, Constructor<? extends ILottoConverter>>();
+				addConverter(converters, "SDI10","org.govmix.proxy.fatturapa.web.commons.converter.fattura.LottoSDI10Converter");
+				addConverter(converters, "SDI11","org.govmix.proxy.fatturapa.web.commons.converter.fattura.LottoSDI11Converter");
+				addConverter(converters, "FPA12","org.govmix.proxy.fatturapa.web.commons.converter.fattura.LottoFPA12Converter");
+				addConverter(converters, "UBL21","org.govmix.proxy.fatturapa.web.commons.converter.UBLLottoConverter");
 		}
-	}
 
-	public static String getNappFromFattura(FatturaElettronica fattura) throws Exception {
 		
-		String napp = null;
-		String prefix = "PagoPA-";
-		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV10Converter converter = new FatturaV10Converter(fattura.getXml(), null);
-			for(FatturaElettronicaBodyType body: converter.getFattura().getFatturaElettronicaBodyList()) {
-				for(DatiPagamentoType datiPagamento: body.getDatiPagamentoList()) {
-					for(DettaglioPagamentoType dettagliPagamento: datiPagamento.getDettaglioPagamentoList()) {
-						if(dettagliPagamento.getCodicePagamento()!= null && dettagliPagamento.getCodicePagamento().startsWith(prefix)) {
-							napp = dettagliPagamento.getCodicePagamento();
-						}
-					}
+		if(formato == null) {
+			for(String form: converters.keySet()) {
+				Constructor<? extends ILottoConverter> constructor = converters.get(form);
+				try {
+					return constructor.newInstance(xml, params);
+				} catch(InstantiationException e) {}
+				catch (Exception e) {
+					throw new InserimentoLottiException(CODICE.ERRORE_GENERICO, e.getMessage());
 				}
 			}
-		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV11Converter converter = new FatturaV11Converter(fattura.getXml(), null);
-			for(it.gov.fatturapa.sdi.fatturapa.v1_1.FatturaElettronicaBodyType body: converter.getFattura().getFatturaElettronicaBodyList()) {
-				for(it.gov.fatturapa.sdi.fatturapa.v1_1.DatiPagamentoType datiPagamento: body.getDatiPagamentoList()) {
-					for(it.gov.fatturapa.sdi.fatturapa.v1_1.DettaglioPagamentoType dettagliPagamento: datiPagamento.getDettaglioPagamentoList()) {
-						if(dettagliPagamento.getCodicePagamento()!= null && dettagliPagamento.getCodicePagamento().startsWith(prefix)) {
-							napp = dettagliPagamento.getCodicePagamento();
-						}
-					}
-				}
-			}
-		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.getValue().equals(fattura.getFormatoTrasmissione().getValue()) || 
-				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FPA12Converter converter = new FPA12Converter(fattura.getXml(), null);
-			for(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.FatturaElettronicaBodyType body: converter.getFattura().getFatturaElettronicaBodyList()) {
-				for(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.DatiPagamentoType datiPagamento: body.getDatiPagamentoList()) {
-					for(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.DettaglioPagamentoType dettagliPagamento: datiPagamento.getDettaglioPagamentoList()) {
-						if(dettagliPagamento.getCodicePagamento()!= null && dettagliPagamento.getCodicePagamento().startsWith(prefix)) {
-							napp = dettagliPagamento.getCodicePagamento();
-						}
-					}
-				}
-			}
+			
+			throw new InserimentoLottiException(CODICE.ERRORE_FORMATO_FILE, "Formato file non riconosciuto");
 		} else {
-			throw new Exception("Formato FatturaPA ["+fattura.getFormatoTrasmissione()+"] non riconosciuto");
+			if(converters.containsKey(formato)) {
+				Constructor<? extends ILottoConverter> constructor = converters.get(formato);
+				try {
+					return constructor.newInstance(xml, params);
+				} catch (Exception e) {
+					throw new InserimentoLottiException(CODICE.ERRORE_GENERICO, e.getMessage());
+				}
+			} else {
+				throw new InserimentoLottiException(CODICE.ERRORE_FORMATO_FILE, "Formato FatturaPA ["+formato+"] non riconosciuto");
+			}
 		}
 		
-		return napp.replace(prefix, "");
 	}
 
-	public static String getCodiceFiscaleDestinatarioFromFattura(FatturaElettronica fattura) throws Exception {
-		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV10Converter converter = new FatturaV10Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getDatiAnagrafici().getCodiceFiscale();
-		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FatturaV11Converter converter = new FatturaV11Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getDatiAnagrafici().getCodiceFiscale();
-		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.getValue().equals(fattura.getFormatoTrasmissione().getValue()) || 
-				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
-			FPA12Converter converter = new FPA12Converter(fattura.getXml(), null);
-			return converter.getFattura().getFatturaElettronicaHeader().getCessionarioCommittente().getDatiAnagrafici().getCodiceFiscale();
+	public static byte[] getLottoXml(FormatoArchivioInvioFatturaType formatoArchivioInvioFattura, byte[] xml, Long identificativoSdI, Logger log) throws Exception {
+		if(FormatoArchivioInvioFatturaType.P7M.equals(formatoArchivioInvioFattura)) {
+			try {
+				P7MInfo info = new P7MInfo(xml, log);
+
+				return info.getXmlDecoded();
+			} catch(Throwable t) {
+				throw new Exception("Lotto["+identificativoSdI+"]: "+t.getMessage(), t);
+			}
 		} else {
-			throw new Exception("Formato FatturaPA ["+fattura.getFormatoTrasmissione()+"] non riconosciuto");
+			return xml;
 		}
 	}
 
-	public static FatturaElettronica getFattura(Logger log, byte[] raw, Long identificativo, int posizione, String messageId,
-			String nomeFile, String type, boolean fatturazioneAttiva, String dipartimento) throws Exception {
-		LottoFatture lotto = getLotto(getParams(raw, identificativo, messageId, nomeFile, fatturazioneAttiva, type), dipartimento);
-		
-		byte[] lottoXml = ConsegnaFatturaUtils.getLottoXml(lotto, log);
-		List<byte[]> fattureLst =ConsegnaFatturaUtils.getXmlWithSDIUtils(lottoXml);
-
-		ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(lotto, posizione, nomeFile, fattureLst.get(posizione-1));
-		AbstractFatturaConverter<?> converter = ConsegnaFattura.getConverter(params);
-		return converter.getFatturaElettronica();
-	}
-
-	public static AbstractFatturaConverter<?> getConverter(Logger log, byte[] raw, Long identificativo, int posizione, String messageId,
-			String nomeFile, String type, boolean fatturazioneAttiva, String dipartimento) throws Exception {
-		LottoFatture lotto = getLotto(getParams(raw, identificativo, messageId, nomeFile, fatturazioneAttiva, type), dipartimento);
-		
-		byte[] lottoXml = ConsegnaFatturaUtils.getLottoXml(lotto, log);
-		List<byte[]> fattureLst =ConsegnaFatturaUtils.getXmlWithSDIUtils(lottoXml);
-
-		ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(lotto, posizione, nomeFile, fattureLst.get(posizione-1));
-		return ConsegnaFattura.getConverter(params);
-	}
 
 
-	
 }

@@ -26,12 +26,16 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
+import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
+import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.AllegatoFatturaBD;
+import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFatturePassiveBD;
-import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFattura;
-import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters;
-import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaUtils;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.FatturaDeserializerUtils;
+import org.govmix.proxy.fatturapa.web.commons.converter.fattura.ILottoConverter;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.InvioNotifica;
 import org.govmix.proxy.fatturapa.web.commons.sonde.Sonda;
@@ -64,8 +68,9 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 			connection = DAOFactory.getInstance().getConnection();
 			BatchProperties properties = BatchProperties.getInstance(); 
 
-			ConsegnaFattura consegnaFattura = new ConsegnaFattura(log, properties.isValidazioneDAOAbilitata(), connection, false);
 			LottoFatturePassiveBD lottoBD = new LottoFatturePassiveBD(log, connection, false);
+			FatturaPassivaBD fatturaBD = new FatturaPassivaBD(log, connection, false);
+			AllegatoFatturaBD allegatoBD = new AllegatoFatturaBD(log, connection, false);
 
 			Date limitDate = new Date();
 			this.log.info("Cerco lotti di fatture da inserire");
@@ -86,15 +91,36 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 							IdLotto idLotto =  lottoBD.convertToId(lotto);
 
 							try{ 
-								byte[] lottoXML = ConsegnaFatturaUtils.getLottoXml(lotto, this.log);
-								String nomeFile = ConsegnaFatturaUtils.getNomeLottoXml(lotto, this.log);
+								
+								ILottoConverter converter = FatturaDeserializerUtils.getLottoConverter(lotto, this.log);
 
+								List<String> idFatture = converter.getIdentificativiInterniFatture();
 								
-								
-								List<byte[]> fattureLst =ConsegnaFatturaUtils.getXmlWithSDIUtils(lottoXML); //ConsegnaFatturaUtils.getXmlWithSerializer(lotto.getFormatoTrasmissione(), lottoXML, ...);
-								
-								for (int i = 0; i < fattureLst.size(); i++) {
-									inserisciFattura(consegnaFattura, lotto, (i+1), nomeFile, fattureLst.get(i));
+								for(String k: idFatture) {
+									FatturaElettronica fatturaElettronica = converter.getFatturaElettronica(k);
+									List<AllegatoFattura> allegatiLst = converter.getAllegati(k);
+
+									IdFattura idFattura = fatturaBD.convertToId(fatturaElettronica);
+
+									if(properties.isValidazioneDAOAbilitata()) {
+										fatturaBD.validate(fatturaElettronica);
+										if(allegatiLst != null) {
+											for(AllegatoFattura allegato: allegatiLst) {
+												allegato.setIdFattura(idFattura);
+												allegatoBD.validate(allegato);
+											}
+										}	
+									}
+									
+									fatturaBD.create(fatturaElettronica);
+
+									if(allegatiLst != null) {
+										for(AllegatoFattura allegato: allegatiLst) {
+											allegato.setIdFattura(idFattura);
+											allegatoBD.create(allegato);
+										}
+									}
+
 								}
 								
 								lottoBD.setProcessato(idLotto);
@@ -167,24 +193,6 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 					connection.close();
 				} catch (SQLException e) {}
 			}
-		}
-
-	}
-
-	public void inserisciFattura(ConsegnaFattura consegnaFattura, LottoFatture lotto,
-			int posizione, String nomeFile, byte[] xml) throws ValidationException, Exception {
-		
-		try {
-
-			ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(lotto, posizione, nomeFile, xml);
-			if(xml == null) {
-				throw new ValidationException("La fattura ricevuta in ingresso e' null");
-			}
-
-			consegnaFattura.consegnaFattura(params);
-		} catch(Exception e) {
-			this.log.error("riceviFattura completata con errore per il lotto["+lotto.getIdentificativoSdi()+"] posizione ["+posizione+"]:"+ e.getMessage(), e);
-			throw e;
 		}
 	}
 

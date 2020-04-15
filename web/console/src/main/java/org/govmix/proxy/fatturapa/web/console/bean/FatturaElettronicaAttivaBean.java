@@ -35,7 +35,9 @@ import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.FatturaDeserializerUtils;
+import org.govmix.proxy.fatturapa.web.commons.converter.fattura.ILottoConverter;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
+import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.web.bean.IBean;
@@ -386,6 +388,9 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		FormatoTrasmissioneType formatoTrasmissione2 = this.getDTO().getFormatoTrasmissione();
 		if(formatoTrasmissione2 != null){
 			switch (formatoTrasmissione2) {
+			case SDI10:
+				this.formatoTrasmissione.setValue("fattura.formatoTrasmissione.sdi10");
+				break;
 			case SDI11:
 				this.formatoTrasmissione.setValue("fattura.formatoTrasmissione.sdi11");
 				break;
@@ -395,8 +400,11 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 			case FPR12:
 				this.formatoTrasmissione.setValue("fattura.formatoTrasmissione.fpr12");
 				break;
-			case SDI10:
-				this.formatoTrasmissione.setValue("fattura.formatoTrasmissione.sdi10");
+			case UBL21:
+				this.formatoTrasmissione.setValue("fattura.formatoTrasmissione.ubl21");
+				break;
+			case CII20:
+				this.formatoTrasmissione.setValue("fattura.formatoTrasmissione.cii20");
 				break;
 			}
 
@@ -535,7 +543,8 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 //		this.sottoDominio.setValue(sottoDominioValue);
 //		this.sottoDominio.setRendered(_sottodominio != null); 
 		try {
-			this.cuDestinatario.setValue(FatturaDeserializerUtils.getCodiceDestinatarioFromFattura(this.getDTO()));
+			ILottoConverter converter = FatturaDeserializerUtils.getLottoConverter(this.getDTO().getLottoFatture(), LoggerManager.getConsoleLogger());
+			this.cuDestinatario.setValue(converter.getFatturaElettronica(this.getDTO().getPosizione() +"").getCodiceDestinatario());
 			this.cuDestinatario.setRendered(true);
 		} catch (Exception e) {
 			this.cuDestinatario.setRendered(false); 

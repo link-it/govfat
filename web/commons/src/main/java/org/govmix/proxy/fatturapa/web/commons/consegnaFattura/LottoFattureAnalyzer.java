@@ -6,12 +6,11 @@ import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.constants.DominioType;
-import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
+import org.govmix.proxy.fatturapa.orm.constants.FormatoArchivioInvioFatturaType;
 import org.govmix.proxy.fatturapa.orm.constants.SottodominioType;
-import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
-import org.govmix.proxy.fatturapa.orm.constants.StatoInserimentoType;
-import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
+import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException.CODICE;
+import org.govmix.proxy.fatturapa.web.commons.converter.fattura.ILottoConverter;
 import org.openspcoop2.protocol.sdi.utils.P7MInfo;
 
 public class LottoFattureAnalyzer {
@@ -20,14 +19,14 @@ public class LottoFattureAnalyzer {
 	private boolean isFirmato;
 	private byte[] original;
 	private byte[] decoded;
-	private LottoFatture lotto;
+	private ILottoConverter lottoConverter;
 	private Logger log;
 
-	public LottoFattureAnalyzer(LottoFatture lotto, Dipartimento dipartimento, String codiceDipartimento, Logger log) throws Exception {
-		this(lotto.getXml(), lotto.getNomeFile(), lotto.getIdentificativoSdi(), dipartimento, codiceDipartimento, log);
+	public LottoFattureAnalyzer(LottoFatture lotto, Dipartimento dipartimento, String codiceDipartimento, StatoElaborazioneType stato, String protocollo, Logger log) throws Exception {
+		this(lotto.getXml(), lotto.getNomeFile(), lotto.getIdentificativoSdi(), dipartimento, codiceDipartimento, stato, protocollo, log);
 	}
 	
-	public LottoFattureAnalyzer(byte[] lottoFatture, String nomeFile, Long identificativo, Dipartimento dipartimento, String codiceDipartimento, Logger log) throws InserimentoLottiException {
+	public LottoFattureAnalyzer(byte[] lottoFatture, String nomeFile, Long identificativo, Dipartimento dipartimento, String codiceDipartimento, StatoElaborazioneType stato, String protocollo, Logger log) throws InserimentoLottiException {
 		this.log = log;
 		this.original = lottoFatture;
 		try {
@@ -51,8 +50,48 @@ public class LottoFattureAnalyzer {
 				throw new InserimentoLottiException(CODICE.ERRORE_FORMATO_FILE, e.getMessage());
 			}
 		}
-		String type = this.isP7M ? "P7M" : "XML"; 
-		this.lotto  = getLotto(this.original, nomeFile, identificativo, type, dipartimento, codiceDipartimento);
+		
+		if(stato == null) {
+			
+			if(this.isFirmato) {
+				if(dipartimento.getFirmaAutomatica()){
+					throw new InserimentoLottiException(CODICE.ERRORE_FILE_FIRMATO, nomeFile, dipartimento);
+				}
+			} else {
+				if(!dipartimento.getFirmaAutomatica() && isFirmaNecessaria(codiceDipartimento)) {
+					throw new InserimentoLottiException(getCodiceErroreNonFirmato(codiceDipartimento), nomeFile, dipartimento);
+				}
+			}
+
+			 if(dipartimento.getModalitaPush()) {
+					stato = StatoElaborazioneType.PRESA_IN_CARICO;
+			 } else {
+			         if(!this.isFirmato  && isFirmaNecessaria(codiceDipartimento)) {
+			                 throw new InserimentoLottiException(getCodiceErroreNonFirmato(codiceDipartimento), nomeFile, dipartimento);
+			         }
+					stato = StatoElaborazioneType.DA_INVIARE_ALLO_SDI;
+			 }
+		}
+		ConsegnaFatturaParameters params = new ConsegnaFatturaParameters();
+		params.setCodiceDestinatario(codiceDipartimento);
+		params.setDataRicezione(new Date());
+		params.setDominio(getDominio(codiceDipartimento));
+		params.setSottodominio(getSottodominio(codiceDipartimento));
+		params.setStato(stato);
+		params.setProtocollo(protocollo);
+		if(dipartimento!=null) {
+			params.setPrefissoCodicePagamento(dipartimento.getEnte().getPrefissoCodicePagamento());
+			params.setNodoCodicePagamento(dipartimento.getEnte().getNodoCodicePagamento());
+		}
+		params.setFatturazioneAttiva(true);
+		params.setFormatoArchivioInvioFattura(this.isP7M ? FormatoArchivioInvioFatturaType.P7M : FormatoArchivioInvioFatturaType.XML);
+		params.setIdentificativoSdI(identificativo);
+		params.setMessageId(identificativo+"");
+		params.setNomeFile(nomeFile);
+		params.setRaw(this.original);
+		params.setXml(this.decoded);
+
+		this.lottoConverter = FatturaDeserializerUtils.getLottoConverter(params);
 	}
 
 	public boolean isP7M() {
@@ -116,109 +155,27 @@ public class LottoFattureAnalyzer {
 
 	}
 	
-	private LottoFatture getLotto(byte[] xml, String nomeFile, Long identificativo, String type, Dipartimento dipartimento, String codiceDipartimento) throws InserimentoLottiException {
-		
-		
-		ConsegnaFatturaParameters params = null;
-		String messageId = identificativo + "";
-
-		try {
-
-			params = ConsegnaFatturaUtils.getParameters(identificativo, nomeFile,
-							type, null,
-							messageId,
-							false,
-							xml);
-			
-			params.validate(true);
-		} catch(Exception e) {
-			this.log.error("Errore durante il caricamento del lotto con nome file ["+nomeFile+"]: " + e.getMessage(), e);
-			throw new InserimentoLottiException(CODICE.PARAMETRI_NON_VALIDI, nomeFile);
-		}
-
-		LottoFatture lotto = new LottoFatture();
-
-		lotto.setFormatoArchivioInvioFattura(params.getFormatoArchivioInvioFattura());
-		lotto.setCedentePrestatoreCodice(params.getCedentePrestatore().getIdCodice());
-		lotto.setCedentePrestatorePaese(params.getCedentePrestatore().getIdPaese());
-		lotto.setCedentePrestatoreCodiceFiscale(params.getCedentePrestatore().getCodiceFiscale());
-		lotto.setCedentePrestatoreCognome(params.getCedentePrestatore().getCognome());
-		lotto.setCedentePrestatoreNome(params.getCedentePrestatore().getNome());
-		lotto.setCedentePrestatoreDenominazione(params.getCedentePrestatore().getDenominazione());
-
-		lotto.setCessionarioCommittenteCodice(params.getCessionarioCommittente().getIdCodice());
-		lotto.setCessionarioCommittentePaese(params.getCessionarioCommittente().getIdPaese());
-		lotto.setCessionarioCommittenteCodiceFiscale(params.getCessionarioCommittente().getCodiceFiscale());
-		lotto.setCessionarioCommittenteCognome(params.getCessionarioCommittente().getCognome());
-		lotto.setCessionarioCommittenteNome(params.getCessionarioCommittente().getNome());
-		lotto.setCessionarioCommittenteDenominazione(params.getCessionarioCommittente().getDenominazione());
-
-		if(params.getTerzoIntermediarioOSoggettoEmittente() != null) {
-			lotto.setTerzoIntermediarioOSoggettoEmittenteCodice(params.getTerzoIntermediarioOSoggettoEmittente().getIdCodice());
-			lotto.setTerzoIntermediarioOSoggettoEmittentePaese(params.getTerzoIntermediarioOSoggettoEmittente().getIdPaese());
-			lotto.setTerzoIntermediarioOSoggettoEmittenteCodiceFiscale(params.getTerzoIntermediarioOSoggettoEmittente().getCodiceFiscale());
-			lotto.setTerzoIntermediarioOSoggettoEmittenteCognome(params.getTerzoIntermediarioOSoggettoEmittente().getCognome());
-			lotto.setTerzoIntermediarioOSoggettoEmittenteNome(params.getTerzoIntermediarioOSoggettoEmittente().getNome());
-			lotto.setTerzoIntermediarioOSoggettoEmittenteDenominazione(params.getTerzoIntermediarioOSoggettoEmittente().getDenominazione());
-		}
-
-		lotto.setIdentificativoSdi(params.getIdentificativoSdI());
-
-		lotto.setCodiceDestinatario(codiceDipartimento);
-		lotto.setFormatoTrasmissione(FormatoTrasmissioneType.valueOf(params.getFormatoFatturaPA()));
-
-		lotto.setNomeFile(params.getNomeFile());
-		lotto.setMessageId(params.getMessageId());
-
-		lotto.setXml(params.getXml());
-		lotto.setFatturazioneAttiva(true);
-		
-		lotto.setDataRicezione(new Date());
-		lotto.setStatoConsegna(StatoConsegnaType.NON_CONSEGNATA);
-		lotto.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
-		lotto.setStatoInserimento(StatoInserimentoType.NON_INSERITO);
-		lotto.setDataUltimaElaborazione(new Date());
-		lotto.setDataProssimaElaborazione(new Date());
-		lotto.setTentativiConsegna(0);
-		lotto.setDominio(getDominio(params.getCodiceDestinatario()));
-		lotto.setSottodominio(getSottodominio(params.getCodiceDestinatario()));
-		
-		
-		if(dipartimento!=null) {
-			if(dipartimento.getEnte().getNodoCodicePagamento()!=null && dipartimento.getEnte().getPrefissoCodicePagamento() != null) {
-				this.log.debug("Dipartimento ["+dipartimento.getCodice()+"]. Nodo ["+dipartimento.getEnte().getNodoCodicePagamento()+"]. Prefisso ["+dipartimento.getEnte().getPrefissoCodicePagamento()+"]");
-				lotto.setPagoPA(XPathUtils.getPagoPA(this.decoded, dipartimento.getEnte().getNodoCodicePagamento(), dipartimento.getEnte().getPrefissoCodicePagamento(), lotto.getNomeFile(), this.log));
-			} else {
-				this.log.debug("Ente ["+dipartimento.getEnte().getNome()+"] non abilitato a invio PagoPA");
-			}
-		} else {
-			this.log.debug("Dipartimento non valorizzato. Non cerco numero avviso PagoPA"); 
-		}
-		
-		return lotto;
-	}
-
-	public LottoFatture getLotto() {
-		return lotto;
-	}
-
-	public void setLotto(LottoFatture lotto) {
-		this.lotto = lotto;
+	public boolean isFirmaNecessaria() throws InserimentoLottiException {
+		return this.isFirmaNecessaria(this.lottoConverter.getLottoFatture().getCodiceDestinatario());
 	}
 	
-	public boolean isFirmaNecessaria() {
-		return this.lotto.getDominio().toString().equals(DominioType.PA.toString()) || (this.getLotto().getSottodominio() != null && this.getLotto().getSottodominio().toString().equals(SottodominioType.ESTERO.toString()));
+	private boolean isFirmaNecessaria(String codiceDestinatario) throws InserimentoLottiException {
+		
+		DominioType dominio = getDominio(codiceDestinatario);
+		SottodominioType sottodominio = getSottodominio(codiceDestinatario);
+		return dominio.toString().equals(DominioType.PA.toString()) || (sottodominio != null && sottodominio.toString().equals(SottodominioType.ESTERO.toString()));
 	}
 
-	public CODICE getCodiceErroreNonFirmato() {
-		if(this.lotto.getSottodominio() != null && this.lotto.getSottodominio().equals(SottodominioType.ESTERO)) {
+	private CODICE getCodiceErroreNonFirmato(String codiceDestinatario) throws InserimentoLottiException {
+		SottodominioType sottodominio = getSottodominio(codiceDestinatario);
+		if(sottodominio != null && sottodominio.equals(SottodominioType.ESTERO)) {
 			return CODICE.ERRORE_FILE_ESTERO_NON_FIRMATO;				
 		}
 		return CODICE.ERRORE_FILE_NON_FIRMATO;
 	}
 
-	public CODICE getCodiceErroreFirmato() {
-		return CODICE.ERRORE_FILE_FIRMATO;
+	public ILottoConverter getLottoConverter() {
+		return lottoConverter;
 	}
 
 }

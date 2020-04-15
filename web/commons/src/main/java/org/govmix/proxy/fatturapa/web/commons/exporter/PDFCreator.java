@@ -54,7 +54,9 @@ public class PDFCreator {
 	public enum TipoXSL {
 		FATTURA_V10,
 		FATTURA_V11, 
-		FATTURA_V12, 
+		FATTURA_V12,
+		FATTURA_UBL21,
+		FATTURA_CII20,
 		NOTIFICA_EC, 
 		SCARTO_EC, 
 		NOTIFICA_DT, 

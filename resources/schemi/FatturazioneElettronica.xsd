@@ -377,6 +377,8 @@
 			<xsd:enumeration value="FPR12" />
 			<xsd:enumeration value="SDI11" />
 			<xsd:enumeration value="SDI10" />
+			<xsd:enumeration value="UBL21" />
+			<xsd:enumeration value="CII20" />
 		</xsd:restriction>
 	</xsd:simpleType>
 

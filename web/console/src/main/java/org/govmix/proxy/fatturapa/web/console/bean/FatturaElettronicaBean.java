@@ -460,17 +460,20 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 		FormatoTrasmissioneType formatoTrasmissione2 = this.getDTO().getFormatoTrasmissione();
 		if(formatoTrasmissione2 != null){
 			switch (formatoTrasmissione2) {
+			case SDI10:
+				this.formatoTrasmissione.setValue("fattura.formatoTrasmissione.sdi10");
+				break;
 			case SDI11:
 				this.formatoTrasmissione.setValue("fattura.formatoTrasmissione.sdi11");
 				break;
 			case FPA12:
 				this.formatoTrasmissione.setValue("fattura.formatoTrasmissione.fpa12");
 				break;
-			case FPR12:
-				this.formatoTrasmissione.setValue("fattura.formatoTrasmissione.fpr12");
+			case UBL21:
+				this.formatoTrasmissione.setValue("fattura.formatoTrasmissione.ubl21");
 				break;
-			case SDI10:
-				this.formatoTrasmissione.setValue("fattura.formatoTrasmissione.sdi10");
+			case CII20:
+				this.formatoTrasmissione.setValue("fattura.formatoTrasmissione.cii20");
 				break;
 			}
 

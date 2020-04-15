@@ -43,6 +43,8 @@ public class CommonsProperties extends AbstractProperties {
 	private String xslFatturaSDI10;
 	private String xslFatturaSDI11;
 	private String xslFatturaV12;
+	private String xslFatturaUBL21;
+	private String xslFatturaCII20;
 	private String xslNotificaEC;
 	private String xslNotificaDT;
 	private String xslScartoEC;
@@ -116,6 +118,8 @@ public class CommonsProperties extends AbstractProperties {
 		this.xslFatturaSDI10 = getProperty("xsl.fatturapa.sdi10", true);
 		this.xslFatturaSDI11 = getProperty("xsl.fatturapa.sdi11", true);
 		this.xslFatturaV12 = getProperty("xsl.fatturapa.v12", true);
+		this.setXslFatturaUBL21(getProperty("xsl.fatturapa.ubl21", true));
+		this.setXslFatturaCII20(getProperty("xsl.fatturapa.cii20", true));
 		this.xslNotificaDT = getProperty("xsl.notificaDT", true);
 		this.xslNotificaEC = getProperty("xsl.notificaEC", true);
 		this.xslScartoEC = getProperty("xsl.scartoEC", true);
@@ -264,6 +268,8 @@ public class CommonsProperties extends AbstractProperties {
 		case FATTURA_V10: return this.getXslFatturaSDI10();
 		case FATTURA_V11: return this.getXslFatturaSDI11();
 		case FATTURA_V12: return this.getXslFatturaV12();
+		case FATTURA_UBL21:  return this.getXslFatturaUBL21();
+		case FATTURA_CII20:  return this.getXslFatturaCII20();
 		case NOTIFICA_DT: return this.getXslNotificaDT();
 		case NOTIFICA_EC: return this.getXslNotificaEC();
 		case PCC_RIALLINEAMENTO: return this.getXslPccRiallineamento();
@@ -283,5 +289,20 @@ public class CommonsProperties extends AbstractProperties {
 		return "Versione Software["+CostantiFatturaPA.VERSIONE+"] Commit["+CostantiFatturaPA.COMMIT_ID+"]";
 	}
 
+	public String getXslFatturaUBL21() {
+		return xslFatturaUBL21;
+	}
+
+	public void setXslFatturaUBL21(String xslFatturaUBL21) {
+		this.xslFatturaUBL21 = xslFatturaUBL21;
+	}
+
+	public String getXslFatturaCII20() {
+		return xslFatturaCII20;
+	}
+
+	public void setXslFatturaCII20(String xslFatturaCII20) {
+		this.xslFatturaCII20 = xslFatturaCII20;
+	}
 
 }

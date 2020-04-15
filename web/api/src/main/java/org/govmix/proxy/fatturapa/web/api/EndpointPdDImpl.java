@@ -20,6 +20,8 @@
  */
 package org.govmix.proxy.fatturapa.web.api;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.util.Date;
@@ -33,9 +35,7 @@ import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.DominioType;
-import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
-import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
-import org.govmix.proxy.fatturapa.orm.constants.StatoInserimentoType;
+import org.govmix.proxy.fatturapa.orm.constants.FormatoArchivioInvioFatturaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
 import org.govmix.proxy.fatturapa.web.api.utils.WebApiProperties;
@@ -43,13 +43,15 @@ import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaAttivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFatturePassiveBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters;
-import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaUtils;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.FatturaDeserializerUtils;
+import org.govmix.proxy.fatturapa.web.commons.converter.fattura.ILottoConverter;
 import org.govmix.proxy.fatturapa.web.commons.converter.notificaesitocommittente.NotificaEsitoConverter;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.riceviNotificaDT.RiceviNotifica;
 import org.govmix.proxy.fatturapa.web.commons.ricevicomunicazionesdi.RiceviComunicazioneSdI;
 import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
+import org.openspcoop2.protocol.sdi.utils.P7MInfo;
 
 public class EndpointPdDImpl implements EndpointPdD {
 
@@ -124,63 +126,29 @@ public class EndpointPdDImpl implements EndpointPdD {
 				
 				String idEgov = getIdEgov(headers);
 
-				ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(identificativoSDI, nomeFile,
-						formatoArchivioInvioFatturaString, formatoArchivioBase64,
-						messageId,
-						false,
-						fatturaStream);
-
+				ConsegnaFatturaParameters params = new ConsegnaFatturaParameters();
+				params.setCodiceDestinatario(codiceDestinatario);
+				params.setDataRicezione(new Date());
+				params.setDominio(DominioType.PA);
+				params.setFatturazioneAttiva(false);
+				params.setFormatoArchivioInvioFattura(FormatoArchivioInvioFatturaType.toEnumConstant(formatoArchivioInvioFatturaString));
+				params.setFormatoFatturaPA(formatoFatturaPA);
+				params.setIdEgov(idEgov);
+				params.setIdentificativoSdI(identificativoSDI);
+				params.setMessageId(messageId);
+				params.setNomeFile(nomeFile);
+				params.setRaw(getXmlBytes(fatturaStream, formatoArchivioBase64));
+				params.setXml(FatturaDeserializerUtils.getLottoXml(params.getFormatoArchivioInvioFattura(), params.getRaw(), params.getIdentificativoSdI(), this.log));
+				
 				try {
 					params.validate(true);
 				} catch(Exception e) {
 					throw new Exception("Parametri ["+params.toString()+"] ricevuti in ingresso non validi:"+e.getMessage());
 				}
 
-				LottoFatture lotto = new LottoFatture();
+				ILottoConverter converter = FatturaDeserializerUtils.getLottoConverter(params);
+				LottoFatture lotto = converter.getLottoFatture();
 
-				lotto.setFormatoArchivioInvioFattura(params.getFormatoArchivioInvioFattura());
-				lotto.setCedentePrestatoreCodice(params.getCedentePrestatore().getIdCodice());
-				lotto.setCedentePrestatorePaese(params.getCedentePrestatore().getIdPaese());
-				lotto.setCedentePrestatoreCodiceFiscale(params.getCedentePrestatore().getCodiceFiscale());
-				lotto.setCedentePrestatoreCognome(params.getCedentePrestatore().getCognome());
-				lotto.setCedentePrestatoreNome(params.getCedentePrestatore().getNome());
-				lotto.setCedentePrestatoreDenominazione(params.getCedentePrestatore().getDenominazione());
-
-				lotto.setCessionarioCommittenteCodice(params.getCessionarioCommittente().getIdCodice());
-				lotto.setCessionarioCommittentePaese(params.getCessionarioCommittente().getIdPaese());
-				lotto.setCessionarioCommittenteCodiceFiscale(params.getCessionarioCommittente().getCodiceFiscale());
-				lotto.setCessionarioCommittenteCognome(params.getCessionarioCommittente().getCognome());
-				lotto.setCessionarioCommittenteNome(params.getCessionarioCommittente().getNome());
-				lotto.setCessionarioCommittenteDenominazione(params.getCessionarioCommittente().getDenominazione());
-
-				if(params.getTerzoIntermediarioOSoggettoEmittente() != null) {
-					lotto.setTerzoIntermediarioOSoggettoEmittenteCodice(params.getTerzoIntermediarioOSoggettoEmittente().getIdCodice());
-					lotto.setTerzoIntermediarioOSoggettoEmittentePaese(params.getTerzoIntermediarioOSoggettoEmittente().getIdPaese());
-					lotto.setTerzoIntermediarioOSoggettoEmittenteCodiceFiscale(params.getTerzoIntermediarioOSoggettoEmittente().getCodiceFiscale());
-					lotto.setTerzoIntermediarioOSoggettoEmittenteCognome(params.getTerzoIntermediarioOSoggettoEmittente().getCognome());
-					lotto.setTerzoIntermediarioOSoggettoEmittenteNome(params.getTerzoIntermediarioOSoggettoEmittente().getNome());
-					lotto.setTerzoIntermediarioOSoggettoEmittenteDenominazione(params.getTerzoIntermediarioOSoggettoEmittente().getDenominazione());
-				}
-
-				lotto.setIdentificativoSdi(params.getIdentificativoSdI());
-
-				lotto.setCodiceDestinatario(params.getCodiceDestinatario());
-				lotto.setFormatoTrasmissione(FormatoTrasmissioneType.valueOf(params.getFormatoFatturaPA()));
-
-				lotto.setIdEgov(idEgov);
-				lotto.setNomeFile(params.getNomeFile());
-				lotto.setMessageId(params.getMessageId());
-
-				lotto.setXml(params.getXml());
-				lotto.setFatturazioneAttiva(false);
-				
-				lotto.setDataRicezione(new Date());
-				lotto.setStatoConsegna(StatoConsegnaType.NON_CONSEGNATA);
-				lotto.setStatoProtocollazione(StatoProtocollazioneType.NON_PROTOCOLLATA);
-				lotto.setStatoInserimento(StatoInserimentoType.NON_INSERITO);
-				lotto.setTentativiConsegna(0);
-				
-				lotto.setDominio(DominioType.PA);
 				this.log.info("Inserimento del Lotto con identificativo SdI ["+lotto.getIdentificativoSdi()+"]...");
 				this.lottoBD.create(lotto);	
 				this.log.info("Inserimento del Lotto con identificativo SdI ["+lotto.getIdentificativoSdi()+"] completato");
@@ -193,6 +161,44 @@ public class EndpointPdDImpl implements EndpointPdD {
 
 		this.log.info("riceviLotto completata con successo per il lotto con identificativo SdI ["+identificativoSDI+"]");
 		return Response.ok().build();
+	}
+
+	private static byte[] getXmlBytes(InputStream fatturaStream, String formatoArchivioBase64) throws Exception {
+		boolean isBase64 = false;
+		if(formatoArchivioBase64 != null) {
+			try {
+				isBase64= Boolean.parseBoolean(formatoArchivioBase64);
+			} catch(Exception e){
+				throw new Exception("Parametro FormatoArchivioBase64 non valido:" + formatoArchivioBase64);
+			}
+		}
+		
+		byte[] xmlFattura = streamToBytes(fatturaStream);
+		if(isBase64) {
+			return org.apache.soap.encoding.soapenc.Base64.decode(new String(xmlFattura));
+		} else {
+			return xmlFattura;
+		}
+	}
+	
+	
+	private static byte[] streamToBytes(InputStream is) throws IOException {
+		ByteArrayOutputStream baos = null;
+
+		try {
+			baos = new ByteArrayOutputStream();
+			byte[] buff = new byte[2048];
+			int len = is.read(buff);
+			while(len > 0) {
+				baos.write(buff, 0, len);
+				len = is.read(buff);
+			}
+
+			return baos.toByteArray();
+		} finally {
+			if(is != null)
+				try {is.close(); } catch(Exception e) {} //IOUtils non chiude sempre (TODO usare commons IO di apache) 
+		}
 	}
 
 	private String getIdEgov(HttpHeaders headers) throws Exception {

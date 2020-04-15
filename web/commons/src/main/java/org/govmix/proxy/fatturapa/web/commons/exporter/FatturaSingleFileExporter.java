@@ -71,10 +71,12 @@ public class FatturaSingleFileExporter extends AbstractSingleFileXMLExporter<Fat
 	@Override
 	protected TipoXSL getTipoXsl(FatturaElettronica object) {
 		switch(object.getFormatoTrasmissione()) {
-		case FPA12: return TipoXSL.FATTURA_V12;
-		case FPR12: return TipoXSL.FATTURA_V12;
 		case SDI10: return TipoXSL.FATTURA_V10;
 		case SDI11: return TipoXSL.FATTURA_V11;
+		case FPA12: return TipoXSL.FATTURA_V12;
+		case FPR12: return TipoXSL.FATTURA_V12;
+		case UBL21: return TipoXSL.FATTURA_UBL21;
+		case CII20: return TipoXSL.FATTURA_CII20;
 		default: return TipoXSL.FATTURA_V12;
 		}
 	}
@@ -82,10 +84,12 @@ public class FatturaSingleFileExporter extends AbstractSingleFileXMLExporter<Fat
 	@Override
 	protected String getNomeRisorsaXLST(FatturaElettronica object) throws Exception {
 		switch(object.getFormatoTrasmissione()) {
-		case FPA12: return CommonsProperties.getInstance(this.log).getXslFatturaV12();
-		case FPR12: return CommonsProperties.getInstance(this.log).getXslFatturaV12();
 		case SDI10: return CommonsProperties.getInstance(this.log).getXslFatturaSDI10();
 		case SDI11: return CommonsProperties.getInstance(this.log).getXslFatturaSDI11();
+		case FPA12: return CommonsProperties.getInstance(this.log).getXslFatturaV12();
+		case FPR12: return CommonsProperties.getInstance(this.log).getXslFatturaV12();
+		case UBL21: return CommonsProperties.getInstance(this.log).getXslFatturaUBL21();
+		case CII20: return CommonsProperties.getInstance(this.log).getXslFatturaCII20();
 		default: return CommonsProperties.getInstance(this.log).getXslFatturaV12();
 		}
 	}
