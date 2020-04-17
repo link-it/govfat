@@ -40,6 +40,7 @@ import org.apache.soap.encoding.soapenc.Base64;
 public class InvioNotifica {
 
 	private static final String NOME_FILE_URL_PARAM = "NomeFile";
+	private static final String IDENTIFICATIVO_SDI_URL_PARAM = "IdentificativoSdI";
 
 	private JaxbSerializer serializer;
 	private JaxbDeserializer deserializer;
@@ -69,7 +70,7 @@ public class InvioNotifica {
 	public void invia(NotificaEsitoCommittenteType nec, String nomeFile) throws IOException, SerializerException, DeserializerException {
 		this.notificaXML = this.serializer.toByteArray(this.of.createNotificaEsitoCommittente(nec));
 
-		URL url = new URL(this.url.toString() + "?" + NOME_FILE_URL_PARAM + "=" + nomeFile);
+		URL url = new URL(this.url.toString() + "?" + NOME_FILE_URL_PARAM + "=" + nomeFile + "&" + IDENTIFICATIVO_SDI_URL_PARAM + "=" + nec.getIdentificativoSdI());
 		URLConnection conn = url.openConnection();
 		HttpURLConnection httpConn = (HttpURLConnection) conn;
 
