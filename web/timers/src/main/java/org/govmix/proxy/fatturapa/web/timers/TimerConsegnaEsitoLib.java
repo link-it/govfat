@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.ScartoType;
@@ -148,7 +149,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 								nec.setRiferimentoFattura(riferimentoFattura);
 
 								
-								InvioNotifica invioNotifica = this.isSPCoop(notifica) ?  invioNotificaSPCoop: invioNotificaSDICoop;
+								InvioNotifica invioNotifica = isSPCoop(notifica.getFatturaElettronica().getLottoFatture()) ?  invioNotificaSPCoop: invioNotificaSDICoop;
 								invioNotifica.invia(nec, notifica.getNomeFile());
 								int esitoChiamata = invioNotifica.getEsitoChiamata();
 
@@ -329,7 +330,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 
 	}
 
-	private boolean isSPCoop(NotificaEsitoCommittente notifica) {
-		return notifica.getFatturaElettronica().getLottoFatture().getIdEgov()!= null && notifica.getFatturaElettronica().getLottoFatture().getIdEgov().startsWith("CentroServiziFatturaPA_CentroServiziFatturaPASPCoopIT"); 
+	public static boolean isSPCoop(LottoFatture lotto) {
+		return lotto.getIdEgov()!= null && lotto.getIdEgov().startsWith("CentroServiziFatturaPA_CentroServiziFatturaPASPCoopIT"); 
 	}
 }

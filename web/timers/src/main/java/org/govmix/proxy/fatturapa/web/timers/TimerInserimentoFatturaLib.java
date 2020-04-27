@@ -108,7 +108,13 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 								if(properties.isRifiutoAutomaticoAbilitato()) {
 									
 									try {
-										InvioNotifica invioNotifica = new InvioNotifica(properties.getRicezioneEsitoURL(), properties.getRicezioneEsitoUsername(), properties.getRicezioneEsitoPassword());
+										
+										InvioNotifica invioNotifica = null;
+										if(TimerConsegnaEsitoLib.isSPCoop(lotto)) {
+											invioNotifica = new InvioNotifica(properties.getRicezioneEsitoURLSPCoop(), properties.getRicezioneEsitoUsernameSPCoop(), properties.getRicezioneEsitoPasswordSPCoop());
+										} else {
+											invioNotifica = new InvioNotifica(properties.getRicezioneEsitoURLSDICoop(), properties.getRicezioneEsitoUsernameSDICoop(), properties.getRicezioneEsitoPasswordSDICoop());
+										}
 										NotificaEsitoCommittenteType nec = new NotificaEsitoCommittenteType();
 										nec.setIdentificativoSdI(""+lotto.getIdentificativoSdi());
 										nec.setEsito(EsitoCommittenteType.EC02);
