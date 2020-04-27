@@ -113,6 +113,9 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 				List<NotificaEsitoCommittente> lstNotifiche = notificaEsitoCommittenteBD.findAllNotifiche(limitDate, 0, this.limit);
 
 				BatchProperties properties = BatchProperties.getInstance();
+				InvioNotifica invioNotificaSDICoop = new InvioNotifica(properties.getRicezioneEsitoURLSDICoop(), properties.getRicezioneEsitoUsernameSDICoop(), properties.getRicezioneEsitoPasswordSDICoop());
+				InvioNotifica invioNotificaSPCoop = new InvioNotifica(properties.getRicezioneEsitoURLSPCoop(), properties.getRicezioneEsitoUsernameSPCoop(), properties.getRicezioneEsitoPasswordSPCoop());
+
 				try {
 					while(countNotificheElaborate < countNotifiche) {
 						for(NotificaEsitoCommittente notifica : lstNotifiche) {
@@ -143,7 +146,9 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 								riferimentoFattura.setPosizioneFattura(notifica.getIdFattura().getPosizione());
 
 								nec.setRiferimentoFattura(riferimentoFattura);
-								InvioNotifica invioNotifica = new InvioNotifica(properties.getRicezioneEsitoURL(), properties.getRicezioneEsitoUsername(), properties.getRicezioneEsitoPassword());
+
+								
+								InvioNotifica invioNotifica = this.isSPCoop(notifica) ?  invioNotificaSPCoop: invioNotificaSDICoop;
 								invioNotifica.invia(nec, notifica.getNomeFile());
 								int esitoChiamata = invioNotifica.getEsitoChiamata();
 
@@ -305,16 +310,13 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 						this.log.info("Gestite ["+countNotificheElaborate+"\\"+countNotifiche+"] NotificheEsitoCommittente da consegnare");
 
 						lstNotifiche = notificaEsitoCommittenteBD.findAllNotifiche(limitDate, 0, this.limit);
-//						connection.commit();
 					}
 					Sonda.getInstance().registraChiamataServizioOK(this.getTimerName());
 				} catch(Exception e) {
 					log.error("Errore durante la consegnaEsito:"+e.getMessage(), e);
-//					connection.rollback();
 				}
 
 				this.log.info("Gestite ["+countNotificheElaborate+"\\"+countNotifiche+"] NotificheEsitoCommittente da consegnare. Fine");
-//				connection.setAutoCommit(true);
 			}
 
 		} finally {
@@ -325,5 +327,9 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 			}
 		}
 
+	}
+
+	private boolean isSPCoop(NotificaEsitoCommittente notifica) {
+		return notifica.getFatturaElettronica().getLottoFatture().getIdEgov()!= null && notifica.getFatturaElettronica().getLottoFatture().getIdEgov().startsWith("CentroServiziFatturaPA_CentroServiziFatturaPASPCoopIT"); 
 	}
 }

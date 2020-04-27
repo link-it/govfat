@@ -63,6 +63,7 @@ public class NotificaEsitoCommittenteModel extends AbstractModel<NotificaEsitoCo
 		this.SCARTO_NOTE = new Field("scartoNote",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.SCARTO_XML = new Field("scartoXml",byte[].class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.XML = new Field("xml",byte[].class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
+		this.FATTURA_ELETTRONICA = new org.govmix.proxy.fatturapa.orm.model.FatturaElettronicaModel(new Field("FatturaElettronica",org.govmix.proxy.fatturapa.orm.FatturaElettronica.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class));
 	
 	}
 	
@@ -91,6 +92,7 @@ public class NotificaEsitoCommittenteModel extends AbstractModel<NotificaEsitoCo
 		this.SCARTO_NOTE = new ComplexField(father,"scartoNote",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.SCARTO_XML = new ComplexField(father,"scartoXml",byte[].class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.XML = new ComplexField(father,"xml",byte[].class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
+		this.FATTURA_ELETTRONICA = new org.govmix.proxy.fatturapa.orm.model.FatturaElettronicaModel(new ComplexField(father,"FatturaElettronica",org.govmix.proxy.fatturapa.orm.FatturaElettronica.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class));
 	
 	}
 	
@@ -137,6 +139,8 @@ public class NotificaEsitoCommittenteModel extends AbstractModel<NotificaEsitoCo
 	public IField SCARTO_XML = null;
 	 
 	public IField XML = null;
+	 
+	public org.govmix.proxy.fatturapa.orm.model.FatturaElettronicaModel FATTURA_ELETTRONICA = null;
 	 
 
 	@Override

@@ -60,6 +60,7 @@ import java.io.Serializable;
  * 			&lt;element name="scartoNote" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="scartoXml" type="{http://www.w3.org/2001/XMLSchema}base64Binary" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="xml" type="{http://www.w3.org/2001/XMLSchema}base64Binary" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="FatturaElettronica" type="{http://www.govmix.org/proxy/fatturapa/orm}FatturaElettronica" minOccurs="0" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -94,7 +95,8 @@ import java.io.Serializable;
   	"scarto",
   	"scartoNote",
   	"scartoXml",
-  	"xml"
+  	"xml",
+  	"fatturaElettronica"
   }
 )
 
@@ -332,6 +334,14 @@ public class NotificaEsitoCommittente extends org.openspcoop2.utils.beans.BaseBe
     this.xml = xml;
   }
 
+  public FatturaElettronica getFatturaElettronica() {
+    return this.fatturaElettronica;
+  }
+
+  public void setFatturaElettronica(FatturaElettronica fatturaElettronica) {
+    this.fatturaElettronica = fatturaElettronica;
+  }
+
   private static final long serialVersionUID = 1L;
 
   @XmlTransient
@@ -447,5 +457,8 @@ public class NotificaEsitoCommittente extends org.openspcoop2.utils.beans.BaseBe
   @javax.xml.bind.annotation.XmlSchemaType(name="base64Binary")
   @XmlElement(name="xml",required=false,nillable=false)
   protected byte[] xml;
+
+  @XmlElement(name="FatturaElettronica",required=false,nillable=false)
+  protected FatturaElettronica fatturaElettronica;
 
 }
