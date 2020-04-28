@@ -140,16 +140,16 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 			fields.add((NotificaEsitoCommittente.model().SCARTO_XML));
 			fields.add((NotificaEsitoCommittente.model().XML));
 			fields.add((NotificaEsitoCommittente.model().UTENTE.USERNAME));
-			fields.add((NotificaEsitoCommittente.model().ID_FATTURA.IDENTIFICATIVO_SDI));
-			fields.add((NotificaEsitoCommittente.model().ID_FATTURA.POSIZIONE));
+//			fields.add((NotificaEsitoCommittente.model().ID_FATTURA.IDENTIFICATIVO_SDI));
+//			fields.add((NotificaEsitoCommittente.model().ID_FATTURA.POSIZIONE));
 			fields.add((NotificaEsitoCommittente.model().FATTURA_ELETTRONICA.LOTTO_FATTURE.ID_EGOV));
 
 			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));
 
 			for(Map<String, Object> map: returnMap) {
 				Long idFatturaElettronica = (Long) map.remove("id_fattura_elettronica");
-				Long identificativoSdI = (Long) map.remove(NotificaEsitoCommittente.model().ID_FATTURA.IDENTIFICATIVO_SDI.getFieldName());
-				Integer posizione = (Integer) map.remove(NotificaEsitoCommittente.model().ID_FATTURA.POSIZIONE.getFieldName());
+				Long identificativoSdI = (Long) map.remove(NotificaEsitoCommittente.model().IDENTIFICATIVO_SDI.getFieldName());
+				Integer posizione = (Integer) map.remove(NotificaEsitoCommittente.model().POSIZIONE.getFieldName());
 				String idEgov = (String) map.remove(NotificaEsitoCommittente.model().FATTURA_ELETTRONICA.LOTTO_FATTURE.ID_EGOV.getFieldName());
 				String username = (String) map.remove(NotificaEsitoCommittente.model().UTENTE.USERNAME.getFieldName());
 
