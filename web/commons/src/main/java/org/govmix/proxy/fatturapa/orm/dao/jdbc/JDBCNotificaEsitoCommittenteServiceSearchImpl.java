@@ -143,8 +143,9 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 			fields.add((NotificaEsitoCommittente.model().XML));
 			String usernameAlias = "ut_username";
 			fields.add(new AliasField(NotificaEsitoCommittente.model().UTENTE.USERNAME, usernameAlias));
-			String idutenteAlias = "ut_id";
-			fields.add(new AliasField(new CustomField("ut_id", Long.class, "id", this.getNotificaEsitoCommittenteFieldConverter().toTable(NotificaEsitoCommittente.model().UTENTE)), idutenteAlias));
+			String idutenteField = "id_utente";
+			fields.add(new CustomField(idutenteField, Long.class, idutenteField, this.getNotificaEsitoCommittenteFieldConverter().toTable(NotificaEsitoCommittente.model())));
+
 			String egovalias = "lotto_egov";
 			fields.add(new AliasField(NotificaEsitoCommittente.model().FATTURA_ELETTRONICA.LOTTO_FATTURE.ID_EGOV, egovalias));
 
@@ -154,7 +155,7 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 				Long idFatturaElettronica = (Long) map.get(idfatturaelettronicaField);
 				String idEgov = (String) map.get(egovalias);
 				String username = (String) map.get(usernameAlias);
-				Long idutente= (Long) map.get(idutenteAlias);
+				Long idutente= (Long) map.get(idutenteField);
 
 				NotificaEsitoCommittente notifica = (NotificaEsitoCommittente)this.getNotificaEsitoCommittenteFetch().fetch(jdbcProperties.getDatabase(), NotificaEsitoCommittente.model(), map);
 				

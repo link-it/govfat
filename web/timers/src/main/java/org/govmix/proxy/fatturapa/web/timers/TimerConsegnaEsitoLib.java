@@ -108,7 +108,6 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 			long countNotificheElaborate = 0; 
 
 			if(countNotifiche > 0) {
-				connection.setAutoCommit(false);
 
 				this.log.info("Gestisco ["+countNotifiche+"] NotificheEsitoCommittente da consegnare, ["+limit+"] alla volta");
 				List<NotificaEsitoCommittente> lstNotifiche = notificaEsitoCommittenteBD.findAllNotifiche(limitDate, 0, this.limit);
@@ -313,7 +312,6 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 								notifica.setStatoConsegnaSdi(policyRispedizione.isRispedizioneAbilitata() ? StatoConsegnaType.IN_RICONSEGNA: StatoConsegnaType.ERRORE_CONSEGNA);
 								notificaEsitoCommittenteBD.update(notifica);
 							}
-							connection.commit();
 							countNotificheElaborate++;
 						}
 						this.log.info("Gestite ["+countNotificheElaborate+"\\"+countNotifiche+"] NotificheEsitoCommittente da consegnare");
@@ -323,11 +321,9 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 					Sonda.getInstance().registraChiamataServizioOK(this.getTimerName());
 				} catch(Exception e) {
 					log.error("Errore durante la consegnaEsito:"+e.getMessage(), e);
-					connection.rollback();
 				}
 
 				this.log.info("Gestite ["+countNotificheElaborate+"\\"+countNotifiche+"] NotificheEsitoCommittente da consegnare. Fine");
-				connection.setAutoCommit(true);
 			}
 
 		} finally {
