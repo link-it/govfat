@@ -214,7 +214,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 //													switch(esito) {
 //													case EC01: esitoFattura = EsitoType.SCARTATA_ACCETTATO;
 //													break;
-//													case EC02: esitoFattura = EsitoType.SCARTATA_RIFIUTATO;
+//									org.govmix.proxy.fatturapa.orm.dao.jdbc.JDBCNotificaEsitoCommittenteServiceImpl.update				case EC02: esitoFattura = EsitoType.SCARTATA_RIFIUTATO;
 //													break;
 //													default: esitoFattura = EsitoType.SCARTATA_ACCETTATO;
 //													break;

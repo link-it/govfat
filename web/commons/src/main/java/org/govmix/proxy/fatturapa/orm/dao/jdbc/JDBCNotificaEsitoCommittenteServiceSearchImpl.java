@@ -148,10 +148,10 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 
 			for(Map<String, Object> map: returnMap) {
 				Long idFatturaElettronica = (Long) map.remove("id_fattura_elettronica");
-				Long identificativoSdI = (Long) map.remove(NotificaEsitoCommittente.model().IDENTIFICATIVO_SDI.getFieldName());
-				Integer posizione = (Integer) map.remove(NotificaEsitoCommittente.model().POSIZIONE.getFieldName());
-				String idEgov = (String) map.remove(NotificaEsitoCommittente.model().FATTURA_ELETTRONICA.LOTTO_FATTURE.ID_EGOV.getFieldName());
-				String username = (String) map.remove(NotificaEsitoCommittente.model().UTENTE.USERNAME.getFieldName());
+				Long identificativoSdI = (Long) map.get(NotificaEsitoCommittente.model().IDENTIFICATIVO_SDI.getFieldName());
+				Integer posizione = (Integer) map.get(NotificaEsitoCommittente.model().POSIZIONE.getFieldName());
+				String idEgov = (String) map.get(NotificaEsitoCommittente.model().FATTURA_ELETTRONICA.LOTTO_FATTURE.ID_EGOV.getFieldName());
+				String username = (String) map.get(NotificaEsitoCommittente.model().UTENTE.USERNAME.getFieldName());
 
 				NotificaEsitoCommittente notifica = (NotificaEsitoCommittente)this.getNotificaEsitoCommittenteFetch().fetch(jdbcProperties.getDatabase(), NotificaEsitoCommittente.model(), map);
 				
