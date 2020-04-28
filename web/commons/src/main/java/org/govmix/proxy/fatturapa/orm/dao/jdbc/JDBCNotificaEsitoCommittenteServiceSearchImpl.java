@@ -144,7 +144,7 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 			String usernameAlias = "ut_username";
 			fields.add(new AliasField(NotificaEsitoCommittente.model().UTENTE.USERNAME, usernameAlias));
 			String idutenteAlias = "ut_id";
-			fields.add(new AliasField(new CustomField("id", Long.class, "id", this.getNotificaEsitoCommittenteFieldConverter().toTable(NotificaEsitoCommittente.model().UTENTE)), idutenteAlias));
+			fields.add(new AliasField(new CustomField("ut_id", Long.class, "id", this.getNotificaEsitoCommittenteFieldConverter().toTable(NotificaEsitoCommittente.model().UTENTE)), idutenteAlias));
 			String egovalias = "lotto_egov";
 			fields.add(new AliasField(NotificaEsitoCommittente.model().FATTURA_ELETTRONICA.LOTTO_FATTURE.ID_EGOV, egovalias));
 
