@@ -163,6 +163,13 @@ public class NotificaEsitoCommittenteFetch extends AbstractJDBCFetch {
 				return object;
 			}
 			
+			if(model.equals(NotificaEsitoCommittente.model().UTENTE)){
+				IdUtente object = new IdUtente();
+				setParameter(object, "setUsername", NotificaEsitoCommittente.model().UTENTE.USERNAME.getFieldType(),
+						this.getObjectFromMap(map,"id-utente"));
+				return object;
+			}
+
 			else{
 				throw new ServiceException("Model ["+model.toString()+"] not supported by fetch: "+this.getClass().getName());
 			}	
