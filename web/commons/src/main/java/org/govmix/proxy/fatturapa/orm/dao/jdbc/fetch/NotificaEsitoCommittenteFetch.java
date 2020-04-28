@@ -20,18 +20,17 @@
  */
 package org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch;
 
+import java.sql.ResultSet;
+import java.util.Map;
+
+import org.govmix.proxy.fatturapa.orm.IdUtente;
+import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.openspcoop2.generic_project.beans.IModel;
 import org.openspcoop2.generic_project.dao.jdbc.utils.AbstractJDBCFetch;
 import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCParameterUtilities;
 import org.openspcoop2.generic_project.exception.ServiceException;
-
-import java.sql.ResultSet;
-import java.util.Map;
-
 import org.openspcoop2.utils.TipiDatabase;
 import org.openspcoop2.utils.jdbc.IKeyGeneratorObject;
-
-import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 
 
 /**     
@@ -95,6 +94,14 @@ public class NotificaEsitoCommittenteFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "xml", NotificaEsitoCommittente.model().XML.getFieldType()));
 				return object;
 			}
+			
+			if(model.equals(NotificaEsitoCommittente.model().UTENTE)){
+				IdUtente object = new IdUtente();
+				setParameter(object, "setUsername", NotificaEsitoCommittente.model().UTENTE.USERNAME.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "username", NotificaEsitoCommittente.model().UTENTE.USERNAME.getFieldType()));
+				return object;
+			}
+
 			
 			else{
 				throw new ServiceException("Model ["+model.toString()+"] not supported by fetch: "+this.getClass().getName());

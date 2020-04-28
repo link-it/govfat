@@ -140,23 +140,17 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 			fields.add((NotificaEsitoCommittente.model().SCARTO_XML));
 			fields.add((NotificaEsitoCommittente.model().XML));
 			fields.add((NotificaEsitoCommittente.model().UTENTE.USERNAME));
-//			fields.add((NotificaEsitoCommittente.model().ID_FATTURA.IDENTIFICATIVO_SDI));
-//			fields.add((NotificaEsitoCommittente.model().ID_FATTURA.POSIZIONE));
 			fields.add((NotificaEsitoCommittente.model().FATTURA_ELETTRONICA.LOTTO_FATTURE.ID_EGOV));
 
 			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));
 
 			for(Map<String, Object> map: returnMap) {
 				Long idFatturaElettronica = (Long) map.remove("id_fattura_elettronica");
-				Long identificativoSdI = (Long) map.get(NotificaEsitoCommittente.model().IDENTIFICATIVO_SDI.getFieldName());
-				Integer posizione = (Integer) map.get(NotificaEsitoCommittente.model().POSIZIONE.getFieldName());
 				String idEgov = (String) map.get(NotificaEsitoCommittente.model().FATTURA_ELETTRONICA.LOTTO_FATTURE.ID_EGOV.getFieldName());
-				String username = (String) map.get(NotificaEsitoCommittente.model().UTENTE.USERNAME.getFieldName());
 
 				NotificaEsitoCommittente notifica = (NotificaEsitoCommittente)this.getNotificaEsitoCommittenteFetch().fetch(jdbcProperties.getDatabase(), NotificaEsitoCommittente.model(), map);
-				
-				IdUtente idUtente = new IdUtente();
-				idUtente.setUsername(username);
+				IdUtente idUtente = (IdUtente)this.getNotificaEsitoCommittenteFetch().fetch(jdbcProperties.getDatabase(), NotificaEsitoCommittente.model().UTENTE, map);
+
 				notifica.setUtente(idUtente);
 
 				FatturaElettronica fattura = new FatturaElettronica();
@@ -165,9 +159,9 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 				fattura.setLottoFatture(lotto);
 				notifica.setFatturaElettronica(fattura);
 
-				IdFattura idfattura = new IdFattura(false);
-				idfattura.setIdentificativoSdi(identificativoSdI);
-				idfattura.setPosizione(posizione);
+				IdFattura idfattura = new IdFattura(false); //sempre fatturazione passiva
+				idfattura.setIdentificativoSdi(notifica.getIdentificativoSdi());
+				idfattura.setPosizione(notifica.getPosizione());
 				idfattura.setId(idFatturaElettronica);
 				notifica.setIdFattura(idfattura);
 
