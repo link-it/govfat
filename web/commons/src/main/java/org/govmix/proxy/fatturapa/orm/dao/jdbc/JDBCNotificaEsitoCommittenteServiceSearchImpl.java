@@ -35,6 +35,7 @@ import org.openspcoop2.generic_project.dao.jdbc.utils.IJDBCFetch;
 import org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject;
 import org.openspcoop2.generic_project.dao.jdbc.IJDBCServiceSearchWithoutId;
 import org.openspcoop2.generic_project.utils.UtilsTemplate;
+import org.openspcoop2.generic_project.beans.AliasField;
 import org.openspcoop2.generic_project.beans.CustomField;
 import org.openspcoop2.generic_project.beans.InUse;
 import org.openspcoop2.generic_project.beans.IField;
@@ -139,7 +140,8 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 			fields.add((NotificaEsitoCommittente.model().SCARTO_NOTE));
 			fields.add((NotificaEsitoCommittente.model().SCARTO_XML));
 			fields.add((NotificaEsitoCommittente.model().XML));
-			fields.add((NotificaEsitoCommittente.model().UTENTE.USERNAME));
+			String usernameAlias = "ut_username";
+			fields.add(new AliasField(NotificaEsitoCommittente.model().UTENTE.USERNAME, usernameAlias));
 			fields.add((NotificaEsitoCommittente.model().FATTURA_ELETTRONICA.LOTTO_FATTURE.ID_EGOV));
 
 			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));
@@ -147,9 +149,11 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 			for(Map<String, Object> map: returnMap) {
 				Long idFatturaElettronica = (Long) map.remove("id_fattura_elettronica");
 				String idEgov = (String) map.get(NotificaEsitoCommittente.model().FATTURA_ELETTRONICA.LOTTO_FATTURE.ID_EGOV.getFieldName());
+				String username = (String) map.get(usernameAlias);
 
 				NotificaEsitoCommittente notifica = (NotificaEsitoCommittente)this.getNotificaEsitoCommittenteFetch().fetch(jdbcProperties.getDatabase(), NotificaEsitoCommittente.model(), map);
-				IdUtente idUtente = (IdUtente)this.getNotificaEsitoCommittenteFetch().fetch(jdbcProperties.getDatabase(), NotificaEsitoCommittente.model().UTENTE, map);
+				IdUtente idUtente = new IdUtente();
+				idUtente.setUsername(username);
 
 				notifica.setUtente(idUtente);
 

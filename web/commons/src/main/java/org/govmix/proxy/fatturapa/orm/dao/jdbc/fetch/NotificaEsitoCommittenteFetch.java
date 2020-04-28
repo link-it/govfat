@@ -23,7 +23,6 @@ package org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch;
 import java.sql.ResultSet;
 import java.util.Map;
 
-import org.govmix.proxy.fatturapa.orm.IdUtente;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.openspcoop2.generic_project.beans.IModel;
 import org.openspcoop2.generic_project.dao.jdbc.utils.AbstractJDBCFetch;
@@ -95,14 +94,6 @@ public class NotificaEsitoCommittenteFetch extends AbstractJDBCFetch {
 				return object;
 			}
 			
-			if(model.equals(NotificaEsitoCommittente.model().UTENTE)){
-				IdUtente object = new IdUtente();
-				setParameter(object, "setUsername", NotificaEsitoCommittente.model().UTENTE.USERNAME.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "username", NotificaEsitoCommittente.model().UTENTE.USERNAME.getFieldType()));
-				return object;
-			}
-
-			
 			else{
 				throw new ServiceException("Model ["+model.toString()+"] not supported by fetch: "+this.getClass().getName());
 			}	
@@ -160,13 +151,6 @@ public class NotificaEsitoCommittenteFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"scartoXml"));
 				setParameter(object, "setXml", NotificaEsitoCommittente.model().XML.getFieldType(),
 					this.getObjectFromMap(map,"xml"));
-				return object;
-			}
-			
-			if(model.equals(NotificaEsitoCommittente.model().UTENTE)){
-				IdUtente object = new IdUtente();
-				setParameter(object, "setUsername", NotificaEsitoCommittente.model().UTENTE.USERNAME.getFieldType(),
-						this.getObjectFromMap(map,"id-utente"));
 				return object;
 			}
 
