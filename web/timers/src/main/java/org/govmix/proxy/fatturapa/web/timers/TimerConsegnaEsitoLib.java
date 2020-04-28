@@ -148,8 +148,15 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 
 								nec.setRiferimentoFattura(riferimentoFattura);
 
+								InvioNotifica invioNotifica = null;
+								if(isSPCoop(notifica.getFatturaElettronica().getLottoFatture())) {
+									this.log.info("Invio notifica ["+notifica.getId()+"] tramite canale SPCoop");
+									invioNotifica = invioNotificaSPCoop;
+								} else {
+									this.log.info("Invio notifica ["+notifica.getId()+"] tramite canale SDICoop");
+									invioNotifica = invioNotificaSDICoop;
+								}
 								
-								InvioNotifica invioNotifica = isSPCoop(notifica.getFatturaElettronica().getLottoFatture()) ?  invioNotificaSPCoop: invioNotificaSDICoop;
 								invioNotifica.invia(nec, notifica.getNomeFile());
 								int esitoChiamata = invioNotifica.getEsitoChiamata();
 

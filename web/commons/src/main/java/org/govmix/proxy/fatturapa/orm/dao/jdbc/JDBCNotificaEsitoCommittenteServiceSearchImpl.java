@@ -120,7 +120,8 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 
 			String id = "id";
 			fields.add(new CustomField(id, Long.class, id, this.getNotificaEsitoCommittenteFieldConverter().toTable(NotificaEsitoCommittente.model())));
-			fields.add(new CustomField("id_fattura_elettronica", Long.class, "id_fattura_elettronica", this.getNotificaEsitoCommittenteFieldConverter().toTable(NotificaEsitoCommittente.model())));
+			String idfatturaelettronicaField = "id_fattura_elettronica";
+			fields.add(new CustomField(idfatturaelettronicaField, Long.class, idfatturaelettronicaField, this.getNotificaEsitoCommittenteFieldConverter().toTable(NotificaEsitoCommittente.model())));
 			fields.add((NotificaEsitoCommittente.model().IDENTIFICATIVO_SDI));
 			fields.add((NotificaEsitoCommittente.model().NUMERO_FATTURA));
 			fields.add((NotificaEsitoCommittente.model().ANNO));
@@ -144,17 +145,19 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 			fields.add(new AliasField(NotificaEsitoCommittente.model().UTENTE.USERNAME, usernameAlias));
 			String idutenteAlias = "ut_id";
 			fields.add(new AliasField(new CustomField("id", Long.class, "id", this.getNotificaEsitoCommittenteFieldConverter().toTable(NotificaEsitoCommittente.model().UTENTE)), idutenteAlias));
-			fields.add((NotificaEsitoCommittente.model().FATTURA_ELETTRONICA.LOTTO_FATTURE.ID_EGOV));
+			String egovalias = "lotto_egov";
+			fields.add(new AliasField(NotificaEsitoCommittente.model().FATTURA_ELETTRONICA.LOTTO_FATTURE.ID_EGOV, egovalias));
 
 			List<Map<String, Object>> returnMap = this.select(jdbcProperties, log, connection, sqlQueryObject, expression, fields.toArray(new IField[1]));
 
 			for(Map<String, Object> map: returnMap) {
-				Long idFatturaElettronica = (Long) map.remove("id_fattura_elettronica");
-				String idEgov = (String) map.get(NotificaEsitoCommittente.model().FATTURA_ELETTRONICA.LOTTO_FATTURE.ID_EGOV.getFieldName());
+				Long idFatturaElettronica = (Long) map.get(idfatturaelettronicaField);
+				String idEgov = (String) map.get(egovalias);
 				String username = (String) map.get(usernameAlias);
 				Long idutente= (Long) map.get(idutenteAlias);
 
 				NotificaEsitoCommittente notifica = (NotificaEsitoCommittente)this.getNotificaEsitoCommittenteFetch().fetch(jdbcProperties.getDatabase(), NotificaEsitoCommittente.model(), map);
+				
 				IdUtente idUtente = new IdUtente();
 				idUtente.setUsername(username);
 				idUtente.setId(idutente);
