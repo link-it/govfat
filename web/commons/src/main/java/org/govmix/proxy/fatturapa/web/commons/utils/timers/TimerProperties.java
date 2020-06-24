@@ -20,9 +20,12 @@
  */
 package org.govmix.proxy.fatturapa.web.commons.utils.timers;
 
+import java.util.List;
+
+import org.govmix.proxy.pcc.fatture.utils.AbstractProperties;
 import org.openspcoop2.utils.resources.PropertiesReader;
 
-public class TimerProperties {
+public class TimerProperties extends AbstractProperties {
 
 	private boolean timerAbilitato;
 	private boolean timerLogAbilitato;
@@ -33,50 +36,17 @@ public class TimerProperties {
 	private int timerErrorThreshold;
 	private String timerName;
 	
-	public TimerProperties(PropertiesReader externalReader, PropertiesReader reader, String prefix, String name) throws Exception {
+	public TimerProperties(List<PropertiesReader> r, String prefix, String name) throws Exception {
+		super(r);
+
 		this.timerName = name;
 		
-		String abilitato = externalReader.getValue(prefix+".enable");
-		if(abilitato == null) {
-			throw new Exception("properieta' ["+prefix+".enable] non definita");
-		}
-		
-		this.timerAbilitato = Boolean.parseBoolean(abilitato.trim());
-		
-		String timeout = externalReader.getValue(prefix+".timeout");
-		if(timeout == null) {
-			throw new Exception("properieta' ["+prefix+".timeout] non definita");
-		}
-		
-		this.timerTimeout = Integer.parseInt(timeout.trim());
-		
-		String logAbilitato = reader.getValue(prefix+".logQuery");
-		if(logAbilitato == null) {
-			throw new Exception("properieta' ["+prefix+".logQuery] non definita");
-		}
-		
-		this.timerLogAbilitato = Boolean.parseBoolean(logAbilitato.trim());
-		
-		String limit = reader.getValue(prefix+".query.limit");
-		if(limit == null) {
-			throw new Exception("properieta' ["+prefix+".query.limit] non definita");
-		}
-		
-		this.timerLimit = Integer.parseInt(limit.trim());
-		
-		String timerWarningThresholdString = externalReader.getValue(prefix+".warningThreshold");
-		if(timerWarningThresholdString == null) {
-			throw new Exception("properieta' ["+prefix+".warningThreshold] non definita");
-		}
-		
-		this.timerWarningThreshold = Integer.parseInt(timerWarningThresholdString.trim());
-		
-		String timerErrorThresholdString = externalReader.getValue(prefix+".errorThreshold");
-		if(timerErrorThresholdString == null) {
-			throw new Exception("properieta' ["+prefix+".errorThreshold] non definita");
-		}
-		
-		this.timerErrorThreshold = Integer.parseInt(timerErrorThresholdString.trim());
+		this.timerAbilitato = this.getBooleanProperty(prefix+".enable", true);
+		this.timerTimeout = this.getIntegerProperty(prefix+".timeout", true);
+		this.timerLogAbilitato = this.getBooleanProperty(prefix+".logQuery", true);
+		this.timerLimit = this.getIntegerProperty(prefix+".query.limit", true);
+		this.timerWarningThreshold = this.getIntegerProperty(prefix+".warningThreshold", true);
+		this.timerErrorThreshold = this.getIntegerProperty(prefix+".errorThreshold", true);
 		
 		
 	}

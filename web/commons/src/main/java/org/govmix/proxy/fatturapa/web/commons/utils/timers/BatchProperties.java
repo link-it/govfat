@@ -49,8 +49,6 @@ public class BatchProperties extends AbstractProperties {
 	private long timerEJBDeployTimeout;
 	private Map<String, TimerProperties> timers;
 	
-	protected Properties props;
-	
 	public BatchProperties(String resourceName) throws Exception {
 		super(resourceName);
 		
@@ -102,7 +100,7 @@ public class BatchProperties extends AbstractProperties {
 				throw new Exception("Impossibile trovare le properties relative al batch[ID Modulo ["+key+"]]");
 				}
 			table.put(key, value);
-			TimerProperties timerProperties = new TimerProperties(this.getExternalReader(), this.getReader(), timerPrefix+key, key);
+			TimerProperties timerProperties = new TimerProperties(this.getLstReaders(), timerPrefix+key, key);
 			this.timers.put(key, timerProperties);
 		}
 
