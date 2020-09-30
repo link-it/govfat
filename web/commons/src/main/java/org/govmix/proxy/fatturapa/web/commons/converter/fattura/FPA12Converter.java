@@ -45,35 +45,18 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 		DatiGeneraliDocumentoType datiGeneraliDocumento =  this.getFattura().getFatturaElettronicaBody(0).getDatiGenerali().getDatiGeneraliDocumento();
 		
 		TipoDocumentoType tipoDoc = null;
-		if(datiGeneraliDocumento.getTipoDocumento()!=null) {
-			switch(datiGeneraliDocumento.getTipoDocumento()) {
-			case TD01: tipoDoc = TipoDocumentoType.TD01;
-				break;
-			case TD02: tipoDoc = TipoDocumentoType.TD02;
-				break;
-			case TD03: tipoDoc = TipoDocumentoType.TD03;
-				break;
-			case TD04: tipoDoc = TipoDocumentoType.TD04;
-				break;
-			case TD05: tipoDoc = TipoDocumentoType.TD05;
-				break;
-			case TD06: tipoDoc = TipoDocumentoType.TD06;
-				break;
-			}
-		} else {
-			Logger log = LoggerManager.getBatchInserimentoFatturaLogger();
-			try {
-				String tipoDocumento = XPathUtils.getTipoDocumento(this.fatturaAsByte, log); //per TD20
-				log.info("Trovato tipoDocumento ["+tipoDocumento+"]");
-				tipoDoc = TipoDocumentoType.toEnumConstant(tipoDocumento, true);
-				log.info("Trovato tipoDocumentoType ["+tipoDoc+"]");
-			} catch (NotFoundException e) {
-				tipoDoc = TipoDocumentoType.TDXX;
-				log.error("TipoDocumentoType non trovato: " + e.getMessage(), e);
-			} catch (Exception e) {
-				tipoDoc = TipoDocumentoType.TDXX;
-				log.error("Errore durante la lettura del TipoDocumento: " + e.getMessage(), e);
-			}
+		Logger log = LoggerManager.getBatchInserimentoFatturaLogger();
+		try {
+			String tipoDocumento = XPathUtils.getTipoDocumento(this.fatturaAsByte, log); //per  TD20 e nuovi tipi documento v1.2.1
+			log.info("Trovato tipoDocumento ["+tipoDocumento+"]");
+			tipoDoc = TipoDocumentoType.toEnumConstant(tipoDocumento, true);
+			log.info("Trovato tipoDocumentoType ["+tipoDoc+"]");
+		} catch (NotFoundException e) {
+			tipoDoc = TipoDocumentoType.TDXX;
+			log.error("TipoDocumentoType non trovato: " + e.getMessage(), e);
+		} catch (Exception e) {
+			tipoDoc = TipoDocumentoType.TDXX;
+			log.error("Errore durante la lettura del TipoDocumento: " + e.getMessage(), e);
 		}
 		
 		fatturaElettronica.setTipoDocumento(tipoDoc);
