@@ -44,8 +44,22 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 
 		DatiGeneraliDocumentoType datiGeneraliDocumento =  this.getFattura().getFatturaElettronicaBody(0).getDatiGenerali().getDatiGeneraliDocumento();
 		
-		TipoDocumentoType tipoDoc = null;
+		TipoDocumentoType tipoDoc = getTipoDoumento();
+		
+		fatturaElettronica.setTipoDocumento(tipoDoc);
+		
+		fatturaElettronica.setDivisa(datiGeneraliDocumento.getDivisa());
+
+		fatturaElettronica.setData(datiGeneraliDocumento.getData());
+		fatturaElettronica.setAnno(new Integer(this.getSdfYear().format(datiGeneraliDocumento.getData())));
+
+		fatturaElettronica.setNumero(datiGeneraliDocumento.getNumero());
+	}
+
+	private TipoDocumentoType getTipoDoumento() {
 		Logger log = LoggerManager.getBatchInserimentoFatturaLogger();
+
+		TipoDocumentoType tipoDoc;
 		try {
 			String tipoDocumento = XPathUtils.getTipoDocumento(this.fatturaAsByte, log); //per  TD20 e nuovi tipi documento v1.2.1
 			log.info("Trovato tipoDocumento ["+tipoDocumento+"]");
@@ -58,15 +72,7 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 			tipoDoc = TipoDocumentoType.TDXX;
 			log.error("Errore durante la lettura del TipoDocumento: " + e.getMessage(), e);
 		}
-		
-		fatturaElettronica.setTipoDocumento(tipoDoc);
-		
-		fatturaElettronica.setDivisa(datiGeneraliDocumento.getDivisa());
-
-		fatturaElettronica.setData(datiGeneraliDocumento.getData());
-		fatturaElettronica.setAnno(new Integer(this.getSdfYear().format(datiGeneraliDocumento.getData())));
-
-		fatturaElettronica.setNumero(datiGeneraliDocumento.getNumero());
+		return tipoDoc;
 	}
 	
 	
@@ -130,11 +136,6 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 			throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento");
 		
 		DatiGeneraliDocumentoType datiGeneraliDocumento = fatturaBody.getDatiGenerali().getDatiGeneraliDocumento();
-		
-		if(strictValidation) {
-			if(datiGeneraliDocumento.getTipoDocumento()==null)
-				throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.tipoDocumento");
-		}
 		
 		if(datiGeneraliDocumento.getData() == null)
 			throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.data");
