@@ -128,6 +128,7 @@ public class InserimentoLotti {
 				ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(lotto, (i+1), nomeFile, fattureLst.get(i));
 				consegnaFattura.consegnaFattura(params);
 			} catch(ValidationException e) {
+				this.log.error("Errore durante l'inserimento della fattura:" + e.getMessage());
 				throw new InserimentoLottiException(CODICE.PARAMETRI_NON_VALIDI, nomeFile);
 			}
 		}
