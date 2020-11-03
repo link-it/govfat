@@ -473,16 +473,16 @@
 			<div class="form-container noborder">
 				<h:form id="formControlloUpload">
 	            	<a4j:outputPanel layout="block" ajaxRendered="false">
-						<a4j:jsFunction name="propagaStartUploads" reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" 
+						<a4j:jsFunction name="propagaStartUploads" reRender="dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" 
 								actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.startUploadsListener}" limitToList="true">
 						</a4j:jsFunction>
-						<a4j:jsFunction name="propagaStopUploads" reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" 
+						<a4j:jsFunction name="propagaStopUploads" reRender="dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" 
 								actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.stopUploadsListener}" limitToList="true">
 						</a4j:jsFunction>
-						<a4j:jsFunction name="propagaEndUploadFail" reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" 
+						<a4j:jsFunction name="propagaEndUploadFail" reRender="dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" 
 								actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.uploadCanceledListener}" limitToList="true">
 						</a4j:jsFunction>
-						<a4j:jsFunction name="propagaEndDeleteOk" reRender="conservazioneFattureForm_formPnl,dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" 
+						<a4j:jsFunction name="propagaEndDeleteOk" reRender="dsFileUploadErrorsCtr,formCaricaFattura_btnPnl" 
 								actionListener="#{fatturaElettronicaAttivaMBean.form.fatturaFile.deleteCompleteListener}" limitToList="true">
 						</a4j:jsFunction>
 	           		</a4j:outputPanel>
