@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
+import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.NotificaEsitoCommittenteFieldConverter;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.NotificaEsitoCommittenteFetch;
@@ -128,6 +130,7 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 			fields.add(NotificaEsitoCommittente.model().TENTATIVI_CONSEGNA_SDI);
 			fields.add(NotificaEsitoCommittente.model().SCARTO);
 			fields.add(NotificaEsitoCommittente.model().SCARTO_NOTE);
+			fields.add((NotificaEsitoCommittente.model().FATTURA_ELETTRONICA.LOTTO_FATTURE.ID_EGOV));
 
 			String idTracciaNotifica = "id_traccia_notifica";
 			fields.add(new CustomField(idTracciaNotifica, Long.class, idTracciaNotifica, this.getFieldConverter().toTable(NotificaEsitoCommittente.model())));
@@ -143,8 +146,15 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 			for(Map<String, Object> map: returnMap) {
 				Object idFK_notificaOBJ = map.remove(idTracciaNotifica);
 				Object idFK_scartoOBJ = map.remove(idTracciaScarto);
+				String idEgov = (String) map.remove(NotificaEsitoCommittente.model().FATTURA_ELETTRONICA.LOTTO_FATTURE.ID_EGOV.getFieldName());
 
 				NotificaEsitoCommittente notificaEsitoCommittente = (NotificaEsitoCommittente)this.getFetch().fetch(jdbcProperties.getDatabase(), NotificaEsitoCommittente.model(), map);
+
+				FatturaElettronica fattura = new FatturaElettronica();
+				LottoFatture lotto = new LottoFatture();
+				lotto.setIdEgov(idEgov);
+				fattura.setLottoFatture(lotto);
+				notificaEsitoCommittente.setFatturaElettronica(fattura);
 
 				
 				if(idMappingResolutionBehaviour==null ||
@@ -533,12 +543,32 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 	}
 	
 	private void _join(IExpression expression, ISQLQueryObject sqlQueryObject) throws NotImplementedException, ServiceException, Exception{
-		if(expression.inUseModel(NotificaEsitoCommittente.model().ID_FATTURA,false)){
-			String tableName1 = this.getNotificaEsitoCommittenteFieldConverter().toAliasTable(NotificaEsitoCommittente.model());
-			String tableName2 = this.getNotificaEsitoCommittenteFieldConverter().toAliasTable(NotificaEsitoCommittente.model().ID_FATTURA);
-			sqlQueryObject.addWhereCondition(tableName1+".id_fattura_elettronica="+tableName2+".id");
-		}
+		
+		boolean inusefattura = expression.inUseModel(NotificaEsitoCommittente.model().ID_FATTURA,false) || expression.inUseModel(NotificaEsitoCommittente.model().FATTURA_ELETTRONICA,false);
+		boolean inuselotto = expression.inUseModel(NotificaEsitoCommittente.model().FATTURA_ELETTRONICA.LOTTO_FATTURE,false);
+		if(inusefattura){
+			if(expression.inUseModel(NotificaEsitoCommittente.model().ID_FATTURA,false)){
+				String tableName1 = this.getNotificaEsitoCommittenteFieldConverter().toAliasTable(NotificaEsitoCommittente.model());
+				String tableName2 = this.getNotificaEsitoCommittenteFieldConverter().toAliasTable(NotificaEsitoCommittente.model().ID_FATTURA);
+				sqlQueryObject.addWhereCondition(tableName1+".id_fattura_elettronica="+tableName2+".id");
+			}
 
+			if(inuselotto){
+
+				if(!inusefattura) {
+					String tableName1 = this.getNotificaEsitoCommittenteFieldConverter().toAliasTable(NotificaEsitoCommittente.model());
+					String tableName2 = this.getNotificaEsitoCommittenteFieldConverter().toAliasTable(NotificaEsitoCommittente.model().ID_FATTURA);
+					sqlQueryObject.addWhereCondition(tableName1+".id_fattura_elettronica="+tableName2+".id");
+					sqlQueryObject.addFromTable(tableName2);
+
+				}
+
+				String tableName1 = this.getNotificaEsitoCommittenteFieldConverter().toAliasTable(NotificaEsitoCommittente.model().FATTURA_ELETTRONICA);
+				String tableName2 = this.getNotificaEsitoCommittenteFieldConverter().toAliasTable(NotificaEsitoCommittente.model().FATTURA_ELETTRONICA.LOTTO_FATTURE);
+				sqlQueryObject.addWhereCondition(tableName1+".identificativo_sdi="+tableName2+".identificativo_sdi");
+				sqlQueryObject.addWhereCondition(tableName1+".fatturazione_attiva="+tableName2+".fatturazione_attiva");
+			}
+		}
 		if(expression.inUseModel(NotificaEsitoCommittente.model().UTENTE,false)){
 			String tableName1 = this.getNotificaEsitoCommittenteFieldConverter().toAliasTable(NotificaEsitoCommittente.model());
 			String tableName2 = this.getNotificaEsitoCommittenteFieldConverter().toAliasTable(NotificaEsitoCommittente.model().UTENTE);

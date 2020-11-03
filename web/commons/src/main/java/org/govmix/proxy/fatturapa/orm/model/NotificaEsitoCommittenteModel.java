@@ -21,11 +21,10 @@
 package org.govmix.proxy.fatturapa.orm.model;
 
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
-
 import org.openspcoop2.generic_project.beans.AbstractModel;
-import org.openspcoop2.generic_project.beans.IField;
-import org.openspcoop2.generic_project.beans.Field;
 import org.openspcoop2.generic_project.beans.ComplexField;
+import org.openspcoop2.generic_project.beans.Field;
+import org.openspcoop2.generic_project.beans.IField;
 
 
 /**     
@@ -139,6 +138,8 @@ public class NotificaEsitoCommittenteModel extends AbstractModel<NotificaEsitoCo
 	public org.govmix.proxy.fatturapa.orm.model.IdTracciaSdiModel ID_TRACCIA_NOTIFICA = null;
 	 
 	public org.govmix.proxy.fatturapa.orm.model.IdTracciaSdiModel ID_TRACCIA_SCARTO = null;
+	 
+	public org.govmix.proxy.fatturapa.orm.model.FatturaElettronicaModel FATTURA_ELETTRONICA = null;
 	 
 
 	@Override

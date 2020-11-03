@@ -79,6 +79,10 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 				this.log.info("Gestisco ["+countFatture+"] lotti di fatture da inserire, ["+this.limit+"] alla volta");
 				List<LottoFatture> lstLotti = lottoBD.getLottiDaInserire(limitDate, 0, this.limit);
 
+				InvioNotifica invioNotificaSDICoop = new InvioNotifica(properties.getRicezioneEsitoURLSDICoop(), properties.getRicezioneEsitoUsernameSDICoop(), properties.getRicezioneEsitoPasswordSDICoop());
+				InvioNotifica invioNotificaSPCoop = new InvioNotifica(properties.getRicezioneEsitoURLSPCoop(), properties.getRicezioneEsitoUsernameSPCoop(), properties.getRicezioneEsitoPasswordSPCoop());
+
+
 				while(countFattureElaborate < countFatture) {
 					try {
 						for(LottoFatture lotto : lstLotti) {
@@ -108,7 +112,6 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 								if(properties.isRifiutoAutomaticoAbilitato()) {
 									
 									try {
-										InvioNotifica invioNotifica = new InvioNotifica(properties.getRicezioneEsitoURL(), properties.getRicezioneEsitoUsername(), properties.getRicezioneEsitoPassword());
 										this.log.info("Invio della notifica di rifiuto automatico per il lotto ["+lotto.getIdentificativoSdi()+"]...");
 										
 										NotificaECRequest request = new NotificaECRequest();
@@ -119,9 +122,16 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 										notifica.setEsito(org.govmix.proxy.fatturapa.orm.constants.EsitoCommittenteType.EC02);
 										notifica.setDescrizione("Lotto rifiutato d'ufficio in quanto non conforme alle specifiche");
 										request.setNotifica(notifica);
-										NotificaECResponse invioNotificaResponse = invioNotifica.invia(request);
 										
-										this.log.info("Invio della notifica di rifiuto automatico per il lotto ["+lotto.getIdentificativoSdi()+"] completato. Return code ["+invioNotificaResponse.getEsitoChiamata()+"]");
+										boolean isSpCoop = TimerInserimentoFatturaLib.isSPCoop(lotto);
+										InvioNotifica invioNotifica = isSpCoop ?  invioNotificaSPCoop: invioNotificaSDICoop;
+										NotificaECResponse invioNotificaResponse = invioNotifica.invia(request);
+
+										if(isSpCoop) {
+											this.log.info("Invio tramite canale SPCoop della notifica di rifiuto automatico per il lotto ["+lotto.getIdentificativoSdi()+"] completato. Return code ["+invioNotificaResponse.getEsitoChiamata()+"]");
+										} else {
+											this.log.info("Invio tramite canale SDICoop della notifica di rifiuto automatico per il lotto ["+lotto.getIdentificativoSdi()+"] completato. Return code ["+invioNotificaResponse.getEsitoChiamata()+"]");
+										}
 										
 										if(invioNotificaResponse.getEsitoChiamata() == 202 || invioNotificaResponse.getEsitoChiamata() == 200) { //solo se lo SdI accetta la notifica (o se c'e' uno scarto)
 											lottoBD.setProcessato(idLotto, true); //processiamo il lotto con errore
@@ -171,6 +181,10 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 			}
 		}
 
+	}
+
+	public static boolean isSPCoop(LottoFatture lotto) {
+        return lotto.getIdEgov()!= null && lotto.getIdEgov().startsWith("CentroServiziFatturaPA_CentroServiziFatturaPASPCoopIT"); 
 	}
 
 	public void inserisciFattura(ConsegnaFattura consegnaFattura, LottoFatture lotto,

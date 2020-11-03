@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.IdTracciaSdi;
+import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
@@ -51,8 +52,8 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 		super(limit, log, logQuery);
 	}
 
-	public static boolean isSPCoop(NotificaEsitoCommittente notifica) {
-        return notifica.getFatturaElettronica().getLottoFatture().getIdEgov()!= null && notifica.getFatturaElettronica().getLottoFatture().getIdEgov().startsWith("CentroServiziFatturaPA_CentroServiziFatturaPASPCoopIT"); 
+	public static boolean isSPCoop(LottoFatture lotto) {
+        return lotto.getIdEgov()!= null && lotto.getIdEgov().startsWith("CentroServiziFatturaPA_CentroServiziFatturaPASPCoopIT"); 
 	}
 
 	@Override
@@ -89,9 +90,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 						for(NotificaEsitoCommittente notifica : lstNotifiche) {
 
 							try{
-//								InvioNotifica invioNotifica = new InvioNotifica(properties.getRicezioneEsitoURL(), properties.getRicezioneEsitoUsername(), properties.getRicezioneEsitoPassword());
-
-								InvioNotifica invioNotifica = TimerConsegnaEsitoLib.isSPCoop(notifica) ?  invioNotificaSPCoop: invioNotificaSDICoop;
+								InvioNotifica invioNotifica = TimerConsegnaEsitoLib.isSPCoop(notifica.getFatturaElettronica().getLottoFatture()) ?  invioNotificaSPCoop: invioNotificaSDICoop;
 
 								
 								NotificaECRequest request = new NotificaECRequest();
