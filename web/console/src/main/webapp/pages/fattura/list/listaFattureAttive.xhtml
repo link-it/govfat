@@ -540,7 +540,7 @@
 					<a4j:outputPanel layout="block" id="formCaricaFattura_btnPnl" ajaxRendered="false">
 						<div class="buttonrow" style="margin-left: 320px; margin-top:20px;">
 							<a4j:commandButton styleClass="icon-save positive" style="padding: 4px 6px 4px 5px;" id="caricaFattureButton"
-								disabled="#{!fatturaElettronicaAttivaMBean.form.buttonEnabled}" limitToList="true"
+								disabled="#{!fatturaElettronicaAttivaMBean.form.buttonEnabled}" 
 								value="#{msg['fattura.button.salva']}" action="#{fatturaElettronicaAttivaMBean.salvaFatture}"
 								reRender="dsFileUploadErrorsCtr" onclick="this.disabled=true"
 								oncomplete="this.disabled=false; if (#{fatturaElettronicaAttivaMBean.salvataggioOk == 'true'}) { #{rich:component('fileUploadModalPnl')}.hide(); ricaricaListaFattureAttive(); }" />
