@@ -1256,6 +1256,18 @@
 					</xsd:appinfo>
 				</xsd:annotation>
 			</xsd:element>
+
+			<xsd:element name="FatturaElettronica" type="FatturaElettronica" minOccurs="0">
+				<xsd:annotation>
+				        <xsd:appinfo>
+				                <linkit:generator xmlns:linkit="http://www.link.it/project_generator">
+				                        <linkit:sql-id-mapping object-name="FatturaElettronica"
+				                                object-type="FatturaElettronica" relationship="none" />
+				                </linkit:generator>
+				        </xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+
 			
 			<!--xsd:element name="xml" type="xsd:base64Binary" minOccurs="0"/-->
 			<!--xsd:element name="scartoXml" type="xsd:base64Binary" minOccurs="0"/-->

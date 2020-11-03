@@ -63,6 +63,7 @@ public class NotificaEsitoCommittenteModel extends AbstractModel<NotificaEsitoCo
 		this.SCARTO_NOTE = new Field("scartoNote",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.ID_TRACCIA_NOTIFICA = new org.govmix.proxy.fatturapa.orm.model.IdTracciaSdiModel(new Field("idTracciaNotifica",org.govmix.proxy.fatturapa.orm.IdTracciaSdi.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class));
 		this.ID_TRACCIA_SCARTO = new org.govmix.proxy.fatturapa.orm.model.IdTracciaSdiModel(new Field("idTracciaScarto",org.govmix.proxy.fatturapa.orm.IdTracciaSdi.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class));
+		this.FATTURA_ELETTRONICA = new org.govmix.proxy.fatturapa.orm.model.FatturaElettronicaModel(new Field("FatturaElettronica",org.govmix.proxy.fatturapa.orm.FatturaElettronica.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class));
 	
 	}
 	
@@ -91,6 +92,7 @@ public class NotificaEsitoCommittenteModel extends AbstractModel<NotificaEsitoCo
 		this.SCARTO_NOTE = new ComplexField(father,"scartoNote",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.ID_TRACCIA_NOTIFICA = new org.govmix.proxy.fatturapa.orm.model.IdTracciaSdiModel(new ComplexField(father,"idTracciaNotifica",org.govmix.proxy.fatturapa.orm.IdTracciaSdi.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class));
 		this.ID_TRACCIA_SCARTO = new org.govmix.proxy.fatturapa.orm.model.IdTracciaSdiModel(new ComplexField(father,"idTracciaScarto",org.govmix.proxy.fatturapa.orm.IdTracciaSdi.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class));
+		this.FATTURA_ELETTRONICA = new org.govmix.proxy.fatturapa.orm.model.FatturaElettronicaModel(new ComplexField(father,"FatturaElettronica",org.govmix.proxy.fatturapa.orm.FatturaElettronica.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class));
 	
 	}
 	

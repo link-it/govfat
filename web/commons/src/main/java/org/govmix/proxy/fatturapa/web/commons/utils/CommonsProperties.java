@@ -40,6 +40,12 @@ import org.govmix.proxy.pcc.fatture.utils.AbstractProperties;
 public class CommonsProperties extends AbstractProperties {
 
 	/** XSL **/
+
+	private String discriminatorHeaderNameSPCoop;
+	private String discriminatorHeaderValueSPCoop;
+	private String idEgovHeaderSPCoop;
+	private String idEgovHeaderSDICoop;
+
 	private String xslFatturaSDI10;
 	private String xslFatturaSDI11;
 	private String xslFatturaV12;
@@ -48,14 +54,14 @@ public class CommonsProperties extends AbstractProperties {
 	private String xslScartoEC;
 	private String xslPccRiallineamento;
 	private String xslBaseDir;
-	
+
 	private Properties xslTraccia;
 	private URL invioFatturaURL;
 	private String invioFatturaUsername;
 	private String invioFatturaPassword;
 
 	private String idEgovHeader;
-	
+
 	private int maxTentativiRispedizione;
 	private int fattoreRispedizione;
 	private int maxTentativiRispedizioneWFM;
@@ -143,6 +149,10 @@ public class CommonsProperties extends AbstractProperties {
 		}	
 
 		this.reader = propertiesReader;
+		this.discriminatorHeaderNameSPCoop = this.getProperty("discriminator.spcoop.headerName", true);
+		this.discriminatorHeaderValueSPCoop = this.getProperty("discriminator.spcoop.headerValue", true);
+		this.idEgovHeaderSPCoop = this.getProperty("header.spcoop.idegov", true);
+		this.idEgovHeaderSDICoop = this.getProperty("header.sdicoop.idegov", true);
 
 		//carico le properties
 		this.xslFatturaSDI10 = getProperty("xsl.fatturapa.sdi10", true);
@@ -152,20 +162,20 @@ public class CommonsProperties extends AbstractProperties {
 		this.xslNotificaEC = getProperty("xsl.notificaEC", true);
 		this.xslScartoEC = getProperty("xsl.scartoEC", true);
 		this.xslPccRiallineamento = getProperty("xsl.PccRiallineamento", true);
-		
 
-        String entiListString = getProperty("xsl.traccia.list", true);
+
+		String entiListString = getProperty("xsl.traccia.list", true);
 
 		this.xslTraccia = new Properties();
-        if(entiListString != null && !entiListString.isEmpty()) {
-                String[] entiList = entiListString.split(",");
-                for(String ente: entiList) {
-                	this.xslTraccia.put(ente, getProperty("xsl.traccia."+ente, true));
-                }
-        }
+		if(entiListString != null && !entiListString.isEmpty()) {
+			String[] entiList = entiListString.split(",");
+			for(String ente: entiList) {
+				this.xslTraccia.put(ente, getProperty("xsl.traccia."+ente, true));
+			}
+		}
 
 		this.xslBaseDir = getProperty("xsl.baseDir", true);
-		
+
 		this.invioFatturaURL = new URL(this.getProperty("invioFattura.url", true));
 		this.invioFatturaUsername = this.getProperty("invioFattura.username", false);
 		this.invioFatturaPassword = this.getProperty("invioFattura.password", false);
@@ -210,32 +220,6 @@ public class CommonsProperties extends AbstractProperties {
 	public Enumeration<?> keys(){
 		return this.reader.propertyNames();
 	}
-
-//	public String getProperty(String name,boolean required) throws Exception{
-//		String tmp = null;
-//
-//		tmp = this.reader.getProperty(name);
-//
-//		if(tmp==null){
-//			if(required){
-//				throw new Exception("Property ["+name+"] not found");
-//			}
-//		}
-//		if(tmp!=null){
-//			return tmp.trim();
-//		}else{
-//			return null;
-//		}
-//	}
-//	public Boolean getBooleanProperty(String name,boolean required) throws Exception{
-//		String propAsString = getProperty(name, required);
-//
-//		if(propAsString != null){
-//			Boolean b = new Boolean(propAsString.equalsIgnoreCase("true"));
-//			return b;
-//		}
-//		return null;
-//	}
 
 	public String getXslNotificaEC() {
 		return xslNotificaEC;
@@ -341,10 +325,27 @@ public class CommonsProperties extends AbstractProperties {
 		}
 
 	}
-	
+
 	public String getInfoVersione() {
 		return "Versione Software["+CostantiFatturaPA.VERSIONE+"] Commit["+CostantiFatturaPA.COMMIT_ID+"]";
 	}
+
+	public String getIdEgovHeaderSPCoop() {
+		return idEgovHeaderSPCoop;
+	}
+
+	public String getIdEgovHeaderSDICoop() {
+		return idEgovHeaderSDICoop;
+	}
+
+	public String getDiscriminatorHeaderNameSPCoop() {
+		return discriminatorHeaderNameSPCoop;
+	}
+
+	public String getDiscriminatorHeaderValueSPCoop() {
+		return discriminatorHeaderValueSPCoop;
+	}
+
 
 
 }

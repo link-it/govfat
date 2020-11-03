@@ -51,6 +51,10 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 		super(limit, log, logQuery);
 	}
 
+	public static boolean isSPCoop(NotificaEsitoCommittente notifica) {
+        return notifica.getFatturaElettronica().getLottoFatture().getIdEgov()!= null && notifica.getFatturaElettronica().getLottoFatture().getIdEgov().startsWith("CentroServiziFatturaPA_CentroServiziFatturaPASPCoopIT"); 
+	}
+
 	@Override
 	public void execute() throws Exception {
 
@@ -74,13 +78,20 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 				this.log.info("Gestisco ["+countNotifiche+"] NotificheEsitoCommittente da consegnare, ["+this.limit+"] alla volta");
 				List<NotificaEsitoCommittente> lstNotifiche = notificaEsitoCommittenteBD.findAllNotifiche(limitDate, 0, this.limit);
 
+				
 				BatchProperties properties = BatchProperties.getInstance();
+
+				InvioNotifica invioNotificaSDICoop = new InvioNotifica(properties.getRicezioneEsitoURLSDICoop(), properties.getRicezioneEsitoUsernameSDICoop(), properties.getRicezioneEsitoPasswordSDICoop());
+				InvioNotifica invioNotificaSPCoop = new InvioNotifica(properties.getRicezioneEsitoURLSPCoop(), properties.getRicezioneEsitoUsernameSPCoop(), properties.getRicezioneEsitoPasswordSPCoop());
+
 				try {
 					while(countNotificheElaborate < countNotifiche) {
 						for(NotificaEsitoCommittente notifica : lstNotifiche) {
 
 							try{
-								InvioNotifica invioNotifica = new InvioNotifica(properties.getRicezioneEsitoURL(), properties.getRicezioneEsitoUsername(), properties.getRicezioneEsitoPassword());
+//								InvioNotifica invioNotifica = new InvioNotifica(properties.getRicezioneEsitoURL(), properties.getRicezioneEsitoUsername(), properties.getRicezioneEsitoPassword());
+
+								InvioNotifica invioNotifica = TimerConsegnaEsitoLib.isSPCoop(notifica) ?  invioNotificaSPCoop: invioNotificaSDICoop;
 
 								
 								NotificaECRequest request = new NotificaECRequest();

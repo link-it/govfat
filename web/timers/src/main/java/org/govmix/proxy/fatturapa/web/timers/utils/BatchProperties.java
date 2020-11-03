@@ -26,9 +26,14 @@ import java.net.URL;
 public class BatchProperties extends org.govmix.proxy.fatturapa.web.commons.utils.timers.BatchProperties {
 
 	
-	private String ricezioneEsitoPassword;
-	private URL ricezioneEsitoURL;
-	private String ricezioneEsitoUsername;
+	private URL ricezioneEsitoURLSDICoop;
+	private String ricezioneEsitoPasswordSDICoop;
+	private String ricezioneEsitoUsernameSDICoop;
+
+	private URL ricezioneEsitoURLSPCoop;
+	private String ricezioneEsitoUsernameSPCoop;
+	private String ricezioneEsitoPasswordSPCoop;
+	
 	private boolean consegnaFatturaContestuale;
 	private boolean validazioneDAOAbilitata;
 	private boolean rifiutoAutomaticoAbilitato;
@@ -54,9 +59,13 @@ public class BatchProperties extends org.govmix.proxy.fatturapa.web.commons.util
 		super(path);
 		
 		try {
-			this.ricezioneEsitoURL = new URL(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.ricezioneEsito.url", true));
-			this.ricezioneEsitoUsername = this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.ricezioneEsito.username", true);
-			this.ricezioneEsitoPassword = this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.ricezioneEsito.password", true);
+			 this.ricezioneEsitoURLSPCoop = new URL(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.ricezioneEsito.spcoop.url", true));
+			 this.ricezioneEsitoUsernameSPCoop = this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.ricezioneEsito.spcoop.username", true);
+			 this.ricezioneEsitoPasswordSPCoop = this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.ricezioneEsito.spcoop.password", true);
+			 
+			 this.ricezioneEsitoURLSDICoop = new URL(this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.ricezioneEsito.sdicoop.url", true));
+			 this.ricezioneEsitoUsernameSDICoop = this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.ricezioneEsito.sdicoop.username", true);
+			 this.ricezioneEsitoPasswordSDICoop = this.getProperty("org.govmix.proxy.fatturapa.web.api.pdd.ricezioneEsito.sdicoop.password", true);
 			
 			String consegnaFatturaContestualeString = this.getProperty("org.govmix.proxy.fatturapa.web.api.consegnaFatturaAssociata", true);
 			this.consegnaFatturaContestuale = Boolean.parseBoolean(consegnaFatturaContestualeString);
@@ -91,15 +100,32 @@ public class BatchProperties extends org.govmix.proxy.fatturapa.web.commons.util
 		}
 	}
 	
-	public String getRicezioneEsitoPassword() {
-		return ricezioneEsitoPassword;
+	public URL getRicezioneEsitoURLSPCoop() {
+	        return this.ricezioneEsitoURLSPCoop;
 	}
-	public URL getRicezioneEsitoURL() {
-		return ricezioneEsitoURL;
+
+	public String getRicezioneEsitoUsernameSPCoop() {
+	        return this.ricezioneEsitoUsernameSPCoop;
 	}
-	
-	public String getRicezioneEsitoUsername() {
-		return ricezioneEsitoUsername;
+
+	public String getRicezioneEsitoPasswordSPCoop() {
+	        return this.ricezioneEsitoPasswordSPCoop;
+	}
+
+	public URL getRicezioneEsitoURLSDICoop() {
+	        return this.ricezioneEsitoURLSDICoop;
+	}
+
+	public String getRicezioneEsitoUsernameSDICoop() {
+	        return this.ricezioneEsitoUsernameSDICoop;
+	}
+
+	public String getRicezioneEsitoPasswordSDICoop() {
+	        return this.ricezioneEsitoPasswordSDICoop;
+	}
+
+	public static BatchProperties getProps() {
+	        return props;
 	}
 	public String getMsgNotificaGiaPervenuta() {
 		return msgNotificaGiaPervenuta;
