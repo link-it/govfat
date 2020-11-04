@@ -87,21 +87,21 @@ public class LottoFattureAnalyzer {
 		this.decoded = decoded;
 	}
 
-	private static DominioType getDominio(String codiceDipartimento) throws InserimentoLottiException {
+	private static DominioType getDominio(String codiceDipartimento, String nomeFile) throws InserimentoLottiException {
 		if(codiceDipartimento==null)
-			throw new InserimentoLottiException(CODICE.PARAMETRI_NON_VALIDI, "Impossibile determinare il dominio. Codice dipartimento null");
+			throw new InserimentoLottiException(CODICE.PARAMETRI_NON_VALIDI, nomeFile);
 		if(codiceDipartimento.length() == 6)
 			return DominioType.PA;
 		if(codiceDipartimento.length() == 7)
 			return DominioType.B2B;
 		
-		throw new InserimentoLottiException(CODICE.PARAMETRI_NON_VALIDI, "Lunghezza del codice dipartimento ["+codiceDipartimento.length()+"]. Impossibile determinare il dominio");
+		throw new InserimentoLottiException(CODICE.PARAMETRI_NON_VALIDI, nomeFile);
 	}
 	
 	
-	private static SottodominioType getSottodominio(String codiceDipartimento) throws InserimentoLottiException {
+	private static SottodominioType getSottodominio(String codiceDipartimento, String nomeFile) throws InserimentoLottiException {
 		
-		DominioType dominio = getDominio(codiceDipartimento);
+		DominioType dominio = getDominio(codiceDipartimento, nomeFile);
 		if(dominio.toString().equals(DominioType.B2B.toString())) {
 			if("XXXXXXX".equals(codiceDipartimento)) {
 				return SottodominioType.ESTERO;
@@ -133,7 +133,7 @@ public class LottoFattureAnalyzer {
 			params.validate(true);
 		} catch(Exception e) {
 			this.log.error("Errore durante il caricamento del lotto con nome file ["+nomeFile+"]: " + e.getMessage(), e);
-			throw new InserimentoLottiException(CODICE.PARAMETRI_NON_VALIDI, nomeFile);
+			throw new InserimentoLottiException(CODICE.PARAMETRI_NON_VALIDI, e.getMessage());
 		}
 
 		LottoFatture lotto = new LottoFatture();
@@ -180,8 +180,8 @@ public class LottoFattureAnalyzer {
 		lotto.setDataUltimaElaborazione(new Date());
 		lotto.setDataProssimaElaborazione(new Date());
 		lotto.setTentativiConsegna(0);
-		lotto.setDominio(getDominio(params.getCodiceDestinatario()));
-		lotto.setSottodominio(getSottodominio(params.getCodiceDestinatario()));
+		lotto.setDominio(getDominio(params.getCodiceDestinatario(), params.getNomeFile()));
+		lotto.setSottodominio(getSottodominio(params.getCodiceDestinatario(), params.getNomeFile()));
 		
 		
 		if(dipartimento!=null) {
