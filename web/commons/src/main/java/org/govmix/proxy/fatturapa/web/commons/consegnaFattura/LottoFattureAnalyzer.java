@@ -133,7 +133,7 @@ public class LottoFattureAnalyzer {
 			params.validate(true);
 		} catch(Exception e) {
 			this.log.error("Errore durante il caricamento del lotto con nome file ["+nomeFile+"]: " + e.getMessage(), e);
-			throw new InserimentoLottiException(CODICE.PARAMETRI_NON_VALIDI, e.getMessage());
+			throw new InserimentoLottiException(CODICE.PARAMETRI_NON_VALIDI, nomeFile);
 		}
 
 		LottoFatture lotto = new LottoFatture();
