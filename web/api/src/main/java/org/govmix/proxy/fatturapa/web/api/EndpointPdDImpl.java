@@ -74,6 +74,9 @@ public class EndpointPdDImpl implements EndpointPdD {
 	private boolean isSPCoop(HttpHeaders headers) throws Exception {
 		CommonsProperties instance = CommonsProperties.getInstance(log);
 		if(!headers.getRequestHeaders().keySet().isEmpty()) {
+			
+			this.log.debug("Discriminator header: " + instance.getDiscriminatorHeaderNameSPCoop());
+			this.log.debug("Discriminator value: " + instance.getDiscriminatorHeaderValueSPCoop());
 			this.log.debug("Headers: ");
 			for(String header : headers.getRequestHeaders().keySet()){
 				this.log.debug(header + ": " + headers.getRequestHeaders().getFirst(header));
