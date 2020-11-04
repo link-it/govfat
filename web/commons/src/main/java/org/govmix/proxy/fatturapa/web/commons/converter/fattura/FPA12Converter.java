@@ -143,7 +143,7 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 		if(datiGeneraliDocumento.getData() == null)
 			throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.data");
 		
-		if(datiGeneraliDocumento.getNumero() == null)
+		if(datiGeneraliDocumento.getNumero() == null || datiGeneraliDocumento.getNumero().isEmpty())
 			throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.numero");
 		
 		if(strictValidation) {
