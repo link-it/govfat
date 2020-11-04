@@ -55,8 +55,9 @@ public class InvioNotifica {
 	private URL url;
 	private String username;
 	private String password;
+	private String idEgovHeader;
 	
-	public InvioNotifica(URL url, String username, String password) {
+	public InvioNotifica(URL url, String username, String password, String idEgovHeader) {
 		this.url = url;
 		this.username = username;
 		this.password = password;
@@ -149,11 +150,9 @@ public class InvioNotifica {
 		}
 		
 		String idEgov = "--";
-		String idEgovHeader;
 		try {
-			idEgovHeader = CommonsProperties.getInstance(LoggerManager.getBatchStartupLogger()).getIdEgovHeader();
-			if(httpConn.getHeaderFields().containsKey(idEgovHeader))
-				idEgov = httpConn.getHeaderFields().get(idEgovHeader).get(0);
+			if(httpConn.getHeaderFields().containsKey(this.idEgovHeader))
+				idEgov = httpConn.getHeaderFields().get(this.idEgovHeader).get(0);
 		} catch (Exception e) {}
 		
 		tracciaNotifica.setIdEgov(idEgov);

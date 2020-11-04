@@ -78,7 +78,7 @@ public class SpedizioneFattureAttive implements IWorkFlow<LottoFatture> {
 			tracciaSdi.setTentativiProtocollazione(0);
 			tracciaSdi.setDataProssimaProtocollazione(new Date());
 
-			tracciaSdi.setIdEgov(esitoInvioFattura.getMetadato(CommonsProperties.getInstance(log).getIdEgovHeader()));
+			tracciaSdi.setIdEgov(esitoInvioFattura.getMetadato(CommonsProperties.getInstance(log).getIdEgovHeaderFatturazioneAttiva()));
 			tracciaSdi.setCodiceDipartimento(lotto.getCodiceDestinatario());
 	
 			this.tracciaBD.insert(tracciaSdi);

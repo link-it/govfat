@@ -38,6 +38,7 @@ import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.InvioNoti
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.NotificaECRequest;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.NotificaECResponse;
 import org.govmix.proxy.fatturapa.web.commons.sonde.Sonda;
+import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.govmix.proxy.fatturapa.web.timers.utils.BatchProperties;
 import org.openspcoop2.generic_project.exception.ValidationException;
 
@@ -79,8 +80,10 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 				this.log.info("Gestisco ["+countFatture+"] lotti di fatture da inserire, ["+this.limit+"] alla volta");
 				List<LottoFatture> lstLotti = lottoBD.getLottiDaInserire(limitDate, 0, this.limit);
 
-				InvioNotifica invioNotificaSDICoop = new InvioNotifica(properties.getRicezioneEsitoURLSDICoop(), properties.getRicezioneEsitoUsernameSDICoop(), properties.getRicezioneEsitoPasswordSDICoop());
-				InvioNotifica invioNotificaSPCoop = new InvioNotifica(properties.getRicezioneEsitoURLSPCoop(), properties.getRicezioneEsitoUsernameSPCoop(), properties.getRicezioneEsitoPasswordSPCoop());
+				CommonsProperties commonsProperties = CommonsProperties.getInstance(this.log);
+
+				InvioNotifica invioNotificaSDICoop = new InvioNotifica(properties.getRicezioneEsitoURLSDICoop(), properties.getRicezioneEsitoUsernameSDICoop(), properties.getRicezioneEsitoPasswordSDICoop(), commonsProperties.getIdEgovHeaderSDICoop());
+				InvioNotifica invioNotificaSPCoop = new InvioNotifica(properties.getRicezioneEsitoURLSPCoop(), properties.getRicezioneEsitoUsernameSPCoop(), properties.getRicezioneEsitoPasswordSPCoop(), commonsProperties.getIdEgovHeaderSPCoop());
 
 
 				while(countFattureElaborate < countFatture) {

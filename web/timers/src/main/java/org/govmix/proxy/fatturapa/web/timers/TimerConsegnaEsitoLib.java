@@ -43,6 +43,7 @@ import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.NotificaE
 import org.govmix.proxy.fatturapa.web.commons.policies.IPolicyRispedizione;
 import org.govmix.proxy.fatturapa.web.commons.policies.PolicyRispedizioneFactory;
 import org.govmix.proxy.fatturapa.web.commons.sonde.Sonda;
+import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.govmix.proxy.fatturapa.web.timers.utils.BatchProperties;
 
 import it.gov.fatturapa.sdi.messaggi.v1_0.ScartoEsitoCommittenteType;
@@ -81,9 +82,10 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 
 				
 				BatchProperties properties = BatchProperties.getInstance();
+				CommonsProperties commonsProperties = CommonsProperties.getInstance(this.log);
 
-				InvioNotifica invioNotificaSDICoop = new InvioNotifica(properties.getRicezioneEsitoURLSDICoop(), properties.getRicezioneEsitoUsernameSDICoop(), properties.getRicezioneEsitoPasswordSDICoop());
-				InvioNotifica invioNotificaSPCoop = new InvioNotifica(properties.getRicezioneEsitoURLSPCoop(), properties.getRicezioneEsitoUsernameSPCoop(), properties.getRicezioneEsitoPasswordSPCoop());
+				InvioNotifica invioNotificaSDICoop = new InvioNotifica(properties.getRicezioneEsitoURLSDICoop(), properties.getRicezioneEsitoUsernameSDICoop(), properties.getRicezioneEsitoPasswordSDICoop(), commonsProperties.getIdEgovHeaderSDICoop());
+				InvioNotifica invioNotificaSPCoop = new InvioNotifica(properties.getRicezioneEsitoURLSPCoop(), properties.getRicezioneEsitoUsernameSPCoop(), properties.getRicezioneEsitoPasswordSPCoop(), commonsProperties.getIdEgovHeaderSPCoop());
 
 				try {
 					while(countNotificheElaborate < countNotifiche) {

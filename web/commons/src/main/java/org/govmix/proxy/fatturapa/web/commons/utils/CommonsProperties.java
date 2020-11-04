@@ -43,6 +43,7 @@ public class CommonsProperties extends AbstractProperties {
 
 	private String discriminatorHeaderNameSPCoop;
 	private String discriminatorHeaderValueSPCoop;
+	private String idEgovHeaderFatturazioneAttiva;
 	private String idEgovHeaderSPCoop;
 	private String idEgovHeaderSDICoop;
 
@@ -59,8 +60,6 @@ public class CommonsProperties extends AbstractProperties {
 	private URL invioFatturaURL;
 	private String invioFatturaUsername;
 	private String invioFatturaPassword;
-
-	private String idEgovHeader;
 
 	private int maxTentativiRispedizione;
 	private int fattoreRispedizione;
@@ -151,6 +150,7 @@ public class CommonsProperties extends AbstractProperties {
 		this.reader = propertiesReader;
 		this.discriminatorHeaderNameSPCoop = this.getProperty("discriminator.spcoop.headerName", true);
 		this.discriminatorHeaderValueSPCoop = this.getProperty("discriminator.spcoop.headerValue", true);
+		this.idEgovHeaderFatturazioneAttiva = this.getProperty("header.fatturazioneAttiva.idegov", true);
 		this.idEgovHeaderSPCoop = this.getProperty("header.spcoop.idegov", true);
 		this.idEgovHeaderSDICoop = this.getProperty("header.sdicoop.idegov", true);
 
@@ -179,8 +179,6 @@ public class CommonsProperties extends AbstractProperties {
 		this.invioFatturaURL = new URL(this.getProperty("invioFattura.url", true));
 		this.invioFatturaUsername = this.getProperty("invioFattura.username", false);
 		this.invioFatturaPassword = this.getProperty("invioFattura.password", false);
-
-		this.idEgovHeader = this.getProperty("header.idegov", true);
 
 		this.maxTentativiRispedizione = Integer.parseInt(this.getProperty("rispedizioni.maxTentativiRispedizione", true));
 		this.fattoreRispedizione = Integer.parseInt(this.getProperty("rispedizioni.fattoreRispedizione", true));
@@ -295,10 +293,6 @@ public class CommonsProperties extends AbstractProperties {
 		return invioFatturaPassword;
 	}
 
-	public String getIdEgovHeader() {
-		return idEgovHeader;
-	}
-
 	public String getXslTraccia(TipoComunicazioneType tipoComunicazione) {
 		if(this.xslTraccia.containsKey(tipoComunicazione.toString())) {
 			return this.xslTraccia.getProperty(tipoComunicazione.toString());
@@ -344,6 +338,14 @@ public class CommonsProperties extends AbstractProperties {
 
 	public String getDiscriminatorHeaderValueSPCoop() {
 		return discriminatorHeaderValueSPCoop;
+	}
+
+	public String getIdEgovHeaderFatturazioneAttiva() {
+		return idEgovHeaderFatturazioneAttiva;
+	}
+
+	public void setIdEgovHeaderFatturazioneAttiva(String idEgovHeaderFatturazioneAttiva) {
+		this.idEgovHeaderFatturazioneAttiva = idEgovHeaderFatturazioneAttiva;
 	}
 
 
