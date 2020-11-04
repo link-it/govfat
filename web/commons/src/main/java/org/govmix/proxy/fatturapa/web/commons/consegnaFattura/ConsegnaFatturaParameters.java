@@ -239,7 +239,10 @@ public class ConsegnaFatturaParameters {
 			throw new Exception("cedentePrestatore non valido: " + e.getMessage());
 		}
 		
-		if(this.cedentePrestatore.getIdCodice() == null || this.cedentePrestatore.getIdPaese() == null) {
+		if(this.cedentePrestatore.getIdCodice() == null || 
+                this.cedentePrestatore.getIdCodice().isEmpty() || 
+                this.cedentePrestatore.getIdPaese() == null || 
+                this.cedentePrestatore.getIdPaese().isEmpty()) {
 			throw new Exception("IdCodice ["+this.cedentePrestatore.getIdCodice()+"] e IdPaese ["+this.cedentePrestatore.getIdPaese()+"] non possono essere null per il cedentePrestatore.");
 		}
 		
