@@ -74,9 +74,15 @@ public class EndpointPdDImpl implements EndpointPdD {
 	private boolean isSPCoop(HttpHeaders headers) throws Exception {
 		CommonsProperties instance = CommonsProperties.getInstance(log);
 		if(!headers.getRequestHeaders().keySet().isEmpty()) {
+			this.log.debug("Headers: ");
 			for(String header : headers.getRequestHeaders().keySet()){
+				this.log.debug(header + ": " + headers.getRequestHeaders().getFirst(header));
 				if(header.equalsIgnoreCase(instance.getDiscriminatorHeaderNameSPCoop())) {
-					return headers.getRequestHeaders().getFirst(header).equals(instance.getDiscriminatorHeaderValueSPCoop());
+					this.log.debug("Discriminator : " + header + ": " + headers.getRequestHeaders().getFirst(header));
+					boolean isSPCoop = headers.getRequestHeaders().getFirst(header).equals(instance.getDiscriminatorHeaderValueSPCoop());
+					this.log.debug("Is SPCoop: " + isSPCoop);
+
+					return isSPCoop;
 				}
 			}
 		}
@@ -212,6 +218,7 @@ public class EndpointPdDImpl implements EndpointPdD {
 	private String getIdEgov(HttpHeaders headers) throws Exception {
 		CommonsProperties props = CommonsProperties.getInstance(log);
 		String idEgovHeader = this.isSPCoop(headers) ? props.getIdEgovHeaderSPCoop() : props.getIdEgovHeaderSDICoop();
+		this.log.debug("Cerco header: " + idEgovHeader);
 
 		String idEgov = null;
 		if(!headers.getRequestHeaders().keySet().isEmpty()) {
