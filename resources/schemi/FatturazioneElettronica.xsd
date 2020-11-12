@@ -1272,8 +1272,8 @@
 			<xsd:element name="posizione" type="xsd:positiveInteger"
 				minOccurs="0" />
 			<xsd:element name="esito" type="EsitoCommittenteType" />
-			<xsd:element name="descrizione" type="xsd:string"
-				minOccurs="0" />
+			<xsd:element name="descrizione" type="xsd:string" minOccurs="0" />
+			<xsd:element name="codiciErrore" type="xsd:string" minOccurs="0" />
 			<xsd:element name="messageIdCommittente" type="MessageIdType"
 				minOccurs="0" />
 			<xsd:element name="nomeFile" type="NomeFileType" />
