@@ -95,7 +95,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 				if(properties.getRicezioneEsitoURLSPCoop()!=null) {
 					invioNotificaSPCoop = new InvioNotifica(properties.getRicezioneEsitoURLSPCoop(), properties.getRicezioneEsitoUsernameSPCoop(), properties.getRicezioneEsitoPasswordSPCoop(), commonsProperties.getIdEgovHeaderSPCoop());
 				}
-				InvioNotificaFactory factory = new InvioNotificaFactory(invioNotificaSPCoop, invioNotificaSDICoop);
+				InvioNotificaFactory factory = new InvioNotificaFactory(invioNotificaSPCoop, invioNotificaSDICoop, this.log);
 				try {
 					while(countNotificheElaborate < countNotifiche) {
 						for(NotificaEsitoCommittente notifica : lstNotifiche) {
