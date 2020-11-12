@@ -35,6 +35,7 @@ import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaPar
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaUtils;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.InvioNotifica;
+import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.InvioNotificaFactory;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.NotificaECRequest;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.NotificaECResponse;
 import org.govmix.proxy.fatturapa.web.commons.sonde.Sonda;
@@ -82,9 +83,17 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 
 				CommonsProperties commonsProperties = CommonsProperties.getInstance(this.log);
 
-				InvioNotifica invioNotificaSDICoop = new InvioNotifica(properties.getRicezioneEsitoURLSDICoop(), properties.getRicezioneEsitoUsernameSDICoop(), properties.getRicezioneEsitoPasswordSDICoop(), commonsProperties.getIdEgovHeaderSDICoop());
-				InvioNotifica invioNotificaSPCoop = new InvioNotifica(properties.getRicezioneEsitoURLSPCoop(), properties.getRicezioneEsitoUsernameSPCoop(), properties.getRicezioneEsitoPasswordSPCoop(), commonsProperties.getIdEgovHeaderSPCoop());
-
+				InvioNotifica invioNotificaSDICoop = null;
+				InvioNotifica invioNotificaSPCoop = null;
+				
+				if(properties.getRicezioneEsitoURLSDICoop()!=null) {
+					invioNotificaSDICoop = new InvioNotifica(properties.getRicezioneEsitoURLSDICoop(), properties.getRicezioneEsitoUsernameSDICoop(), properties.getRicezioneEsitoPasswordSDICoop(), commonsProperties.getIdEgovHeaderSDICoop());
+				}
+				
+				if(properties.getRicezioneEsitoURLSPCoop()!=null) {
+					invioNotificaSPCoop = new InvioNotifica(properties.getRicezioneEsitoURLSPCoop(), properties.getRicezioneEsitoUsernameSPCoop(), properties.getRicezioneEsitoPasswordSPCoop(), commonsProperties.getIdEgovHeaderSPCoop());
+				}
+				InvioNotificaFactory factory = new InvioNotificaFactory(invioNotificaSPCoop, invioNotificaSDICoop);
 
 				while(countFattureElaborate < countFatture) {
 					try {
@@ -127,8 +136,7 @@ public class TimerInserimentoFatturaLib extends AbstractTimerLib {
 										request.setNotifica(notifica);
 										
 										boolean isSpCoop = TimerInserimentoFatturaLib.isSPCoop(lotto);
-										InvioNotifica invioNotifica = isSpCoop ?  invioNotificaSPCoop: invioNotificaSDICoop;
-										NotificaECResponse invioNotificaResponse = invioNotifica.invia(request);
+										NotificaECResponse invioNotificaResponse = factory.invia(request, isSpCoop);
 
 										if(isSpCoop) {
 											this.log.info("Invio tramite canale SPCoop della notifica di rifiuto automatico per il lotto ["+lotto.getIdentificativoSdi()+"] completato. Return code ["+invioNotificaResponse.getEsitoChiamata()+"]");

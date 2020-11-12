@@ -38,6 +38,7 @@ import org.govmix.proxy.fatturapa.web.commons.businessdelegate.NotificaEsitoComm
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.TracciaSdIBD;
 import org.govmix.proxy.fatturapa.web.commons.dao.DAOFactory;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.InvioNotifica;
+import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.InvioNotificaFactory;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.NotificaECRequest;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.NotificaECResponse;
 import org.govmix.proxy.fatturapa.web.commons.policies.IPolicyRispedizione;
@@ -84,20 +85,26 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 				BatchProperties properties = BatchProperties.getInstance();
 				CommonsProperties commonsProperties = CommonsProperties.getInstance(this.log);
 
-				InvioNotifica invioNotificaSDICoop = new InvioNotifica(properties.getRicezioneEsitoURLSDICoop(), properties.getRicezioneEsitoUsernameSDICoop(), properties.getRicezioneEsitoPasswordSDICoop(), commonsProperties.getIdEgovHeaderSDICoop());
-				InvioNotifica invioNotificaSPCoop = new InvioNotifica(properties.getRicezioneEsitoURLSPCoop(), properties.getRicezioneEsitoUsernameSPCoop(), properties.getRicezioneEsitoPasswordSPCoop(), commonsProperties.getIdEgovHeaderSPCoop());
-
+				InvioNotifica invioNotificaSDICoop = null;
+				InvioNotifica invioNotificaSPCoop = null;
+				
+				if(properties.getRicezioneEsitoURLSDICoop()!=null) {
+					invioNotificaSDICoop = new InvioNotifica(properties.getRicezioneEsitoURLSDICoop(), properties.getRicezioneEsitoUsernameSDICoop(), properties.getRicezioneEsitoPasswordSDICoop(), commonsProperties.getIdEgovHeaderSDICoop());
+				}
+				
+				if(properties.getRicezioneEsitoURLSPCoop()!=null) {
+					invioNotificaSPCoop = new InvioNotifica(properties.getRicezioneEsitoURLSPCoop(), properties.getRicezioneEsitoUsernameSPCoop(), properties.getRicezioneEsitoPasswordSPCoop(), commonsProperties.getIdEgovHeaderSPCoop());
+				}
+				InvioNotificaFactory factory = new InvioNotificaFactory(invioNotificaSPCoop, invioNotificaSDICoop);
 				try {
 					while(countNotificheElaborate < countNotifiche) {
 						for(NotificaEsitoCommittente notifica : lstNotifiche) {
 
 							try{
-								InvioNotifica invioNotifica = TimerConsegnaEsitoLib.isSPCoop(notifica.getFatturaElettronica().getLottoFatture()) ?  invioNotificaSPCoop: invioNotificaSDICoop;
-
 								
 								NotificaECRequest request = new NotificaECRequest();
 								request.setNotifica(notifica);
-								NotificaECResponse invioNotificaResponse = invioNotifica.invia(request);
+								NotificaECResponse invioNotificaResponse = factory.invia(request, TimerConsegnaEsitoLib.isSPCoop(notifica.getFatturaElettronica().getLottoFatture()));
 								int esitoChiamata = invioNotificaResponse.getEsitoChiamata();
 
 								if(esitoChiamata > 299) {
