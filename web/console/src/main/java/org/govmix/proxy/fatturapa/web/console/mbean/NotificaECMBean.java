@@ -182,7 +182,7 @@ public class NotificaECMBean extends BaseFormMBean<NotificaECBean, Long, Notific
 			}
 
 			NotificaEC notificaECToSend = new NotificaEC();
-			notificaECToSend.setDescrizione(this.form.getDescrizione().getValue());
+//			notificaECToSend.setDescrizione(this.form.getDescrizione().getValue()); //TODO pintori setDescrizione -> setMotivoRifiuto
 			notificaECToSend.setEsito(EsitoCommittente.fromValue(this.form.getEsito().getValue().getValue()));
 			notificaECToSend.setIdentificativoSdi(BigInteger.valueOf(this.fattura.getDTO().getIdentificativoSdi()));
 			notificaECToSend.setPosizione(BigInteger.valueOf(this.fattura.getDTO().getPosizione()));

@@ -738,6 +738,12 @@ public class JDBCFatturaElettronicaServiceSearchImpl implements IJDBCServiceSear
 			sqlQueryObject.addWhereCondition(tableName1+".id_notifica_decorrenza_termini="+tableName2+".id");
 		}
 
+		if(expression.inUseModel(FatturaElettronica.model().NOTIFICA_EC,false)){
+			String tableName1 = this.getFatturaElettronicaFieldConverter().toAliasTable(FatturaElettronica.model());
+			String tableName2 = this.getFatturaElettronicaFieldConverter().toAliasTable(FatturaElettronica.model().NOTIFICA_EC);
+			sqlQueryObject.addWhereCondition(tableName1+".id="+tableName2+".id_fattura_elettronica");
+		}
+
 		if(expression.inUseModel(FatturaElettronica.model().DIPARTIMENTO,false)){
 			String tableName1 = this.getFatturaElettronicaFieldConverter().toAliasTable(FatturaElettronica.model());
 			String tableName2 = this.getFatturaElettronicaFieldConverter().toAliasTable(FatturaElettronica.model().DIPARTIMENTO);

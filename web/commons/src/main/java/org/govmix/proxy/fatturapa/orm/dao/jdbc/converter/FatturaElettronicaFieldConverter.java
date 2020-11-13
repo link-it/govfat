@@ -957,6 +957,27 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 				return "nome";
 			}
 		}
+		if(field.equals(FatturaElettronica.model().NOTIFICA_EC.IDENTIFICATIVO_SDI)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".identificativo_sdi";
+			}else{
+				return "identificativo_sdi";
+			}
+		}
+		if(field.equals(FatturaElettronica.model().NOTIFICA_EC.POSIZIONE)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".posizione";
+			}else{
+				return "posizione";
+			}
+		}
+		if(field.equals(FatturaElettronica.model().NOTIFICA_EC.MOTIVI_RIFIUTO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".motivi_rifiuto";
+			}else{
+				return "motivi_rifiuto";
+			}
+		}
 
 
 		return super.toColumn(field,returnAlias,appendTablePrefix);
@@ -1351,6 +1372,15 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 		if(field.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO.NOME)){
 			return this.toTable(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO, returnAlias);
 		}
+		if(field.equals(FatturaElettronica.model().NOTIFICA_EC.IDENTIFICATIVO_SDI)){
+			return this.toTable(FatturaElettronica.model().NOTIFICA_EC, returnAlias);
+		}
+		if(field.equals(FatturaElettronica.model().NOTIFICA_EC.POSIZIONE)){
+			return this.toTable(FatturaElettronica.model().NOTIFICA_EC, returnAlias);
+		}
+		if(field.equals(FatturaElettronica.model().NOTIFICA_EC.MOTIVI_RIFIUTO)){
+			return this.toTable(FatturaElettronica.model().NOTIFICA_EC, returnAlias);
+		}
 
 
 		return super.toTable(field,returnAlias);
@@ -1427,7 +1457,9 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 		if(model.equals(FatturaElettronica.model().LOTTO_FATTURE.DIPARTIMENTO.DIPARTIMENTO_PROPERTY_VALUE.ID_PROPERTY.ID_PROTOCOLLO)){
 			return "protocolli";
 		}
-
+		if(model.equals(FatturaElettronica.model().NOTIFICA_EC)){
+			return "esito_committente";
+		}
 
 		return super.toTable(model,returnAlias);
 		

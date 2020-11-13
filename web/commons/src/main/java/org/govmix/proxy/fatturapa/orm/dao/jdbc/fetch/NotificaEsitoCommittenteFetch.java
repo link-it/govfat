@@ -65,6 +65,8 @@ public class NotificaEsitoCommittenteFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "esito", NotificaEsitoCommittente.model().ESITO.getFieldType())+"");
 				setParameter(object, "setDescrizione", NotificaEsitoCommittente.model().DESCRIZIONE.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "descrizione", NotificaEsitoCommittente.model().DESCRIZIONE.getFieldType()));
+				setParameter(object, "setMotiviRifiuto", NotificaEsitoCommittente.model().MOTIVI_RIFIUTO.getFieldType(),
+					jdbcParameterUtilities.readParameter(rs, "motivi_rifiuto", NotificaEsitoCommittente.model().MOTIVI_RIFIUTO.getFieldType()));
 				setParameter(object, "setMessageIdCommittente", NotificaEsitoCommittente.model().MESSAGE_ID_COMMITTENTE.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "message_id_committente", NotificaEsitoCommittente.model().MESSAGE_ID_COMMITTENTE.getFieldType()));
 				setParameter(object, "setNomeFile", NotificaEsitoCommittente.model().NOME_FILE.getFieldType(),
@@ -125,6 +127,8 @@ public class NotificaEsitoCommittenteFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"esito"));
 				setParameter(object, "setDescrizione", NotificaEsitoCommittente.model().DESCRIZIONE.getFieldType(),
 					this.getObjectFromMap(map,"descrizione"));
+				setParameter(object, "setMotiviRifiuto", NotificaEsitoCommittente.model().MOTIVI_RIFIUTO.getFieldType(),
+					this.getObjectFromMap(map,"motiviRifiuto"));
 				setParameter(object, "setMessageIdCommittente", NotificaEsitoCommittente.model().MESSAGE_ID_COMMITTENTE.getFieldType(),
 					this.getObjectFromMap(map,"messageIdCommittente"));
 				setParameter(object, "setNomeFile", NotificaEsitoCommittente.model().NOME_FILE.getFieldType(),
@@ -153,7 +157,7 @@ public class NotificaEsitoCommittenteFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"xml"));
 				return object;
 			}
-
+			
 			else{
 				throw new ServiceException("Model ["+model.toString()+"] not supported by fetch: "+this.getClass().getName());
 			}	

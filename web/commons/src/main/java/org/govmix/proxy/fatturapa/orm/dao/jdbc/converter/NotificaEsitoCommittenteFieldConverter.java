@@ -131,6 +131,13 @@ public class NotificaEsitoCommittenteFieldConverter extends AbstractSQLFieldConv
 				return "descrizione";
 			}
 		}
+		if(field.equals(NotificaEsitoCommittente.model().MOTIVI_RIFIUTO)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".motivi_rifiuto";
+			}else{
+				return "motivi_rifiuto";
+			}
+		}
 		if(field.equals(NotificaEsitoCommittente.model().MESSAGE_ID_COMMITTENTE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".message_id_committente";
@@ -1156,6 +1163,9 @@ public class NotificaEsitoCommittenteFieldConverter extends AbstractSQLFieldConv
 			return this.toTable(NotificaEsitoCommittente.model(), returnAlias);
 		}
 		if(field.equals(NotificaEsitoCommittente.model().DESCRIZIONE)){
+			return this.toTable(NotificaEsitoCommittente.model(), returnAlias);
+		}
+		if(field.equals(NotificaEsitoCommittente.model().MOTIVI_RIFIUTO)){
 			return this.toTable(NotificaEsitoCommittente.model(), returnAlias);
 		}
 		if(field.equals(NotificaEsitoCommittente.model().MESSAGE_ID_COMMITTENTE)){

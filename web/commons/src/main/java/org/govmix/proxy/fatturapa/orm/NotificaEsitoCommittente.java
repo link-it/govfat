@@ -46,6 +46,7 @@ import java.io.Serializable;
  * 			&lt;element name="posizione" type="{http://www.w3.org/2001/XMLSchema}positiveInteger" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="esito" type="{http://www.govmix.org/proxy/fatturapa/orm}EsitoCommittenteType" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="descrizione" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="motiviRifiuto" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="messageIdCommittente" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="nomeFile" type="{http://www.govmix.org/proxy/fatturapa/orm}string" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="utente" type="{http://www.govmix.org/proxy/fatturapa/orm}id-utente" minOccurs="1" maxOccurs="1"/>
@@ -82,6 +83,7 @@ import java.io.Serializable;
   	"posizione",
   	"esito",
   	"descrizione",
+  	"motiviRifiuto",
   	"messageIdCommittente",
   	"nomeFile",
   	"utente",
@@ -192,6 +194,14 @@ public class NotificaEsitoCommittente extends org.openspcoop2.utils.beans.BaseBe
 
   public void setDescrizione(java.lang.String descrizione) {
     this.descrizione = descrizione;
+  }
+
+  public java.lang.String getMotiviRifiuto() {
+    return this.motiviRifiuto;
+  }
+
+  public void setMotiviRifiuto(java.lang.String motiviRifiuto) {
+    this.motiviRifiuto = motiviRifiuto;
   }
 
   public java.lang.String getMessageIdCommittente() {
@@ -394,6 +404,10 @@ public class NotificaEsitoCommittente extends org.openspcoop2.utils.beans.BaseBe
   @javax.xml.bind.annotation.XmlSchemaType(name="string")
   @XmlElement(name="descrizione",required=false,nillable=false)
   protected java.lang.String descrizione;
+
+  @javax.xml.bind.annotation.XmlSchemaType(name="string")
+  @XmlElement(name="motiviRifiuto",required=false,nillable=false)
+  protected java.lang.String motiviRifiuto;
 
   @javax.xml.bind.annotation.XmlSchemaType(name="string")
   @XmlElement(name="messageIdCommittente",required=false,nillable=false)

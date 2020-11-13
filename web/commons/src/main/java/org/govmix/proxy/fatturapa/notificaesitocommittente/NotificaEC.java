@@ -29,6 +29,7 @@
 package org.govmix.proxy.fatturapa.notificaesitocommittente;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -51,7 +52,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="identificativoSdi" type="{http://www.govmix.org/proxy/fatturapa/notificaesitocommittente}IdentificativoSdI"/>
  *         &lt;element name="posizione" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
  *         &lt;element name="esito" type="{http://www.govmix.org/proxy/fatturapa/notificaesitocommittente}EsitoCommittente"/>
- *         &lt;element name="descrizione" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="motiviRifiuto" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" maxOccurs="unbounded"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -65,7 +66,7 @@ import javax.xml.bind.annotation.XmlType;
     "identificativoSdi",
     "posizione",
     "esito",
-    "descrizione"
+    "motivoRifiuto"
 })
 
 @XmlRootElement
@@ -78,14 +79,14 @@ public class NotificaEC {
     protected BigInteger posizione;
     @XmlElement(required = true)
     protected EsitoCommittente esito;
-    protected String descrizione;
+    private List<MotivoRifiuto> motivoRifiuto;
 
 //    public static void main(String[] args) throws Exception {
-//    	JAXBContext ctx = JAXBContext.newInstance(NotificaEC.class.getPackage().getName());
-//		Marshaller masrshal =  ctx.createMarshaller();
+//    	javax.xml.bind.JAXBContext ctx = javax.xml.bind.JAXBContext.newInstance(NotificaEC.class.getPackage().getName());
+//    	javax.xml.bind.Marshaller masrshal =  ctx.createMarshaller();
 //		NotificaEC jaxbElement = new NotificaEC();
 //		jaxbElement.setEsito(EsitoCommittente.EC_02);
-//		jaxbElement.setDescrizione("Importo non coerente e committente errato");
+//		jaxbElement.setMotivoRifiuto(java.util.Arrays.asList(MotivoRifiuto.MR_01,MotivoRifiuto.MR_02));
 //		jaxbElement.setIdentificativoSdi(new BigInteger("111"));
 //		jaxbElement.setPosizione(new BigInteger("1"));
 //		masrshal.marshal(jaxbElement, System.out);
@@ -163,28 +164,12 @@ public class NotificaEC {
         this.esito = value;
     }
 
-    /**
-     * Gets the value of the descrizione property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getDescrizione() {
-        return descrizione;
-    }
+	public List<MotivoRifiuto> getMotivoRifiuto() {
+		return motivoRifiuto;
+	}
 
-    /**
-     * Sets the value of the descrizione property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setDescrizione(String value) {
-        this.descrizione = value;
-    }
+	public void setMotivoRifiuto(List<MotivoRifiuto> motivoRifiuto) {
+		this.motivoRifiuto = motivoRifiuto;
+	}
 
 }

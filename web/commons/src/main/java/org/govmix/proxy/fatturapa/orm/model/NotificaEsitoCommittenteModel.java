@@ -49,6 +49,7 @@ public class NotificaEsitoCommittenteModel extends AbstractModel<NotificaEsitoCo
 		this.POSIZIONE = new Field("posizione",java.lang.Integer.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.ESITO = new Field("esito",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.DESCRIZIONE = new Field("descrizione",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
+		this.MOTIVI_RIFIUTO = new Field("motiviRifiuto",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.MESSAGE_ID_COMMITTENTE = new Field("messageIdCommittente",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.NOME_FILE = new Field("nomeFile",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.UTENTE = new org.govmix.proxy.fatturapa.orm.model.IdUtenteModel(new Field("utente",org.govmix.proxy.fatturapa.orm.IdUtente.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class));
@@ -78,6 +79,7 @@ public class NotificaEsitoCommittenteModel extends AbstractModel<NotificaEsitoCo
 		this.POSIZIONE = new ComplexField(father,"posizione",java.lang.Integer.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.ESITO = new ComplexField(father,"esito",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.DESCRIZIONE = new ComplexField(father,"descrizione",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
+		this.MOTIVI_RIFIUTO = new ComplexField(father,"motiviRifiuto",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.MESSAGE_ID_COMMITTENTE = new ComplexField(father,"messageIdCommittente",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.NOME_FILE = new ComplexField(father,"nomeFile",java.lang.String.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class);
 		this.UTENTE = new org.govmix.proxy.fatturapa.orm.model.IdUtenteModel(new ComplexField(father,"utente",org.govmix.proxy.fatturapa.orm.IdUtente.class,"NotificaEsitoCommittente",NotificaEsitoCommittente.class));
@@ -111,6 +113,8 @@ public class NotificaEsitoCommittenteModel extends AbstractModel<NotificaEsitoCo
 	public IField ESITO = null;
 	 
 	public IField DESCRIZIONE = null;
+	 
+	public IField MOTIVI_RIFIUTO = null;
 	 
 	public IField MESSAGE_ID_COMMITTENTE = null;
 	 

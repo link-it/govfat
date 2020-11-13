@@ -33,6 +33,7 @@ import org.govmix.proxy.fatturapa.orm.IdNotificaDecorrenzaTermini;
 import org.govmix.proxy.fatturapa.orm.IdTrasmissioneEsito;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.LottoFatture;
+import org.govmix.proxy.fatturapa.orm.IdNotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.orm.IdTrasmissione;
 import org.govmix.proxy.fatturapa.orm.PccTracciaTrasmissioneEsito;
 import org.govmix.proxy.fatturapa.orm.PccErroreElaborazione;
@@ -830,6 +831,69 @@ public abstract class AbstractDeserializer {
 	 */
 	public LottoFatture readLottoFattureFromString(String in) throws DeserializerException {
 		return (LottoFatture) this.xmlToObj(in.getBytes(), LottoFatture.class);
+	}	
+	
+	
+	
+	/*
+	 =================================================================================
+	 Object: id-notifica-esito-committente
+	 =================================================================================
+	*/
+	
+	/**
+	 * Transform the xml in <var>fileName</var> in the object type {@link org.govmix.proxy.fatturapa.orm.IdNotificaEsitoCommittente}
+	 * 
+	 * @param fileName Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.IdNotificaEsitoCommittente}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.IdNotificaEsitoCommittente}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public IdNotificaEsitoCommittente readIdNotificaEsitoCommittente(String fileName) throws DeserializerException {
+		return (IdNotificaEsitoCommittente) this.xmlToObj(fileName, IdNotificaEsitoCommittente.class);
+	}
+	
+	/**
+	 * Transform the xml in <var>file</var> in the object type {@link org.govmix.proxy.fatturapa.orm.IdNotificaEsitoCommittente}
+	 * 
+	 * @param file Xml file to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.IdNotificaEsitoCommittente}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.IdNotificaEsitoCommittente}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public IdNotificaEsitoCommittente readIdNotificaEsitoCommittente(File file) throws DeserializerException {
+		return (IdNotificaEsitoCommittente) this.xmlToObj(file, IdNotificaEsitoCommittente.class);
+	}
+	
+	/**
+	 * Transform the input stream <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.IdNotificaEsitoCommittente}
+	 * 
+	 * @param in InputStream to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.IdNotificaEsitoCommittente}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.IdNotificaEsitoCommittente}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public IdNotificaEsitoCommittente readIdNotificaEsitoCommittente(InputStream in) throws DeserializerException {
+		return (IdNotificaEsitoCommittente) this.xmlToObj(in, IdNotificaEsitoCommittente.class);
+	}	
+	
+	/**
+	 * Transform the byte array <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.IdNotificaEsitoCommittente}
+	 * 
+	 * @param in Byte array to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.IdNotificaEsitoCommittente}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.IdNotificaEsitoCommittente}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public IdNotificaEsitoCommittente readIdNotificaEsitoCommittente(byte[] in) throws DeserializerException {
+		return (IdNotificaEsitoCommittente) this.xmlToObj(in, IdNotificaEsitoCommittente.class);
+	}	
+	
+	/**
+	 * Transform the String <var>in</var> in the object type {@link org.govmix.proxy.fatturapa.orm.IdNotificaEsitoCommittente}
+	 * 
+	 * @param in String to use for the reconstruction of the object type {@link org.govmix.proxy.fatturapa.orm.IdNotificaEsitoCommittente}
+	 * @return Object type {@link org.govmix.proxy.fatturapa.orm.IdNotificaEsitoCommittente}
+	 * @throws DeserializerException The exception that is thrown when an error occurs during deserialization
+	 */
+	public IdNotificaEsitoCommittente readIdNotificaEsitoCommittenteFromString(String in) throws DeserializerException {
+		return (IdNotificaEsitoCommittente) this.xmlToObj(in.getBytes(), IdNotificaEsitoCommittente.class);
 	}	
 	
 	

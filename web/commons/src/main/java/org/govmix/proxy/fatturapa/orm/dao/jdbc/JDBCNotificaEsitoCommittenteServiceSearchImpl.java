@@ -128,6 +128,7 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 			fields.add((NotificaEsitoCommittente.model().POSIZIONE));
 			fields.add((NotificaEsitoCommittente.model().ESITO));
 			fields.add((NotificaEsitoCommittente.model().DESCRIZIONE));
+			fields.add((NotificaEsitoCommittente.model().MOTIVI_RIFIUTO));
 			fields.add((NotificaEsitoCommittente.model().MESSAGE_ID_COMMITTENTE));
 			fields.add((NotificaEsitoCommittente.model().NOME_FILE));
 			fields.add((NotificaEsitoCommittente.model().MODALITA_BATCH));

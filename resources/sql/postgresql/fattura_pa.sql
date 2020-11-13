@@ -498,6 +498,7 @@ CREATE TABLE esito_committente
 	posizione INT,
 	esito VARCHAR(255) NOT NULL,
 	descrizione VARCHAR(255),
+	motivi_rifiuto VARCHAR(255),
 	message_id_committente VARCHAR(14),
 	nome_file VARCHAR(50) NOT NULL,
 	modalita_batch BOOLEAN NOT NULL DEFAULT false,

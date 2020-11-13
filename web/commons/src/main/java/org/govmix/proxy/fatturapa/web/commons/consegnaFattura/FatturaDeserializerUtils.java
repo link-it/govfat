@@ -21,6 +21,7 @@
 package org.govmix.proxy.fatturapa.web.commons.consegnaFattura;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +32,7 @@ import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoInserimentoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
+import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.AbstractFatturaConverter;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FPA12Converter;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FatturaV10Converter;
@@ -368,6 +370,83 @@ public class FatturaDeserializerUtils {
 		ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(lotto, posizione, nomeFile, fattureLst.get(posizione-1));
 		AbstractFatturaConverter<?> converter = ConsegnaFattura.getConverter(params);
 		return converter.getFatturaElettronica();
+	}
+
+	public static Date getDataScadenzaPagamento(FatturaElettronica fatturaElettronica) throws Exception {
+		if(fatturaElettronica.getDataProtocollazione()!= null) {
+			return new Date(fatturaElettronica.getDataProtocollazione().getTime() + (1000*60*60*24*30));
+		} else {
+			return null;
+		}
+	}
+
+	public static List<DatiDocumentiCorrelatiType> getDatiFattureCollegate(FatturaElettronica fattura) throws Exception {
+		
+		if(fattura.getTipoDocumento().equals(TipoDocumentoType.TD04)) {
+			
+			List<DatiDocumentiCorrelatiType> lst = new ArrayList<DatiDocumentiCorrelatiType>();
+			if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+				FatturaV10Converter converter = new FatturaV10Converter(fattura.getXml(), null);
+				if(converter.getFattura().getFatturaElettronicaBodyList().size() > 0 &&
+						converter.getFattura().getFatturaElettronicaBody(0).getDatiGenerali() != null && 
+						converter.getFattura().getFatturaElettronicaBody(0).getDatiGenerali().getDatiFattureCollegateList() != null) {
+					for(it.gov.fatturapa.sdi.fatturapa.v1_0.DatiDocumentiCorrelatiType ddcIn: converter.getFattura().getFatturaElettronicaBody(0).getDatiGenerali().getDatiFattureCollegateList()) {
+						DatiDocumentiCorrelatiType ddc = new DatiDocumentiCorrelatiType();
+						ddc.setCodiceCIG(ddcIn.getCodiceCIG());
+						ddc.setCodiceCUP(ddcIn.getCodiceCUP());
+						ddc.setCodiceCommessaConvenzione(ddcIn.getCodiceCommessaConvenzione());
+						ddc.setData(ddcIn.getData());
+						ddc.setIdDocumento(ddcIn.getIdDocumento());
+						ddc.setNumItem(ddcIn.getNumItem());
+						ddc.setRiferimentoNumeroLinea(ddcIn.getRiferimentoNumeroLineaList());
+						lst.add(ddc);
+					}
+				}
+			}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+				FatturaV11Converter converter = new FatturaV11Converter(fattura.getXml(), null);
+				
+				if(converter.getFattura().getFatturaElettronicaBodyList().size() > 0 &&
+						converter.getFattura().getFatturaElettronicaBody(0).getDatiGenerali() != null && 
+						converter.getFattura().getFatturaElettronicaBody(0).getDatiGenerali().getDatiFattureCollegateList() != null) {
+					for(it.gov.fatturapa.sdi.fatturapa.v1_1.DatiDocumentiCorrelatiType ddcIn: converter.getFattura().getFatturaElettronicaBody(0).getDatiGenerali().getDatiFattureCollegateList()) {
+						DatiDocumentiCorrelatiType ddc = new DatiDocumentiCorrelatiType();
+						ddc.setCodiceCIG(ddcIn.getCodiceCIG());
+						ddc.setCodiceCUP(ddcIn.getCodiceCUP());
+						ddc.setCodiceCommessaConvenzione(ddcIn.getCodiceCommessaConvenzione());
+						ddc.setData(ddcIn.getData());
+						ddc.setIdDocumento(ddcIn.getIdDocumento());
+						ddc.setNumItem(ddcIn.getNumItem());
+						ddc.setRiferimentoNumeroLinea(ddcIn.getRiferimentoNumeroLineaList());
+						lst.add(ddc);
+					}
+				}
+			}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.getValue().equals(fattura.getFormatoTrasmissione().getValue()) || 
+					it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+				FPA12Converter converter = new FPA12Converter(fattura.getXml(), null);
+				if(converter.getFattura().getFatturaElettronicaBodyList().size() > 0 &&
+						converter.getFattura().getFatturaElettronicaBody(0).getDatiGenerali() != null && 
+						converter.getFattura().getFatturaElettronicaBody(0).getDatiGenerali().getDatiFattureCollegateList() != null) {
+					for(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.DatiDocumentiCorrelatiType ddcIn: converter.getFattura().getFatturaElettronicaBody(0).getDatiGenerali().getDatiFattureCollegateList()) {
+						DatiDocumentiCorrelatiType ddc = new DatiDocumentiCorrelatiType();
+						ddc.setCodiceCIG(ddcIn.getCodiceCIG());
+						ddc.setCodiceCUP(ddcIn.getCodiceCUP());
+						ddc.setCodiceCommessaConvenzione(ddcIn.getCodiceCommessaConvenzione());
+						ddc.setData(ddcIn.getData());
+						ddc.setIdDocumento(ddcIn.getIdDocumento());
+						ddc.setNumItem(ddcIn.getNumItem());
+						ddc.setRiferimentoNumeroLinea(ddcIn.getRiferimentoNumeroLineaList());
+						lst.add(ddc);
+					}
+				}
+			} else {
+				throw new Exception("Formato FatturaPA ["+fattura.getFormatoTrasmissione()+"] non riconosciuto");
+			}
+			
+			return lst;
+		} else {
+			return new ArrayList<DatiDocumentiCorrelatiType>();
+		}
+		
 	}
 
 	public static AbstractFatturaConverter<?> getConverter(Logger log, byte[] raw, Long identificativo, int posizione, String messageId,

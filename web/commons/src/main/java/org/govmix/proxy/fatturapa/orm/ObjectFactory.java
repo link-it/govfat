@@ -124,6 +124,13 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link IdNotificaEsitoCommittente }
+     */
+    public IdNotificaEsitoCommittente createIdNotificaEsitoCommittente() {
+        return new IdNotificaEsitoCommittente();
+    }
+
+    /**
      * Create an instance of {@link RegistroPropertyValue }
      */
     public RegistroPropertyValue createRegistroPropertyValue() {

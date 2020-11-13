@@ -86,6 +86,7 @@ public class FatturaElettronicaModel extends AbstractModel<FatturaElettronica> {
 		this.STATO_CONSERVAZIONE = new Field("statoConservazione",java.lang.String.class,"FatturaElettronica",FatturaElettronica.class);
 		this.DIPARTIMENTO = new org.govmix.proxy.fatturapa.orm.model.DipartimentoModel(new Field("Dipartimento",org.govmix.proxy.fatturapa.orm.Dipartimento.class,"FatturaElettronica",FatturaElettronica.class));
 		this.LOTTO_FATTURE = new org.govmix.proxy.fatturapa.orm.model.LottoFattureModel(new Field("LottoFatture",org.govmix.proxy.fatturapa.orm.LottoFatture.class,"FatturaElettronica",FatturaElettronica.class));
+		this.NOTIFICA_EC = new org.govmix.proxy.fatturapa.orm.model.IdNotificaEsitoCommittenteModel(new Field("notificaEC",org.govmix.proxy.fatturapa.orm.IdNotificaEsitoCommittente.class,"FatturaElettronica",FatturaElettronica.class));
 	
 	}
 	
@@ -137,6 +138,7 @@ public class FatturaElettronicaModel extends AbstractModel<FatturaElettronica> {
 		this.STATO_CONSERVAZIONE = new ComplexField(father,"statoConservazione",java.lang.String.class,"FatturaElettronica",FatturaElettronica.class);
 		this.DIPARTIMENTO = new org.govmix.proxy.fatturapa.orm.model.DipartimentoModel(new ComplexField(father,"Dipartimento",org.govmix.proxy.fatturapa.orm.Dipartimento.class,"FatturaElettronica",FatturaElettronica.class));
 		this.LOTTO_FATTURE = new org.govmix.proxy.fatturapa.orm.model.LottoFattureModel(new ComplexField(father,"LottoFatture",org.govmix.proxy.fatturapa.orm.LottoFatture.class,"FatturaElettronica",FatturaElettronica.class));
+		this.NOTIFICA_EC = new org.govmix.proxy.fatturapa.orm.model.IdNotificaEsitoCommittenteModel(new ComplexField(father,"notificaEC",org.govmix.proxy.fatturapa.orm.IdNotificaEsitoCommittente.class,"FatturaElettronica",FatturaElettronica.class));
 	
 	}
 	
@@ -229,6 +231,8 @@ public class FatturaElettronicaModel extends AbstractModel<FatturaElettronica> {
 	public org.govmix.proxy.fatturapa.orm.model.DipartimentoModel DIPARTIMENTO = null;
 	 
 	public org.govmix.proxy.fatturapa.orm.model.LottoFattureModel LOTTO_FATTURE = null;
+	 
+	public org.govmix.proxy.fatturapa.orm.model.IdNotificaEsitoCommittenteModel NOTIFICA_EC = null;
 	 
 
 	@Override

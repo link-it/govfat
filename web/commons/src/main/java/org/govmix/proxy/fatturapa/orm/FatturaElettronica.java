@@ -86,6 +86,7 @@ import java.io.Serializable;
  * 			&lt;element name="statoConservazione" type="{http://www.govmix.org/proxy/fatturapa/orm}StatoConservazioneType" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="Dipartimento" type="{http://www.govmix.org/proxy/fatturapa/orm}Dipartimento" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="LottoFatture" type="{http://www.govmix.org/proxy/fatturapa/orm}LottoFatture" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="notificaEC" type="{http://www.govmix.org/proxy/fatturapa/orm}id-notifica-esito-committente" minOccurs="0" maxOccurs="1"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -143,7 +144,8 @@ import java.io.Serializable;
   	"idEsitoScadenza",
   	"statoConservazione",
   	"dipartimento",
-  	"lottoFatture"
+  	"lottoFatture",
+  	"notificaEC"
   }
 )
 
@@ -617,6 +619,14 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
     this.lottoFatture = lottoFatture;
   }
 
+  public IdNotificaEsitoCommittente getNotificaEC() {
+    return this.notificaEC;
+  }
+
+  public void setNotificaEC(IdNotificaEsitoCommittente notificaEC) {
+    this.notificaEC = notificaEC;
+  }
+
   private static final long serialVersionUID = 1L;
 
   @XmlTransient
@@ -840,5 +850,8 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
 
   @XmlElement(name="LottoFatture",required=false,nillable=false)
   protected LottoFatture lottoFatture;
+
+  @XmlElement(name="notificaEC",required=false,nillable=false)
+  protected IdNotificaEsitoCommittente notificaEC;
 
 }

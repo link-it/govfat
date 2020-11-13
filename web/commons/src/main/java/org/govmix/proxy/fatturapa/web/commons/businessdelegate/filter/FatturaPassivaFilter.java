@@ -3,6 +3,7 @@ package org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.govmix.proxy.fatturapa.notificaesitocommittente.MotivoRifiuto;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
@@ -13,6 +14,7 @@ import org.openspcoop2.generic_project.exception.ExpressionNotImplementedExcepti
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.expression.IExpression;
+import org.openspcoop2.generic_project.expression.LikeMode;
 
 public class FatturaPassivaFilter extends FatturaFilter {
 
@@ -22,6 +24,7 @@ public class FatturaPassivaFilter extends FatturaFilter {
 	private List<StatoConsegnaType> statiConsegna;
 	
 	private EsitoType esito;
+	private MotivoRifiuto motivoRifiuto;
 	private boolean esitoNull;
 	
 	private Boolean inScadenza;
@@ -37,6 +40,10 @@ public class FatturaPassivaFilter extends FatturaFilter {
 			
 			if(modalitaPush != null) {
 				expression.equals(FatturaElettronica.model().DIPARTIMENTO.MODALITA_PUSH, this.modalitaPush);
+			}
+			
+			if(this.motivoRifiuto != null) {
+				expression.like(FatturaElettronica.model().NOTIFICA_EC.MOTIVI_RIFIUTO, this.motivoRifiuto.name(), LikeMode.ANYWHERE);
 			}
 			
 			if(this.statiConsegna != null && !this.statiConsegna.isEmpty()) {
@@ -164,6 +171,14 @@ public class FatturaPassivaFilter extends FatturaFilter {
 
 	public void setInScadenza(Boolean inScadenza) {
 		this.inScadenza = inScadenza;
+	}
+
+	public MotivoRifiuto getMotivoRifiuto() {
+		return motivoRifiuto;
+	}
+
+	public void setMotivoRifiuto(MotivoRifiuto motivoRifiuto) {
+		this.motivoRifiuto = motivoRifiuto;
 	}
 
 }

@@ -108,6 +108,7 @@ public class JDBCNotificaEsitoCommittenteServiceImpl extends JDBCNotificaEsitoCo
 		sqlQueryObjectInsert.addInsertField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().POSIZIONE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().ESITO,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().DESCRIZIONE,false),"?");
+		sqlQueryObjectInsert.addInsertField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().MOTIVI_RIFIUTO,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().MESSAGE_ID_COMMITTENTE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().NOME_FILE,false),"?");
 		sqlQueryObjectInsert.addInsertField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().MODALITA_BATCH,false),"?");
@@ -133,6 +134,7 @@ public class JDBCNotificaEsitoCommittenteServiceImpl extends JDBCNotificaEsitoCo
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(notificaEsitoCommittente.getPosizione(),NotificaEsitoCommittente.model().POSIZIONE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(notificaEsitoCommittente.getEsito(),NotificaEsitoCommittente.model().ESITO.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(notificaEsitoCommittente.getDescrizione(),NotificaEsitoCommittente.model().DESCRIZIONE.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(notificaEsitoCommittente.getMotiviRifiuto(),NotificaEsitoCommittente.model().MOTIVI_RIFIUTO.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(notificaEsitoCommittente.getMessageIdCommittente(),NotificaEsitoCommittente.model().MESSAGE_ID_COMMITTENTE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(notificaEsitoCommittente.getNomeFile(),NotificaEsitoCommittente.model().NOME_FILE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(notificaEsitoCommittente.getModalitaBatch(),NotificaEsitoCommittente.model().MODALITA_BATCH.getFieldType()),
@@ -232,6 +234,8 @@ public class JDBCNotificaEsitoCommittenteServiceImpl extends JDBCNotificaEsitoCo
 		lstObjects_notificaEsitoCommittente.add(new JDBCObject(notificaEsitoCommittente.getEsito(), NotificaEsitoCommittente.model().ESITO.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().DESCRIZIONE,false), "?");
 		lstObjects_notificaEsitoCommittente.add(new JDBCObject(notificaEsitoCommittente.getDescrizione(), NotificaEsitoCommittente.model().DESCRIZIONE.getFieldType()));
+		sqlQueryObjectUpdate.addUpdateField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().MOTIVI_RIFIUTO,false), "?");
+		lstObjects_notificaEsitoCommittente.add(new JDBCObject(notificaEsitoCommittente.getMotiviRifiuto(), NotificaEsitoCommittente.model().MOTIVI_RIFIUTO.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().MESSAGE_ID_COMMITTENTE,false), "?");
 		lstObjects_notificaEsitoCommittente.add(new JDBCObject(notificaEsitoCommittente.getMessageIdCommittente(), NotificaEsitoCommittente.model().MESSAGE_ID_COMMITTENTE.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getNotificaEsitoCommittenteFieldConverter().toColumn(NotificaEsitoCommittente.model().NOME_FILE,false), "?");

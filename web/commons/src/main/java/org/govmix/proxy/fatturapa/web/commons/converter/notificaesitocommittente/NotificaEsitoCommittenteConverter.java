@@ -31,6 +31,7 @@ import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdUtente;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoCommittenteType;
+import org.govmix.proxy.fatturapa.notificaesitocommittente.MotivoRifiuto;
 import org.govmix.proxy.fatturapa.notificaesitocommittente.NotificaEC;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 
@@ -102,10 +103,55 @@ public class NotificaEsitoCommittenteConverter {
 		
 		notificaEsitoCommittente.setEsito(esitoCommittente);
 		
-		notificaEsitoCommittente.setDescrizione(this.esito.getDescrizione());
+		notificaEsitoCommittente.setMotiviRifiuto(this.getMotiviRifiuto());
+		notificaEsitoCommittente.setDescrizione(this.getDescrizione());
 
 		return notificaEsitoCommittente;
 		
+	}
+
+	private String getMotiviRifiuto() {
+		if(this.esito.getMotivoRifiuto()!=null &&!this.esito.getMotivoRifiuto().isEmpty()) {
+			
+			StringBuffer sb = new StringBuffer();
+			for(MotivoRifiuto mr: this.esito.getMotivoRifiuto()) {
+				if(sb.length()>0) {
+					sb.append(",");
+				}
+				sb.append(mr.toString());
+			}
+			
+			return sb.toString();
+		} else {
+			return null;
+		}
+	}
+
+	private String getDescrizione() {
+		if(this.esito.getMotivoRifiuto()!=null &&!this.esito.getMotivoRifiuto().isEmpty()) {
+			
+			StringBuffer sb = new StringBuffer();
+			for(MotivoRifiuto mr: this.esito.getMotivoRifiuto()) {
+				if(sb.length()>0) {
+					sb.append(". ");
+				}
+				sb.append(convertToDescrizione(mr));
+			}
+			
+			return sb.toString();
+		} else {
+			return null;
+		}
+	}
+
+	private String convertToDescrizione(MotivoRifiuto mr) {
+		switch(mr) {
+		case MR_01: return "Soggetto destinatario errato";
+		case MR_02: return "Omesso o errato CIG o CUP";
+		case MR_03: return "Omesso o errato numero e data dell’atto d’impegno";
+		default: return null;
+		
+		}
 	}
 
 	public IdUtente getIdUtente() {
