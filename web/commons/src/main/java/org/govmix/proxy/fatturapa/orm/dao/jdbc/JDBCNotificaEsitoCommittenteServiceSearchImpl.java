@@ -154,7 +154,8 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 
 			for(Map<String, Object> map: returnMap) {
 				Long idFatturaElettronica = (Long) map.get(idfatturaelettronicaField);
-				String idEgov = (String) map.get(egovalias);
+				Object idEgovOBJ = map.remove(egovalias);
+
 				String username = (String) map.get(usernameAlias);
 				Long idutente= (Long) map.get(idutenteField);
 
@@ -165,11 +166,13 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 				idUtente.setId(idutente);
 				notifica.setUtente(idUtente);
 
-				FatturaElettronica fattura = new FatturaElettronica();
-				LottoFatture lotto = new LottoFatture();
-				lotto.setIdEgov(idEgov);
-				fattura.setLottoFatture(lotto);
-				notifica.setFatturaElettronica(fattura);
+				if(idEgovOBJ!=null && idEgovOBJ instanceof String) {
+					FatturaElettronica fattura = new FatturaElettronica();
+					LottoFatture lotto = new LottoFatture();
+					lotto.setIdEgov((String) idEgovOBJ);
+					fattura.setLottoFatture(lotto);
+					notifica.setFatturaElettronica(fattura);
+				}
 
 				IdFattura idfattura = new IdFattura(false); //sempre fatturazione passiva
 				idfattura.setIdentificativoSdi(notifica.getIdentificativoSdi());
