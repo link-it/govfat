@@ -22,6 +22,7 @@ package org.govmix.proxy.fatturapa.web.commons.consegnaFattura;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -374,7 +375,14 @@ public class FatturaDeserializerUtils {
 
 	public static Date getDataScadenzaPagamento(FatturaElettronica fatturaElettronica) throws Exception {
 		if(fatturaElettronica.getDataProtocollazione()!= null) {
-			return new Date(fatturaElettronica.getDataProtocollazione().getTime() + (1000*60*60*24*30));
+			
+			Calendar cal = Calendar.getInstance();
+			
+			cal.setTime(fatturaElettronica.getDataProtocollazione());
+			
+			cal.add(Calendar.MONTH, 1);
+			
+			return cal.getTime();
 		} else {
 			return null;
 		}
