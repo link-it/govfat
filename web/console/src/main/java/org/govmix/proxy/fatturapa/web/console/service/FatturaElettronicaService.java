@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.govmix.proxy.fatturapa.notificaesitocommittente.MotivoRifiuto;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
@@ -321,6 +322,12 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 				} else {
 					filter.setEsitoNull(true);
 				}
+			}
+			
+			// Motivo rifiuto ec
+			if(search.getMotivoRifiuto().getValue() != null &&
+					!StringUtils.isEmpty(search.getMotivoRifiuto().getValue().getValue()) && !search.getMotivoRifiuto().getValue().getValue().equals("*")){
+				filter.setMotivoRifiuto(MotivoRifiuto.fromValue(search.getMotivoRifiuto().getValue().getValue()));
 			}
 
 			// Decorrenza Termini

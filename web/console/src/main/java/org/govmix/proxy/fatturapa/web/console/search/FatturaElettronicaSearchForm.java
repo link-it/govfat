@@ -63,6 +63,7 @@ public class FatturaElettronicaSearchForm extends BaseSearchForm implements Sear
 
 	private Text identificativoProtocollo = null;
 	private SelectList<SelectItem> statoConsegna = null;
+	private SelectList<SelectItem> motivoRifiuto = null;
 	
 	private boolean usaDataScadenza = false;
 	
@@ -123,6 +124,9 @@ public class FatturaElettronicaSearchForm extends BaseSearchForm implements Sear
 
 		this.statoConsegna = factory.getInputFieldFactory().createSelectList("statoConsegna","fattura.search.statoConsegna",null,false);
 		
+		this.motivoRifiuto = factory.getInputFieldFactory().createSelectList("motivoRifiuto","fattura.search.notificaEC.motivoRifiuto",null,false);
+		((SelectListImpl)this.motivoRifiuto).setCheckItemWidth(true); 
+		
 		this.setField(this.cedentePrestatore);
 		this.setField(this.dipartimento);
 		this.setField(this.dataRicezionePeriodo);
@@ -136,6 +140,7 @@ public class FatturaElettronicaSearchForm extends BaseSearchForm implements Sear
 		this.setField(this.identificativoLotto);
 		this.setField(this.identificativoProtocollo); 
 		this.setField(this.statoConsegna); 
+		this.setField(this.motivoRifiuto); 
 
 
 		this.reset();
@@ -170,6 +175,7 @@ public class FatturaElettronicaSearchForm extends BaseSearchForm implements Sear
 		
 		this.statoConsegna.reset();
 		this.identificativoProtocollo.reset();
+		this.motivoRifiuto.reset();
 
 		this.usaDataScadenza = false;
 	}
@@ -436,7 +442,13 @@ public class FatturaElettronicaSearchForm extends BaseSearchForm implements Sear
 
 	public void setUsaDataScadenza(boolean usaDataScadenza) {
 		this.usaDataScadenza = usaDataScadenza;
+	}
+
+	public SelectList<SelectItem> getMotivoRifiuto() {
+		return motivoRifiuto;
+	}
+
+	public void setMotivoRifiuto(SelectList<SelectItem> motivoRifiuto) {
+		this.motivoRifiuto = motivoRifiuto;
 	}	
-	
-	
 }

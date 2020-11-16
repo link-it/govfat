@@ -372,3 +372,15 @@ textarea[type="textarea"][disabled], input[type="text"][disabled], input[type="p
 	padding-top: 3px;
 }
 
+.multiCheckboxLabelRight {
+	
+}
+
+table.multiCheckboxLabelRight label {
+	float: right;
+	margin-right: 0px;
+	padding-right: 0px;
+	text-align: left;
+	padding-left: 10px;
+	white-space: nowrap;
+}

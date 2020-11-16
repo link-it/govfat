@@ -24,12 +24,13 @@ package org.govmix.proxy.fatturapa.web.console.form;
 import javax.faces.event.ActionEvent;
 
 import org.govmix.proxy.fatturapa.orm.constants.EsitoCommittenteType;
+import org.openspcoop2.generic_project.web.factory.Costanti;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.Form;
 import org.openspcoop2.generic_project.web.impl.jsf1.form.BaseForm;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem;
+import org.openspcoop2.generic_project.web.input.MultipleCheckBox;
 import org.openspcoop2.generic_project.web.input.SelectList;
-import org.openspcoop2.generic_project.web.input.TextArea;
 
 /**
  * NotificaECForm Bean per la gestione del form per l'invio della NotificaEC.
@@ -41,7 +42,7 @@ import org.openspcoop2.generic_project.web.input.TextArea;
 public class NotificaECForm extends BaseForm implements Form {
 
 	private SelectList<SelectItem> esito= null;
-	private TextArea descrizione = null;
+	private MultipleCheckBox<SelectItem> motivoRifiuto = null; 
 	
 	public NotificaECForm()throws Exception{
 		this.init();
@@ -61,19 +62,19 @@ public class NotificaECForm extends BaseForm implements Form {
 		this.esito.setFieldsToUpdate("iNEC_formPnl");
 		this.esito.setForm(this);
 
-		this.descrizione = factory.getInputFieldFactory().createTextArea("descrizione","notificaEsitoCommittente.descrizione",null,true);
-		
+		this.motivoRifiuto = factory.getInputFieldFactory().createMultipleCheckBox("motivoRifiuto","notificaEsitoCommittente.motivoRifiuto",null,true);
+		this.motivoRifiuto.setDirezione(Costanti.CHOICE_ORIENTATION_VERTICAL);
 		
 		this._setEsito();
 		
 		this.setField(this.esito);
-		this.setField(this.descrizione);
+		this.setField(this.motivoRifiuto);
 	}
 
 	@Override
 	public void reset() {
 		this.esito.reset();
-		this.descrizione.reset();
+		this.motivoRifiuto.reset();
 		
 	}
 
@@ -85,24 +86,24 @@ public class NotificaECForm extends BaseForm implements Form {
 		this.esito = esito;
 	}
 
-	public TextArea getDescrizione() {
-		this._setEsito();
-		
-		return this.descrizione;
-	}
-
 	private void _setEsito() {
-		this.descrizione.setRendered(false); 
+		this.motivoRifiuto.setRendered(false); 
 		
 		if(this.esito.getValue() != null){
 			if(this.esito.getValue().getValue().equals(EsitoCommittenteType.EC02.getValue())){
-				this.descrizione.setRendered(true); 
+				this.motivoRifiuto.setRendered(true); 
 			}
 		}
 	}
 
-	public void setDescrizione(TextArea descrizione) {
-		this.descrizione = descrizione;
+	public MultipleCheckBox<SelectItem> getMotivoRifiuto() {
+		this._setEsito();
+		
+		return this.motivoRifiuto;
+	}
+
+	public void setMotivoRifiuto(MultipleCheckBox<SelectItem> motivoRifiuto) {
+		this.motivoRifiuto = motivoRifiuto;
 	}
 	
 	public void esitoSelectListener(ActionEvent ae){

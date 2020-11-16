@@ -30,6 +30,7 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.govmix.proxy.fatturapa.notificaesitocommittente.MotivoRifiuto;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
@@ -93,6 +94,9 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 
 	// Stato Consegna
 	private List<SelectItem> listaStatoConsegna = null;
+	
+	// Motivo rifiuto notifica ec
+	private List<SelectItem> listaMotivi = null;
 
 	private PagedDataTable<List<FatturaElettronicaBean>, NotificaECForm, FatturaElettronicaSearchForm> table;
 
@@ -175,6 +179,7 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 		((SelectListImpl)this.search.getNotificaEsitoCommittente()).setElencoSelectItems(this.getListaNotificaEC());
 		((SelectListImpl)this.search.getDipartimento()).setElencoSelectItems(this.getDipartimenti());
 		((SelectListImpl)this.search.getStatoConsegna()).setElencoSelectItems(this.getListaStatoConsegna()); 
+		((SelectListImpl)this.search.getMotivoRifiuto()).setElencoSelectItems(this.getListaMotivi()); 
 		this.search.setmBean(this);
 	}
 
@@ -274,6 +279,19 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 	}
 
 	// Valori delle select List
+	
+	public List<SelectItem> getListaMotivi() {
+		if (this.listaMotivi == null) {
+			this.listaMotivi = new ArrayList<SelectItem>();
+			
+			this.listaMotivi.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi"))));
+			this.listaMotivi.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(	MotivoRifiuto.MR_01.value(), ("notificaEsitoCommittente.motivoRifiuto.MR01"))));
+			this.listaMotivi.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(	MotivoRifiuto.MR_02.value(), ("notificaEsitoCommittente.motivoRifiuto.MR02"))));
+			this.listaMotivi.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(	MotivoRifiuto.MR_03.value(), ("notificaEsitoCommittente.motivoRifiuto.MR03"))));
+		}
+		
+		return listaMotivi;
+	}
 
 	public List<SelectItem> getListaNotificaEC() {
 		if (this.listaNotificaEC == null) {

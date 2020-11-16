@@ -159,8 +159,17 @@
 
 						<op2web:fieldset legend="#{msg['notificaEsitoCommittente.formInvia.label.inviaNotifica']}" collapsible="false" closed="false">
 
-							<op2web:formFields nomiFields="#{'esito,descrizione'}"/>
-
+							<op2web:formFields nomiFields="#{'esito'}"/>
+							
+							<op2web:prop label="#{notificaECMBean.form.motivoRifiuto.label}" rendered="#{notificaECMBean.form.motivoRifiuto.rendered}">
+								<h:selectManyCheckbox id="input_#{notificaECMBean.form.motivoRifiuto.name}" styleClass="multiCheckboxLabelRight"  converter="selectItemConverter"
+									layout="#{notificaECMBean.form.motivoRifiuto.direzione}" disabled="#{notificaECMBean.form.motivoRifiuto.disabled}"
+									value="#{notificaECMBean.form.motivoRifiuto.value}" > 
+										<f:selectItems value="#{notificaECMBean.form.motivoRifiuto.elencoSelectItems}" /> 
+									
+									</h:selectManyCheckbox>
+							</op2web:prop>
+							
 						</op2web:fieldset>
 						<ui:define name="buttons">
 								<!-- Invia Notifica -->

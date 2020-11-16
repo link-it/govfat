@@ -26,15 +26,15 @@ import java.util.List;
 
 import javax.faces.model.SelectItem;
 
-import org.apache.commons.lang.StringUtils;
+import org.govmix.proxy.fatturapa.notificaesitocommittente.EsitoCommittente;
+import org.govmix.proxy.fatturapa.notificaesitocommittente.MotivoRifiuto;
+import org.govmix.proxy.fatturapa.notificaesitocommittente.NotificaEC;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdUtente;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoCommittenteType;
-import org.govmix.proxy.fatturapa.notificaesitocommittente.EsitoCommittente;
-import org.govmix.proxy.fatturapa.notificaesitocommittente.NotificaEC;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.business.InvioNotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.business.exception.NotificaGiaInviataException;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
@@ -43,12 +43,12 @@ import org.govmix.proxy.fatturapa.web.console.bean.NotificaECBean;
 import org.govmix.proxy.fatturapa.web.console.form.NotificaECForm;
 import org.govmix.proxy.fatturapa.web.console.iservice.IFatturaElettronicaService;
 import org.govmix.proxy.fatturapa.web.console.service.FatturaElettronicaService;
+import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.MultipleCheckBoxImpl;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.impl.SelectListImpl;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.BaseFormMBean;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.InviaException;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.MessageUtils;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils;
-import org.openspcoop2.generic_project.web.input.TextArea;
 
 /**
  * NotificaECMBean MBean per la gestione della schermata di invio Notifica EC.
@@ -64,6 +64,7 @@ public class NotificaECMBean extends BaseFormMBean<NotificaECBean, Long, Notific
 	private FatturaElettronicaBean fattura = null;
 
 	private List<SelectItem> listaEsiti = null;
+	private List<SelectItem> listaMotivi = null;
 
 	private boolean showForm = true;
 
@@ -104,6 +105,7 @@ public class NotificaECMBean extends BaseFormMBean<NotificaECBean, Long, Notific
 		this.form.reset();
 
 		((SelectListImpl)this.form.getEsito()).setElencoSelectItems(this.getListaEsiti());
+		((MultipleCheckBoxImpl)this.form.getMotivoRifiuto()).setElencoSelectItems(this.getListaMotivi());
 
 		this.showForm = true;
 	}
@@ -167,6 +169,26 @@ public class NotificaECMBean extends BaseFormMBean<NotificaECBean, Long, Notific
 	}
 
 
+	public List<SelectItem> getListaMotivi() {
+		this.listaMotivi = new ArrayList<SelectItem>();
+		
+		this.listaMotivi.add(new SelectItem(
+				new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(
+						MotivoRifiuto.MR_01.value(), Utils.getInstance().getMessageFromResourceBundle("notificaEsitoCommittente.motivoRifiuto.MR01"))));
+		this.listaMotivi.add(new SelectItem(
+				new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(
+						MotivoRifiuto.MR_02.value(), Utils.getInstance().getMessageFromResourceBundle("notificaEsitoCommittente.motivoRifiuto.MR02"))));
+		this.listaMotivi.add(new SelectItem(
+				new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(
+						MotivoRifiuto.MR_03.value(), Utils.getInstance().getMessageFromResourceBundle("notificaEsitoCommittente.motivoRifiuto.MR03"))));
+		
+		return listaMotivi;
+	}
+
+	public void setListaMotivi(List<SelectItem> listaMotivi) {
+		this.listaMotivi = listaMotivi;
+	}
+
 	@Override
 	protected String _invia() throws InviaException {
 		this.log.debug("Inserimento della notifica in corso...");
@@ -182,7 +204,8 @@ public class NotificaECMBean extends BaseFormMBean<NotificaECBean, Long, Notific
 			}
 
 			NotificaEC notificaECToSend = new NotificaEC();
-//			notificaECToSend.setDescrizione(this.form.getDescrizione().getValue()); //TODO pintori setDescrizione -> setMotivoRifiuto
+			
+			notificaECToSend.setMotivoRifiuto(this.getMotivoRifiutoValori());
 			notificaECToSend.setEsito(EsitoCommittente.fromValue(this.form.getEsito().getValue().getValue()));
 			notificaECToSend.setIdentificativoSdi(BigInteger.valueOf(this.fattura.getDTO().getIdentificativoSdi()));
 			notificaECToSend.setPosizione(BigInteger.valueOf(this.fattura.getDTO().getPosizione()));
@@ -224,6 +247,19 @@ public class NotificaECMBean extends BaseFormMBean<NotificaECBean, Long, Notific
 	}
 
 
+	private List<MotivoRifiuto> getMotivoRifiutoValori() {
+		List<MotivoRifiuto> motivoRifiuto = new ArrayList<MotivoRifiuto>();
+		
+		List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> value = this.form.getMotivoRifiuto().getValue();
+		if(value != null && value.size() > 0) {
+			for(org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem val : value) {
+				motivoRifiuto.add(MotivoRifiuto.fromValue(val.getValue()));
+			}
+		}
+		
+		return motivoRifiuto;
+	}
+
 	public String validaInput(){
 		String msg = null;
 		org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem selectedEsito = this.form.getEsito().getValue();
@@ -231,16 +267,9 @@ public class NotificaECMBean extends BaseFormMBean<NotificaECBean, Long, Notific
 		if(selectedEsito.getValue().equals("*"))
 			return Utils.getInstance().getMessageFromResourceBundle("notificaEsitoCommittente.formInvia.error.esitoVuoto");
 
-		TextArea descrizione = this.form.getDescrizione();
-		if(selectedEsito.getValue().equalsIgnoreCase(EsitoCommittenteType.EC02.getValue())){
-			if(StringUtils.isEmpty(descrizione.getValue()))
-				return Utils.getInstance().getMessageFromResourceBundle("notificaEsitoCommittente.formInvia.error.descrizioneVuota");
-
-			if(descrizione.getValue() != null){
-				if(descrizione.getValue().length() > 255)
-					return Utils.getInstance().getMessageFromResourceBundle("notificaEsitoCommittente.formInvia.error.descrizioneTroppoLunga");
-			}
-		}
+		List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> value = this.form.getMotivoRifiuto().getValue();
+		if(value == null || (value != null && value.size() <= 0))
+			return Utils.getInstance().getMessageFromResourceBundle("notificaEsitoCommittente.formInvia.error.motivoRifiutoVuoto");
 
 		return msg;
 	}
