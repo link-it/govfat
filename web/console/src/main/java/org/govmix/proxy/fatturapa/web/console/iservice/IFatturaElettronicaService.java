@@ -23,7 +23,9 @@ package org.govmix.proxy.fatturapa.web.console.iservice;
 import java.util.Date;
 import java.util.List;
 
+import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
+import org.govmix.proxy.fatturapa.web.console.bean.DatiDocumentiCorrelatiBean;
 import org.govmix.proxy.fatturapa.web.console.bean.FatturaElettronicaBean;
 import org.govmix.proxy.fatturapa.web.console.search.FatturaElettronicaSearchForm;
 import org.openspcoop2.generic_project.exception.ServiceException;
@@ -48,4 +50,6 @@ public interface IFatturaElettronicaService extends IBaseService<FatturaElettron
 	public Long getIdEsitoScadenza(Long idFattura) throws ServiceException;
 	
 	public Date getDataUltimaOperazioneByIdFattura(IdFattura idFattura) throws ServiceException;
+	
+	public List<DatiDocumentiCorrelatiBean> getDatiFattureCollegate(FatturaElettronica fattura) throws ServiceException;
 }

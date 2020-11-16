@@ -21,6 +21,7 @@
 package org.govmix.proxy.fatturapa.web.console.bean;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -35,7 +36,9 @@ import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.FatturaDeserializerUtils;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
+import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.web.bean.IBean;
@@ -99,6 +102,8 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 	private DateTime dataProssimaConsegna = null;
 	private DateTime dataScadenza = null;
 	private Text dataScadenzaAssente = null;
+	
+	private DateTime dataScadenzaPagamento = null;
 
 	// Informazioni necessarie per la visualizzazione del dettaglio
 	// Metadata Allegati
@@ -115,6 +120,11 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 	private NotificaDTBean metadataNotificaDT = new NotificaDTBean();
 	// lista notifiche DT
 	private List<NotificaDTBean> listaNotificaDT = new ArrayList<NotificaDTBean>();
+	
+	// metadati dati documenti collegati
+	private DatiDocumentiCorrelatiBean metadataDatiDocumentiCollegati = new DatiDocumentiCorrelatiBean();
+	// lista dati collegati
+	private List<DatiDocumentiCorrelatiBean> listaDatiDocumentiCollegati = new ArrayList<DatiDocumentiCorrelatiBean>();
 
 	// Gruppo Informazioni Dati Genareli
 	private OutputGroup datiIntestazione = null;
@@ -190,6 +200,8 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 		this.dataScadenza = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataScadenza","fattura.dataScadenza",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY);
 		this.dataScadenzaAssente = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("dataScadenzaAssente","fattura.dataScadenzaAssente");
 		
+		this.setDataScadenzaPagamento(this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataScadenzaPagamento","fattura.dataScadenzaPagamento",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY));
+		
 		this.setField(this.cedentePrestatore);
 		this.setField(this.cedentePrestatorePaese);
 		this.setField(this.dipartimento);
@@ -227,6 +239,7 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 		this.setField(this.dataProssimaConsegna);
 		this.setField(this.dataScadenza);
 		this.setField(this.dataScadenzaAssente);
+		this.setField(this.getDataScadenzaPagamento());
 
 		this.datiIntestazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiIntestazione",6);
 		this.datiIntestazione.setRendered(true);
@@ -491,6 +504,17 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 			} else {
 				this.statoConsegna.setValue("fattura.statoConsegna.nonConsegnata");
 			}
+		}
+		
+		try {
+			this.getDataScadenzaPagamento().setRendered(true);
+			Date scadenzaPagamento = FatturaDeserializerUtils.getDataScadenzaPagamento(this.getDTO());
+			if(scadenzaPagamento == null)
+				this.getDataScadenzaPagamento().setRendered(false);
+			
+			this.getDataScadenzaPagamento().setValue(scadenzaPagamento);
+		} catch (Exception e) {
+			LoggerManager.getConsoleLogger().error("Si e' verificato un errore durante l'esecuzione del metodo [FatturaDeserializerUtils.getDataScadenzaPagamento]: "+ e.getMessage(), e);
 		}
 	}
 
@@ -1022,6 +1046,30 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 
 	public void setDataScadenzaAssente(Text dataScadenzaAssente) {
 		this.dataScadenzaAssente = dataScadenzaAssente;
+	}
+
+	public List<DatiDocumentiCorrelatiBean> getListaDatiDocumentiCollegati() {
+		return listaDatiDocumentiCollegati;
+	}
+
+	public void setListaDatiDocumentiCollegati(List<DatiDocumentiCorrelatiBean> listaDatiDocumentiCollegati) {
+		this.listaDatiDocumentiCollegati = listaDatiDocumentiCollegati;
+	}
+
+	public DatiDocumentiCorrelatiBean getMetadataDatiDocumentiCollegati() {
+		return metadataDatiDocumentiCollegati;
+	}
+
+	public void setMetadataDatiDocumentiCollegati(DatiDocumentiCorrelatiBean metadataDatiDocumentiCollegati) {
+		this.metadataDatiDocumentiCollegati = metadataDatiDocumentiCollegati;
+	}
+
+	public DateTime getDataScadenzaPagamento() {
+		return dataScadenzaPagamento;
+	}
+
+	public void setDataScadenzaPagamento(DateTime dataScadenzaPagamento) {
+		this.dataScadenzaPagamento = dataScadenzaPagamento;
 	}
 	
 }

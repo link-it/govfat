@@ -254,7 +254,6 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 			}
 			this.selectedElement.setListaNotificaDT(listaNotificaDT); 
 
-
 			if(this.enteService == null)
 				this.enteService = new EnteService();
 
@@ -266,6 +265,12 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 				if(enteBean != null){
 					this.selectedElement.setShowPCC(enteBean.getDTO().getIdPccAmministrazione() != null);
 				}
+			} catch (ServiceException e) {
+				this.log.debug("Si e' verificato un errore durante il caricamento dell'ente: "+ e.getMessage(), e);
+			}
+			
+			try {
+				this.selectedElement.setListaDatiDocumentiCollegati(((IFatturaElettronicaService)this.service).getDatiFattureCollegate(this.selectedElement.getDTO()));
 			} catch (ServiceException e) {
 				this.log.debug("Si e' verificato un errore durante il caricamento dell'ente: "+ e.getMessage(), e);
 			}

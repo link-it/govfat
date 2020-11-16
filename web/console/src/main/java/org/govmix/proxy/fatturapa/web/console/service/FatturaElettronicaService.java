@@ -39,7 +39,10 @@ import org.govmix.proxy.fatturapa.web.commons.businessdelegate.PccOperazioneCont
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FatturaPassivaFilter;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter.FilterSortWrapper;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.DatiDocumentiCorrelatiType;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.FatturaDeserializerUtils;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
+import org.govmix.proxy.fatturapa.web.console.bean.DatiDocumentiCorrelatiBean;
 import org.govmix.proxy.fatturapa.web.console.bean.FatturaElettronicaBean;
 import org.govmix.proxy.fatturapa.web.console.iservice.IFatturaElettronicaService;
 import org.govmix.proxy.fatturapa.web.console.search.FatturaElettronicaSearchForm;
@@ -547,5 +550,33 @@ public class FatturaElettronicaService extends BaseService<FatturaElettronicaSea
 			FatturaElettronicaService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
 			throw new ServiceException(e);
 		}
+	}
+	
+	@Override
+	public List<DatiDocumentiCorrelatiBean> getDatiFattureCollegate(FatturaElettronica fattura) throws ServiceException {
+		String methodName = "getDatiFattureCollegate()";
+		List<DatiDocumentiCorrelatiBean> beans = new ArrayList<DatiDocumentiCorrelatiBean>();
+		try {
+			if(fattura.getXml() == null) {
+				FatturaElettronicaBean findById = this.findById(fattura.getId());
+				fattura.setXml(findById.getDTO().getXml());
+			}
+			
+			List<DatiDocumentiCorrelatiType> datiFattureCollegate = FatturaDeserializerUtils.getDatiFattureCollegate(fattura);
+			if(datiFattureCollegate != null && datiFattureCollegate.size() > 0) {
+				for(int i = 0; i < datiFattureCollegate.size() ; i++) {
+					DatiDocumentiCorrelatiType datiDocumentiCorrelatiType = datiFattureCollegate.get(i);
+					DatiDocumentiCorrelatiBean bean = new DatiDocumentiCorrelatiBean();
+					bean.setDTO(datiDocumentiCorrelatiType);
+					bean.setIdLinea(i); 
+					beans.add(bean);
+				}
+			}
+		} catch (Exception e) {
+			FatturaElettronicaService.log.error("Si e' verificato un errore durante l'esecuzione del metodo ["+methodName+"]: "+ e.getMessage(), e);
+			throw new ServiceException(e);
+		}
+		
+		return beans;
 	}
 }
