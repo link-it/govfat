@@ -196,11 +196,27 @@ public class FatturaPassivaBD extends FatturaBD {
 					lst.add(new UpdateField(FatturaElettronica.model().STATO_PROTOCOLLAZIONE, StatoProtocollazioneType.PROTOCOLLATA_IN_ELABORAZIONE));
 			} else if(protocollo != null) {
 				lst.add(new UpdateField(FatturaElettronica.model().STATO_PROTOCOLLAZIONE, StatoProtocollazioneType.PROTOCOLLATA));
-				lst.add(new UpdateField(FatturaElettronica.model().DATA_PROTOCOLLAZIONE, new Date()));
+//				lst.add(new UpdateField(FatturaElettronica.model().DATA_PROTOCOLLAZIONE, new Date()));
 				lst.add(new UpdateField(FatturaElettronica.model().PROTOCOLLO, protocollo));
 			} else {
 				lst.add(new UpdateField(FatturaElettronica.model().STATO_PROTOCOLLAZIONE, StatoProtocollazioneType.NON_PROTOCOLLATA));
 			}
+
+			this.service.updateFields(idFattura, lst.toArray(new UpdateField[1]));
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la updateProtocollo: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la updateProtocollo: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
+	public void updateDataProtocollazione(IdFattura idFattura, Date dataProtocollazione) throws Exception {
+		try {
+			
+			List<UpdateField> lst = new ArrayList<UpdateField>();
+			lst.add(new UpdateField(FatturaElettronica.model().DATA_PROTOCOLLAZIONE, dataProtocollazione));
 
 			this.service.updateFields(idFattura, lst.toArray(new UpdateField[1]));
 		} catch (ServiceException e) {
