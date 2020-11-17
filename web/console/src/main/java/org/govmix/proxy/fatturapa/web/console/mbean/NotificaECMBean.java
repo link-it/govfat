@@ -267,9 +267,12 @@ public class NotificaECMBean extends BaseFormMBean<NotificaECBean, Long, Notific
 		if(selectedEsito.getValue().equals("*"))
 			return Utils.getInstance().getMessageFromResourceBundle("notificaEsitoCommittente.formInvia.error.esitoVuoto");
 
-		List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> value = this.form.getMotivoRifiuto().getValue();
-		if(value == null || (value != null && value.size() <= 0))
-			return Utils.getInstance().getMessageFromResourceBundle("notificaEsitoCommittente.formInvia.error.motivoRifiutoVuoto");
+		if(selectedEsito.getValue().equalsIgnoreCase(EsitoCommittenteType.EC02.getValue())){
+			List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> value = this.form.getMotivoRifiuto().getValue();
+			if(value == null || (value != null && value.size() <= 0)) {
+				return Utils.getInstance().getMessageFromResourceBundle("notificaEsitoCommittente.formInvia.error.motivoRifiutoVuoto");
+			}
+		}
 
 		return msg;
 	}
