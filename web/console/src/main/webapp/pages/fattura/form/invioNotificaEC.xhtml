@@ -177,7 +177,8 @@
 
 							<op2web:formFields nomiFields="#{'esito'}"/>
 							
-							<op2web:prop label="#{notificaECMBean.form.motivoRifiuto.label}" rendered="#{notificaECMBean.form.motivoRifiuto.rendered}">
+							<op2web:prop label="#{notificaECMBean.form.motivoRifiuto.label}" rendered="#{notificaECMBean.form.motivoRifiuto.rendered}"
+								required="#{notificaECMBean.form.motivoRifiuto.required}" >
 								<h:selectManyCheckbox id="input_#{notificaECMBean.form.motivoRifiuto.name}" styleClass="multiCheckboxLabelRight"  converter="selectItemConverter"
 									layout="#{notificaECMBean.form.motivoRifiuto.direzione}" disabled="#{notificaECMBean.form.motivoRifiuto.disabled}"
 									value="#{notificaECMBean.form.motivoRifiuto.value}" > 
