@@ -21,18 +21,20 @@
 package org.govmix.proxy.fatturapa.web.commons.converter.notificaesitocommittente;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
+import org.govmix.proxy.fatturapa.notificaesitocommittente.MotivoRifiuto;
+import org.govmix.proxy.fatturapa.notificaesitocommittente.NotificaEC;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdUtente;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoCommittenteType;
-import org.govmix.proxy.fatturapa.notificaesitocommittente.MotivoRifiuto;
-import org.govmix.proxy.fatturapa.notificaesitocommittente.NotificaEC;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 
 public class NotificaEsitoCommittenteConverter {
@@ -146,12 +148,29 @@ public class NotificaEsitoCommittenteConverter {
 
 	private String convertToDescrizione(MotivoRifiuto mr) {
 		switch(mr) {
-		case MR_01: return "Soggetto destinatario errato";
-		case MR_02: return "Omesso o errato CIG o CUP";
-		case MR_03: return "Omesso o errato numero e data dell’atto d’impegno";
+		case MR_01: return "Soggetto destinatario errato - falscher Empf\u00E4nger";
+		case MR_02: return "Omesso o errato CIG o CUP - fehlender oder falscher CIG oder CUP";
+		case MR_03: return "Omesso o errato numero e data dell’atto d’impegno - fehlende oder falsche Nummer und Datum des Zweckbindungsaktes";
 		default: return null;
 		
 		}
+	}
+	
+	public static List<MotivoRifiuto> getMotiviRifiuto(String motiviRifiutoString) {
+		List<MotivoRifiuto> mrLst = new ArrayList<MotivoRifiuto>();
+		if(motiviRifiutoString == null)
+			return mrLst;
+		
+		String[] mr = motiviRifiutoString.split(",");
+		
+		for(String m: mr) {
+			try {
+				mrLst.add(MotivoRifiuto.fromValue(m));
+			} catch(Exception e) {}
+		}
+		
+		return mrLst;
+		
 	}
 
 	public IdUtente getIdUtente() {
