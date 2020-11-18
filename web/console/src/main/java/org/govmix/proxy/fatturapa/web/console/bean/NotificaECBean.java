@@ -34,6 +34,7 @@ import org.openspcoop2.generic_project.web.factory.FactoryException;
 import org.openspcoop2.generic_project.web.impl.jsf1.bean.BaseBean;
 import org.openspcoop2.generic_project.web.output.Button;
 import org.openspcoop2.generic_project.web.output.DateTime;
+import org.openspcoop2.generic_project.web.output.OutputField;
 import org.openspcoop2.generic_project.web.output.Text;
 
 /**
@@ -108,6 +109,12 @@ public class NotificaECBean extends BaseBean<NotificaEsitoCommittente, Long> imp
 		this.setField(this.statoConsegnaSdi);
 		this.setField(this.dataProssimaConsegnaSdi);
 		
+	}
+	
+	@Override
+	public void setField(OutputField<?> field) {
+		super.setField(field);
+		field.setLabelStyleClass("outputFieldLabel outputFieldLabelPreWrap");
 	}
 
 	@Override
