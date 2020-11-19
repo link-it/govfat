@@ -66,6 +66,7 @@ import javax.xml.bind.annotation.XmlType;
     "identificativoSdi",
     "posizione",
     "esito",
+    "descrizione",
     "motivoRifiuto"
 })
 
@@ -79,6 +80,9 @@ public class NotificaEC {
     protected BigInteger posizione;
     @XmlElement(required = true)
     protected EsitoCommittente esito;
+    @XmlElement(required = false)
+    private String descrizione;
+    @XmlElement(required = false)
     private List<MotivoRifiuto> motivoRifiuto;
 
 //    public static void main(String[] args) throws Exception {
@@ -170,6 +174,14 @@ public class NotificaEC {
 
 	public void setMotivoRifiuto(List<MotivoRifiuto> motivoRifiuto) {
 		this.motivoRifiuto = motivoRifiuto;
+	}
+
+	public String getDescrizione() {
+		return descrizione;
+	}
+
+	public void setDescrizione(String descrizione) {
+		this.descrizione = descrizione;
 	}
 
 }

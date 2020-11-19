@@ -28,6 +28,7 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
+import org.govmix.proxy.fatturapa.notificaesitocommittente.EsitoCommittente;
 import org.govmix.proxy.fatturapa.notificaesitocommittente.MotivoRifiuto;
 import org.govmix.proxy.fatturapa.notificaesitocommittente.NotificaEC;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
@@ -129,7 +130,7 @@ public class NotificaEsitoCommittenteConverter {
 		}
 	}
 
-	private String getDescrizione() {
+	private String getDescrizione() throws Exception {
 		if(this.esito.getMotivoRifiuto()!=null &&!this.esito.getMotivoRifiuto().isEmpty()) {
 			
 			StringBuffer sb = new StringBuffer();
@@ -142,7 +143,15 @@ public class NotificaEsitoCommittenteConverter {
 			
 			return sb.toString();
 		} else {
-			return null;
+			if(this.esito.getDescrizione()!=null) {
+				return this.esito.getDescrizione();
+			} else {
+				if(this.esito.getEsito().equals(EsitoCommittente.EC_02)) {
+					throw new Exception("Specificare il motivo del rifiuto in caso di esito " + this.esito.getEsito());
+				} else {
+					return null;
+				}
+			}
 		}
 	}
 
