@@ -188,7 +188,7 @@ public class NotificaECMBean extends BaseFormMBean<NotificaECBean, Long, Notific
 	public void setListaMotivi(List<SelectItem> listaMotivi) {
 		this.listaMotivi = listaMotivi;
 	}
-
+	
 	@Override
 	protected String _invia() throws InviaException {
 		this.log.debug("Inserimento della notifica in corso...");
@@ -198,9 +198,10 @@ public class NotificaECMBean extends BaseFormMBean<NotificaECBean, Long, Notific
 
 			// Non faccio la submit
 			if(msg != null){
-				throw new InviaException(Utils.getInstance().getMessageFromResourceBundle("notificaEsitoCommittente.formInvia.error.operazioneNonCompletata") + " " + msg);
-				//				MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("notificaEsitoCommittente.formInvia.error.operazioneNonCompletata") + " " + msg);
-				//				return null;
+//				throw new InviaException(msg);
+//				throw new InviaException(Utils.getInstance().getMessageFromResourceBundle("notificaEsitoCommittente.formInvia.error.operazioneNonCompletata") + " " + msg);
+				MessageUtils.addErrorMsg(Utils.getInstance().getMessageFromResourceBundle("notificaEsitoCommittente.formInvia.error.operazioneNonEseguita") + " " + msg);
+				return null;
 			}
 
 			NotificaEC notificaECToSend = new NotificaEC();

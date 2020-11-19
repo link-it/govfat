@@ -113,7 +113,7 @@
 						status="mainStatus" styleClass="icon-delete" action="#{fatturaElettronicaMBean.reset}">
 					</a4j:commandButton>
 					
-					<a4j:commandButton id="filtraButtonScadenza"
+					<a4j:commandButton id="filtraButtonScadenza" rendered="#{false}"
 						value="#{msg['fattura.search.button.filtra.dataScadenza']}" styleClass="icon-refresh"
 						reRender="fatturaElettronicaTable" status="mainStatus" action="#{fatturaElettronicaMBean.filtraScadenza}">
 					</a4j:commandButton>
