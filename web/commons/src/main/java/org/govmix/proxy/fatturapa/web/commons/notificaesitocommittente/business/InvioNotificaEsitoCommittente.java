@@ -54,6 +54,7 @@ public class InvioNotificaEsitoCommittente {
 			connection = DAOFactory.getInstance().getConnection();
 			connection.setAutoCommit(false);
 			this.invia(new NotificaEsitoCommittenteConverter(is, idUtente), connection);
+			connection.commit();
 		} catch(Exception e) {
 			this.log.error("Errore durante l'invio della Notifica di Esito Committente: "+e.getMessage(), e);
 			if(connection != null){
@@ -115,10 +116,11 @@ public class InvioNotificaEsitoCommittente {
 			throw new Exception("L'utente ["+idUtente.getUsername()+"] non appartiene al dipartimento destinatario della fattura.");
 		}
 
-		if(notificaEsitoCommittenteBD.canNotificaEsitoCommittenteBeSent(notificaEsitoCommittente.getIdFattura()))
-		notificaEsitoCommittenteBD.create(notificaEsitoCommittente);
-		else
+		if(!notificaEsitoCommittenteBD.canNotificaEsitoCommittenteBeSent(notificaEsitoCommittente.getIdFattura())) {
 			throw new NotificaGiaInviataException("Impossibile inviare la Notifica di Esito Committente per la fattura con identificativo SdI ["+notificaEsitoCommittente.getIdFattura().getIdentificativoSdi()+"] e posizione ["+notificaEsitoCommittente.getIdFattura().getPosizione()+"] in quanto ne e' stata gia' inviata una");
+		}
+
+		notificaEsitoCommittenteBD.create(notificaEsitoCommittente);
 
 		EsitoType esito = notificaEsitoCommittente.getEsito().equals(EsitoCommittenteType.EC01) ? EsitoType.IN_ELABORAZIONE_ACCETTATO : EsitoType.IN_ELABORAZIONE_RIFIUTATO;
 		fatturaElettronicaBD.updateEsito(notificaEsitoCommittente.getIdFattura(), esito);
