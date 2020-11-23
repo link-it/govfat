@@ -6,6 +6,7 @@
       <xs:element name="identificativoSdi" type="IdentificativoSdI"/>
       <xs:element name="posizione" type="xs:positiveInteger"/>
       <xs:element name="esito" type="EsitoCommittente"/>
+      <xs:element name="descrizione" minOccurs="0" type="xs:string"/>
       <xs:element name="motivoRifiuto" minOccurs="0" maxOccurs="unbounded" type="MotivoRifiuto"/>
     </xs:sequence>
   </xs:complexType>
