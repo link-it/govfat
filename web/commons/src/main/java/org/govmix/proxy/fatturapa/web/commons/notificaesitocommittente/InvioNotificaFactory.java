@@ -67,22 +67,22 @@ public class InvioNotificaFactory {
 			NotificaECResponse resp = invioNotificaPrincipale.invia(request);
 			
 			this.log.info("Invio notifica ["+request.getNotifica().getIdentificativoSdi()+"] tramite il canale principale " + invioNotificaPrincipaleName + " completato con response code. " + resp.getEsitoChiamata());
-			if(resp.getEsitoChiamata() < 299 || invioNotificaSecondario==null) {
+//			if(resp.getEsitoChiamata() < 299 || invioNotificaSecondario==null) {
 				this.log.info("Restituisco esito notifica ["+request.getNotifica().getIdentificativoSdi()+"] inviata tramite il canale principale " + invioNotificaPrincipaleName);
 				return resp;
-			}
+//			}
 		}
 		
-		if(invioNotificaSecondario!=null) {
-			this.log.info("Invio notifica ["+request.getNotifica().getIdentificativoSdi()+"] tramite il canale secondario " + invioNotificaSecondariaName + " in corso...");
-			NotificaECResponse resp = invioNotificaSecondario.invia(request);
-			
-			this.log.info("Invio notifica ["+request.getNotifica().getIdentificativoSdi()+"] tramite il canale secondario " + invioNotificaSecondariaName + " completato con response code. " + resp.getEsitoChiamata());
-			return resp;
-		} else {
-			this.log.warn("Invio notifica ["+request.getNotifica().getIdentificativoSdi()+"]. Nessun canale configurato");
+//		if(invioNotificaSecondario!=null) {
+//			this.log.info("Invio notifica ["+request.getNotifica().getIdentificativoSdi()+"] tramite il canale secondario " + invioNotificaSecondariaName + " in corso...");
+//			NotificaECResponse resp = invioNotificaSecondario.invia(request);
+//			
+//			this.log.info("Invio notifica ["+request.getNotifica().getIdentificativoSdi()+"] tramite il canale secondario " + invioNotificaSecondariaName + " completato con response code. " + resp.getEsitoChiamata());
+//			return resp;
+//		} else {
+//			this.log.warn("Invio notifica ["+request.getNotifica().getIdentificativoSdi()+"]. Nessun canale configurato");
 			return null;//non accadra' mai in quanto nel costruttore controlliamo che almeno uno dei due canali sia attivo
-		}
+//		}
 		
 		
 	}
