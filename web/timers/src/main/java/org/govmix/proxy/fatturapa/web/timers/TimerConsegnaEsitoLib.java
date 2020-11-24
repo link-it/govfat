@@ -303,7 +303,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 				}
 
 				this.log.info("Gestite ["+countNotificheElaborate+"\\"+countNotifiche+"] NotificheEsitoCommittente da consegnare. Fine");
-//				connection.setAutoCommit(true);
+				connection.setAutoCommit(true);
 			}
 
 		} finally {
