@@ -575,6 +575,18 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 			sqlQueryObject.addWhereCondition(tableName1+".id_utente="+tableName2+".id");
 		}
         
+		if(expression.inUseModel(NotificaEsitoCommittente.model().ID_TRACCIA_NOTIFICA,false)){
+			String tableName1 = this.getNotificaEsitoCommittenteFieldConverter().toAliasTable(NotificaEsitoCommittente.model());
+			String tableName2 = this.getNotificaEsitoCommittenteFieldConverter().toAliasTable(NotificaEsitoCommittente.model().ID_TRACCIA_NOTIFICA);
+			sqlQueryObject.addWhereCondition(tableName1+".id_traccia_notifica="+tableName2+".id");
+		}
+        
+		if(expression.inUseModel(NotificaEsitoCommittente.model().ID_TRACCIA_SCARTO,false)){
+			String tableName1 = this.getNotificaEsitoCommittenteFieldConverter().toAliasTable(NotificaEsitoCommittente.model());
+			String tableName2 = this.getNotificaEsitoCommittenteFieldConverter().toAliasTable(NotificaEsitoCommittente.model().ID_TRACCIA_SCARTO);
+			sqlQueryObject.addWhereCondition(tableName1+".id_traccia_scarto="+tableName2+".id");
+		}
+        
 	}
 	
 	protected java.util.List<Object> _getRootTablePrimaryKeyValues(JDBCServiceManagerProperties jdbcProperties, Logger log, Connection connection, ISQLQueryObject sqlQueryObject, NotificaEsitoCommittente notificaEsitoCommittente) throws NotFoundException, ServiceException, NotImplementedException, Exception{
