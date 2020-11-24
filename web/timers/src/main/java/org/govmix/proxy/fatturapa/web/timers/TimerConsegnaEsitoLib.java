@@ -76,7 +76,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 			long countNotificheElaborate = 0; 
 
 			if(countNotifiche > 0) {
-//				connection.setAutoCommit(false);
+				connection.setAutoCommit(false);
 
 				this.log.info("Gestisco ["+countNotifiche+"] NotificheEsitoCommittente da consegnare, ["+this.limit+"] alla volta");
 				List<NotificaEsitoCommittente> lstNotifiche = notificaEsitoCommittenteBD.findAllNotifiche(limitDate, 0, this.limit);
@@ -95,7 +95,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 				if(properties.getRicezioneEsitoURLSPCoop()!=null) {
 					invioNotificaSPCoop = new InvioNotifica(properties.getRicezioneEsitoURLSPCoop(), properties.getRicezioneEsitoUsernameSPCoop(), properties.getRicezioneEsitoPasswordSPCoop(), commonsProperties.getIdEgovHeaderSPCoop());
 				}
-				InvioNotificaFactory factory = new InvioNotificaFactory(invioNotificaSPCoop, invioNotificaSDICoop, this.log);
+//				InvioNotificaFactory factory = new InvioNotificaFactory(invioNotificaSPCoop, invioNotificaSDICoop, this.log);
 				try {
 					while(countNotificheElaborate < countNotifiche) {
 						for(NotificaEsitoCommittente notifica : lstNotifiche) {
@@ -104,7 +104,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 								
 								NotificaECRequest request = new NotificaECRequest();
 								request.setNotifica(notifica);
-								NotificaECResponse invioNotificaResponse = factory.invia(request, TimerConsegnaEsitoLib.isSPCoop(notifica.getFatturaElettronica().getLottoFatture()));
+								NotificaECResponse invioNotificaResponse = invioNotificaSDICoop.invia(request);//, TimerConsegnaEsitoLib.isSPCoop(notifica.getFatturaElettronica().getLottoFatture()));
 								int esitoChiamata = invioNotificaResponse.getEsitoChiamata();
 								this.log.info("Notifica ["+request.getNotifica().getIdentificativoSdi()+"] Risposta dallo SdI con codice ["+esitoChiamata+"]");
 								
@@ -120,7 +120,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 									notifica.setTentativiConsegnaSdi(tentativiConsegnaSdi  + 1);
 									notifica.setStatoConsegnaSdi(policyRispedizione.isRispedizioneAbilitata() ? StatoConsegnaType.IN_RICONSEGNA: StatoConsegnaType.ERRORE_CONSEGNA);
 									notificaEsitoCommittenteBD.update(notifica);
-//									connection.commit();
+									connection.commit();
 									countNotificheElaborate++;
 									continue;
 									
@@ -290,7 +290,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 								notificaEsitoCommittenteBD.update(notifica);
 							}
 							
-//							connection.commit();
+							connection.commit();
 							countNotificheElaborate++;
 						}
 						this.log.info("Gestite ["+countNotificheElaborate+"\\"+countNotifiche+"] NotificheEsitoCommittente da consegnare");
@@ -303,7 +303,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 				}
 
 				this.log.info("Gestite ["+countNotificheElaborate+"\\"+countNotifiche+"] NotificheEsitoCommittente da consegnare. Fine");
-//				connection.setAutoCommit(true);
+				connection.setAutoCommit(true);
 			}
 
 		} finally {
