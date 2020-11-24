@@ -53,8 +53,8 @@ public class InvioNotificaFactory {
 			invioNotificaSecondariaName = "SDICoop";
 
 		} else {
-			invioNotificaSecondario = this.invioNotificaSPCoop;
 			invioNotificaPrincipale = this.invioNotificaSDICoop;
+			invioNotificaSecondario = this.invioNotificaSPCoop;
 
 			invioNotificaPrincipaleName = "SDICoop";
 			invioNotificaSecondariaName = "SPCoop";
@@ -63,23 +63,24 @@ public class InvioNotificaFactory {
 
 		if(invioNotificaPrincipale!=null) {
 			
-			this.log.info("Invio notifica tramite il canale principale " + invioNotificaPrincipaleName + " in corso...");
+			this.log.info("Invio notifica ["+request.getNotifica().getIdentificativoSdi()+"] tramite il canale principale " + invioNotificaPrincipaleName + " in corso...");
 			NotificaECResponse resp = invioNotificaPrincipale.invia(request);
 			
-			this.log.info("Invio notifica tramite il canale principale " + invioNotificaPrincipaleName + " completato con response code. " + resp.getEsitoChiamata());
+			this.log.info("Invio notifica ["+request.getNotifica().getIdentificativoSdi()+"] tramite il canale principale " + invioNotificaPrincipaleName + " completato con response code. " + resp.getEsitoChiamata());
 			if(resp.getEsitoChiamata() < 299 || invioNotificaSecondario==null) {
-				this.log.info("Restituisco esito notifica inviata tramite il canale principale " + invioNotificaPrincipaleName);
+				this.log.info("Restituisco esito notifica ["+request.getNotifica().getIdentificativoSdi()+"] inviata tramite il canale principale " + invioNotificaPrincipaleName);
 				return resp;
 			}
 		}
 		
 		if(invioNotificaSecondario!=null) {
-			this.log.info("Invio notifica tramite il canale secondario " + invioNotificaSecondariaName + " in corso...");
+			this.log.info("Invio notifica ["+request.getNotifica().getIdentificativoSdi()+"] tramite il canale secondario " + invioNotificaSecondariaName + " in corso...");
 			NotificaECResponse resp = invioNotificaSecondario.invia(request);
 			
-			this.log.info("Invio notifica tramite il canale secondario " + invioNotificaSecondariaName + " completato con response code. " + resp.getEsitoChiamata());
+			this.log.info("Invio notifica ["+request.getNotifica().getIdentificativoSdi()+"] tramite il canale secondario " + invioNotificaSecondariaName + " completato con response code. " + resp.getEsitoChiamata());
 			return resp;
 		} else {
+			this.log.warn("Invio notifica ["+request.getNotifica().getIdentificativoSdi()+"]. Nessun canale configurato");
 			return null;//non accadra' mai in quanto nel costruttore controlliamo che almeno uno dei due canali sia attivo
 		}
 		

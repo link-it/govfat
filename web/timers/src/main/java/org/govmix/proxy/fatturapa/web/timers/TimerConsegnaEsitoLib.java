@@ -106,7 +106,8 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 								request.setNotifica(notifica);
 								NotificaECResponse invioNotificaResponse = factory.invia(request, TimerConsegnaEsitoLib.isSPCoop(notifica.getFatturaElettronica().getLottoFatture()));
 								int esitoChiamata = invioNotificaResponse.getEsitoChiamata();
-
+								this.log.info("Notifica ["+request.getNotifica().getIdentificativoSdi()+"] Risposta dallo SdI con codice ["+esitoChiamata+"]");
+								
 								if(esitoChiamata > 299) {
 									IPolicyRispedizione policyRispedizione = PolicyRispedizioneFactory.getInstance().getPolicyRispedizione(notifica);
 									long offset = policyRispedizione.getOffsetRispedizione();
@@ -266,9 +267,13 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 									if(esitoFattura!=null)
 										fatturaElettronicaBD.updateEsito(notifica.getIdFattura(), esitoFattura);
 								}
+								
+								this.log.info("Notifica ["+request.getNotifica().getIdentificativoSdi()+"] Aggiornamento stato notifica...");
+
 								notifica.setStatoConsegnaSdi(StatoConsegnaType.CONSEGNATA);
 								notifica.setDataInvioSdi(new Date());
 								notificaEsitoCommittenteBD.update(notifica);
+								this.log.info("Notifica ["+request.getNotifica().getIdentificativoSdi()+"] Aggiornamento stato notifica completato");
 								
 							} catch(Exception e) {
 								this.log.error("Errore durante l'invio della notifica relativa alla fattura ["+notifica.getIdFattura().toJson()+"]:"+e.getMessage(), e);
