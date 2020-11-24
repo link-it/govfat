@@ -569,6 +569,23 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 				sqlQueryObject.addWhereCondition(tableName1+".fatturazione_attiva="+tableName2+".fatturazione_attiva");
 			}
 		}
+		
+		if(inuselotto){
+
+			if(!inusefattura) {
+				String tableName1 = this.getNotificaEsitoCommittenteFieldConverter().toAliasTable(NotificaEsitoCommittente.model());
+				String tableName2 = this.getNotificaEsitoCommittenteFieldConverter().toAliasTable(NotificaEsitoCommittente.model().ID_FATTURA);
+				sqlQueryObject.addWhereCondition(tableName1+".id_fattura_elettronica="+tableName2+".id");
+				sqlQueryObject.addFromTable(tableName2);
+
+			}
+
+			String tableName1 = this.getNotificaEsitoCommittenteFieldConverter().toAliasTable(NotificaEsitoCommittente.model().FATTURA_ELETTRONICA);
+			String tableName2 = this.getNotificaEsitoCommittenteFieldConverter().toAliasTable(NotificaEsitoCommittente.model().FATTURA_ELETTRONICA.LOTTO_FATTURE);
+			sqlQueryObject.addWhereCondition(tableName1+".identificativo_sdi="+tableName2+".identificativo_sdi");
+			sqlQueryObject.addWhereCondition(tableName1+".fatturazione_attiva="+tableName2+".fatturazione_attiva");
+		}
+
 		if(expression.inUseModel(NotificaEsitoCommittente.model().UTENTE,false)){
 			String tableName1 = this.getNotificaEsitoCommittenteFieldConverter().toAliasTable(NotificaEsitoCommittente.model());
 			String tableName2 = this.getNotificaEsitoCommittenteFieldConverter().toAliasTable(NotificaEsitoCommittente.model().UTENTE);
