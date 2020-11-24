@@ -120,6 +120,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 									notifica.setTentativiConsegnaSdi(tentativiConsegnaSdi  + 1);
 									notifica.setStatoConsegnaSdi(policyRispedizione.isRispedizioneAbilitata() ? StatoConsegnaType.IN_RICONSEGNA: StatoConsegnaType.ERRORE_CONSEGNA);
 									notificaEsitoCommittenteBD.update(notifica);
+									connection.commit();
 									countNotificheElaborate++;
 									continue;
 									
@@ -196,6 +197,7 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 //												notifica.setTentativiConsegnaSdi(tentativiConsegnaSdi  + 1);
 												notifica.setStatoConsegnaSdi(StatoConsegnaType.IN_RICONSEGNA);
 												notificaEsitoCommittenteBD.update(notifica);
+												connection.commit();
 												countNotificheElaborate++;
 												continue;
 
