@@ -49,7 +49,7 @@ public class InvioFattura {
 
 		EsitoInvioFattura esito = new EsitoInvioFattura();
 		try {
-			URL url = new URL(this.url.toString() + "?TipoFile="+lotto.getFormatoArchivioInvioFattura()+"&Versione="+lotto.getFormatoTrasmissione()+"&IdPaese="+lotto.getCedentePrestatorePaese()+"&IdCodice="+lotto.getCedentePrestatoreCodice());
+			URL url = new URL(this.url.toString() + "?TipoFile="+lotto.getFormatoArchivioInvioFattura()+"&Versione="+lotto.getFormatoTrasmissione()+"&IdPaese="+lotto.getCedentePrestatorePaese()+"&IdCodice="+lotto.getCedentePrestatoreCodice() + "&NomeFile="+lotto.getNomeFile());
 			URLConnection conn = url.openConnection();
 			HttpURLConnection httpConn = (HttpURLConnection) conn;
 	
