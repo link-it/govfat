@@ -31,6 +31,7 @@ import org.govmix.proxy.fatturapa.orm.LottoFatture;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.converter.NotificaEsitoCommittenteFieldConverter;
 import org.govmix.proxy.fatturapa.orm.dao.jdbc.fetch.NotificaEsitoCommittenteFetch;
+import org.openspcoop2.generic_project.beans.AliasField;
 import org.openspcoop2.generic_project.beans.CustomField;
 import org.openspcoop2.generic_project.beans.FunctionField;
 import org.openspcoop2.generic_project.beans.IField;
@@ -130,7 +131,8 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 			fields.add(NotificaEsitoCommittente.model().TENTATIVI_CONSEGNA_SDI);
 			fields.add(NotificaEsitoCommittente.model().SCARTO);
 			fields.add(NotificaEsitoCommittente.model().SCARTO_NOTE);
-			fields.add((NotificaEsitoCommittente.model().FATTURA_ELETTRONICA.LOTTO_FATTURE.ID_EGOV));
+			String egovalias = "lotto_egov";
+			fields.add(new AliasField(NotificaEsitoCommittente.model().FATTURA_ELETTRONICA.LOTTO_FATTURE.ID_EGOV, egovalias));
 
 			String idTracciaNotifica = "id_traccia_notifica";
 			fields.add(new CustomField(idTracciaNotifica, Long.class, idTracciaNotifica, this.getFieldConverter().toTable(NotificaEsitoCommittente.model())));
@@ -146,15 +148,18 @@ public class JDBCNotificaEsitoCommittenteServiceSearchImpl implements IJDBCServi
 			for(Map<String, Object> map: returnMap) {
 				Object idFK_notificaOBJ = map.remove(idTracciaNotifica);
 				Object idFK_scartoOBJ = map.remove(idTracciaScarto);
-				String idEgov = (String) map.remove(this.getFieldConverter().toColumn(NotificaEsitoCommittente.model().FATTURA_ELETTRONICA.LOTTO_FATTURE.ID_EGOV, false));
+				Object idEgovO = map.remove(egovalias);
 
 				NotificaEsitoCommittente notificaEsitoCommittente = (NotificaEsitoCommittente)this.getFetch().fetch(jdbcProperties.getDatabase(), NotificaEsitoCommittente.model(), map);
 
-				FatturaElettronica fattura = new FatturaElettronica();
-				LottoFatture lotto = new LottoFatture();
-				lotto.setIdEgov(idEgov);
-				fattura.setLottoFatture(lotto);
-				notificaEsitoCommittente.setFatturaElettronica(fattura);
+				if(idEgovO instanceof String) {
+					String idEgov = (String) idEgovO;
+					FatturaElettronica fattura = new FatturaElettronica();
+					LottoFatture lotto = new LottoFatture();
+					lotto.setIdEgov(idEgov);
+					fattura.setLottoFatture(lotto);
+					notificaEsitoCommittente.setFatturaElettronica(fattura);
+				}
 
 				
 				if(idMappingResolutionBehaviour==null ||
