@@ -106,7 +106,6 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 								request.setNotifica(notifica);
 								
 								boolean spCoop = TimerConsegnaEsitoLib.isSPCoop(notifica.getFatturaElettronica().getLottoFatture());
-								this.log.info("Id: " + notifica.getId());
 								this.log.info("IdEgov: " + notifica.getFatturaElettronica().getLottoFatture().getIdEgov());
 								this.log.info("IS SPCoop: " + spCoop);
 								NotificaECResponse invioNotificaResponse = factory.invia(request, spCoop);
