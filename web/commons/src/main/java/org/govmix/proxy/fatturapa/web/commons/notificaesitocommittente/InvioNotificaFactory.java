@@ -75,6 +75,8 @@ public class InvioNotificaFactory {
 			} catch(Exception e) {
 				if(invioNotificaSecondario==null) {
 					throw e;
+				} else {
+					this.log.warn("Errore durante l'invio notifica tramite il canale principale " + invioNotificaPrincipaleName + ". Invio tramite canale secondario " + invioNotificaSecondariaName + ": " + e.getMessage(), e);
 				}
 			}
 		}
