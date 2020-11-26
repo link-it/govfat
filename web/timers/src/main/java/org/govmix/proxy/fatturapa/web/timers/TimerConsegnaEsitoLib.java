@@ -104,7 +104,11 @@ public class TimerConsegnaEsitoLib extends AbstractTimerLib {
 								
 								NotificaECRequest request = new NotificaECRequest();
 								request.setNotifica(notifica);
-								NotificaECResponse invioNotificaResponse = factory.invia(request, TimerConsegnaEsitoLib.isSPCoop(notifica.getFatturaElettronica().getLottoFatture()));
+								
+								boolean spCoop = TimerConsegnaEsitoLib.isSPCoop(notifica.getFatturaElettronica().getLottoFatture());
+								this.log.info("IdEgov: " + notifica.getFatturaElettronica().getLottoFatture().getIdEgov());
+								this.log.info("IS SPCoop: " + spCoop);
+								NotificaECResponse invioNotificaResponse = factory.invia(request, spCoop);
 								int esitoChiamata = invioNotificaResponse.getEsitoChiamata();
 								this.log.info("Notifica ["+request.getNotifica().getIdentificativoSdi()+"] Risposta dallo SdI con codice ["+esitoChiamata+"]");
 								

@@ -63,13 +63,19 @@ public class InvioNotificaFactory {
 
 		if(invioNotificaPrincipale!=null) {
 			
-			this.log.info("Invio notifica ["+request.getNotifica().getIdentificativoSdi()+"] tramite il canale principale " + invioNotificaPrincipaleName + " in corso...");
-			NotificaECResponse resp = invioNotificaPrincipale.invia(request);
-			
-			this.log.info("Invio notifica ["+request.getNotifica().getIdentificativoSdi()+"] tramite il canale principale " + invioNotificaPrincipaleName + " completato con response code. " + resp.getEsitoChiamata());
-			if(resp.getEsitoChiamata() < 299 || invioNotificaSecondario==null) {
-				this.log.info("Restituisco esito notifica ["+request.getNotifica().getIdentificativoSdi()+"] inviata tramite il canale principale " + invioNotificaPrincipaleName);
-				return resp;
+			try {
+				this.log.info("Invio notifica ["+request.getNotifica().getIdentificativoSdi()+"] tramite il canale principale " + invioNotificaPrincipaleName + " in corso...");
+				NotificaECResponse resp = invioNotificaPrincipale.invia(request);
+				
+				this.log.info("Invio notifica ["+request.getNotifica().getIdentificativoSdi()+"] tramite il canale principale " + invioNotificaPrincipaleName + " completato con response code. " + resp.getEsitoChiamata());
+				if(resp.getEsitoChiamata() < 299 || invioNotificaSecondario==null) {
+					this.log.info("Restituisco esito notifica ["+request.getNotifica().getIdentificativoSdi()+"] inviata tramite il canale principale " + invioNotificaPrincipaleName);
+					return resp;
+				}
+			} catch(Exception e) {
+				if(invioNotificaSecondario==null) {
+					throw e;
+				}
 			}
 		}
 		
