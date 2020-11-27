@@ -49,7 +49,18 @@
 							<op2web:output field="#{fatturaElettronicaMBean.selectedElement.dataConsegna}" insideGroup="true" />
 							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" />
 							
-							<op2web:output field="#{fatturaElettronicaMBean.selectedElement.dataScadenza}" insideGroup="true" />
+							<h:outputText id="out_#{fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.name}_Label"
+								styleClass="#{fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.labelStyleClass}" 
+								value="#{fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.label}:" 
+								rendered="#{!empty fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.label and fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.rendered}" />
+							<h:outputText id="out_#{fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.name}_NoValue" value="--" 
+								styleClass="#{fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.valueStyleClass}"
+								rendered="#{empty fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.value and fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.rendered}" />
+							<h:outputText id="out_#{fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.name}_DataValue" 
+								value="#{fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.value}" styleClass="#{fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.valueStyleClass}"
+								rendered="#{not empty fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.value and fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.rendered}">
+									<f:convertDateTime pattern="#{fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.pattern}" defaultTime="00:00" timeZone="Europe/Rome" />
+							</h:outputText>	
 							<op2web:output field="#{fatturaElettronicaMBean.selectedElement.statoConsegna}" insideGroup="true" />
 							<h:panelGroup>
 								<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{fatturaElettronicaMBean.selectedElement.visualizzaLinkRiconsegna == false}"/>
@@ -78,26 +89,10 @@
 								rendered="#{not empty fatturaElettronicaMBean.selectedElement.dataProssimaConsegna.value and fatturaElettronicaMBean.selectedElement.dataProssimaConsegna.rendered}">
 									<f:convertDateTime pattern="#{fatturaElettronicaMBean.selectedElement.dataProssimaConsegna.pattern}" defaultTime="00:00" timeZone="Europe/Rome" />
 							</h:outputText>	
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{!fatturaElettronicaMBean.selectedElement.dataProssimaConsegna.rendered and !fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.rendered}"/>
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{!fatturaElettronicaMBean.selectedElement.dataProssimaConsegna.rendered and !fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.rendered}"/>
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{!fatturaElettronicaMBean.selectedElement.dataProssimaConsegna.rendered}"/>
+							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{!fatturaElettronicaMBean.selectedElement.dataProssimaConsegna.rendered}"/>
 							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{fatturaElettronicaMBean.selectedElement.dataProssimaConsegna.rendered}"/>
-							
-							<h:outputText id="out_#{fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.name}_Label"
-								styleClass="#{fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.labelStyleClass}" 
-								value="#{fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.label}:" 
-								rendered="#{!empty fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.label and fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.rendered}" />
-								
-							<h:outputText id="out_#{fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.name}_DataValue" 
-								value="#{fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.value}" styleClass="#{fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.valueStyleClass}"
-								rendered="#{not empty fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.value and fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.rendered}">
-									<f:convertDateTime pattern="#{fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.pattern}" defaultTime="00:00" timeZone="Europe/Rome" />
-							</h:outputText>	
-							
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{fatturaElettronicaMBean.selectedElement.dataProssimaConsegna.rendered and fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.rendered}"/>
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{fatturaElettronicaMBean.selectedElement.dataProssimaConsegna.rendered and fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.rendered}"/>
-							
-							<h:graphicImage value="/images/s.gif" width="1" height="1" alt="spacer" rendered="#{fatturaElettronicaMBean.selectedElement.dataScadenzaPagamento.rendered}"/>
-							
+
 						</h:panelGrid>
 					</op2web:fieldset>
 

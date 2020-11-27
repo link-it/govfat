@@ -200,7 +200,7 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 		this.dataScadenza = this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataScadenza","fattura.dataScadenza",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY);
 		this.dataScadenzaAssente = this.getWebGenericProjectFactory().getOutputFieldFactory().createText("dataScadenzaAssente","fattura.dataScadenzaAssente");
 		
-		this.setDataScadenzaPagamento(this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataScadenzaPagamento","fattura.dataScadenzaPagamento",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY));
+		this.dataScadenzaPagamento = (this.getWebGenericProjectFactory().getOutputFieldFactory().createDateTime("dataScadenzaPagamento","fattura.dataScadenzaPagamento",org.govmix.proxy.fatturapa.web.console.costanti.Costanti.FORMATO_DATA_DD_M_YYYY));
 		
 		this.setField(this.cedentePrestatore);
 		this.setField(this.cedentePrestatorePaese);
@@ -239,7 +239,7 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 		this.setField(this.dataProssimaConsegna);
 		this.setField(this.dataScadenza);
 		this.setField(this.dataScadenzaAssente);
-		this.setField(this.getDataScadenzaPagamento());
+		this.setField(this.dataScadenzaPagamento);
 
 		this.datiIntestazione = this.getWebGenericProjectFactory().getOutputFieldFactory().createOutputGroup("datiIntestazione",6);
 		this.datiIntestazione.setRendered(true);
@@ -273,7 +273,7 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 		this.datiTrasmissione1.addField(this.dipartimento);
 		this.datiTrasmissione1.addField(this.codiceDestinatario);
 		this.datiTrasmissione1.addField(this.dataRicezione);
-		this.datiTrasmissione1.addField(this.dataScadenza);
+		this.datiTrasmissione1.addField(this.dataScadenzaPagamento);
 		this.datiTrasmissione1.addField(this.dataConsegna);
 		this.datiTrasmissione1.addField(this.dataProssimaConsegna);
 		this.datiTrasmissione1.addField(this.statoConsegna);
@@ -507,12 +507,13 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 		}
 		
 		try {
-			this.getDataScadenzaPagamento().setRendered(true);
+			this.dataScadenzaPagamento.setValue(null);
+//			this.dataScadenzaPagamento.setRendered(true);
 			Date scadenzaPagamento = FatturaDeserializerUtils.getDataScadenzaPagamento(this.getDTO());
-			if(scadenzaPagamento == null)
-				this.getDataScadenzaPagamento().setRendered(false);
-			
-			this.getDataScadenzaPagamento().setValue(scadenzaPagamento);
+			if(scadenzaPagamento != null) {
+				this.dataScadenzaPagamento.setValue(scadenzaPagamento);
+//				this.dataScadenzaPagamento.setRendered(false);
+			}
 		} catch (Exception e) {
 			LoggerManager.getConsoleLogger().error("Si e' verificato un errore durante l'esecuzione del metodo [FatturaDeserializerUtils.getDataScadenzaPagamento]: "+ e.getMessage(), e);
 		}
