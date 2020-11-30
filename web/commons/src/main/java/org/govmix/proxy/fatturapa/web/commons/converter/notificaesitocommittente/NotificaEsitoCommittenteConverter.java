@@ -141,8 +141,17 @@ public class NotificaEsitoCommittenteConverter {
 				sb.append(convertToDescrizione(mr));
 			}
 			
+			if(this.esito.getDescrizione()!=null) {
+				sb.append(". " + this.esito.getDescrizione());
+			} 
 			return sb.toString();
 		} else {
+//			if(this.esito.getEsito().equals(EsitoCommittente.EC_02)) {
+//				throw new Exception("Specificare il motivo del rifiuto in caso di esito " + this.esito.getEsito());
+//			} else {
+//				return null;
+//			}
+//		}
 			if(this.esito.getDescrizione()!=null) {
 				return this.esito.getDescrizione();
 			} else {
