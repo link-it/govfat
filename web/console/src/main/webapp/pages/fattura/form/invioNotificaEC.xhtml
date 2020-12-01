@@ -178,9 +178,11 @@
 									layout="#{notificaECMBean.form.motivoRifiuto.direzione}" disabled="#{notificaECMBean.form.motivoRifiuto.disabled}"
 									value="#{notificaECMBean.form.motivoRifiuto.value}" > 
 										<f:selectItems value="#{notificaECMBean.form.motivoRifiuto.elencoSelectItems}" /> 
-									
+										<a4j:support status="mainStatus" event="onchange" reRender="#{notificaECMBean.form.motivoRifiuto.fieldsToUpdate}" actionListener="#{notificaECMBean.form.motivoRifiuto.valueChanged}" />
 									</h:selectManyCheckbox>
 							</op2web:prop>
+							
+							<op2web:formFields nomiFields="#{'descrizione'}"/>
 							
 						</op2web:fieldset>
 						<ui:define name="buttons">
