@@ -69,7 +69,6 @@ public class NotificaEsitoCommittenteConverter {
 		this.idUtente = idUtente;
 		this.modalitaBatch = modalitaBatch;
 		this.fatturaElettronicaBD = new FatturaPassivaBD();
-		
 	}
 	
 	public NotificaEsitoCommittente getNotificaEsitoCommittente() throws Exception {
@@ -113,7 +112,7 @@ public class NotificaEsitoCommittenteConverter {
 		
 	}
 
-	private String getMotiviRifiuto() {
+	public String getMotiviRifiuto() {
 		if(this.esito.getMotivoRifiuto()!=null &&!this.esito.getMotivoRifiuto().isEmpty()) {
 			
 			StringBuffer sb = new StringBuffer();
@@ -130,13 +129,13 @@ public class NotificaEsitoCommittenteConverter {
 		}
 	}
 
-	private String getDescrizione() throws Exception {
+	public String getDescrizione() throws Exception {
 		if(this.esito.getMotivoRifiuto()!=null &&!this.esito.getMotivoRifiuto().isEmpty()) {
 			
 			StringBuffer sb = new StringBuffer();
 			for(MotivoRifiuto mr: this.esito.getMotivoRifiuto()) {
 				if(sb.length()>0) {
-					sb.append(". ");
+					sb.append("/");
 				}
 				sb.append(convertToDescrizione(mr));
 			}
@@ -166,9 +165,9 @@ public class NotificaEsitoCommittenteConverter {
 
 	private String convertToDescrizione(MotivoRifiuto mr) {
 		switch(mr) {
-		case MR_01: return "Soggetto destinatario errato - falscher Empf\u00E4nger";
-		case MR_02: return "Omesso o errato CIG o CUP - fehlender oder falscher CIG oder CUP";
-		case MR_03: return "Omesso o errato numero e data dell’atto d’impegno - fehlende oder falsche Nummer und Datum des Zweckbindungsaktes";
+		case MR_01: return "Soggetto destinatario errato-falscher Empf\u00E4nger";
+		case MR_02: return "Omesso o errato CIG o CUP-fehlender oder falscher CIG oder CUP";
+		case MR_03: return "Omesso o errato numero e data dell’atto d’impegno-fehlende oder falsche Nummer und Datum des Zweckbindungsaktes";
 		default: return null;
 		
 		}
