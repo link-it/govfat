@@ -251,16 +251,7 @@ public class NotificaECMBean extends BaseFormMBean<NotificaECBean, Long, Notific
 
 
 	private List<MotivoRifiuto> getMotivoRifiutoValori() {
-		List<MotivoRifiuto> motivoRifiuto = new ArrayList<MotivoRifiuto>();
-		
-		List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> value = this.form.getMotivoRifiuto().getValue();
-		if(value != null && value.size() > 0) {
-			for(org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem val : value) {
-				motivoRifiuto.add(MotivoRifiuto.fromValue(val.getValue()));
-			}
-		}
-		
-		return motivoRifiuto;
+		return this.form.getMotivoRifiutoValori();
 	}
 
 	public String validaInput(){
@@ -281,8 +272,16 @@ public class NotificaECMBean extends BaseFormMBean<NotificaECBean, Long, Notific
 				TextArea descrizione = this.form.getDescrizione();
 				
 				if(descrizione.getValue() != null){
-					if(descrizione.getValue().length() > 255)
-						return Utils.getInstance().getMessageFromResourceBundle("notificaEsitoCommittente.formInvia.error.descrizioneTroppoLunga");
+					NotificaEC esito = new NotificaEC();
+					esito.setEsito(EsitoCommittente.EC_02);
+					esito.setDescrizione(descrizione.getValue());
+					esito.setMotivoRifiuto(getMotivoRifiutoValori());
+					try {
+						int lunghezzaRealeDescrizione = InvioNotificaEsitoCommittente.getLunghezzaRealeDescrizione(esito);
+						if(lunghezzaRealeDescrizione > 255)
+							return Utils.getInstance().getMessageWithParamsFromResourceBundle("notificaEsitoCommittente.formInvia.error.descrizioneTroppoLunga", lunghezzaRealeDescrizione);
+					} catch (Exception e) {
+					}
 				}
 			}
 		}

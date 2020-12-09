@@ -182,7 +182,12 @@
 									</h:selectManyCheckbox>
 							</op2web:prop>
 							
-							<op2web:formFields nomiFields="#{'descrizione'}"/>
+							<op2web:prop label="#{notificaECMBean.form.descrizione.label}" rendered="#{notificaECMBean.form.descrizione.rendered}"
+								required="#{notificaECMBean.form.descrizione.required}" note="#{notificaECMBean.form.descrizione.note}" >
+								<h:inputTextarea id="input_#{notificaECMBean.form.descrizione.name}" value="#{notificaECMBean.form.descrizione.value}"
+									style="#{notificaECMBean.form.descrizione.style}" disabled="#{notificaECMBean.form.descrizione.disabled}" rows="#{notificaECMBean.form.descrizione.rows}"
+									cols="#{notificaECMBean.form.descrizione.columns}" />
+							</op2web:prop>
 							
 						</op2web:fieldset>
 						<ui:define name="buttons">
