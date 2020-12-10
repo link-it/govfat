@@ -106,7 +106,14 @@ public class NotificaEsitoCommittenteConverter {
 		notificaEsitoCommittente.setEsito(esitoCommittente);
 		
 		notificaEsitoCommittente.setMotiviRifiuto(this.getMotiviRifiuto());
-		notificaEsitoCommittente.setDescrizione(this.getDescrizione());
+		
+		String descrizione = this.getDescrizione();
+		
+		if(descrizione.length() > 255) {
+			throw new Exception("Descrizione troppo lunga ("+descrizione.length()+" caratteri). Attesi al massimo 255");
+		}
+		
+		notificaEsitoCommittente.setDescrizione(descrizione);
 
 		return notificaEsitoCommittente;
 		
