@@ -49,6 +49,7 @@ import org.openspcoop2.generic_project.web.impl.jsf1.mbean.BaseFormMBean;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.exception.InviaException;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.MessageUtils;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils;
+import org.openspcoop2.generic_project.web.input.TextArea;
 
 /**
  * NotificaECMBean MBean per la gestione della schermata di invio Notifica EC.
@@ -210,6 +211,7 @@ public class NotificaECMBean extends BaseFormMBean<NotificaECBean, Long, Notific
 			notificaECToSend.setEsito(EsitoCommittente.fromValue(this.form.getEsito().getValue().getValue()));
 			notificaECToSend.setIdentificativoSdi(BigInteger.valueOf(this.fattura.getDTO().getIdentificativoSdi()));
 			notificaECToSend.setPosizione(BigInteger.valueOf(this.fattura.getDTO().getPosizione()));
+			notificaECToSend.setDescrizione(this.form.getDescrizione().getValue());
 
 			InvioNotificaEsitoCommittente sender = new InvioNotificaEsitoCommittente(this.log);
 
@@ -249,16 +251,7 @@ public class NotificaECMBean extends BaseFormMBean<NotificaECBean, Long, Notific
 
 
 	private List<MotivoRifiuto> getMotivoRifiutoValori() {
-		List<MotivoRifiuto> motivoRifiuto = new ArrayList<MotivoRifiuto>();
-		
-		List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> value = this.form.getMotivoRifiuto().getValue();
-		if(value != null && value.size() > 0) {
-			for(org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem val : value) {
-				motivoRifiuto.add(MotivoRifiuto.fromValue(val.getValue()));
-			}
-		}
-		
-		return motivoRifiuto;
+		return this.form.getMotivoRifiutoValori();
 	}
 
 	public String validaInput(){
@@ -272,6 +265,24 @@ public class NotificaECMBean extends BaseFormMBean<NotificaECBean, Long, Notific
 			List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> value = this.form.getMotivoRifiuto().getValue();
 			if(value == null || (value != null && value.size() <= 0)) {
 				return Utils.getInstance().getMessageFromResourceBundle("notificaEsitoCommittente.formInvia.error.motivoRifiutoVuoto");
+			}
+			
+			// validazione lunghezza stringa se ho selezionato un motivo
+			if(value != null && value.size() > 0) {
+				TextArea descrizione = this.form.getDescrizione();
+				
+				if(descrizione.getValue() != null){
+					NotificaEC esito = new NotificaEC();
+					esito.setEsito(EsitoCommittente.EC_02);
+					esito.setDescrizione(descrizione.getValue());
+					esito.setMotivoRifiuto(getMotivoRifiutoValori());
+					try {
+						int lunghezzaRealeDescrizione = InvioNotificaEsitoCommittente.getLunghezzaRealeDescrizione(esito);
+						if(lunghezzaRealeDescrizione > 255)
+							return Utils.getInstance().getMessageWithParamsFromResourceBundle("notificaEsitoCommittente.formInvia.error.descrizioneTroppoLunga", lunghezzaRealeDescrizione);
+					} catch (Exception e) {
+					}
+				}
 			}
 		}
 

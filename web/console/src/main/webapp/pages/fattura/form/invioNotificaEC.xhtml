@@ -178,8 +178,15 @@
 									layout="#{notificaECMBean.form.motivoRifiuto.direzione}" disabled="#{notificaECMBean.form.motivoRifiuto.disabled}"
 									value="#{notificaECMBean.form.motivoRifiuto.value}" > 
 										<f:selectItems value="#{notificaECMBean.form.motivoRifiuto.elencoSelectItems}" /> 
-									
+										<a4j:support status="mainStatus" event="onchange" reRender="#{notificaECMBean.form.motivoRifiuto.fieldsToUpdate}" actionListener="#{notificaECMBean.form.motivoRifiuto.valueChanged}" />
 									</h:selectManyCheckbox>
+							</op2web:prop>
+							
+							<op2web:prop label="#{notificaECMBean.form.descrizione.label}" rendered="#{notificaECMBean.form.descrizione.rendered}"
+								required="#{notificaECMBean.form.descrizione.required}" note="#{notificaECMBean.form.descrizione.note}" >
+								<h:inputTextarea id="input_#{notificaECMBean.form.descrizione.name}" value="#{notificaECMBean.form.descrizione.value}"
+									style="#{notificaECMBean.form.descrizione.style}" disabled="#{notificaECMBean.form.descrizione.disabled}" rows="#{notificaECMBean.form.descrizione.rows}"
+									cols="#{notificaECMBean.form.descrizione.columns}" />
 							</op2web:prop>
 							
 						</op2web:fieldset>

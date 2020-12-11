@@ -25,8 +25,11 @@ package org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.business
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.govmix.proxy.fatturapa.notificaesitocommittente.EsitoCommittente;
+import org.govmix.proxy.fatturapa.notificaesitocommittente.MotivoRifiuto;
 import org.govmix.proxy.fatturapa.notificaesitocommittente.NotificaEC;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdDipartimento;
@@ -70,6 +73,35 @@ public class InvioNotificaEsitoCommittente {
 		}
 	}
 
+	public static int getLunghezzaResiduaDescrizione(List<MotivoRifiuto> lstMotivi) throws Exception {
+		
+		int lunghezzaMax = 255; 
+		if(lstMotivi == null || lstMotivi.isEmpty()) {
+			return lunghezzaMax;
+		}
+		NotificaEC esito = new NotificaEC();
+		
+		esito.setEsito(EsitoCommittente.EC_02);
+		esito.setMotivoRifiuto(lstMotivi);
+		esito.setDescrizione("");
+		String descrizione = new NotificaEsitoCommittenteConverter(esito, null).getDescrizione();
+		return lunghezzaMax - descrizione.length();
+	}
+
+	public static int getLunghezzaRealeDescrizione(NotificaEC esito) throws Exception {
+		return new NotificaEsitoCommittenteConverter(esito, null).getDescrizione().length();
+	}
+	
+//	public static void main(String[] args) throws Exception {
+//		List<MotivoRifiuto> m = Arrays.asList(MotivoRifiuto.MR_01,MotivoRifiuto.MR_02,MotivoRifiuto.MR_03);
+//		
+//		System.out.println(getLunghezzaResiduaDescrizione(m));
+//		NotificaEC ec = new NotificaEC();
+//		ec.setDescrizione("");
+//		ec.setMotivoRifiuto(m);
+//		System.out.println(getLunghezzaRealeDescrizione(ec));
+//	}
+//
 	public void invia(NotificaEC esito, IdUtente idUtente) throws Exception {
 		Connection connection = null;
 		try {

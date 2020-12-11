@@ -21,9 +21,15 @@
 package org.govmix.proxy.fatturapa.web.console.form;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.faces.event.ActionEvent;
 
+import org.ajax4jsf.xml.serializer.utils.Utils;
+import org.govmix.proxy.fatturapa.notificaesitocommittente.MotivoRifiuto;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoCommittenteType;
+import org.govmix.proxy.fatturapa.web.commons.notificaesitocommittente.business.InvioNotificaEsitoCommittente;
 import org.openspcoop2.generic_project.web.factory.Costanti;
 import org.openspcoop2.generic_project.web.factory.WebGenericProjectFactory;
 import org.openspcoop2.generic_project.web.form.Form;
@@ -31,6 +37,7 @@ import org.openspcoop2.generic_project.web.impl.jsf1.form.BaseForm;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem;
 import org.openspcoop2.generic_project.web.input.MultipleCheckBox;
 import org.openspcoop2.generic_project.web.input.SelectList;
+import org.openspcoop2.generic_project.web.input.TextArea;
 
 /**
  * NotificaECForm Bean per la gestione del form per l'invio della NotificaEC.
@@ -43,6 +50,7 @@ public class NotificaECForm extends BaseForm implements Form {
 
 	private SelectList<SelectItem> esito= null;
 	private MultipleCheckBox<SelectItem> motivoRifiuto = null; 
+	private TextArea descrizione = null;
 	
 	public NotificaECForm()throws Exception{
 		this.init();
@@ -64,18 +72,24 @@ public class NotificaECForm extends BaseForm implements Form {
 
 		this.motivoRifiuto = factory.getInputFieldFactory().createMultipleCheckBox("motivoRifiuto","notificaEsitoCommittente.motivoRifiuto",null,true);
 		this.motivoRifiuto.setDirezione(Costanti.CHOICE_ORIENTATION_VERTICAL);
+		this.motivoRifiuto.setFieldsToUpdate("iNEC_formPnl");
+		this.motivoRifiuto.setForm(this);
+		
+		this.descrizione = factory.getInputFieldFactory().createTextArea("descrizione","notificaEsitoCommittente.descrizione", null, false);
 		
 		this._setEsito();
+		this._setMotivoRifiuto();
 		
 		this.setField(this.esito);
 		this.setField(this.motivoRifiuto);
+		this.setField(this.descrizione);
 	}
 
 	@Override
 	public void reset() {
 		this.esito.reset();
 		this.motivoRifiuto.reset();
-		
+		this.descrizione.reset();
 	}
 
 	public SelectList<SelectItem> getEsito() {
@@ -92,7 +106,11 @@ public class NotificaECForm extends BaseForm implements Form {
 		if(this.esito.getValue() != null){
 			if(this.esito.getValue().getValue().equals(EsitoCommittenteType.EC02.getValue())){
 				this.motivoRifiuto.setRendered(true); 
+			} else {
+				this.motivoRifiuto.reset();
 			}
+		} else {
+			this.motivoRifiuto.reset();
 		}
 	}
 
@@ -108,6 +126,59 @@ public class NotificaECForm extends BaseForm implements Form {
 	
 	public void esitoSelectListener(ActionEvent ae){
 		this._setEsito();
+		this._setMotivoRifiuto();
 	}
 
+	private void _setMotivoRifiuto() {
+		this.descrizione.setRendered(false); 
+		this.descrizione.setNote(null);
+		
+		if(this.motivoRifiuto.isRendered() && this.motivoRifiuto.getValue() != null){
+			List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> value = this.getMotivoRifiuto().getValue();
+			if(value != null && value.size() > 0) {
+				this.descrizione.setRendered(true); 
+				
+				try {
+					int lunghezzaResiduaDescrizione = InvioNotificaEsitoCommittente.getLunghezzaResiduaDescrizione(this.getMotivoRifiutoValori()); 
+					String notaLabel = org.govmix.proxy.fatturapa.web.console.util.Utils.getInstance().getMessageWithParamsFromResourceBundle("notificaEsitoCommittente.descrizione.nota", lunghezzaResiduaDescrizione);
+					this.descrizione.setNote(notaLabel);
+				}catch(Exception e) {
+					
+				}
+				
+				
+			} else {
+				this.descrizione.reset();
+			}
+		} else {
+			this.descrizione.reset();
+		}
+	}
+	
+	public void motivoRifiutoOnChangeListener(ActionEvent ae){
+		this._setMotivoRifiuto();
+	}
+	
+	public TextArea getDescrizione() {
+		this._setMotivoRifiuto();
+		
+		return descrizione;
+	}
+	
+	public void setDescrizione(TextArea descrizione) {
+		this.descrizione = descrizione;
+	}
+	
+	public List<MotivoRifiuto> getMotivoRifiutoValori() {
+		List<MotivoRifiuto> motivoRifiuto = new ArrayList<MotivoRifiuto>();
+		
+		List<org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem> value = this.getMotivoRifiuto().getValue();
+		if(value != null && value.size() > 0) {
+			for(org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem val : value) {
+				motivoRifiuto.add(MotivoRifiuto.fromValue(val.getValue()));
+			}
+		}
+		
+		return motivoRifiuto;
+	}
 }
