@@ -109,7 +109,7 @@ public class NotificaEsitoCommittenteConverter {
 		
 		String descrizione = this.getDescrizione();
 		
-		if(descrizione.length() > 255) {
+		if(descrizione != null && descrizione.length() > 255) {
 			throw new Exception("Il campo Descrizione (comprensivo dei motivi di rifiuto) non pu\u00F2 essere pi\u00F9 lungo di 255 caratteri. Numero caratteri inseriti "+ descrizione.length());
 		}
 		
