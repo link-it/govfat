@@ -130,7 +130,7 @@ public class ParERClient {
 		        // Allow TLSv1 protocol only
 		        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
 		                sslcontext,
-		                new String[] { "TLSv1" },
+		                new String[] { "TLSv2" },
 		                null,
 		                SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
 		        client = HttpClients.custom().setSSLSocketFactory(sslsf).setDefaultRequestConfig(RequestConfig.custom()
