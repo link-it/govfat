@@ -123,6 +123,8 @@ public class ParERClient {
 
 		        // Trust own CA and all self-signed certs
 		        SSLContext sslContext = SSLContext.getInstance("TLSv1.2"); 
+		        sslContext.init(null,null,null);
+
 		        // Allow TLSv1 protocol only
 		        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
 		                sslContext,
