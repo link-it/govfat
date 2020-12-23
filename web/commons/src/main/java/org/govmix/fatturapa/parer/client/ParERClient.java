@@ -25,8 +25,6 @@ import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLContexts;
-import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -124,15 +122,14 @@ public class ParERClient {
 		        }
 
 		        // Trust own CA and all self-signed certs
-		        SSLContext sslcontext = SSLContexts.custom()
-		                .loadTrustMaterial(trustStore, new TrustSelfSignedStrategy())
-		                .build();
+		        SSLContext sslContext = SSLContext.getInstance("TLSv1.2"); 
 		        // Allow TLSv1 protocol only
 		        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
-		                sslcontext,
+		                sslContext,
 		                new String[] { "TLSv1.2" },
 		                null,
 		                SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+
 		        client = HttpClients.custom().setSSLSocketFactory(sslsf).setDefaultRequestConfig(RequestConfig.custom()
 		                .setCookieSpec(CookieSpecs.STANDARD).build())
 		                .build();
