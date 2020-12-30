@@ -44,20 +44,7 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 
 		DatiGeneraliDocumentoType datiGeneraliDocumento =  this.getFattura().getFatturaElettronicaBody(0).getDatiGenerali().getDatiGeneraliDocumento();
 		
-		TipoDocumentoType tipoDoc = null;
-		Logger log = LoggerManager.getBatchInserimentoFatturaLogger();
-		try {
-			String tipoDocumento = XPathUtils.getTipoDocumento(this.fatturaAsByte, log); //per  TD20 e nuovi tipi documento v1.2.1
-			log.info("Trovato tipoDocumento ["+tipoDocumento+"]");
-			tipoDoc = TipoDocumentoType.toEnumConstant(tipoDocumento, true);
-			log.info("Trovato tipoDocumentoType ["+tipoDoc+"]");
-		} catch (NotFoundException e) {
-			tipoDoc = TipoDocumentoType.TDXX;
-			log.error("TipoDocumentoType non trovato: " + e.getMessage(), e);
-		} catch (Exception e) {
-			tipoDoc = TipoDocumentoType.TDXX;
-			log.error("Errore durante la lettura del TipoDocumento: " + e.getMessage(), e);
-		}
+		TipoDocumentoType tipoDoc = getTipoDoumento();
 		
 		fatturaElettronica.setTipoDocumento(tipoDoc);
 		
@@ -68,7 +55,29 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 
 		fatturaElettronica.setNumero(datiGeneraliDocumento.getNumero());
 	}
-	
+
+	private TipoDocumentoType getTipoDoumento() {
+		Logger log = LoggerManager.getBatchInserimentoFatturaLogger();
+
+		TipoDocumentoType tipoDoc;
+		try {
+			String tipoDocumento = getTipoDocumentoString();
+			log.info("Trovato tipoDocumento ["+tipoDocumento+"]");
+			tipoDoc = TipoDocumentoType.toEnumConstant(tipoDocumento, true);
+			log.info("Trovato tipoDocumentoType ["+tipoDoc+"]");
+		} catch (NotFoundException e) {
+			tipoDoc = TipoDocumentoType.TDXX;
+			log.error("TipoDocumentoType non trovato: " + e.getMessage(), e);
+		} catch (Exception e) {
+			tipoDoc = TipoDocumentoType.TDXX;
+			log.error("Errore durante la lettura del TipoDocumento: " + e.getMessage(), e);
+		}
+		return tipoDoc;
+	}
+
+	private String getTipoDocumentoString() throws Exception {
+		return XPathUtils.getTipoDocumento(this.fatturaAsByte, LoggerManager.getBatchInserimentoFatturaLogger()); //per  TD20 e nuovi tipi documento v1.2.1
+	}
 	
 
 	@Override
@@ -131,13 +140,25 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 		
 		DatiGeneraliDocumentoType datiGeneraliDocumento = fatturaBody.getDatiGenerali().getDatiGeneraliDocumento();
 		
-		if(strictValidation) {
-			if(datiGeneraliDocumento.getTipoDocumento()==null)
-				throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.tipoDocumento");
-		}
-		
 		if(datiGeneraliDocumento.getData() == null)
 			throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.data");
+		
+		if(datiGeneraliDocumento.getNumero() == null || datiGeneraliDocumento.getNumero().isEmpty())
+			throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.numero");
+		
+		if(strictValidation) {
+			TipoDocumentoType tipoDoc = null;
+			try {
+				String tipoDocumentoString = this.getTipoDocumentoString();
+				tipoDoc = TipoDocumentoType.toEnumConstant(tipoDocumentoString);
+			} catch(Exception e) {
+				throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.tipoDocumento");	
+			}
+			
+			if(tipoDoc == null) {
+				throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.tipoDocumento");	
+			}
+		}
 
 	}
 	
