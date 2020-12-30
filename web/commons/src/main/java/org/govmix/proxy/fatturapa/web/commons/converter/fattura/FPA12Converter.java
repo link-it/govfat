@@ -3,11 +3,15 @@ package org.govmix.proxy.fatturapa.web.commons.converter.fattura;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters;
+import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.XPathUtils;
+import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.openspcoop2.generic_project.exception.DeserializerException;
+import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.ValidationException;
 
 import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.AllegatiType;
@@ -41,23 +45,18 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 		DatiGeneraliDocumentoType datiGeneraliDocumento =  this.getFattura().getFatturaElettronicaBody(0).getDatiGenerali().getDatiGeneraliDocumento();
 		
 		TipoDocumentoType tipoDoc = null;
-		if(datiGeneraliDocumento.getTipoDocumento()!=null) {
-			switch(datiGeneraliDocumento.getTipoDocumento()) {
-			case TD01: tipoDoc = TipoDocumentoType.TD01;
-				break;
-			case TD02: tipoDoc = TipoDocumentoType.TD02;
-				break;
-			case TD03: tipoDoc = TipoDocumentoType.TD03;
-				break;
-			case TD04: tipoDoc = TipoDocumentoType.TD04;
-				break;
-			case TD05: tipoDoc = TipoDocumentoType.TD05;
-				break;
-			case TD06: tipoDoc = TipoDocumentoType.TD06;
-				break;
-			}
-		} else {
+		Logger log = LoggerManager.getBatchInserimentoFatturaLogger();
+		try {
+			String tipoDocumento = XPathUtils.getTipoDocumento(this.fatturaAsByte, log); //per  TD20 e nuovi tipi documento v1.2.1
+			log.info("Trovato tipoDocumento ["+tipoDocumento+"]");
+			tipoDoc = TipoDocumentoType.toEnumConstant(tipoDocumento, true);
+			log.info("Trovato tipoDocumentoType ["+tipoDoc+"]");
+		} catch (NotFoundException e) {
 			tipoDoc = TipoDocumentoType.TDXX;
+			log.error("TipoDocumentoType non trovato: " + e.getMessage(), e);
+		} catch (Exception e) {
+			tipoDoc = TipoDocumentoType.TDXX;
+			log.error("Errore durante la lettura del TipoDocumento: " + e.getMessage(), e);
 		}
 		
 		fatturaElettronica.setTipoDocumento(tipoDoc);
