@@ -154,26 +154,40 @@ public class Utils extends org.openspcoop2.generic_project.web.impl.jsf1.utils.U
 		return null;
 	}
 	
-	public static FatturaElettronicaSearchForm getFatturaElettronicaSearchForm() {
+	public static void refreshTipoDocumentoFatturaElettronicaSearchForm() {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		if(fc!= null){
 			ExternalContext ec = fc.getExternalContext();
 			FatturaElettronicaSearchForm lb = (FatturaElettronicaSearchForm)ec.getSessionMap().get("fatturaElettronicaSearchForm");
 
-			return lb;
+			if(lb!= null){
+				lb.refreshTipoDocumento();
+			}
 		}
-		return null;
 	}
 	
-	public static FatturaElettronicaAttivaSearchForm getFatturaElettronicaAttivaSearchForm() {
+	public static void refreshTipoDocumentoFatturaElettronicaAttivaSearchForm() {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		if(fc!= null){
 			ExternalContext ec = fc.getExternalContext();
 			FatturaElettronicaAttivaSearchForm lb = (FatturaElettronicaAttivaSearchForm)ec.getSessionMap().get("fatturaElettronicaAttivaSearchForm");
 
-			return lb;
+			if(lb!= null){
+				lb.refreshTipoDocumento();
+			}
 		}
-		return null;
+	}
+	
+	public static void refreshTipoDocumentoFatturaElettronicaAttivaSoloConservazioneSearchForm() {
+		FacesContext fc = FacesContext.getCurrentInstance();
+		if(fc!= null){
+			ExternalContext ec = fc.getExternalContext();
+			FatturaElettronicaAttivaSearchForm lb = (FatturaElettronicaAttivaSearchForm)ec.getSessionMap().get("fatturaElettronicaAttivaSoloConservazioneSearchForm");
+
+			if(lb!= null){
+				lb.refreshTipoDocumento();
+			}
+		}
 	}
 	
 //	public static Ente getEnte() {

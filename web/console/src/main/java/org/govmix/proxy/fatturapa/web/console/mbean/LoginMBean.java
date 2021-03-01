@@ -313,8 +313,9 @@ public class LoginMBean extends LoginBean{
 		super.cambiaLinguaListener(event);
 		
 		// fix dimensione della label della select list tipodocumento
-		org.govmix.proxy.fatturapa.web.console.util.Utils.getFatturaElettronicaSearchForm().refreshTipoDocumento();
-		org.govmix.proxy.fatturapa.web.console.util.Utils.getFatturaElettronicaAttivaSearchForm().refreshTipoDocumento();
+		org.govmix.proxy.fatturapa.web.console.util.Utils.refreshTipoDocumentoFatturaElettronicaSearchForm();
+		org.govmix.proxy.fatturapa.web.console.util.Utils.refreshTipoDocumentoFatturaElettronicaAttivaSearchForm();
+		org.govmix.proxy.fatturapa.web.console.util.Utils.refreshTipoDocumentoFatturaElettronicaAttivaSoloConservazioneSearchForm();
 	}
 
 
