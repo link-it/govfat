@@ -56,6 +56,8 @@ import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.constants.NomePccOperazioneType;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.mbean.LoginMBean;
+import org.govmix.proxy.fatturapa.web.console.search.FatturaElettronicaAttivaSearchForm;
+import org.govmix.proxy.fatturapa.web.console.search.FatturaElettronicaSearchForm;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
 import org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem;
 import org.openspcoop2.generic_project.web.input.FormField;
@@ -148,6 +150,28 @@ public class Utils extends org.openspcoop2.generic_project.web.impl.jsf1.utils.U
 			if(lb!= null && lb.getIsLoggedIn()){
 				return lb.getMapEnti();
 			}
+		}
+		return null;
+	}
+	
+	public static FatturaElettronicaSearchForm getFatturaElettronicaSearchForm() {
+		FacesContext fc = FacesContext.getCurrentInstance();
+		if(fc!= null){
+			ExternalContext ec = fc.getExternalContext();
+			FatturaElettronicaSearchForm lb = (FatturaElettronicaSearchForm)ec.getSessionMap().get("fatturaElettronicaSearchForm");
+
+			return lb;
+		}
+		return null;
+	}
+	
+	public static FatturaElettronicaAttivaSearchForm getFatturaElettronicaAttivaSearchForm() {
+		FacesContext fc = FacesContext.getCurrentInstance();
+		if(fc!= null){
+			ExternalContext ec = fc.getExternalContext();
+			FatturaElettronicaAttivaSearchForm lb = (FatturaElettronicaAttivaSearchForm)ec.getSessionMap().get("fatturaElettronicaAttivaSearchForm");
+
+			return lb;
 		}
 		return null;
 	}

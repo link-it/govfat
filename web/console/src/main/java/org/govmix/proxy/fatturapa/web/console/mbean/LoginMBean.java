@@ -311,6 +311,10 @@ public class LoginMBean extends LoginBean{
 	@Override
 	public void cambiaLinguaListener(ActionEvent event) {
 		super.cambiaLinguaListener(event);
+		
+		// fix dimensione della label della select list tipodocumento
+		org.govmix.proxy.fatturapa.web.console.util.Utils.getFatturaElettronicaSearchForm().refreshTipoDocumento();
+		org.govmix.proxy.fatturapa.web.console.util.Utils.getFatturaElettronicaAttivaSearchForm().refreshTipoDocumento();
 	}
 
 

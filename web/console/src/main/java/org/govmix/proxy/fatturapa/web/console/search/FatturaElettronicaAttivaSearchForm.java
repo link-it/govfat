@@ -66,6 +66,8 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 	private BooleanCheckBox conservazione = null;
 	private Boolean soloConservazione = null;
 	private SelectList<SelectItem> formatoTrasmissione = null;
+	
+	private boolean refreshTipoDocumento = false;
 
 	public FatturaElettronicaAttivaSearchForm()throws Exception{
 		this.init();
@@ -252,11 +254,22 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 	}
 
 	public SelectList<SelectItem> getTipoDocumento() {
+		if(this.refreshTipoDocumento) {
+			List<javax.faces.model.SelectItem> elencoSelectItems = ((SelectListImpl) this.tipoDocumento).getElencoSelectItems();
+			((SelectListImpl)this.tipoDocumento).setElencoSelectItems(elencoSelectItems);
+			this.refreshTipoDocumento = false;
+		}
+		
+		
 		return this.tipoDocumento;
 	}
 
 	public void setTipoDocumento(SelectList<SelectItem> tipoDocumento) {
 		this.tipoDocumento = tipoDocumento;
+	}
+	
+	public void refreshTipoDocumento() {
+		this.refreshTipoDocumento = true;
 	}
 
 	public List<SelectItem> cessionarioCommittenteAutoComplete(Object val){

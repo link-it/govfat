@@ -66,6 +66,7 @@ public class FatturaElettronicaSearchForm extends BaseSearchForm implements Sear
 	private SelectList<SelectItem> motivoRifiuto = null;
 	
 	private boolean usaDataScadenza = false;
+	private boolean refreshTipoDocumento = false;
 	
 
 	public FatturaElettronicaSearchForm()throws Exception{
@@ -245,11 +246,22 @@ public class FatturaElettronicaSearchForm extends BaseSearchForm implements Sear
 	}
 
 	public SelectList<SelectItem> getTipoDocumento() {
+		if(this.refreshTipoDocumento) {
+			List<javax.faces.model.SelectItem> elencoSelectItems = ((SelectListImpl) this.tipoDocumento).getElencoSelectItems();
+			((SelectListImpl)this.tipoDocumento).setElencoSelectItems(elencoSelectItems);
+			this.refreshTipoDocumento = false;
+		}
+		
+		
 		return this.tipoDocumento;
 	}
 
 	public void setTipoDocumento(SelectList<SelectItem> tipoDocumento) {
 		this.tipoDocumento = tipoDocumento;
+	}
+	
+	public void refreshTipoDocumento() {
+		this.refreshTipoDocumento = true;
 	}
 
 	public SelectList<SelectItem> getNotificaEsitoCommittente() {
