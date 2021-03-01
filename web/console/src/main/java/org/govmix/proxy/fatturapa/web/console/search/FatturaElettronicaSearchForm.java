@@ -108,6 +108,7 @@ public class FatturaElettronicaSearchForm extends BaseSearchForm implements Sear
 		this._setPeriodo();
 
 		this.tipoDocumento = factory.getInputFieldFactory().createSelectList("tipoDocumento","fattura.search.tipoDocumento",null,false);
+		((SelectListImpl)this.tipoDocumento).setCheckItemWidth(true); 
 		this.notificaEsitoCommittente = factory.getInputFieldFactory().createSelectList("notificaEsitoCommittente","fattura.search.notificaEC",null,false);
 		this.notificaDecorrenzaTermini = factory.getInputFieldFactory().createSelectList( "notificaDecorrenzaTermini","fattura.search.notificaDT",null,false);
 		this.numero = factory.getInputFieldFactory().createText("numero","fattura.search.numero",null,false);

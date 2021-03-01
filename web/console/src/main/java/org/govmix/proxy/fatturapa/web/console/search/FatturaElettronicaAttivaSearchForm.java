@@ -107,6 +107,7 @@ public class FatturaElettronicaAttivaSearchForm extends BaseSearchForm implement
 		this._setPeriodo();
 
 		this.tipoDocumento = factory.getInputFieldFactory().createSelectList("tipoDocumento","fattura.search.tipoDocumento",null,false);
+		((SelectListImpl)this.tipoDocumento).setCheckItemWidth(true); 
 		this.numero = factory.getInputFieldFactory().createText("numero","fattura.search.numero",null,false);
 		
 		this.numero.setAutoComplete(true);
