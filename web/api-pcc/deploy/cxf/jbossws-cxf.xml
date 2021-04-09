@@ -43,32 +43,32 @@
    	
    	
    	<bean id="loggingGetTracceInInterceptor" class="org.apache.cxf.interceptor.LoggingInInterceptor">
-   		<property name="outputLocation" value="file://${properties.path}/log/get_tracce_in.log" />
+   		<property name="outputLocation" value="file://${log.path}/get_tracce_in.log" />
         <property name="prettyLogging" value="true" />
    	</bean>	
    	
    	<bean id="loggingGetTracceOutInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor">	
-   		<property name="outputLocation" value="file://${properties.path}/log/get_tracce_out.log" />
+   		<property name="outputLocation" value="file://${log.path}/get_tracce_out.log" />
         <property name="prettyLogging" value="true" />
    	</bean>		
 
    	<bean id="loggingGetTracceFaultInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor">	
-   		<property name="outputLocation" value="file:///${properties.path}/log/get_tracce_fault.log" />
+   		<property name="outputLocation" value="file:///${log.path}/get_tracce_fault.log" />
         <property name="prettyLogging" value="true" />
    	</bean>		
 
    	<bean id="loggingProxyPCCInInterceptor" class="org.apache.cxf.interceptor.LoggingInInterceptor">
-   		<property name="outputLocation" value="file://${properties.path}/log/proxy_pcc_in.log" />
+   		<property name="outputLocation" value="file://${log.path}/proxy_pcc_in.log" />
         <property name="prettyLogging" value="true" />
    	</bean>	
    	
    	<bean id="loggingProxyPCCOutInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor">	
-   		<property name="outputLocation" value="file://${properties.path}/log/proxy_pcc_out.log" />
+   		<property name="outputLocation" value="file://${log.path}/proxy_pcc_out.log" />
         <property name="prettyLogging" value="true" />
    	</bean>		
 
    	<bean id="loggingProxyPCCFaultInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor">	
-   		<property name="outputLocation" value="file://${properties.path}/log/proxy_pcc_fault.log" />
+   		<property name="outputLocation" value="file://${log.path}/proxy_pcc_fault.log" />
         <property name="prettyLogging" value="true" />
    	</bean>		
 </beans>
