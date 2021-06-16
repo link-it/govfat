@@ -268,7 +268,7 @@ public class LottoFattureAnalyzer {
 							type, null,
 							messageId,
 							false,
-							request.getXml());
+							request.getXml(), log);
 			
 			params.validate(true);
 		} catch(Exception e) {

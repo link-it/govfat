@@ -90,12 +90,12 @@ public class FatturaDeserializerUtils {
 
 	
 	public static ConsegnaFatturaParameters getParams(byte[] raw, Long identificativo, String messageId,
-			String nomeFile, boolean fatturazioneAttiva, String type) throws Exception, IOException {
+			String nomeFile, boolean fatturazioneAttiva, String type, Logger log) throws Exception, IOException {
 		ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(identificativo, nomeFile,
 						type, null,
 						messageId,
 						fatturazioneAttiva,
-						raw);
+						raw, log);
 		params.validate(true);
 		return params;
 	}
@@ -312,7 +312,7 @@ public class FatturaDeserializerUtils {
 
 	public static FatturaElettronica getFattura(Logger log, byte[] raw, Long identificativo, int posizione, String messageId,
 			String nomeFile, String type, boolean fatturazioneAttiva, String dipartimento) throws Exception {
-		LottoFatture lotto = getLotto(getParams(raw, identificativo, messageId, nomeFile, fatturazioneAttiva, type), dipartimento);
+		LottoFatture lotto = getLotto(getParams(raw, identificativo, messageId, nomeFile, fatturazioneAttiva, type, log), dipartimento);
 		
 		byte[] lottoXml = ConsegnaFatturaUtils.getLottoXml(lotto, log);
 		List<byte[]> fattureLst =ConsegnaFatturaUtils.getXmlWithSDIUtils(lottoXml);
@@ -324,7 +324,7 @@ public class FatturaDeserializerUtils {
 
 	public static AbstractFatturaConverter<?> getConverter(Logger log, byte[] raw, Long identificativo, int posizione, String messageId,
 			String nomeFile, String type, boolean fatturazioneAttiva, String dipartimento) throws Exception {
-		LottoFatture lotto = getLotto(getParams(raw, identificativo, messageId, nomeFile, fatturazioneAttiva, type), dipartimento);
+		LottoFatture lotto = getLotto(getParams(raw, identificativo, messageId, nomeFile, fatturazioneAttiva, type, log), dipartimento);
 		
 		byte[] lottoXml = ConsegnaFatturaUtils.getLottoXml(lotto, log);
 		List<byte[]> fattureLst =ConsegnaFatturaUtils.getXmlWithSDIUtils(lottoXml);

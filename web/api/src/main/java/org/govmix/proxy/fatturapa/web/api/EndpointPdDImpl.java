@@ -151,7 +151,7 @@ public class EndpointPdDImpl implements EndpointPdD {
 						formatoArchivioInvioFatturaString, formatoArchivioBase64,
 						messageId,
 						false,
-						fatturaStream);
+						fatturaStream, this.log);
 
 				try {
 					params.validate(true);

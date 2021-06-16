@@ -178,8 +178,8 @@ public class ConsegnaFatturaUtils {
 			String formatoArchivioInvioFatturaString,
 			String formatoArchivioBase64, String messageId,
 			boolean fatturazioneAttiva,
-			InputStream is) throws Exception, IOException {
-		return getParameters(identificativoSDI, nomeFile, formatoArchivioInvioFatturaString, formatoArchivioBase64, messageId, fatturazioneAttiva, Utilities.getAsByteArray(is));
+			InputStream is, Logger log) throws Exception, IOException {
+		return getParameters(identificativoSDI, nomeFile, formatoArchivioInvioFatturaString, formatoArchivioBase64, messageId, fatturazioneAttiva, Utilities.getAsByteArray(is), log);
 				
 	}
 
@@ -187,11 +187,12 @@ public class ConsegnaFatturaUtils {
 			String formatoArchivioInvioFatturaString,
 			String formatoArchivioBase64, String messageId,
 			boolean fatturazioneAttiva,
-			byte[] xml) throws Exception, IOException {
+			byte[] xml, Logger log) throws Exception, IOException {
 		List<String> formati = new ArrayList<String>();
 		formati.add("FPA12");
 		formati.add("SDI11");
 		formati.add("SDI10");
+		
 		
 		for(int i =0; i < formati.size(); i++) {
 			try {
@@ -202,7 +203,9 @@ public class ConsegnaFatturaUtils {
 						messageId,
 						fatturazioneAttiva,
 						xml);
-			} catch(DeserializerException e) {}			
+			} catch(DeserializerException e) {
+				log.warn("Errore deserializzazione con formato ["+formati.get(i)+"]:" + e.getMessage(), e);
+			}			
 		}
 
 		throw new Exception("Formato fattura non riconosciuto");
