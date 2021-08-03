@@ -197,7 +197,7 @@ public class EndpointPdDImpl implements EndpointPdD {
 			
 		} catch(Exception e) {
 			this.log.error("riceviLotto completata con errore per il lotto con identificativo SdI ["+identificativoSDI+"]:"+ e.getMessage(), e);
-			saveLotto(identificativoSDIString, fatturaBytes, headers);
+			//saveLotto(identificativoSDIString, fatturaBytes, headers);
 			return Response.status(500).build();
 		}
 
