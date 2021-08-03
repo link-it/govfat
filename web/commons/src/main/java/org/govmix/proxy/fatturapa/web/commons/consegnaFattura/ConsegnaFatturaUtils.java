@@ -33,7 +33,6 @@ import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaPar
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.openspcoop2.generic_project.exception.DeserializerException;
 import org.openspcoop2.protocol.sdi.constants.SDICostanti;
-import org.openspcoop2.protocol.sdi.utils.P7MInfo;
 import org.openspcoop2.protocol.sdi.utils.SDILottoUtils;
 import org.openspcoop2.utils.Utilities;
 

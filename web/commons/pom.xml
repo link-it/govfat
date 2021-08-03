@@ -18,6 +18,19 @@
 
 	<dependencies>
 		<dependency>
+                        <groupId>org.bouncycastle</groupId>
+                        <artifactId>bcprov-ext-jdk15on</artifactId>
+			<version>1.52</version>
+			<scope>provided</scope>
+                </dependency>
+                <dependency>
+                        <groupId>org.bouncycastle</groupId>
+                        <artifactId>bcpkix-jdk15on</artifactId>
+                        <version>1.52</version>
+                        <scope>provided</scope>
+                </dependency>
+
+		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.5.2</version>

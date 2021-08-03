@@ -20,9 +20,15 @@
  */
 package org.govmix.proxy.fatturapa.web.api;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Map.Entry;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
@@ -50,6 +56,7 @@ import org.govmix.proxy.fatturapa.web.commons.riceviNotificaDT.RiceviNotifica;
 import org.govmix.proxy.fatturapa.web.commons.ricevicomunicazionesdi.RiceviComunicazioneSdI;
 import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
+import org.openspcoop2.utils.Utilities;
 
 public class EndpointPdDImpl implements EndpointPdD {
 
@@ -70,28 +77,6 @@ public class EndpointPdDImpl implements EndpointPdD {
 		
 		this.log.info("Info versione: " + CommonsProperties.getInstance(log).getInfoVersione());
 	}
-
-	private boolean isSPCoop(HttpHeaders headers) throws Exception {
-		CommonsProperties instance = CommonsProperties.getInstance(log);
-		if(!headers.getRequestHeaders().keySet().isEmpty()) {
-			
-			this.log.debug("Discriminator header: " + instance.getDiscriminatorHeaderNameSPCoop());
-			this.log.debug("Discriminator value: " + instance.getDiscriminatorHeaderValueSPCoop());
-			this.log.debug("Headers: ");
-			for(String header : headers.getRequestHeaders().keySet()){
-				this.log.debug(header + ": " + headers.getRequestHeaders().getFirst(header));
-				if(header.equalsIgnoreCase(instance.getDiscriminatorHeaderNameSPCoop())) {
-					this.log.debug("Discriminator : " + header + ": " + headers.getRequestHeaders().getFirst(header));
-					boolean isSPCoop = headers.getRequestHeaders().getFirst(header).equals(instance.getDiscriminatorHeaderValueSPCoop());
-					this.log.debug("Is SPCoop: " + isSPCoop);
-
-					return isSPCoop;
-				}
-			}
-		}
-		return false;
-	}
-
 
 	@Override
 	public Response postRiceviLotto(String formatoFatturaPA,
@@ -138,6 +123,7 @@ public class EndpointPdDImpl implements EndpointPdD {
 			return Response.status(500).build();
 		}
 
+		byte[] fatturaBytes = null;
 		try {
 			IdLotto idLotto = lottoBD.newIdLotto();
 			idLotto.setIdentificativoSdi(identificativoSDI);
@@ -147,11 +133,12 @@ public class EndpointPdDImpl implements EndpointPdD {
 				
 				String idEgov = getIdEgov(headers);
 
+				fatturaBytes = Utilities.getAsByteArray(fatturaStream);
 				ConsegnaFatturaParameters params = ConsegnaFatturaUtils.getParameters(identificativoSDI, nomeFile,
 						formatoArchivioInvioFatturaString, formatoArchivioBase64,
 						messageId,
 						false,
-						fatturaStream, this.log);
+						fatturaBytes, this.log);
 
 				try {
 					params.validate(true);
@@ -211,11 +198,98 @@ public class EndpointPdDImpl implements EndpointPdD {
 			
 		} catch(Exception e) {
 			this.log.error("riceviLotto completata con errore per il lotto con identificativo SdI ["+identificativoSDI+"]:"+ e.getMessage(), e);
+			saveLotto(identificativoSDIString, fatturaBytes, headers);
 			return Response.status(500).build();
 		}
 
 		this.log.info("riceviLotto completata con successo per il lotto con identificativo SdI ["+identificativoSDI+"]");
 		return Response.ok().build();
+	}
+
+	private void saveLotto(String identificativoSDIString, byte[] fattura, HttpHeaders headers) {
+		
+		this.log.info("Lotto non inserito sul DB, salvataggio sul filesystem in corso...");
+		try {
+			String idfattura = identificativoSDIString!= null ? identificativoSDIString : new SimpleDateFormat("yyyyMMddhhmm").format(new Date());
+			String root = WebApiProperties.getInstance().getExternalResourcePath() + File.separator +  "log";
+			String pathFattura = root + File.separator + idfattura + ".fattura";
+			String pathHeaders = root + File.separator + idfattura + ".headers";
+			if(fattura != null) {
+				FileOutputStream fos = null;
+				try {
+					this.log.info("Salvataggio fattura nel file ["+pathFattura+"] in corso...");
+		
+					fos = new FileOutputStream(pathFattura);
+					fos.write(fattura);
+					this.log.info("Salvataggio fattura nel file ["+pathFattura+"] completato");
+				} catch(Exception e) {
+					this.log.error("Errore durante il salvataggio fattura nel file ["+pathFattura+"]: " + e.getMessage(), e);
+				} finally {
+					if(fos!=null) {
+						try {fos.flush();} catch (IOException e) {}
+					}
+					if(fos!=null) {
+						try {fos.close();} catch (IOException e) {}
+					}
+				}
+			} else {
+				this.log.info("Salvataggio fattura non effettuato, tracciato null");
+			}
+			
+			if(headers != null) {
+				FileOutputStream fos2 = null;
+				try {
+					this.log.info("Salvataggio header nel file ["+pathHeaders+"] in corso...");
+		
+					fos2 = new FileOutputStream(pathHeaders);
+					StringBuffer sb = new StringBuffer();
+					
+					for(Entry<String, List<String>> header: headers.getRequestHeaders().entrySet()) {
+						if(sb.length() > 0) {
+							sb.append("\n");
+						}
+						sb.append(header.getKey()).append("->");
+						StringBuffer sbValue = new StringBuffer();
+						for(String value: header.getValue()) {
+							if(sbValue.length() > 0) {
+								sbValue.append(",");
+							}
+							sbValue.append(value);
+						}
+						sb.append(sbValue);
+					}
+					
+					fos2.write(sb.toString().getBytes());
+					this.log.info("Salvataggio header nel file ["+pathHeaders+"] completato");
+				} catch(Exception e) {
+					this.log.error("Errore durante il salvataggio header nel file ["+pathHeaders+"]: " + e.getMessage(), e);
+				} finally {
+					if(fos2!=null) {
+						try {fos2.flush();} catch (IOException e) {}
+					}
+					if(fos2!=null) {
+						try {fos2.close();} catch (IOException e) {}
+					}
+				}
+			} else {
+				this.log.info("Salvataggio header non effettuato, header null");
+			}
+			this.log.info("Lotto non inserito sul DB, salvataggio sul filesystem completato");
+		} catch(Exception e) {
+			this.log.error("Errore durante il salvataggio sul filesystem di un lotto non inserito nel DB: " + e.getMessage(), e);
+		}
+	}
+
+	private boolean isSPCoop(HttpHeaders headers) throws Exception {
+		CommonsProperties instance = CommonsProperties.getInstance(log);
+		if(!headers.getRequestHeaders().keySet().isEmpty()) {
+			for(String header : headers.getRequestHeaders().keySet()){
+				if(header.equalsIgnoreCase(instance.getDiscriminatorHeaderNameSPCoop())) {
+					return headers.getRequestHeaders().getFirst(header).equals(instance.getDiscriminatorHeaderValueSPCoop());
+				}
+			}
+		}
+		return false;
 	}
 
 	private String getIdEgov(HttpHeaders headers) throws Exception {
