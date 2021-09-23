@@ -1,17 +1,12 @@
 package org.govmix.fatturapa.parer.builder;
 
+import org.apache.log4j.Logger;
 import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaPassivaInput;
-import org.govmix.fatturapa.parer.versamento.request.ChiaveType;
 import org.govmix.fatturapa.parer.versamento.request.ComponenteType;
-import org.govmix.fatturapa.parer.versamento.request.ConfigType;
 import org.govmix.fatturapa.parer.versamento.request.DocumentoCollegatoType;
-import org.govmix.fatturapa.parer.versamento.request.DocumentoCollegatoType.DocumentoCollegato;
 import org.govmix.fatturapa.parer.versamento.request.DocumentoType;
 import org.govmix.fatturapa.parer.versamento.request.StrutturaType;
 import org.govmix.fatturapa.parer.versamento.request.StrutturaType.Componenti;
-import org.govmix.fatturapa.parer.versamento.request.TipoConservazioneType;
-
-import org.apache.log4j.Logger;
 
 public class FatturaPassivaMultiplaUnitaDocumentariaBuilder extends
 		AbstractFatturaPassivaUnitaDocumentariaBuilder {

@@ -14,8 +14,8 @@ import org.govmix.fatturapa.parer.versamento.request.ComponenteType;
 import org.govmix.fatturapa.parer.versamento.request.DocumentoType;
 import org.govmix.fatturapa.parer.versamento.request.ProfiloUnitaDocumentariaType;
 import org.govmix.fatturapa.parer.versamento.request.StrutturaType;
-import org.govmix.fatturapa.parer.versamento.request.TipoSupportoType;
 import org.govmix.fatturapa.parer.versamento.request.StrutturaType.Componenti;
+import org.govmix.fatturapa.parer.versamento.request.TipoSupportoType;
 import org.govmix.proxy.fatturapa.orm.Ente;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
@@ -23,17 +23,17 @@ import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 
 public abstract class AbstractFatturaPassivaUnitaDocumentariaBuilder extends BaseAbstractFatturaPassivaUnitaDocumentariaBuilder{
 
-	private List<Integer> lstFattureSenzaDenominazioneMittente;
-	private List<Integer> lstFattureConDataInChiave;
+	private List<Long> lstFattureSenzaDenominazioneMittente;
+	private List<Long> lstFattureConDataInChiave;
 	public AbstractFatturaPassivaUnitaDocumentariaBuilder(Logger log) {
 		super(log);
-		this.lstFattureSenzaDenominazioneMittente = new ArrayList<Integer>();
-		this.lstFattureSenzaDenominazioneMittente.add(17563421);
-		this.lstFattureSenzaDenominazioneMittente.add(25345733);
+		this.lstFattureSenzaDenominazioneMittente = new ArrayList<Long>();
+		this.lstFattureSenzaDenominazioneMittente.add(17563421l);
+		this.lstFattureSenzaDenominazioneMittente.add(25345733l);
 		
-		this.lstFattureConDataInChiave = new ArrayList<Integer>();
-		this.lstFattureConDataInChiave.add(38414974);
-		this.lstFattureConDataInChiave.add(38798942);
+		this.lstFattureConDataInChiave = new ArrayList<Long>();
+		this.lstFattureConDataInChiave.add(38414974l);
+		this.lstFattureConDataInChiave.add(38798942l);
 	}
 
 	@Override
@@ -104,16 +104,30 @@ public abstract class AbstractFatturaPassivaUnitaDocumentariaBuilder extends Bas
 	protected String getTipoDocumento(UnitaDocumentariaFatturaPassivaInput input) {
 		switch(input.getFattura().getTipoDocumento()){
 		case TD01: return "FATTURA";
-		case TD02:return "ACCONTO/ANTICIPO SU FATTURA";
-		case TD03:return "ACCONTO/ANTICIPO SU PARCELLA";
-		case TD04:return "NOTA DI CREDITO";
-		case TD05:return "NOTA DI DEBITO";
-		case TD06:return "PARCELLA";
-		case TD20:return "AUTOFATTURA";
-		default:return null;
+		case TD02: return "ACCONTO/ANTICIPO SU FATTURA";
+		case TD03: return "ACCONTO/ANTICIPO SU PARCELLA";
+		case TD04: return "NOTA DI CREDITO";
+		case TD05: return "NOTA DI DEBITO";
+		case TD06: return "PARCELLA";
+		case TD16: return "INTEGRAZIONE FATTURA REVERSE CHARGE INTERNO";
+		case TD17: return "INTEGRAZIONE/AUTOFATTURA PER ACQUISTO SERVIZI DALL'ESTERO";
+		case TD18: return "INTEGRAZIONE PER ACQUISTO DI BENI INTRACOMUNITARI";
+		case TD19: return "INTEGRAZIONE/AUTOFATTURA PER ACQUISTO DI BENI EX ART.17";
+		case TD20: return "AUTOFATTURA";
+		case TD21: return "AUTOFATTURA PER SPLAFONAMENTO";
+		case TD22: return "ESTRAZIONE BENI DA DEPOSITO IVA";
+		case TD23: return "ESTRAZIONE BENI DA DEPOSITO IVA CON VERSAMENTO DELL'IVA";
+		case TD24: return "FATTURA DIFFERITA DI CUI ALL'ART. 21 4A)";
+		case TD25: return "FATTURA DIFFERITA DI CUI ALL'ART. 21 4B)";
+		case TD26: return "CESSIONE DI BENI AMMORTIZZABILI E PER PASSAGGI INTERNI";
+		case TD27: return "FATTURA PER AUTOCONSUMO/CESSIONI GRATUITE";
+		case TDXX:
+			break;
 		}
+
+		return null;
 	}
-	
+
 	@Override
 	protected List<DocumentoWrapper> getAnnessi(UnitaDocumentariaFatturaPassivaInput input) throws Exception {
 
