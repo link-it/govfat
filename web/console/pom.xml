@@ -348,23 +348,4 @@
 		</plugins>
 	</build>
 
-	<repositories>
-		<repository>
-			<id>jboss-releases</id>
-			<url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
-		</repository>
-		<repository>
-			<id>jboss-thirdparty-releases</id>
-			<url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/</url>
-		</repository>
-		<repository>
-			<id>openspcoop2-releases</id>
-			<url>http://maven.openspcoop.org/content/repositories/public/</url>
-		</repository>
-		<repository>
-			<id>openspcoop2-snapshot</id>
-			<url>http://maven.openspcoop.org/content/repositories/snapshots/</url>
-		</repository>
-	</repositories>
-
 </project>

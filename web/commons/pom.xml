@@ -207,11 +207,11 @@
 	<repositories>
 		<repository>
 			<id>openspcoop2-releases</id>
-			<url>http://maven.openspcoop.org/content/repositories/public/</url>
+			<url>https://maven.ilink.it/content/repositories/public/</url>
 		</repository>
 		<repository>
 			<id>openspcoop2-snapshot</id>
-			<url>http://maven.openspcoop.org/content/repositories/snapshots/</url>
+			<url>http://maven.link.it/content/repositories/snapshots/</url>
 		</repository>
 	</repositories>
 
