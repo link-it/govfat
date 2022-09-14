@@ -2,8 +2,6 @@
 <!-- edited with XMLSPY v2004 rel. 3 U (http://www.xmlspy.com) by Silvestro (Silvestro) -->
 <xs:schema targetNamespace="http://www.tesoro.it/fatture" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.tesoro.it/fatture" version="1.0">
 	
-	<xs:import namespace="http://schemas.xmlsoap.org/soap/envelope/" schemaLocation="http://schemas.xmlsoap.org/soap/envelope/"/>
-	
 	<!-- ################################################################################ -->
 	<!-- ANNOTAZIONI PER VERSIONING (NON MODIFICARE)                                                                            -->
 	<!-- ################################################################################ -->
