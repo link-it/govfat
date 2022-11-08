@@ -24,7 +24,7 @@ package org.govmix.proxy.fatturapa.web.timers;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.rmi.PortableRemoteObject;
+//import javax.rmi.PortableRemoteObject;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
@@ -154,21 +154,21 @@ public class TimerStartup {
 		private List<TimerObject> initTimers(BatchProperties properties) throws Exception {
 			ArrayList<TimerObject> lst = new ArrayList<TimerObject>();
 			if(properties.isServerJ2EE()) {
-				GestoreJNDI jndi = null;
-				if(properties.getJndiContextTimerEJB()==null)
-					jndi = new GestoreJNDI();
-				else
-					jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
-
-				for(Object timerNameObject : properties.getJndiTimerEJBName().keySet()) {
-					String timerName = (String)timerNameObject;
-
-					log.debug("Init timer ejb ["+timerName+"]...");
-					if(this.lookupTimer(timerName, properties, jndi)) {
-						lst.add(createEJBTimer(timerName, properties));
-					}
-					log.debug("Init timer ejb ["+timerName+"] OK");
-				}
+//				GestoreJNDI jndi = null;
+//				if(properties.getJndiContextTimerEJB()==null)
+//					jndi = new GestoreJNDI();
+//				else
+//					jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
+//
+//				for(Object timerNameObject : properties.getJndiTimerEJBName().keySet()) {
+//					String timerName = (String)timerNameObject;
+//
+//					log.debug("Init timer ejb ["+timerName+"]...");
+//					if(this.lookupTimer(timerName, properties, jndi)) {
+//						lst.add(createEJBTimer(timerName, properties));
+//					}
+//					log.debug("Init timer ejb ["+timerName+"] OK");
+//				}
 			} else {
 				for(Object timerNameObject : properties.getJndiTimerEJBName().keySet()) {
 					String timerName = (String)timerNameObject;
@@ -183,38 +183,38 @@ public class TimerStartup {
 			return lst;
 		}
 
-		private TimerObject createEJBTimer(String timerName, BatchProperties properties) throws Exception {
-
-			IEJBTimer timer;
-			if(TimerConsegnaFattura.ID_MODULO.equals(timerName)){
-				timer = TimerStartup.createTimerConsegnaFattura(properties);
-			}else if(TimerConsegnaLotto.ID_MODULO.equals(timerName)){
-				timer = TimerStartup.createTimerConsegnaLotto(properties);
-			}else if(TimerAssociazioneProtocollo.ID_MODULO.equals(timerName)){
-				timer = TimerStartup.createTimerAssociaProtocollo(properties);
-			}else if(TimerConsegnaEsito.ID_MODULO.equals(timerName)){
-				timer = TimerStartup.createTimerConsegnaEsito(properties);
-			}else if(TimerInserimentoFattura.ID_MODULO.equals(timerName)){
-				timer = TimerStartup.createTimerInserimentoFattura(properties);
-			}else if(TimerAccettazioneFattura.ID_MODULO.equals(timerName)){
-				timer = TimerStartup.createTimerAccettazioneFattura(properties);
-			}else if(TimerWorkFlowFattura.ID_MODULO.equals(timerName)){
-				timer = TimerStartup.createTimerWorkFlowFattura(properties);
-			}else if(TimerSpedizioneFatturaAttiva.ID_MODULO.equals(timerName)){
-				timer = TimerStartup.createTimerSpedizioneFatturaAttiva(properties);
-			}else if(TimerProtocollazioneRicevuta.ID_MODULO.equals(timerName)){
-				timer = TimerStartup.createTimerProtocollazioneRicevuta(properties);
-			}else if(TimerSchedulingConservazione.ID_MODULO.equals(timerName)){
-				timer = TimerStartup.createTimerSchedulingConservazione(properties);
-			}else if(TimerInvioConservazione.ID_MODULO.equals(timerName)){
-				timer = TimerStartup.createTimerReinvioConservazione(properties);
-			} else {
-				return null;
-			}
-
-			return new EJBTimerObject(timer, properties.getTimers().get(timerName));
-
-		}
+//		private TimerObject createEJBTimer(String timerName, BatchProperties properties) throws Exception {
+//
+//			IEJBTimer timer;
+//			if(TimerConsegnaFattura.ID_MODULO.equals(timerName)){
+//				timer = TimerStartup.createTimerConsegnaFattura(properties);
+//			}else if(TimerConsegnaLotto.ID_MODULO.equals(timerName)){
+//				timer = TimerStartup.createTimerConsegnaLotto(properties);
+//			}else if(TimerAssociazioneProtocollo.ID_MODULO.equals(timerName)){
+//				timer = TimerStartup.createTimerAssociaProtocollo(properties);
+//			}else if(TimerConsegnaEsito.ID_MODULO.equals(timerName)){
+//				timer = TimerStartup.createTimerConsegnaEsito(properties);
+//			}else if(TimerInserimentoFattura.ID_MODULO.equals(timerName)){
+//				timer = TimerStartup.createTimerInserimentoFattura(properties);
+//			}else if(TimerAccettazioneFattura.ID_MODULO.equals(timerName)){
+//				timer = TimerStartup.createTimerAccettazioneFattura(properties);
+//			}else if(TimerWorkFlowFattura.ID_MODULO.equals(timerName)){
+//				timer = TimerStartup.createTimerWorkFlowFattura(properties);
+//			}else if(TimerSpedizioneFatturaAttiva.ID_MODULO.equals(timerName)){
+//				timer = TimerStartup.createTimerSpedizioneFatturaAttiva(properties);
+//			}else if(TimerProtocollazioneRicevuta.ID_MODULO.equals(timerName)){
+//				timer = TimerStartup.createTimerProtocollazioneRicevuta(properties);
+//			}else if(TimerSchedulingConservazione.ID_MODULO.equals(timerName)){
+//				timer = TimerStartup.createTimerSchedulingConservazione(properties);
+//			}else if(TimerInvioConservazione.ID_MODULO.equals(timerName)){
+//				timer = TimerStartup.createTimerReinvioConservazione(properties);
+//			} else {
+//				return null;
+//			}
+//
+//			return new EJBTimerObject(timer, properties.getTimers().get(timerName));
+//
+//		}
 
 		private TimerObject createThreadTimer(String timerName, BatchProperties properties) throws Exception {
 
@@ -310,215 +310,215 @@ public class TimerStartup {
 		}catch(Exception e){}
 	}
 
-	private static TimerConsegnaFattura createTimerConsegnaFattura(BatchProperties properties) throws Exception {
-
-		GestoreJNDI jndi = null;
-		if(properties.getJndiContextTimerEJB()==null)
-			jndi = new GestoreJNDI();
-		else
-			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
-
-		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerConsegnaFattura.ID_MODULO);
-		Object objref = jndi.lookup(nomeJNDI);
-		TimerConsegnaFatturaHome timerHome = 
-				(TimerConsegnaFatturaHome) PortableRemoteObject.narrow(objref,TimerConsegnaFatturaHome.class);
-		TimerConsegnaFattura timerDiServizio = timerHome.create();	
-
-		return timerDiServizio;
-
-
-	}
-
-	private static TimerInserimentoFattura createTimerInserimentoFattura(BatchProperties properties) throws Exception {
-
-		GestoreJNDI jndi = null;
-		if(properties.getJndiContextTimerEJB()==null)
-			jndi = new GestoreJNDI();
-		else
-			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
-
-		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerInserimentoFattura.ID_MODULO);
-		Object objref = jndi.lookup(nomeJNDI);
-		TimerInserimentoFatturaHome timerHome = 
-				(TimerInserimentoFatturaHome) PortableRemoteObject.narrow(objref,TimerInserimentoFatturaHome.class);
-		TimerInserimentoFattura timerDiServizio = timerHome.create();	
-
-		return timerDiServizio;
-
-
-	}
-
-	private static TimerAccettazioneFattura createTimerAccettazioneFattura(BatchProperties properties) throws Exception {
-
-		GestoreJNDI jndi = null;
-		if(properties.getJndiContextTimerEJB()==null)
-			jndi = new GestoreJNDI();
-		else
-			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
-
-		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerAccettazioneFattura.ID_MODULO);
-		Object objref = jndi.lookup(nomeJNDI);
-		TimerAccettazioneFatturaHome timerHome = 
-				(TimerAccettazioneFatturaHome) PortableRemoteObject.narrow(objref,TimerAccettazioneFatturaHome.class);
-		TimerAccettazioneFattura timerDiServizio = timerHome.create();	
-
-		return timerDiServizio;
-
-
-	}
-
-	private static TimerWorkFlowFattura createTimerWorkFlowFattura(BatchProperties properties) throws Exception {
-
-		GestoreJNDI jndi = null;
-		if(properties.getJndiContextTimerEJB()==null)
-			jndi = new GestoreJNDI();
-		else
-			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
-
-		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerWorkFlowFattura.ID_MODULO);
-		Object objref = jndi.lookup(nomeJNDI);
-		TimerWorkFlowFatturaHome timerHome = 
-				(TimerWorkFlowFatturaHome) PortableRemoteObject.narrow(objref,TimerWorkFlowFatturaHome.class);
-		TimerWorkFlowFattura timerDiServizio = timerHome.create();	
-
-		return timerDiServizio;
-
-
-	}
-
-	private static TimerSpedizioneFatturaAttiva createTimerSpedizioneFatturaAttiva(BatchProperties properties) throws Exception {
-
-		GestoreJNDI jndi = null;
-		if(properties.getJndiContextTimerEJB()==null)
-			jndi = new GestoreJNDI();
-		else
-			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
-
-		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerSpedizioneFatturaAttiva.ID_MODULO);
-		Object objref = jndi.lookup(nomeJNDI);
-		TimerSpedizioneFatturaAttivaHome timerHome = 
-				(TimerSpedizioneFatturaAttivaHome) PortableRemoteObject.narrow(objref,TimerSpedizioneFatturaAttivaHome.class);
-		TimerSpedizioneFatturaAttiva timerDiServizio = timerHome.create();	
-
-		return timerDiServizio;
-
-
-	}
-
-	private static TimerProtocollazioneRicevuta createTimerProtocollazioneRicevuta(BatchProperties properties) throws Exception {
-
-		GestoreJNDI jndi = null;
-		if(properties.getJndiContextTimerEJB()==null)
-			jndi = new GestoreJNDI();
-		else
-			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
-
-		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerProtocollazioneRicevuta.ID_MODULO);
-		Object objref = jndi.lookup(nomeJNDI);
-		TimerProtocollazioneRicevutaHome timerHome = 
-				(TimerProtocollazioneRicevutaHome) PortableRemoteObject.narrow(objref,TimerProtocollazioneRicevutaHome.class);
-		TimerProtocollazioneRicevuta timerDiServizio = timerHome.create();	
-
-		return timerDiServizio;
-
-
-	}
-
-	private static TimerConsegnaLotto createTimerConsegnaLotto(BatchProperties properties) throws Exception {
-
-		GestoreJNDI jndi = null;
-		if(properties.getJndiContextTimerEJB()==null)
-			jndi = new GestoreJNDI();
-		else
-			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
-
-		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerConsegnaLotto.ID_MODULO);
-		Object objref = jndi.lookup(nomeJNDI);
-		TimerConsegnaLottoHome timerHome = 
-				(TimerConsegnaLottoHome) PortableRemoteObject.narrow(objref,TimerConsegnaLottoHome.class);
-		TimerConsegnaLotto timerDiServizio = timerHome.create();	
-
-		return timerDiServizio;
-
-
-	}
-
-	private static TimerAssociazioneProtocollo createTimerAssociaProtocollo(BatchProperties properties) throws Exception {
-
-		GestoreJNDI jndi = null;
-		if(properties.getJndiContextTimerEJB()==null)
-			jndi = new GestoreJNDI();
-		else
-			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
-
-		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerAssociazioneProtocollo.ID_MODULO);
-		Object objref = jndi.lookup(nomeJNDI);
-		TimerAssociazioneProtocolloHome timerHome = 
-				(TimerAssociazioneProtocolloHome) PortableRemoteObject.narrow(objref,TimerAssociazioneProtocolloHome.class);
-		TimerAssociazioneProtocollo timerDiServizio = timerHome.create();	
-
-		return timerDiServizio;
-
-
-	}
-
-	private static TimerSchedulingConservazione createTimerSchedulingConservazione(BatchProperties properties) throws Exception {
-
-		GestoreJNDI jndi = null;
-		if(properties.getJndiContextTimerEJB()==null)
-			jndi = new GestoreJNDI();
-		else
-			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
-
-		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerSchedulingConservazione.ID_MODULO);
-		Object objref = jndi.lookup(nomeJNDI);
-		TimerSchedulingConservazioneHome timerHome = 
-				(TimerSchedulingConservazioneHome) PortableRemoteObject.narrow(objref,TimerSchedulingConservazioneHome.class);
-		TimerSchedulingConservazione timerDiServizio = timerHome.create();	
-
-		return timerDiServizio;
-
-
-	}
-
-	private static TimerInvioConservazione createTimerReinvioConservazione(BatchProperties properties) throws Exception {
-
-		GestoreJNDI jndi = null;
-		if(properties.getJndiContextTimerEJB()==null)
-			jndi = new GestoreJNDI();
-		else
-			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
-
-		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerInvioConservazione.ID_MODULO);
-		Object objref = jndi.lookup(nomeJNDI);
-		TimerInvioConservazioneHome timerHome = 
-				(TimerInvioConservazioneHome) PortableRemoteObject.narrow(objref,TimerInvioConservazioneHome.class);
-		TimerInvioConservazione timerDiServizio = timerHome.create();	
-
-		return timerDiServizio;
-
-
-	}
-
-	private static TimerConsegnaEsito createTimerConsegnaEsito(BatchProperties properties) throws Exception {
-
-		GestoreJNDI jndi = null;
-		if(properties.getJndiContextTimerEJB()==null)
-			jndi = new GestoreJNDI();
-		else
-			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
-
-		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerConsegnaEsito.ID_MODULO);
-		Object objref = jndi.lookup(nomeJNDI);
-		TimerConsegnaEsitoHome timerHome = 
-				(TimerConsegnaEsitoHome) PortableRemoteObject.narrow(objref,TimerConsegnaEsitoHome.class);
-		TimerConsegnaEsito timerDiServizio = timerHome.create();	
-
-		return timerDiServizio;
-
-
-	}
-
+//	private static TimerConsegnaFattura createTimerConsegnaFattura(BatchProperties properties) throws Exception {
+//
+//		GestoreJNDI jndi = null;
+//		if(properties.getJndiContextTimerEJB()==null)
+//			jndi = new GestoreJNDI();
+//		else
+//			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
+//
+//		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerConsegnaFattura.ID_MODULO);
+//		Object objref = jndi.lookup(nomeJNDI);
+//		TimerConsegnaFatturaHome timerHome = 
+//				(TimerConsegnaFatturaHome) PortableRemoteObject.narrow(objref,TimerConsegnaFatturaHome.class);
+//		TimerConsegnaFattura timerDiServizio = timerHome.create();	
+//
+//		return timerDiServizio;
+//
+//
+//	}
+//
+//	private static TimerInserimentoFattura createTimerInserimentoFattura(BatchProperties properties) throws Exception {
+//
+//		GestoreJNDI jndi = null;
+//		if(properties.getJndiContextTimerEJB()==null)
+//			jndi = new GestoreJNDI();
+//		else
+//			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
+//
+//		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerInserimentoFattura.ID_MODULO);
+//		Object objref = jndi.lookup(nomeJNDI);
+//		TimerInserimentoFatturaHome timerHome = 
+//				(TimerInserimentoFatturaHome) PortableRemoteObject.narrow(objref,TimerInserimentoFatturaHome.class);
+//		TimerInserimentoFattura timerDiServizio = timerHome.create();	
+//
+//		return timerDiServizio;
+//
+//
+//	}
+//
+//	private static TimerAccettazioneFattura createTimerAccettazioneFattura(BatchProperties properties) throws Exception {
+//
+//		GestoreJNDI jndi = null;
+//		if(properties.getJndiContextTimerEJB()==null)
+//			jndi = new GestoreJNDI();
+//		else
+//			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
+//
+//		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerAccettazioneFattura.ID_MODULO);
+//		Object objref = jndi.lookup(nomeJNDI);
+//		TimerAccettazioneFatturaHome timerHome = 
+//				(TimerAccettazioneFatturaHome) PortableRemoteObject.narrow(objref,TimerAccettazioneFatturaHome.class);
+//		TimerAccettazioneFattura timerDiServizio = timerHome.create();	
+//
+//		return timerDiServizio;
+//
+//
+//	}
+//
+//	private static TimerWorkFlowFattura createTimerWorkFlowFattura(BatchProperties properties) throws Exception {
+//
+//		GestoreJNDI jndi = null;
+//		if(properties.getJndiContextTimerEJB()==null)
+//			jndi = new GestoreJNDI();
+//		else
+//			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
+//
+//		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerWorkFlowFattura.ID_MODULO);
+//		Object objref = jndi.lookup(nomeJNDI);
+//		TimerWorkFlowFatturaHome timerHome = 
+//				(TimerWorkFlowFatturaHome) PortableRemoteObject.narrow(objref,TimerWorkFlowFatturaHome.class);
+//		TimerWorkFlowFattura timerDiServizio = timerHome.create();	
+//
+//		return timerDiServizio;
+//
+//
+//	}
+//
+//	private static TimerSpedizioneFatturaAttiva createTimerSpedizioneFatturaAttiva(BatchProperties properties) throws Exception {
+//
+//		GestoreJNDI jndi = null;
+//		if(properties.getJndiContextTimerEJB()==null)
+//			jndi = new GestoreJNDI();
+//		else
+//			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
+//
+//		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerSpedizioneFatturaAttiva.ID_MODULO);
+//		Object objref = jndi.lookup(nomeJNDI);
+//		TimerSpedizioneFatturaAttivaHome timerHome = 
+//				(TimerSpedizioneFatturaAttivaHome) PortableRemoteObject.narrow(objref,TimerSpedizioneFatturaAttivaHome.class);
+//		TimerSpedizioneFatturaAttiva timerDiServizio = timerHome.create();	
+//
+//		return timerDiServizio;
+//
+//
+//	}
+//
+//	private static TimerProtocollazioneRicevuta createTimerProtocollazioneRicevuta(BatchProperties properties) throws Exception {
+//
+//		GestoreJNDI jndi = null;
+//		if(properties.getJndiContextTimerEJB()==null)
+//			jndi = new GestoreJNDI();
+//		else
+//			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
+//
+//		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerProtocollazioneRicevuta.ID_MODULO);
+//		Object objref = jndi.lookup(nomeJNDI);
+//		TimerProtocollazioneRicevutaHome timerHome = 
+//				(TimerProtocollazioneRicevutaHome) PortableRemoteObject.narrow(objref,TimerProtocollazioneRicevutaHome.class);
+//		TimerProtocollazioneRicevuta timerDiServizio = timerHome.create();	
+//
+//		return timerDiServizio;
+//
+//
+//	}
+//
+//	private static TimerConsegnaLotto createTimerConsegnaLotto(BatchProperties properties) throws Exception {
+//
+//		GestoreJNDI jndi = null;
+//		if(properties.getJndiContextTimerEJB()==null)
+//			jndi = new GestoreJNDI();
+//		else
+//			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
+//
+//		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerConsegnaLotto.ID_MODULO);
+//		Object objref = jndi.lookup(nomeJNDI);
+//		TimerConsegnaLottoHome timerHome = 
+//				(TimerConsegnaLottoHome) PortableRemoteObject.narrow(objref,TimerConsegnaLottoHome.class);
+//		TimerConsegnaLotto timerDiServizio = timerHome.create();	
+//
+//		return timerDiServizio;
+//
+//
+//	}
+//
+//	private static TimerAssociazioneProtocollo createTimerAssociaProtocollo(BatchProperties properties) throws Exception {
+//
+//		GestoreJNDI jndi = null;
+//		if(properties.getJndiContextTimerEJB()==null)
+//			jndi = new GestoreJNDI();
+//		else
+//			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
+//
+//		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerAssociazioneProtocollo.ID_MODULO);
+//		Object objref = jndi.lookup(nomeJNDI);
+//		TimerAssociazioneProtocolloHome timerHome = 
+//				(TimerAssociazioneProtocolloHome) PortableRemoteObject.narrow(objref,TimerAssociazioneProtocolloHome.class);
+//		TimerAssociazioneProtocollo timerDiServizio = timerHome.create();	
+//
+//		return timerDiServizio;
+//
+//
+//	}
+//
+//	private static TimerSchedulingConservazione createTimerSchedulingConservazione(BatchProperties properties) throws Exception {
+//
+//		GestoreJNDI jndi = null;
+//		if(properties.getJndiContextTimerEJB()==null)
+//			jndi = new GestoreJNDI();
+//		else
+//			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
+//
+//		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerSchedulingConservazione.ID_MODULO);
+//		Object objref = jndi.lookup(nomeJNDI);
+//		TimerSchedulingConservazioneHome timerHome = 
+//				(TimerSchedulingConservazioneHome) PortableRemoteObject.narrow(objref,TimerSchedulingConservazioneHome.class);
+//		TimerSchedulingConservazione timerDiServizio = timerHome.create();	
+//
+//		return timerDiServizio;
+//
+//
+//	}
+//
+//	private static TimerInvioConservazione createTimerReinvioConservazione(BatchProperties properties) throws Exception {
+//
+//		GestoreJNDI jndi = null;
+//		if(properties.getJndiContextTimerEJB()==null)
+//			jndi = new GestoreJNDI();
+//		else
+//			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
+//
+//		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerInvioConservazione.ID_MODULO);
+//		Object objref = jndi.lookup(nomeJNDI);
+//		TimerInvioConservazioneHome timerHome = 
+//				(TimerInvioConservazioneHome) PortableRemoteObject.narrow(objref,TimerInvioConservazioneHome.class);
+//		TimerInvioConservazione timerDiServizio = timerHome.create();	
+//
+//		return timerDiServizio;
+//
+//
+//	}
+//
+//	private static TimerConsegnaEsito createTimerConsegnaEsito(BatchProperties properties) throws Exception {
+//
+//		GestoreJNDI jndi = null;
+//		if(properties.getJndiContextTimerEJB()==null)
+//			jndi = new GestoreJNDI();
+//		else
+//			jndi = new GestoreJNDI(properties.getJndiContextTimerEJB());
+//
+//		String nomeJNDI = properties.getJndiTimerEJBName().get(TimerConsegnaEsito.ID_MODULO);
+//		Object objref = jndi.lookup(nomeJNDI);
+//		TimerConsegnaEsitoHome timerHome = 
+//				(TimerConsegnaEsitoHome) PortableRemoteObject.narrow(objref,TimerConsegnaEsitoHome.class);
+//		TimerConsegnaEsito timerDiServizio = timerHome.create();	
+//
+//		return timerDiServizio;
+//
+//
+//	}
+//
 
 
 }

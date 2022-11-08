@@ -18,7 +18,7 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
-import org.apache.geronimo.mail.util.Hex;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 import org.govmix.fatturapa.parer.beans.AbstractUnitaDocumentariaInput;
 import org.govmix.fatturapa.parer.beans.DocumentoWrapper;
@@ -138,7 +138,7 @@ public abstract class AbstractUnitaDocumentariaBuilder <T extends AbstractUnitaD
 	private static final String ALGORITHM = "SHA-1";
 
 	private void setHash(DocumentoType doc, byte[] raw) throws Exception {
-		String hash = new String(Hex.encode(MessageDigest.getInstance(ALGORITHM).digest(raw)));
+		String hash = new String(new Hex().encode(MessageDigest.getInstance(ALGORITHM).digest(raw)));
 		doc.getStrutturaOriginale().getComponenti().getComponente().get(0).setHashVersato(hash);
 	}
 	private JAXBElement<DatiSpecificiType> getDatiSpecificiJAXB(T input) {

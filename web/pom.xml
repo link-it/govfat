@@ -32,11 +32,11 @@
 
 	<properties>
 		<rel-to-parent>.</rel-to-parent>
-		<javaVersion>1.6</javaVersion>
+		<javaVersion>11</javaVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<openspcoop2.version>2.3.8.4</openspcoop2.version>
 		<openspcoop2.sdi.version>12429p1</openspcoop2.sdi.version>
-		<cxf.version>2.7.11</cxf.version>
+		<cxf.version>3.5.0</cxf.version>
         <richfaces.version>3.3.4.Final</richfaces.version>
         <jboss.home>/var/lib/jbossas-7.1.1.Final</jboss.home>
         <spring.version>3.2.3.RELEASE</spring.version>
