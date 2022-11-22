@@ -37,7 +37,7 @@ public abstract class BaseAbstractFatturaPassivaUnitaDocumentariaBuilder extends
 			for(NotificaEsitoCommittente nec: input.getNotificaEC()) {
 				if(nec.getXml() != null) {
 					DocumentoType annessoNEC = new DocumentoType();
-					String idDocumentoNotificaEC = 	nec.getIdFattura().getIdentificativoSdi() + "_" +nec.getIdFattura().getPosizione() + "_EC"+index;
+					String idDocumentoNotificaEC = 	nec.getIdFattura().getId() + "_EC"+index;
 					annessoNEC.setIDDocumento(idDocumentoNotificaEC);
 
 					annessoNEC.setTipoDocumento("NOTIFICA DI ESITO COMMITTENTE");
@@ -64,7 +64,7 @@ public abstract class BaseAbstractFatturaPassivaUnitaDocumentariaBuilder extends
 					//SCARTO
 					if(nec.getScartoXml() != null) {
 						DocumentoType annessoSEC = new DocumentoType();
-						String idDocumentoScarto = 	nec.getIdFattura().getIdentificativoSdi() + "_" +nec.getIdFattura().getPosizione() + "_EC_SC"+(index-1);
+						String idDocumentoScarto = 	nec.getIdFattura().getId()+ "_EC_SC"+(index-1);
 						annessoSEC.setIDDocumento(idDocumentoScarto);
 
 						annessoSEC.setTipoDocumento("SCARTO ESITO COMMITTENTE");
@@ -95,7 +95,7 @@ public abstract class BaseAbstractFatturaPassivaUnitaDocumentariaBuilder extends
 		}
 		if(input.getNotificaDT() != null) {
 			DocumentoType annessoNDT = new DocumentoType();
-			String idDocumentoNotificaDT = input.getNotificaDT().getIdentificativoSdi() + "_DT"; 
+			String idDocumentoNotificaDT = input.getNotificaDT().getId() + "_DT"; 
 			annessoNDT.setIDDocumento(idDocumentoNotificaDT);
 
 			annessoNDT.setTipoDocumento("NOTIFICA DI DECORRENZA DEI TERMINI");
@@ -140,7 +140,7 @@ public abstract class BaseAbstractFatturaPassivaUnitaDocumentariaBuilder extends
 			for(AllegatoFattura allegatoInput: input.getAllegati()) {
 				if(allegatoInput.getAttachment() != null && allegatoInput.getAttachment().length > 0) {
 					DocumentoType allegato = new DocumentoType();
-					String idDocumentoAllegato = input.getFattura().getNomeFile() + "_ALL"+index;
+					String idDocumentoAllegato = input.getFattura().getId() + "_ALL"+index;
 					allegato.setIDDocumento(idDocumentoAllegato);
 	
 					allegato.setTipoDocumento("GENERICO");

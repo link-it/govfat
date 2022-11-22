@@ -98,7 +98,7 @@ public class LottoFattureUnitaDocumentariaBuilder extends AbstractUnitaDocumenta
 	protected DocumentoType getDocumentoPrincipale(
 			UnitaDocumentariaLottoInput input) {
 		DocumentoType documentoPricipale = new DocumentoType();
-		String idDocumentoLotto = input.getLotto().getIdentificativoSdi() + "";
+		String idDocumentoLotto = input.getLotto().getId() + "";
 		documentoPricipale.setIDDocumento(idDocumentoLotto);
 		
 		documentoPricipale.setTipoDocumento("LOTTO DI FATTURE");

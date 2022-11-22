@@ -46,7 +46,7 @@ public class FatturaAttivaMultiplaUnitaDocumentariaBuilder extends
 	protected DocumentoType getDocumentoPrincipale(UnitaDocumentariaFatturaAttivaInput input) {
 
 		DocumentoType documentoPricipale = new DocumentoType();
-		String idDocumento = input.getFattura().getNumero();
+		String idDocumento = input.getFattura().getId() + "";
 		documentoPricipale.setIDDocumento(idDocumento);
 
 		documentoPricipale.setTipoDocumento(this.getTipoDocumento(input));		

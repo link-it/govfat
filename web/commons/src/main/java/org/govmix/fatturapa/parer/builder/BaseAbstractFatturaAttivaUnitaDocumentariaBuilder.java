@@ -68,15 +68,7 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 				
 				if(add) {
 					DocumentoType annesso = new DocumentoType();
-					StringBuilder sb = new StringBuilder();
-					sb.append(traccia.getIdentificativoSdi()).append("_");
-					
-					if(traccia.getPosizione() != null)
-						sb.append(traccia.getPosizione()).append("_");
-					
-					sb.append(traccia.get_value_tipoComunicazione()).append(index);
-					
-					String idDocumentoAnnesso = sb.toString();
+					String idDocumentoAnnesso = traccia.getId() + "";
 					
 					annesso.setIDDocumento(idDocumentoAnnesso);
 					annesso.setTipoDocumento(this.getTipoComunicazione(traccia.getTipoComunicazione()));
@@ -147,7 +139,7 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 			for(AllegatoFattura allegatoInput: input.getAllegati()) {
 				if(allegatoInput.getAttachment() != null && allegatoInput.getAttachment().length > 0) {
 					DocumentoType allegato = new DocumentoType();
-					String idDocumentoAllegato = input.getFattura().getNomeFile() + "_ALL"+index;
+					String idDocumentoAllegato = input.getFattura().getId() + "_ALL"+index;
 					allegato.setIDDocumento(idDocumentoAllegato);
 	
 					allegato.setTipoDocumento("GENERICO");
