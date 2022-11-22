@@ -58,7 +58,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Fattura", propOrder = {
+@XmlType(name = "FatturaProtocollata", propOrder = {
     "idSDI",
     "posizione",
     "annoProtocollo",

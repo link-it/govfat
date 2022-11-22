@@ -57,7 +57,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "listaFattureNonConsegnateResponse", propOrder = {
+@XmlType(name = "ListaFattureProtocollateNonConsegnateResponse", propOrder = {
     "fattura"
 })
 @XmlRootElement
