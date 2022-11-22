@@ -124,7 +124,6 @@ public class RecuperaFatture {
 		
 		FatturaPassivaFilter filter = this.fatturaPassivaBD.newFilter();
 		filter.setUtente(utente);
-		filter.setModalitaPush(false);
 		filter.setStatiConsegna(Arrays.asList(StatoConsegnaType.CONSEGNATA));
 		filter.setProtocolloNull(false);
 		filter.setConsegnataSap(false);
