@@ -59,7 +59,9 @@ public class FatturaElettronicaFetch extends AbstractJDBCFetch {
 				setParameter(object, "setIdentificativoSdi", FatturaElettronica.model().IDENTIFICATIVO_SDI.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "identificativo_sdi", FatturaElettronica.model().IDENTIFICATIVO_SDI.getFieldType()));
 				setParameter(object, "setFatturazioneAttiva", FatturaElettronica.model().FATTURAZIONE_ATTIVA.getFieldType(),
-					jdbcParameterUtilities.readParameter(rs, "fatturazione_attiva", FatturaElettronica.model().FATTURAZIONE_ATTIVA.getFieldType()));
+						jdbcParameterUtilities.readParameter(rs, "fatturazione_attiva", FatturaElettronica.model().FATTURAZIONE_ATTIVA.getFieldType()));
+				setParameter(object, "setConsegnataSap", FatturaElettronica.model().CONSEGNATA_SAP.getFieldType(),
+						jdbcParameterUtilities.readParameter(rs, "consegnata_sap", FatturaElettronica.model().CONSEGNATA_SAP.getFieldType()));
 				setParameter(object, "setDataRicezione", FatturaElettronica.model().DATA_RICEZIONE.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "data_ricezione", FatturaElettronica.model().DATA_RICEZIONE.getFieldType()));
 				setParameter(object, "setNomeFile", FatturaElettronica.model().NOME_FILE.getFieldType(),
@@ -245,7 +247,9 @@ public class FatturaElettronicaFetch extends AbstractJDBCFetch {
 				setParameter(object, "setIdentificativoSdi", FatturaElettronica.model().IDENTIFICATIVO_SDI.getFieldType(),
 					this.getObjectFromMap(map,"identificativoSdi"));
 				setParameter(object, "setFatturazioneAttiva", FatturaElettronica.model().FATTURAZIONE_ATTIVA.getFieldType(),
-					this.getObjectFromMap(map,"fatturazioneAttiva"));
+						this.getObjectFromMap(map,"fatturazioneAttiva"));
+				setParameter(object, "setConsegnataSap", FatturaElettronica.model().CONSEGNATA_SAP.getFieldType(),
+						this.getObjectFromMap(map,"consegnataSap"));
 				setParameter(object, "setDataRicezione", FatturaElettronica.model().DATA_RICEZIONE.getFieldType(),
 					this.getObjectFromMap(map,"dataRicezione"));
 				setParameter(object, "setNomeFile", FatturaElettronica.model().NOME_FILE.getFieldType(),

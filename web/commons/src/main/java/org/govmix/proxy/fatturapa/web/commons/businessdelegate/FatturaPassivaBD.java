@@ -250,6 +250,21 @@ public class FatturaPassivaBD extends FatturaBD {
 		}
 	}
 
+	public void updateConsegnataSAP(IdFattura idFattura, boolean consegnataSAP) throws Exception {
+		try {
+			List<UpdateField> lstFields = new ArrayList<UpdateField>();
+			lstFields.add(new UpdateField(FatturaElettronica.model().CONSEGNATA_SAP, consegnataSAP));
+			
+			this.service.updateFields(idFattura, lstFields.toArray(new UpdateField[]{}));
+		} catch (ServiceException e) {
+			this.log.error("Errore durante la updateConsegnataSAP: " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (NotImplementedException e) {
+			this.log.error("Errore durante la updateConsegnataSAP: " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+	}
+
 	public void updateStatoConsegna(FatturaElettronica fattura) throws Exception {
 		try {
 			List<UpdateField> lstFields = new ArrayList<UpdateField>();

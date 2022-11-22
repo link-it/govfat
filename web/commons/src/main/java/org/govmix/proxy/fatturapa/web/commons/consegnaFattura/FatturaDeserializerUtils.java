@@ -33,7 +33,7 @@ import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoInserimentoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
-import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
+import org.govmix.proxy.fatturapa.orm.utils.TipoDocumentoUtils;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.AbstractFatturaConverter;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FPA12Converter;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FatturaV10Converter;
@@ -116,6 +116,22 @@ public class FatturaDeserializerUtils {
 		params.setPosizioneFatturaPA(posizione);
 		
 		return params;
+	}
+	
+	public static boolean isFatturaPEC(FatturaElettronica fattura) throws Exception {
+		AbstractFatturaConverter<?> converter = null;
+		if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+			converter = new FatturaV10Converter(fattura.getXml(), null);
+		}else if(it.gov.fatturapa.sdi.fatturapa.v1_1.constants.FormatoTrasmissioneType.SDI11.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+			converter = new FatturaV11Converter(fattura.getXml(), null);
+		}else if(it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPA12.getValue().equals(fattura.getFormatoTrasmissione().getValue()) || 
+				it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.constants.FormatoTrasmissioneType.FPR12.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
+			converter = new FPA12Converter(fattura.getXml(), null);
+		} else {
+			throw new Exception("Formato FatturaPA ["+fattura.getFormatoTrasmissione()+"] non riconosciuto");
+		}
+		
+		return converter.isFatturaPEC();
 	}
 	
 	public static String getDenominazioneDestinatarioFromFattura(FatturaElettronica fattura) throws Exception {
@@ -390,7 +406,7 @@ public class FatturaDeserializerUtils {
 
 	public static List<DatiDocumentiCorrelatiType> getDatiFattureCollegate(FatturaElettronica fattura) throws Exception {
 		
-		if(fattura.getTipoDocumento().equals(TipoDocumentoType.TD04)) {
+		if(TipoDocumentoUtils.getInstance().isTipoNotaCredito(fattura)) {
 			
 			List<DatiDocumentiCorrelatiType> lst = new ArrayList<DatiDocumentiCorrelatiType>();
 			if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {

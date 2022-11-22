@@ -62,6 +62,7 @@ import org.openspcoop2.generic_project.web.input.TextArea;
 public class DipartimentoForm extends BaseForm implements Form,Serializable{
 
 
+	private static final String BOOL_PROP_TYPE_PREFIX = "bool_";
 	/**
 	 * 
 	 */
@@ -79,7 +80,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 
 	private SelectList<SelectItem> registro = null; 
 
-	private List<Text> properties = null;
+	private List<FormField<?>> properties = null;
 
 	private TextArea indirizziNotifica = null;
 
@@ -227,7 +228,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 			this.setField(this.codiceProcedimento);
 			this.setField(this.codiceProcedimentoB2B);
 			
-			this.properties = new ArrayList<Text>();
+			this.properties = new ArrayList<FormField<?>>();
 			
 			this.nomiPropertiesObbligatorie = ConsoleProperties.getInstance(LoggerManager.getConsoleLogger()).getListaNomiPropertiesDipartimentoObbligatorie();
 
@@ -259,7 +260,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		this._setFatturazioneAttiva();
 		this._abilitaRegistro();
 		
-		for (FormField<String> prop : this.properties) {
+		for (FormField<?> prop : this.properties) {
 			prop.reset();
 		}
 
@@ -327,14 +328,23 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 				}
 
 				this.properties.clear();
-				Text proprieta = null;
+				FormField<?> proprieta = null;
 				for (DipartimentoPropertyValue prop : bean.getDTO().getDipartimentoPropertyValueList()) {
-					proprieta = factory.getInputFieldFactory().createText();
+					if(prop.getIdProperty().getNome().startsWith(BOOL_PROP_TYPE_PREFIX)) {
+						proprieta = factory.getInputFieldFactory().createBooleanCheckBox();
+					} else {
+						proprieta = factory.getInputFieldFactory().createText();
+					}
 
 					proprieta.setRequired(mod && this.nomiPropertiesObbligatorie.contains(prop.getIdProperty().getNome())); 
 					proprieta.setLabel(prop.getIdProperty().getNome());
 					proprieta.setName("prop_" + prop.getIdProperty().getNome());
-					proprieta.setDefaultValue(prop.getValore());
+					
+					if(prop.getIdProperty().getNome().startsWith(BOOL_PROP_TYPE_PREFIX)) {
+						((BooleanCheckBox)proprieta).setDefaultValue(prop.getValore() != null && prop.getValore().equals("TRUE"));
+					} else {
+						((Text)proprieta).setDefaultValue(prop.getValore());
+					}
 
 					this.properties.add(proprieta);
 				}
@@ -424,13 +434,16 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 
 				String namePrefix = "prop_";
 				if(this.codice.getDefaultValue() == null){
-					Text proprieta = null;
+					FormField<?> proprieta = null;
 					for (DipartimentoProperty dipartimentoProperty : this.listaNomiProperties) {
-						proprieta = factory.getInputFieldFactory().createText();
+						if(dipartimentoProperty.getNome().startsWith(BOOL_PROP_TYPE_PREFIX)) {
+							proprieta = factory.getInputFieldFactory().createBooleanCheckBox();
+						} else {
+							proprieta = factory.getInputFieldFactory().createText();
+						}
 						proprieta.setRequired(false);
 						proprieta.setLabel(dipartimentoProperty.getLabel());
 						proprieta.setName(namePrefix + dipartimentoProperty.getNome());
-						proprieta.setDefaultValue(null);
 
 						this.properties.add(proprieta);
 					}
@@ -439,7 +452,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 					// Modifica, aggiorno solo la label (in questo momento coincide con il nome, in futuro puo' essere anche diversa)
 					for (DipartimentoProperty dipartimentoProperty : this.listaNomiProperties) {
 						boolean found = false;
-						for (FormField<String> proprieta : this.properties) {
+						for (FormField<?> proprieta : this.properties) {
 							//	if(proprieta.getLabel().equals(dipartimentoProperty.getLabel())){
 							if(proprieta.getName().equals(namePrefix+dipartimentoProperty.getNome())){
 								proprieta.setLabel(dipartimentoProperty.getLabel());
@@ -449,7 +462,12 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 						}
 
 						if(!found){
-							Text proprieta = factory.getInputFieldFactory().createText();
+							FormField<?> proprieta = null;
+							if(dipartimentoProperty.getNome().startsWith(BOOL_PROP_TYPE_PREFIX)) {
+								proprieta = factory.getInputFieldFactory().createBooleanCheckBox();
+							} else {
+								proprieta = factory.getInputFieldFactory().createText();
+							}
 							proprieta.setRequired(true);
 							proprieta.setLabel(dipartimentoProperty.getLabel());
 							proprieta.setName(namePrefix + dipartimentoProperty.getNome());
@@ -577,10 +595,16 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		//
 		if(mod){
 
-			for (FormField<String> prop : this.properties) {
-				String _valore = prop.getValue();
-				if(prop.isRequired() && StringUtils.isEmpty(_valore))
-					return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromCommonsResourceBundle(CostantiForm.FIELD_NON_PUO_ESSERE_VUOTO, prop.getLabel());	
+			for (FormField<?> prop : this.properties) {
+				if(prop instanceof Text) {
+					String _valore = ((Text)prop).getValue();
+					if(prop.isRequired() && StringUtils.isEmpty(_valore))
+						return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromCommonsResourceBundle(CostantiForm.FIELD_NON_PUO_ESSERE_VUOTO, prop.getLabel());
+//				} else if(prop instanceof BooleanCheckBox) {
+//					Boolean _valore = ((BooleanCheckBox)prop).getValue();
+//					if(prop.isRequired() && StringUtils.isEmpty(_valore))
+//						return org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils.getInstance().getMessageWithParamsFromCommonsResourceBundle(CostantiForm.FIELD_NON_PUO_ESSERE_VUOTO, prop.getLabel());
+				}
 			}
 			//			String _endpoint = this.endpoint.getValue();
 			//			if(StringUtils.isEmpty(_endpoint))
@@ -691,8 +715,14 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 
 		// Impost i valori delle properties
 		if(this.listaNomiProperties != null && this.listaNomiProperties .size() > 0){
-			for (FormField<String> prop : this.properties) {
-				String valore = prop.getValue();
+			for (FormField<?> prop : this.properties) {
+				String valore = null;
+				if(prop instanceof Text) {
+					valore = ((Text)prop).getValue();
+				} else if (prop instanceof BooleanCheckBox) {
+					boolean value = ((BooleanCheckBox)prop).getValue() != null ? (((BooleanCheckBox)prop).getValue() ? true : false) : false;
+					valore = value ? "TRUE": "FALSE";
+				}
 				String nomeProp = prop.getName();
 				nomeProp = nomeProp.substring(nomeProp.lastIndexOf("prop_")+"prop_".length());
 
@@ -774,11 +804,11 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		this.notificaAutomatica = notificaAutomatica;
 	}
 
-	public List<Text> getProperties() {
+	public List<FormField<?>> getProperties() {
 
 		boolean mod = this.modalitaPush.getValue() != null ? (this.getModalitaPush().getValue() ? true : false) : false;
 
-		for (FormField<String> proprieta : this.properties) {
+		for (FormField<?> proprieta : this.properties) {
 			String nomeProp = proprieta.getName();
 			nomeProp = nomeProp.substring(nomeProp.lastIndexOf("prop_")+"prop_".length());
 			boolean req = mod && this.nomiPropertiesObbligatorie.contains(nomeProp);
@@ -788,7 +818,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		return this.properties;
 	}
 
-	public void setProperties(List<Text> properties) {
+	public void setProperties(List<FormField<?>> properties) {
 		this.properties = properties;
 	}
 
@@ -825,7 +855,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 
 	public void registroSelectListener(ActionEvent ae){
 		// reset valori delle properties in base al registro scelto.
-		this.properties = new ArrayList<Text>();
+		this.properties = new ArrayList<FormField<?>>();
 		this.setListaNomiProperties(this.mbean.getListaDipartimentoProperties(),false); 
 	}
 
@@ -845,7 +875,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 		this.username.setRendered(false);
 		
 		if(this.properties != null) {
-			for (FormField<String> proprieta : this.properties) {
+			for (FormField<?> proprieta : this.properties) {
 				proprieta.setRequired(false);
 			}
 		}
@@ -857,7 +887,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 			this.password.setRendered(true);
 			this.username.setRendered(true);
 
-			for (FormField<String> proprieta : this.properties) {
+			for (FormField<?> proprieta : this.properties) {
 				String nomeProp = proprieta.getName();
 				nomeProp = nomeProp.substring(nomeProp.lastIndexOf("prop_")+"prop_".length());
 				boolean req = mod && this.nomiPropertiesObbligatorie.contains(nomeProp);

@@ -89,6 +89,13 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 				return "fatturazione_attiva";
 			}
 		}
+		if(field.equals(FatturaElettronica.model().CONSEGNATA_SAP)){
+			if(appendTablePrefix){
+				return this.toAliasTable(field)+".consegnata_sap";
+			}else{
+				return "consegnata_sap";
+			}
+		}
 		if(field.equals(FatturaElettronica.model().DATA_RICEZIONE)){
 			if(appendTablePrefix){
 				return this.toAliasTable(field)+".data_ricezione";
@@ -998,6 +1005,9 @@ public class FatturaElettronicaFieldConverter extends AbstractSQLFieldConverter 
 			return this.toTable(FatturaElettronica.model(), returnAlias);
 		}
 		if(field.equals(FatturaElettronica.model().FATTURAZIONE_ATTIVA)){
+			return this.toTable(FatturaElettronica.model(), returnAlias);
+		}
+		if(field.equals(FatturaElettronica.model().CONSEGNATA_SAP)){
 			return this.toTable(FatturaElettronica.model(), returnAlias);
 		}
 		if(field.equals(FatturaElettronica.model().DATA_RICEZIONE)){

@@ -22,11 +22,14 @@ package org.govmix.proxy.fatturapa.web.commons.recuperaFatture;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
+import javax.xml.datatype.DatatypeFactory;
 
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
@@ -36,7 +39,9 @@ import org.govmix.proxy.fatturapa.orm.IdUtente;
 import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.recuperofatture.Fattura;
+import org.govmix.proxy.fatturapa.recuperofatture.FatturaProtocollata;
 import org.govmix.proxy.fatturapa.recuperofatture.ListaFattureNonConsegnateResponse;
+import org.govmix.proxy.fatturapa.recuperofatture.ListaFattureProtocollateNonConsegnateResponse;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.DipartimentoBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.UtenteBD;
@@ -114,6 +119,53 @@ public class RecuperaFatture {
 		
 	}
 	
+	public String cercaFattureNonConsegnateSAPProtocollate(IdUtente idUtente, Integer limit) throws Exception {
+		Utente utente = this.utenteBD.findByUsername(idUtente.getUsername());
+		
+		FatturaPassivaFilter filter = this.fatturaPassivaBD.newFilter();
+		filter.setUtente(utente);
+		filter.setModalitaPush(false);
+		filter.setStatiConsegna(Arrays.asList(StatoConsegnaType.CONSEGNATA));
+		filter.setProtocolloNull(false);
+		filter.setConsegnataSap(false);
+		
+		filter.setOffset(0);
+		filter.setLimit(limit);
+
+		List<FatturaElettronica> lst = this.fatturaPassivaBD.findAll(filter);
+		
+		ListaFattureProtocollateNonConsegnateResponse response = new ListaFattureProtocollateNonConsegnateResponse();
+		
+		for(FatturaElettronica id : lst) {
+			FatturaProtocollata fattura = new FatturaProtocollata();
+			fattura.setIdSDI(new BigInteger(id.getIdentificativoSdi().toString()));
+			fattura.setPosizione(new BigInteger(id.getPosizione().toString()));
+			ProtocolloKey protocolloK = ProtocolloKey.fromString(id.getProtocollo());
+			fattura.setAnnoProtocollo(protocolloK.getAnno() + "");
+			fattura.setNumeroProtocollo(protocolloK.getNumero());
+			fattura.setRegistroProtocollo(protocolloK.getRegistro());
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sssZ");
+			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+			fattura.setDataProtocollazione(DatatypeFactory.newInstance().newXMLGregorianCalendar(sdf.format(id.getDataConsegna())));
+			response.getFattura().add(fattura);
+		}
+		
+		ByteArrayOutputStream os = null;
+		try {
+			os = new ByteArrayOutputStream();
+			marshaller.marshal(response, os);
+			return os.toString();
+		} finally {
+			if(os != null) {
+				try {
+					os.close();
+				} catch(Exception e) {}
+			}
+		}
+		
+	}
+	
 	public byte[] recuperaFatturaNonConsegnata(IdUtente idUtente, IdFattura idFattura) throws Exception {
 		ByteArrayOutputStream os = null;
 		try {
@@ -122,6 +174,31 @@ public class RecuperaFatture {
 			
 			//aggiorno lo stato della consegna
 			this.fatturaPassivaBD.updateStatoConsegna(idFattura, StatoConsegnaType.CONSEGNATA, null);
+			
+			
+			os = new ByteArrayOutputStream();
+			FatturaElettronica fattura = this.fatturaPassivaBD.get(idFattura); 
+			sfe.exportAsZip(Arrays.asList(fattura), os);
+			return os.toByteArray();
+		} finally {
+			if(os != null) {
+				try {
+					os.flush();
+					os.close();
+				} catch(Exception e) {}
+			}
+		}
+		
+	}
+	
+	public byte[] recuperaFatturaNonConsegnataProtocollata(IdUtente idUtente, IdFattura idFattura) throws Exception {
+		ByteArrayOutputStream os = null;
+		try {
+			
+			this.checkFatturaProtocollata(idUtente, idFattura);
+			
+			//aggiorno lo stato della consegna
+			this.fatturaPassivaBD.updateConsegnataSAP(idFattura, true);
 			
 			
 			os = new ByteArrayOutputStream();
@@ -160,6 +237,28 @@ public class RecuperaFatture {
 		//check dipartimento pull
 		if(!dipartimentoBD.isPull(idDipartimento)) {
 			throw new Exception("Il dipartimento destinatario della fattura ["+idDipartimento+"] ha abilitato la modalita' push di consegna delle fatture.");
+		}
+		
+	}
+
+	private void checkFatturaProtocollata(IdUtente idUtente, IdFattura idFattura) throws Exception {
+
+		FatturaElettronica fattura = fatturaPassivaBD.get(idFattura);
+
+		IdDipartimento idDipartimento = new IdDipartimento();
+		idDipartimento.setCodice(fattura.getCodiceDestinatario());
+		
+		//check utente appartenente a quel dipartimento
+		if(!this.utenteBD.belongsTo(idUtente, idDipartimento)) {
+			throw new Exception("L'utente ["+idUtente.toJson()+"] non appartiene al dipartimento destinatario della fattura.");
+		}
+		
+		//check fattura protocollata
+		if(!fattura.getStatoConsegna().equals(StatoConsegnaType.CONSEGNATA)) {
+			throw new Exception("Fattura ["+fattura.getIdentificativoSdi()+"/"+fattura.getPosizione()+"] non protocollata");
+		}
+		if(fattura.getProtocollo()== null) {
+			throw new Exception("Fattura ["+fattura.getIdentificativoSdi()+"/"+fattura.getPosizione()+"] non protocollata");
 		}
 		
 	}

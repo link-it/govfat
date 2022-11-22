@@ -60,7 +60,7 @@ import org.govmix.proxy.fatturapa.orm.constants.CausaleType;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoDebitoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoType;
-import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
+import org.govmix.proxy.fatturapa.orm.utils.TipoDocumentoUtils;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.commons.utils.TransformUtils;
 import org.govmix.proxy.fatturapa.web.console.bean.FatturaElettronicaBean;
@@ -594,18 +594,18 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 
 		StatoDebitoType statoDebitoType = valueStato != null ?  StatoDebitoType.toEnumConstant(valueStato) : StatoDebitoType.NOLIQ;
 				
-		TipoDocumentoType tipoDocumento = this.fattura != null ? this.fattura.getDTO().getTipoDocumento() : TipoDocumentoType.TD01;
+//		TipoDocumentoType tipoDocumento = this.fattura != null ? this.fattura.getDTO().getTipoDocumento() : TipoDocumentoType.TD01;
 		
-		TipoDocumentoType notadicredito = TipoDocumentoType.TD04; // nota di credito 
+//		TipoDocumentoType notadicredito = TipoDocumentoType.TD04; // nota di credito 
 
 		switch (statoDebitoType) {
 		case NOLIQ:
 			lista.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO)));
 			lista.add(new SelectItem(
 					new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CausaleType.CONT.getValue(), "pccCausale."+CausaleType.CONT.getValue())));
-			if(!notadicredito.equals(tipoDocumento))
+			if(!TipoDocumentoUtils.getInstance().isTipoNotaCredito(this.fattura.getDTO()))
 				lista.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CausaleType.ATTNC.getValue(), "pccCausale."+CausaleType.ATTNC.getValue())));
-			if(notadicredito.equals(tipoDocumento))
+			if(TipoDocumentoUtils.getInstance().isTipoNotaCredito(this.fattura.getDTO()))
 				lista.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CausaleType.NCRED.getValue(), "pccCausale."+CausaleType.NCRED.getValue())));
 			
 			lista.add(new SelectItem(

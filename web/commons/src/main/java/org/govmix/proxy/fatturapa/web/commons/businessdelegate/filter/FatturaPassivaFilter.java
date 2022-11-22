@@ -26,6 +26,8 @@ public class FatturaPassivaFilter extends FatturaFilter {
 	private EsitoType esito;
 	private MotivoRifiuto motivoRifiuto;
 	private boolean esitoNull;
+	private Boolean protocolloNull;
+	private Boolean consegnataSap;
 	
 	private Boolean inScadenza;
 	
@@ -70,6 +72,18 @@ public class FatturaPassivaFilter extends FatturaFilter {
 				expression.isNull(FatturaElettronica.model().ESITO);
 			} else if(this.esito != null) {
 				expression.equals(FatturaElettronica.model().ESITO, this.esito);
+			}
+
+			if(this.protocolloNull!=null) {
+				if(this.protocolloNull) {
+					expression.isNull(FatturaElettronica.model().PROTOCOLLO);
+				} else {
+					expression.isNotNull(FatturaElettronica.model().PROTOCOLLO);
+				}
+			}
+
+			if(this.consegnataSap!=null) {
+				expression.equals(FatturaElettronica.model().CONSEGNATA_SAP, this.consegnataSap);
 			}
 
 			if(this.decorrenzaTermini != null) {
@@ -179,6 +193,22 @@ public class FatturaPassivaFilter extends FatturaFilter {
 
 	public void setMotivoRifiuto(MotivoRifiuto motivoRifiuto) {
 		this.motivoRifiuto = motivoRifiuto;
+	}
+
+	public Boolean isProtocolloNull() {
+		return protocolloNull;
+	}
+
+	public void setProtocolloNull(Boolean protocolloNull) {
+		this.protocolloNull = protocolloNull;
+	}
+
+	public Boolean getConsegnataSap() {
+		return consegnataSap;
+	}
+
+	public void setConsegnataSap(Boolean consegnataSap) {
+		this.consegnataSap = consegnataSap;
 	}
 
 }
