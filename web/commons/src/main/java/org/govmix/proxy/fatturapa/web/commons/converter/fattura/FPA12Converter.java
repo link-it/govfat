@@ -195,7 +195,7 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 	@Override
 	public boolean isFatturaPEC() {
 		DatiTrasmissioneType datiTrasmissione = this.getFattura().getFatturaElettronicaHeader().getDatiTrasmissione();
-		if(datiTrasmissione.getCodiceDestinatario().equals("000000")) {
+		if(datiTrasmissione.getCodiceDestinatario().equals("0000000")) {
 			return datiTrasmissione.getPecDestinatario() != null;
 		} else {
 			return false;
