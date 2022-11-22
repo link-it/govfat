@@ -22,10 +22,9 @@ package org.govmix.proxy.fatturapa.web.commons.recuperaFatture;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.TimeZone;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -144,9 +143,9 @@ public class RecuperaFatture {
 			fattura.setNumeroProtocollo(protocolloK.getNumero());
 			fattura.setRegistroProtocollo(protocolloK.getRegistro());
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sssZ");
-			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-			fattura.setDataProtocollazione(DatatypeFactory.newInstance().newXMLGregorianCalendar(sdf.format(id.getDataConsegna())));
+			GregorianCalendar datac = new GregorianCalendar();
+			datac.setTime(id.getDataConsegna());
+			fattura.setDataProtocollazione(DatatypeFactory.newInstance().newXMLGregorianCalendar(datac));
 			response.getFattura().add(fattura);
 		}
 		
