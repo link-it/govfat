@@ -721,7 +721,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 					valore = ((Text)prop).getValue();
 				} else if (prop instanceof BooleanCheckBox) {
 					boolean value = ((BooleanCheckBox)prop).getValue() != null ? (((BooleanCheckBox)prop).getValue() ? true : false) : false;
-					valore = value ? "TRUE": "FALSE";
+					valore = value ? "commons.label.si": "commons.label.no";
 				}
 				String nomeProp = prop.getName();
 				nomeProp = nomeProp.substring(nomeProp.lastIndexOf("prop_")+"prop_".length());
