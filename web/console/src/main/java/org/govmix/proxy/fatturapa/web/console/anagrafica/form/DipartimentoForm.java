@@ -62,7 +62,7 @@ import org.openspcoop2.generic_project.web.input.TextArea;
 public class DipartimentoForm extends BaseForm implements Form,Serializable{
 
 
-	private static final String BOOL_PROP_TYPE_PREFIX = "bool_";
+	public static final String BOOL_PROP_TYPE_PREFIX = "bool_";
 	/**
 	 * 
 	 */
@@ -721,7 +721,7 @@ public class DipartimentoForm extends BaseForm implements Form,Serializable{
 					valore = ((Text)prop).getValue();
 				} else if (prop instanceof BooleanCheckBox) {
 					boolean value = ((BooleanCheckBox)prop).getValue() != null ? (((BooleanCheckBox)prop).getValue() ? true : false) : false;
-					valore = value ? "commons.label.si": "commons.label.no";
+					valore = value ? "TRUE": "FALSE";
 				}
 				String nomeProp = prop.getName();
 				nomeProp = nomeProp.substring(nomeProp.lastIndexOf("prop_")+"prop_".length());
