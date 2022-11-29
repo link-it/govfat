@@ -17,6 +17,13 @@
         </properties>
 
 	<dependencies>
+<dependency>
+    <groupId>org.bouncycastle</groupId>
+    <artifactId>bctls-jdk15on</artifactId>
+    <version>1.58</version>
+    <scope>provided</scope>
+</dependency>
+
 		<dependency>
                         <groupId>org.bouncycastle</groupId>
                         <artifactId>bcprov-ext-jdk15on</artifactId>

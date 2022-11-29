@@ -64,6 +64,13 @@
 			<artifactId>bcpkix-jdk15on</artifactId>
 			<version>1.52</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.bouncycastle/bctls-jdk15on -->
+<dependency>
+    <groupId>org.bouncycastle</groupId>
+    <artifactId>bctls-jdk15on</artifactId>
+    <version>1.58</version>
+</dependency>
+
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-ext-jdk15on</artifactId>

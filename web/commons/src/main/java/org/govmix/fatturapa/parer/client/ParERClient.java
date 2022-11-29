@@ -36,6 +36,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.log4j.Logger;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.jsse.provider.BouncyCastleJsseProvider;
 import org.govmix.fatturapa.parer.beans.UnitaDocumentariaBean;
 import org.govmix.fatturapa.parer.client.ParERResponse.STATO;
 import org.govmix.fatturapa.parer.utils.ConservazioneProperties;
@@ -124,7 +125,7 @@ public class ParERClient {
 		        }
 
 		        // Trust own CA and all self-signed certs
-		        Provider BCJSSE = new BouncyCastleProvider();
+		        Provider BCJSSE = new BouncyCastleJsseProvider();
 		        SSLContext sslContext = SSLContext.getInstance("TLSv1.3", BCJSSE); 
 		        sslContext.init(null,null,null);
 
