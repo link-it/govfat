@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
 import java.security.KeyStore;
 import java.security.Provider;
 import java.security.SecureRandom;
+import java.security.Security;
 
 import javax.net.ssl.SSLContext;
 import javax.xml.bind.JAXBContext;
@@ -124,9 +125,10 @@ public class ParERClient {
 		        } finally {
 		            instream.close();
 		        }
-
-		        // Trust own CA and all self-signed certs
 		        Provider BCJSSE = new BouncyCastleJsseProvider();
+
+		        Security.addProvider(BCJSSE);
+		        // Trust own CA and all self-signed certs
 		        SSLContext sslContext = SSLContext.getInstance("TLS", BCJSSE); 
 		        sslContext.init(null,null,SecureRandom.getInstance("DEFAULT", BouncyCastleJsseProvider.PROVIDER_NAME));
 
