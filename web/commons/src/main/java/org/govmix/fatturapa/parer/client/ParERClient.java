@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
 import java.security.KeyStore;
+import java.security.Provider;
 
 import javax.net.ssl.SSLContext;
 import javax.xml.bind.JAXBContext;
@@ -34,6 +35,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.log4j.Logger;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.govmix.fatturapa.parer.beans.UnitaDocumentariaBean;
 import org.govmix.fatturapa.parer.client.ParERResponse.STATO;
 import org.govmix.fatturapa.parer.utils.ConservazioneProperties;
@@ -122,7 +124,8 @@ public class ParERClient {
 		        }
 
 		        // Trust own CA and all self-signed certs
-		        SSLContext sslContext = SSLContext.getInstance("TLSv1.3"); 
+		        Provider BCJSSE = new BouncyCastleProvider();
+		        SSLContext sslContext = SSLContext.getInstance("TLS", BCJSSE); 
 		        sslContext.init(null,null,null);
 
 		        // Allow TLSv1 protocol only
