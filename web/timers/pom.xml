@@ -69,7 +69,6 @@
         <groupId>org.bouncycastle</groupId>
         <artifactId>bctls-jdk15to18</artifactId>
         <version>1.64</version>
-        <scope>provided</scope>
     </dependency>
 
 		<dependency>
