@@ -65,11 +65,12 @@
 			<version>1.52</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.bouncycastle/bctls-jdk15on -->
-<dependency>
-    <groupId>org.bouncycastle</groupId>
-    <artifactId>bctls-jdk15on</artifactId>
-    <version>1.58</version>
-</dependency>
+    <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bctls-jdk15to18</artifactId>
+        <version>1.64</version>
+        <scope>provided</scope>
+    </dependency>
 
 		<dependency>
 			<groupId>org.bouncycastle</groupId>

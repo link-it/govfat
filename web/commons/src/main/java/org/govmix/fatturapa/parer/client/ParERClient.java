@@ -10,7 +10,6 @@ import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
 import java.security.KeyStore;
 import java.security.Provider;
-import java.security.SecureRandom;
 
 import javax.net.ssl.SSLContext;
 import javax.xml.bind.JAXBContext;
@@ -128,7 +127,7 @@ public class ParERClient {
 		        // Trust own CA and all self-signed certs
 		        Provider BCJSSE = new BouncyCastleJsseProvider();
 		        SSLContext sslContext = SSLContext.getInstance("TLS", BCJSSE); 
-		        sslContext.init(null,null,SecureRandom.getInstanceStrong());
+		        sslContext.init(null,null,null);
 
 		        // Allow TLSv1 protocol only
 //		        String[] supportedProtocols = new String[] { "TLSv1.2" };
