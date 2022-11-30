@@ -129,8 +129,8 @@ public class ParERClient {
 		        Provider BCJSSE = new BouncyCastleJsseProvider();
 
 		        // Trust own CA and all self-signed certs
-		        SSLContext sslContext = SSLContext.getInstance("TLS", BCJSSE); 
-		        sslContext.init(null,null,SecureRandom.getInstance("DEFAULT", BCJSSE));
+		        SSLContext sslContext = SSLContext.getInstance("TLSv1.3", BCJSSE); 
+		        sslContext.init(null,null,null);
 
 		        // Allow TLSv1 protocol only
 //		        String[] supportedProtocols = new String[] { "TLSv1.2" };
