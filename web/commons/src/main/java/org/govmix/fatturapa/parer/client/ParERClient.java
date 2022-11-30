@@ -36,9 +36,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.log4j.Logger;
-import org.bouncycastle.crypto.CryptoServicesRegistrar;
-import org.bouncycastle.crypto.prng.BasicEntropySourceProvider;
-import org.bouncycastle.crypto.prng.EntropySourceProvider;
 import org.bouncycastle.jsse.provider.BouncyCastleJsseProvider;
 import org.govmix.fatturapa.parer.beans.UnitaDocumentariaBean;
 import org.govmix.fatturapa.parer.client.ParERResponse.STATO;
@@ -126,10 +123,10 @@ public class ParERClient {
 		        } finally {
 		            instream.close();
 		        }
-		        Provider BCJSSE = new BouncyCastleProvider();
+		        Provider BCJSSE = new BouncyCastleJsseProvider();
 		        // Trust own CA and all self-signed certs
 		        SSLContext sslContext = SSLContext.getInstance("TLSv1.3", BCJSSE); 
-		        sslContext.init(null,null,null);
+		        sslContext.init(null,null,SecureRandom.getInstance("SHA1PRNG"));
 
 		        // Allow TLSv1 protocol only
 //		        String[] supportedProtocols = new String[] { "TLSv1.2" };

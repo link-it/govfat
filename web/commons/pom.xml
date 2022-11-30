@@ -23,6 +23,12 @@
         <version>1.72</version>
         <scope>provided</scope>
     </dependency>
+                    <dependency>
+                        <groupId>org.bouncycastle</groupId>
+                        <artifactId>bcprov-jdk15to18</artifactId>
+                        <version>1.70</version>
+                        <scope>provided</scope>
+                </dependency>
 
 		<dependency>
                         <groupId>org.bouncycastle</groupId>
@@ -214,7 +220,7 @@
 	<repositories>
 		<repository>
 			<id>openspcoop2-releases</id>
-			<url>https://maven.ilink.it/content/repositories/public/</url>
+			<url>https://maven.link.it/content/repositories/public/</url>
 		</repository>
 		<repository>
 			<id>openspcoop2-snapshot</id>
