@@ -125,7 +125,7 @@ public class ParERClient {
 		        }
 		        Provider BCJSSE = new BouncyCastleJsseProvider();
 
-		        Security.addProvider(BCJSSE);
+//		        Security.addProvider(BCJSSE);
 		        // Trust own CA and all self-signed certs
 		        SSLContext sslContext = SSLContext.getInstance("TLS", BCJSSE); 
 		        sslContext.init(null,null,null);
