@@ -139,7 +139,7 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 			for(AllegatoFattura allegatoInput: input.getAllegati()) {
 				if(allegatoInput.getAttachment() != null && allegatoInput.getAttachment().length > 0) {
 					DocumentoType allegato = new DocumentoType();
-					String idDocumentoAllegato = input.getFattura().getId() + "_ALL"+index;
+					String idDocumentoAllegato = input.getFattura().getId() + "";
 					allegato.setIDDocumento(idDocumentoAllegato);
 	
 					allegato.setTipoDocumento("GENERICO");

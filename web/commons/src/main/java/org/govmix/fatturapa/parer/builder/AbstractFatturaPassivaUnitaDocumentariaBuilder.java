@@ -119,7 +119,7 @@ public abstract class AbstractFatturaPassivaUnitaDocumentariaBuilder extends Bas
 			for(NotificaEsitoCommittente nec: input.getNotificaEC()) {
 				if(nec.getXml() != null) {
 					DocumentoType annessoNEC = new DocumentoType();
-					String idDocumentoNotificaEC = 	nec.getIdFattura().getId() + "_EC"+index;
+					String idDocumentoNotificaEC = 	nec.getId() + "";
 					annessoNEC.setIDDocumento(idDocumentoNotificaEC);
 
 					annessoNEC.setTipoDocumento("NOTIFICA DI ESITO COMMITTENTE");
@@ -146,7 +146,7 @@ public abstract class AbstractFatturaPassivaUnitaDocumentariaBuilder extends Bas
 					//SCARTO
 					if(nec.getScartoXml() != null) {
 						DocumentoType annessoSEC = new DocumentoType();
-						String idDocumentoScarto = 	nec.getIdFattura().getId() + "_EC_SC"+(index-1);
+						String idDocumentoScarto = 	nec.getId() + "" +(index-1);
 						annessoSEC.setIDDocumento(idDocumentoScarto);
 
 						annessoSEC.setTipoDocumento("SCARTO ESITO COMMITTENTE");
@@ -177,7 +177,7 @@ public abstract class AbstractFatturaPassivaUnitaDocumentariaBuilder extends Bas
 		}
 		if(input.getNotificaDT() != null) {
 			DocumentoType annessoNDT = new DocumentoType();
-			String idDocumentoNotificaDT = input.getNotificaDT().getId() + "_DT"; 
+			String idDocumentoNotificaDT = input.getNotificaDT().getId() + ""; 
 			annessoNDT.setIDDocumento(idDocumentoNotificaDT);
 
 			annessoNDT.setTipoDocumento("NOTIFICA DI DECORRENZA DEI TERMINI");
