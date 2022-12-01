@@ -37,6 +37,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.log4j.Logger;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.jsse.provider.BouncyCastleJsseProvider;
 import org.govmix.fatturapa.parer.beans.UnitaDocumentariaBean;
 import org.govmix.fatturapa.parer.client.ParERResponse.STATO;
@@ -124,20 +125,19 @@ public class ParERClient {
 		        } finally {
 		            instream.close();
 		        }
-		        Provider BCJSSE = new BouncyCastleJsseProvider();
+		        Provider BCJSSE = new BouncyCastleProvider();
 		        // Trust own CA and all self-signed certs
 		        SSLContext sslContext = SSLContext.getInstance("TLSv1.3", BCJSSE); 
 		        sslContext.init(null,null,new SecureRandom());//SecureRandom.getInstance("SHA1PRNG"));
 
-		        SSLParameters params = sslContext.getSupportedSSLParameters();
-		        String[] suites = params.getCipherSuites();
-		        this.log.debug("Java version : " + System.getProperty("java.runtime.version"));
-		        this.log.debug("Connecting with " + suites.length + " cipher suites supported:");
-
-		        for (int i = 0; i < suites.length; i++) {
-		            this.log.debug(" ********* " + suites[i] + " ********* ");
-		        }
-
+//		        SSLParameters params = sslContext.getSupportedSSLParameters();
+//		        String[] suites = params.getCipherSuites();
+//		        this.log.debug("Java version : " + System.getProperty("java.runtime.version"));
+//		        this.log.debug("Connecting with " + suites.length + " cipher suites supported:");
+//
+//		        for (int i = 0; i < suites.length; i++) {
+//		            this.log.debug(" ********* " + suites[i] + " ********* ");
+//		        }
 
 //		        String[] supportedProtocols = new String[] { "TLSv1.2" };
 		        String[] supportedProtocols = new String[] { "TLSv1.3" };
