@@ -62,7 +62,7 @@
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcpkix-jdk15on</artifactId>
-			<version>1.59</version>
+			<version>1.70</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.bouncycastle/bctls-jdk15on -->
     <dependency>
@@ -74,7 +74,7 @@
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-ext-jdk15on</artifactId>
-			<version>1.59</version>
+			<version>1.70</version>
 		</dependency>
 
 		<dependency>
