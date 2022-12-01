@@ -11,10 +11,10 @@ import java.nio.charset.Charset;
 import java.security.KeyStore;
 import java.security.Provider;
 import java.security.SecureRandom;
-import java.security.Security;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
+import javax.net.ssl.TrustManagerFactory;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -38,7 +38,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.log4j.Logger;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.jsse.provider.BouncyCastleJsseProvider;
 import org.govmix.fatturapa.parer.beans.UnitaDocumentariaBean;
 import org.govmix.fatturapa.parer.client.ParERResponse.STATO;
@@ -127,12 +126,16 @@ public class ParERClient {
 		            instream.close();
 		        }
 
-		        Security.insertProviderAt(new BouncyCastleProvider(), 1);
-		        Security.insertProviderAt(new BouncyCastleJsseProvider(), 2);
+		        String defaultTrustManagerAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+		        TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(defaultTrustManagerAlgorithm);
+
+		        trustManagerFactory.init(trustStore);
+
 		        Provider BCJSSE = new BouncyCastleJsseProvider();
+
 		        // Trust own CA and all self-signed certs
 		        SSLContext sslContext = SSLContext.getInstance("TLSv1.3", BCJSSE); 
-		        sslContext.init(null,null,SecureRandom.getInstance("SHA1PRNG"));
+		        sslContext.init(null,trustManagerFactory.getTrustManagers(),SecureRandom.getInstance("SHA1PRNG"));
 
 		        SSLParameters params = sslContext.getSupportedSSLParameters();
 		        String[] suites = params.getCipherSuites();
