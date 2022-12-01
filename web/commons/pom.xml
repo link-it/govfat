@@ -19,8 +19,8 @@
 	<dependencies>
     <dependency>
         <groupId>org.bouncycastle</groupId>
-        <artifactId>bctls-jdk15to18</artifactId>
-        <version>1.72</version>
+        <artifactId>bctls-jdk15on</artifactId>
+        <version>1.59</version>
         <scope>provided</scope>
     </dependency>
                     <!--dependency>
@@ -33,13 +33,13 @@
 		<dependency>
                         <groupId>org.bouncycastle</groupId>
                         <artifactId>bcprov-ext-jdk15on</artifactId>
-			<version>1.70</version>
+			<version>1.59</version>
 			<scope>provided</scope>
                 </dependency>
                 <dependency>
                         <groupId>org.bouncycastle</groupId>
                         <artifactId>bcpkix-jdk15on</artifactId>
-                        <version>1.70</version>
+                        <version>1.59</version>
                         <scope>provided</scope>
                 </dependency>
 
