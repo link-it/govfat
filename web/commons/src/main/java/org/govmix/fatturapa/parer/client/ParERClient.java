@@ -128,7 +128,6 @@ public class ParERClient {
 		        SSLContext sslContext = SSLContext.getInstance("TLSv1.3", BCJSSE); 
 		        sslContext.init(null,null,new SecureRandom());//SecureRandom.getInstance("SHA1PRNG"));
 
-		        // Allow TLSv1 protocol only
 //		        String[] supportedProtocols = new String[] { "TLSv1.2" };
 		        String[] supportedProtocols = new String[] { "TLSv1.3" };
 				SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
