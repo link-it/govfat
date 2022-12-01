@@ -27,7 +27,6 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
@@ -146,7 +145,7 @@ public class ParERClient {
 		                sslContext,
 		                supportedProtocols,
 		                null,
-		                new NoopHostnameVerifier());
+		                SSLConnectionSocketFactory.getDefaultHostnameVerifier());
 
 		        client = HttpClients.custom().setSSLSocketFactory(sslsf).setDefaultRequestConfig(RequestConfig.custom()
 		                .setCookieSpec(CookieSpecs.STANDARD).build())
