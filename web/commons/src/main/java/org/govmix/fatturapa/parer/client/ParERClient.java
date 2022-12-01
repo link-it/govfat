@@ -13,6 +13,7 @@ import java.security.Provider;
 import java.security.SecureRandom;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLParameters;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -127,6 +128,16 @@ public class ParERClient {
 		        // Trust own CA and all self-signed certs
 		        SSLContext sslContext = SSLContext.getInstance("TLSv1.3", BCJSSE); 
 		        sslContext.init(null,null,new SecureRandom());//SecureRandom.getInstance("SHA1PRNG"));
+
+		        SSLParameters params = sslContext.getSupportedSSLParameters();
+		        String[] suites = params.getCipherSuites();
+		        this.log.debug("Java version : " + System.getProperty("java.runtime.version"));
+		        this.log.debug("Connecting with " + suites.length + " cipher suites supported:");
+
+		        for (int i = 0; i < suites.length; i++) {
+		            this.log.debug(" ********* " + suites[i] + " ********* ");
+		        }
+
 
 //		        String[] supportedProtocols = new String[] { "TLSv1.2" };
 		        String[] supportedProtocols = new String[] { "TLSv1.3" };
