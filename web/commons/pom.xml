@@ -17,12 +17,12 @@
         </properties>
 
 	<dependencies>
-    <dependency>
+    <!--dependency>
         <groupId>org.bouncycastle</groupId>
         <artifactId>bctls-jdk15on</artifactId>
         <version>1.70</version>
         <scope>provided</scope>
-    </dependency>
+    </dependency-->
                     <!--dependency>
                         <groupId>org.bouncycastle</groupId>
                         <artifactId>bcprov-jdk15to18</artifactId>
@@ -30,7 +30,7 @@
                         <scope>provided</scope>
                 </dependency-->
 
-		<dependency>
+		<!--dependency>
                         <groupId>org.bouncycastle</groupId>
                         <artifactId>bcprov-ext-jdk15on</artifactId>
 			<version>1.70</version>
@@ -41,7 +41,7 @@
                         <artifactId>bcpkix-jdk15on</artifactId>
                         <version>1.70</version>
                         <scope>provided</scope>
-                </dependency>
+                </dependency-->
 
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>

@@ -92,16 +92,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcpkix-jdk15on</artifactId>
-			<version>1.52</version>
-		</dependency>
-		<dependency>
-			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcprov-ext-jdk15on</artifactId>
-			<version>1.52</version>
-		</dependency>
-		<dependency>
 			<groupId>fatturapa</groupId>
 			<artifactId>web-commons</artifactId>
 			<version>${project.version}</version>
@@ -113,12 +103,6 @@
 			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
-
-                <dependency>
-                        <groupId>net.sourceforge</groupId>
-                        <artifactId>spnego</artifactId>
-                        <version>r7</version>
-                </dependency>
 
 		<dependency>
 			<groupId>com.sun.xml.bind</groupId>

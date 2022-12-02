@@ -47,12 +47,6 @@
 			</exclusions>
 		</dependency>
 
-		<dependency>
-			<groupId>net.sourceforge</groupId>
-			<artifactId>spnego</artifactId>
-			<version>r7</version>
-		</dependency>
-
 		<!-- Import the JAX-RS API, we use provided scope as the API is included 
 			in JBoss AS 7 -->
 		<dependency>
@@ -288,17 +282,6 @@
 			<version>${openspcoop2.version}</version>
 		</dependency>
 
-         <dependency>
-                 <groupId>org.bouncycastle</groupId>
-                 <artifactId>bcpkix-jdk15on</artifactId>
-                 <version>1.52</version>
-         </dependency>
-         <dependency>
-                 <groupId>org.bouncycastle</groupId>
-                 <artifactId>bcprov-ext-jdk15on</artifactId>
-                 <version>1.52</version>
-         </dependency>
-         
          <!-- file upload -->
          <dependency>
 		    <groupId>commons-fileupload</groupId>

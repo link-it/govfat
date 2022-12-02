@@ -21,6 +21,7 @@
 package org.govmix.proxy.fatturapa.web.console.mbean;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -35,7 +36,6 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.bouncycastle.util.Arrays;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
@@ -633,7 +633,7 @@ IFatturaElettronicaAttivaService>{
 				String nomeFattura = nomeFiles.get(i);
 				byte[] xml = this.form.getFatturaFile().getContenuto().get(i);
 				
-				if(filesMap.containsKey(nomeFattura) && Arrays.areEqual(filesMap.get(nomeFattura), xml)) {
+				if(filesMap.containsKey(nomeFattura) && Arrays.equals(filesMap.get(nomeFattura), xml)) {
 					// NON INSERISCO
 					
 					this.log.info("Non inserisco il file ["+nomeFattura+"] in quanto duplicato");
@@ -727,7 +727,7 @@ IFatturaElettronicaAttivaService>{
 				String nomeFattura = nomiFileRicevuti.get(i);
 				byte[] xml = this.form.getFatturaFile().getContenuto().get(i);
 				
-				if(filesMap.containsKey(nomeFattura) && Arrays.areEqual(filesMap.get(nomeFattura), xml)) {
+				if(filesMap.containsKey(nomeFattura) && Arrays.equals(filesMap.get(nomeFattura), xml)) {
 					// NON INSERISCO
 					
 					this.log.info("Non inserisco il file ["+nomeFattura+"] in quanto duplicato");

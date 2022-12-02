@@ -5,7 +5,7 @@ import java.io.ByteArrayInputStream;
 import org.apache.log4j.Logger;
 import java.io.StringReader;
 
-import org.bouncycastle.util.io.pem.PemReader;
+//import org.bouncycastle.util.io.pem.PemReader;
 import org.openspcoop2.utils.io.Base64Utilities;
 
 /**
@@ -38,8 +38,8 @@ public class P7MInfo {
 	public P7MInfo(byte [] fattura, Logger log) throws Throwable{
 		
 		try{
-			org.bouncycastle.cms.CMSSignedData cmsSignedData = new org.bouncycastle.cms.CMSSignedData(new ByteArrayInputStream(fattura));
-			this.xmlDecoded = (byte[]) cmsSignedData.getSignedContent().getContent();
+//			org.bouncycastle.cms.CMSSignedData cmsSignedData = new org.bouncycastle.cms.CMSSignedData(new ByteArrayInputStream(fattura));
+//			this.xmlDecoded = (byte[]) cmsSignedData.getSignedContent().getContent();
 			
 		}catch(Throwable e){
 			
@@ -48,19 +48,19 @@ public class P7MInfo {
 				decoded = Base64Utilities.decode(new String(fattura));
 				String fatturaS = new String(fattura);
 				if(fatturaS.trim().startsWith("-----BEGIN")) {
-					PemReader pemReader = null;
+//					PemReader pemReader = null;
 					StringReader stringReader = null;
 					try {
 						stringReader = new StringReader(fatturaS);
-						pemReader = new PemReader(stringReader);
-						decoded = pemReader.readPemObject().getContent();
+//						pemReader = new PemReader(stringReader);
+//						decoded = pemReader.readPemObject().getContent();
 					}catch(Throwable eDecodePEM) {
 						//System.out.println("ERRORE PEM");
 						log.error("DecodificaBase64 via PEMReader non riuscita: "+eDecodePEM.getMessage(), eDecodePEM);
 					}finally {
-						try {
-							pemReader.close();
-						}catch(Throwable eClose) {}
+//						try {
+//							pemReader.close();
+//						}catch(Throwable eClose) {}
 						try {
 							stringReader.close();
 						}catch(Throwable eClose) {}
@@ -77,12 +77,12 @@ public class P7MInfo {
 			}
 			this.base64Encoded = true;
 			
-			try{
-				org.bouncycastle.cms.CMSSignedData cmsSignedData = new org.bouncycastle.cms.CMSSignedData(new ByteArrayInputStream(decoded));
-				this.xmlDecoded = (byte[]) cmsSignedData.getSignedContent().getContent();				
-			}catch(Throwable eSecond){
-				throw eSecond;
-			}
+//			try{
+//				org.bouncycastle.cms.CMSSignedData cmsSignedData = new org.bouncycastle.cms.CMSSignedData(new ByteArrayInputStream(decoded));
+//				this.xmlDecoded = (byte[]) cmsSignedData.getSignedContent().getContent();				
+//			}catch(Throwable eSecond){
+//				throw eSecond;
+//			}
 		}
 		
 	}

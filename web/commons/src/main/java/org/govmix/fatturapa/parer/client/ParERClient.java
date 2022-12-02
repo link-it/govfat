@@ -9,12 +9,9 @@ import java.io.InputStream;
 import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
 import java.security.KeyStore;
-import java.security.Provider;
-import java.security.SecureRandom;
 import java.security.Security;
 
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLParameters;
 import javax.net.ssl.TrustManagerFactory;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -39,8 +36,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.log4j.Logger;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.jsse.provider.BouncyCastleJsseProvider;
 import org.govmix.fatturapa.parer.beans.UnitaDocumentariaBean;
 import org.govmix.fatturapa.parer.client.ParERResponse.STATO;
 import org.govmix.fatturapa.parer.utils.ConservazioneProperties;
@@ -49,7 +44,6 @@ import org.govmix.fatturapa.parer.versamento.response.ECEsitoExtType;
 import org.govmix.fatturapa.parer.versamento.response.EsitoVersamentoType;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 
-@SuppressWarnings("deprecation")
 public class ParERClient {
 
 	protected Logger log;
@@ -133,32 +127,11 @@ public class ParERClient {
 
 		        trustManagerFactory.init(trustStore);
 
-		        Security.insertProviderAt(new BouncyCastleProvider(),1);
-		        Security.insertProviderAt(new BouncyCastleJsseProvider(),2);
-
-		        Provider BCJSSE = new BouncyCastleJsseProvider();
-
 		        // Trust own CA and all self-signed certs
-		        SSLContext sslContext = SSLContext.getInstance("TLSv1.3", BCJSSE); 
-		        sslContext.init(null,trustManagerFactory.getTrustManagers(),SecureRandom.getInstance("SHA1PRNG"));
+		        SSLContext sslContext = SSLContext.getInstance("TLSv1.3");//, BCJSSE); 
+		        sslContext.init(null,trustManagerFactory.getTrustManagers(),null);//SecureRandom.getInstance("SHA1PRNG"));
 
-		        SSLParameters params = sslContext.getSupportedSSLParameters();
-		        String[] suites = params.getCipherSuites();
-		        this.log.debug("Java version : " + System.getProperty("java.runtime.version"));
-		        this.log.debug("Connecting with " + suites.length + " cipher suites supported:");
-
-		        for (int i = 0; i < suites.length; i++) {
-		            this.log.debug(" ********* " + suites[i] + " ********* ");
-		        }
-
-
-//		        String[] supportedProtocols = new String[] { "TLSv1.2" };
-		        String[] supportedProtocols = new String[] { "TLSv1.3" };
-				SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
-		                sslContext,
-		                supportedProtocols,
-		                null,
-		                SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+				SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext);
 
 		        client = HttpClients.custom().setSSLSocketFactory(sslsf).setDefaultRequestConfig(RequestConfig.custom()
 		                .setCookieSpec(CookieSpecs.STANDARD).build())
