@@ -282,6 +282,12 @@
 			<version>${openspcoop2.version}</version>
 		</dependency>
 
+		 <dependency>
+         <groupId>net.sourceforge</groupId>
+         <artifactId>spnego</artifactId>
+         <version>r7</version>
+ </dependency>
+
          <!-- file upload -->
          <dependency>
 		    <groupId>commons-fileupload</groupId>
