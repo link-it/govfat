@@ -32,7 +32,7 @@ public class FatturaAttivaSingolaUnitaDocumentariaBuilder extends AbstractFattur
 	protected DocumentoType getDocumentoPrincipale(UnitaDocumentariaFatturaAttivaInput input) {
 
 		DocumentoType documentoPricipale = new DocumentoType();
-		String idDocumento = input.getFattura().getNumero();
+		String idDocumento = input.getFattura().getId() + "";
 		documentoPricipale.setIDDocumento(idDocumento);
 		
 		documentoPricipale.setTipoDocumento(this.getTipoDocumento(input));		
@@ -67,7 +67,7 @@ public class FatturaAttivaSingolaUnitaDocumentariaBuilder extends AbstractFattur
 		
 		if(INCLUDE_METADATI) {
 			DocumentoType annessoMetadati = new DocumentoType();
-			String idDocumentoMetadati = input.getLotto().getIdentificativoSdi() + "-metadati";
+			String idDocumentoMetadati = input.getLotto().getId() + "-metadati";
 			annessoMetadati.setIDDocumento(idDocumentoMetadati);
 			
 			annessoMetadati.setTipoDocumento("FILE DEI METADATI");

@@ -33,7 +33,6 @@ import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.constants.DominioType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
-import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.FatturaDeserializerUtils;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
@@ -365,9 +364,9 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		}
 
 		this.codiceDestinatario.setValue(this.getDTO().getCodiceDestinatario());
-		TipoDocumentoType tipoDocumento2 = this.getDTO().getTipoDocumento();
-		if(tipoDocumento2 != null){
-			String valueTD = tipoDocumento2.getValue();
+//		TipoDocumentoType tipoDocumento2 = this.getDTO().getTipoDocumento();
+		String valueTD = this.getDTO().get_value_tipoDocumento();
+		if(valueTD != null){
 			this.tipoDocumento.setValue("fattura.tipoDocumento."+valueTD);
 		}
 		this.tipoDocumento.getValue();
@@ -408,6 +407,8 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 		//		if(this.getDTO().getProtocollo() != null) {
 		//			this.statoConsegna.setValue("fattura.statoConsegna.protocollata");
 		//		} else {
+		boolean isPEC = false;
+		try {isPEC = FatturaDeserializerUtils.isFatturaPEC(dto);} catch(Exception e) {}
 		if(_statoElaborazione != null) {
 			this.statoElaborazione.setValue("fattura.statoElaborazione."+_statoElaborazione.getValue());
 		}
@@ -421,7 +422,6 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 			case RICEVUTA_DALLO_SDI:
 			case RICEVUTA_DAL_DESTINATARIO:
 			case IMPOSSIBILITA_DI_RECAPITO:
-			case MANCATA_CONSEGNA:
 			case RICEVUTO_ESITO_CEDENTE_PRESTATORE_ACCETTAZIONE:
 			case RICEVUTO_ESITO_CEDENTE_PRESTATORE_RIFIUTO:
 			case RICEVUTO_SCARTO_SDI:
@@ -430,6 +430,16 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 				valoreIdentificavoSDI = this.getDTO().getIdentificativoSdi() + "";
 				valorePosizione = this.getDTO().getPosizione() + "";
 				this.statoElaborazioneDettaglio.setValue("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				break;
+			case MANCATA_CONSEGNA:
+				valoreProtocollo = this.getDTO().getProtocollo();
+				valoreIdentificavoSDI = this.getDTO().getIdentificativoSdi() + "";
+				valorePosizione = this.getDTO().getPosizione() + "";
+				if(isPEC) {
+					this.statoElaborazioneDettaglio.setValue("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue() + ".PEC");
+				} else {
+					this.statoElaborazioneDettaglio.setValue("fattura.statoElaborazione.dettaglio."+_statoElaborazione.getValue());
+				}
 				break;
 			case DA_INVIARE_ALLO_SDI:
 			case ERRORE_DI_SPEDIZIONE:

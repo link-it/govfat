@@ -3,20 +3,19 @@ package org.govmix.proxy.fatturapa.web.commons.converter.fattura;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
-import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
+import org.govmix.proxy.fatturapa.orm.utils.TipoDocumentoUtils;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.XPathUtils;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.openspcoop2.generic_project.exception.DeserializerException;
-import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.ValidationException;
 
 import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.AllegatiType;
 import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.DatiGeneraliDocumentoType;
 import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.DatiRiepilogoType;
+import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.DatiTrasmissioneType;
 import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.FatturaElettronicaBodyType;
 import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.FatturaElettronicaType;
 import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.utils.serializer.JaxbDeserializer;
@@ -44,9 +43,9 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 
 		DatiGeneraliDocumentoType datiGeneraliDocumento =  this.getFattura().getFatturaElettronicaBody(0).getDatiGenerali().getDatiGeneraliDocumento();
 		
-		TipoDocumentoType tipoDoc = getTipoDoumento();
-		
-		fatturaElettronica.setTipoDocumento(tipoDoc);
+		try {
+			fatturaElettronica.set_value_tipoDocumento(getTipoDocumentoString());
+		} catch (Exception e) {}
 		
 		fatturaElettronica.setDivisa(datiGeneraliDocumento.getDivisa());
 
@@ -54,25 +53,6 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 		fatturaElettronica.setAnno(new Integer(this.getSdfYear().format(datiGeneraliDocumento.getData())));
 
 		fatturaElettronica.setNumero(datiGeneraliDocumento.getNumero());
-	}
-
-	private TipoDocumentoType getTipoDoumento() {
-		Logger log = LoggerManager.getBatchInserimentoFatturaLogger();
-
-		TipoDocumentoType tipoDoc;
-		try {
-			String tipoDocumento = getTipoDocumentoString();
-			log.info("Trovato tipoDocumento ["+tipoDocumento+"]");
-			tipoDoc = TipoDocumentoType.toEnumConstant(tipoDocumento, true);
-			log.info("Trovato tipoDocumentoType ["+tipoDoc+"]");
-		} catch (NotFoundException e) {
-			tipoDoc = TipoDocumentoType.TDXX;
-			log.error("TipoDocumentoType non trovato: " + e.getMessage(), e);
-		} catch (Exception e) {
-			tipoDoc = TipoDocumentoType.TDXX;
-			log.error("Errore durante la lettura del TipoDocumento: " + e.getMessage(), e);
-		}
-		return tipoDoc;
 	}
 
 	private String getTipoDocumentoString() throws Exception {
@@ -147,15 +127,12 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 			throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.numero");
 		
 		if(strictValidation) {
-			TipoDocumentoType tipoDoc = null;
 			try {
 				String tipoDocumentoString = this.getTipoDocumentoString();
-				tipoDoc = TipoDocumentoType.toEnumConstant(tipoDocumentoString);
+				if(!TipoDocumentoUtils.getInstance().getValues().contains(tipoDocumentoString)) {
+					throw new ValidationException("Valore ["+tipoDocumentoString+"] di datiGenerali.datiGeneraliDocumento.tipoDocumento non ammesso");	
+				}
 			} catch(Exception e) {
-				throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.tipoDocumento");	
-			}
-			
-			if(tipoDoc == null) {
 				throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.tipoDocumento");	
 			}
 		}
@@ -214,4 +191,15 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 		return importo;
 
 	}
+	
+	@Override
+	public boolean isFatturaPEC() {
+		DatiTrasmissioneType datiTrasmissione = this.getFattura().getFatturaElettronicaHeader().getDatiTrasmissione();
+		if(datiTrasmissione.getCodiceDestinatario().equals("0000000")) {
+			return datiTrasmissione.getPecDestinatario() != null;
+		} else {
+			return false;
+		}
+	}
+
 }

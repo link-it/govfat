@@ -43,7 +43,7 @@ public class FatturaPassivaMultiplaUnitaDocumentariaBuilder extends
 			UnitaDocumentariaFatturaPassivaInput input) {
 
 		DocumentoType documentoPricipale = new DocumentoType();
-		String idDocumento = input.getFattura().getIdentificativoSdi() + "_" + input.getFattura().getPosizione();
+		String idDocumento = input.getFattura().getId() + "";
 		documentoPricipale.setIDDocumento(idDocumento);
 		
 		documentoPricipale.setTipoDocumento(this.getTipoDocumento(input));		

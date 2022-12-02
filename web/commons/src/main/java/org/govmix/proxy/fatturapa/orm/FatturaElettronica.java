@@ -20,19 +20,20 @@
  */
 package org.govmix.proxy.fatturapa.orm;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
+
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
-import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
-import java.io.Serializable;
 
 
 /** <p>Java class for FatturaElettronica complex type.
@@ -104,6 +105,7 @@ import java.io.Serializable;
   	"formatoTrasmissione",
   	"_decimalWrapper_identificativoSdi",
   	"fatturazioneAttiva",
+  	"consegnataSap",
   	"dataRicezione",
   	"nomeFile",
   	"messageId",
@@ -214,6 +216,18 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
   public void setFatturazioneAttiva(boolean fatturazioneAttiva) {
     this.fatturazioneAttiva = fatturazioneAttiva;
   }
+
+  public boolean isConsegnataSap() {
+	    return this.consegnataSap;
+	  }
+
+	  public boolean getConsegnataSap() {
+	    return this.consegnataSap;
+	  }
+
+	  public void setConsegnataSap(boolean consegnataSap) {
+	    this.consegnataSap = consegnataSap;
+	  }
 
   public java.util.Date getDataRicezione() {
     return this.dataRicezione;
@@ -328,7 +342,8 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
   }
 
   public void set_value_tipoDocumento(String value) {
-    this.tipoDocumento = (TipoDocumentoType) TipoDocumentoType.toEnumConstantFromString(value);
+//	    this.tipoDocumento = (TipoDocumentoType) TipoDocumentoType.toEnumConstantFromString(value);
+	    this.tipoDocumento = value;
   }
 
   public String get_value_tipoDocumento() {
@@ -339,13 +354,13 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
     }
   }
 
-  public org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType getTipoDocumento() {
-    return this.tipoDocumento;
-  }
-
-  public void setTipoDocumento(org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType tipoDocumento) {
-    this.tipoDocumento = tipoDocumento;
-  }
+//  public org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType getTipoDocumento() {
+//    return this.tipoDocumento;
+//  }
+//
+//  public void setTipoDocumento(org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType tipoDocumento) {
+//    this.tipoDocumento = tipoDocumento;
+//  }
 
   public java.lang.String getDivisa() {
     return this.divisa;
@@ -664,6 +679,10 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
   @XmlElement(name="fatturazioneAttiva",required=true,nillable=false)
   protected boolean fatturazioneAttiva;
 
+  @javax.xml.bind.annotation.XmlSchemaType(name="boolean")
+  @XmlElement(name="consegnataSap",required=true,nillable=false)
+  protected boolean consegnataSap = false;
+
   @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(org.openspcoop2.utils.jaxb.DateTime2String.class)
   @javax.xml.bind.annotation.XmlSchemaType(name="dateTime")
   @XmlElement(name="dataRicezione",required=true,nillable=false,type=java.lang.String.class)
@@ -728,7 +747,7 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
   protected java.lang.String _value_tipoDocumento;
 
   @XmlElement(name="tipoDocumento",required=true,nillable=false)
-  protected TipoDocumentoType tipoDocumento;
+  protected String tipoDocumento;
 
   @javax.xml.bind.annotation.XmlSchemaType(name="string")
   @XmlElement(name="divisa",required=true,nillable=false)

@@ -44,7 +44,7 @@ import org.govmix.proxy.fatturapa.orm.IdRegistro;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
-import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
+import org.govmix.proxy.fatturapa.orm.utils.TipoDocumentoUtils;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFattureAttiveBD;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException.CODICE;
@@ -327,8 +327,7 @@ IFatturaElettronicaAttivaService>{
 			this.listaTipoDocumento = new ArrayList<SelectItem>();
 
 			this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi"))));
-			for(TipoDocumentoType td: TipoDocumentoType.values()) {
-				String value = td.getValue();
+			for(String value: TipoDocumentoUtils.getInstance().getValues()) {
 				this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(value,  ("fattura.tipoDocumento."+value))));
 			}
 		}

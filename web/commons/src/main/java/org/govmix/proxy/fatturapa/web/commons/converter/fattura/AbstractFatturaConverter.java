@@ -165,6 +165,7 @@ public abstract class AbstractFatturaConverter<T> {
 	}
 	
 	public abstract List<AllegatoFattura> getAllegati();
+	public abstract boolean isFatturaPEC();
 
 	public T getFattura() {
 		return this.fattura;

@@ -29,6 +29,7 @@ import org.govmix.proxy.fatturapa.orm.DipartimentoPropertyValue;
 import org.govmix.proxy.fatturapa.orm.PccDipartimentoOperazione;
 import org.govmix.proxy.fatturapa.orm.PccOperazione;
 import org.govmix.proxy.fatturapa.orm.constants.NomePccOperazioneType;
+import org.govmix.proxy.fatturapa.web.console.anagrafica.form.DipartimentoForm;
 import org.govmix.proxy.fatturapa.web.console.util.Utils;
 import org.openspcoop2.generic_project.web.bean.IBean;
 import org.openspcoop2.generic_project.web.factory.FactoryException;
@@ -274,7 +275,12 @@ public class DipartimentoBean extends BaseBean<Dipartimento, Long> implements IB
 
 					for (DipartimentoPropertyValue dipartimentoPropertyValue : this.getDTO().getDipartimentoPropertyValueList()) {
 						if(dipartimentoProperty.getNome().equals(dipartimentoPropertyValue.getIdProperty().getNome())){
-							proprieta.setValue(dipartimentoPropertyValue.getValore());
+							if(dipartimentoProperty.getNome().startsWith(DipartimentoForm.BOOL_PROP_TYPE_PREFIX)) {
+								String valueString = dipartimentoPropertyValue.getValore() != null && dipartimentoPropertyValue.getValore().equals("TRUE") ? "commons.label.si" : "commons.label.no";
+								proprieta.setValue(valueString);
+							} else {
+								proprieta.setValue(dipartimentoPropertyValue.getValore());
+							}
 							found = true;
 							break;
 						}

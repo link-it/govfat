@@ -48,4 +48,14 @@ public interface EndpointEnte {
 	@Path("consegnaFattura")
 	Response recuperaFatturaNonConsegnata(@QueryParam("ProxyFatturaPA-IdSdI") Long idSdI, @QueryParam("ProxyFatturaPA-Posizione") Integer posizione);
 
+	@GET
+	@Produces("text/plain")
+	@Path("listaFattureProtocollateNonConsegnate")
+	Response listaFattureProtocollateNonConsegnate(@QueryParam("ProxyFatturaPA-Limit") Integer limit);
+	
+	@GET
+	@Produces("application/zip")
+	@Path("consegnaFatturaProtocollata")
+	Response consegnaFatturaProtocollata(@QueryParam("ProxyFatturaPA-IdSdI") Long idSdI, @QueryParam("ProxyFatturaPA-Posizione") Integer posizione);
+
 }

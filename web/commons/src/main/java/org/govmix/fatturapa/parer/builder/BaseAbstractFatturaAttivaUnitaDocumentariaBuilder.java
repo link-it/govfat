@@ -18,6 +18,7 @@ import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.DominioType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
+import org.govmix.proxy.fatturapa.orm.utils.TipoDocumentoUtils;
 
 public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends AbstractUnitaDocumentariaBuilder<UnitaDocumentariaFatturaAttivaInput> {
 
@@ -26,30 +27,7 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 	}
 
 	protected String getTipoDocumento(UnitaDocumentariaFatturaAttivaInput input) {
-		switch(input.getFattura().getTipoDocumento()){
-		case TD01: return "FATTURA";
-		case TD02: return "ACCONTO/ANTICIPO SU FATTURA";
-		case TD03: return "ACCONTO/ANTICIPO SU PARCELLA";
-		case TD04: return "NOTA DI CREDITO";
-		case TD05: return "NOTA DI DEBITO";
-		case TD06: return "PARCELLA";
-		case TD16: return "INTEGRAZIONE FATTURA REVERSE CHARGE INTERNO";
-		case TD17: return "INTEGRAZIONE/AUTOFATTURA PER ACQUISTO SERVIZI DALL'ESTERO";
-		case TD18: return "INTEGRAZIONE PER ACQUISTO DI BENI INTRACOMUNITARI";
-		case TD19: return "INTEGRAZIONE/AUTOFATTURA PER ACQUISTO DI BENI EX ART.17";
-		case TD20: return "AUTOFATTURA";
-		case TD21: return "AUTOFATTURA PER SPLAFONAMENTO";
-		case TD22: return "ESTRAZIONE BENI DA DEPOSITO IVA";
-		case TD23: return "ESTRAZIONE BENI DA DEPOSITO IVA CON VERSAMENTO DELL'IVA";
-		case TD24: return "FATTURA DIFFERITA DI CUI ALL'ART. 21 4A)";
-		case TD25: return "FATTURA DIFFERITA DI CUI ALL'ART. 21 4B)";
-		case TD26: return "CESSIONE DI BENI AMMORTIZZABILI E PER PASSAGGI INTERNI";
-		case TD27: return "FATTURA PER AUTOCONSUMO/CESSIONI GRATUITE";
-		case TDXX:
-			break;
-		}
-
-		return null;
+		return TipoDocumentoUtils.getInstance().getTipoDocumentoConsevazioneFatturaAttiva(input);
 	}
 	
 	
@@ -90,15 +68,7 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 				
 				if(add) {
 					DocumentoType annesso = new DocumentoType();
-					StringBuilder sb = new StringBuilder();
-					sb.append(traccia.getIdentificativoSdi()).append("_");
-					
-					if(traccia.getPosizione() != null)
-						sb.append(traccia.getPosizione()).append("_");
-					
-					sb.append(traccia.get_value_tipoComunicazione()).append(index);
-					
-					String idDocumentoAnnesso = sb.toString();
+					String idDocumentoAnnesso = traccia.getId() + "";
 					
 					annesso.setIDDocumento(idDocumentoAnnesso);
 					annesso.setTipoDocumento(this.getTipoComunicazione(traccia.getTipoComunicazione()));
@@ -169,7 +139,7 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 			for(AllegatoFattura allegatoInput: input.getAllegati()) {
 				if(allegatoInput.getAttachment() != null && allegatoInput.getAttachment().length > 0) {
 					DocumentoType allegato = new DocumentoType();
-					String idDocumentoAllegato = input.getFattura().getNomeFile() + "_ALL"+index;
+					String idDocumentoAllegato = input.getFattura().getId() + "";
 					allegato.setIDDocumento(idDocumentoAllegato);
 	
 					allegato.setTipoDocumento("GENERICO");

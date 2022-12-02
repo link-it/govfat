@@ -36,7 +36,7 @@ import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
-import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
+import org.govmix.proxy.fatturapa.orm.utils.TipoDocumentoUtils;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.FatturaPassivaBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.NotificaEsitoCommittenteBD;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
@@ -347,8 +347,7 @@ public class FatturaElettronicaMBean extends BaseMBean<FatturaElettronicaBean, L
 			this.listaTipoDocumento = new ArrayList<SelectItem>();
 
 			this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi"))));
-			for(TipoDocumentoType td: TipoDocumentoType.values()) {
-				String value = td.getValue();
+			for(String value: TipoDocumentoUtils.getInstance().getValues()) {
 				this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(value,  ("fattura.tipoDocumento."+value))));
 			}
 		}

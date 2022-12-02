@@ -123,7 +123,6 @@ public class EndpointEnteImpl implements EndpointEnte {
 		}
 		this.log.info("consegnaFattura completata con successo");
 		return Response.ok(fattura).build();
-
 	}
 	
 
@@ -148,6 +147,55 @@ public class EndpointEnteImpl implements EndpointEnte {
 			throw new Exception("Principal utente non trovato");
 		}
 
+	}
+
+
+	@Override
+	public Response listaFattureProtocollateNonConsegnate(Integer limit) {
+		String lst;
+		try {
+			this.log.info("Invoke listaFattureNonConsegnate");
+			IdUtente idUtente = getIdUtente();
+			Integer limitFatture = (limit != null) ? limit: WebApiProperties.getInstance().getLimitGetIdFatture(); 
+
+			lst = this.recuperaFatture.cercaFattureNonConsegnateSAPProtocollate(idUtente, limitFatture);
+		} catch(Exception e) {
+			this.log.error("listaFattureNonConsegnate completata con errore: "+e.getMessage(), e);
+			return Response.status(500).entity(e.getMessage()).build();
+		}
+		this.log.info("listaFattureNonConsegnate completata con successo");
+		return Response.ok(lst).build();
+	}
+
+
+	@Override
+	public Response consegnaFatturaProtocollata(Long idSdI, Integer posizione) {
+		
+		byte[] fattura;
+		try {
+			this.log.info("Invoke consegnaFattura");
+			
+			if(idSdI == null) {
+				throw new Exception("Il parametro idSdI non puo' essere null");
+			}
+			
+			if(posizione == null) {
+				throw new Exception("Il parametro posizione non puo' essere null");
+			}
+			
+			IdUtente idUtente = getIdUtente();
+			
+			IdFattura idFattura = recuperaFatture.newIdFattura();
+			idFattura.setIdentificativoSdi(idSdI);
+			idFattura.setPosizione(posizione);
+			
+			fattura = this.recuperaFatture.recuperaFatturaNonConsegnataProtocollata(idUtente, idFattura);
+		} catch(Exception e) {
+			this.log.info("consegnaFattura completata con errore: "+ e.getMessage(), e);
+			return Response.status(500).entity(e.getMessage()).build();
+		}
+		this.log.info("consegnaFattura completata con successo");
+		return Response.ok(fattura).build();
 	}
 
 

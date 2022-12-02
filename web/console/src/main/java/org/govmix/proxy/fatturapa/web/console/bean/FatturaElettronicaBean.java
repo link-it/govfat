@@ -35,7 +35,6 @@ import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
-import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.FatturaDeserializerUtils;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
@@ -439,9 +438,9 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 		}
 
 		this.codiceDestinatario.setValue(this.getDTO().getCodiceDestinatario());
-		TipoDocumentoType tipoDocumento2 = this.getDTO().getTipoDocumento();
-		if(tipoDocumento2 != null){
-			String valueTD = tipoDocumento2.getValue();
+//		TipoDocumentoType tipoDocumento2 = this.getDTO().getTipoDocumento();
+		String valueTD = this.getDTO().get_value_tipoDocumento();
+		if(valueTD != null){
 			this.tipoDocumento.setValue("fattura.tipoDocumento."+valueTD);
 		}
 		this.tipoDocumento.getValue();

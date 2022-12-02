@@ -54,16 +54,34 @@
 			<version>${cxf.version}</version>
 		</dependency>
 		
-		<dependency>
+		<!--dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcpkix-jdk15on</artifactId>
-			<version>1.52</version>
+			<version>1.70</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.bouncycastle/bctls-jdk15on -->
+    <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bctls-jdk15on</artifactId>
+        <version>1.70</version>
+    </dependency>
+<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcutil-jdk15on -->
+<dependency>
+    <groupId>org.bouncycastle</groupId>
+    <artifactId>bcutil-jdk15on</artifactId>
+    <version>1.70</version>
+</dependency>
+
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-ext-jdk15on</artifactId>
-			<version>1.52</version>
+<<<<<<< Updated upstream
+			<version>1.70</version>
 		</dependency>
+=======
+			<version>1.52</version>
+		</dependency-->
+>>>>>>> Stashed changes
 
 		<dependency>
 			<groupId>javax.ejb</groupId>
@@ -84,11 +102,11 @@
 			<version>${project.version}</version>
 		</dependency>
 
-                <dependency>
+                <!--dependency>
                         <groupId>net.sourceforge</groupId>
                         <artifactId>spnego</artifactId>
                         <version>r7</version>
-                </dependency>
+                </dependency-->
 
 	</dependencies>
 	<build>
