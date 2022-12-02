@@ -72,16 +72,11 @@
     <version>1.70</version>
 </dependency>
 
-		<dependency>
+		<!--dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-ext-jdk15on</artifactId>
-<<<<<<< Updated upstream
 			<version>1.70</version>
-		</dependency>
-=======
-			<version>1.52</version>
 		</dependency-->
->>>>>>> Stashed changes
 
 		<dependency>
 			<groupId>javax.ejb</groupId>
