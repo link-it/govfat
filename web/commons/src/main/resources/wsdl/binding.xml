@@ -1,6 +1,9 @@
 <!DOCTYPE xml>
 <jxb:bindings xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+          jxb:extensionBindingPrefixes="xjc"
+
 	version="2.1"
 	>
 
@@ -17,7 +20,7 @@
 			parseMethod="org.apache.cxf.xjc.runtime.DataTypeAdapter.parseDate"
 			printMethod="org.apache.cxf.xjc.runtime.DataTypeAdapter.printDate" />
 
-		<jxb:javaType name="java.math.BigDecimal" xmlType="xs:decimal"
+		<xjc:javaType name="java.math.BigDecimal" xmlType="xs:decimal"
 		                  adapter="org.govmix.proxy.pcc.fatture.utils.adapter.BigDecimalAdapter"/>
 			
 	</jxb:globalBindings>
