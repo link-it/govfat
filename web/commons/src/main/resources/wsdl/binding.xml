@@ -18,8 +18,7 @@
 			printMethod="org.apache.cxf.xjc.runtime.DataTypeAdapter.printDate" />
 
 		<jxb:javaType name="java.math.BigDecimal" xmlType="xs:decimal"
-                parseMethod="org.govmix.proxy.pcc.fatture.utils.adapter.BigDecimalAdapter.parseBigDecimal"
-                printMethod="org.govmix.proxy.pcc.fatture.utils.adapter.BigDecimalAdapter.printBigDecimal" />
+		                  adapter="org.govmix.proxy.pcc.fatture.utils.adapter.BigDecimalAdapter"/>
 			
 	</jxb:globalBindings>
 	

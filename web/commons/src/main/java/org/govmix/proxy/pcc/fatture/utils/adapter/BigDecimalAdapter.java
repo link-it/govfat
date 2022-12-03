@@ -23,19 +23,20 @@ package org.govmix.proxy.pcc.fatture.utils.adapter;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
-public class BigDecimalAdapter {
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-    private BigDecimalAdapter() {
-    }
+public class BigDecimalAdapter extends XmlAdapter<String, BigDecimal>{
 
-    public static BigDecimal parseBigDecimal(String s) {
+	@Override
+	public BigDecimal unmarshal(String s) throws Exception {
         if (s == null) {
             return null;
         }
         return new BigDecimal(s);
-    }
-    
-    public static String printBigDecimal(BigDecimal bigDecimal) {
+	}
+
+	@Override
+	public String marshal(BigDecimal bigDecimal) throws Exception {
         if (bigDecimal == null) {
             return null;
         }
@@ -43,6 +44,5 @@ public class BigDecimalAdapter {
         DecimalFormat df = new DecimalFormat("#.##");
         
         return df.format(bigDecimal.doubleValue());
-        
-    }
+	}
 }
