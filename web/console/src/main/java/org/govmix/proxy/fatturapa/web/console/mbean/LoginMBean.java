@@ -51,7 +51,7 @@ import org.openspcoop2.generic_project.exception.ServiceException;
 import org.openspcoop2.generic_project.web.impl.jsf1.mbean.LoginBean;
 import org.openspcoop2.generic_project.web.impl.jsf1.utils.Utils;
 
-//import net.sourceforge.spnego.SpnegoAuthenticator;
+import net.sourceforge.spnego.SpnegoAuthenticator;
 
 /**
  * LoginMBean bean di sessione per la gestione della sessione dell'utente.
@@ -174,47 +174,47 @@ public class LoginMBean extends LoginBean{
 	@Override
 	public String logout(){
 		LoginMBean.log.info("Logout utente ["+this.getUsername()+"] in corso...");
-//		SpnegoAuthenticator authenticator = null;
-//		try{
-//			FacesContext fc = FacesContext.getCurrentInstance();
-//			if(fc!= null){
-//				ExternalContext externalContext = fc.getExternalContext();
-//				if(externalContext != null){
-//					HttpSession session = (HttpSession)externalContext.getSession(false);
-//
-//					// Logout Spnego
-//					if(this.isNoPasswordLogin()){
-//						try{
-//							LoginMBean.log.info("Logout Spnego in corso...");
-//							Object obj =  session.getAttribute(LoginMBean.S_AUTHENTICATOR_KEY);
-//							if(obj!=null){
-//								authenticator = (SpnegoAuthenticator) obj;
-//								LoginMBean.log.info("Authenticator Spnego trovato.");
-//								authenticator.dispose();
-//							}
-//							LoginMBean.log.info("Logout Spnego completato.");
-//						}catch(Exception e){
-//							LoginMBean.log.error("Errore durante l'esecuzione del metodo dispose di SPNEGO: "+e.getMessage(), e); 
-//						}
-//					}
-//
-//					externalContext.getSessionMap().put("loginBean", null);
-//					session.setAttribute("loginBean", null); 
-//					session.invalidate();
-//					LoginMBean.log.info("Logout utente ["+this.getUsername()+"] Invalidata Sessione.");
-//					if(ConsoleProperties.getInstance(LoginMBean.log).isUtilizzaProfiloUtente()){
-//						if(this.loggedUtente.getTipo() != null && this.loggedUtente.getTipo().equals(UserType.ESTERNO)){
-//							Evento eventoLogin = getEventoLogout();
-//							((ILoginDao)this.getLoginDao()).registraEvento(eventoLogin);
-//						}
-//					}
-//
-//				}
-//			}
-//			LoginMBean.log.info("Logout utente ["+this.getUsername()+"] completato.");
-//		}catch(Exception e){
-//			LoginMBean.log.error("Errore durante il logout: "+e.getMessage(), e); 
-//		}
+		SpnegoAuthenticator authenticator = null;
+		try{
+			FacesContext fc = FacesContext.getCurrentInstance();
+			if(fc!= null){
+				ExternalContext externalContext = fc.getExternalContext();
+				if(externalContext != null){
+					HttpSession session = (HttpSession)externalContext.getSession(false);
+
+					// Logout Spnego
+					if(this.isNoPasswordLogin()){
+						try{
+							LoginMBean.log.info("Logout Spnego in corso...");
+							Object obj =  session.getAttribute(LoginMBean.S_AUTHENTICATOR_KEY);
+							if(obj!=null){
+								authenticator = (SpnegoAuthenticator) obj;
+								LoginMBean.log.info("Authenticator Spnego trovato.");
+								authenticator.dispose();
+							}
+							LoginMBean.log.info("Logout Spnego completato.");
+						}catch(Exception e){
+							LoginMBean.log.error("Errore durante l'esecuzione del metodo dispose di SPNEGO: "+e.getMessage(), e); 
+						}
+					}
+
+					externalContext.getSessionMap().put("loginBean", null);
+					session.setAttribute("loginBean", null); 
+					session.invalidate();
+					LoginMBean.log.info("Logout utente ["+this.getUsername()+"] Invalidata Sessione.");
+					if(ConsoleProperties.getInstance(LoginMBean.log).isUtilizzaProfiloUtente()){
+						if(this.loggedUtente.getTipo() != null && this.loggedUtente.getTipo().equals(UserType.ESTERNO)){
+							Evento eventoLogin = getEventoLogout();
+							((ILoginDao)this.getLoginDao()).registraEvento(eventoLogin);
+						}
+					}
+
+				}
+			}
+			LoginMBean.log.info("Logout utente ["+this.getUsername()+"] completato.");
+		}catch(Exception e){
+			LoginMBean.log.error("Errore durante il logout: "+e.getMessage(), e); 
+		}
 
 		if(!this.isNoPasswordLogin())
 			return "login";
