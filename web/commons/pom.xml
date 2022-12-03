@@ -216,17 +216,19 @@
 		    <version>1.13</version>
 		</dependency>
 
+<dependency>
+    <groupId>org.bouncycastle</groupId>
+    <artifactId>bcmail-jdk18on</artifactId>
+    <version>1.72</version>
+</dependency>
+
+<dependency>
+    <groupId>org.bouncycastle</groupId>
+    <artifactId>bcprov-jdk18on</artifactId>
+    <version>1.72</version>
+</dependency>
+
 	</dependencies>
-	<!--repositories>
-		<repository>
-			<id>openspcoop2-releases</id>
-			<url>https://maven.link.it/content/repositories/public/</url>
-		</repository>
-		<repository>
-			<id>openspcoop2-snapshot</id>
-			<url>http://maven.link.it/content/repositories/snapshots/</url>
-		</repository>
-	</repositories-->
 
 	<build>
 		<filters>
