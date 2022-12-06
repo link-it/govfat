@@ -161,11 +161,11 @@
 					<op2web:formField field="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataInvioPeriodo}" />
 
 					<op2web:inlineProp labelEsterna="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataInvio.label}" styleClassEsterna="labelPaddingTop"
-						rendered="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataInvio.rendered}">
+						rendered="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataInvio.rendered}" required="false">
 
 						<ui:define name="prop1">
 							<op2web:prop label="#{commonsMsg['form.component.dal']}" 
-								styleClass="insideLeftProp" rendered="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataInvio.rendered}">
+								styleClass="insideLeftProp" rendered="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataInvio.rendered}" required="false">
 								<rich:calendar id="input1_#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataInvio.name}" value="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataInvio.value}"
 									disabled="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataInvio.disabled}" style="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataInvio.style}" bypassUpdates="true"
 									datePattern="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataInvio.pattern}" defaultTime="00:00" validatorMessage="#{msg['fattura.search.dataInvio.da.formatoNonValido']}"
@@ -177,7 +177,7 @@
 
 						<ui:define name="prop2">
 							<op2web:prop label="#{commonsMsg['form.component.al']}"
-								styleClass="insideRightProp" rendered="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataInvio.rendered}">
+								styleClass="insideRightProp" rendered="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataInvio.rendered}" required="false">
 								<rich:calendar id="input2_#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataInvio.name}" value="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataInvio.value2}"
 									disabled="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataInvio.disabled}" style="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataInvio.style}"
 									datePattern="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataInvio.pattern}" defaultTime="23:59" converter="dateConverter" 
@@ -186,7 +186,7 @@
 						</ui:define>
 					</op2web:inlineProp>
 						
-					<op2web:prop label="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataEsatta.label}" rendered="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataEsatta.rendered}" styleClass="labelPaddingTop">
+					<op2web:prop label="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataEsatta.label}" rendered="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataEsatta.rendered}" styleClass="labelPaddingTop" required="false">
 						<rich:calendar id="input_#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataEsatta.name}" value="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataEsatta.value}"  disabled="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataEsatta.disabled}"
 		 					style="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataEsatta.style}" datePattern="#{fatturaElettronicaAttivaSoloConservazioneMBean.search.dataEsatta.pattern}" defaultTime="00:00" 
 		 					validatorMessage="#{msg['fattura.search.dataEsatta.formatoNonValido']}" converter="dateEmptyConverter"

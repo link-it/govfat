@@ -158,11 +158,11 @@
 					<op2web:searchFields nomiFields="#{'cessionarioCommittente,identificativoLotto,dipartimento,dataInvioPeriodo'}"    />
 
 					<op2web:inlineProp labelEsterna="#{fatturaElettronicaAttivaMBean.search.dataInvio.label}"  styleClassEsterna="labelPaddingTop"
-						rendered="#{fatturaElettronicaAttivaMBean.search.dataInvio.rendered}">
+						rendered="#{fatturaElettronicaAttivaMBean.search.dataInvio.rendered}" required="false">
 
 						<ui:define name="prop1">
 							<op2web:prop label="#{commonsMsg['form.component.dal']}" 
-								styleClass="insideLeftProp" rendered="#{fatturaElettronicaAttivaMBean.search.dataInvio.rendered}">
+								styleClass="insideLeftProp" rendered="#{fatturaElettronicaAttivaMBean.search.dataInvio.rendered}" required="false">
 								<rich:calendar id="input1_#{fatturaElettronicaAttivaMBean.search.dataInvio.name}" value="#{fatturaElettronicaAttivaMBean.search.dataInvio.value}"
 									disabled="#{fatturaElettronicaAttivaMBean.search.dataInvio.disabled}" style="#{fatturaElettronicaAttivaMBean.search.dataInvio.style}" bypassUpdates="true"
 									datePattern="#{fatturaElettronicaAttivaMBean.search.dataInvio.pattern}" defaultTime="00:00" validatorMessage="#{msg['fattura.search.dataInvio.da.formatoNonValido']}"
@@ -174,7 +174,7 @@
 
 						<ui:define name="prop2">
 							<op2web:prop label="#{commonsMsg['form.component.al']}"
-								styleClass="insideRightProp" rendered="#{fatturaElettronicaAttivaMBean.search.dataInvio.rendered}">
+								styleClass="insideRightProp" rendered="#{fatturaElettronicaAttivaMBean.search.dataInvio.rendered}" required="false">
 								<rich:calendar id="input2_#{fatturaElettronicaAttivaMBean.search.dataInvio.name}" value="#{fatturaElettronicaAttivaMBean.search.dataInvio.value2}"
 									disabled="#{fatturaElettronicaAttivaMBean.search.dataInvio.disabled}" style="#{fatturaElettronicaAttivaMBean.search.dataInvio.style}"
 									datePattern="#{fatturaElettronicaAttivaMBean.search.dataInvio.pattern}" defaultTime="23:59" converter="dateConverter" 
@@ -194,7 +194,7 @@
 				<op2web:fieldset legend="#{msg['fattura.search.datiFattura']}" rendered="#{true}" collapsible="false" closed="false">
 					<op2web:formField field="#{fatturaElettronicaAttivaMBean.search.numero}" />
 						
-					<op2web:prop label="#{fatturaElettronicaAttivaMBean.search.dataEsatta.label}" rendered="#{fatturaElettronicaAttivaMBean.search.dataEsatta.rendered}" styleClass="labelPaddingTop">
+					<op2web:prop label="#{fatturaElettronicaAttivaMBean.search.dataEsatta.label}" rendered="#{fatturaElettronicaAttivaMBean.search.dataEsatta.rendered}" styleClass="labelPaddingTop" required="false">
 						<rich:calendar id="input_#{fatturaElettronicaAttivaMBean.search.dataEsatta.name}" value="#{fatturaElettronicaAttivaMBean.search.dataEsatta.value}"  disabled="#{fatturaElettronicaAttivaMBean.search.dataEsatta.disabled}"
 		 					style="#{fatturaElettronicaAttivaMBean.search.dataEsatta.style}" datePattern="#{fatturaElettronicaAttivaMBean.search.dataEsatta.pattern}" defaultTime="00:00" 
 		 					validatorMessage="#{msg['fattura.search.dataEsatta.formatoNonValido']}" converter="dateEmptyConverter"
