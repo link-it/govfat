@@ -9,9 +9,6 @@ import java.io.InputStream;
 import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
 import java.security.KeyStore;
-import java.security.Provider;
-import java.security.SecureRandom;
-import java.security.Security;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
@@ -39,8 +36,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.log4j.Logger;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.jsse.provider.BouncyCastleJsseProvider;
 import org.govmix.fatturapa.parer.beans.UnitaDocumentariaBean;
 import org.govmix.fatturapa.parer.client.ParERResponse.STATO;
 import org.govmix.fatturapa.parer.utils.ConservazioneProperties;
@@ -133,17 +128,9 @@ public class ParERClient {
 
 		        trustManagerFactory.init(trustStore);
 
-//		        Security.insertProviderAt(new BouncyCastleProvider(),1);
-//		        Security.insertProviderAt(new BouncyCastleJsseProvider(),2);
-		        
-		        Security.removeProvider("BCJSSE");
-		        Security.removeProvider("BC");
-
-		        Provider BCJSSE = new BouncyCastleJsseProvider();
-
 		        // Trust own CA and all self-signed certs
-		        SSLContext sslContext = SSLContext.getInstance("TLSv1.3", BCJSSE); 
-		        sslContext.init(null,trustManagerFactory.getTrustManagers(),SecureRandom.getInstance("SHA1PRNG"));
+		        SSLContext sslContext = SSLContext.getInstance("TLSv1.3");
+		        sslContext.init(null,trustManagerFactory.getTrustManagers(),null);
 
 		        SSLParameters params = sslContext.getSupportedSSLParameters();
 		        String[] suites = params.getCipherSuites();
