@@ -213,6 +213,32 @@ public abstract class AbstractUnitaDocumentariaBuilder <T extends AbstractUnitaD
 		
 		return intestazione;
 	}
+	
+	// SUFFIX Per id documento univoci
+	protected String getSuffixFattura() {
+		return "0";
+	}
+	protected String getSuffixMetadati() {
+		return "1";
+	}
+	protected String getSuffixAllegato() {
+		return "2";
+	}
+	protected String getSuffixEC() {
+		return "3";
+	}
+	protected String getSuffixSC() {
+		return "4";
+	}
+	protected String getSuffixDT() {
+		return "5";
+	}
+	protected String getSuffixLotto() {
+		return "6";
+	}
+	protected String getSuffixAnnesso() {
+		return "6";
+	}
 
 
 	protected abstract Ente getEnte(T input) throws Exception;

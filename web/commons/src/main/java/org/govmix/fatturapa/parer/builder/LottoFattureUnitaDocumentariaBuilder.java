@@ -60,8 +60,8 @@ public class LottoFattureUnitaDocumentariaBuilder extends AbstractUnitaDocumenta
 		if(INCLUDE_METADATI) {
 			List<DocumentoWrapper> annessiLst = new ArrayList<DocumentoWrapper>();
 			DocumentoType annessoMetadati = new DocumentoType();
-			String idDocumentoMetadati = input.getLotto().getIdentificativoSdi() + "-metadati";
-			annessoMetadati.setIDDocumento(idDocumentoMetadati);
+			String idDocumentoMetadati = input.getLotto().getId() + getSuffixMetadati();
+			annessoMetadati.setIDDocumento(idDocumentoMetadati); //OK
 			
 			annessoMetadati.setTipoDocumento("FILE DEI METADATI");
 			StrutturaType strutturaOriginale = new StrutturaType();
@@ -98,8 +98,8 @@ public class LottoFattureUnitaDocumentariaBuilder extends AbstractUnitaDocumenta
 	protected DocumentoType getDocumentoPrincipale(
 			UnitaDocumentariaLottoInput input) {
 		DocumentoType documentoPricipale = new DocumentoType();
-		String idDocumentoLotto = input.getLotto().getId() + "";
-		documentoPricipale.setIDDocumento(idDocumentoLotto);
+		String idDocumentoLotto = input.getLotto().getId()  + getSuffixLotto();
+		documentoPricipale.setIDDocumento(idDocumentoLotto); //OK
 		
 		documentoPricipale.setTipoDocumento("LOTTO DI FATTURE");
 		

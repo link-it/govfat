@@ -68,9 +68,9 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 				
 				if(add) {
 					DocumentoType annesso = new DocumentoType();
-					String idDocumentoAnnesso = traccia.getId() + "";
+					String idDocumentoAnnesso = traccia.getId() + getSuffixAnnesso();
 					
-					annesso.setIDDocumento(idDocumentoAnnesso);
+					annesso.setIDDocumento(idDocumentoAnnesso); //OK
 					annesso.setTipoDocumento(this.getTipoComunicazione(traccia.getTipoComunicazione()));
 					StrutturaType strutturaOriginale = new StrutturaType();
 					Componenti componenti = new Componenti();
@@ -139,8 +139,8 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 			for(AllegatoFattura allegatoInput: input.getAllegati()) {
 				if(allegatoInput.getAttachment() != null && allegatoInput.getAttachment().length > 0) {
 					DocumentoType allegato = new DocumentoType();
-					String idDocumentoAllegato = input.getFattura().getId() + "";
-					allegato.setIDDocumento(idDocumentoAllegato);
+					String idDocumentoAllegato = allegatoInput.getId() + getSuffixAllegato();
+					allegato.setIDDocumento(idDocumentoAllegato); //OK
 	
 					allegato.setTipoDocumento("GENERICO");
 	
