@@ -133,8 +133,11 @@ public class ParERClient {
 
 		        trustManagerFactory.init(trustStore);
 
-		        Security.insertProviderAt(new BouncyCastleProvider(),1);
-		        Security.insertProviderAt(new BouncyCastleJsseProvider(),2);
+//		        Security.insertProviderAt(new BouncyCastleProvider(),1);
+//		        Security.insertProviderAt(new BouncyCastleJsseProvider(),2);
+		        
+		        Security.removeProvider("BCJSSE");
+		        Security.removeProvider("BC");
 
 		        Provider BCJSSE = new BouncyCastleJsseProvider();
 
