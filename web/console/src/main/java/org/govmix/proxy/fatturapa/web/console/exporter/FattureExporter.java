@@ -25,6 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -154,7 +155,7 @@ public class FattureExporter  extends HttpServlet{
 					String action =req.getParameter(FattureExporter.PARAMETRO_ACTION);
 					username = lb.getUsername();
 
-					if(ids == null || (ids != null && ids.length == 0))
+					if(!isAll && (ids == null || (ids != null && ids.length == 0)))
 						throw new ExportException("Si e' verificato un errore durante l'export: Formato parametri errato.");
 
 					if(action != null){
@@ -175,6 +176,11 @@ public class FattureExporter  extends HttpServlet{
 
 								expressionFromSearch = service.getFilterFromSearch(fatturaSearchDAO, form2);
 
+								List<IdFattura> lstIdFattura = getLstIdFattura(fatturaSearchDAO, expressionFromSearch);
+								
+								
+								ids = lstIdFattura.stream().map(f -> (f.getId() + "")).collect(Collectors.toList()).toArray(new String[]{});
+								
 							}catch(Exception e){
 								FattureExporter.log.error("Si e' verificato un errore durante l'impostazione dei criteri di ricerca: "+ e.getMessage(),e);
 								throw new ExportException("Si e' verificato un errore durante l'export della risorsa selezionata.");
