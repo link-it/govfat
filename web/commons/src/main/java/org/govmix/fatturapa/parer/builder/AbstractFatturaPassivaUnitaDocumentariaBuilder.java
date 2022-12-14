@@ -119,8 +119,8 @@ public abstract class AbstractFatturaPassivaUnitaDocumentariaBuilder extends Bas
 			for(NotificaEsitoCommittente nec: input.getNotificaEC()) {
 				if(nec.getXml() != null) {
 					DocumentoType annessoNEC = new DocumentoType();
-					String idDocumentoNotificaEC = 	nec.getId() + "";
-					annessoNEC.setIDDocumento(idDocumentoNotificaEC);
+					String idDocumentoNotificaEC = 	nec.getId() + getSuffixEC();
+					annessoNEC.setIDDocumento(idDocumentoNotificaEC); //OK
 
 					annessoNEC.setTipoDocumento("NOTIFICA DI ESITO COMMITTENTE");
 					StrutturaType strutturaOriginale = new StrutturaType();
@@ -146,8 +146,8 @@ public abstract class AbstractFatturaPassivaUnitaDocumentariaBuilder extends Bas
 					//SCARTO
 					if(nec.getScartoXml() != null) {
 						DocumentoType annessoSEC = new DocumentoType();
-						String idDocumentoScarto = 	nec.getId() + "" +(index-1);
-						annessoSEC.setIDDocumento(idDocumentoScarto);
+						String idDocumentoScarto = 	nec.getId()  + getSuffixSC();
+						annessoSEC.setIDDocumento(idDocumentoScarto); //OK
 
 						annessoSEC.setTipoDocumento("SCARTO ESITO COMMITTENTE");
 						StrutturaType strutturaOriginaleSEC = new StrutturaType();
@@ -177,8 +177,8 @@ public abstract class AbstractFatturaPassivaUnitaDocumentariaBuilder extends Bas
 		}
 		if(input.getNotificaDT() != null) {
 			DocumentoType annessoNDT = new DocumentoType();
-			String idDocumentoNotificaDT = input.getNotificaDT().getId() + ""; 
-			annessoNDT.setIDDocumento(idDocumentoNotificaDT);
+			String idDocumentoNotificaDT = input.getNotificaDT().getId() + getSuffixDT(); 
+			annessoNDT.setIDDocumento(idDocumentoNotificaDT); //OK
 
 			annessoNDT.setTipoDocumento("NOTIFICA DI DECORRENZA DEI TERMINI");
 			StrutturaType strutturaOriginale = new StrutturaType();
