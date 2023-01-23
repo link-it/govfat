@@ -450,7 +450,7 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 				}
 			} catch (Exception e) {
 				LoggerManager.getConsoleLogger().error("Errore durante l'inizializzazione di tipo documento utils: " + e.getMessage(), e);
-				this.tipoDocumento.setValue("fattura.tipoDocumento.XX");
+				this.tipoDocumento.setValue("fattura.tipoDocumento.TDXX");
 			}
 		}
 		this.tipoDocumento.getValue();
