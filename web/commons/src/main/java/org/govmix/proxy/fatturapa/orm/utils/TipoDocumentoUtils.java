@@ -1,5 +1,8 @@
 package org.govmix.proxy.fatturapa.orm.utils;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
 
@@ -50,8 +53,20 @@ public class TipoDocumentoUtils {
 	public boolean isTipoNotaCredito(FatturaElettronica input) {
 		return input.get_value_tipoDocumento().equals("TD04");
 	}
-	public Set<String> getValues() {
-		return tipidocumento.keySet();
+	public Collection<String> getValues() {
+		Comparator<? super String> c = new Comparator<String>() {
+
+			@Override
+			public int compare(String o1, String o2) {
+				return o1.compareTo(o2);
+			}
+		};
+
+		Set<String> keySet = tipidocumento.keySet();
+		
+		String[] array = keySet.toArray(new String[] {});
+		Arrays.sort(array, c);
+		return Arrays.asList(array);
 	}
 
 }
