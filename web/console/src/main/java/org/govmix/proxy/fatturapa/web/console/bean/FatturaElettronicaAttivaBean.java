@@ -373,11 +373,11 @@ public class FatturaElettronicaAttivaBean extends BaseBean<FatturaElettronica, L
 				if(TipoDocumentoUtils.getInstance(LoggerManager.getConsoleLogger()).getValues().contains(valueTD)) {
 					this.tipoDocumento.setValue("fattura.tipoDocumento."+valueTD);
 				} else {
-					this.tipoDocumento.setValue("fattura.tipoDocumento.XX");
+					this.tipoDocumento.setValue("fattura.tipoDocumento.TDXX");
 				}
 			} catch (Exception e) {
 				LoggerManager.getConsoleLogger().error("Errore durante l'inizializzazione di tipo documento utils: " + e.getMessage(), e);
-				this.tipoDocumento.setValue("fattura.tipoDocumento.XX");
+				this.tipoDocumento.setValue("fattura.tipoDocumento.TDXX");
 			}
 		}
 
