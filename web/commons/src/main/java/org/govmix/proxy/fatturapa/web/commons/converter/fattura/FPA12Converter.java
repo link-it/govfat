@@ -132,8 +132,10 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 				if(!TipoDocumentoUtils.getInstance(LoggerManager.getBatchInserimentoFatturaLogger()).getValues().contains(tipoDocumentoString)) {
 					throw new ValidationException("Valore ["+tipoDocumentoString+"] di datiGenerali.datiGeneraliDocumento.tipoDocumento non ammesso");	
 				}
+			} catch(ValidationException e) {
+				throw e;
 			} catch(Exception e) {
-				throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.tipoDocumento");	
+				throw new ValidationException("Errore durante la ricerca dell'elemento datiGenerali.datiGeneraliDocumento.tipoDocumento: " + e.getMessage());	
 			}
 		}
 
