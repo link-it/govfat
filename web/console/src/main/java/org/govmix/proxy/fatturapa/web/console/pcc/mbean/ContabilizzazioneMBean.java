@@ -603,7 +603,15 @@ public class ContabilizzazioneMBean  extends BaseMBean<ContabilizzazionePccBean,
 			lista.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CostantiForm.NON_SELEZIONATO, CostantiForm.NON_SELEZIONATO)));
 			lista.add(new SelectItem(
 					new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CausaleType.CONT.getValue(), "pccCausale."+CausaleType.CONT.getValue())));
-			if(this.fattura == null || !TipoDocumentoUtils.getInstance().isTipoNotaCredito(this.fattura.getDTO())) {
+			
+			TipoDocumentoUtils tipoDocumentoUtils = null;
+			try {
+				tipoDocumentoUtils = TipoDocumentoUtils.getInstance(this.log);
+			} catch (Exception e) {
+				this.log.error("Errore durante l'inizializzazione di TipoDocumentoUtils: " + e.getMessage(), e);
+			}
+
+			if(this.fattura == null || !tipoDocumentoUtils.isTipoNotaCredito(this.fattura.getDTO())) {
 				lista.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CausaleType.ATTNC.getValue(), "pccCausale."+CausaleType.ATTNC.getValue())));
 			} else {
 				lista.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(CausaleType.NCRED.getValue(), "pccCausale."+CausaleType.NCRED.getValue())));

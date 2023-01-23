@@ -66,9 +66,9 @@ public abstract class AbstractFatturaPassivaUnitaDocumentariaBuilder extends Bas
 		return "FATTURA PASSIVA";
 	}
 
-	public ChiaveType getChiave(UnitaDocumentariaFatturaPassivaInput input) {
+	public ChiaveType getChiave(UnitaDocumentariaFatturaPassivaInput input) throws Exception {
 		ChiaveType chiave = new ChiaveType();
-		if(TipoDocumentoUtils.getInstance().isTipoNotaCredito(input.getFattura())) {
+		if(TipoDocumentoUtils.getInstance(this.log).isTipoNotaCredito(input.getFattura())) {
 			// Dopo aver verificato che alcune note di credito generavano la stessa chiave della fattura, si e' deciso di prependere la stringa NC_ alla chiave in caso di note di credito 
 			chiave.setNumero("NC_" + input.getFattura().getNumero() + "_" + input.getFattura().getCedentePrestatoreCodiceFiscale());
 		} else {
@@ -101,8 +101,8 @@ public abstract class AbstractFatturaPassivaUnitaDocumentariaBuilder extends Bas
 		return new CacheEnti(log).getEnte(input.getFattura().getCodiceDestinatario());
 	}
 
-	protected String getTipoDocumento(UnitaDocumentariaFatturaPassivaInput input) {
-		return TipoDocumentoUtils.getInstance().getTipoDocumentoConsevazioneFatturaPassiva(input);
+	protected String getTipoDocumento(UnitaDocumentariaFatturaPassivaInput input) throws Exception {
+		return TipoDocumentoUtils.getInstance(this.log).getTipoDocumentoConsevazioneFatturaPassiva(input);
 	}
 
 	@Override

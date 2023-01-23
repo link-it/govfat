@@ -40,7 +40,7 @@ public class FatturaPassivaMultiplaUnitaDocumentariaBuilder extends
 
 	@Override
 	protected DocumentoType getDocumentoPrincipale(
-			UnitaDocumentariaFatturaPassivaInput input) {
+			UnitaDocumentariaFatturaPassivaInput input) throws Exception {
 
 		DocumentoType documentoPricipale = new DocumentoType();
 		String idDocumento = input.getFattura().getId() + getSuffixFattura();

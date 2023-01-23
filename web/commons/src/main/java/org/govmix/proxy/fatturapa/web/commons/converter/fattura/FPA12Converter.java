@@ -129,7 +129,7 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 		if(strictValidation) {
 			try {
 				String tipoDocumentoString = this.getTipoDocumentoString();
-				if(!TipoDocumentoUtils.getInstance().getValues().contains(tipoDocumentoString)) {
+				if(!TipoDocumentoUtils.getInstance(LoggerManager.getBatchInserimentoFatturaLogger()).getValues().contains(tipoDocumentoString)) {
 					throw new ValidationException("Valore ["+tipoDocumentoString+"] di datiGenerali.datiGeneraliDocumento.tipoDocumento non ammesso");	
 				}
 			} catch(Exception e) {
