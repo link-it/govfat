@@ -730,9 +730,6 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
   @XmlElement(name="codiceDestinatario",required=true,nillable=false)
   protected java.lang.String codiceDestinatario;
 
-  @XmlTransient
-  protected java.lang.String _value_tipoDocumento;
-
   @XmlElement(name="tipoDocumento",required=true,nillable=false)
   protected String tipoDocumento;
 
