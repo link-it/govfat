@@ -44,7 +44,7 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 		DatiGeneraliDocumentoType datiGeneraliDocumento =  this.getFattura().getFatturaElettronicaBody(0).getDatiGenerali().getDatiGeneraliDocumento();
 		
 		try {
-			fatturaElettronica.set_value_tipoDocumento(getTipoDocumentoString());
+			fatturaElettronica.setTipoDocumento(getTipoDocumentoString());
 		} catch (Exception e) {}
 		
 		fatturaElettronica.setDivisa(datiGeneraliDocumento.getDivisa());

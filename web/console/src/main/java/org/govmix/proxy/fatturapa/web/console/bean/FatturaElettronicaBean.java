@@ -440,17 +440,17 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 
 		this.codiceDestinatario.setValue(this.getDTO().getCodiceDestinatario());
 
-		String valueTD = this.getDTO().get_value_tipoDocumento();
+		String valueTD = this.getDTO().getTipoDocumento();
 		if(valueTD != null){
 			try {
 				if(TipoDocumentoUtils.getInstance(LoggerManager.getConsoleLogger()).getValues().contains(valueTD)) {
 					this.tipoDocumento.setValue("fattura.tipoDocumento."+valueTD);
 				} else {
-					this.tipoDocumento.setValue("fattura.tipoDocumento.TDXX");
+					this.tipoDocumento.setValue("fattura.tipoDocumento."+TipoDocumentoUtils.TIPO_DOCUMENTO_SCONOSCIUTO);
 				}
 			} catch (Exception e) {
 				LoggerManager.getConsoleLogger().error("Errore durante l'inizializzazione di tipo documento utils: " + e.getMessage(), e);
-				this.tipoDocumento.setValue("fattura.tipoDocumento.TDXX");
+				this.tipoDocumento.setValue("fattura.tipoDocumento."+TipoDocumentoUtils.TIPO_DOCUMENTO_SCONOSCIUTO);
 			}
 		}
 		this.tipoDocumento.getValue();

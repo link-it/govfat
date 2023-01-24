@@ -202,7 +202,7 @@ public class JDBCFatturaElettronicaServiceImpl extends JDBCFatturaElettronicaSer
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(fatturaElettronica.getTerzoIntermediarioOSoggettoEmittenteCodiceFiscale(),FatturaElettronica.model().TERZO_INTERMEDIARIO_OSOGGETTO_EMITTENTE_CODICE_FISCALE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(fatturaElettronica.getPosizione(),FatturaElettronica.model().POSIZIONE.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(fatturaElettronica.getCodiceDestinatario(),FatturaElettronica.model().CODICE_DESTINATARIO.getFieldType()),
-			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(fatturaElettronica.get_value_tipoDocumento(),FatturaElettronica.model().TIPO_DOCUMENTO.getFieldType()),
+			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(fatturaElettronica.getTipoDocumento(),FatturaElettronica.model().TIPO_DOCUMENTO.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(fatturaElettronica.getDivisa(),FatturaElettronica.model().DIVISA.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(fatturaElettronica.getData(),FatturaElettronica.model().DATA.getFieldType()),
 			new org.openspcoop2.generic_project.dao.jdbc.utils.JDBCObject(fatturaElettronica.getAnno(),FatturaElettronica.model().ANNO.getFieldType()),
@@ -378,7 +378,7 @@ public class JDBCFatturaElettronicaServiceImpl extends JDBCFatturaElettronicaSer
 		sqlQueryObjectUpdate.addUpdateField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().CODICE_DESTINATARIO,false), "?");
 		lstObjects_fatturaElettronica.add(new JDBCObject(fatturaElettronica.getCodiceDestinatario(), FatturaElettronica.model().CODICE_DESTINATARIO.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().TIPO_DOCUMENTO,false), "?");
-		lstObjects_fatturaElettronica.add(new JDBCObject(fatturaElettronica.get_value_tipoDocumento(), FatturaElettronica.model().TIPO_DOCUMENTO.getFieldType()));
+		lstObjects_fatturaElettronica.add(new JDBCObject(fatturaElettronica.getTipoDocumento(), FatturaElettronica.model().TIPO_DOCUMENTO.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DIVISA,false), "?");
 		lstObjects_fatturaElettronica.add(new JDBCObject(fatturaElettronica.getDivisa(), FatturaElettronica.model().DIVISA.getFieldType()));
 		sqlQueryObjectUpdate.addUpdateField(this.getFatturaElettronicaFieldConverter().toColumn(FatturaElettronica.model().DATA,false), "?");

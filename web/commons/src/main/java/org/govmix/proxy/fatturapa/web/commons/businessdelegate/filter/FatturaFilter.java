@@ -137,7 +137,7 @@ public class FatturaFilter extends AbstractFilter {
 			
 			if(this.tipoDocumento != null) {
 				
-				if(this.tipoDocumento.equals("TDXX")) {
+				if(this.tipoDocumento.equals(TipoDocumentoUtils.TIPO_DOCUMENTO_SCONOSCIUTO)) {
 					IExpression newExpression = this.newExpression();
 					try {
 						Collection<String> tipidoc = TipoDocumentoUtils.getInstance(LoggerManager.getDaoLogger()).getValues();

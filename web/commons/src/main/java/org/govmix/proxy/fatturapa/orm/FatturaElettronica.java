@@ -341,26 +341,13 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
     this.codiceDestinatario = codiceDestinatario;
   }
 
-  public void set_value_tipoDocumento(String value) {
-//	    this.tipoDocumento = (TipoDocumentoType) TipoDocumentoType.toEnumConstantFromString(value);
-	    this.tipoDocumento = value;
+  public String getTipoDocumento() {
+    return this.tipoDocumento;
   }
 
-  public String get_value_tipoDocumento() {
-    if(this.tipoDocumento == null){
-    	return null;
-    }else{
-    	return this.tipoDocumento.toString();
-    }
+  public void setTipoDocumento(String tipoDocumento) {
+    this.tipoDocumento = tipoDocumento;
   }
-
-//  public org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType getTipoDocumento() {
-//    return this.tipoDocumento;
-//  }
-//
-//  public void setTipoDocumento(org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType tipoDocumento) {
-//    this.tipoDocumento = tipoDocumento;
-//  }
 
   public java.lang.String getDivisa() {
     return this.divisa;

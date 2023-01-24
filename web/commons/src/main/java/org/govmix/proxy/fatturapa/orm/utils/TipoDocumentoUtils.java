@@ -16,6 +16,9 @@ public class TipoDocumentoUtils {
 
 	private static TipoDocumentoUtils instance;
 	
+	public static final String TIPO_DOCUMENTO_NOTA_CREDITO = "TD04";
+	public static final String TIPO_DOCUMENTO_SCONOSCIUTO = "TDXX";
+	
 	public static TipoDocumentoUtils getInstance(Logger log) throws Exception {
 		if(instance == null) {
 			instance = new TipoDocumentoUtils(log);
@@ -31,15 +34,15 @@ public class TipoDocumentoUtils {
 
 	public String getTipoDocumentoConsevazione(FatturaElettronica input) throws Exception {
 		String tipoConservazione = null;
-		if(this.tipidocumento.containsKey(input.get_value_tipoDocumento())) {
-			tipoConservazione = this.tipidocumento.get(input.get_value_tipoDocumento()).getConservazione();
+		if(this.tipidocumento.containsKey(input.getTipoDocumento())) {
+			tipoConservazione = this.tipidocumento.get(input.getTipoDocumento()).getConservazione();
 		}
 		
 		if(tipoConservazione != null) {
 			return tipoConservazione;
 		}
 		
-		throw new Exception("Impossibile inviare in conservazione la fattura con tipo documento ["+input.get_value_tipoDocumento()+"]");
+		throw new Exception("Impossibile inviare in conservazione la fattura con tipo documento ["+input.getTipoDocumento()+"]");
 	}
 
 	public String getTipoDocumentoConsevazioneFatturaPassiva(UnitaDocumentariaFatturaPassivaInput input) throws Exception {
@@ -51,7 +54,7 @@ public class TipoDocumentoUtils {
 	}
 
 	public boolean isTipoNotaCredito(FatturaElettronica input) {
-		return input.get_value_tipoDocumento().equals("TD04");
+		return input.getTipoDocumento().equals(TIPO_DOCUMENTO_NOTA_CREDITO);
 	}
 	public Collection<String> getValues() {
 		Comparator<? super String> c = new Comparator<String>() {
