@@ -21,19 +21,6 @@ public abstract class BaseAbstractFatturaPassivaUnitaDocumentariaBuilder extends
 		super(log);
 	}
 
-	protected String getTipoDocumento(UnitaDocumentariaFatturaPassivaInput input) {
-		switch(input.getFattura().getTipoDocumento()){
-		case TD01: return "FATTURA";
-		case TD02:return "ACCONTO/ANTICIPO SU FATTURA";
-		case TD03:return "ACCONTO/ANTICIPO SU PARCELLA";
-		case TD04:return "NOTA DI CREDITO";
-		case TD05:return "NOTA DI DEBITO";
-		case TD06:return "PARCELLA";
-		default:return null;
-		}
-	}
-	
-	
 	@Override
 	protected List<DocumentoWrapper> getAnnessi(UnitaDocumentariaFatturaPassivaInput input) throws Exception {
 

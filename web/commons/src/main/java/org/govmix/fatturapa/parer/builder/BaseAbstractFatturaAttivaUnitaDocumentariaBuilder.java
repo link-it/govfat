@@ -15,6 +15,7 @@ import org.govmix.fatturapa.parer.versamento.request.TipoSupportoType;
 import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
+import org.govmix.proxy.fatturapa.orm.utils.TipoDocumentoUtils;
 
 public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends AbstractUnitaDocumentariaBuilder<UnitaDocumentariaFatturaAttivaInput> {
 
@@ -22,16 +23,8 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 		super(log);
 	}
 
-	protected String getTipoDocumento(UnitaDocumentariaFatturaAttivaInput input) {
-		switch(input.getFattura().getTipoDocumento()){
-		case TD01: return "FATTURA";
-		case TD02:return "ACCONTO/ANTICIPO SU FATTURA";
-		case TD03:return "ACCONTO/ANTICIPO SU PARCELLA";
-		case TD04:return "NOTA DI CREDITO";
-		case TD05:return "NOTA DI DEBITO";
-		case TD06:return "PARCELLA";
-		default:return null;
-		}
+	protected String getTipoDocumento(UnitaDocumentariaFatturaAttivaInput input) throws Exception {
+		return TipoDocumentoUtils.getInstance(this.log).getTipoDocumentoConsevazioneFatturaAttiva(input);
 	}
 	
 	

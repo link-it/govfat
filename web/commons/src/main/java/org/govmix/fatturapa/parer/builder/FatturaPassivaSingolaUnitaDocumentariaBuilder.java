@@ -33,7 +33,7 @@ public class FatturaPassivaSingolaUnitaDocumentariaBuilder extends
 	}
 
 	@Override
-	protected DocumentoType getDocumentoPrincipale(UnitaDocumentariaFatturaPassivaInput input) {
+	protected DocumentoType getDocumentoPrincipale(UnitaDocumentariaFatturaPassivaInput input) throws Exception {
 
 		DocumentoType documentoPricipale = new DocumentoType();
 		String idDocumento = input.getFattura().getIdentificativoSdi() + "_" + input.getFattura().getPosizione();

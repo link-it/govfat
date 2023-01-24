@@ -214,7 +214,7 @@ public class PccTracciaFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"FatturaElettronica.posizione"));
 				setParameter(object, "setCodiceDestinatario", PccTraccia.model().FATTURA_ELETTRONICA.CODICE_DESTINATARIO.getFieldType(),
 					this.getObjectFromMap(map,"FatturaElettronica.codiceDestinatario"));
-				setParameter(object, "set_value_tipoDocumento", String.class,
+				setParameter(object, "setTipoDocumento", String.class,
 					this.getObjectFromMap(map,"FatturaElettronica.tipoDocumento"));
 				setParameter(object, "setDivisa", PccTraccia.model().FATTURA_ELETTRONICA.DIVISA.getFieldType(),
 					this.getObjectFromMap(map,"FatturaElettronica.divisa"));

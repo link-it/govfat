@@ -21,6 +21,7 @@
 package org.govmix.proxy.fatturapa.web.console.mbean;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -35,19 +36,16 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import java.util.Arrays;
 import org.govmix.proxy.fatturapa.orm.Dipartimento;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.orm.IdFattura;
 import org.govmix.proxy.fatturapa.orm.IdLotto;
 import org.govmix.proxy.fatturapa.orm.IdRegistro;
-import org.govmix.proxy.fatturapa.orm.TracciaSDI;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoElaborazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
-import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
+import org.govmix.proxy.fatturapa.orm.utils.TipoDocumentoUtils;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.LottoFattureAttiveBD;
-import org.govmix.proxy.fatturapa.web.commons.businessdelegate.NotificaDecorrenzaTerminiBD;
 import org.govmix.proxy.fatturapa.web.commons.businessdelegate.TracciaSdIBD;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.InserimentoLottiException.CODICE;
@@ -60,7 +58,6 @@ import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.bean.AllegatoFatturaBean;
 import org.govmix.proxy.fatturapa.web.console.bean.ConservazioneFormBean;
 import org.govmix.proxy.fatturapa.web.console.bean.FatturaElettronicaAttivaBean;
-import org.govmix.proxy.fatturapa.web.console.bean.NotificaDTBean;
 import org.govmix.proxy.fatturapa.web.console.bean.TracciaSDIBean;
 import org.govmix.proxy.fatturapa.web.console.datamodel.FatturaElettronicaAttivaDM;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
@@ -70,7 +67,6 @@ import org.govmix.proxy.fatturapa.web.console.iservice.IFatturaElettronicaAttiva
 import org.govmix.proxy.fatturapa.web.console.iservice.ITracciaSDIService;
 import org.govmix.proxy.fatturapa.web.console.search.FatturaElettronicaAttivaSearchForm;
 import org.govmix.proxy.fatturapa.web.console.service.AllegatiService;
-import org.govmix.proxy.fatturapa.web.console.service.NotificaDTService;
 import org.govmix.proxy.fatturapa.web.console.service.TracciaSDIService;
 import org.govmix.proxy.fatturapa.web.console.util.ConsoleProperties;
 import org.openspcoop2.generic_project.web.form.CostantiForm;
@@ -337,10 +333,15 @@ IFatturaElettronicaAttivaService>{
 			this.listaTipoDocumento = new ArrayList<SelectItem>();
 
 			this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi"))));
-			for(TipoDocumentoType td: TipoDocumentoType.values()) {
-				String value = td.getValue();
-				this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(value,  ("fattura.tipoDocumento."+value))));
+			try {
+				for(String value: TipoDocumentoUtils.getInstance(this.log).getValues()) {
+					this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(value,  ("fattura.tipoDocumento."+value))));
+				}
+				this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoDocumentoUtils.TIPO_DOCUMENTO_SCONOSCIUTO,  ("fattura.tipoDocumento."+TipoDocumentoUtils.TIPO_DOCUMENTO_SCONOSCIUTO))));
+			} catch (Exception e) {
+				this.log.error("Errore durante l'inizializzazione di TipoDocumentoUtils: " + e.getMessage(), e);
 			}
+
 		}
 
 		return this.listaTipoDocumento;

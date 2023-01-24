@@ -19,21 +19,21 @@ import org.govmix.fatturapa.parer.versamento.request.StrutturaType.Componenti;
 import org.govmix.proxy.fatturapa.orm.Ente;
 import org.govmix.proxy.fatturapa.orm.NotificaEsitoCommittente;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
-import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
+import org.govmix.proxy.fatturapa.orm.utils.TipoDocumentoUtils;
 
 public abstract class AbstractFatturaPassivaUnitaDocumentariaBuilder extends BaseAbstractFatturaPassivaUnitaDocumentariaBuilder{
 
-	private List<Integer> lstFattureSenzaDenominazioneMittente;
-	private List<Integer> lstFattureConDataInChiave;
+	private List<Long> lstFattureSenzaDenominazioneMittente;
+	private List<Long> lstFattureConDataInChiave;
 	public AbstractFatturaPassivaUnitaDocumentariaBuilder(Logger log) {
 		super(log);
-		this.lstFattureSenzaDenominazioneMittente = new ArrayList<Integer>();
-		this.lstFattureSenzaDenominazioneMittente.add(17563421);
-		this.lstFattureSenzaDenominazioneMittente.add(25345733);
+		this.lstFattureSenzaDenominazioneMittente = new ArrayList<Long>();
+		this.lstFattureSenzaDenominazioneMittente.add(17563421l);
+		this.lstFattureSenzaDenominazioneMittente.add(25345733l);
 		
-		this.lstFattureConDataInChiave = new ArrayList<Integer>();
-		this.lstFattureConDataInChiave.add(38414974);
-		this.lstFattureConDataInChiave.add(38798942);
+		this.lstFattureConDataInChiave = new ArrayList<Long>();
+		this.lstFattureConDataInChiave.add(38414974l);
+		this.lstFattureConDataInChiave.add(38798942l);
 	}
 
 	@Override
@@ -66,9 +66,9 @@ public abstract class AbstractFatturaPassivaUnitaDocumentariaBuilder extends Bas
 		return "FATTURA PASSIVA";
 	}
 
-	public ChiaveType getChiave(UnitaDocumentariaFatturaPassivaInput input) {
+	public ChiaveType getChiave(UnitaDocumentariaFatturaPassivaInput input) throws Exception {
 		ChiaveType chiave = new ChiaveType();
-		if(input.getFattura().getTipoDocumento().equals(TipoDocumentoType.TD04)) {
+		if(TipoDocumentoUtils.getInstance(this.log).isTipoNotaCredito(input.getFattura())) {
 			// Dopo aver verificato che alcune note di credito generavano la stessa chiave della fattura, si e' deciso di prependere la stringa NC_ alla chiave in caso di note di credito 
 			chiave.setNumero("NC_" + input.getFattura().getNumero() + "_" + input.getFattura().getCedentePrestatoreCodiceFiscale());
 		} else {
@@ -101,19 +101,10 @@ public abstract class AbstractFatturaPassivaUnitaDocumentariaBuilder extends Bas
 		return new CacheEnti(log).getEnte(input.getFattura().getCodiceDestinatario());
 	}
 
-	protected String getTipoDocumento(UnitaDocumentariaFatturaPassivaInput input) {
-		switch(input.getFattura().getTipoDocumento()){
-		case TD01: return "FATTURA";
-		case TD02:return "ACCONTO/ANTICIPO SU FATTURA";
-		case TD03:return "ACCONTO/ANTICIPO SU PARCELLA";
-		case TD04:return "NOTA DI CREDITO";
-		case TD05:return "NOTA DI DEBITO";
-		case TD06:return "PARCELLA";
-		case TDXX:return "SCONOSCIUTO";
-		default:return null;
-		}
+	protected String getTipoDocumento(UnitaDocumentariaFatturaPassivaInput input) throws Exception {
+		return TipoDocumentoUtils.getInstance(this.log).getTipoDocumentoConsevazioneFatturaPassiva(input);
 	}
-	
+
 	@Override
 	protected List<DocumentoWrapper> getAnnessi(UnitaDocumentariaFatturaPassivaInput input) throws Exception {
 

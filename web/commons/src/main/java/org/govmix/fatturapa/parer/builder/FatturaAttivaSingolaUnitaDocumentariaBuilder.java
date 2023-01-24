@@ -31,7 +31,7 @@ public class FatturaAttivaSingolaUnitaDocumentariaBuilder extends AbstractFattur
 	}
 
 	@Override
-	protected DocumentoType getDocumentoPrincipale(UnitaDocumentariaFatturaAttivaInput input) {
+	protected DocumentoType getDocumentoPrincipale(UnitaDocumentariaFatturaAttivaInput input) throws Exception {
 
 		DocumentoType documentoPricipale = new DocumentoType();
 		String idDocumento = input.getFattura().getNumero();

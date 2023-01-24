@@ -22,9 +22,12 @@ package org.govmix.proxy.fatturapa.web.commons.utils;
 
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
+import org.govmix.proxy.fatturapa.orm.utils.TipoDocumento;
 import org.govmix.proxy.fatturapa.web.commons.exporter.PDFCreator.TipoXSL;
 import org.govmix.proxy.pcc.fatture.utils.AbstractProperties;
 
@@ -46,7 +49,7 @@ public class CommonsProperties extends AbstractProperties {
 	private String idEgovHeaderFatturazioneAttiva;
 	private String idEgovHeaderSPCoop;
 	private String idEgovHeaderSDICoop;
-
+	
 	private String xslFatturaSDI10;
 	private String xslFatturaSDI11;
 	private String xslFatturaV12;
@@ -68,6 +71,7 @@ public class CommonsProperties extends AbstractProperties {
 	private int maxTentativiRispedizioneSdI;
 	private int fattoreRispedizioneSdI;
 
+	private Map<String, TipoDocumento> tipidocumento;
 
 	public int getMaxTentativiRispedizione() {
 		return maxTentativiRispedizione;
@@ -186,6 +190,21 @@ public class CommonsProperties extends AbstractProperties {
 		this.fattoreRispedizioneWFM = Integer.parseInt(this.getProperty("rispedizioni.fattoreRispedizioneWFM", true));
 		this.maxTentativiRispedizioneSdI = Integer.parseInt(this.getProperty("rispedizioni.maxTentativiRispedizioneSdI", true));
 		this.fattoreRispedizioneSdI = Integer.parseInt(this.getProperty("rispedizioni.fattoreRispedizioneSdI", true));
+
+		this.tipidocumento = new HashMap<String, TipoDocumento>();
+		
+        String tipiDocString = getProperty("tipo_documento.list", true);
+
+        if(tipiDocString != null && !tipiDocString.isEmpty()) {
+                String[] tipiDocList = tipiDocString.split(",");
+                for(String tipoDoc: tipiDocList) {
+            		TipoDocumento tipodoc = new TipoDocumento();
+            		tipodoc.setCodice(tipoDoc);
+            		tipodoc.setConservazione(getProperty("tipo_documento.conservazione."+tipoDoc, false));
+
+                	this.tipidocumento.put(tipoDoc, tipodoc);
+                }
+        }
 
 	}
 
@@ -340,6 +359,10 @@ public class CommonsProperties extends AbstractProperties {
 		return discriminatorHeaderValueSPCoop;
 	}
 
+	public Map<String, TipoDocumento> getTipidocumento() {
+		return tipidocumento;
+	}
+	
 	public String getIdEgovHeaderFatturazioneAttiva() {
 		return idEgovHeaderFatturazioneAttiva;
 	}

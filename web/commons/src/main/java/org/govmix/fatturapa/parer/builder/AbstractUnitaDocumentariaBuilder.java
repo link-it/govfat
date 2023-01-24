@@ -221,10 +221,10 @@ public abstract class AbstractUnitaDocumentariaBuilder <T extends AbstractUnitaD
 	protected abstract byte[] getRawDocumentoPrincipale(T input);
 	protected abstract List<DocumentoWrapper> getAnnessi(T input) throws Exception;
 	protected abstract List<DocumentoWrapper> getAllegati(T input) throws Exception;
-	protected abstract DocumentoType getDocumentoPrincipale(T input);
+	protected abstract DocumentoType getDocumentoPrincipale(T input) throws Exception;
 	protected abstract List<ParamWrapper> getParams(T input);
 	protected abstract ProfiloUnitaDocumentariaType getProfiloUnitaDocumentaria(T input) throws Exception;
-	public abstract ChiaveType getChiave(T input);
+	public abstract ChiaveType getChiave(T input) throws Exception;
 	protected abstract String getVersioneDatiSpecifici(T input);
 	
 	

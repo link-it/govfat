@@ -80,5 +80,22 @@
 		</plugins>
 	</build>
 
+	<repositories>
+                <repository>
+                        <id>linkit-releases</id>
+                        <url>https://maven.link.it/content/repositories/public/</url>
+                </repository>
+                <repository>
+                        <id>linkit-snapshot</id>
+                        <url>https://maven.link.it/content/repositories/snapshots/</url>
+                </repository>
+                <repository>
+                        <id>linkit-thirdparty</id>
+                        <url>https://maven.link.it/content/repositories/thirdparty-releases/</url>
+                </repository>
+        </repositories>
+
+
+
 </project>
 

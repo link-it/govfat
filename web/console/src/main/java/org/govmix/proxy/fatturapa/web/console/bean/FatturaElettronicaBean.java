@@ -36,7 +36,7 @@ import org.govmix.proxy.fatturapa.orm.constants.EsitoType;
 import org.govmix.proxy.fatturapa.orm.constants.FormatoTrasmissioneType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConsegnaType;
 import org.govmix.proxy.fatturapa.orm.constants.StatoProtocollazioneType;
-import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
+import org.govmix.proxy.fatturapa.orm.utils.TipoDocumentoUtils;
 import org.govmix.proxy.fatturapa.web.commons.exporter.AbstractSingleFileExporter;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.govmix.proxy.fatturapa.web.console.exporter.FattureExporter;
@@ -434,10 +434,19 @@ public class FatturaElettronicaBean extends BaseBean<FatturaElettronica, Long> i
 		}
 
 		this.codiceDestinatario.setValue(this.getDTO().getCodiceDestinatario());
-		TipoDocumentoType tipoDocumento2 = this.getDTO().getTipoDocumento();
-		if(tipoDocumento2 != null){
-			String valueTD = tipoDocumento2.getValue();
-			this.tipoDocumento.setValue("fattura.tipoDocumento."+valueTD);
+
+		String valueTD = this.getDTO().getTipoDocumento();
+		if(valueTD != null){
+			try {
+				if(TipoDocumentoUtils.getInstance(LoggerManager.getConsoleLogger()).getValues().contains(valueTD)) {
+					this.tipoDocumento.setValue("fattura.tipoDocumento."+valueTD);
+				} else {
+					this.tipoDocumento.setValue("fattura.tipoDocumento."+TipoDocumentoUtils.TIPO_DOCUMENTO_SCONOSCIUTO);
+				}
+			} catch (Exception e) {
+				LoggerManager.getConsoleLogger().error("Errore durante l'inizializzazione di tipo documento utils: " + e.getMessage(), e);
+				this.tipoDocumento.setValue("fattura.tipoDocumento."+TipoDocumentoUtils.TIPO_DOCUMENTO_SCONOSCIUTO);
+			}
 		}
 		this.tipoDocumento.getValue();
 		this.nomeFile.setValue(this.getDTO().getNomeFile());

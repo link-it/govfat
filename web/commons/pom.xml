@@ -207,11 +207,11 @@
 	<repositories>
 		<repository>
 			<id>openspcoop2-releases</id>
-			<url>http://maven.openspcoop.org/content/repositories/public/</url>
+			<url>https://maven.link.it/content/repositories/public/</url>
 		</repository>
 		<repository>
 			<id>openspcoop2-snapshot</id>
-			<url>http://maven.openspcoop.org/content/repositories/snapshots/</url>
+			<url>http://maven.link.it/content/repositories/snapshots/</url>
 		</repository>
 	</repositories>
 
@@ -278,6 +278,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>jaxb2-maven-plugin</artifactId>
+				<version>2.5.0</version>
 				<executions>
 					<execution>
 						<id>xjc1</id>

@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
-import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.XPathUtils;
 import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
@@ -20,6 +19,8 @@ import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.DatiRiepilogoType;
 import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.FatturaElettronicaBodyType;
 import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.FatturaElettronicaType;
 import it.gov.agenziaentrate.ivaservizi.docs.xsd.fatture.v1_2.utils.serializer.JaxbDeserializer;
+
+import org.govmix.proxy.fatturapa.orm.utils.TipoDocumentoUtils;
 
 public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaType> {
 
@@ -44,9 +45,9 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 
 		DatiGeneraliDocumentoType datiGeneraliDocumento =  this.getFattura().getFatturaElettronicaBody(0).getDatiGenerali().getDatiGeneraliDocumento();
 		
-		TipoDocumentoType tipoDoc = getTipoDoumento();
-		
-		fatturaElettronica.setTipoDocumento(tipoDoc);
+		try {
+			fatturaElettronica.setTipoDocumento(getTipoDocumentoString());
+		} catch (Exception e) {}
 		
 		fatturaElettronica.setDivisa(datiGeneraliDocumento.getDivisa());
 
@@ -54,25 +55,6 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 		fatturaElettronica.setAnno(new Integer(this.getSdfYear().format(datiGeneraliDocumento.getData())));
 
 		fatturaElettronica.setNumero(datiGeneraliDocumento.getNumero());
-	}
-
-	private TipoDocumentoType getTipoDoumento() {
-		Logger log = LoggerManager.getBatchInserimentoFatturaLogger();
-
-		TipoDocumentoType tipoDoc;
-		try {
-			String tipoDocumento = getTipoDocumentoString();
-			log.info("Trovato tipoDocumento ["+tipoDocumento+"]");
-			tipoDoc = TipoDocumentoType.toEnumConstant(tipoDocumento, true);
-			log.info("Trovato tipoDocumentoType ["+tipoDoc+"]");
-		} catch (NotFoundException e) {
-			tipoDoc = TipoDocumentoType.TDXX;
-			log.error("TipoDocumentoType non trovato: " + e.getMessage(), e);
-		} catch (Exception e) {
-			tipoDoc = TipoDocumentoType.TDXX;
-			log.error("Errore durante la lettura del TipoDocumento: " + e.getMessage(), e);
-		}
-		return tipoDoc;
 	}
 
 	private String getTipoDocumentoString() throws Exception {
@@ -147,16 +129,15 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 			throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.numero");
 		
 		if(strictValidation) {
-			TipoDocumentoType tipoDoc = null;
 			try {
 				String tipoDocumentoString = this.getTipoDocumentoString();
-				tipoDoc = TipoDocumentoType.toEnumConstant(tipoDocumentoString);
+				if(!TipoDocumentoUtils.getInstance(LoggerManager.getBatchInserimentoFatturaLogger()).getValues().contains(tipoDocumentoString)) {
+					throw new ValidationException("Valore ["+tipoDocumentoString+"] di datiGenerali.datiGeneraliDocumento.tipoDocumento non ammesso");	
+				}
+			} catch(ValidationException e) {
+				throw e;
 			} catch(Exception e) {
-				throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.tipoDocumento");	
-			}
-			
-			if(tipoDoc == null) {
-				throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.tipoDocumento");	
+				throw new ValidationException("Errore durante la ricerca dell'elemento datiGenerali.datiGeneraliDocumento.tipoDocumento: " + e.getMessage());	
 			}
 		}
 

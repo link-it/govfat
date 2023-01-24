@@ -25,7 +25,6 @@ import java.util.List;
 
 import org.govmix.proxy.fatturapa.orm.AllegatoFattura;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
-import org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType;
 import org.govmix.proxy.fatturapa.web.commons.consegnaFattura.ConsegnaFatturaParameters;
 import org.openspcoop2.generic_project.exception.DeserializerException;
 import org.openspcoop2.generic_project.exception.ValidationException;
@@ -63,28 +62,6 @@ public class FatturaV11Converter extends AbstractFatturaConverter<FatturaElettro
 		public void populateFatturaConDatiSpecifici(FatturaElettronica fatturaElettronica) {
 
 			DatiGeneraliDocumentoType datiGeneraliDocumento =  this.getFattura().getFatturaElettronicaBody(0).getDatiGenerali().getDatiGeneraliDocumento();
-			
-			TipoDocumentoType tipoDoc = null;
-			if(datiGeneraliDocumento.getTipoDocumento()!=null) {
-				switch(datiGeneraliDocumento.getTipoDocumento()) {
-				case TD01: tipoDoc = TipoDocumentoType.TD01;
-					break;
-				case TD02: tipoDoc = TipoDocumentoType.TD02;
-					break;
-				case TD03: tipoDoc = TipoDocumentoType.TD03;
-					break;
-				case TD04: tipoDoc = TipoDocumentoType.TD04;
-					break;
-				case TD05: tipoDoc = TipoDocumentoType.TD05;
-					break;
-				case TD06: tipoDoc = TipoDocumentoType.TD06;
-					break;
-				}
-			} else {
-				tipoDoc = TipoDocumentoType.TDXX;
-			}
-			
-			fatturaElettronica.setTipoDocumento(tipoDoc);
 			
 			fatturaElettronica.setDivisa(datiGeneraliDocumento.getDivisa());
 
