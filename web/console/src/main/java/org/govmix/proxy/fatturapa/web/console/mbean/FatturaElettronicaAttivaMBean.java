@@ -331,6 +331,7 @@ IFatturaElettronicaAttivaService>{
 				for(String value: TipoDocumentoUtils.getInstance(this.log).getValues()) {
 					this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(value,  ("fattura.tipoDocumento."+value))));
 				}
+				this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("TDXX",  ("fattura.tipoDocumento.TDXX"))));
 			} catch (Exception e) {
 				this.log.error("Errore durante l'inizializzazione di TipoDocumentoUtils: " + e.getMessage(), e);
 			}

@@ -1,6 +1,7 @@
 package org.govmix.proxy.fatturapa.web.commons.businessdelegate.filter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -9,6 +10,8 @@ import org.govmix.proxy.fatturapa.orm.Utente;
 import org.govmix.proxy.fatturapa.orm.UtenteDipartimento;
 import org.govmix.proxy.fatturapa.orm.constants.StatoConservazioneType;
 import org.govmix.proxy.fatturapa.orm.constants.UserRole;
+import org.govmix.proxy.fatturapa.orm.utils.TipoDocumentoUtils;
+import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 import org.openspcoop2.generic_project.beans.CustomField;
 import org.openspcoop2.generic_project.dao.IExpressionConstructor;
 import org.openspcoop2.generic_project.exception.ExpressionException;
@@ -133,7 +136,20 @@ public class FatturaFilter extends AbstractFilter {
 			}
 			
 			if(this.tipoDocumento != null) {
-				expression.equals(FatturaElettronica.model().TIPO_DOCUMENTO, this.tipoDocumento);
+				
+				if(this.tipoDocumento.equals("TDXX")) {
+					IExpression newExpression = this.newExpression();
+					try {
+						Collection<String> tipidoc = TipoDocumentoUtils.getInstance(LoggerManager.getDaoLogger()).getValues();
+
+						newExpression.not().in(FatturaElettronica.model().TIPO_DOCUMENTO, tipidoc);
+						expression.and(newExpression);
+					} catch(Exception e) {
+						LoggerManager.getDaoLogger().error("Errore durante la lettura dei tipi documento: " + e.getMessage(), e);
+					}
+				} else {
+					expression.equals(FatturaElettronica.model().TIPO_DOCUMENTO, this.tipoDocumento);
+				}
 			}
 			
 			if(this.formatoArchivioInvioFattura != null) {
