@@ -341,6 +341,7 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
     this.codiceDestinatario = codiceDestinatario;
   }
 
+<<<<<<< HEAD
   public void set_value_tipoDocumento(String value) {
 //	    this.tipoDocumento = (TipoDocumentoType) TipoDocumentoType.toEnumConstantFromString(value);
 	    this.tipoDocumento = value;
@@ -354,13 +355,13 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
     }
   }
 
-//  public org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType getTipoDocumento() {
-//    return this.tipoDocumento;
-//  }
-//
-//  public void setTipoDocumento(org.govmix.proxy.fatturapa.orm.constants.TipoDocumentoType tipoDocumento) {
-//    this.tipoDocumento = tipoDocumento;
-//  }
+  public String getTipoDocumento() {
+    return this.tipoDocumento;
+  }
+
+  public void setTipoDocumento(String tipoDocumento) {
+    this.tipoDocumento = tipoDocumento;
+  }
 
   public java.lang.String getDivisa() {
     return this.divisa;
@@ -742,9 +743,6 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
   @javax.xml.bind.annotation.XmlSchemaType(name="string")
   @XmlElement(name="codiceDestinatario",required=true,nillable=false)
   protected java.lang.String codiceDestinatario;
-
-  @XmlTransient
-  protected java.lang.String _value_tipoDocumento;
 
   @XmlElement(name="tipoDocumento",required=true,nillable=false)
   protected String tipoDocumento;

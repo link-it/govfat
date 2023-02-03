@@ -128,10 +128,10 @@ public class ParERClient {
 		        trustManagerFactory.init(trustStore);
 
 		        // Trust own CA and all self-signed certs
-		        SSLContext sslContext = SSLContext.getInstance("TLSv1.3");//, BCJSSE); 
-		        sslContext.init(null,trustManagerFactory.getTrustManagers(),null);//SecureRandom.getInstance("SHA1PRNG"));
+		        SSLContext sslContext = SSLContext.getInstance("TLSv1.3");
+		        sslContext.init(null,trustManagerFactory.getTrustManagers(),null);
 
-				SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext);
+			SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext);
 
 		        client = HttpClients.custom().setSSLSocketFactory(sslsf).setDefaultRequestConfig(RequestConfig.custom()
 		                .setCookieSpec(CookieSpecs.STANDARD).build())

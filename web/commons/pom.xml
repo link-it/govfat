@@ -17,32 +17,7 @@
         </properties>
 
 	<dependencies>
-    <!--dependency>
-        <groupId>org.bouncycastle</groupId>
-        <artifactId>bctls-jdk15on</artifactId>
-        <version>1.70</version>
-        <scope>provided</scope>
-    </dependency-->
-                    <!--dependency>
-                        <groupId>org.bouncycastle</groupId>
-                        <artifactId>bcprov-jdk15to18</artifactId>
-                        <version>1.70</version>
-                        <scope>provided</scope>
-                </dependency-->
-
-		<!--dependency>
-                        <groupId>org.bouncycastle</groupId>
-                        <artifactId>bcprov-ext-jdk15on</artifactId>
-			<version>1.70</version>
-			<scope>provided</scope>
-                </dependency>
-                <dependency>
-                        <groupId>org.bouncycastle</groupId>
-                        <artifactId>bcpkix-jdk15on</artifactId>
-                        <version>1.70</version>
-                        <scope>provided</scope>
-                </dependency-->
-
+		<dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
@@ -229,7 +204,16 @@
 </dependency>
 
 	</dependencies>
-
+	<repositories>
+		<repository>
+			<id>openspcoop2-releases</id>
+			<url>https://maven.link.it/content/repositories/public/</url>
+		</repository>
+		<repository>
+			<id>openspcoop2-snapshot</id>
+			<url>http://maven.link.it/content/repositories/snapshots/</url>
+		</repository>
+	</repositories>
 	<build>
 		<filters>
 			<filter>${basedir}/../../resources/filters/${env}.filter.properties</filter>

@@ -22,9 +22,12 @@ package org.govmix.proxy.fatturapa.web.commons.utils;
 
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.govmix.proxy.fatturapa.orm.constants.TipoComunicazioneType;
+import org.govmix.proxy.fatturapa.orm.utils.TipoDocumento;
 import org.govmix.proxy.fatturapa.web.commons.exporter.PDFCreator.TipoXSL;
 import org.govmix.proxy.pcc.fatture.utils.AbstractProperties;
 
@@ -59,6 +62,7 @@ public class CommonsProperties extends AbstractProperties {
 	private String idEgovHeaderSPCoop;
 	private String idEgovHeaderSDICoop;
 
+	private Map<String, TipoDocumento> tipidocumento;
 	private static final String propertiesPath = "/webCommons.properties";
 	/** Copia Statica */
 	private static CommonsProperties commonsProperties = null;
@@ -145,6 +149,22 @@ public class CommonsProperties extends AbstractProperties {
 		this.discriminatorHeaderValueSPCoop = this.getProperty("discriminator.spcoop.headerValue", true);
 		this.idEgovHeaderSPCoop = this.getProperty("header.spcoop.idegov", true);
 		this.idEgovHeaderSDICoop = this.getProperty("header.sdicoop.idegov", true);
+		
+		this.tipidocumento = new HashMap<String, TipoDocumento>();
+		
+        String tipiDocString = getProperty("tipo_documento.list", true);
+
+        if(tipiDocString != null && !tipiDocString.isEmpty()) {
+                String[] tipiDocList = tipiDocString.split(",");
+                for(String tipoDoc: tipiDocList) {
+            		TipoDocumento tipodoc = new TipoDocumento();
+            		tipodoc.setCodice(tipoDoc);
+            		tipodoc.setConservazione(getProperty("tipo_documento.conservazione."+tipoDoc, false));
+
+                	this.tipidocumento.put(tipoDoc, tipodoc);
+                }
+        }
+
 
 	}
 
@@ -273,6 +293,10 @@ public class CommonsProperties extends AbstractProperties {
 
 	public String getDiscriminatorHeaderValueSPCoop() {
 		return discriminatorHeaderValueSPCoop;
+	}
+
+	public Map<String, TipoDocumento> getTipidocumento() {
+		return tipidocumento;
 	}
 
 

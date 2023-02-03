@@ -1,5 +1,6 @@
 package org.govmix.proxy.fatturapa.orm.utils;
 
+<<<<<<< HEAD
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -7,40 +8,38 @@ import java.util.Set;
 import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaAttivaInput;
 import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaPassivaInput;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
+=======
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaAttivaInput;
+import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaPassivaInput;
+import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
+import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
+>>>>>>> mev11.22
 
 public class TipoDocumentoUtils {
 
 	private static TipoDocumentoUtils instance;
 	
-	public static TipoDocumentoUtils getInstance() {
+	public static final String TIPO_DOCUMENTO_NOTA_CREDITO = "TD04";
+	public static final String TIPO_DOCUMENTO_SCONOSCIUTO = "TDXX";
+	
+	public static TipoDocumentoUtils getInstance(Logger log) throws Exception {
 		if(instance == null) {
-			instance = new TipoDocumentoUtils();
-		} 
+			instance = new TipoDocumentoUtils(log);
+		}
 		
 		return instance;
 	}
 	private Map<String, TipoDocumento> tipidocumento;
 	
-	public TipoDocumentoUtils() {
-		this.tipidocumento = new HashMap<String, TipoDocumento>();
-		this.add(this.tipidocumento,"TD01","FATTURA");
-		this.add(this.tipidocumento,"TD02","ACCONTO/ANTICIPO SU FATTURA");
-		this.add(this.tipidocumento,"TD03","ACCONTO/ANTICIPO SU PARCELLA");
-		this.add(this.tipidocumento,"TD04","NOTA DI CREDITO");
-		this.add(this.tipidocumento,"TD05","NOTA DI DEBITO");
-		this.add(this.tipidocumento,"TD06","PARCELLA");
-		this.add(this.tipidocumento,"TD16","INTEGRAZIONE FATTURA REVERSE CHARGE INTERNO");
-		this.add(this.tipidocumento,"TD17","INTEGRAZIONE/AUTOFATTURA PER ACQUISTO SERVIZI DALL'ESTERO");
-		this.add(this.tipidocumento,"TD18","INTEGRAZIONE PER ACQUISTO DI BENI INTRACOMUNITARI");
-		this.add(this.tipidocumento,"TD19","INTEGRAZIONE/AUTOFATTURA PER ACQUISTO DI BENI EX ART.17");
-		this.add(this.tipidocumento,"TD20","AUTOFATTURA");
-		this.add(this.tipidocumento,"TD21","AUTOFATTURA PER SPLAFONAMENTO");
-		this.add(this.tipidocumento,"TD22","ESTRAZIONE BENI DA DEPOSITO IVA");
-		this.add(this.tipidocumento,"TD23","ESTRAZIONE BENI DA DEPOSITO IVA CON VERSAMENTO DELL'IVA");
-		this.add(this.tipidocumento,"TD24","FATTURA DIFFERITA DI CUI ALL'ART. 21 4A)");
-		this.add(this.tipidocumento,"TD25","FATTURA DIFFERITA DI CUI ALL'ART. 21 4B)");
-		this.add(this.tipidocumento,"TD26","CESSIONE DI BENI AMMORTIZZABILI E PER PASSAGGI INTERNI");
-		this.add(this.tipidocumento,"TD27","FATTURA PER AUTOCONSUMO/CESSIONI GRATUITE");
+	public TipoDocumentoUtils(Logger log) throws Exception {
+		this.tipidocumento = CommonsProperties.getInstance(log).getTipidocumento();
 	}
 
 	private void add(Map<String, TipoDocumento> tipidocumento, String cod, String cons) {
@@ -51,27 +50,44 @@ public class TipoDocumentoUtils {
 		this.tipidocumento.put(cod, tipodoc);
 	}
 
-	public String getTipoDocumentoConsevazione(FatturaElettronica input) {
-		if(tipidocumento.containsKey(input.get_value_tipoDocumento())) {
-			return tipidocumento.get(input.get_value_tipoDocumento()).getConservazione();
+	public String getTipoDocumentoConsevazione(FatturaElettronica input) throws Exception {
+		String tipoConservazione = null;
+		if(this.tipidocumento.containsKey(input.getTipoDocumento())) {
+			tipoConservazione = this.tipidocumento.get(input.getTipoDocumento()).getConservazione();
 		}
 		
-		return null;
+		if(tipoConservazione != null) {
+			return tipoConservazione;
+		}
+		
+		throw new Exception("Impossibile inviare in conservazione la fattura con tipo documento ["+input.getTipoDocumento()+"]");
 	}
 
-	public String getTipoDocumentoConsevazioneFatturaPassiva(UnitaDocumentariaFatturaPassivaInput input) {
+	public String getTipoDocumentoConsevazioneFatturaPassiva(UnitaDocumentariaFatturaPassivaInput input) throws Exception {
 		return getTipoDocumentoConsevazione(input.getFattura());
 	}
 
-	public String getTipoDocumentoConsevazioneFatturaAttiva(UnitaDocumentariaFatturaAttivaInput input) {
+	public String getTipoDocumentoConsevazioneFatturaAttiva(UnitaDocumentariaFatturaAttivaInput input) throws Exception {
 		return getTipoDocumentoConsevazione(input.getFattura());
 	}
 
 	public boolean isTipoNotaCredito(FatturaElettronica input) {
-		return input.get_value_tipoDocumento().equals("TD04");
+		return input.get_value_tipoDocumento().equals(TIPO_DOCUMENTO_NOTA_CREDITO);
 	}
-	public Set<String> getValues() {
-		return tipidocumento.keySet();
+	public Collection<String> getValues() {
+		Comparator<? super String> c = new Comparator<String>() {
+
+			@Override
+			public int compare(String o1, String o2) {
+				return o1.compareTo(o2);
+			}
+		};
+
+		Set<String> keySet = tipidocumento.keySet();
+		
+		String[] array = keySet.toArray(new String[] {});
+		Arrays.sort(array, c);
+		return Arrays.asList(array);
 	}
 
 }

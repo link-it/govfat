@@ -26,8 +26,8 @@ public abstract class BaseAbstractFatturaAttivaUnitaDocumentariaBuilder extends 
 		super(log);
 	}
 
-	protected String getTipoDocumento(UnitaDocumentariaFatturaAttivaInput input) {
-		return TipoDocumentoUtils.getInstance().getTipoDocumentoConsevazioneFatturaAttiva(input);
+	protected String getTipoDocumento(UnitaDocumentariaFatturaAttivaInput input) throws Exception {
+		return TipoDocumentoUtils.getInstance(this.log).getTipoDocumentoConsevazioneFatturaAttiva(input);
 	}
 	
 	

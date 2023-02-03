@@ -327,9 +327,15 @@ IFatturaElettronicaAttivaService>{
 			this.listaTipoDocumento = new ArrayList<SelectItem>();
 
 			this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem("*", ("commons.label.qualsiasi"))));
-			for(String value: TipoDocumentoUtils.getInstance().getValues()) {
-				this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(value,  ("fattura.tipoDocumento."+value))));
+			try {
+				for(String value: TipoDocumentoUtils.getInstance(this.log).getValues()) {
+					this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(value,  ("fattura.tipoDocumento."+value))));
+				}
+				this.listaTipoDocumento.add(new SelectItem(new org.openspcoop2.generic_project.web.impl.jsf1.input.SelectItem(TipoDocumentoUtils.TIPO_DOCUMENTO_SCONOSCIUTO,  ("fattura.tipoDocumento."+TipoDocumentoUtils.TIPO_DOCUMENTO_SCONOSCIUTO))));
+			} catch (Exception e) {
+				this.log.error("Errore durante l'inizializzazione di TipoDocumentoUtils: " + e.getMessage(), e);
 			}
+
 		}
 
 		return this.listaTipoDocumento;

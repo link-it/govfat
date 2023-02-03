@@ -90,7 +90,7 @@ public class FatturaElettronicaFetch extends AbstractJDBCFetch {
 					jdbcParameterUtilities.readParameter(rs, "posizione", FatturaElettronica.model().POSIZIONE.getFieldType(), org.openspcoop2.generic_project.dao.jdbc.utils.JDBCDefaultForXSDType.FORCE_ZERO_AS_NULL));
 				setParameter(object, "setCodiceDestinatario", FatturaElettronica.model().CODICE_DESTINATARIO.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "codice_destinatario", FatturaElettronica.model().CODICE_DESTINATARIO.getFieldType()));
-				setParameter(object, "set_value_tipoDocumento", String.class,
+				setParameter(object, "setTipoDocumento", String.class,
 					jdbcParameterUtilities.readParameter(rs, "tipo_documento", FatturaElettronica.model().TIPO_DOCUMENTO.getFieldType())+"");
 				setParameter(object, "setDivisa", FatturaElettronica.model().DIVISA.getFieldType(),
 					jdbcParameterUtilities.readParameter(rs, "divisa", FatturaElettronica.model().DIVISA.getFieldType()));
@@ -278,7 +278,7 @@ public class FatturaElettronicaFetch extends AbstractJDBCFetch {
 					this.getObjectFromMap(map,"posizione"));
 				setParameter(object, "setCodiceDestinatario", FatturaElettronica.model().CODICE_DESTINATARIO.getFieldType(),
 					this.getObjectFromMap(map,"codiceDestinatario"));
-				setParameter(object, "set_value_tipoDocumento", String.class,
+				setParameter(object, "setTipoDocumento", String.class,
 					this.getObjectFromMap(map,"tipoDocumento"));
 				setParameter(object, "setDivisa", FatturaElettronica.model().DIVISA.getFieldType(),
 					this.getObjectFromMap(map,"divisa"));

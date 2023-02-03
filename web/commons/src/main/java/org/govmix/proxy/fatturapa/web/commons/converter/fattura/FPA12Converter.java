@@ -44,7 +44,7 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 		DatiGeneraliDocumentoType datiGeneraliDocumento =  this.getFattura().getFatturaElettronicaBody(0).getDatiGenerali().getDatiGeneraliDocumento();
 		
 		try {
-			fatturaElettronica.set_value_tipoDocumento(getTipoDocumentoString());
+			fatturaElettronica.setTipoDocumento(getTipoDocumentoString());
 		} catch (Exception e) {}
 		
 		fatturaElettronica.setDivisa(datiGeneraliDocumento.getDivisa());
@@ -129,11 +129,13 @@ public class FPA12Converter extends AbstractFatturaConverter<FatturaElettronicaT
 		if(strictValidation) {
 			try {
 				String tipoDocumentoString = this.getTipoDocumentoString();
-				if(!TipoDocumentoUtils.getInstance().getValues().contains(tipoDocumentoString)) {
+				if(!TipoDocumentoUtils.getInstance(LoggerManager.getBatchInserimentoFatturaLogger()).getValues().contains(tipoDocumentoString)) {
 					throw new ValidationException("Valore ["+tipoDocumentoString+"] di datiGenerali.datiGeneraliDocumento.tipoDocumento non ammesso");	
 				}
+			} catch(ValidationException e) {
+				throw e;
 			} catch(Exception e) {
-				throw new ValidationException("La fattura non contiene l'elemento datiGenerali.datiGeneraliDocumento.tipoDocumento");	
+				throw new ValidationException("Errore durante la ricerca dell'elemento datiGenerali.datiGeneraliDocumento.tipoDocumento: " + e.getMessage());	
 			}
 		}
 

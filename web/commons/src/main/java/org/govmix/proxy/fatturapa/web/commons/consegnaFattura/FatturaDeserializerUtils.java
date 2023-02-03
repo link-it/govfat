@@ -38,6 +38,7 @@ import org.govmix.proxy.fatturapa.web.commons.converter.fattura.AbstractFatturaC
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FPA12Converter;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FatturaV10Converter;
 import org.govmix.proxy.fatturapa.web.commons.converter.fattura.FatturaV11Converter;
+import org.govmix.proxy.fatturapa.web.commons.utils.LoggerManager;
 
 import it.gov.fatturapa.sdi.fatturapa.v1_0.DatiPagamentoType;
 import it.gov.fatturapa.sdi.fatturapa.v1_0.DettaglioPagamentoType;
@@ -406,8 +407,7 @@ public class FatturaDeserializerUtils {
 
 	public static List<DatiDocumentiCorrelatiType> getDatiFattureCollegate(FatturaElettronica fattura) throws Exception {
 		
-		if(TipoDocumentoUtils.getInstance().isTipoNotaCredito(fattura)) {
-			
+		if(TipoDocumentoUtils.getInstance(LoggerManager.getDaoLogger()).isTipoNotaCredito(fattura)) {
 			List<DatiDocumentiCorrelatiType> lst = new ArrayList<DatiDocumentiCorrelatiType>();
 			if(it.gov.fatturapa.sdi.fatturapa.v1_0.constants.FormatoTrasmissioneType.SDI10.getValue().equals(fattura.getFormatoTrasmissione().getValue())) {
 				FatturaV10Converter converter = new FatturaV10Converter(fattura.getXml(), null);
