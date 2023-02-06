@@ -1,14 +1,5 @@
 package org.govmix.proxy.fatturapa.orm.utils;
 
-<<<<<<< HEAD
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaAttivaInput;
-import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaPassivaInput;
-import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
-=======
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -20,7 +11,6 @@ import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaAttivaInput;
 import org.govmix.fatturapa.parer.beans.UnitaDocumentariaFatturaPassivaInput;
 import org.govmix.proxy.fatturapa.orm.FatturaElettronica;
 import org.govmix.proxy.fatturapa.web.commons.utils.CommonsProperties;
->>>>>>> mev11.22
 
 public class TipoDocumentoUtils {
 

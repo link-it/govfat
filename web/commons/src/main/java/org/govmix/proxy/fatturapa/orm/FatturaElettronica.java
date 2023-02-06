@@ -341,7 +341,6 @@ public class FatturaElettronica extends org.openspcoop2.utils.beans.BaseBean imp
     this.codiceDestinatario = codiceDestinatario;
   }
 
-<<<<<<< HEAD
   public void set_value_tipoDocumento(String value) {
 //	    this.tipoDocumento = (TipoDocumentoType) TipoDocumentoType.toEnumConstantFromString(value);
 	    this.tipoDocumento = value;
