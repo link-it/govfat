@@ -149,9 +149,10 @@ public abstract class AbstractSingleFileImporter<T> {
 					FileDataSource fds = new FileDataSource(entryName);
 					String nome = fds.getName();
 	
-					String tipo = nome.substring(nome.lastIndexOf(".")+1,nome.length()).toLowerCase(); 
+					int idxExt = nome.lastIndexOf(".");
+					String tipo = idxExt >= 0 ? nome.substring(idxExt+1).toLowerCase() : ""; 
 	
-					nome = nome.substring(0, nome.lastIndexOf("."));
+					if(idxExt >= 0) nome = nome.substring(0, idxExt);
 					//System.out.println("VERIFICARE NAME["+nome+"] TIPO["+tipo+"]");
 					InputStream inputStream = null;
 					try {						
