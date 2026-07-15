@@ -126,6 +126,14 @@
 			<version>2.2.5.1</version>
 		</dependency>
 
+		<!-- Pin di jaxb-xjc: con JDK 8 il profilo cxf 'jdk17' non si attiva e la
+		     versione transitiva scenderebbe a 2.1.13; blocchiamo la 2.2.6 come in deploy (JDK 7). -->
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-xjc</artifactId>
+			<version>2.2.6</version>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<filters>
